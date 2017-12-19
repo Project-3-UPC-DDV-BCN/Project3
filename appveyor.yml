@@ -13,9 +13,9 @@ build:
   verbosity: minimal
 before_package:
 - ps: >-
-    Copy-Item C:\projects\the-creator-3d\$env:CONFIGURATION\The-Creator.exe C:\projects\the-creator-3d\EngineResources\.
+    Copy-Item C:\projects\project3\$env:CONFIGURATION\The-Creator.exe C:\projects\project3\EngineResources\.
 
-    Copy-Item C:\projects\the-creator-3d\README.md C:\projects\the-creator-3d\EngineResources\.
+    Copy-Item C:\projects\project3\README.md C:\projects\project3\EngineResources\.
 artifacts:
 - path: EngineResources
   name: Project3
