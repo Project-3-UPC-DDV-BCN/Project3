@@ -1,13 +1,10 @@
-# The Creator 3D	
+# Project 3 - Star Wars
 
-[![Build status](https://ci.appveyor.com/api/projects/status/2446x5ohw7wv0yy1?svg=true)](https://ci.appveyor.com/project/sergipa/the-creator-3d)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
+[![Build status](https://ci.appveyor.com/api/projects/status/dc96gdb3fquj30w8/branch/master?svg=true)](https://ci.appveyor.com/project/Project-3-UPC-DDV-BCN/project3/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/dc96gdb3fquj30w8/branch/master?svg=true)](https://ci.appveyor.com/project/Project-3-UPC-DDV-BCN/project3/branch/development)
 
-The Creator 3D is a 3D engine made for educational purposes. This is an early version of the engine, the engine is subject to change.
-
-## Usage
-At this point, the usage of the engine is pretty intuitive. 
-
-The controls try to mimic the ones of Unity. 
+Spaceship 3D game based on Star Wars
 
 ## License
 
@@ -38,8 +35,4 @@ For more information, please refer to <http://unlicense.org/>
 
 ## Credits
 
-The engine has been developed by:
-
-Adrià Martín: https://github.com/TinoTano
-
-Sergi Pérez: https://github.com/sergipa
+//TODO :)
