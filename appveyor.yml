@@ -1,20 +1,30 @@
-version: 0.2.{build}
+version: Project3.Engine.Autorelease-{build}
+branches:
+  only:
+  - master
+  - development
 skip_tags: true
+image: Visual Studio 2017
 configuration:
 - Debug
 - Release
 build:
   project: The Creator.sln
-  verbosity: normal
+  verbosity: minimal
 before_package:
-- ps: Copy-Item C:\projects\the-creator-3d\$env:CONFIGURATION\The-Creator.exe C:\projects\the-creator-3d\EngineResources\.
+- ps: >-
+    Copy-Item C:\projects\the-creator-3d\$env:CONFIGURATION\The-Creator.exe C:\projects\the-creator-3d\EngineResources\.
+
+    Copy-Item C:\projects\the-creator-3d\README.md C:\projects\the-creator-3d\EngineResources\.
 artifacts:
 - path: EngineResources
-  name: Engine
+  name: Project3
 deploy:
 - provider: GitHub
   auth_token:
-    secure: 8g535l10Nl6OGyUThbOD9ocDxqCF7OraHuKmVNd4oSEP8y/PbiTb8cj3mBXUUxpB
-  artifact: Engine
+    secure: EQ5OXzpbnU30wLIr7rB1zjqcpBtzgiJCp5087bZSBfSbHheXyJ9FgCDb1jdJtXmd
+  artifact: Project3
+  force_update: true
   on:
+    branch: master
     CONFIGURATION: Release
