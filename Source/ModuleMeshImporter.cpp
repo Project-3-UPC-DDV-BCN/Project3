@@ -139,10 +139,13 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			bool mesh_created = true; //If node have more than 1 mesh and last mesh returned false, we need to reset the return for the new mesh.
 
 			aiMesh* ai_mesh = scene.mMeshes[node->mMeshes[i]];
+
+			// -------------- Mesh --------------------
 			Mesh* mesh = new Mesh();
 			std::string mesh_name = (std::string)node->mName.C_Str();
 			if (i > 0) mesh_name += "_" + std::to_string(i);
 			mesh->SetName(mesh_name);
+
 			mesh->num_vertices = ai_mesh->mNumVertices;
 			mesh->vertices = new float[mesh->num_vertices * 3];
 			memcpy(mesh->vertices, ai_mesh->mVertices, sizeof(float) * mesh->num_vertices * 3);
@@ -170,26 +173,60 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 
 			if (!mesh_created) continue;
 
+			float* normals = nullptr;
 			if (ai_mesh->HasNormals())
 			{
-				mesh->normals = new float[mesh->num_vertices * 3];
-				memcpy(mesh->normals, ai_mesh->mNormals, sizeof(float) * mesh->num_vertices * 3);
+				normals = new float[mesh->num_vertices * 3];
+				memcpy(normals, ai_mesh->mNormals, sizeof(float) * mesh->num_vertices * 3);
 				CONSOLE_DEBUG("Mesh ""%s"" has Normals", node->mName.C_Str());
 			}
 
+			float* colors = nullptr;
 			if (ai_mesh->HasVertexColors(0))
 			{
-				mesh->colors = new float[mesh->num_vertices * 4];
-				memcpy(mesh->colors, ai_mesh->mColors[0], sizeof(float) * mesh->num_vertices * 4);
+				colors = new float[mesh->num_vertices * 4];
+				memcpy(colors, ai_mesh->mColors[0], sizeof(float) * mesh->num_vertices * 4);
 				CONSOLE_DEBUG("Mesh ""%s"" has Colors", node->mName.C_Str());
 			}
 
+			float* texture_coords = nullptr;
 			if (ai_mesh->HasTextureCoords(0))
 			{
-				mesh->texture_coords = new float[mesh->num_vertices * 3];
-				memcpy(mesh->texture_coords, ai_mesh->mTextureCoords[0], sizeof(float) * mesh->num_vertices * 3);
+				texture_coords = new float[mesh->num_vertices * 3];
+				memcpy(texture_coords, ai_mesh->mTextureCoords[0], sizeof(float) * mesh->num_vertices * 3);
 				CONSOLE_DEBUG("Mesh ""%s"" has UVs", node->mName.C_Str());
 			}
+
+			///Create the data buffer
+			mesh->vertices_data = new float[mesh->num_vertices * 13]; // vert pos, tex coords, normals, color
+
+			float null[3] = { 0.f,0.f,0.f };
+			float null_color[4] = { 1.f,1.f,1.f,1.f };
+			for (int v = 0; v < mesh->num_vertices; ++v)
+			{
+				//copy vertex pos
+				memcpy(mesh->vertices_data + v * 13, mesh->vertices + v * 3, sizeof(float) * 3);
+
+				//copy tex coord
+				if (texture_coords != nullptr)
+					memcpy(mesh->vertices_data + v * 13 + 3, texture_coords + v * 3, sizeof(float) * 3);
+				else
+					memcpy(mesh->vertices_data + v * 13 + 3, null, sizeof(float) * 3);
+
+				//copy normals
+				if (normals != nullptr)
+					memcpy(mesh->vertices_data + v * 13 + 6, normals + v * 3, sizeof(float) * 3);
+				else
+					memcpy(mesh->vertices_data + v * 13 + 6, null, sizeof(float) * 3);
+
+				//copy colors
+				if (colors != nullptr)
+					memcpy(mesh->vertices_data + v * 13 + 9, colors + v * 3, sizeof(float) * 4);
+				else
+					memcpy(mesh->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+			}
+
+			// -------------------------------------
 
 			Material* material = nullptr;
 			if (scene.HasMaterials())
@@ -406,7 +443,7 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 			char* cursor = buffer;
 			mesh = new Mesh();
 			// amount of indices / vertices / colors / normals / texture_coords
-			uint ranges[5];
+			uint ranges[2];
 			uint bytes = sizeof(ranges);
 			memcpy(ranges, cursor, bytes);
 
@@ -419,35 +456,11 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 			mesh->indices = new uint[mesh->num_indices];
 			memcpy(mesh->indices, cursor, bytes);
 
-			// Load vertices
+			// Load vertices_data
 			cursor += bytes;
-			bytes = sizeof(float) * mesh->num_vertices * 3;
-			mesh->vertices = new float[mesh->num_vertices * 3];
-			memcpy(mesh->vertices, cursor, bytes);
-
-			// Load colors
-			if (ranges[2] > 0)
-			{
-				cursor += bytes;
-				mesh->colors = new float[mesh->num_vertices * 3];
-				memcpy(mesh->colors, cursor, bytes);
-			}
-
-			// Load normals
-			if (ranges[3] > 0)
-			{
-				cursor += bytes;
-				mesh->normals = new float[mesh->num_vertices * 3];
-				memcpy(mesh->normals, cursor, bytes);
-			}
-
-			// Load texture coords
-			if (ranges[4] > 0)
-			{
-				cursor += bytes;
-				mesh->texture_coords = new float[mesh->num_vertices * 3];
-				memcpy(mesh->texture_coords, cursor, bytes);
-			}
+			bytes = sizeof(float) * mesh->num_vertices * 13;
+			mesh->vertices_data = new float[mesh->num_vertices * 13];
+			memcpy(mesh->vertices_data, cursor, bytes);
 
 			// AABB
 			cursor += bytes;
@@ -456,6 +469,7 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 
 			RELEASE_ARRAY(buffer);
 
+			mesh->CreateVerticesFromData();
 			mesh->SetLibraryPath(path);
 		}
 		else
@@ -472,23 +486,14 @@ void ModuleMeshImporter::SaveMeshToLibrary(Mesh& mesh)
 {
 	
 	// amount of indices / vertices / colors / normals / texture_coords / AABB
-	uint ranges[5] = {
+	uint ranges[2] = {
 		mesh.num_indices,
 		mesh.num_vertices,
-		(mesh.colors) ? mesh.num_vertices : 0,
-		(mesh.normals) ? mesh.num_vertices : 0,
-		(mesh.texture_coords) ? mesh.num_vertices : 0
 	};
 
 	uint size = sizeof(ranges);
 	size += sizeof(uint) * mesh.num_indices;
-	size += sizeof(float) * mesh.num_vertices * 3;
-	if (mesh.colors != nullptr)
-		size += sizeof(float) * mesh.num_vertices * 3;
-	if (mesh.normals != nullptr)
-		size += sizeof(float) * mesh.num_vertices * 3;
-	if (mesh.texture_coords != nullptr)
-		size += sizeof(float) * mesh.num_vertices * 3;
+	size += sizeof(float) * mesh.num_vertices * 13;
 	size += sizeof(AABB);
 
 	// allocate and fill
@@ -506,29 +511,8 @@ void ModuleMeshImporter::SaveMeshToLibrary(Mesh& mesh)
 
 	// Store vertices
 	cursor += bytes;
-	bytes = sizeof(float) * mesh.num_vertices * 3;
-	memcpy(cursor, mesh.vertices, bytes);
-
-	// Store colors
-	if (mesh.colors != nullptr)
-	{
-		cursor += bytes;
-		memcpy(cursor, mesh.colors, bytes);
-	}
-
-	// Store normals
-	if (mesh.normals != nullptr)
-	{
-		cursor += bytes;
-		memcpy(cursor, mesh.normals, bytes);
-	}
-
-	// Store texture coords
-	if (mesh.texture_coords != nullptr)
-	{
-		cursor += bytes;
-		memcpy(cursor, mesh.texture_coords, bytes);
-	}
+	bytes = sizeof(float) * mesh.num_vertices * 13;
+	memcpy(cursor, mesh.vertices_data, bytes);
 
 	// Store AABB
 	cursor += bytes;

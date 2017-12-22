@@ -8,22 +8,12 @@
 
 Mesh::Mesh()
 {
-	id_vertices = 0;
+	id_vertices_data = 0;
 	num_indices = 0;
 	indices = nullptr;
 
 	id_indices = 0;
 	num_vertices = 0;
-	vertices = nullptr;
-
-	id_normals = 0;
-	normals = nullptr;
-
-	id_colors = 0;
-	colors = nullptr;
-
-	id_texture_coords = 0;
-	texture_coords = nullptr;
 
 	SetType(Resource::MeshResource);
 
@@ -32,10 +22,7 @@ Mesh::Mesh()
 Mesh::~Mesh()
 {
 	RELEASE_ARRAY(indices);
-	RELEASE_ARRAY(vertices);
-	RELEASE_ARRAY(normals);
-	RELEASE_ARRAY(colors);
-	RELEASE_ARRAY(texture_coords);
+	RELEASE_ARRAY(vertices_data);
 
 	UnloadFromMemory();
 }
@@ -79,10 +66,7 @@ bool Mesh::Load(Data & data)
 		num_indices = mesh->num_indices;
 		indices = mesh->indices;
 		num_vertices = mesh->num_vertices;
-		vertices = mesh->vertices;
-		normals = mesh->normals;
-		colors = mesh->colors;
-		texture_coords = mesh->texture_coords;
+		vertices_data = mesh->vertices_data;
 		App->resources->AddMesh(this);
 	}
 
@@ -96,39 +80,15 @@ void Mesh::CreateMeta() const
 
 void Mesh::LoadToMemory()
 {
-	glGenBuffers(1, &id_vertices);
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 3, vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, &id_vertices_data);
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 13, vertices_data, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glGenBuffers(1, &id_indices);
 	glBindBuffer(GL_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	if (normals != nullptr)
-	{
-		glGenBuffers(1, &(id_normals));
-		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, normals, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	if (colors != nullptr)
-	{
-		glGenBuffers(1, &(id_colors));
-		glBindBuffer(GL_ARRAY_BUFFER, id_colors);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, colors, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	if (texture_coords != nullptr)
-	{
-		glGenBuffers(1, &(id_texture_coords));
-		glBindBuffer(GL_ARRAY_BUFFER, id_texture_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, texture_coords, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
 
 	IncreaseUsedCount();
 }
@@ -139,16 +99,26 @@ void Mesh::UnloadFromMemory()
 
 	if (GetUsedCount() == 0)
 	{
-		glDeleteBuffers(1, &id_vertices);
-		glDeleteBuffers(1, &id_indices);
-		glDeleteBuffers(1, &id_normals);
-		glDeleteBuffers(1, &id_colors);
-		glDeleteBuffers(1, &id_texture_coords);
+		glDeleteBuffers(1, &id_vertices_data);
 
-		id_vertices = 0;
-		id_indices = 0;
-		id_normals = 0;
-		id_colors = 0;
-		id_texture_coords = 0;
+		id_vertices_data = 0;
 	}
+}
+
+void Mesh::CreateVerticesFromData()
+{
+	if (vertices == nullptr && vertices_data != nullptr)
+	{
+		vertices = new float[num_vertices * 3];
+
+		for (int i = 0; i < num_vertices; ++i)
+		{
+			memcpy(vertices + i * 3, vertices_data + i * 13, sizeof(float) * 3);
+		}
+	}
+}
+
+void Mesh::InitializeMesh()
+{
+
 }

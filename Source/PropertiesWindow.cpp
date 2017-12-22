@@ -284,9 +284,9 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			ImGui::Text("Triangle Count: %d", mesh_renderer->GetMesh()->num_indices / 3);
 			ImGui::Text("Vertex Count: %d", mesh_renderer->GetMesh()->num_vertices);
 			ImGui::Text("Indices Count: %d", mesh_renderer->GetMesh()->num_indices);
-			ImGui::Text("Normals: "); ImGui::SameLine(); (mesh_renderer->GetMesh()->id_normals > 0) ? ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes")) : ImGui::TextColored(ImVec4(1, 0, 0, 1), ("no"));
-			ImGui::Text("Colors: "); ImGui::SameLine(); (mesh_renderer->GetMesh()->id_colors > 0) ? ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes")) : ImGui::TextColored(ImVec4(1, 0, 0, 1), ("no"));
-			ImGui::Text("UV: "); ImGui::SameLine(); (mesh_renderer->GetMesh()->id_texture_coords > 0) ? ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes")) : ImGui::TextColored(ImVec4(1, 0, 0, 1), ("no"));
+			ImGui::Text("Normals: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
+			ImGui::Text("Colors: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
+			ImGui::Text("UV: "); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNodeEx("Material", ImGuiTreeNodeFlags_OpenOnArrow))

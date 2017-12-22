@@ -289,33 +289,33 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 	{
 		material->LoadToMemory();
 	}
-	//VERTICES
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//NORMALS
-	if (mesh->GetMesh()->id_normals > 0)
-	{
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_normals);
-		glNormalPointer(GL_FLOAT, 0, NULL);
-	}
-	//TEXTURE_COORDS
-	if (mesh->GetMesh()->id_texture_coords > 0)
-	{
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_texture_coords);
-		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
-	}
-	//COLORS
-	if (mesh->GetMesh()->id_colors > 0)
-	{
-		glEnableClientState(GL_COLOR_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_colors);
-		glColorPointer(3, GL_FLOAT, 0, NULL);
-	}
-	//INDICES
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->GetMesh()->id_indices);
+	////VERTICES
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_vertices);
+	//glVertexPointer(3, GL_FLOAT, 0, NULL);
+	////NORMALS
+	//if (mesh->GetMesh()->id_normals > 0)
+	//{
+	//	glEnableClientState(GL_NORMAL_ARRAY);
+	//	glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_normals);
+	//	glNormalPointer(GL_FLOAT, 0, NULL);
+	//}
+	////TEXTURE_COORDS
+	//if (mesh->GetMesh()->id_texture_coords > 0)
+	//{
+	//	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	//	glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_texture_coords);
+	//	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
+	//}
+	////COLORS
+	//if (mesh->GetMesh()->id_colors > 0)
+	//{
+	//	glEnableClientState(GL_COLOR_ARRAY);
+	//	glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_colors);
+	//	glColorPointer(3, GL_FLOAT, 0, NULL);
+	//}
+	////INDICES
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->GetMesh()->id_indices);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
