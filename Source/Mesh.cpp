@@ -5,6 +5,7 @@
 #include "ModuleMeshImporter.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResources.h"
+#include "ModuleRenderer3D.h"
 
 Mesh::Mesh()
 {
@@ -80,15 +81,20 @@ void Mesh::CreateMeta() const
 
 void Mesh::LoadToMemory()
 {
-	glGenBuffers(1, &id_vertices_data);
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 13, vertices_data, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	if (id_vertices_data == 0)
+	{
+		glGenBuffers(1, &id_vertices_data);
+		glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 13, vertices_data, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &id_indices);
-	glBindBuffer(GL_ARRAY_BUFFER, id_indices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glGenBuffers(1, &id_indices);
+		glBindBuffer(GL_ARRAY_BUFFER, id_indices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		InitializeMesh();
+	}
 
 	IncreaseUsedCount();
 }
@@ -120,5 +126,26 @@ void Mesh::CreateVerticesFromData()
 
 void Mesh::InitializeMesh()
 {
+	id_vao = App->renderer3D->GenVertexArrayObject();
 
+	App->renderer3D->BindVertexArrayObject(id_vao);
+
+	App->renderer3D->BindArrayBuffer(id_vertices_data);
+
+	//vertices
+	App->renderer3D->SetVertexAttributePointer(0, 3, 13, 0);
+	App->renderer3D->EnableVertexAttributeArray(0);
+	//texture coords
+	App->renderer3D->SetVertexAttributePointer(1, 3, 13, 3);
+	App->renderer3D->EnableVertexAttributeArray(1);
+	//normals
+	App->renderer3D->SetVertexAttributePointer(2, 3, 13, 6);
+	App->renderer3D->EnableVertexAttributeArray(2);
+	//colors
+	App->renderer3D->SetVertexAttributePointer(3, 4, 13, 9);
+	App->renderer3D->EnableVertexAttributeArray(3);
+
+	App->renderer3D->BindElementArrayBuffer(id_indices);
+
+	App->renderer3D->UnbindVertexArrayObject();
 }

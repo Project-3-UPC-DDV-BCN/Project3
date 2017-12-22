@@ -285,32 +285,21 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	bool used_texture = false;
 	for (std::vector<Texture*>::iterator it = diffuse_texture_list.begin(); it != diffuse_texture_list.end(); it++)
 	{
 		if (*it != nullptr)
 		{
 			if ((*it)->GetID() > 0)
 			{
-				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, (*it)->GetID());
-				used_texture = true;
 			}
 		}
-	}
-	if (!used_texture)
-	{
-		GLfloat color[] = { diffuse_color.r, diffuse_color.g, diffuse_color.b, diffuse_color.a };
-		GLfloat color2[] = { 0.3f, 0.5f, 0.05f, 1 };
-		glDisable(GL_COLOR_MATERIAL);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	}
 }
 
 void Material::UnloadFromMemory()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
 }
 
 void Material::SetDiffuseTexture(Texture * diffuse)

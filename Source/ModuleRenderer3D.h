@@ -43,6 +43,39 @@ public:
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
 	void ResetRender();
 
+	void BindArrayBuffer(uint id) const;
+	void BindElementArrayBuffer(uint id) const;
+
+	void UnbindArraybuffer() const;
+	void UnbindElementArrayBuffer() const;
+
+	//Shaders
+	uint GenVertexArrayObject() const;
+	void BindVertexArrayObject(uint id) const;
+	void UnbindVertexArrayObject() const;
+
+	uint CreateVertexShader(const char* source);
+	uint CreateFragmentShader(const char* source);
+	void DeleteShader(uint shader_id);
+
+	uint GetProgramBinary(uint program_id, uint buff_size, char* buff) const;
+	int GetProgramSize(uint program_id) const;
+	void LoadProgramFromBinary(uint program_id, uint buff_size, const char* buff);
+
+	void EnableVertexAttributeArray(uint id);
+	void DisableVertexAttributeArray(uint id);
+	void SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap);
+
+	void UseShaderProgram(uint id);
+	void SetUniformMatrix(uint program, const char* name, float* data);
+
+	void SetUniformFloat(uint program, const char* name, float data);
+
+	uint CreateShaderProgram();
+	void AttachShaderToProgram(uint program_id, uint shader_id);
+	bool LinkProgram(uint program_id);
+	void DeleteProgram(uint program_id);
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh);

@@ -37,13 +37,8 @@ std::string ModuleTextureImporter::ImportTexture(std::string path)
 	ilGenImages(1, &image_id);
 	ilBindImage(image_id);
 
-	if (ilLoadImage(path.c_str()))
+	if (ilLoad(IL_TYPE_UNKNOWN, path.c_str()))
 	{
-		ILinfo ImageInfo;
-		iluGetImageInfo(&ImageInfo);
-
-		ilEnable(IL_FILE_OVERWRITE);
-
 		//save texture library
 		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
 		if (ilSave(IL_DDS, (LIBRARY_TEXTURES_FOLDER + App->file_system->GetFileNameWithoutExtension(path) + ".dds").c_str()))
@@ -56,7 +51,7 @@ std::string ModuleTextureImporter::ImportTexture(std::string path)
 			CONSOLE_DEBUG("%s library file cannot be created.", App->file_system->GetFileNameWithoutExtension(path).c_str());
 		}
 
-		ilDeleteImages(1, &image_id);
+		ilDeleteImage(ilGetInteger(IL_ACTIVE_IMAGE));
 		CONSOLE_DEBUG("Texture Loaded: %s", path.c_str());
 	}
 	else
@@ -75,7 +70,7 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 
 	Texture* tmp_texture = nullptr;
 
-	if (ilLoadImage(path.c_str()))
+	if (ilLoad(IL_TYPE_UNKNOWN, path.c_str()))
 	{
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
@@ -85,7 +80,7 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 			iluFlipImage();
 		}
 
-		if (!ilConvertImage(ilGetInteger(IL_IMAGE_FORMAT), IL_UNSIGNED_BYTE))
+		if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
 		{
 			CONSOLE_LOG("DeviL: Failed to convert image %s. Error: %s", path.c_str(), iluErrorString(ilGetError()));
 		}
@@ -98,7 +93,6 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 		ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
 
 		tmp_texture = new Texture();
-		tmp_texture->SetID(ilutGLBindTexImage());
 		tmp_texture->SetWidth(width);
 		tmp_texture->SetHeight(height);
 		tmp_texture->SetLibraryPath(path);
@@ -106,8 +100,9 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 		tmp_texture->SetCompression(ilGetInteger(IL_DXTC_FORMAT));
 		tmp_texture->SetImageData(data);
 		tmp_texture->SetFormat(Texture::rgba);
+		tmp_texture->LoadToMemory();
 
-		ilDeleteImages(1, &image_id);
+		ilDeleteImage(ilGetInteger(IL_ACTIVE_IMAGE));
 		CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
 
 		tmp_texture->RecreateTexture();

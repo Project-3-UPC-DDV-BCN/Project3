@@ -20,6 +20,7 @@ public:
 
 	void CreateVerticesFromData();
 
+private:
 	//Must be call after setting the values to the mesh!!!
 	void InitializeMesh();
 
