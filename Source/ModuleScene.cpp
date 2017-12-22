@@ -243,6 +243,7 @@ update_status ModuleScene::Update(float dt)
 	}
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
+
 	return UPDATE_CONTINUE;
 }
 

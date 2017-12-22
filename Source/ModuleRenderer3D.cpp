@@ -134,6 +134,7 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	ms_timer.Start();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	return UPDATE_CONTINUE;
 }
@@ -143,23 +144,23 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
-		editor_camera->GetViewportTexture()->Bind();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//editor_camera->GetViewportTexture()->Bind();
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	DrawEditorScene();
+	//DrawEditorScene();
 
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
-		DrawSceneCameras(*it);
+		//DrawSceneCameras(*it);
 	}
 	
 	dynamic_mesh_to_draw.clear();
 
 	//EditorUI can't be drawn in wireframe mode!
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//Disable Lighting before draw editor or shadows will appear in menu bars and ligth will affect editor colors.
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	App->editor->DrawEditor();
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
@@ -270,7 +271,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		App->scene->octree.DebugDraw();
 	}
 	
-	active_camera->GetViewportTexture()->Render();
+	//active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
 
 }
