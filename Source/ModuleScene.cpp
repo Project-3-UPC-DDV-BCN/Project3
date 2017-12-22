@@ -205,10 +205,6 @@ update_status ModuleScene::Update(float dt)
 		{
 			if (mesh_renderer != nullptr && mesh_renderer->IsActive() && mesh_renderer->GetMesh() != nullptr)
 			{
-				if ((*it)->IsSelected())
-				{
-					App->renderer3D->SetActiveTexture2D(false);
-				}
 				App->renderer3D->AddMeshToDraw(mesh_renderer);
 			}
 			if (camera != nullptr && camera->IsActive())

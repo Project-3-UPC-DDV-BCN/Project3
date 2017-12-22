@@ -25,15 +25,32 @@ bool RenderTextureMSAA::Create(uint width, uint height, int MSAA_level)
 	if (MSAA_level > max_msaa_samples) MSAA_level = max_msaa_samples;
 	current_msaa_samples = MSAA_level;
 
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
+	}
+
 	// create a texture object
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //clamp is not allowed with shaders
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
+	}
 
 	// create a MSAA framebuffer object
 	glGenFramebuffers(1, &fbo_msaa_id);

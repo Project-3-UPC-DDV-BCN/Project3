@@ -28,11 +28,8 @@
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 	use_vsync = true;
-	is_using_lightning = false;
 	is_using_depth_test = false;
 	is_using_cull_test = false;
-	is_using_color_material = false;
-	is_using_texture2D = false;
 	is_using_fog = false;
 	testing_light = false;
 	name = "Renderer";
@@ -81,10 +78,6 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 
 		App->camera->CreateEditorCamera();
 
-		////Initialize Projection Matrix
-		//glMatrixMode(GL_PROJECTION);
-		//glLoadIdentity();
-
 		//Check for error
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -104,10 +97,16 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-		
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
 		glClearDepth(1.0f);
 		
+		error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			ret = false;
+		}
+
 		//Initialize clear color
 		glClearColor(0.2f, 0.2f, 0.2f, 1.f);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -120,37 +119,10 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			ret = false;
 		}
 		
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.2f, 0.2f, 0.2f, 1);
-		lights[0].diffuse.Set(1, 1, 1, 1);
-		lights[0].specular.Set(1, 1, 1, 1);
-		lights[0].SetPos(-1.0f, 1.0f, 1.0f);
-		lights[0].Init();
-		lights_count++;
-
-		lights[1].ref = GL_LIGHT1;
-		lights[1].ambient.Set(0.2f, 0.2f, 0.2f, 1);
-		lights[1].diffuse.Set(1, 1, 1, 1);
-		lights[1].specular.Set(1, 1, 1, 1);
-		lights[1].SetPos(-1.0f, 1.0f, 1.0f);
-		lights[1].Init();
-		lights_count++;
-
-		GLfloat LightModelAmbient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
-		lights[1].Active(true);
-		glEnable(GL_COLOR_MATERIAL);
-		is_using_lightning = true;
 		is_using_depth_test = true;
 		is_using_cull_test = true;
-		is_using_color_material = true;
-		is_using_texture2D = true;
 
 		glEnable(GL_MULTISAMPLE);
 	}
@@ -169,33 +141,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	glEnable(GL_LIGHTING);
-
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
-		editor_camera->UpdateProjection();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(editor_camera->GetViewMatrix());
-	}
-
-	if (is_using_lightning)
-	{
-		if (testing_light)
-		{
-			for (uint i = 1; i < lights_count; ++i)
-				lights[i].Active(false);
-			lights[7].Active(true);
-		}
-		else
-		{
-			for (uint i = 1; i < lights_count; ++i)
-				lights[i].Active(true);
-		}
-		for (uint i = 0; i < lights_count; ++i)
-			lights[i].Render();
 	}
 
 	DrawEditorScene();
@@ -210,7 +159,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//EditorUI can't be drawn in wireframe mode!
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//Disable Lighting before draw editor or shadows will appear in menu bars and ligth will affect editor colors.
-	glDisable(GL_LIGHTING);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	App->editor->DrawEditor();
 
@@ -225,18 +173,14 @@ void ModuleRenderer3D::DrawEditorScene()
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_TEXTURE_2D);
 		App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
 	pl.color = { 1,1,1,1 };
-	pl.Render();
-	glEnable(GL_LIGHTING);
+	//pl.Render();
 	DrawSceneGameObjects(editor_camera, true);
 }
 
@@ -246,21 +190,13 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 
 	camera->GetViewportTexture()->Bind();
 
-	camera->UpdateProjection();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(camera->GetViewMatrix());
 
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_TEXTURE_2D);
 		App->scene->DrawSkyBox(camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	DrawSceneGameObjects(camera, false);
@@ -455,22 +391,6 @@ void ModuleRenderer3D::SaveData(Data * data)
 	data->CloseSection();
 }
 
-void ModuleRenderer3D::SetActiveLighting(bool active)
-{
-	is_using_lightning = active;
-
-	if (active)
-	{
-		for (uint i = 0; i < lights_count; ++i)
-			lights[i].Active(true);
-	}
-	else 
-	{
-		for (uint i = 0; i < lights_count; ++i)
-			lights[i].Active(false);
-	}
-}
-
 void ModuleRenderer3D::SetActiveDepthTest(bool active)
 {
 	is_using_depth_test = active;
@@ -499,34 +419,6 @@ void ModuleRenderer3D::SetActiveCullTest(bool active)
 	}
 }
 
-void ModuleRenderer3D::SetActiveColorMaterial(bool active)
-{
-	is_using_color_material = active;
-
-	if (active)
-	{
-		glEnable(GL_COLOR_MATERIAL);
-	}
-	else
-	{
-		glDisable(GL_COLOR_MATERIAL);
-	}
-}
-
-void ModuleRenderer3D::SetActiveTexture2D(bool active)
-{
-	is_using_texture2D = active;
-
-	if (active)
-	{
-		glEnable(GL_TEXTURE_2D);
-	}
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-	}
-}
-
 void ModuleRenderer3D::SetActiveFog(bool active)
 {
 	is_using_fog = active;
@@ -541,11 +433,6 @@ void ModuleRenderer3D::SetActiveFog(bool active)
 	}
 }
 
-bool ModuleRenderer3D::GetActiveLighting() const
-{
-	return is_using_lightning;
-}
-
 bool ModuleRenderer3D::GetActiveDepthTest() const
 {
 	return is_using_depth_test;
@@ -554,16 +441,6 @@ bool ModuleRenderer3D::GetActiveDepthTest() const
 bool ModuleRenderer3D::GetActiveCullTest() const
 {
 	return is_using_cull_test;
-}
-
-bool ModuleRenderer3D::GetActiveColorMaterial() const
-{
-	return is_using_color_material;
-}
-
-bool ModuleRenderer3D::GetActiveTexture2D() const
-{
-	return is_using_texture2D;
 }
 
 bool ModuleRenderer3D::GetActiveFog() const

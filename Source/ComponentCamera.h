@@ -20,7 +20,6 @@ public:
 	math::Frustum GetFrustum() const;
 	bool ContainsGameObjectAABB(AABB& gameobject_bounding_box);
 	void UpdatePosition();
-	void UpdateProjection();
 	float* GetProjectionMatrix() const;
 	float* GetViewMatrix();
 

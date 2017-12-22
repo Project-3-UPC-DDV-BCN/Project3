@@ -26,18 +26,12 @@ public:
 	void SetWireframeMode();
 	void SaveData(Data* data);
 
-	void SetActiveLighting(bool active);
 	void SetActiveDepthTest(bool active);
 	void SetActiveCullTest(bool active);
-	void SetActiveColorMaterial(bool active);
-	void SetActiveTexture2D(bool active);
 	void SetActiveFog(bool active);
 
-	bool GetActiveLighting() const;
 	bool GetActiveDepthTest() const;
 	bool GetActiveCullTest() const;
-	bool GetActiveColorMaterial() const;
-	bool GetActiveTexture2D() const;
 	bool GetActiveFog() const;
 
 	void EnableTestLight();
@@ -67,11 +61,8 @@ public:
 
 private:
 	bool use_vsync;
-	bool is_using_lightning;
 	bool is_using_depth_test;
 	bool is_using_cull_test;
-	bool is_using_color_material;
-	bool is_using_texture2D;
 	bool is_using_fog;
 
 	bool testing_light;

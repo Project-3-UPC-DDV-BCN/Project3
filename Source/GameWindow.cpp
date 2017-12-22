@@ -32,12 +32,10 @@ void GameWindow::DrawWindow()
 			game_scene_height = size.y;
 		}
 
-		App->renderer3D->SetActiveTexture2D(true);
 		if (App->renderer3D->game_camera != nullptr && App->renderer3D->game_camera->GetViewportTexture() != nullptr)
 		{
 			ImGui::Image((void*)App->renderer3D->game_camera->GetViewportTexture()->GetTextureID(), size, ImVec2(0, 1), ImVec2(1, 0));
 		}
-		App->renderer3D->SetActiveTexture2D(false);
 	}
 	ImGui::EndDock();
 }
