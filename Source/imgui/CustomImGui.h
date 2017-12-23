@@ -1,6 +1,7 @@
 #pragma once
 
 #include "imgui.h"
+#include "../Shader.h"
 
 class Texture;
 class Mesh;
@@ -8,7 +9,6 @@ class Prefab;
 class GameObject;
 class Material;
 class Script;
-class Shader;
 
 namespace ImGui
 {

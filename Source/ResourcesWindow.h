@@ -3,6 +3,7 @@
 #include "Resource.h"
 #include <map>
 #include <list>
+#include "Shader.h"
 
 class Texture;
 class Mesh;
@@ -10,7 +11,6 @@ class Prefab;
 class GameObject;
 class Material;
 class Script;
-class Shader;
 
 class ResourcesWindow :
 	public Window
