@@ -14,9 +14,10 @@ public:
 	void DrawWindow();
 
 	void SetPath(std::string string);
+	void SetLanguageType(TextEditor::LanguageDefinition language_type);
+
 private:
 	TextEditor editor;
-
 	std::string path;
 	std::string text;
 };
