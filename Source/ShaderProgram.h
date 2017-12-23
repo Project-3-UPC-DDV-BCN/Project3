@@ -19,6 +19,7 @@ public:
 
 	void UseProgram();
 	void SaveToLibray() const;
+	void LoadFromLibrary(const char* path);
 	void LinkShaderProgram();
 	uint GetProgramID() const;
 

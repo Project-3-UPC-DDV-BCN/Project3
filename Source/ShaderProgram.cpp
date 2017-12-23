@@ -82,6 +82,30 @@ void ShaderProgram::SaveToLibray() const
 
 }
 
+void ShaderProgram::LoadFromLibrary(const char* path)
+{
+	std::ifstream file(path, std::ifstream::binary);
+	if (file.is_open())
+	{
+		// get length of file:
+		file.seekg(0, file.end);
+		int length = file.tellg();
+		file.seekg(0, file.beg);
+
+		char * buffer = new char[length];
+		file.read(buffer, length);
+
+		if (file)
+		{
+			if (program_id != 0)
+				App->renderer3D->DeleteProgram(program_id);
+
+			program_id = App->renderer3D->CreateShaderProgram();
+			App->renderer3D->LoadProgramFromBinary(program_id, length, buffer);
+		}
+	}
+}
+
 void ShaderProgram::LinkShaderProgram()
 {
 	if (program_id != 0)
