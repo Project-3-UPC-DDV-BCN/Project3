@@ -9,6 +9,7 @@
 #include "../Material.h"
 #include "../GameObject.h"
 #include "../Script.h"
+#include "../Shader.h"
 
 namespace ImGui
 {
@@ -428,6 +429,68 @@ namespace ImGui
 			if (new_script != tmp_script)
 			{
 				*script = new_script;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
+	bool InputResourceShader(const char * label, Shader ** shader, Shader::ShaderType type)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+		Shader* tmp_script = *shader;
+		if (tmp_script != nullptr)
+		{
+			buf_display = tmp_script->GetName();
+		}
+		else
+		{
+			buf_display = "None(Shader)";
+		}
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+		ImGui::SameLine();
+
+		if (Button("+##shader", { 20, 20 }))
+		{
+			App->editor->resources_window->SetShaderType(type);
+			App->editor->resources_window->SetResourceType(Resource::ShaderResource);
+			App->editor->resources_window->SetActive(true);
+		}
+
+		Shader* new_shader = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->script_changed)
+		{
+			new_shader = App->editor->resources_window->GetShader();
+			if (new_shader != tmp_script)
+			{
+				*shader = new_shader;
 				App->editor->resources_window->SetActive(false);
 				App->editor->resources_window->Reset();
 				return true;

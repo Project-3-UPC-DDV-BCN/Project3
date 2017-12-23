@@ -13,6 +13,7 @@ ShaderProgram::ShaderProgram()
 
 ShaderProgram::~ShaderProgram()
 {
+	SaveToLibray();
 }
 
 void ShaderProgram::SetVertexShader(Shader * shader)

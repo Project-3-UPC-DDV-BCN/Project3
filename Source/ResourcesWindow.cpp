@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "Script.h"
+#include "Shader.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -20,6 +21,7 @@ ResourcesWindow::ResourcesWindow()
 	gameobject_to_return = nullptr;
 	material_to_return = nullptr;
 	script_to_return = nullptr;
+	shader_to_return = nullptr;
 
 	texture_changed = false;
 	mesh_changed = false;
@@ -27,6 +29,9 @@ ResourcesWindow::ResourcesWindow()
 	gameobject_changed = false;
 	material_changed = false;
 	script_changed = false;
+	shader_changed = false;
+
+	shader_type = Shader::ShaderType::ST_NULL;
 
 	type = Resource::Unknown;
 }
@@ -165,6 +170,25 @@ void ResourcesWindow::DrawWindow()
 			}
 		}
 		break;
+	case Resource::ShaderResource:
+		shaders_list = App->resources->GetShadersList();
+		if (ImGui::Selectable("None##shader"))
+		{
+			shader_to_return = nullptr;
+			shader_changed = true;
+			break;
+		}
+		for (std::map<uint, Shader*>::const_iterator it = shaders_list.begin(); it != shaders_list.end(); it++)
+		{
+			if (it->second->GetShaderType() != shader_type) continue;
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				shader_to_return = it->second;
+				shader_changed = true;
+				break;
+			}
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -209,6 +233,16 @@ Script * ResourcesWindow::GetScript() const
 	return script_to_return;
 }
 
+Shader * ResourcesWindow::GetShader() const
+{
+	return shader_to_return;
+}
+
+void ResourcesWindow::SetShaderType(Shader::ShaderType type)
+{
+	shader_type = type;
+}
+
 void ResourcesWindow::Reset()
 {
 	texture_changed = false;
@@ -224,4 +258,6 @@ void ResourcesWindow::Reset()
 	gameobject_to_return = nullptr;
 	material_to_return = nullptr;
 	script_to_return = nullptr;
+
+	shader_type = Shader::ShaderType::ST_NULL;
 }

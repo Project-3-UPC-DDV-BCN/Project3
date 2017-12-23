@@ -11,6 +11,7 @@ class Resources;
 class Material;
 class Script;
 class Shader;
+class ShaderProgram;
 
 class ModuleResources :
 	public Module
@@ -68,6 +69,12 @@ public:
 	void RemoveShader(Shader* shader);
 	std::map<uint, Shader*> GetShadersList() const;
 
+	ShaderProgram* GetShaderProgram(std::string name) const;
+	ShaderProgram* GetShaderProgram(UID uid) const;
+	void AddShaderProgram(ShaderProgram* program);
+	void RemoveShaderProgram(ShaderProgram* program);
+	std::map<uint, ShaderProgram*> GetShaderProgramList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -92,5 +99,6 @@ private:
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, Shader*> shaders_list;
+	std::map<uint, ShaderProgram*> shader_programs_list;
 };
 

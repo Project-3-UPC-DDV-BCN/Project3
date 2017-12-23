@@ -18,6 +18,7 @@
 #include "ModuleScriptImporter.h"
 #include "Shader.h"
 #include "ModuleShaderImporter.h"
+#include "ShaderProgram.h"
 
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -50,6 +51,11 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	materials_list.clear();
+
+	for (std::map<uint, ShaderProgram*>::iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); ++it) {
+		RELEASE(it->second);
+	}
+	shader_programs_list.clear();
 
 	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
 		RELEASE(it->second);
@@ -457,6 +463,43 @@ void ModuleResources::RemoveShader(Shader * shader)
 std::map<uint, Shader*> ModuleResources::GetShadersList() const
 {
 	return shaders_list;
+}
+
+ShaderProgram * ModuleResources::GetShaderProgram(std::string name) const
+{
+	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+ShaderProgram * ModuleResources::GetShaderProgram(UID uid) const
+{
+	if (shader_programs_list.find(uid) != shader_programs_list.end()) return shader_programs_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddShaderProgram(ShaderProgram * program)
+{
+	if (program != nullptr)
+	{
+		shader_programs_list[program->GetUID()] = program;
+	}
+}
+
+void ModuleResources::RemoveShaderProgram(ShaderProgram * program)
+{
+	if (program)
+	{
+		std::map<uint, ShaderProgram*>::iterator it = shader_programs_list.find(program->GetUID());
+		if (it != shader_programs_list.end()) shader_programs_list.erase(it);
+	}
+}
+
+std::map<uint, ShaderProgram*> ModuleResources::GetShaderProgramList() const
+{
+	return shader_programs_list;
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)

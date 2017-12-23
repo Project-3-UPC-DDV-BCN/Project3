@@ -8,6 +8,7 @@ class Prefab;
 class GameObject;
 class Material;
 class Script;
+class Shader;
 
 namespace ImGui
 {
@@ -18,5 +19,6 @@ namespace ImGui
 	bool InputResourceGameObject(const char* label, GameObject** texture);
 	bool InputResourceMaterial(const char* label, Material** texture);
 	bool InputResourceScript(const char* label, Script** script);
+	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 }
 
