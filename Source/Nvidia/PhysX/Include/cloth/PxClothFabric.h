@@ -35,7 +35,7 @@
 */
 
 
-#include "common/PxBase.h"
+#include "../common/PxBase.h"
 
 #if !PX_DOXYGEN
 namespace physx

@@ -34,8 +34,8 @@
   @{
 */
 
-#include "common/PxPhysXCommonConfig.h"
-#include "task/PxCpuDispatcher.h"
+#include "../common/PxPhysXCommonConfig.h"
+#include "../task/PxCpuDispatcher.h"
 
 #if !PX_DOXYGEN
 namespace physx

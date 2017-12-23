@@ -33,9 +33,9 @@
   @{
 */
 
-#include "vehicle/PxVehicleDrive.h"
-#include "vehicle/PxVehicleWheels.h"
-#include "vehicle/PxVehicleComponents.h"
+#include "PxVehicleDrive.h"
+#include "PxVehicleWheels.h"
+#include "PxVehicleComponents.h"
 
 
 #if !PX_DOXYGEN

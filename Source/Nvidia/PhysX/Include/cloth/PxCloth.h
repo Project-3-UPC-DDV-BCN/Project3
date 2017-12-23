@@ -34,13 +34,13 @@
 @{
 */
 
-#include "PxPhysXConfig.h"
-#include "PxActor.h"
-#include "PxLockedData.h"
-#include "PxFiltering.h"
-#include "cloth/PxClothFabric.h"
-#include "cloth/PxClothTypes.h"
-#include "cloth/PxClothCollisionData.h"
+#include "../PxPhysXConfig.h"
+#include "../PxActor.h"
+#include "../PxLockedData.h"
+#include "../PxFiltering.h"
+#include "PxClothFabric.h"
+#include "PxClothTypes.h"
+#include "PxClothCollisionData.h"
 
 #if !PX_DOXYGEN
 namespace physx

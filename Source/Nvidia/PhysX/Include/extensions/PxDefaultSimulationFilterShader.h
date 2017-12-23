@@ -34,9 +34,9 @@
   @{
 */
 
-#include "PxPhysXConfig.h"
+#include "../PxPhysXConfig.h"
 
-#include "PxFiltering.h"
+#include "../PxFiltering.h"
 
 #if !PX_DOXYGEN
 namespace physx

@@ -30,8 +30,8 @@
 
 #ifndef PX_STRING_TABLE_EXT_H
 #define PX_STRING_TABLE_EXT_H
-#include "foundation/Px.h"
-#include "common/PxStringTable.h"
+#include "../foundation/Px.h"
+#include "../common/PxStringTable.h"
 
 #if !PX_DOXYGEN
 namespace physx

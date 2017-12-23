@@ -31,7 +31,7 @@
 #ifndef PX_PHYSICS_NX_CLOTH_READ_DATA
 #define PX_PHYSICS_NX_CLOTH_READ_DATA
 
-#include "PxPhysXConfig.h"
+#include "../PxPhysXConfig.h"
 
 #if PX_USE_CLOTH_API
 

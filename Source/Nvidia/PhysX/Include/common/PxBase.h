@@ -37,8 +37,8 @@
 
 #include "PxSerialFramework.h"
 #include "PxCollection.h"
-#include "common/PxTypeInfo.h"
-#include "foundation/PxFlags.h"
+#include "PxTypeInfo.h"
+#include "../foundation/PxFlags.h"
 #include <string.h>	// For strcmp
 
 #if !PX_DOXYGEN

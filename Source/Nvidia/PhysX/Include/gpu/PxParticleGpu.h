@@ -34,12 +34,12 @@
   @{
 */
 
-#include "PxPhysXConfig.h"
+#include "../PxPhysXConfig.h"
 
 #if PX_SUPPORT_GPU_PHYSX
 
-#include "common/PxPhysXCommonConfig.h"
-#include "task/PxTask.h"
+#include "../common/PxPhysXCommonConfig.h"
+#include "../task/PxTask.h"
 
 #if !PX_DOXYGEN
 namespace physx

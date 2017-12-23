@@ -31,7 +31,7 @@
 #ifndef PX_PARTICLE_FLAG
 #define PX_PARTICLE_FLAG
 
-#include "foundation/PxPreprocessor.h"
+#include "../foundation/PxPreprocessor.h"
 
 /** \addtogroup particles
   @{

@@ -30,8 +30,8 @@
 #ifndef GU_CONTACTBUFFER_H
 #define GU_CONTACTBUFFER_H
 
-#include "PxPhysXConfig.h"
-#include "PxContact.h"
+#include "../PxPhysXConfig.h"
+#include "../PxContact.h"
 #include "GuContactPoint.h"
 
 namespace physx

@@ -31,7 +31,7 @@
 #ifndef PX_STRING_TABLE_H
 #define PX_STRING_TABLE_H
 
-#include "foundation/PxPreprocessor.h"
+#include "../foundation/PxPreprocessor.h"
 
 /** \addtogroup physics
 @{

@@ -34,7 +34,7 @@
 /** \addtogroup common 
 @{ */
 
-#include "foundation/Px.h"
+#include "../foundation/Px.h"
 
 /*Temporary disable support for VS2017 for windows platform, as we wait for compiler fix:
 https://developercommunity.visualstudio.com/content/problem/66047/possible-compiler-bug.html

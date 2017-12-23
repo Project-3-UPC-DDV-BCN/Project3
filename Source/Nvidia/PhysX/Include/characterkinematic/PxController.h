@@ -35,11 +35,11 @@
   @{
 */
 
-#include "characterkinematic/PxCharacter.h"
-#include "characterkinematic/PxExtended.h"
-#include "characterkinematic/PxControllerObstacles.h"
-#include "PxQueryFiltering.h"
-#include "foundation/PxErrorCallback.h"
+#include "PxCharacter.h"
+#include "PxExtended.h"
+#include "PxControllerObstacles.h"
+#include "../PxQueryFiltering.h"
+#include "../foundation/PxErrorCallback.h"
 
 #if !PX_DOXYGEN
 namespace physx

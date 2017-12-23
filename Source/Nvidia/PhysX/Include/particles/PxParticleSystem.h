@@ -34,7 +34,7 @@
   @{
 */
 
-#include "particles/PxParticleBase.h"
+#include "PxParticleBase.h"
 
 #if !PX_DOXYGEN
 namespace physx

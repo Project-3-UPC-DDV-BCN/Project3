@@ -199,6 +199,9 @@ Alternatively, one can instead directly #include a subset of the below files.
 #include "extensions/PxTriangleMeshExt.h"
 #include "extensions/PxConvexMeshExt.h"
 
+//Extensions 
+#include "extensions/PxDefaultErrorCallback.h"
+
 //Serialization
 #include "extensions/PxSerialization.h"
 #include "extensions/PxBinaryConverter.h"

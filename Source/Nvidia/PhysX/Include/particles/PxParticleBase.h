@@ -37,14 +37,14 @@
   @{
 */
 
-#include "PxPhysXConfig.h"
-#include "foundation/PxBounds3.h"
-#include "PxFiltering.h"
-#include "particles/PxParticleBaseFlag.h"
-#include "PxActor.h"
-#include "particles/PxParticleCreationData.h"
-#include "particles/PxParticleReadData.h"
-#include "PxForceMode.h"
+#include "../PxPhysXConfig.h"
+#include "../foundation/PxBounds3.h"
+#include "../PxFiltering.h"
+#include "PxParticleBaseFlag.h"
+#include "../PxActor.h"
+#include "PxParticleCreationData.h"
+#include "PxParticleReadData.h"
+#include "../PxForceMode.h"
 
 #if !PX_DOXYGEN
 namespace physx

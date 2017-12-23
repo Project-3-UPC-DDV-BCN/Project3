@@ -34,9 +34,9 @@
   @{
 */
 
-#include "PxPhysXConfig.h"
-#include "foundation/PxStrideIterator.h"
-#include "foundation/PxBounds3.h"
+#include "../PxPhysXConfig.h"
+#include "../foundation/PxStrideIterator.h"
+#include "../foundation/PxBounds3.h"
 
 #if !PX_DOXYGEN
 namespace physx

@@ -33,8 +33,8 @@
 /** \addtogroup geomutils
 @{
 */
-#include "geometry/PxTriangleMeshGeometry.h"
-#include "common/PxCoreUtilityTypes.h"
+#include "PxTriangleMeshGeometry.h"
+#include "../common/PxCoreUtilityTypes.h"
 
 #if !PX_DOXYGEN
 namespace physx

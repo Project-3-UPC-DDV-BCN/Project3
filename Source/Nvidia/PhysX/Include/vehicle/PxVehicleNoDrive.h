@@ -33,8 +33,8 @@
   @{
 */
 
-#include "vehicle/PxVehicleWheels.h"
-#include "vehicle/PxVehicleComponents.h"
+#include "PxVehicleWheels.h"
+#include "PxVehicleComponents.h"
 
 
 #if !PX_DOXYGEN

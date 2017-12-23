@@ -43,8 +43,8 @@ The reason for this is GJK support cannot be evaluated near infinity. A viable a
   @{
 */
 
-#include "common/PxPhysXCommonConfig.h"
-#include "PxQueryReport.h"
+#include "../common/PxPhysXCommonConfig.h"
+#include "../PxQueryReport.h"
 
 #if !PX_DOXYGEN
 namespace physx

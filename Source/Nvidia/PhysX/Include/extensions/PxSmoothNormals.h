@@ -34,7 +34,7 @@
   @{
 */
 
-#include "common/PxPhysXCommonConfig.h"
+#include "../common/PxPhysXCommonConfig.h"
 
 /**
 \brief Builds smooth vertex normals over a mesh.

@@ -36,7 +36,7 @@
 
 #include "PxSerialFramework.h"
 #include "PxCollection.h"
-#include "foundation/PxAssert.h"
+#include "../foundation/PxAssert.h"
 
 #if !PX_DOXYGEN
 namespace physx

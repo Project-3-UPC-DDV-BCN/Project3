@@ -34,7 +34,7 @@
   @{
 */
 
-#include "foundation/Px.h"
+#include "../foundation/Px.h"
 
 // define API function declaration
 #if defined PX_PHYSX_STATIC_LIB || defined PX_PHYSX_CHARACTER_STATIC_LIB

@@ -34,7 +34,7 @@
   @{
 */
 
-#include "extensions/PxJoint.h"
+#include "PxJoint.h"
 
 #if !PX_DOXYGEN
 namespace physx

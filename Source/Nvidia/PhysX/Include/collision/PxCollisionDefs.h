@@ -31,12 +31,12 @@
 #ifndef PX_COLLISION_DEFS_H
 #define PX_COLLISION_DEFS_H
 
-#include "PxPhysXConfig.h"
-#include "foundation/PxVec3.h"
-#include "foundation/PxMat33.h"
-#include "GeomUtils/GuContactPoint.h"
-#include "GeomUtils/GuContactBuffer.h"
-#include "geometry/PxGeometry.h"
+#include "../PxPhysXConfig.h"
+#include "../foundation/PxVec3.h"
+#include "../foundation/PxMat33.h"
+#include "../GeomUtils/GuContactPoint.h"
+#include "../GeomUtils/GuContactBuffer.h"
+#include "../geometry/PxGeometry.h"
 
 #if !PX_DOXYGEN
 namespace physx
