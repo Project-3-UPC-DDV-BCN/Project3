@@ -10,6 +10,7 @@ class GameObject;
 class Resources;
 class Material;
 class Script;
+class Shader;
 
 class ModuleResources :
 	public Module
@@ -61,6 +62,12 @@ public:
 	void RemoveScript(Script* script);
 	std::map<uint, Script*> GetScriptsList() const;
 
+	Shader* GetShader(std::string name) const;
+	Shader* GetShader(UID uid) const;
+	void AddShader(Shader* shader);
+	void RemoveShader(Shader* shader);
+	std::map<uint, Shader*> GetShadersList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -84,5 +91,6 @@ private:
 	std::map<uint, GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, Shader*> shaders_list;
 };
 

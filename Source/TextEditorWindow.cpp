@@ -5,12 +5,13 @@
 #include <tchar.h>
 #include "Application.h"
 #include "ModuleScriptImporter.h"
+#include "ModuleShaderImporter.h"
+#include "ModuleFileSystem.h"
 
 TextEditorWindow::TextEditorWindow()
 {
 	active = false;
 	window_name = "TextEditor";
-
 	editor.SetLanguageDefinition(TextEditor::LanguageDefinition::CSharp());
 }
 
@@ -36,7 +37,19 @@ void TextEditorWindow::DrawWindow()
 				ofs.open(path, std::ofstream::out | std::ofstream::trunc);
 				ofs << text_to_save;
 				ofs.close();
-				if(editor.CanUndo()) App->script_importer->ImportScript(path);
+				if (editor.CanUndo())
+				{
+					std::string extension = App->file_system->GetFileExtension(path);
+
+					if (extension == ".cs")
+					{
+						App->script_importer->ImportScript(path);
+					}
+					else
+					{
+						App->shader_importer->ImportShader(path);
+					}
+				}
 			}
 			if (ImGui::MenuItem("Quit"))
 				this->active = false;
@@ -85,4 +98,9 @@ void TextEditorWindow::SetPath(std::string string)
 	std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 	editor.SetText(str);
 	path = string;
+}
+
+void TextEditorWindow::SetLanguageType(TextEditor::LanguageDefinition language_type)
+{
+	editor.SetLanguageDefinition(language_type);
 }
