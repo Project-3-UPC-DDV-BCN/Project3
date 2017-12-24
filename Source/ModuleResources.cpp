@@ -52,10 +52,20 @@ ModuleResources::~ModuleResources()
 	}
 	materials_list.clear();
 
+	Data shprograms;
+	uint i = 0;
 	for (std::map<uint, ShaderProgram*>::iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); ++it) {
+
+		shprograms.CreateSection("shprogram_" + std::to_string(i));
+		shprograms.AddUInt("vertex_shader", it->second->GetUID());
+		shprograms.AddUInt("fragment_shader", it->second->GetUID());
+		shprograms.CloseSection();
+		++i;
+
 		RELEASE(it->second);
 	}
 	shader_programs_list.clear();
+	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms.shprog");
 
 	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
 		RELEASE(it->second);
