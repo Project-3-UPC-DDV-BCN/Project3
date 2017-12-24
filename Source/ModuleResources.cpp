@@ -79,12 +79,31 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
+	{
+		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+	}
 	
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
 		CreateResource(*it);
 	}
+
+	if (App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
+	{
+		std::vector<std::string> files_in_shader_library = App->file_system->GetFilesInDirectory(assets_folder_path);
+
+		for (std::vector<std::string>::iterator it = files_in_shader_library.begin(); it != files_in_shader_library.end(); it++)
+		{
+			std::string extension = App->file_system->GetFileExtension(*it);
+			if (extension == ".shprog")
+			{
+				ShaderProgram* program = new ShaderProgram();
+				program->LoadFromLibrary((*it).c_str());
+			}
+		}
+	}
+
 }
 
 void ModuleResources::AddResource(Resource * resource)

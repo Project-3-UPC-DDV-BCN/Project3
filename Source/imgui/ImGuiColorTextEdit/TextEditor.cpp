@@ -394,6 +394,7 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	{
 		if (ImGui::IsWindowHovered())
 			ImGui::SetMouseCursor(ImGuiMouseCursor_TextInput);
+
 		//ImGui::CaptureKeyboardFromApp(true);
 
 		/*if (!IsReadOnly() && ImGui::IsKeyPressed('Z'))
@@ -577,6 +578,16 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 							EnterCharacter('"');
 							mState.mCursorPosition = Coordinates(coord.mLine, coord.mColumn);
 						}
+						if (c == '.')
+						{
+							Coordinates coord = GetActualCursorCoordinates();
+							std::string word = GetWordAt(Coordinates(coord.mLine, coord.mColumn - 2));
+							if (GetLanguageDefinition().class_auto_complete.find(word) != GetLanguageDefinition().class_auto_complete.end())
+							{
+								auto_complete_class = word;
+								is_auto_complete_open = true;
+							}
+						}
 					}
 				}
 			}
@@ -627,6 +638,36 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	auto lineMax = std::max(0, std::min((int)mLines.size() - 1, lineNo + (int)floor((scrollY + contentSize.y) / mCharAdvance.y)));
 	if (!mLines.empty())
 	{
+		if (is_auto_complete_open)
+		{
+			std::map<std::string, std::string> auto_complete = GetLanguageDefinition().class_auto_complete;
+			std::string words = auto_complete[auto_complete_class];
+			ImGui::SetNextWindowPos(cursorScreenPos);
+			ImGui::BeginTooltip();
+			for (int i = 0; i < words.size(); i++)
+			{
+				std::string word;
+				while (words[i] != '_' && words[i] != '\0')
+				{
+					word += words[i];
+					i++;
+				}
+				if (ImGui::Selectable(word.c_str()))
+				{
+					ImGui::SetClipboardText(word.c_str());
+					Paste();
+					is_auto_complete_open = false;
+				}
+			}
+
+			ImGui::EndTooltip();
+		}
+
+		if (ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1))
+		{
+			is_auto_complete_open = false;
+		}
+
 		while (lineNo <= lineMax)
 		{
 			ImVec2 lineStartScreenPos = ImVec2(cursorScreenPos.x, cursorScreenPos.y + lineNo * mCharAdvance.y);
@@ -813,6 +854,8 @@ void TextEditor::SetText(const std::string & aText)
 void TextEditor::EnterCharacter(Char aChar)
 {
 	assert(!mReadOnly);
+
+	is_auto_complete_open = false;
 
 	UndoRecord u;
 
@@ -1864,17 +1907,50 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::GLSL()
 	if (!inited)
 	{
 		static const char* const keywords[] = {
-			"auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short",
-			"signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while", "_Alignas", "_Alignof", "_Atomic", "_Bool", "_Complex", "_Generic", "_Imaginary",
-			"_Noreturn", "_Static_assert", "_Thread_local", "attribute", "uniform", "varying", "layout", "centroid", "flat", "smooth", "subroutine", "in", "out", "inout", "invariant", "discard", "mat2", "mat3", "mat4", "dmat2",
-			"dmat3", "dmat4", "mat2x2", "mat2x3", "mat2x4", "dmat2x2", "dmat2x3", "dmat2x4", "mat3x2", "mat3x3", "mat3x4", "mat4x2", "mat4x3", "mat4x4", "dmat4x2", "dmat4x3", "dmat4x4"
+			"in", "out", "float", "double", "int", "void", "bool", "true", "false",
+			"invariant",
+			"discard", "return",
+			"mat2", "mat3", "mat4", "dmat2", "dmat3", "dmat4",
+			"mat2x2", "mat2x3", "mat2x4", "dmat2x2", "dmat2x3", "dmat2x4",
+			"mat3x2", "mat3x3", "mat3x4", "dmat3x2", "dmat3x3", "dmat3x4",
+			"mat4x2", "mat4x3", "mat4x4", "dmat4x2", "dmat4x3", "dmat4x4",
+			"vec2", "vec3", "vec4", "ivec2", "ivec3", "ivec4", "bvec2", "bvec3", "bvec4", "dvec2", "dvec3", "dvec4",
+			"uint", "uvec2", "uvec3", "uvec4",
+			"lowp", "mediump", "highp", "precision",
+			"sampler1D", "sampler2D", "sampler3D", "samplerCube",
+			"sampler1DShadow", "sampler2DShadow", "samplerCubeShadow",
+			"sampler1DArray", "sampler2DArray",
+			"sampler1DArrayShadow", "sampler2DArrayShadow",
+			"isampler1D", "isampler2D", "isampler3D", "isamplerCube",
+			"isampler1DArray", "isampler2DArray",
+			"usampler1D", "usampler2D", "usampler3D", "usamplerCube",
+			"usampler1DArray", "usampler2DArray",
+			"sampler2DRect", "sampler2DRectShadow", "isampler2DRect", "usampler2DRect",
+			"samplerBuffer", "isamplerBuffer", "usamplerBuffer",
+			"sampler2DMS", "isampler2DMS", "usampler2DMS",
+			"sampler2DMSArray", "isampler2DMSArray", "usampler2DMSArray",
+			"samplerCubeArray", "samplerCubeArrayShadow", "isamplerCubeArray", "usamplerCubeArray",
+			"struct"
 		};
 		for (auto& k : keywords)
 			langDef.mKeywords.insert(k);
 
 		static const char* const identifiers[] = {
-			"abort", "abs", "acos", "asin", "atan", "atexit", "atof", "atoi", "atol", "ceil", "clock", "cosh", "ctime", "div", "exit", "fabs", "floor", "fmod", "getchar", "getenv", "isalnum", "isalpha", "isdigit", "isgraph",
-			"ispunct", "isspace", "isupper", "kbhit", "log10", "log2", "log", "memcmp", "modf", "pow", "putchar", "putenv", "puts", "rand", "remove", "rename", "sinh", "sqrt", "srand", "strcat", "strcmp", "strerror", "time", "tolower", "toupper"
+			"gl_MaxVertexAttribs", "gl_MaxVertexOutputComponents", "gl_MaxVertexUniformComponents", "gl_MaxVertexTextureImageUnits", "gl_MaxGeometryInputComponents", 
+			"gl_MaxGeometryOutputComponents", "gl_MaxGeometryUniformComponents", "gl_MaxGeometryTextureImageUnits", "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents", 
+			"gl_MaxGeometryVaryingComponents", "gl_MaxFragmentInputComponents", "gl_MaxDrawBuffers", "gl_MaxFragmentUniformComponents", "gl_MaxTextureImageUnits", "gl_MaxClipDistances", 
+			"gl_MaxCombinedTextureImageUnits", "gl_MaxTessControlInputComponents", "gl_MaxTessControlOutputComponents", "gl_MaxTessControlUniformComponents", "gl_MaxTessControlTextureImageUnits", 
+			"gl_MaxTessControlTotalOutputComponents", "gl_MaxTessEvaluationInputComponents", "gl_MaxTessEvaluationOutputComponents", "gl_MaxTessEvaluationUniformComponents", 
+			"gl_MaxTessEvaluationTextureImageUnits", "gl_MaxTessPatchComponents", "gl_MaxPatchVertices", "gl_MaxTessGenLevel", "gl_MaxViewports", "gl_MaxVertexUniformVectors", "gl_MaxFragmentUniformVectors",
+			"gl_MaxVaryingVectors", "gl_MaxVertexImageUniforms", "gl_MaxVertexAtomicCounters", "gl_MaxVertexAtomicCounterBuffers", "gl_MaxTessControlImageUniforms", 
+			"gl_MaxTessControlAtomicCounters", "gl_MaxTessControlAtomicCounterBuffers", "gl_MaxTessEvaluationImageUniforms", "gl_MaxTessEvaluationAtomicCounters",
+			"gl_MaxTessEvaluationAtomicCounterBuffers", "gl_MaxGeometryImageUniforms", "gl_MaxGeometryAtomicCounters", "gl_MaxGeometryAtomicCounterBuffers", "gl_MaxFragmentImageUniforms",
+			"gl_MaxFragmentAtomicCounters", "gl_MaxFragmentAtomicCounterBuffers", "gl_MaxCombinedImageUniforms", "gl_MaxCombinedAtomicCounters", "gl_MaxCombinedAtomicCounterBuffers",
+			"gl_MaxImageUnits", "gl_MaxCombinedImageUnitsAndFragmentOutputs", "gl_MaxImageSamples", "gl_MaxAtomicCounterBindings", "gl_MaxAtomicCounterBufferSize",
+			"gl_MinProgramTexelOffset", "gl_MaxProgramTexelOffset", "gl_VertexID", "gl_InstanceID", "gl_Position", "gl_PointSize", "gl_ClipDistance", "gl_PatchVerticesIn",
+			"gl_PrimitiveID", "gl_InvocationID", "gl_TessLevelOuter", "gl_TessLevelInner", "gl_TessCoord", "gl_PatchVerticesIn", "gl_PrimitiveID", "gl_PrimitiveIDIn",
+			"gl_InvocationID", "gl_Layer", "gl_ViewportIndex", "gl_FragCoord", "gl_FrontFacing", "gl_PointCoord", "gl_SampleID", "gl_SamplePosition", "gl_SampleMaskIn",
+			"gl_FragDepth", "gl_NumWorkGroups", "gl_WorkGroupID", "gl_LocalInvocationID", "gl_GlobalInvocationID", "gl_LocalInvocationIndex"
 		};
 		for (auto& k : identifiers)
 		{
@@ -2160,6 +2236,9 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation));
+
+		langDef.class_auto_complete["Math"] = "IsPowerOfTwo(int value)_Sin(float value)_Cos(float value)";
+		langDef.class_auto_complete["TheGameObject"] = "SetActive(bool value)_IsActive()_SetStatic(bool value)";
 
 		langDef.mCommentStart = "/*";
 		langDef.mCommentEnd = "*/";

@@ -144,6 +144,7 @@ public:
 		Identifiers mPreprocIdentifiers;
 		Classes mClasses;
 		std::string mCommentStart, mCommentEnd;
+		std::map<std::string, std::string> class_auto_complete;
 
 		TokenRegexStrings mTokenRegexStrings;
 
@@ -157,6 +158,7 @@ public:
 		static LanguageDefinition AngelScript();
 		static LanguageDefinition Lua();
 		static LanguageDefinition CSharp();
+
 	};
 
 	TextEditor();
@@ -217,6 +219,11 @@ public:
 	static const Palette& GetLightPalette();
 
 private:
+
+	bool is_auto_complete_open = false;
+	std::string auto_complete_class;
+	std::map<std::string, std::string> variables;
+
 	typedef std::vector<std::pair<std::regex, PaletteIndex>> RegexList;
 
 	struct EditorState
