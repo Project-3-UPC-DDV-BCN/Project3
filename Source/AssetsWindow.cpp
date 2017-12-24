@@ -13,6 +13,7 @@
 #include "LuaScript.h"
 #include "ModuleScriptImporter.h"
 #include "TextEditorWindow.h"
+#include "Material.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -237,8 +238,11 @@ void AssetsWindow::DrawWindow()
 				{
 					show_new_script_window = true;
 					show_new_shader_window = false;
+					show_new_material_window = false;
+
 					show_delete_window = false;
 					show_new_folder_window = false;
+					
 					options_is_open = false;
 				}
 
@@ -246,8 +250,11 @@ void AssetsWindow::DrawWindow()
 				{
 					show_new_script_window = false;
 					show_new_shader_window = true;
+					show_new_material_window = false;
+
 					show_delete_window = false;
 					show_new_folder_window = false;
+					
 					options_is_open = false;
 					shader_type = Shader::ST_VERTEX;
 				}
@@ -256,10 +263,25 @@ void AssetsWindow::DrawWindow()
 				{
 					show_new_script_window = false;
 					show_new_shader_window = true;
+					show_new_material_window = false;
+
 					show_delete_window = false;
 					show_new_folder_window = false;
+					
 					options_is_open = false;
 					shader_type = Shader::ST_FRAGMENT;
+				}
+
+				if (ImGui::MenuItem("Create Material"))
+				{
+					show_new_script_window = false;
+					show_new_shader_window = false;
+					show_new_material_window = true;
+					
+					show_delete_window = false;
+					show_new_folder_window = false;
+					
+					options_is_open = false;
 				}
 
 				ImGui::EndPopup();
@@ -337,6 +359,11 @@ void AssetsWindow::DrawWindow()
 		if (show_new_shader_window)
 		{
 			CreateNewShaderWindow(shader_type);
+		}
+
+		if (show_new_material_window)
+		{
+			CreateNewMaterialWindow();
 		}
 	}
 	ImGui::EndDock();
@@ -528,6 +555,42 @@ void AssetsWindow::CreateNewShaderWindow(Shader::ShaderType type)
 	ImGui::End();
 }
 
+void AssetsWindow::CreateNewMaterialWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
+	ImGui::SetNextWindowPosCenter();
+
+	ImGui::Begin("New Material Name", &active,
+		ImGuiWindowFlags_NoFocusOnAppearing |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders |
+		ImGuiWindowFlags_NoTitleBar);
+	ImGui::Spacing();
+	ImGui::Text("New Material Name");
+	static char inputText[30];
+	ImGui::InputText("", inputText, 30);
+	ImGui::Spacing();
+	if (ImGui::Button("Confirm")) {
+		std::string str(inputText);
+		if (!str.empty()) {
+			for (std::string::iterator it = str.begin(); it != str.end(); it++)
+			{
+				if (*it == ' ') *it = '_';
+			}
+			CreateMaterial(str);
+			strcpy(inputText, "");
+			show_new_material_window = false;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel")) {
+		strcpy(inputText, "");
+		show_new_material_window = false;
+	}
+	ImGui::End();
+}
+
 void AssetsWindow::CreateShader(Shader::ShaderType type, std::string shader_name)
 {
 	std::ifstream in_file;
@@ -561,6 +624,21 @@ void AssetsWindow::CreateShader(Shader::ShaderType type, std::string shader_name
 
 		App->resources->CreateResource(selected_folder + "\\" + new_file_name);
 	}
+}
+
+void AssetsWindow::CreateMaterial(std::string material_name)
+{
+	std::string new_file_name = material_name + ".mat";
+
+	Material* new_mat = new Material();
+	new_mat->SetName(material_name);
+	Data d;
+	new_mat->Save(d);
+
+	d.SaveAsBinary(selected_folder + "\\" + new_file_name);
+
+	App->resources->CreateResource(selected_folder + "\\" + new_file_name);
+	RELEASE(new_mat);
 }
 
 void AssetsWindow::DeleteWindow(std::string path)

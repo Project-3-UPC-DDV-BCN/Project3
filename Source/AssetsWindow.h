@@ -22,8 +22,10 @@ private:
 	void CreateDirectortWindow();
 	void CreateNewScriptWindow(Script::ScriptType type);
 	void CreateNewShaderWindow(Shader::ShaderType type);
+	void CreateNewMaterialWindow();
 	void CreateScript(Script::ScriptType type, std::string script_name);
 	void CreateShader(Shader::ShaderType type, std::string shader_name);
+	void CreateMaterial(std::string material_name);
 
 private:
 	uint node;
@@ -32,6 +34,7 @@ private:
 	bool show_delete_window;
 	bool show_new_script_window;
 	bool show_new_shader_window;
+	bool show_new_material_window = false;
 
 	bool options_is_open;
 
