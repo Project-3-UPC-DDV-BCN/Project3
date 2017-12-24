@@ -15,7 +15,8 @@ ShaderProgram::ShaderProgram()
 
 ShaderProgram::~ShaderProgram()
 {
-	SaveToLibray();
+	if(GetUsedCount()>0)
+		SaveToLibray();
 }
 
 void ShaderProgram::SetVertexShader(Shader * shader)
