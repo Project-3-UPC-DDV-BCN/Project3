@@ -59,8 +59,9 @@ ModuleResources::~ModuleResources()
 		if (it->second->GetUsedCount() > 0)
 		{
 			shprograms.CreateSection("shprogram_" + std::to_string(i));
-			shprograms.AddUInt("vertex_shader", it->second->GetUID());
-			shprograms.AddUInt("fragment_shader", it->second->GetUID());
+			shprograms.AddUInt("uuid", it->second->GetUID());
+			shprograms.AddUInt("vertex_shader", (it->second->GetVertexShader() != nullptr) ? it->second->GetVertexShader()->GetUID() : 0);
+			shprograms.AddUInt("fragment_shader", (it->second->GetFragmentShader() != nullptr) ? it->second->GetFragmentShader()->GetUID() : 0);
 			shprograms.CloseSection();
 			++i;
 		}
@@ -68,6 +69,7 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	shader_programs_list.clear();
+	shprograms.AddUInt("num_sections", i);
 	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms");
 
 	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
@@ -104,7 +106,9 @@ void ModuleResources::FillResourcesLists()
 
 	if (App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
 	{
-		std::vector<std::string> files_in_shader_library = App->file_system->GetFilesInDirectory(assets_folder_path);
+		std::vector<std::string> files_in_shader_library = App->file_system->GetFilesInDirectory(App->file_system->StringToPathFormat(LIBRARY_SHADERS_FOLDER_PATH));
+		std::string meta_file;
+		bool exist_meta = false;
 
 		for (std::vector<std::string>::iterator it = files_in_shader_library.begin(); it != files_in_shader_library.end(); it++)
 		{
@@ -114,7 +118,15 @@ void ModuleResources::FillResourcesLists()
 				ShaderProgram* program = new ShaderProgram();
 				program->LoadFromLibrary((*it).c_str());
 			}
+			else if (extension == ".meta") //meta file should be loaded after all programs
+			{
+				meta_file = *it;
+				exist_meta = true;
+			}
 		}
+
+		if(exist_meta)
+			LoadShaderProgramMeta(meta_file);
 	}
 
 }
@@ -532,6 +544,57 @@ void ModuleResources::RemoveShaderProgram(ShaderProgram * program)
 std::map<uint, ShaderProgram*> ModuleResources::GetShaderProgramList() const
 {
 	return shader_programs_list;
+}
+
+void ModuleResources::LoadShaderProgramMeta(std::string path) const
+{
+	Data d;
+	d.LoadJSON(path);
+	uint sections = d.GetUInt("num_sections");
+
+	for (int i = 0; i < sections; ++i)
+	{
+		std::string section_name = "shprogram_" + std::to_string(i);
+		d.EnterSection(section_name);
+		UID program = d.GetUInt("uuid");
+		ShaderProgram* shprog = GetShaderProgram(program);
+		if (shprog != nullptr)
+		{
+			UID vert_uid = d.GetUInt("vertex_shader");
+			if (vert_uid != 0)
+			{
+				Shader* vert_shader = GetShader(vert_uid);
+				if (vert_shader != nullptr)
+				{
+					shprog->SetVertexShader(vert_shader);
+				}
+				else
+				{
+					CONSOLE_WARNING("Vertex shader %d not found for %s", vert_uid, section_name.c_str());
+				}
+			}
+
+			UID frag_uid = d.GetUInt("fragment_shader");
+			if (frag_uid != 0)
+			{
+				Shader* frag_shader = GetShader(frag_uid);
+				if (frag_shader != nullptr)
+				{
+					shprog->SetFragmentShader(frag_shader);
+				}
+				else
+				{
+					CONSOLE_WARNING("Fragment shader %d not found for %s", frag_uid, section_name.c_str());
+				}
+			}
+		}
+		else
+		{
+			CONSOLE_WARNING("%s not found!", section_name.c_str());
+		}
+
+		d.LeaveSection();
+	}
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)

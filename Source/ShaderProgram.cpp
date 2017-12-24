@@ -77,7 +77,7 @@ void ShaderProgram::SaveToLibray() const
 	{
 		if (ret_size < size) size = ret_size;
 
-		std::string library_path = LIBRARY_SHADERS_FOLDER + vertex_shader->GetName() + "_" + fragment_shader->GetName() + ".shprog";
+		std::string library_path = LIBRARY_SHADERS_FOLDER + std::to_string(GetUID()) + ".shprog";
 		std::ofstream outfile(library_path.c_str(), std::ofstream::binary);
 		outfile.write(buff, size);
 		outfile.close();
@@ -107,45 +107,7 @@ void ShaderProgram::LoadFromLibrary(const char* path)
 			App->renderer3D->LoadProgramFromBinary(program_id, length, buffer);
 
 			std::string name = App->file_system->GetFileNameWithoutExtension(path);
-
-			std::string vertex_shader_name;
-			std::string fragment_shader_name;
-
-			int i = 0;
-			while (name[i] != '_')
-			{
-				vertex_shader_name[i] = name[i];
-				i++;
-			}
-			i++;
-
-			while (name[i] != '\0')
-			{
-				fragment_shader_name[i] = name[i];
-				i++;
-			}
-			
-			Shader* vertex = App->resources->GetShader(vertex_shader_name);
-			if (vertex)
-			{
-				SetVertexShader(vertex);
-
-				Shader* fragment = App->resources->GetShader(fragment_shader_name);
-				if (fragment)
-				{
-					SetFragmentShader(fragment);
-
-					App->resources->AddShaderProgram(this);
-				}
-				else
-				{
-					CONSOLE_ERROR("Cannot find fragment shader file for %s or it's not loaded correctly", name.c_str());
-				}
-			}
-			else
-			{
-				CONSOLE_ERROR("Cannot find vertex shader file for %s or it's not loaded correctly", name.c_str());
-			}
+			SetUID(strtoul(name.c_str(), NULL, 0));
 		}
 	}
 }
