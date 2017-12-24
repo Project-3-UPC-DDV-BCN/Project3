@@ -65,7 +65,7 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	shader_programs_list.clear();
-	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms.shprog");
+	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms");
 
 	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
 		RELEASE(it->second);
