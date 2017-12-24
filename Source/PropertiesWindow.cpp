@@ -18,6 +18,8 @@
 #include "CSScript.h"
 #include "ModuleResources.h"
 #include "ComponentFactory.h"
+#include "ShaderProgram.h"
+#include "Shader.h"
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -297,23 +299,28 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				ImGui::TreePop();
 				return;
 			}
-			/*ImGui::Text("Texture ID: %d", mesh_renderer->GetMaterial()->GetID());
-			ImGui::Text("Texture Path: %s", mesh_renderer->GetMaterial()->GetAssetsPath().c_str());
-			if (ImGui::IsItemHoveredRect() && ImGui::CalcTextSize(("Texture Path: " + mesh_renderer->GetMaterial()->GetAssetsPath()).c_str()).x > ImGui::GetContentRegionAvailWidth()) {
-				ImGui::BeginTooltip();
-				ImGui::Text("%s", mesh_renderer->GetMaterial()->GetAssetsPath().c_str());
-				ImGui::EndTooltip();
+			else
+			{
+				ImGui::Text("\tShaders");
+				ShaderProgram* prog = mesh_renderer->GetMaterial()->GetShaderProgram();
+
+				if (prog != nullptr)
+				{
+					Shader* vert = prog->GetVertexShader();
+					if (ImGui::InputResourceShader("Vertex Shader", &vert, Shader::ShaderType::ST_VERTEX))
+					{
+						mesh_renderer->GetMaterial()->SetVertexShader(vert);
+					}
+
+					Shader* frag = prog->GetFragmentShader();
+					if (ImGui::InputResourceShader("Vertex Shader", &frag, Shader::ShaderType::ST_FRAGMENT))
+					{
+						mesh_renderer->GetMaterial()->SetFragmentShader(frag);
+					}
+				}
+
 			}
-			ImGui::Text("Texture Name: %s", mesh_renderer->GetMaterial()->GetName().c_str());
-			if (ImGui::IsItemHoveredRect() && ImGui::CalcTextSize(("Texture Name: " + mesh_renderer->GetMaterial()->GetName()).c_str()).x > ImGui::GetContentRegionAvailWidth()) {
-				ImGui::BeginTooltip();
-				ImGui::Text("%s", mesh_renderer->GetMaterial()->GetName().c_str());
-				ImGui::EndTooltip();
-			}
-			ImGui::Text("Texture Size: %d x %d", mesh_renderer->GetMaterial()->GetWidth(), mesh_renderer->GetMaterial()->GetHeight());
-			ImGui::Text("Texture Format: %s", mesh_renderer->GetMaterial()->GetFormatString().c_str());
-			ImGui::Text("Texture Type: %s", mesh_renderer->GetMaterial()->GetTypeString().c_str());*/
-ImGui::TreePop();
+		ImGui::TreePop();
 		}
 
 		ImGui::Spacing();

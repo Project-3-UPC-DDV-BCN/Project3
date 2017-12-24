@@ -99,16 +99,11 @@ void ModuleResources::FillResourcesLists()
 		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 	}
 	
-	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
-	{
-		CreateResource(*it);
-	}
-
+	std::string shprog_meta_file;
+	bool exist_shprog_meta = false;
 	if (App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
 	{
 		std::vector<std::string> files_in_shader_library = App->file_system->GetFilesInDirectory(App->file_system->StringToPathFormat(LIBRARY_SHADERS_FOLDER_PATH));
-		std::string meta_file;
-		bool exist_meta = false;
 
 		for (std::vector<std::string>::iterator it = files_in_shader_library.begin(); it != files_in_shader_library.end(); it++)
 		{
@@ -118,16 +113,21 @@ void ModuleResources::FillResourcesLists()
 				ShaderProgram* program = new ShaderProgram();
 				program->LoadFromLibrary((*it).c_str());
 			}
-			else if (extension == ".meta") //meta file should be loaded after all programs
+			else if (extension == ".meta") //meta file should be loaded after all programs and shaders
 			{
-				meta_file = *it;
-				exist_meta = true;
+				shprog_meta_file = *it;
+				exist_shprog_meta = true;
 			}
 		}
-
-		if(exist_meta)
-			LoadShaderProgramMeta(meta_file);
 	}
+
+	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
+	{
+		CreateResource(*it);
+	}
+
+	if (exist_shprog_meta)
+		LoadShaderProgramMeta(shprog_meta_file);
 
 }
 
@@ -522,6 +522,20 @@ ShaderProgram * ModuleResources::GetShaderProgram(UID uid) const
 {
 	if (shader_programs_list.find(uid) != shader_programs_list.end()) return shader_programs_list.at(uid);
 	return nullptr;
+}
+
+ShaderProgram * ModuleResources::GetShaderProgram(Shader * vertex, Shader * fragment) const
+{
+	ShaderProgram* ret = nullptr;
+	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
+	{
+		if (it->second->GetVertexShader() == vertex && it->second->GetFragmentShader() == fragment)
+		{
+			ret = it->second;
+			break;
+		}
+	}
+	return ret;
 }
 
 void ModuleResources::AddShaderProgram(ShaderProgram * program)
@@ -1035,6 +1049,19 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 				RemoveMesh(mesh);
 			}
 		}
+	}
+}
+
+void ModuleResources::CreateDefaultShaders()
+{
+	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default.vshader";
+	if (App->file_system->FileExist(vert_default_path))
+	{
+		CreateResource(vert_default_path);
+	}
+	else
+	{
+
 	}
 }
 

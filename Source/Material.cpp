@@ -8,6 +8,7 @@
 #include "ModuleTextureImporter.h"
 #include <ctime>
 #include "OpenGL.h"
+#include "ShaderProgram.h"
 
 Material::Material()
 {
@@ -47,100 +48,46 @@ void Material::Save(Data & data) const
 	data.AddFloat("refraction", refraction);
 	data.AddFloat("reflectivity", reflectivity);
 	data.AddFloat("bump_scaling", bump_scaling);
-	data.CreateSection("Diffuse_textures");
-	data.AddInt("diffuse_count", diffuse_texture_list.size());
-	for (int i = 0; i < diffuse_texture_list.size(); i++)
-	{
-		if (diffuse_texture_list[i] == nullptr) continue;
-		data.AddString("diffuse_texture" + std::to_string(i), diffuse_texture_list[i]->GetLibraryPath());
-	}
+
+	if(diffuse_texture != nullptr)
+		data.AddString("diffuse_texture", diffuse_texture->GetLibraryPath());
+
 	math::float4 f_diffuse_color;
 	f_diffuse_color.x = diffuse_color.r;
 	f_diffuse_color.y = diffuse_color.g;
 	f_diffuse_color.z = diffuse_color.b;
 	f_diffuse_color.w = diffuse_color.a;
 	data.AddVector4("diffuse_color", f_diffuse_color);
-	data.CloseSection();
-	data.CreateSection("Specular_textures");
-	data.AddInt("specular_count", specular_texture_list.size());
-	for (int i = 0; i < specular_texture_list.size(); i++)
-	{
-		if (specular_texture_list[i] == nullptr) continue;
-		data.AddString("specular_texture" + std::to_string(i), specular_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Ambient_textures");
-	data.AddInt("ambient_count", ambient_texture_list.size());
-	for (int i = 0; i < ambient_texture_list.size(); i++)
-	{
-		if (ambient_texture_list[i] == nullptr) continue;
-		data.AddString("ambient_texture" + std::to_string(i), ambient_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Emissive_textures");
-	data.AddInt("emissive_count", emissive_texture_list.size());
-	for (int i = 0; i < emissive_texture_list.size(); i++)
-	{
-		if (emissive_texture_list[i] == nullptr) continue;
-		data.AddString("emissive_texture" + std::to_string(i), emissive_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Heightmap_textures");
-	data.AddInt("height_count", heightmap_texture_list.size());
-	for (int i = 0; i < heightmap_texture_list.size(); i++)
-	{
-		if (heightmap_texture_list[i] == nullptr) continue;
-		data.AddString("height_texture" + std::to_string(i), heightmap_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Normalmap_textures");
-	data.AddInt("normal_count", normalmap_texture_list.size());
-	for (int i = 0; i < normalmap_texture_list.size(); i++)
-	{
-		if (normalmap_texture_list[i] == nullptr) continue;
-		data.AddString("normalmap_texture" + std::to_string(i), normalmap_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Shininess_textures");
-	data.AddInt("shininess_count", shininess_texture_list.size());
-	for (int i = 0; i < shininess_texture_list.size(); i++)
-	{
-		if (shininess_texture_list[i] == nullptr) continue;
-		data.AddString("shininess_texture" + std::to_string(i), shininess_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Opacity_textures");
-	data.AddInt("opacity_count", opacity_texture_list.size());
-	for (int i = 0; i < opacity_texture_list.size(); i++)
-	{
-		if (opacity_texture_list[i] == nullptr) continue;
-		data.AddString("opacity_texture" + std::to_string(i), opacity_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Displacement_textures");
-	data.AddInt("displacement_count", displacement_texture_list.size());
-	for (int i = 0; i < displacement_texture_list.size(); i++)
-	{
-		if (displacement_texture_list[i] == nullptr) continue;
-		data.AddString("displacement_texture" + std::to_string(i), displacement_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Lightmap_textures");
-	data.AddInt("lightmap_count", lightmap_texture_list.size());
-	for (int i = 0; i < lightmap_texture_list.size(); i++)
-	{
-		if (lightmap_texture_list[i] == nullptr) continue;
-		data.AddString("lightmap_texture" + std::to_string(i), lightmap_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
-	data.CreateSection("Reflection_textures");
-	data.AddInt("reflection_count", reflection_texture_list.size());
-	for (int i = 0; i < reflection_texture_list.size(); i++)
-	{
-		if (reflection_texture_list[i] == nullptr) continue;
-		data.AddString("reflection_texture" + std::to_string(i), reflection_texture_list[i]->GetLibraryPath());
-	}
-	data.CloseSection();
+
+	if (specular_texture != nullptr)
+		data.AddString("specular_texture", specular_texture->GetLibraryPath());
+
+	if (ambient_texture != nullptr)
+		data.AddString("ambient_texture", ambient_texture->GetLibraryPath());
+	
+	if (emissive_texture != nullptr) 
+		data.AddString("emissive_texture", emissive_texture->GetLibraryPath());
+	
+	if (heightmap_texture != nullptr)
+		data.AddString("height_texture", heightmap_texture->GetLibraryPath());
+	
+	if (normalmap_texture != nullptr)
+		data.AddString("normalmap_texture", normalmap_texture->GetLibraryPath());
+
+	if (shininess_texture != nullptr)
+		data.AddString("shininess_texture", shininess_texture->GetLibraryPath());
+	
+	if (opacity_texture != nullptr)
+		data.AddString("opacity_texture", opacity_texture->GetLibraryPath());
+	
+	if (displacement_texture != nullptr)
+		data.AddString("displacement_texture", displacement_texture->GetLibraryPath());
+	
+	if (lightmap_texture != nullptr)
+		data.AddString("lightmap_texture", lightmap_texture->GetLibraryPath());
+	
+	if (reflection_texture != nullptr)
+		data.AddString("reflection_texture", reflection_texture->GetLibraryPath());
 }
 
 bool Material::Load(Data & data)
@@ -157,110 +104,56 @@ bool Material::Load(Data & data)
 	refraction = data.GetFloat("refraction");
 	reflectivity = data.GetFloat("reflectivity");
 	bump_scaling = data.GetFloat("bump_scaling");
-	data.EnterSection("Diffuse_textures");
-	int diffuse_count = data.GetInt("diffuse_count");
-	for (int i = 0; i < diffuse_count; i++)
-	{
-		std::string library_path = data.GetString("diffuse_texture" + std::to_string(i));
-		Texture* diffuse = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
-		SetDiffuseTexture(diffuse);
-	}
+	
+	std::string library_path = data.GetString("diffuse_texture");
+	Texture* diffuse = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
+	SetDiffuseTexture(diffuse);
+	
 	math::float4 f_diffuse_color = data.GetVector4("diffuse_color");
 	diffuse_color.r = f_diffuse_color.x;
 	diffuse_color.g = f_diffuse_color.y;
 	diffuse_color.b = f_diffuse_color.z;
 	diffuse_color.a = f_diffuse_color.w;
-	data.LeaveSection();
-	data.EnterSection("Specular_textures");
-	int specular_count = data.GetInt("specular_count");
-	for (int i = 0; i < specular_count; i++)
-	{
-		std::string library_path = data.GetString("specular_texture" + std::to_string(i));
-		Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetSpecularTexture(specular);
-	}
-	data.LeaveSection();
-	data.EnterSection("Ambient_textures");
-	int ambient_count = data.GetInt("ambient_count");
-	for (int i = 0; i < ambient_count; i++)
-	{
-		std::string library_path = data.GetString("ambient_texture" + std::to_string(i));
-		Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetAmbientTexture(ambient);
-	}
-	data.LeaveSection();
-	data.EnterSection("Emissive_textures");
-	int emissive_count = data.GetInt("emissive_count");
-	for (int i = 0; i < emissive_count; i++)
-	{
-		std::string library_path = data.GetString("emissive_texture" + std::to_string(i));
-		Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetEmissiveTexture(emissive);
-	}
-	data.LeaveSection();
-	data.EnterSection("Heightmap_textures");
-	int heightmap_count = data.GetInt("heightmap_count");
-	for (int i = 0; i < heightmap_count; i++)
-	{
-		std::string library_path = data.GetString("heightmap_texture" + std::to_string(i));
-		Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetHeightMapTexture(heightmap);
-	}
-	data.LeaveSection();
-	data.EnterSection("Normalmap_textures");
-	int normalmap_count = data.GetInt("normalmap_count");
-	for (int i = 0; i < normalmap_count; i++)
-	{
-		std::string library_path = data.GetString("normalmap_texture" + std::to_string(i));
-		Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetNormalMapTexture(normalmap);
-	}
-	data.LeaveSection();
-	data.EnterSection("Shininess_textures");
-	int shininess_count = data.GetInt("shininess_count");
-	for (int i = 0; i < shininess_count; i++)
-	{
-		std::string library_path = data.GetString("shininess_texture" + std::to_string(i));
-		Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetShininessTexture(shininess);
-	}
-	data.LeaveSection();
-	data.EnterSection("Opacity_textures");
-	int opacity_count = data.GetInt("opacity_count");
-	for (int i = 0; i < opacity_count; i++)
-	{
-		std::string library_path = data.GetString("opacity_texture" + std::to_string(i));
-		Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetOpacityTexture(opacity);
-	}
-	data.LeaveSection();
-	data.EnterSection("Displacement_textures");
-	int displacement_count = data.GetInt("displacement_count");
-	for (int i = 0; i < displacement_count; i++)
-	{
-		std::string library_path = data.GetString("displacement_texture" + std::to_string(i));
-		Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetDisplacementTexture(displacement);
-	}
-	data.LeaveSection();
-	data.EnterSection("Lightmap_textures");
-	int lightmap_count = data.GetInt("lightmap_count");
-	for (int i = 0; i < lightmap_count; i++)
-	{
-		std::string library_path = data.GetString("lightmap_texture" + std::to_string(i));
-		Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetLightMapTexture(lightmap);
-	}
-	data.LeaveSection();
-	data.EnterSection("Reflection_textures");
-	int reflection_count = data.GetInt("reflection_count");
-	for (int i = 0; i < reflection_count; i++)
-	{
-		std::string library_path = data.GetString("reflection_texture" + std::to_string(i));
-		Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path);
-		SetReflectionTexture(reflection);
-	}
-	data.LeaveSection();
+
+	library_path = data.GetString("specular_texture");
+	Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetSpecularTexture(specular);
+	
+	library_path = data.GetString("ambient_texture");
+	Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetAmbientTexture(ambient);
+	
+	library_path = data.GetString("emissive_texture");
+	Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetEmissiveTexture(emissive);
+	
+	library_path = data.GetString("heightmap_texture");
+	Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetHeightMapTexture(heightmap);
+	
+	library_path = data.GetString("normalmap_texture");
+	Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetNormalMapTexture(normalmap);
+	
+	library_path = data.GetString("shininess_texture");
+	Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetShininessTexture(shininess);
+	
+	library_path = data.GetString("opacity_texture");
+	Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetOpacityTexture(opacity);
+
+	library_path = data.GetString("displacement_texture");
+	Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetDisplacementTexture(displacement);
+	
+	library_path = data.GetString("lightmap_texture");
+	Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetLightMapTexture(lightmap);
+
+	library_path = data.GetString("reflection_texture");
+	Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path);
+	SetReflectionTexture(reflection);
 
 	SetUID(data.GetUInt("UUID"));
 	SetAssetsPath(data.GetString("assets_path"));
@@ -285,15 +178,9 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	for (std::vector<Texture*>::iterator it = diffuse_texture_list.begin(); it != diffuse_texture_list.end(); it++)
+	if (diffuse_texture->GetID() != 0)
 	{
-		if (*it != nullptr)
-		{
-			if ((*it)->GetID() > 0)
-			{
-				glBindTexture(GL_TEXTURE_2D, (*it)->GetID());
-			}
-		}
+		glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
 	}
 }
 
@@ -304,167 +191,112 @@ void Material::UnloadFromMemory()
 
 void Material::SetDiffuseTexture(Texture * diffuse)
 {
-	diffuse_texture_list.push_back(diffuse);
+	diffuse_texture = diffuse;
 }
 
 void Material::SetSpecularTexture(Texture * specular)
 {
-	specular_texture_list.push_back(specular);
+	specular_texture = specular;
 }
 
 void Material::SetAmbientTexture(Texture * ambient)
 {
-	ambient_texture_list.push_back(ambient);
+	ambient_texture = ambient;
 }
 
 void Material::SetEmissiveTexture(Texture * emissive)
 {
-	emissive_texture_list.push_back(emissive);
+	emissive_texture = emissive;
 }
 
 void Material::SetHeightMapTexture(Texture * heightmap)
 {
-	heightmap_texture_list.push_back(heightmap);
+	heightmap_texture = heightmap;
 }
 
 void Material::SetNormalMapTexture(Texture * normalmap)
 {
-	normalmap_texture_list.push_back(normalmap);
+	normalmap_texture = normalmap;
 }
 
 void Material::SetShininessTexture(Texture * shininess)
 {
-	shininess_texture_list.push_back(shininess);
+	shininess_texture = shininess;
 }
 
 void Material::SetOpacityTexture(Texture * opacity)
 {
-	opacity_texture_list.push_back(opacity);
+	opacity_texture = opacity;
 }
 
 void Material::SetDisplacementTexture(Texture * displacement)
 {
-	displacement_texture_list.push_back(displacement);
+	displacement_texture = displacement;
 }
 
 void Material::SetLightMapTexture(Texture * ligthmap)
 {
-	lightmap_texture_list.push_back(ligthmap);
+	lightmap_texture = ligthmap;
 }
 
 void Material::SetReflectionTexture(Texture * refection)
 {
-	reflection_texture_list.push_back(refection);
+	reflection_texture = refection;
 }
 
-Texture * Material::GetDiffuseTexture(int index) const
+Texture * Material::GetDiffuseTexture() const
 {
-	return diffuse_texture_list[index];
+	return diffuse_texture;
 }
 
-Texture * Material::GetSpecularTexture(int index) const
+Texture * Material::GetSpecularTexture() const
 {
-	return specular_texture_list[index];
+	return specular_texture;
 }
 
-Texture * Material::GetAmbientTexture(int index) const
+Texture * Material::GetAmbientTexture() const
 {
-	return ambient_texture_list[index];
+	return ambient_texture;
 }
 
-Texture * Material::GetEmissiveTexture(int index) const
+Texture * Material::GetEmissiveTexture() const
 {
-	return emissive_texture_list[index];
+	return emissive_texture;
 }
 
-Texture * Material::GetHeightMapTexture(int index) const
+Texture * Material::GetHeightMapTexture() const
 {
-	return heightmap_texture_list[index];
+	return heightmap_texture;
 }
 
-Texture * Material::GetNormalMapTexture(int index) const
+Texture * Material::GetNormalMapTexture() const
 {
-	return normalmap_texture_list[index];
+	return normalmap_texture;
 }
 
-Texture * Material::GetShininessTexture(int index) const
+Texture * Material::GetShininessTexture() const
 {
-	return shininess_texture_list[index];
+	return shininess_texture;
 }
 
-Texture * Material::GetOpacityTexture(int index) const
+Texture * Material::GetOpacityTexture() const
 {
-	return opacity_texture_list[index];
+	return opacity_texture;
 }
 
-Texture * Material::GetDisplacementTexture(int index) const
+Texture * Material::GetDisplacementTexture() const
 {
-	return displacement_texture_list[index];
+	return displacement_texture;
 }
 
-Texture * Material::GetLightMapTexture(int index) const
+Texture * Material::GetLightMapTexture() const
 {
-	return lightmap_texture_list[index];
+	return lightmap_texture;
 }
 
-Texture * Material::GetReflectionTexture(int index) const
+Texture * Material::GetReflectionTexture() const
 {
-	return reflection_texture_list[index];
-}
-
-std::vector<Texture*> Material::GetDiffuseTextureList() const
-{
-	return diffuse_texture_list;
-}
-
-std::vector<Texture*> Material::GetSpecularTextureList() const
-{
-	return specular_texture_list;
-}
-
-std::vector<Texture*> Material::GetAmbientTextureList() const
-{
-	return ambient_texture_list;
-}
-
-std::vector<Texture*> Material::GetEmissiveTextureList() const
-{
-	return emissive_texture_list;
-}
-
-std::vector<Texture*> Material::GetHeightMapTextureList() const
-{
-	return heightmap_texture_list;
-}
-
-std::vector<Texture*> Material::GetNormalMapTextureList() const
-{
-	return normalmap_texture_list;
-}
-
-std::vector<Texture*> Material::GetShininessTextureList() const
-{
-	return shininess_texture_list;
-}
-
-std::vector<Texture*> Material::GetOpacityTextureList() const
-{
-	return opacity_texture_list;
-}
-
-std::vector<Texture*> Material::GetDisplacementTextureList() const
-{
-	return displacement_texture_list;
-}
-
-std::vector<Texture*> Material::GetLightMapTextureList() const
-{
-	return lightmap_texture_list;
-}
-
-std::vector<Texture*> Material::GetReflectionTextureList() const
-{
-	return reflection_texture_list;
+	return reflection_texture;
 }
 
 void Material::SetDiffuseColor(float r, float g, float b)
@@ -641,99 +473,135 @@ float Material::GetBumpScaling() const
 
 void Material::IncreaseUsedTexturesCount()
 {
-	for (std::vector<Texture*>::iterator it = diffuse_texture_list.begin(); it != diffuse_texture_list.end(); it++)
-	{
-		if((*it) != nullptr) (*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = specular_texture_list.begin(); it != specular_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = ambient_texture_list.begin(); it != ambient_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = emissive_texture_list.begin(); it != emissive_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = heightmap_texture_list.begin(); it != heightmap_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = normalmap_texture_list.begin(); it != normalmap_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = shininess_texture_list.begin(); it != shininess_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = opacity_texture_list.begin(); it != opacity_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = displacement_texture_list.begin(); it != displacement_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = lightmap_texture_list.begin(); it != lightmap_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
-	for(std::vector<Texture*>::iterator it = reflection_texture_list.begin(); it != reflection_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->IncreaseUsedCount();
-	}
+	if (diffuse_texture != nullptr)
+		diffuse_texture->IncreaseUsedCount();
+	
+	if (specular_texture != nullptr)
+		specular_texture->IncreaseUsedCount();
+	
+	if (ambient_texture != nullptr)
+		ambient_texture->IncreaseUsedCount();
+	
+	if (emissive_texture != nullptr)
+		emissive_texture->IncreaseUsedCount();
+	
+	if (heightmap_texture != nullptr)
+		heightmap_texture->IncreaseUsedCount();
+	
+	if (normalmap_texture != nullptr)
+		normalmap_texture->IncreaseUsedCount();
+	
+	if (shininess_texture != nullptr)
+		shininess_texture->IncreaseUsedCount();
+	
+	if (opacity_texture != nullptr)
+		opacity_texture->IncreaseUsedCount();
+	
+	if (displacement_texture != nullptr)
+		displacement_texture->IncreaseUsedCount();
+	
+	if(lightmap_texture != nullptr)
+		lightmap_texture->IncreaseUsedCount();
+	
+	if(reflection_texture != nullptr)
+		reflection_texture->IncreaseUsedCount();
+	
 }
 
 void Material::DecreaseUsedTexturesCount()
 {
-	for (std::vector<Texture*>::iterator it = diffuse_texture_list.begin(); it != diffuse_texture_list.end(); it++)
+	if (diffuse_texture != nullptr)
+		diffuse_texture->DecreaseUsedCount();
+
+	if (specular_texture != nullptr)
+		specular_texture->DecreaseUsedCount();
+
+	if (ambient_texture != nullptr)
+		ambient_texture->DecreaseUsedCount();
+
+	if (emissive_texture != nullptr)
+		emissive_texture->DecreaseUsedCount();
+
+	if (heightmap_texture != nullptr)
+		heightmap_texture->DecreaseUsedCount();
+
+	if (normalmap_texture != nullptr)
+		normalmap_texture->DecreaseUsedCount();
+
+	if (shininess_texture != nullptr)
+		shininess_texture->DecreaseUsedCount();
+
+	if (opacity_texture != nullptr)
+		opacity_texture->DecreaseUsedCount();
+
+	if (displacement_texture != nullptr)
+		displacement_texture->DecreaseUsedCount();
+
+	if (lightmap_texture != nullptr)
+		lightmap_texture->DecreaseUsedCount();
+
+	if (reflection_texture != nullptr)
+		reflection_texture->DecreaseUsedCount();
+}
+
+ShaderProgram * Material::GetShaderProgram() const
+{
+	return shader_program;
+}
+
+void Material::SetVertexShader(Shader * vertex)
+{
+	if (vertex != shader_program->GetVertexShader())
 	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = specular_texture_list.begin(); it != specular_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = ambient_texture_list.begin(); it != ambient_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = emissive_texture_list.begin(); it != emissive_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = heightmap_texture_list.begin(); it != heightmap_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = normalmap_texture_list.begin(); it != normalmap_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = shininess_texture_list.begin(); it != shininess_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = opacity_texture_list.begin(); it != opacity_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = displacement_texture_list.begin(); it != displacement_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = lightmap_texture_list.begin(); it != lightmap_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
-	}
-	for (std::vector<Texture*>::iterator it = reflection_texture_list.begin(); it != reflection_texture_list.end(); it++)
-	{
-		if ((*it) != nullptr)(*it)->DecreaseUsedCount();
+		shader_program->DecreaseUsedCount();
+
+		ShaderProgram* prog = App->resources->GetShaderProgram(vertex, shader_program->GetFragmentShader());
+
+		if (prog != nullptr)
+		{
+			shader_program = prog;
+		}
+		else
+		{
+			prog = new ShaderProgram();
+			prog->SetFragmentShader(shader_program->GetFragmentShader());
+			prog->SetVertexShader(vertex);
+			prog->LinkShaderProgram();
+
+			App->resources->AddResource(prog);
+
+			shader_program = prog;
+		}
+
+		shader_program->IncreaseUsedCount();
 	}
 }
 
+void Material::SetFragmentShader(Shader * fragment)
+{
+	if (fragment != shader_program->GetFragmentShader())
+	{
+		shader_program->DecreaseUsedCount();
 
+		ShaderProgram* prog = App->resources->GetShaderProgram(shader_program->GetVertexShader(), fragment);
+
+		if (prog != nullptr)
+		{
+			shader_program = prog;
+		}
+		else
+		{
+			prog = new ShaderProgram();
+			prog->SetFragmentShader(fragment);
+			prog->SetVertexShader(shader_program->GetVertexShader());
+			prog->LinkShaderProgram();
+
+			App->resources->AddResource(prog);
+
+			shader_program = prog;
+		}
+
+		shader_program->IncreaseUsedCount();
+	}
+}
 

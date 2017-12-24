@@ -4,6 +4,8 @@
 #include <vector>
 
 class Texture;
+class ShaderProgram;
+class Shader;
 
 class Material :
 	public Resource
@@ -30,29 +32,17 @@ public:
 	void SetLightMapTexture(Texture* ligthmap);
 	void SetReflectionTexture(Texture* refection);
 
-	Texture* GetDiffuseTexture(int index) const;
-	Texture* GetSpecularTexture(int index) const;
-	Texture* GetAmbientTexture(int index) const;
-	Texture* GetEmissiveTexture(int index) const;
-	Texture* GetHeightMapTexture(int index) const;
-	Texture* GetNormalMapTexture(int index) const;
-	Texture* GetShininessTexture(int index) const;
-	Texture* GetOpacityTexture(int index) const;
-	Texture* GetDisplacementTexture(int index) const;
-	Texture* GetLightMapTexture(int index) const;
-	Texture* GetReflectionTexture(int index) const;
-
-	std::vector<Texture*> GetDiffuseTextureList() const;
-	std::vector<Texture*> GetSpecularTextureList() const;
-	std::vector<Texture*> GetAmbientTextureList() const;
-	std::vector<Texture*> GetEmissiveTextureList() const;
-	std::vector<Texture*> GetHeightMapTextureList() const;
-	std::vector<Texture*> GetNormalMapTextureList() const;
-	std::vector<Texture*> GetShininessTextureList() const;
-	std::vector<Texture*> GetOpacityTextureList() const;
-	std::vector<Texture*> GetDisplacementTextureList() const;
-	std::vector<Texture*> GetLightMapTextureList() const;
-	std::vector<Texture*> GetReflectionTextureList() const;
+	Texture* GetDiffuseTexture() const;
+	Texture* GetSpecularTexture() const;
+	Texture* GetAmbientTexture() const;
+	Texture* GetEmissiveTexture() const;
+	Texture* GetHeightMapTexture() const;
+	Texture* GetNormalMapTexture() const;
+	Texture* GetShininessTexture() const;
+	Texture* GetOpacityTexture() const;
+	Texture* GetDisplacementTexture() const;
+	Texture* GetLightMapTexture() const;
+	Texture* GetReflectionTexture() const;
 
 	void SetDiffuseColor(float r, float g, float b);
 	void SetSpecularColor(float r, float g, float b);
@@ -101,19 +91,23 @@ public:
 	void IncreaseUsedTexturesCount();
 	void DecreaseUsedTexturesCount();
 
+	ShaderProgram* GetShaderProgram()const;
+	void SetVertexShader(Shader* vertex);
+	void SetFragmentShader(Shader* fragment);
+
 private:
 
-	std::vector<Texture*> diffuse_texture_list;
-	std::vector<Texture*> specular_texture_list;
-	std::vector<Texture*> ambient_texture_list;
-	std::vector<Texture*> emissive_texture_list;
-	std::vector<Texture*> heightmap_texture_list;
-	std::vector<Texture*> normalmap_texture_list;
-	std::vector<Texture*> shininess_texture_list;
-	std::vector<Texture*> opacity_texture_list;
-	std::vector<Texture*> displacement_texture_list;
-	std::vector<Texture*> lightmap_texture_list;
-	std::vector<Texture*> reflection_texture_list;
+	Texture* diffuse_texture;
+	Texture* specular_texture;
+	Texture* ambient_texture;
+	Texture* emissive_texture;
+	Texture* heightmap_texture;
+	Texture* normalmap_texture;
+	Texture* shininess_texture;
+	Texture* opacity_texture;
+	Texture* displacement_texture;
+	Texture* lightmap_texture;
+	Texture* reflection_texture;
 
 	Color diffuse_color;
 	Color specular_color;
@@ -143,5 +137,6 @@ private:
 	float reflectivity;
 	float bump_scaling;
 
+	ShaderProgram* shader_program = nullptr;
 };
 

@@ -71,10 +71,11 @@ public:
 
 	ShaderProgram* GetShaderProgram(std::string name) const;
 	ShaderProgram* GetShaderProgram(UID uid) const;
+	ShaderProgram* GetShaderProgram(Shader* vertex, Shader* fragment) const;
 	void AddShaderProgram(ShaderProgram* program);
 	void RemoveShaderProgram(ShaderProgram* program);
 	std::map<uint, ShaderProgram*> GetShaderProgramList() const;
-	void LoadShaderProgramMeta(std::string path) const;
+	void LoadShaderProgramMeta(std::string path) const;	
 
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
@@ -91,6 +92,8 @@ public:
 
 private:
 	void DeleteFBXMeshes(GameObject* gameobject);
+
+	void CreateDefaultShaders();
 
 private:
 	std::map<uint, Texture*> textures_list;
