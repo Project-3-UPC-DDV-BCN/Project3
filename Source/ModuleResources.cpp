@@ -1083,9 +1083,10 @@ void ModuleResources::CreateDefaultShaders()
 		"}";
 
 		default_vert->SetContent(shader_text);
-		default_vert->SetName("default");
-		
-		default_vert->SaveToPath(vert_default_path.c_str());
+		default_vert->SetName("default_vertex");
+		std::ofstream outfile(vert_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
 		RELEASE(default_vert);
 	}
 	CreateResource(vert_default_path);
@@ -1109,9 +1110,10 @@ void ModuleResources::CreateDefaultShaders()
 			"}";
 
 		default_frag->SetContent(shader_text);
-		default_frag->SetName("default");
-
-		default_frag->SaveToPath(frag_default_path.c_str());
+		default_frag->SetName("default_fragment");
+		std::ofstream outfile(frag_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
 		RELEASE(default_frag);
 	}
 	CreateResource(frag_default_path);

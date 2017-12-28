@@ -50,7 +50,7 @@ void Shader::Save(Data & data) const
 {
 	data.AddString("library_path", GetLibraryPath());
 	data.AddString("assets_path", GetAssetsPath());
-	data.AddString("texture_name", GetName());
+	data.AddString("shader_text", shader_text);
 	data.AddUInt("UUID", GetUID());
 }
 
@@ -111,14 +111,4 @@ void Shader::LoadToMemory()
 
 void Shader::UnloadFromMemory()
 {
-}
-
-void Shader::SaveToPath(const char * path)
-{
-	std::string file_path = App->file_system->StringToPathFormat(path);
-
-
-	std::ofstream outfile(file_path, std::ofstream::out);
-	outfile << shader_text;
-	outfile.close();
 }
