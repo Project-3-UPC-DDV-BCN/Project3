@@ -112,3 +112,13 @@ void Shader::LoadToMemory()
 void Shader::UnloadFromMemory()
 {
 }
+
+void Shader::SaveToPath(const char * path)
+{
+	std::string file_path = App->file_system->StringToPathFormat(path);
+
+
+	std::ofstream outfile(file_path, std::ofstream::out);
+	outfile << shader_text;
+	outfile.close();
+}

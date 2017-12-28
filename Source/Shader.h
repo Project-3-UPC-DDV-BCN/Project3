@@ -30,6 +30,8 @@ public:
 	void LoadToMemory();
 	void UnloadFromMemory();
 
+	void SaveToPath(const char* path);
+
 private:
 	uint shader_id;
 	ShaderType shader_type;

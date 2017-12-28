@@ -98,6 +98,8 @@ void ModuleResources::FillResourcesLists()
 	{
 		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 	}
+
+	CreateDefaultShaders();
 	
 	std::string shprog_meta_file;
 	bool exist_shprog_meta = false;
@@ -1054,15 +1056,65 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 
 void ModuleResources::CreateDefaultShaders()
 {
+	CONSOLE_LOG("-------------- Creating Default Shaders -------------")
 	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default.vshader";
-	if (App->file_system->FileExist(vert_default_path))
+	if (!App->file_system->FileExist(vert_default_path))
 	{
-		CreateResource(vert_default_path);
-	}
-	else
-	{
+		Shader* default_vert = new Shader();
+		default_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+		
+		std::string shader_text = 
+		"#version 330 core\n"
+		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec3 texCoord;\n"
+		"layout(location = 2) in vec3 normals;\n"
+		"layout(location = 3) in vec4 color;\n\n"
+		"out vec4 ourColor;\n"
+		"out vec3 Normal;\n"
+		"out vec2 TexCoord;\n\n"
+		"uniform mat4 Model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n\n"
+		"void main()\n"
+		"{ \n"
+		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+		"	ourColor = color;\n"
+		"	TexCoord = texCoord.xy;\n"
+		"}";
 
+		default_vert->SetContent(shader_text);
+		default_vert->SetName("default");
+		
+		default_vert->SaveToPath(vert_default_path.c_str());
+		RELEASE(default_vert);
 	}
+	CreateResource(vert_default_path);
+
+	std::string frag_default_path = SHADER_DEFAULT_FOLDER "default.fshader";
+	if (!App->file_system->FileExist(frag_default_path))
+	{
+		Shader* default_frag = new Shader();
+		default_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform sampler2D ourTexture;\n\n"
+			"void main()\n"
+			"{\n"
+			"	color = texture(ourTexture, TexCoord);\n"
+			"}";
+
+		default_frag->SetContent(shader_text);
+		default_frag->SetName("default");
+
+		default_frag->SaveToPath(frag_default_path.c_str());
+		RELEASE(default_frag);
+	}
+	CreateResource(frag_default_path);
 }
 
 bool ModuleResources::CheckResourceName(std::string& name)

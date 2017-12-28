@@ -108,5 +108,5 @@ enum update_status
 #define LUA_TEMPLATE_FILE_PATH "./Editor_Settings/Scripts_Templates/LuaScript.txt"
 #define VERTEX_SHADER_TEMPLATE_FILE_PATH "./Editor_Settings/Shaders_Templates/Vertex_Shader.txt"
 #define FRAGMENT_SHADER_TEMPLATE_FILE_PATH "./Editor_Settings/Shaders_Templates/Fragment_Shader.txt"
-#define SHADER_DEFAULT_FOLDER "./Editior_Settings/Default_Shaders/"
-#define SHADER_DEFAULT_FOLDER_PATH "./Editior_Settings/Default_Shaders"
+#define SHADER_DEFAULT_FOLDER "./Editor_Settings/Default_Shaders/"
+#define SHADER_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Shaders"
