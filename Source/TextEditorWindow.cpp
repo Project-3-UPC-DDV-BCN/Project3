@@ -7,6 +7,8 @@
 #include "ModuleScriptImporter.h"
 #include "ModuleShaderImporter.h"
 #include "ModuleFileSystem.h"
+#include "Shader.h"
+#include "ModuleResources.h"
 
 TextEditorWindow::TextEditorWindow()
 {
@@ -47,7 +49,15 @@ void TextEditorWindow::DrawWindow()
 					}
 					else
 					{
-						App->shader_importer->ImportShader(path);
+						//import the modified shader to library
+						App->shader_importer->ImportShader(path); 
+
+						//then update the engine shader
+						Shader* modified_shader = App->resources->GetShader(App->file_system->GetFileNameWithoutExtension(path));
+						if (modified_shader != nullptr)
+						{
+							modified_shader->SetContent(text);
+						}
 					}
 				}
 			}

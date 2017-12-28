@@ -313,7 +313,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 					}
 
 					Shader* frag = prog->GetFragmentShader();
-					if (ImGui::InputResourceShader("Vertex Shader", &frag, Shader::ShaderType::ST_FRAGMENT))
+					if (ImGui::InputResourceShader("Fragment Shader", &frag, Shader::ShaderType::ST_FRAGMENT))
 					{
 						mesh_renderer->GetMaterial()->SetFragmentShader(frag);
 					}

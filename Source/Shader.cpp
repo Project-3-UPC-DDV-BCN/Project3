@@ -4,6 +4,7 @@
 #include "ModuleShaderImporter.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResources.h"
+#include "ModuleRenderer3D.h"
 
 Shader::Shader()
 {
@@ -39,6 +40,7 @@ uint Shader::GetID() const
 void Shader::SetContent(std::string content)
 {
 	shader_text = content;
+	UpdateShader();
 }
 
 std::string Shader::GetContent() const
@@ -111,4 +113,30 @@ void Shader::LoadToMemory()
 
 void Shader::UnloadFromMemory()
 {
+}
+
+void Shader::UpdateShader()
+{
+	if (CompileShader())
+		App->resources->OnShaderUpdate(this);
+}
+
+bool Shader::CompileShader()
+{
+	bool ret = false;
+	switch (shader_type)
+	{
+	case ST_VERTEX:
+		shader_id = App->renderer3D->CreateVertexShader(shader_text.c_str());
+		break;
+	case ST_FRAGMENT:
+		shader_id = App->renderer3D->CreateFragmentShader(shader_text.c_str());
+		break;
+	}
+	if (shader_id != 0)
+	{
+		CONSOLE_LOG("Shader compilation Success :)");
+		ret = true;
+	}
+	return ret;
 }

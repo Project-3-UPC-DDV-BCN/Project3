@@ -25,6 +25,8 @@ Material::Material()
 	bump_scaling = 1;
 
 	diffuse_color = { 0.6f,0.6f,0.6f };
+
+	SetDefaultShaders();
 }
 
 Material::~Material()
@@ -603,5 +605,23 @@ void Material::SetFragmentShader(Shader * fragment)
 
 		shader_program->IncreaseUsedCount();
 	}
+}
+
+void Material::SetDefaultShaders()
+{
+	Shader* vert = App->resources->GetShader("default_vertex");
+	Shader* frag = App->resources->GetShader("default_fragment");
+
+	if (vert != nullptr && frag != nullptr)
+	{
+		ShaderProgram* prog = App->resources->GetShaderProgram(vert, frag);
+
+		if (prog != nullptr)
+			shader_program = prog;
+		else
+			CONSOLE_ERROR("Default Shader Program missing!");
+	}
+	else
+		CONSOLE_ERROR("Default Shaders missing!");
 }
 

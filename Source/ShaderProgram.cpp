@@ -11,6 +11,8 @@ ShaderProgram::ShaderProgram()
 	vertex_shader = nullptr;
 	fragment_shader = nullptr;
 	program_id = 0;
+
+	SetType(Resource::ResourceType::ShaderProgramResource);
 }
 
 ShaderProgram::~ShaderProgram()

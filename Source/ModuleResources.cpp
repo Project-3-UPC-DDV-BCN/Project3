@@ -167,6 +167,9 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::ShaderResource:
 		AddShader((Shader*)resource);
 		break;
+	case Resource::ShaderProgramResource:
+		AddShaderProgram((ShaderProgram*)resource);
+		break;
 	case Resource::Unknown:
 		break;
 	}
@@ -610,6 +613,17 @@ void ModuleResources::LoadShaderProgramMeta(std::string path) const
 		}
 
 		d.LeaveSection();
+	}
+}
+
+void ModuleResources::OnShaderUpdate(Shader * shader) const
+{
+	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
+	{
+		if (it->second->GetVertexShader() == shader || it->second->GetFragmentShader() == shader)
+		{
+			it->second->LinkShaderProgram(); //if the modified shader affects this program, link the program again
+		}
 	}
 }
 

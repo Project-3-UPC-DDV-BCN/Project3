@@ -476,7 +476,10 @@ namespace ImGui
 			return false;
 		ImGui::SameLine();
 
-		if (Button("+##shader", { 20, 20 }))
+		char name[15];
+		sprintf(name,"+##shader%d", type);
+
+		if (Button(name, { 20, 20 }))
 		{
 			App->editor->resources_window->SetShaderType(type);
 			App->editor->resources_window->SetResourceType(Resource::ShaderResource);

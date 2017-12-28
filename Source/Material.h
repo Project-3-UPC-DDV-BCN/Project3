@@ -96,6 +96,9 @@ public:
 	void SetFragmentShader(Shader* fragment);
 
 private:
+	void SetDefaultShaders();
+
+private:
 
 	Texture* diffuse_texture = nullptr;
 	Texture* specular_texture = nullptr;

@@ -30,6 +30,11 @@ public:
 	void LoadToMemory();
 	void UnloadFromMemory();
 
+	void UpdateShader();
+
+private:
+	bool CompileShader();
+
 private:
 	uint shader_id;
 	ShaderType shader_type;

@@ -76,6 +76,7 @@ public:
 	void RemoveShaderProgram(ShaderProgram* program);
 	std::map<uint, ShaderProgram*> GetShaderProgramList() const;
 	void LoadShaderProgramMeta(std::string path) const;	
+	void OnShaderUpdate(Shader* shader) const;
 
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
