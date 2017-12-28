@@ -97,17 +97,17 @@ public:
 
 private:
 
-	Texture* diffuse_texture;
-	Texture* specular_texture;
-	Texture* ambient_texture;
-	Texture* emissive_texture;
-	Texture* heightmap_texture;
-	Texture* normalmap_texture;
-	Texture* shininess_texture;
-	Texture* opacity_texture;
-	Texture* displacement_texture;
-	Texture* lightmap_texture;
-	Texture* reflection_texture;
+	Texture* diffuse_texture = nullptr;
+	Texture* specular_texture = nullptr;
+	Texture* ambient_texture = nullptr;
+	Texture* emissive_texture = nullptr;
+	Texture* heightmap_texture = nullptr;
+	Texture* normalmap_texture = nullptr;
+	Texture* shininess_texture = nullptr;
+	Texture* opacity_texture = nullptr;
+	Texture* displacement_texture = nullptr;
+	Texture* lightmap_texture = nullptr;
+	Texture* reflection_texture = nullptr;
 
 	Color diffuse_color;
 	Color specular_color;

@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Data.h"
 #include "Shader.h"
+#include "ModuleFileSystem.h"
 
 ModuleShaderImporter::ModuleShaderImporter(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -39,6 +40,8 @@ Shader * ModuleShaderImporter::LoadShaderFromLibrary(std::string path)
 			if (extension == ".fshader") type = Shader::ShaderType::ST_FRAGMENT;
 			shader->SetShaderType(type);
 			shader->SetContent(data.GetString("shader_text"));
+			shader->SetLibraryPath(path);
+			shader->SetName(App->file_system->GetFileNameWithoutExtension(path));
 			return shader;
 		}
 	}

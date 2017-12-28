@@ -637,8 +637,8 @@ void AssetsWindow::CreateMaterial(std::string material_name)
 
 	d.SaveAsBinary(selected_folder + "\\" + new_file_name);
 
-	App->resources->CreateResource(selected_folder + "\\" + new_file_name);
 	RELEASE(new_mat);
+	App->resources->CreateResource(selected_folder + "\\" + new_file_name);
 }
 
 void AssetsWindow::DeleteWindow(std::string path)

@@ -1057,7 +1057,7 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 void ModuleResources::CreateDefaultShaders()
 {
 	CONSOLE_LOG("-------------- Creating Default Shaders -------------")
-	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default.vshader";
+	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
 	if (!App->file_system->FileExist(vert_default_path))
 	{
 		Shader* default_vert = new Shader();
@@ -1083,7 +1083,6 @@ void ModuleResources::CreateDefaultShaders()
 		"}";
 
 		default_vert->SetContent(shader_text);
-		default_vert->SetName("default_vertex");
 		std::ofstream outfile(vert_default_path.c_str(), std::ofstream::out);
 		outfile << shader_text;
 		outfile.close();
@@ -1091,7 +1090,7 @@ void ModuleResources::CreateDefaultShaders()
 	}
 	CreateResource(vert_default_path);
 
-	std::string frag_default_path = SHADER_DEFAULT_FOLDER "default.fshader";
+	std::string frag_default_path = SHADER_DEFAULT_FOLDER "default_fragment.fshader";
 	if (!App->file_system->FileExist(frag_default_path))
 	{
 		Shader* default_frag = new Shader();
@@ -1110,13 +1109,24 @@ void ModuleResources::CreateDefaultShaders()
 			"}";
 
 		default_frag->SetContent(shader_text);
-		default_frag->SetName("default_fragment");
 		std::ofstream outfile(frag_default_path.c_str(), std::ofstream::out);
 		outfile << shader_text;
 		outfile.close();
 		RELEASE(default_frag);
 	}
 	CreateResource(frag_default_path);
+
+	ShaderProgram* prog = new ShaderProgram();
+
+	Shader* vertex = GetShader("default_vertex");
+	prog->SetVertexShader(vertex);
+
+	Shader* fragment = GetShader("default_fragment");
+	prog->SetFragmentShader(fragment);
+	
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
 }
 
 bool ModuleResources::CheckResourceName(std::string& name)
