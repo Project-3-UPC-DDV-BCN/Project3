@@ -38,8 +38,7 @@ private:
 	uint fbo_msaa_id;
 	uint texture_id;
 	uint rbo_id;
-	uint rbo_color_id;
-	uint rbo_depth_id;
+	uint texture_msaa_id;
 
 	uint width;
 	uint height;

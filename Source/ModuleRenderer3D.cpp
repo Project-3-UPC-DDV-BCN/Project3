@@ -146,10 +146,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
-		//editor_camera->GetViewportTexture()->Bind();
+		editor_camera->GetViewportTexture()->Bind();
+		DrawEditorScene();
 	}
-
-	DrawEditorScene();
 
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
@@ -567,7 +566,7 @@ uint ModuleRenderer3D::GetProgramBinary(uint program_id, uint buff_size, char * 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		CONSOLE_ERROR("Error geting shader program binary %s\n", gluErrorString(error));
+		CONSOLE_ERROR("Error getting shader program %d binary! %s\n", program_id, gluErrorString(error));
 	}
 
 	RELEASE_ARRAY(binaryFormats);
@@ -583,7 +582,7 @@ int ModuleRenderer3D::GetProgramSize(uint program_id) const
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		CONSOLE_ERROR("Error geting shader program size %s\n", gluErrorString(error));
+		CONSOLE_ERROR("Error getting shader program %d size! %s\n", program_id, gluErrorString(error));
 
 	}
 

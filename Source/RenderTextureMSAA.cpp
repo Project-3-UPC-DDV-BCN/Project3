@@ -7,10 +7,9 @@ RenderTextureMSAA::RenderTextureMSAA()
 	fbo_id = 0;
 	fbo_msaa_id = 0;
 	texture_id = 0;
+	texture_msaa_id = 0;
 	rbo_id = 0;
-	rbo_color_id = 0;
-	rbo_depth_id = 0;
-
+	max_msaa_samples = 8; //defined at modulewindow line 61 
 	SetType(Resource::RenderTextureResource);
 }
 
@@ -20,139 +19,61 @@ RenderTextureMSAA::~RenderTextureMSAA()
 
 bool RenderTextureMSAA::Create(uint width, uint height, int MSAA_level)
 {
-	max_msaa_samples = 8;
-	//glGetIntegerv(GL_MAX_SAMPLES, &max_msaa_samples);
+	bool ret = true;
+
 	if (MSAA_level > max_msaa_samples) MSAA_level = max_msaa_samples;
 	current_msaa_samples = MSAA_level;
 
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	// create a texture object
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //clamp is not allowed with shaders
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	// create a MSAA framebuffer object
+	//Create MSAA framebufer
 	glGenFramebuffers(1, &fbo_msaa_id);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_msaa_id);
 
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
+	//Create a multisampled color attachment texture
+	glGenTextures(1, &texture_msaa_id);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, current_msaa_samples, GL_RGB, width, height, GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture_msaa_id, 0);
 
-	// create a MSAA renderbuffer object to store color info
-	glGenRenderbuffers(1, &rbo_color_id);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo_color_id);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, MSAA_level, GL_RGB8, width, height);
+	//Create a renderbuffer for depth and stencil
+	glGenRenderbuffers(1, &rbo_id);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo_id);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, current_msaa_samples, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
 
-	error = glGetError();
-	if (error != GL_NO_ERROR)
+	GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if ( error != GL_FRAMEBUFFER_COMPLETE)
 	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
+		CONSOLE_ERROR("RenderTextureMSAA: Framebuffer is not complete! %s", gluErrorString(error));
+		ret = false;
 	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// create a MSAA renderbuffer object to store depth info
-	glGenRenderbuffers(1, &rbo_depth_id);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo_depth_id);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, MSAA_level, GL_DEPTH_COMPONENT, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	// attach msaa RBOs to FBO attachment points
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo_color_id);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_depth_id);
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	// create a normal (no MSAA) FBO to hold a render-to-texture
+	//configure post-processing framebuffer
 	glGenFramebuffers(1, &fbo_id);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
 
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	glGenRenderbuffers(1, &rbo_id);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo_id);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	// attach a texture to FBO color attachement point
+	//create the color attachment texture
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0);
 
-	error = glGetError();
-	if (error != GL_NO_ERROR)
+	error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (error != GL_FRAMEBUFFER_COMPLETE)
 	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
+		CONSOLE_ERROR("RenderTextureMSAA: Intermediate framebuffer is not complete! %s", gluErrorString(error));
+		ret = false;
 	}
-
-	// attach a rbo to FBO depth attachement point
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
-
-	// check FBO status
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		return false;
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		CONSOLE_DEBUG("Error Creating RendertextureMSAA! %s\n", gluErrorString(error));
-	}
 
 	this->width = width;
 	this->height = height;
 
-	return true;
+	return ret;
 }
 
 void RenderTextureMSAA::Bind()
@@ -174,7 +95,7 @@ void RenderTextureMSAA::Render()
 	glBlitFramebuffer(0, 0, width, height,  // src rect
 		0, 0, width, height,  // dst rect
 		GL_COLOR_BUFFER_BIT, // buffer mask
-		GL_LINEAR); // scale filter
+		GL_NEAREST); // scale filter
 }
 
 void RenderTextureMSAA::ChangeMSAALevel(int MSAA_level)
@@ -187,18 +108,21 @@ void RenderTextureMSAA::Destroy()
 {
 	glDeleteTextures(1, &texture_id);
 	texture_id = 0;
+	glDeleteTextures(1, &texture_msaa_id);
+	texture_msaa_id = 0;
 
 	glDeleteFramebuffers(1, &fbo_id);
 	fbo_id = 0;
 	glDeleteFramebuffers(1, &fbo_msaa_id);
 	fbo_msaa_id = 0;
-
 	glDeleteRenderbuffers(1, &rbo_id);
-	glDeleteRenderbuffers(1, &rbo_color_id);
-	glDeleteRenderbuffers(1, &rbo_depth_id);
 	rbo_id = 0;
-	rbo_color_id = 0;
-	rbo_depth_id = 0;
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("RenderTextureMSAA: error at destroy! %s\n", gluErrorString(error));
+	}
 }
 
 uint RenderTextureMSAA::GetTextureID() const
