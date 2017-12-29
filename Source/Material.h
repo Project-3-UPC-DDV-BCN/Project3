@@ -94,9 +94,13 @@ public:
 	ShaderProgram* GetShaderProgram()const;
 	void SetVertexShader(Shader* vertex);
 	void SetFragmentShader(Shader* fragment);
+	
+
+	uint GetShaderProgramID() const;
 
 private:
 	void SetDefaultShaders();
+	void SetShaders(Shader* vertex, Shader* fragment);
 
 private:
 

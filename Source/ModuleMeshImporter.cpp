@@ -226,6 +226,7 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 					memcpy(mesh->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
 			}
 
+			mesh->CreateVerticesFromData();
 			// -------------------------------------
 
 			Material* material = nullptr;

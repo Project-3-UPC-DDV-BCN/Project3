@@ -95,6 +95,7 @@ private:
 	void DeleteFBXMeshes(GameObject* gameobject);
 
 	void CreateDefaultShaders();
+	void CreateDefaultMaterial();
 
 private:
 	std::map<uint, Texture*> textures_list;

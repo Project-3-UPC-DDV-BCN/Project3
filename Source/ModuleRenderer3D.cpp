@@ -149,7 +149,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		//editor_camera->GetViewportTexture()->Bind();
 	}
 
-	//DrawEditorScene();
+	DrawEditorScene();
 
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
@@ -171,7 +171,7 @@ void ModuleRenderer3D::DrawEditorScene()
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
+		//App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
 	}
 
@@ -222,7 +222,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				//aabb.Render();
 			}
 		}
-		DrawMesh(*it);
+		DrawMesh(*it, active_camera);
 	}
 
 	for (std::list<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
@@ -234,18 +234,18 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
 					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-					DrawMesh(*it);
+					DrawMesh(*it, active_camera);
 				}
 			}
 		}
 		else
 		{
-			DrawMesh(*it);
+			DrawMesh(*it, active_camera);
 			if ((*it)->GetGameObject()->IsSelected())
 			{
 				DebugAABB aabb((*it)->GetMesh()->box);
 				aabb.color = { 0,1,0,1 };
-				aabb.Render();
+				//aabb.Render();
 			}
 		}
 	}
@@ -258,14 +258,14 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			{
 				DebugFrustum frustum((*it)->camera_frustum);
 				frustum.color = { 0,1,0,1 };
-				frustum.Render();
+				//frustum.Render();
 			}
 		}
 	}
 
 	if (App->scene->draw_octree)
 	{
-		App->scene->octree.DebugDraw();
+		//App->scene->octree.DebugDraw();
 	}
 	
 	active_camera->GetViewportTexture()->Render();
@@ -273,22 +273,28 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 }
 
-void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
+void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 	
 	Material* material = mesh->GetMaterial();
+
+	uint program = 0;
 	if (material != nullptr)
 	{
+		program = material->GetShaderProgramID();
+		UseShaderProgram(program);
 		material->LoadToMemory();
 	}
+
+	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
-	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	UnbindVertexArrayObject();
 }
 
 void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)

@@ -88,6 +88,8 @@ void Mesh::LoadToMemory()
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 13, vertices_data, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+		
+
 		glGenBuffers(1, &id_indices);
 		glBindBuffer(GL_ARRAY_BUFFER, id_indices);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);

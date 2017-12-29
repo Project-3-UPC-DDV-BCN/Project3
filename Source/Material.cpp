@@ -9,6 +9,7 @@
 #include <ctime>
 #include "OpenGL.h"
 #include "ShaderProgram.h"
+#include "Shader.h"
 
 Material::Material()
 {
@@ -90,6 +91,9 @@ void Material::Save(Data & data) const
 	
 	if (reflection_texture != nullptr)
 		data.AddString("reflection_texture", reflection_texture->GetLibraryPath());
+
+	data.AddString("vertex_shader", shader_program->GetVertexShader()->GetName());
+	data.AddString("fragment_shader", shader_program->GetFragmentShader()->GetName());
 }
 
 bool Material::Load(Data & data)
@@ -161,6 +165,12 @@ bool Material::Load(Data & data)
 	SetAssetsPath(data.GetString("assets_path"));
 	SetLibraryPath(data.GetString("library_path"));
 	SetName(data.GetString("material_name"));
+
+	Shader* vert = App->resources->GetShader(data.GetString("vertex_shader"));
+	Shader* frag = App->resources->GetShader(data.GetString("fragment_shader"));
+
+	if(vert != nullptr && frag != nullptr)
+		SetShaders(vert, frag);
 
 	return ret;
 }
@@ -607,6 +617,35 @@ void Material::SetFragmentShader(Shader * fragment)
 	}
 }
 
+void Material::SetShaders(Shader * vertex, Shader * fragment)
+{
+	ShaderProgram* prog = App->resources->GetShaderProgram(vertex, fragment);
+
+	if (prog != nullptr)
+	{
+		shader_program = prog;
+	}
+	else
+	{
+		prog = new ShaderProgram();
+		prog->SetFragmentShader(fragment);
+		prog->SetVertexShader(vertex);
+		prog->LinkShaderProgram();
+
+		App->resources->AddResource(prog);
+
+		shader_program = prog;
+	}
+
+	shader_program->IncreaseUsedCount();
+	
+}
+
+uint Material::GetShaderProgramID() const
+{
+	return shader_program->GetProgramID();
+}
+
 void Material::SetDefaultShaders()
 {
 	Shader* vert = App->resources->GetShader("default_vertex");
@@ -617,7 +656,10 @@ void Material::SetDefaultShaders()
 		ShaderProgram* prog = App->resources->GetShaderProgram(vert, frag);
 
 		if (prog != nullptr)
+		{
 			shader_program = prog;
+			prog->IncreaseUsedCount();
+		}
 		else
 			CONSOLE_ERROR("Default Shader Program missing!");
 	}

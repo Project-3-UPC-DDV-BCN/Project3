@@ -19,7 +19,7 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-	delete image_data;
+	RELEASE(image_data);
 	UnloadFromMemory();
 }
 

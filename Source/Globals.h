@@ -110,3 +110,5 @@ enum update_status
 #define FRAGMENT_SHADER_TEMPLATE_FILE_PATH "./Editor_Settings/Shaders_Templates/Fragment_Shader.txt"
 #define SHADER_DEFAULT_FOLDER "./Editor_Settings/Default_Shaders/"
 #define SHADER_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Shaders"
+#define MATERIAL_DEFAULT_FOLDER "./Editor_Settings/Default_Materials/"
+#define MATERIAL_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Materials"

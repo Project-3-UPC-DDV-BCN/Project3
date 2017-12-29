@@ -100,6 +100,7 @@ void ModuleResources::FillResourcesLists()
 	}
 
 	CreateDefaultShaders();
+	CreateDefaultMaterial();
 	
 	std::string shprog_meta_file;
 	bool exist_shprog_meta = false;
@@ -1070,7 +1071,9 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 
 void ModuleResources::CreateDefaultShaders()
 {
-	CONSOLE_LOG("-------------- Creating Default Shaders -------------")
+	CONSOLE_LOG("-------------- Creating Default Shaders -------------");
+	if (!App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(SHADER_DEFAULT_FOLDER_PATH);
+
 	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
 	if (!App->file_system->FileExist(vert_default_path))
 	{
@@ -1141,6 +1144,26 @@ void ModuleResources::CreateDefaultShaders()
 	prog->LinkShaderProgram();
 
 	AddResource(prog);
+}
+
+void ModuleResources::CreateDefaultMaterial()
+{
+	CONSOLE_LOG("-------------- Creating Default Material -------------");
+	if (!App->file_system->DirectoryExist(MATERIAL_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(MATERIAL_DEFAULT_FOLDER_PATH);
+
+	std::string default_mat = MATERIAL_DEFAULT_FOLDER "default_material.mat";
+	if (!App->file_system->FileExist(default_mat))
+	{
+		Material* new_mat = new Material();
+		new_mat->SetName("default_material");
+		Data d;
+		new_mat->Save(d);
+
+		d.SaveAsBinary(default_mat);
+
+		RELEASE(new_mat);
+	}
+	CreateResource(default_mat);
 }
 
 bool ModuleResources::CheckResourceName(std::string& name)
