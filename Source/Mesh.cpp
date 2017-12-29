@@ -24,6 +24,7 @@ Mesh::~Mesh()
 {
 	RELEASE_ARRAY(indices);
 	RELEASE_ARRAY(vertices_data);
+	RELEASE_ARRAY(vertices);
 
 	UnloadFromMemory();
 }
@@ -70,6 +71,7 @@ bool Mesh::Load(Data & data)
 		vertices_data = mesh->vertices_data;
 		App->resources->AddMesh(this);
 	}
+	CreateVerticesFromData();
 
 	return ret;
 }

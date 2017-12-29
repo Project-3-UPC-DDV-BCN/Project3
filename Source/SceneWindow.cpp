@@ -155,6 +155,7 @@ void SceneWindow::DrawMenuBar()
 			if (ImGui::MenuItem("Shaded", "", !wireframe_mode))
 			{
 				wireframe_mode = false;
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			}
 			if (ImGui::MenuItem("Wireframe", "", wireframe_mode))
 			{
