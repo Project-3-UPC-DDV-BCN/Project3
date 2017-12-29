@@ -5,9 +5,17 @@ in vec2 TexCoord;
 
 out vec4 color;
 
+uniform bool has_material_color;
+uniform vec4 material_color;
+uniform bool has_texture;
 uniform sampler2D ourTexture;
 
 void main()
 {
-	color = texture(ourTexture, TexCoord);
+	if(has_texture)
+		color = texture(ourTexture, TexCoord);
+	else if(has_material_color)
+		color = material_color;
+	else
+		color = ourColor;
 }

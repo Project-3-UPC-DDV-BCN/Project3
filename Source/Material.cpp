@@ -10,6 +10,7 @@
 #include "OpenGL.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ModuleRenderer3D.h"
 
 Material::Material()
 {
@@ -25,7 +26,7 @@ Material::Material()
 	reflectivity = 0;
 	bump_scaling = 1;
 
-	diffuse_color = { 0.6f,0.6f,0.6f };
+	diffuse_color = { 0.6f,0.6f,0.0f };
 
 	SetDefaultShaders();
 }
@@ -112,54 +113,88 @@ bool Material::Load(Data & data)
 	bump_scaling = data.GetFloat("bump_scaling");
 	
 	std::string library_path = data.GetString("diffuse_texture");
-	Texture* diffuse = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
-	SetDiffuseTexture(diffuse);
+	if (library_path != "value not found")
+	{
+		Texture* diffuse = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
+		SetDiffuseTexture(diffuse);
+	}
 	
 	math::float4 f_diffuse_color = data.GetVector4("diffuse_color");
 	diffuse_color.r = f_diffuse_color.x;
 	diffuse_color.g = f_diffuse_color.y;
 	diffuse_color.b = f_diffuse_color.z;
 	diffuse_color.a = f_diffuse_color.w;
+	if (diffuse_color.a == -1.0f) diffuse_color.a = 0.0f;
 
 	library_path = data.GetString("specular_texture");
-	Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetSpecularTexture(specular);
+	if (library_path != "value not found")
+	{
+		Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetSpecularTexture(specular);
+	}
 	
 	library_path = data.GetString("ambient_texture");
-	Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetAmbientTexture(ambient);
+	if (library_path != "value not found")
+	{
+		Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetAmbientTexture(ambient);
+	}
 	
 	library_path = data.GetString("emissive_texture");
-	Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetEmissiveTexture(emissive);
+	if (library_path != "value not found")
+	{
+		Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetEmissiveTexture(emissive);
+	}
 	
 	library_path = data.GetString("heightmap_texture");
-	Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetHeightMapTexture(heightmap);
+	if (library_path != "value not found")
+	{
+		Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetHeightMapTexture(heightmap);
+	}
 	
 	library_path = data.GetString("normalmap_texture");
-	Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetNormalMapTexture(normalmap);
+	if (library_path != "value not found")
+	{
+		Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetNormalMapTexture(normalmap);
+	}
 	
 	library_path = data.GetString("shininess_texture");
-	Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetShininessTexture(shininess);
+	if (library_path != "value not found")
+	{
+		Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetShininessTexture(shininess);
+	}
 	
 	library_path = data.GetString("opacity_texture");
-	Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetOpacityTexture(opacity);
+	if (library_path != "value not found")
+	{
+		Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetOpacityTexture(opacity);
+	}
 
 	library_path = data.GetString("displacement_texture");
-	Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetDisplacementTexture(displacement);
+	if (library_path != "value not found")
+	{
+		Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetDisplacementTexture(displacement);
+	}
 	
 	library_path = data.GetString("lightmap_texture");
-	Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetLightMapTexture(lightmap);
+	if (library_path != "value not found")
+	{
+		Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetLightMapTexture(lightmap);
+	}
 
 	library_path = data.GetString("reflection_texture");
-	Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path);
-	SetReflectionTexture(reflection);
+	if (library_path != "value not found")
+	{
+		Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path);
+		SetReflectionTexture(reflection);
+	}
 
 	SetUID(data.GetUInt("UUID"));
 	SetAssetsPath(data.GetString("assets_path"));
@@ -190,10 +225,23 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	if (diffuse_texture->GetID() != 0)
+	bool has_tex = false;
+	if (diffuse_texture != nullptr && diffuse_texture->GetID() != 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
+		has_tex = true;
 	}
+
+	bool has_mat_color = false;
+	if (diffuse_color.a != 0.0f)
+	{
+		App->renderer3D->SetUniformVector4(GetShaderProgramID(), "material_color", float4(diffuse_color.r, diffuse_color.g, diffuse_color.b, diffuse_color.a));
+		has_mat_color = true;
+	}
+
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture", has_tex);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
+	
 }
 
 void Material::UnloadFromMemory()
@@ -316,6 +364,7 @@ void Material::SetDiffuseColor(float r, float g, float b)
 	diffuse_color.r = r;
 	diffuse_color.g = g;
 	diffuse_color.b = b;
+	diffuse_color.a = 1.0f;
 }
 
 void Material::SetSpecularColor(float r, float g, float b)
@@ -323,6 +372,7 @@ void Material::SetSpecularColor(float r, float g, float b)
 	specular_color.r = r;
 	specular_color.g = g;
 	specular_color.b = b;
+	specular_color.a = 1.0f;
 }
 
 void Material::SetAmbientColor(float r, float g, float b)
@@ -330,6 +380,7 @@ void Material::SetAmbientColor(float r, float g, float b)
 	ambient_color.r = r;
 	ambient_color.g = g;
 	ambient_color.b = b;
+	ambient_color.a = 1.0f;
 }
 
 void Material::SetEmissiveColor(float r, float g, float b)
@@ -337,6 +388,7 @@ void Material::SetEmissiveColor(float r, float g, float b)
 	emissive_color.r = r;
 	emissive_color.g = g;
 	emissive_color.b = b;
+	emissive_color.a = 1.0f;
 }
 
 void Material::SetTransparentColor(float r, float g, float b)
@@ -344,6 +396,7 @@ void Material::SetTransparentColor(float r, float g, float b)
 	transparent_color.r = r;
 	transparent_color.g = g;
 	transparent_color.b = b;
+	transparent_color.a = 1.0f;
 }
 
 void Material::SetReflectiveColor(float r, float g, float b)
@@ -351,6 +404,7 @@ void Material::SetReflectiveColor(float r, float g, float b)
 	reflective_color.r = r;
 	reflective_color.g = g;
 	reflective_color.b = b;
+	transparent_color.a = 1.0f;
 }
 
 Color Material::GetDiffuseColor() const

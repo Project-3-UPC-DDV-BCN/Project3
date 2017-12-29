@@ -665,11 +665,39 @@ void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float *
 	}
 }
 
+void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1i(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
 void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
 	if (modelLoc != -1)
 		glUniform1f(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformVector4(uint program, const char * name, float4 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform4f(modelLoc, data.x, data.y, data.z, data.w);
 	GLenum error = glGetError();
 
 	//Check for error

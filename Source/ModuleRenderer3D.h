@@ -67,9 +67,11 @@ public:
 	void SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap);
 
 	void UseShaderProgram(uint id);
-	void SetUniformMatrix(uint program, const char* name, float* data);
-
+	
+	void SetUniformBool(uint program, const char* name, bool data);
 	void SetUniformFloat(uint program, const char* name, float data);
+	void SetUniformVector4(uint program, const char* name, float4 data);
+	void SetUniformMatrix(uint program, const char* name, float* data);
 
 	uint CreateShaderProgram();
 	void AttachShaderToProgram(uint program_id, uint shader_id);

@@ -1119,10 +1119,18 @@ void ModuleResources::CreateDefaultShaders()
 			"in vec3 Normal;\n"
 			"in vec2 TexCoord;\n\n"
 			"out vec4 color;\n\n"
+			"uniform bool has_material_color;\n"
+			"uniform vec4 material_color;\n"
+			"uniform bool has_texture;\n"
 			"uniform sampler2D ourTexture;\n\n"
 			"void main()\n"
 			"{\n"
-			"	color = texture(ourTexture, TexCoord);\n"
+			"	if(has_texture)\n"
+			"		color = texture(ourTexture, TexCoord);\n"
+			"	else if(has_material_color)\n"
+			"		color = material_color;\n"
+			"	else\n"
+			"		color = ourColor;\n"
 			"}";
 
 		default_frag->SetContent(shader_text);

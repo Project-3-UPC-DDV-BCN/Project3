@@ -221,7 +221,7 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 
 				//copy colors
 				if (colors != nullptr)
-					memcpy(mesh->vertices_data + v * 13 + 9, colors + v * 3, sizeof(float) * 4);
+					memcpy(mesh->vertices_data + v * 13 + 9, colors + v * 4, sizeof(float) * 4);
 				else
 					memcpy(mesh->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
 			}
