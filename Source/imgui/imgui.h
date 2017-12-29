@@ -217,7 +217,7 @@ namespace ImGui
     IMGUI_API void          Separator();                                                        // horizontal line
     IMGUI_API void          SameLine(float pos_x = 0.0f, float spacing_w = -1.0f);              // call between widgets or groups to layout them horizontally
     IMGUI_API void          NewLine();                                                          // undo a SameLine()
-    IMGUI_API void          Spacing();                                                          // add vertical spacing
+    IMGUI_API void          Spacing(float y = 0);                                               // add vertical spacing
     IMGUI_API void          Dummy(const ImVec2& size);                                          // add a dummy item of given size
     IMGUI_API void          Indent(float indent_w = 0.0f);                                      // move content position toward the right, by style.IndentSpacing or indent_w if >0
     IMGUI_API void          Unindent(float indent_w = 0.0f);                                    // move content position back to the left, by style.IndentSpacing or indent_w if >0
@@ -581,7 +581,8 @@ enum ImGuiSelectableFlags_
     // Default: 0
     ImGuiSelectableFlags_DontClosePopups    = 1 << 0,   // Clicking this don't close parent popup window
     ImGuiSelectableFlags_SpanAllColumns     = 1 << 1,   // Selectable frame can span all columns (text will still fit in current column)
-    ImGuiSelectableFlags_AllowDoubleClick   = 1 << 2    // Generate press events on double clicks too
+    ImGuiSelectableFlags_AllowDoubleClick   = 1 << 2,   // Generate press events on double clicks too
+	ImGuiSelectableFlags_AllowEnterKey		= 1 << 3	// Pressing Return/Enter acts as click
 };
 
 // User fill ImGuiIO.KeyMap[] array with indices into the ImGuiIO.KeysDown[512] array

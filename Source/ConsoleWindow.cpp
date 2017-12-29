@@ -7,10 +7,6 @@ ConsoleWindow::ConsoleWindow()
 	UpdateLabels();
 
 	scroll_to_bottom = false;
-	logs = 0;
-	warnings = 0;
-	errors = 0;
-	debug_logs = 0;
 	show_logs = true;
 	show_warnings = true;
 	show_errors = true;
@@ -51,21 +47,24 @@ void ConsoleWindow::DrawWindow()
 		ImGui::Separator();
 		ImGui::BeginChild("scrolling");
 
-		for (int i = 0; i < message_list.size(); i++) {
-			if (show_errors && message_list[i].find("[Error]") != std::string::npos) {
-				ImGui::TextColored(error_text_color, "%s", message_list[i].c_str());
+		if (show_errors && !errors_list.empty()) {
+			for (int i = 0; i < errors_list.size(); i++) {
+				ImGui::TextColored(error_text_color, "%s", errors_list[i].c_str());
 			}
-			else if (show_warnings && message_list[i].find("[Warning]") != std::string::npos) {
-				ImGui::TextColored(warning_text_color, "%s", message_list[i].c_str());
+		}
+		if (show_warnings && !warnings_list.empty()) {
+			for (int i = 0; i < warnings_list.size(); i++) {
+				ImGui::TextColored(warning_text_color, "%s", warnings_list[i].c_str());
 			}
-			else if (show_logs && message_list[i].find("[Log]") != std::string::npos) {
-				ImGui::TextColored(log_text_color,"%s", message_list[i].c_str());
+		}
+		if (show_logs && !logs_list.empty()) {
+			for (int i = 0; i < logs_list.size(); i++) {
+				ImGui::TextColored(log_text_color, "%s", logs_list[i].c_str());
 			}
-			else if (show_debug_logs && message_list[i].find("[Debug]") != std::string::npos) {
-				ImGui::TextColored(debug_text_color,"%s", message_list[i].c_str());
-			}
-			else {
-				ImGui::Text("");
+		}
+		if (show_debug_logs && !debug_list.empty()) {
+			for (int i = 0; i < debug_list.size(); i++) {
+				ImGui::TextColored(debug_text_color, "%s", debug_list[i].c_str());
 			}
 		}
 
@@ -79,65 +78,57 @@ void ConsoleWindow::DrawWindow()
 
 void ConsoleWindow::Clear()
 {
-	message_list.clear();
-	logs = 0;
-	warnings = 0;
-	errors = 0;
-	debug_logs = 0;
+	logs_list.clear();
+	warnings_list.clear();
+	errors_list.clear();
+	debug_list.clear();
 	UpdateLabels();
 }
 
-void ConsoleWindow::AddLog(std::string log, bool is_wrror, bool is_warning, bool is_debug)
+void ConsoleWindow::AddLog(std::string log, bool is_error, bool is_warning, bool is_debug)
 {
-	std::string log_prefix;
 
-	if (is_wrror) {
-		log_prefix += " [Error]  ";
-		if (errors < 99) {
-			errors++;
+	if (is_error) {
+		if (errors_list.size() < 99) {
+			errors_list.push_back("[Error] " + log);
 		}
 		else {
-			message_list.erase(message_list.begin());
+			errors_list.erase(errors_list.begin());
 		}
 	}
 	else if (is_warning) {
-		log_prefix += " [Warning]  ";
-		if (warnings < 99) {
-			warnings++;
+		if (warnings_list.size() < 99) {
+			warnings_list.push_back("[Warning] " + log);
 		}
 		else {
-			message_list.erase(message_list.begin());
+			warnings_list.erase(warnings_list.begin());
 		}
 	}
 	else if (is_debug) {
-		log_prefix += " [Debug]  ";
-		if (debug_logs < 99) {
-			debug_logs++;
+		if (debug_list.size() < 99) {
+			debug_list.push_back("[Debug] " + log);
 		}
 		else {
-			message_list.erase(message_list.begin());
+			debug_list.erase(debug_list.begin());
 		}
 	}
 	else {
-		log_prefix += " [Log]  ";
-		if (logs < 99) {
-			logs++;
+		if (logs_list.size() < 99) {
+			logs_list.push_back("[Log] " + log);
 		}
 		else {
-			message_list.erase(message_list.begin());
+			logs_list.erase(logs_list.begin());
 		}
 	}
 
-	log_prefix += log;
-	message_list.push_back(log_prefix);
 	scroll_to_bottom = true;
 	UpdateLabels();
 }
 
 void ConsoleWindow::UpdateLabels()
 {
-	errors_label = "Errors (" + std::to_string(errors) + ")";
-	warnings_label = "Warnings (" + std::to_string(warnings) + ")";
-	logs_label = "Logs (" + std::to_string(logs) + ")";
-	debug_label = "Debug (" + std::to_string(debug_logs) + ")";
+	errors_label = "Errors (" + std::to_string(errors_list.size()) + ")";
+	warnings_label = "Warnings (" + std::to_string(warnings_list.size()) + ")";
+	logs_label = "Logs (" + std::to_string(logs_list.size()) + ")";
+	debug_label = "Debug (" + std::to_string(debug_list.size()) + ")";
 }

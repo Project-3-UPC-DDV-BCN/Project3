@@ -169,8 +169,8 @@ bool Material::Load(Data & data)
 	Shader* vert = App->resources->GetShader(data.GetString("vertex_shader"));
 	Shader* frag = App->resources->GetShader(data.GetString("fragment_shader"));
 
-	if(vert != nullptr && frag != nullptr)
-		SetShaders(vert, frag);
+	/*if(vert != nullptr && frag != nullptr)
+		SetShaders(vert, frag);*/
 
 	return ret;
 }

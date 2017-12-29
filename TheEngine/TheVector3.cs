@@ -134,7 +134,7 @@ namespace TheEngine
             return start + value * (end - start);
         }
 
-        public static TheVector3 SLerp(TheVector3 start, TheVector3 end, float value)
+        public static TheVector3 Slerp(TheVector3 start, TheVector3 end, float value)
         {
             float dot = DotProduct(start, end);
             Math.Math.Clamp(dot, -1, 1);
@@ -148,9 +148,9 @@ namespace TheEngine
             return Lerp(start, end, value).Normalized;
         }
 
-        public static float DotProduct(TheVector3 vector_1, TheVector3 vector_2)
+        public static float DotProduct(TheVector3 a, TheVector3 b)
         {
-            return vector_1.x * vector_2.x + vector_1.y * vector_2.y + vector_1.z * vector_2.z; 
+            return a.x * b.x + a.y * b.y + a.z * b.z; 
         }
 
         public static TheVector3 Project(TheVector3 vector, TheVector3 normal)
@@ -168,14 +168,14 @@ namespace TheEngine
             return ret;
         }
 
-        public static float AngleBetween(TheVector3 vector_1, TheVector3 vector_2)
+        public static float AngleBetween(TheVector3 a, TheVector3 b)
         {
-            return Math.Math.Acos(DotProduct(vector_1, vector_2) / DotProduct(vector_1.Normalized, vector_2.Normalized)) * Math.Math.RadToDeg;
+            return Math.Math.Acos(DotProduct(a, b) / DotProduct(a.Normalized, b.Normalized)) * Math.Math.RadToDeg;
         }
 
-        public static float Distance(TheVector3 vector_1, TheVector3 vector_2)
+        public static float Distance(TheVector3 a, TheVector3 b)
         {
-            TheVector3 vector = new TheVector3(vector_1.x - vector_2.x, vector_1.y - vector_2.y, vector_1.z - vector_2.z);
+            TheVector3 vector = new TheVector3(a.x - b.x, a.y - b.y, a.z - b.z);
             return Math.Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
 
@@ -202,9 +202,9 @@ namespace TheEngine
             this.z = z;
         }
 
-        public static TheVector3 CrossProduct(TheVector3 vector_1, TheVector3 vector_2)
+        public static TheVector3 CrossProduct(TheVector3 a, TheVector3 b)
         {
-            return new TheVector3(vector_1.y * vector_2.z - vector_1.z * vector_2.y, vector_1.z * vector_2.x - vector_1.x * vector_2.z, vector_1.x * vector_2.y - vector_1.y * vector_2.x);
+            return new TheVector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
         }
 
         public static TheVector3 Reflect(TheVector3 direction, TheVector3 normal)

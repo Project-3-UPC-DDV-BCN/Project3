@@ -76,17 +76,28 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 		return false;
 	}
 
+	MonoAssembly* compiler_assembly = mono_domain_assembly_open(mono_domain, REFERENCE_ASSEMBLIES_FOLDER"compiler.dll");
+	if (compiler_assembly)
+	{
+		mono_compiler_image = mono_assembly_get_image(compiler_assembly);
+	}
+	else
+	{
+		CONSOLE_ERROR("Can't load 'Compiler.dll'!");
+		return false;
+	}
+
 	return true;
 }
 
 std::string ModuleScriptImporter::ImportScript(std::string path)
 {
 	std::string ret = "";
-	std::string script_name = App->file_system->GetFileNameWithoutExtension(path);
-	
-	if (CompileScript(path) != 0)
+	std::string result = CompileScript(path);
+
+	if (result != "")
 	{
-		CONSOLE_ERROR("Can't compile %s. Please check for code errors.", path.c_str());
+		CONSOLE_ERROR("%s", result.c_str());
 	}
 
 	return ret;
@@ -120,30 +131,43 @@ MonoImage * ModuleScriptImporter::GetEngineImage() const
 	return mono_engine_image;
 }
 
-int ModuleScriptImporter::CompileScript(std::string assets_path)
+std::string ModuleScriptImporter::CompileScript(std::string assets_path)
 {
 	std::string script_name = App->file_system->GetFileNameWithoutExtension(assets_path);
-	std::string compile_command = mono_path + "compiler\\mcs -target:library -out:" + LIBRARY_SCRIPTS_FOLDER + script_name + ".dll" + " ";
-	std::string assemblies_folder_full_path = App->file_system->GetFullPath("Editor_Settings/Reference_Assemblies/");
-	std::vector<std::string> assemblies = App->file_system->GetFilesInDirectory(assemblies_folder_full_path);
-	for (std::vector<std::string>::iterator it = assemblies.begin(); it != assemblies.end(); it++)
+	std::string ret;
+	if (!App->file_system->DirectoryExist(LIBRARY_SCRIPTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCRIPTS_FOLDER_PATH);
+	std::string output_name = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
+
+	MonoClass* compiler_class = mono_class_from_name(mono_compiler_image, "Compiler", "Compiler");
+	if (compiler_class)
 	{
-		if (App->file_system->GetFileExtension(*it) == ".dll")
+		MonoMethod* method = method = mono_class_get_method_from_name(compiler_class, "Compile", 2);
+
+		if (method)
 		{
-			compile_command += "-r:" + assemblies_folder_full_path + App->file_system->GetFileName(*it) + " ";
-		}
-	}
-	for (std::vector<std::string>::iterator it = assemblies.begin(); it != assemblies.end(); it++)
-	{
-		if (App->file_system->GetFileExtension(*it) == ".dll")
-		{
-			compile_command += "-lib:" + assemblies_folder_full_path + App->file_system->GetFileName(*it) + " ";
+			MonoObject* exception = nullptr;
+			MonoObject* class_object = mono_object_new(mono_domain, compiler_class);
+			void* args[2];
+			MonoString* input_path = mono_string_new(mono_domain, assets_path.c_str());
+			MonoString* output_path = mono_string_new(mono_domain, output_name.c_str());
+			
+			args[0] = input_path;
+			args[1] = output_path;
+
+			MonoString* handle = (MonoString*)mono_runtime_invoke(method, NULL, args, &exception);
+
+			if (exception)
+			{
+				mono_print_unhandled_exception(exception);
+			}
+			else
+			{
+				ret = mono_string_to_utf8(handle);
+			}
 		}
 	}
 
-	std::string d = App->file_system->GetFullPath(assets_path);
-	compile_command += assets_path;
-	return system(compile_command.c_str());
+	return ret;
 }
 
 void ModuleScriptImporter::SetCurrentScript(CSScript * script)

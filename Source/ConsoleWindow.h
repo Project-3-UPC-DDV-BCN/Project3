@@ -19,10 +19,6 @@ private:
 	ImGuiTextFilter filter;
 	ImVector<int> line_offsets;
 	bool scroll_to_bottom;
-	int logs;
-	int warnings;
-	int errors;
-	int debug_logs;
 	std::string logs_label;
 	std::string warnings_label;
 	std::string errors_label;
@@ -31,7 +27,10 @@ private:
 	bool show_warnings;
 	bool show_errors;
 	bool show_debug_logs;
-	std::vector<std::string> message_list;
+	std::vector<std::string> logs_list;
+	std::vector<std::string> warnings_list;
+	std::vector<std::string> errors_list;
+	std::vector<std::string> debug_list;
 	ImVec4 log_text_color;
 	ImVec4 warning_text_color;
 	ImVec4 error_text_color;

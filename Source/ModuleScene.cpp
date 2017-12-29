@@ -85,7 +85,10 @@ void ModuleScene::CreateMainCamera()
 	scene_cameras.push_back(camera);
 	App->resources->AddGameObject(main_camera);
 	App->renderer3D->game_camera = camera;
-	App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+	if (App->editor->game_window->game_scene_width != 0 && App->editor->game_window->game_scene_height != 0)
+	{
+		App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+	}
 }
 
 // Load assets
