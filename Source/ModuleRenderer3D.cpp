@@ -20,6 +20,8 @@
 #include "RenderTextureMSAA.h"
 #include "CubeMap.h"
 #include "SceneWindow.h"
+#include "ModuleResources.h"
+#include "ShaderProgram.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -157,7 +159,15 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	dynamic_mesh_to_draw.clear();
 
+	//Assert polygon mode is fill before render gui
+	GLint polygonMode;
+	glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	App->editor->DrawEditor();
+
+	//reset polygonmode to previous one
+	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 
@@ -199,6 +209,42 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	DrawSceneGameObjects(camera, false);
 }
 
+void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCamera * active_camera)
+{
+	AABB aabb = mesh->GetMesh()->box;
+	float3 size = aabb.Size();
+	float3 pos = aabb.CenterPoint();
+	Quat rot = Quat::identity;
+	float4x4 trans = float4x4::FromTRS(pos, rot, size);
+
+	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+
+	UseShaderProgram(program->GetProgramID());
+
+	SetUniformMatrix(program->GetProgramID(), "view", active_camera->GetViewMatrix());
+	SetUniformMatrix(program->GetProgramID(), "projection", active_camera->GetProjectionMatrix());
+	SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+
+	SetUniformBool(program->GetProgramID(), "has_texture", false);
+	SetUniformBool(program->GetProgramID(), "has_material_color", true);
+	SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+
+	Mesh* cube = App->resources->GetMesh("PrimitiveCube");
+	if (cube->id_indices == 0) cube->LoadToMemory();
+
+	//set wireframe before render 
+	GLint polygonMode;
+	glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+	SetWireframeMode();
+
+	BindVertexArrayObject(cube->id_vao);
+	glDrawElements(GL_TRIANGLES, cube->num_indices, GL_UNSIGNED_INT, NULL);
+	UnbindVertexArrayObject();
+
+	//restore previous polygon mode
+	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+}
+
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
@@ -216,9 +262,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		{
 			if ((*it)->GetGameObject()->IsSelected())
 			{
-				DebugAABB aabb((*it)->GetMesh()->box);
-				aabb.color = { 0,1,0,1 };
-				//aabb.Render();
+				DrawDebugCube(*it, active_camera);
 			}
 		}
 		DrawMesh(*it, active_camera);
@@ -242,9 +286,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			DrawMesh(*it, active_camera);
 			if ((*it)->GetGameObject()->IsSelected())
 			{
-				DebugAABB aabb((*it)->GetMesh()->box);
-				aabb.color = { 0,1,0,1 };
-				//aabb.Render();
+				DrawDebugCube(*it, active_camera);
 			}
 		}
 	}

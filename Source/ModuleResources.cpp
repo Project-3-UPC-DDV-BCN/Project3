@@ -1142,6 +1142,7 @@ void ModuleResources::CreateDefaultShaders()
 	CreateResource(frag_default_path);
 
 	ShaderProgram* prog = new ShaderProgram();
+	prog->SetName("default_shader_program");
 
 	Shader* vertex = GetShader("default_vertex");
 	prog->SetVertexShader(vertex);

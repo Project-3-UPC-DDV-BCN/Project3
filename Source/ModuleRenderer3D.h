@@ -83,6 +83,7 @@ private:
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
+	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 public:
 

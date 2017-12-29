@@ -137,7 +137,7 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		int mouse_x = App->input->GetMouseX();
 		int mouse_y = App->input->GetMouseY();
-		//MousePickRay(mouse_x, mouse_y);
+		MousePickRay(mouse_x, mouse_y);
 	}
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
