@@ -152,7 +152,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
-		//DrawSceneCameras(*it);
+		DrawSceneCameras(*it);
 	}
 	
 	dynamic_mesh_to_draw.clear();
@@ -192,7 +192,7 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		App->scene->DrawSkyBox(camera->camera_frustum.pos);
+		//App->scene->DrawSkyBox(camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
 	}
 
