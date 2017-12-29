@@ -84,7 +84,6 @@ void ShaderProgram::SaveToLibray() const
 		outfile.write(buff, size);
 		outfile.close();
 	}
-
 }
 
 void ShaderProgram::LoadFromLibrary(const char* path)
@@ -131,7 +130,7 @@ void ShaderProgram::LinkShaderProgram()
 		App->renderer3D->DeleteProgram(program_id);
 		program_id = 0;
 	}
-	else CONSOLE_ERROR("Shader Program %d created :)", program_id);
+	else CONSOLE_LOG("Shader Program %d created :)", program_id);
 }
 
 uint ShaderProgram::GetProgramID() const
