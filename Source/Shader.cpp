@@ -84,7 +84,7 @@ bool Shader::Load(Data & data)
 		shader_type = shader->shader_type;
 		SetAssetsPath(data.GetString("assets_path"));
 		SetLibraryPath(data.GetString("library_path"));
-		SetName(data.GetString("texture_name"));
+		SetName(data.GetString("shader_text"));
 		SetUID(data.GetUInt("UUID"));
 	}
 
@@ -135,7 +135,7 @@ bool Shader::CompileShader()
 	}
 	if (shader_id != 0)
 	{
-		CONSOLE_LOG("Shader compilation Success :)");
+		CONSOLE_DEBUG("Shader compilation Success :)");
 		ret = true;
 	}
 	return ret;
