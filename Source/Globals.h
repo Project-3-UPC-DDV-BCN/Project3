@@ -86,6 +86,8 @@ enum update_status
 #define LIBRARY_MATERIALS_FOLDER_PATH "./Project/Library/Materials"
 #define LIBRARY_SCRIPTS_FOLDER "./Project/Library/Scripts/"
 #define LIBRARY_SCRIPTS_FOLDER_PATH "./Project/Library/Scripts"
+#define LIBRARY_PHYS_MATS_FOLDER "./Project/Library/Phys_Mats/"
+#define LIBRARY_PHYS_MATS_FOLDER_PATH "./Project/Library/Phys_Mats"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"

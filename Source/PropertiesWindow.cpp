@@ -18,6 +18,12 @@
 #include "CSScript.h"
 #include "ModuleResources.h"
 #include "ComponentFactory.h"
+#include "ComponentRigidBody.h"
+#include "ComponentCollider.h"
+#include "PhysicsMaterial.h"
+#include "ComponentJointDistance.h"
+
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -25,6 +31,8 @@ PropertiesWindow::PropertiesWindow()
 	window_name = "Properties";
 	scripts_count = 0;
 	factories_count = 0;
+	colliders_count = 0;
+	distance_joints_count = 0;
 }
 
 PropertiesWindow::~PropertiesWindow()
@@ -98,6 +106,11 @@ void PropertiesWindow::DrawWindow()
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
+
+			scripts_count = 0;
+			factories_count = 0;
+			colliders_count = 0;
+			distance_joints_count = 0;
 
 			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++) {
 				DrawComponent((*it));
@@ -179,6 +192,94 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::MenuItem("RigidBody")) {
+					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompRigidBody);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 RigidBody!");
+					}
+				}
+
+				if (ImGui::BeginMenu("Colliders")) {
+					if (ImGui::MenuItem("Box"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompBoxCollider);
+					}
+					if (ImGui::MenuItem("Sphere"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompSphereCollider);
+					}
+					if (ImGui::MenuItem("Capsule"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
+					}
+					if (ImGui::MenuItem("Mesh"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompMeshRenderer))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								selected_gameobject->AddComponent(Component::CompRigidBody);
+							}
+							selected_gameobject->AddComponent(Component::CompMeshCollider);
+						}
+						else
+						{
+							CONSOLE_ERROR("Can't have Mesh Collider without a mesh in the GameObject");
+						}
+					}
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::BeginMenu("Joints")) {
+					if (ImGui::MenuItem("Fixed"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompFixedJoint);
+					}
+					if (ImGui::MenuItem("Distance"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompDistanceJoint);
+					}
+					if (ImGui::MenuItem("Revolute"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompRevoluteJoint);
+					}
+					if (ImGui::MenuItem("Spherical"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompSphericalJoint);
+					}
+					if (ImGui::MenuItem("Prismatic"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompPrismaticJoint);
+					}
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndPopup();
 			}
 		}
@@ -198,13 +299,22 @@ void PropertiesWindow::DrawComponent(Component * component)
 		DrawCameraPanel((ComponentCamera*)component);
 		break;
 	case Component::CompRigidBody:
+		DrawRigidBodyPanel((ComponentRigidBody*)component);
 		break;
 	case Component::CompMeshRenderer:
 		DrawMeshRendererPanel((ComponentMeshRenderer*)component);
 		break;
 	case Component::CompBoxCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
-	case Component::CompCircleCollider:
+	case Component::CompSphereCollider:
+		DrawColliderPanel((ComponentCollider*)component);
+		break;
+	case Component::CompCapsuleCollider:
+		DrawColliderPanel((ComponentCollider*)component);
+		break;
+	case Component::CompMeshCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
 	case Component::CompAudioSource:
 		break;
@@ -217,6 +327,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
+		break;
+	case Component::CompDistanceJoint:
+		DrawJointDistancePanel((ComponentJointDistance*)component);
 		break;
 	default:
 		break;
@@ -554,6 +667,186 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		if (ImGui::DragFloat("Life Time", &life_time, true, 0.025f, 0))
 		{
 			factory->SetLifeTime(life_time);
+		}
+	}
+}
+
+void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
+{
+	if (ImGui::CollapsingHeader(rigidbody->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float mass = rigidbody->GetMass();
+		if (ImGui::DragFloat("Mass", &mass))
+		{
+			rigidbody->SetMass(mass);
+		}
+		float l_damping = rigidbody->GetLinearDamping();
+		if (ImGui::DragFloat("Linear Damping", &l_damping))
+		{
+			rigidbody->SetLinearDamping(l_damping);
+		}
+		float a_damping = rigidbody->GetAngularDamping();
+		if (ImGui::DragFloat("Angular Damping", &a_damping))
+		{
+			rigidbody->SetAngularDamping(a_damping);
+		}
+		bool use_gravity = rigidbody->IsUsingGravity();
+		if (ImGui::Checkbox("Gravity", &use_gravity))
+		{
+			rigidbody->SetUseGravity(use_gravity);
+		}
+		bool is_kinematic = rigidbody->IsKinematic();
+		if (ImGui::Checkbox("Kinematic", &is_kinematic))
+		{
+			rigidbody->SetKinematic(is_kinematic);
+		}
+		bool is_ccd = rigidbody->GetCollisionMode();
+		if (ImGui::Checkbox("CCD", &is_ccd))
+		{
+			rigidbody->SetCollisionMode(is_ccd);
+		}
+
+		ImGui::Text("Axis Lock");
+		ImGui::Separator();
+		ImGui::Text("Movement:");
+		bool linear_x = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearX);
+		if (ImGui::Checkbox("X##LinearX", &linear_x))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearX, linear_x);
+		}
+		ImGui::SameLine();
+		bool linear_y = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearY);
+		if (ImGui::Checkbox("Y##LinearY", &linear_y))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearY, linear_y);
+		}
+		ImGui::SameLine();
+		bool linear_z = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearZ);
+		if (ImGui::Checkbox("Z##LinearZ", &linear_z))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearZ, linear_z);
+		}
+
+		ImGui::Text("Rotation:");
+		bool angular_x = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularX);
+		if (ImGui::Checkbox("X##AngularX", &angular_x))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularX, angular_x);
+		}
+		ImGui::SameLine();
+		bool angular_y = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularY);
+		if (ImGui::Checkbox("Y##AngularY", &angular_y))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularY, angular_y);
+		}
+		ImGui::SameLine();
+		bool angular_z = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularZ);
+		if (ImGui::Checkbox("Z##AngularZ", &angular_z))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularZ, angular_z);
+		}
+	}
+}
+
+void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
+{
+	colliders_count++;
+	if (ImGui::CollapsingHeader((comp_collider->GetName() + "##" + std::to_string(colliders_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool is_active = comp_collider->IsActive();
+		if (ImGui::Checkbox(("Active##Collider" + std::to_string(colliders_count)).c_str(), &is_active))
+		{
+			comp_collider->SetActive(is_active);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
+		{
+			App->scene->selected_gameobjects.front()->DestroyComponent(comp_collider);
+		}
+
+		PhysicsMaterial* material = comp_collider->GetColliderMaterial();
+		if (ImGui::InputResourcePhysMaterial("Material", &material))
+		{
+			comp_collider->SetColliderMaterial(material);
+		}
+		ImGui::Spacing();
+
+		bool is_trigger = comp_collider->IsTrigger();
+		if (ImGui::Checkbox("Trigger", &is_trigger))
+		{
+			comp_collider->SetTrigger(is_trigger);
+		}
+		
+		//material
+
+		float3 center = comp_collider->GetColliderCenter();
+		if (ImGui::DragFloat3("Center", (float*)&center, true, 0.25f)) {
+			comp_collider->SetColliderCenter(center);
+		}
+
+		float3 box_size;
+		float sphere_radius;
+		float capsule_radius;
+		float capsule_height;
+		const char* directions[3];
+		int current_direction;
+		bool is_convex = false;
+
+		switch (comp_collider->GetColliderType())
+		{
+		case ComponentCollider::BoxCollider:
+			box_size = comp_collider->GetBoxSize();
+			if (ImGui::DragFloat3("Size##box", (float*)&box_size, true, 0.25f)) {
+				comp_collider->SetBoxSize(box_size);
+			}
+			break;
+		case ComponentCollider::SphereCollider:
+			sphere_radius = comp_collider->GetSphereRadius();
+			if (ImGui::DragFloat("Radius##sphere", &sphere_radius, true, 0.25f)) {
+				comp_collider->SetSphereRadius(sphere_radius);
+			}
+			break;
+		case ComponentCollider::CapsuleCollider:
+			capsule_radius = comp_collider->GetCapsuleRadius();
+			if (ImGui::DragFloat("Radius##capsule", &capsule_radius, true, 0.25f)) {
+				comp_collider->SetCapsuleRadius(capsule_radius);
+			}
+			capsule_height = comp_collider->GetCapsuleHeight();
+			if (ImGui::DragFloat("Height##capsule", &capsule_height, true, 0.25f)) {
+				comp_collider->SetCapsuleHeight(capsule_height);
+			}
+
+			directions[0] = "X Axis";
+			directions[1] = "Y Axis";
+			directions[2] = "Z Axis";
+			current_direction = comp_collider->GetCapsuleDirection();
+
+			if (ImGui::Combo("Direction", &current_direction, directions, IM_ARRAYSIZE(directions)))
+			{
+				comp_collider->SetCapsuleDirection((ComponentCollider::CapsuleDirection) current_direction);
+			}
+			break;
+		case ComponentCollider::MeshCollider:
+			is_convex = comp_collider->IsConvex();
+			if (ImGui::Checkbox("Convex", &is_convex))
+			{
+				comp_collider->ChangeMeshToConvex(is_convex);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
+{
+	distance_joints_count++;
+	if (ImGui::CollapsingHeader((joint->GetName() + "##" + std::to_string(distance_joints_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		GameObject* gameobject = joint->GetConnectedBody();
+		if (ImGui::InputResourceGameObject("Connected Body", &gameobject, ResourcesWindow::GameObjectFilter::GoFilterRigidBody)) {
+			joint->SetConnectedBody(gameobject);
 		}
 	}
 }

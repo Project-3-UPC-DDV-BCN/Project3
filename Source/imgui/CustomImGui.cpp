@@ -1,6 +1,5 @@
 #include "CustomImGui.h"
 #include "imgui_internal.h"
-#include "../ResourcesWindow.h"
 #include "../Texture.h"
 #include "../Application.h"
 #include "../ModuleEditor.h"
@@ -9,6 +8,7 @@
 #include "../Material.h"
 #include "../GameObject.h"
 #include "../Script.h"
+#include "../PhysicsMaterial.h"
 
 namespace ImGui
 {
@@ -225,7 +225,7 @@ namespace ImGui
 		return false;
 	}
 
-	bool ImGui::InputResourceGameObject(const char * label, GameObject ** gameobject)
+	bool ImGui::InputResourceGameObject(const char * label, GameObject ** gameobject, ResourcesWindow::GameObjectFilter filter)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
@@ -280,6 +280,7 @@ namespace ImGui
 		if (Button("+##gameobject", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::GameObjectResource);
+			App->editor->resources_window->go_filter = filter;
 			App->editor->resources_window->SetActive(true);
 		}
 
@@ -428,6 +429,80 @@ namespace ImGui
 			if (new_script != tmp_script)
 			{
 				*script = new_script;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
+	bool InputResourcePhysMaterial(const char * label, PhysicsMaterial ** phys_mat)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+		PhysicsMaterial* tmp_material = *phys_mat;
+		if (tmp_material != nullptr)
+		{
+			buf_display = tmp_material->GetName();
+		}
+		else
+		{
+			buf_display = "None(Phys Material)";
+		}
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max) && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::PhysicsMatResource)
+			{
+				RenderFrame(rect.Min, rect.Max, ImGui::ColorConvertFloat4ToU32({ 0,0.8f,1,0.2f }));
+				if (ImGui::IsMouseReleased(0))
+				{
+					*phys_mat = (PhysicsMaterial*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}
+		ImGui::SameLine();
+
+		if (Button("+##phys_material", { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::PhysicsMatResource);
+			App->editor->resources_window->SetActive(true);
+		}
+
+		PhysicsMaterial* new_material = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->phys_mat_changed)
+		{
+			new_material = App->editor->resources_window->GetPhysMat();
+			if (new_material != tmp_material)
+			{
+				*phys_mat = new_material;
 				App->editor->resources_window->SetActive(false);
 				App->editor->resources_window->Reset();
 				return true;

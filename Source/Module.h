@@ -54,7 +54,4 @@ public:
 
 	virtual void SaveData(Data* data)
 	{}
-
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{}
 };

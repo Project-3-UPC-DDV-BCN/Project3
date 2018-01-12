@@ -10,11 +10,17 @@ class Prefab;
 class GameObject;
 class Material;
 class Script;
+class PhysicsMaterial;
 
 class ResourcesWindow :
 	public Window
 {
 public:
+
+	enum GameObjectFilter {
+		GoFilterRigidBody, GoFilterNone
+	};
+
 	ResourcesWindow();
 	virtual ~ResourcesWindow();
 
@@ -26,6 +32,7 @@ public:
 	GameObject* GetGameobject() const;
 	Material* GetMaterial() const;
 	Script* GetScript() const;
+	PhysicsMaterial* GetPhysMat() const;
 	void Reset();
 
 private:
@@ -36,6 +43,7 @@ private:
 	std::list<GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, PhysicsMaterial*> phys_material_list;
 
 	Texture* texture_to_return;
 	Mesh* mesh_to_return;
@@ -43,6 +51,7 @@ private:
 	GameObject* gameobject_to_return;
 	Material* material_to_return;
 	Script* script_to_return;
+	PhysicsMaterial* phys_mat_to_return;
 
 public:
 	bool texture_changed;
@@ -51,5 +60,8 @@ public:
 	bool gameobject_changed;
 	bool material_changed;
 	bool script_changed;
+	bool phys_mat_changed;
+	
+	GameObjectFilter go_filter;
 };
 

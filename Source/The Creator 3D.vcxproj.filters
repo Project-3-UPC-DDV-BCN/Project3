@@ -16,9 +16,6 @@
     <Filter Include="Sources\Helpers">
       <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\UI">
-      <UniqueIdentifier>{0bfd2c1a-fc3d-45fa-b15a-22d09dc1e801}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\EditorUI">
       <UniqueIdentifier>{5aa5b117-256e-4d7f-a04d-495686e3e688}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,18 @@
     </Filter>
     <Filter Include="Sources\3d Party\imGui\ImGuiTextEditor">
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia">
+      <UniqueIdentifier>{0bad3b47-c021-4477-8e36-4c6dd026b74d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia\PhysX">
+      <UniqueIdentifier>{ddff0942-c94a-46d4-9124-a5411e851ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia\Flow">
+      <UniqueIdentifier>{cbd15e68-5df4-42e5-bec8-cddb8c138533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia\Blast">
+      <UniqueIdentifier>{b2008ffc-7f13-45a0-86a9-7c51583e6dbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="imgui\stb_truetype.h">
       <Filter>Sources\3d Party\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Console.h">
-      <Filter>Sources\UI</Filter>
     </ClInclude>
     <ClInclude Include="ModuleScene.h">
       <Filter>Sources\Modules</Filter>
@@ -495,6 +501,820 @@
     <ClInclude Include="ComponentFactory.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModulePhysics.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRigidBody.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollider.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePhysMatImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsMaterial.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointRevolute.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointSpherical.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointDistance.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointFixed.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointPrismatic.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxActor.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxAggregate.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxArticulation.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxArticulationJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxArticulationLink.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxBatchQuery.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxBatchQueryDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxBroadPhase.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxClient.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxConstraint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxConstraintDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxContact.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxContactModifyCallback.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxDeletionListener.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxFiltering.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxForceMode.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxImmediateMode.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxLockedData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxMaterial.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxPhysics.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxPhysicsAPI.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxPhysicsSerialization.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxPhysicsVersion.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxPhysXConfig.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxPruningStructure.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxQueryFiltering.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxQueryReport.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxRigidActor.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxRigidBody.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxRigidDynamic.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxRigidStatic.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxScene.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxSceneDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxSceneLock.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxShape.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxSimulationEventCallback.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxSimulationStatistics.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxSpatialIndex.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxVisualizationParameter.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\PxVolumeCache.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxBoxController.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxCapsuleController.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxCharacter.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxController.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxControllerBehavior.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxControllerManager.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxControllerObstacles.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\characterkinematic\PxExtended.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\collision\PxCollisionDefs.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\windows\PxWindowsDelayLoadHook.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxBase.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxCollection.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxCoreUtilityTypes.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxMetaData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxMetaDataFlags.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxPhysicsInsertionCallback.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxPhysXCommonConfig.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxRenderBuffer.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxSerialFramework.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxSerializer.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxStringTable.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxTolerancesScale.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\common\PxTypeInfo.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\PxBVH33MidphaseDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\PxBVH34MidphaseDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\Pxc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\PxConvexMeshDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\PxCooking.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\PxMidphaseDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cooking\PxTriangleMeshDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cudamanager\PxCudaContextManager.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cudamanager\PxCudaMemoryManager.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cudamanager\PxGpuCopyDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cudamanager\PxGpuCopyDescQueue.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxBinaryConverter.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxBroadPhaseExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxClothFabricCooker.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxClothMeshDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxClothMeshQuadifier.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxClothTetherCooker.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxCollectionExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxConstraintExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxConvexMeshExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxD6Joint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxDefaultAllocator.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxDefaultCpuDispatcher.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxDefaultErrorCallback.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxDefaultSimulationFilterShader.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxDefaultStreams.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxDistanceJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxExtensionsAPI.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxFixedJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxJointLimit.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxMassProperties.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxParticleExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxPrismaticJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxRaycastCCD.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxRepXSerializer.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxRepXSimpleType.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxRevoluteJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxRigidActorExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxRigidBodyExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxSceneQueryExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxSerialization.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxShapeExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxSimpleFactory.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxSmoothNormals.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxSphericalJoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxStringTableExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\extensions\PxTriangleMeshExt.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\filebuf\PxFileBuf.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\Px.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxAllocatorCallback.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxAssert.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxBitAndData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxBounds3.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxErrorCallback.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxErrors.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxFlags.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxFoundation.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxFoundationVersion.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxIntrinsics.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxIO.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxMat33.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxMat44.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxMath.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxMathUtils.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxMemory.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxPlane.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxPreprocessor.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxProfiler.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxQuat.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxSimpleTypes.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxStrideIterator.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxTransform.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxUnionCast.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxVec2.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxVec3.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\PxVec4.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\unix\PxUnixIntrinsics.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\windows\PxWindowsFoundationDelayLoadHook.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\foundation\windows\PxWindowsIntrinsics.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxBoxGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxCapsuleGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxConvexMesh.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxConvexMeshGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxGeometryHelpers.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxGeometryQuery.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxHeightField.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxHeightFieldDesc.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxHeightFieldFlag.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxHeightFieldGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxHeightFieldSample.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxMeshQuery.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxMeshScale.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxPlaneGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxSimpleTriangleMesh.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxSphereGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxTriangle.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxTriangleMesh.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\geometry\PxTriangleMeshGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\GeomUtils\GuContactBuffer.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\GeomUtils\GuContactPoint.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\gpu\PxGpu.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\gpu\PxParticleGpu.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleBase.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleBaseFlag.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleCreationData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleFlag.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleFluid.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleFluidReadData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleReadData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\particles\PxParticleSystem.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\pvd\PxPvd.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\pvd\PxPvdSceneClient.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\pvd\PxPvdTransport.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\pvd\windows\PxWindowsPvdDelayLoadHook.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cloth\PxCloth.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cloth\PxClothCollisionData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cloth\PxClothFabric.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cloth\PxClothParticleData.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\cloth\PxClothTypes.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\solver\PxSolverDefs.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\task\PxCpuDispatcher.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\task\PxGpuDispatcher.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\task\PxGpuTask.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\task\PxTask.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\task\PxTaskDefine.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\task\PxTaskManager.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleComponents.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleDrive.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleDrive4W.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleDriveNW.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleDriveTank.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleNoDrive.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleSDK.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleShaders.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleTireFriction.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleUpdate.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleUtil.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleUtilControl.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleUtilSetup.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleUtilTelemetry.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\PhysX\Include\vehicle\PxVehicleWheels.h">
+      <Filter>Sources\3d Party\Nvidia\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlow.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContext.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContextD3D11.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContextD3D12.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContextExt.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowShader.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowTypes.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastArray.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastAssert.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastAtomic.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastDLink.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastFixedArray.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastFixedBitmap.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastFixedBoolArray.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastFixedPriorityQueue.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastFixedQueue.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastGeometry.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastHashMap.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastHashSet.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastIncludeWindows.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastIndexFns.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastIteratorBase.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastMath.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastMemory.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastPreprocessorInternal.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\common\NvBlastTime.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\assetutils\NvBlastExtAssetUtils.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoring.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoringBondGenerator.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoringCollisionBuilder.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoringFractureTool.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoringMesh.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoringMeshCleaner.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\authoring\NvBlastExtAuthoringTypes.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\exporter\NvBlastExtExporter.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\exporter\NvBlastExtExporterJsonCollision.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\import\NvBlastExtApexImportTool.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtCustomProfiler.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtImpactDamageManager.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPx.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxActor.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxAsset.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxFamily.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxListener.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxManager.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxStressSolver.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtPxTask.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastExtSync.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\physx\NvBlastPxCallbacks.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\serialization\NvBlastExtLlSerialization.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\serialization\NvBlastExtPxSerialization.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\serialization\NvBlastExtSerialization.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\serialization\NvBlastExtTkSerialization.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\shaders\NvBlastExtDamageShaders.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\extensions\stress\NvBlastExtStressSolver.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBlast.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -815,6 +1635,37 @@
     <ClCompile Include="ComponentFactory.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ModulePhysics.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRigidBody.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCollider.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePhysMatImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsMaterial.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointRevolute.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointSpherical.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointDistance.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointFixed.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointPrismatic.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleBlast.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

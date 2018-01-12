@@ -13,6 +13,7 @@
 #include "ModuleWindow.h"
 #include "Mesh.h"
 #include <vector>
+#include "ModulePhysics.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -62,6 +63,7 @@ void ModuleCamera3D::CreateEditorCamera()
 {
 	editor_camera = new ComponentCamera(nullptr);
 	App->renderer3D->editor_camera = editor_camera;
+	App->physics->SetCullingBox(editor_camera->camera_frustum.MinimalEnclosingAABB());
 }
 
 // -----------------------------------------------------------------
@@ -131,6 +133,7 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 
+		App->physics->SetCullingBox(tmp_camera_frustum->MinimalEnclosingAABB());
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGuizmo::IsOver())

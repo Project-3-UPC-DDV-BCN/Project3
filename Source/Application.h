@@ -24,6 +24,8 @@ class ModulePrefabImporter;
 class ModuleMaterialImporter;
 class ModuleScriptImporter;
 struct SDL_Surface;
+class ModulePhysics;
+class ModulePhysMatImporter;
 
 class Application
 {
@@ -82,6 +84,8 @@ public:
 	ModulePrefabImporter* prefab_importer;
 	ModuleMaterialImporter* material_importer;
 	ModuleScriptImporter* script_importer;
+	ModulePhysics* physics;
+	ModulePhysMatImporter* phys_mats_importer;
 
 private:
 

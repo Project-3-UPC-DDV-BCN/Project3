@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <d3d11.h>
+
 // --------------------------- NvFlowContextD3D11 -------------------------------
 ///@defgroup NvFlowContextD3D11
 ///@{

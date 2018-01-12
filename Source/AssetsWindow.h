@@ -21,6 +21,7 @@ private:
 	void CreateDirectortWindow();
 	void CreateNewScriptWindow(Script::ScriptType type);
 	void CreateScript(Script::ScriptType type, std::string scriptName);
+	void CreateNewPhysMatWindow();
 
 private:
 	uint node;
@@ -28,6 +29,7 @@ private:
 	bool show_new_folder_window;
 	bool show_delete_window;
 	bool show_new_script_window;
+	bool show_new_phys_mat_window;
 
 	bool options_is_open;
 

@@ -43,7 +43,7 @@ public:
 
 	void UpdateBoundingBox();
 	math::float4x4 GetGlobalTransfomMatrix();
-	const float* GetOpenGLMatrix();
+	math::float4x4 GetOpenGLMatrix();
 	void UpdateGlobalMatrix();
 	void UpdateCamera();
 	void SetGlobalTransfomMatrix(const float4x4 &matrix);

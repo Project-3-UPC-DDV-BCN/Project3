@@ -10,6 +10,7 @@ class GameObject;
 class Resources;
 class Material;
 class Script;
+class PhysicsMaterial;
 
 class ModuleResources :
 	public Module
@@ -61,6 +62,12 @@ public:
 	void RemoveScript(Script* script);
 	std::map<uint, Script*> GetScriptsList() const;
 
+	PhysicsMaterial* GetPhysMaterial(std::string name) const;
+	PhysicsMaterial* GetPhysMaterial(UID uid) const;
+	void AddPhysMaterial(PhysicsMaterial* material);
+	void RemovePhysMaterial(PhysicsMaterial* material);
+	std::map<uint, PhysicsMaterial*> GetPhysMaterialsList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -84,5 +91,6 @@ private:
 	std::map<uint, GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, PhysicsMaterial*> phys_materials_list;
 };
 

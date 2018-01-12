@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "Script.h"
+#include "PhysicsMaterial.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -20,6 +21,7 @@ ResourcesWindow::ResourcesWindow()
 	gameobject_to_return = nullptr;
 	material_to_return = nullptr;
 	script_to_return = nullptr;
+	phys_mat_to_return = nullptr;
 
 	texture_changed = false;
 	mesh_changed = false;
@@ -27,8 +29,10 @@ ResourcesWindow::ResourcesWindow()
 	gameobject_changed = false;
 	material_changed = false;
 	script_changed = false;
+	phys_mat_changed = false;
 
 	type = Resource::Unknown;
+	go_filter = GoFilterNone;
 }
 
 ResourcesWindow::~ResourcesWindow()
@@ -139,6 +143,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::list<GameObject*>::const_iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); it++)
 		{
+			if (go_filter != GoFilterNone)
+			{
+				switch (go_filter)
+				{
+				case ResourcesWindow::GoFilterRigidBody:
+					if ((*it)->GetComponent(Component::CompRigidBody) == nullptr) continue;
+					break;
+				}
+			}
 			if (ImGui::Selectable((*it)->GetName().c_str()))
 			{
 				gameobject_to_return = *it;
@@ -161,6 +174,24 @@ void ResourcesWindow::DrawWindow()
 			{
 				material_to_return = it->second;
 				material_changed = true;
+				break;
+			}
+		}
+		break;
+	case Resource::PhysicsMatResource:
+		phys_material_list = App->resources->GetPhysMaterialsList();
+		if (ImGui::Selectable("None##physmaterial"))
+		{
+			phys_mat_to_return = nullptr;
+			phys_mat_changed = true;
+			break;
+		}
+		for (std::map<uint, PhysicsMaterial*>::const_iterator it = phys_material_list.begin(); it != phys_material_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				phys_mat_to_return = it->second;
+				phys_mat_changed = true;
 				break;
 			}
 		}
@@ -209,6 +240,11 @@ Script * ResourcesWindow::GetScript() const
 	return script_to_return;
 }
 
+PhysicsMaterial * ResourcesWindow::GetPhysMat() const
+{
+	return phys_mat_to_return;
+}
+
 void ResourcesWindow::Reset()
 {
 	texture_changed = false;
@@ -217,6 +253,7 @@ void ResourcesWindow::Reset()
 	gameobject_changed = false;
 	material_changed = false;
 	script_changed = false;
+	phys_mat_changed = false;
 
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
@@ -224,4 +261,7 @@ void ResourcesWindow::Reset()
 	gameobject_to_return = nullptr;
 	material_to_return = nullptr;
 	script_to_return = nullptr;
+	phys_mat_to_return = nullptr;
+
+	go_filter = GoFilterNone;
 }

@@ -16,6 +16,8 @@
 #include "ComponentMeshRenderer.h"
 #include "Script.h"
 #include "ModuleScriptImporter.h"
+#include "PhysicsMaterial.h"
+#include "ModulePhysMatImporter.h"
 
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -103,6 +105,9 @@ void ModuleResources::AddResource(Resource * resource)
 		break;
 	case Resource::MaterialResource:
 		AddMaterial((Material*)resource);
+		break;
+	case Resource::PhysicsMatResource:
+		AddPhysMaterial((PhysicsMaterial*)resource);
 		break;
 	case Resource::Unknown:
 		break;
@@ -400,6 +405,43 @@ std::map<uint, Script*> ModuleResources::GetScriptsList() const
 	return scripts_list;
 }
 
+PhysicsMaterial * ModuleResources::GetPhysMaterial(std::string name) const
+{
+	for (std::map<uint, PhysicsMaterial*>::const_iterator it = phys_materials_list.begin(); it != phys_materials_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+PhysicsMaterial * ModuleResources::GetPhysMaterial(UID uid) const
+{
+	if (phys_materials_list.find(uid) != phys_materials_list.end()) return phys_materials_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddPhysMaterial(PhysicsMaterial * material)
+{
+	if (material != nullptr)
+	{
+		phys_materials_list[material->GetUID()] = material;
+	}
+}
+
+void ModuleResources::RemovePhysMaterial(PhysicsMaterial * material)
+{
+	if (material)
+	{
+		std::map<uint, PhysicsMaterial*>::iterator it = phys_materials_list.find(material->GetUID());
+		if (it != phys_materials_list.end()) phys_materials_list.erase(it);
+	}
+}
+
+std::map<uint, PhysicsMaterial*> ModuleResources::GetPhysMaterialsList() const
+{
+	return phys_materials_list;
+}
+
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
@@ -408,6 +450,7 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".wav" || str == ".ogg") return Resource::AudioResource;
 	else if (str == ".prefab") return Resource::PrefabResource;
 	else if (str == ".mat") return Resource::MaterialResource;
+	else if (str == ".pmat") return Resource::PhysicsMatResource;
 	else if (str == ".animation") return Resource::AnimationResource;
 	else if (str == ".particleFX") return Resource::ParticleFXResource;
 	else if (str == ".scene") return Resource::SceneResource;
@@ -422,6 +465,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".mesh") return Resource::MeshResource;
 	else if (str == ".scene") return Resource::SceneResource;
 	else if (str == ".mat") return Resource::MaterialResource;
+	else if (str == ".pmat") return Resource::PhysicsMatResource;
 	else if (str == ".dll") return Resource::ScriptResource;
 	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
 
@@ -435,6 +479,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 	else if (type == Resource::SceneResource) return ".scene";
 	else if (type == Resource::PrefabResource) return ".prefab";
 	else if (type == Resource::MaterialResource) return ".mat";
+	else if (type == Resource::PhysicsMatResource) return ".pmat";
 	else if (type == Resource::ScriptResource) return ".dll";
 	
 	return "";
@@ -504,6 +549,13 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 			library_file = directory + file_name + ".mat";
 		}
 		break;
+	case Resource::PhysicsMatResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_PHYS_MATS_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".pmat", directory, false))
+		{
+			library_file = directory + file_name + ".pmat";
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -550,6 +602,10 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::MaterialResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
 		ret = App->material_importer->ImportMaterial(file_path);
+		break;
+	case Resource::PhysicsMatResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_PHYS_MATS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PHYS_MATS_FOLDER_PATH);
+		ret = App->phys_mats_importer->ImportPhysicsMaterial(file_path);
 		break;
 	case Resource::Unknown:
 		break;
@@ -618,6 +674,14 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			break;
 		}
 		resource = (Resource*)App->material_importer->LoadMaterialFromLibrary(library_path);
+		break;
+	case Resource::PhysicsMatResource:
+		if (GetPhysMaterial(name) != nullptr)
+		{
+			resource = (Resource*)GetPhysMaterial(name);
+			break;
+		}
+		resource = (Resource*)App->phys_mats_importer->LoadPhysicsMaterialFromLibrary(library_path);
 		break;
 	case Resource::Unknown:
 		break;
@@ -708,6 +772,7 @@ void ModuleResources::DeleteResource(std::string file_path)
 	Texture* texture = nullptr;
 	Prefab* prefab = nullptr;
 	Material* material = nullptr;
+	PhysicsMaterial* phys_material = nullptr;
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::PrefabResource;
 
@@ -761,6 +826,15 @@ void ModuleResources::DeleteResource(std::string file_path)
 			App->file_system->Delete_File(material->GetLibraryPath());
 			App->file_system->Delete_File(file_path + ".meta");
 			RemoveMaterial(material);
+		}
+		break;
+	case Resource::PhysicsMatResource:
+		phys_material = GetPhysMaterial(resource_name);
+		if (phys_material != nullptr)
+		{
+			App->file_system->Delete_File(phys_material->GetLibraryPath());
+			App->file_system->Delete_File(file_path + ".meta");
+			RemovePhysMaterial(phys_material);
 		}
 		break;
 	case Resource::Unknown:

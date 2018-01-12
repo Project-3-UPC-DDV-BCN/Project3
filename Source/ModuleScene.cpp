@@ -23,6 +23,7 @@
 #include "SkyDome.h"
 #include "ComponentScript.h";
 #include "GameWindow.h"
+#include "ModulePhysics.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {

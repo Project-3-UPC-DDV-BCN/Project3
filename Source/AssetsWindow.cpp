@@ -13,6 +13,7 @@
 #include "LuaScript.h"
 #include "ModuleScriptImporter.h"
 #include "TextEditorWindow.h"
+#include "PhysicsMaterial.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -26,6 +27,7 @@ AssetsWindow::AssetsWindow()
 	show_new_script_window = false;
 	options_is_open = false;
 	asset_hovered = false;
+	show_new_phys_mat_window = false;
 
 	mesh_icon = App->texture_importer->LoadTextureFromLibrary(EDITOR_IMAGES_FOLDER"mesh_icon.png");
 	font_icon = App->texture_importer->LoadTextureFromLibrary(EDITOR_IMAGES_FOLDER"font_icon.png");
@@ -231,6 +233,16 @@ void AssetsWindow::DrawWindow()
 					show_delete_window = false;
 					show_new_folder_window = false;
 					options_is_open = false;
+					show_new_phys_mat_window = false;
+				}
+
+				if (ImGui::MenuItem("Create Physics Material"))
+				{
+					show_new_phys_mat_window = true;
+					show_new_script_window = false;
+					show_delete_window = false;
+					show_new_folder_window = false;
+					options_is_open = false;
 				}
 
 				ImGui::EndPopup();
@@ -292,6 +304,11 @@ void AssetsWindow::DrawWindow()
 		if (show_new_script_window)
 		{
 			CreateNewScriptWindow(Script::CsScript);
+		}
+
+		if (show_new_phys_mat_window)
+		{
+			CreateNewPhysMatWindow();
 		}
 	}
 	ImGui::EndDock();
@@ -442,6 +459,45 @@ void AssetsWindow::CreateScript(Script::ScriptType type, std::string scriptName)
 
 		App->resources->CreateResource(selected_folder + "\\" + new_file_name);
 	}
+}
+
+void AssetsWindow::CreateNewPhysMatWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
+	ImGui::SetNextWindowPosCenter();
+	ImGui::Begin("New Physics Material", &active,
+		ImGuiWindowFlags_NoFocusOnAppearing |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders |
+		ImGuiWindowFlags_NoTitleBar);
+	ImGui::Spacing();
+	ImGui::Text("New Physics Material");
+	static char inputText[30];
+	ImGui::InputText("", inputText, 30);
+	ImGui::Spacing();
+	if (ImGui::Button("Confirm")) {
+		std::string str(inputText);
+		if (!str.empty()) {
+			for (std::string::iterator it = str.begin(); it != str.end(); it++)
+			{
+				if (*it == ' ') *it = '_';
+			}
+			Data data;
+			PhysicsMaterial* mat = new PhysicsMaterial();
+			mat->SetName(str);
+			mat->Save(data);
+			data.SaveAsBinary(selected_folder + "\\" + str + ".pmat");
+			App->resources->CreateResource(selected_folder + "\\" + str + ".pmat");
+			show_new_phys_mat_window = false;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel")) {
+		strcpy(inputText, "");
+		show_new_phys_mat_window = false;
+	}
+	ImGui::End();
 }
 
 void AssetsWindow::DeleteWindow(std::string path)

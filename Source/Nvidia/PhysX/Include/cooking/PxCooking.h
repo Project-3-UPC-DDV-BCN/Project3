@@ -418,6 +418,7 @@ struct PxCookingParams
 #error Unknown platform
 #endif
 		gaussMapLimit = PxGetGaussMapVertexLimitForPlatform(targetPlatform);
+		midphaseDesc = physx::PxMeshMidPhase::eBVH34;
 	}
 };
 

@@ -18,6 +18,8 @@
 #include "TagsAndLayers.h"
 #include "ModuleMaterialImporter.h"
 #include "ModuleScriptImporter.h"
+#include "ModulePhysics.h"
+#include "ModulePhysMatImporter.h"
 
 Application::Application()
 {
@@ -42,6 +44,8 @@ Application::Application()
 	prefab_importer = new ModulePrefabImporter(this);
 	material_importer = new ModuleMaterialImporter(this);
 	script_importer = new ModuleScriptImporter(this);
+	physics = new ModulePhysics(this);
+	phys_mats_importer = new ModulePhysMatImporter(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -58,6 +62,7 @@ Application::Application()
 	AddModule(prefab_importer);
 	AddModule(material_importer);
 	AddModule(script_importer);
+	AddModule(phys_mats_importer);
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
@@ -65,6 +70,7 @@ Application::Application()
 	//TIME
 	AddModule(time);
 	//Game Modules
+	AddModule(physics);
 
 	random = new math::LCG();
 	cursor = nullptr;
@@ -91,6 +97,8 @@ Application::~Application()
 	prefab_importer = nullptr;
 	material_importer = nullptr;
 	script_importer = nullptr;
+	phys_mats_importer = nullptr;
+	physics = nullptr;
 
 	std::list<Module*>::iterator item = list_modules.begin();
 

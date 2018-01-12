@@ -33,10 +33,10 @@
 #include "NvBlastTkType.h"
 #include "NvBlastTkEvent.h"
 
-#include "NvBlastPreprocessor.h"
-#include "NvBlastTypes.h"
+#include "../lowlevel/NvBlastPreprocessor.h"
+#include "../lowlevel/NvBlastTypes.h"
 
-#include "PxVec3.h"
+#include "../../../PhysX/Include/foundation/PxVec3.h"
 
 
 // Forward declarations

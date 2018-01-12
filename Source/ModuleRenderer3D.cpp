@@ -20,6 +20,7 @@
 #include "RenderTextureMSAA.h"
 #include "CubeMap.h"
 #include "SceneWindow.h"
+#include "ModulePhysics.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -237,6 +238,14 @@ void ModuleRenderer3D::DrawEditorScene()
 	pl.color = { 1,1,1,1 };
 	pl.Render();
 	glEnable(GL_LIGHTING);
+
+	if (App->scene->draw_octree)
+	{
+		App->scene->octree.DebugDraw();
+	}
+
+	App->physics->DrawColliders();
+
 	DrawSceneGameObjects(editor_camera, true);
 }
 
@@ -328,11 +337,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			}
 		}
 	}
-
-	if (App->scene->draw_octree)
-	{
-		App->scene->octree.DebugDraw();
-	}
 	
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
@@ -345,7 +349,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
 	glPushMatrix();
-	glMultMatrixf(mesh->GetGameObject()->GetOpenGLMatrix());
+	glMultMatrixf(mesh->GetGameObject()->GetOpenGLMatrix().ptr());
 
 	Material* material = mesh->GetMaterial();
 	if (material != nullptr)

@@ -1,5 +1,6 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "componentRigidBody.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
 {
@@ -35,11 +36,6 @@ float3 ComponentTransform::GetGlobalPosition() const
 
 float3 ComponentTransform::GetLocalPosition() const
 {
-	/*if (GetGameObject()->GetParent() != nullptr)
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)GetGameObject()->GetParent()->GetComponent(ComponentType::CompTransform);
-		return GetGlobalPosition() - parent_transform->GetGlobalPosition();
-	}*/
 	return position; //If it's the parent. local position = global position
 }
 
@@ -57,11 +53,6 @@ float3 ComponentTransform::GetGlobalRotation() const
 
 float3 ComponentTransform::GetLocalRotation() const
 {
-	/*if (GetGameObject()->GetParent() != nullptr)
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)GetGameObject()->GetParent()->GetComponent(ComponentType::CompTransform);
-		return GetGlobalRotation() - parent_transform->GetGlobalRotation();
-	}*/
 	return shown_rotation; //If it's the parent. local rotation = global rotation
 }
 
@@ -69,6 +60,11 @@ void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
+	ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+	if (rb)
+	{
+		rb->SetColliderScale(scale);
+	}
 }
 
 float3 ComponentTransform::GetGlobalScale() const
@@ -78,11 +74,6 @@ float3 ComponentTransform::GetGlobalScale() const
 
 float3 ComponentTransform::GetLocalScale() const
 {
-	/*if (GetGameObject()->GetParent() != nullptr)
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)GetGameObject()->GetParent()->GetComponent(ComponentType::CompTransform);
-		return GetGlobalScale() - parent_transform->GetGlobalScale();
-	}*/
 	return scale; //If it's the parent. local scale = global scale
 }
 
@@ -120,16 +111,22 @@ void ComponentTransform::UpdateGlobalMatrix()
 	GetGameObject()->UpdateBoundingBox();
 	//If gameobject has a camera component
 	GetGameObject()->UpdateCamera();
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+	if (rb)
+	{
+		rb->SetTransform(transform_matrix.Transposed().ptr());
+	}
 }
 
-const float4x4 ComponentTransform::GetMatrix() const
+float4x4 ComponentTransform::GetMatrix() const
 {
 	return transform_matrix;
 }
 
-const float * ComponentTransform::GetOpenGLMatrix() const
+float4x4 ComponentTransform::GetOpenGLMatrix() const
 {
-	return transform_matrix.Transposed().ptr();
+	return transform_matrix.Transposed();
 }
 
 void ComponentTransform::SetMatrix(const float4x4 & matrix)

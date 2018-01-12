@@ -8,6 +8,9 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
+#include "ComponentRigidBody.h"
+#include "ComponentCollider.h"
+#include "ComponentJointDistance.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -58,13 +61,22 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentCamera(this));
 		break;
 	case Component::CompRigidBody:
+		components_list.push_back(component = new ComponentRigidBody(this));
 		break;
 	case Component::CompMeshRenderer:
 		components_list.push_back(component = new ComponentMeshRenderer(this));
 		break;
 	case Component::CompBoxCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::BoxCollider));
 		break;
-	case Component::CompCircleCollider:
+	case Component::CompSphereCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::SphereCollider));
+		break;
+	case Component::CompCapsuleCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::CapsuleCollider));
+		break;
+	case Component::CompMeshCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::MeshCollider));
 		break;
 	case Component::CompAudioSource:
 		break;
@@ -77,6 +89,9 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
+		break;
+	case Component::CompDistanceJoint:
+		components_list.push_back(component = new ComponentJointDistance(this));
 		break;
 	default:
 		break;
@@ -319,7 +334,7 @@ math::float4x4 GameObject::GetGlobalTransfomMatrix()
 	return transform->GetMatrix();
 }
 
-const float * GameObject::GetOpenGLMatrix()
+math::float4x4 GameObject::GetOpenGLMatrix()
 {
 	ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
 	return transform->GetOpenGLMatrix();
