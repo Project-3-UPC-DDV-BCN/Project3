@@ -54,6 +54,7 @@ void Shader::Save(Data & data) const
 	data.AddString("assets_path", GetAssetsPath());
 	data.AddString("shader_text", shader_text);
 	data.AddUInt("UUID", GetUID());
+	data.AddString("name", GetName());
 }
 
 bool Shader::Load(Data & data)
@@ -84,7 +85,7 @@ bool Shader::Load(Data & data)
 		shader_type = shader->shader_type;
 		SetAssetsPath(data.GetString("assets_path"));
 		SetLibraryPath(data.GetString("library_path"));
-		SetName(data.GetString("texture_name"));
+		SetName(data.GetString("name"));
 		SetUID(data.GetUInt("UUID"));
 	}
 

@@ -93,8 +93,8 @@ void Material::Save(Data & data) const
 	if (reflection_texture != nullptr)
 		data.AddString("reflection_texture", reflection_texture->GetLibraryPath());
 
-	data.AddString("vertex_shader", shader_program->GetVertexShader()->GetName());
-	data.AddString("fragment_shader", shader_program->GetFragmentShader()->GetName());
+	data.AddUInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
+	data.AddUInt("fragment_shader", shader_program->GetFragmentShader()->GetUID());
 }
 
 bool Material::Load(Data & data)
@@ -201,11 +201,11 @@ bool Material::Load(Data & data)
 	SetLibraryPath(data.GetString("library_path"));
 	SetName(data.GetString("material_name"));
 
-	Shader* vert = App->resources->GetShader(data.GetString("vertex_shader"));
-	Shader* frag = App->resources->GetShader(data.GetString("fragment_shader"));
+	Shader* vert = App->resources->GetShader(data.GetUInt("vertex_shader"));
+	Shader* frag = App->resources->GetShader(data.GetUInt("fragment_shader"));
 
-	/*if(vert != nullptr && frag != nullptr)
-		SetShaders(vert, frag);*/
+	if(vert != nullptr && frag != nullptr)
+		SetShaders(vert, frag);
 
 	return ret;
 }
