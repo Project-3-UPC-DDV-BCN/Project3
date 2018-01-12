@@ -136,7 +136,7 @@ bool Shader::CompileShader()
 	}
 	if (shader_id != 0)
 	{
-		CONSOLE_LOG("Shader compilation Success :)");
+		CONSOLE_DEBUG("Shader compilation Success :)");
 		ret = true;
 	}
 	return ret;

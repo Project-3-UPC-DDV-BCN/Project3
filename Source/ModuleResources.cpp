@@ -1071,7 +1071,7 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 
 void ModuleResources::CreateDefaultShaders()
 {
-	CONSOLE_LOG("-------------- Creating Default Shaders -------------");
+	CONSOLE_DEBUG("-------------- Creating Default Shaders -------------");
 	if (!App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(SHADER_DEFAULT_FOLDER_PATH);
 
 	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
@@ -1157,7 +1157,7 @@ void ModuleResources::CreateDefaultShaders()
 
 void ModuleResources::CreateDefaultMaterial()
 {
-	CONSOLE_LOG("-------------- Creating Default Material -------------");
+	CONSOLE_DEBUG("-------------- Creating Default Material -------------");
 	if (!App->file_system->DirectoryExist(MATERIAL_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(MATERIAL_DEFAULT_FOLDER_PATH);
 
 	std::string default_mat = MATERIAL_DEFAULT_FOLDER "default_material.mat";

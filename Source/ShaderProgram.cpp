@@ -130,7 +130,7 @@ void ShaderProgram::LinkShaderProgram()
 		App->renderer3D->DeleteProgram(program_id);
 		program_id = 0;
 	}
-	else CONSOLE_LOG("Shader Program %d created :)", program_id);
+	else CONSOLE_DEBUG("Shader Program %d created :)", program_id);
 }
 
 uint ShaderProgram::GetProgramID() const
