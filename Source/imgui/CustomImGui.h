@@ -1,6 +1,7 @@
 #pragma once
 
 #include "imgui.h"
+#include "../Shader.h"
 
 class Texture;
 class Mesh;
@@ -18,5 +19,6 @@ namespace ImGui
 	bool InputResourceGameObject(const char* label, GameObject** texture);
 	bool InputResourceMaterial(const char* label, Material** texture);
 	bool InputResourceScript(const char* label, Script** script);
+	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 }
 

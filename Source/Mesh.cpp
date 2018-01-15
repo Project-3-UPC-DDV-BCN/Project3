@@ -5,25 +5,16 @@
 #include "ModuleMeshImporter.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResources.h"
+#include "ModuleRenderer3D.h"
 
 Mesh::Mesh()
 {
-	id_vertices = 0;
+	id_vertices_data = 0;
 	num_indices = 0;
 	indices = nullptr;
 
 	id_indices = 0;
 	num_vertices = 0;
-	vertices = nullptr;
-
-	id_normals = 0;
-	normals = nullptr;
-
-	id_colors = 0;
-	colors = nullptr;
-
-	id_texture_coords = 0;
-	texture_coords = nullptr;
 
 	SetType(Resource::MeshResource);
 
@@ -32,10 +23,8 @@ Mesh::Mesh()
 Mesh::~Mesh()
 {
 	RELEASE_ARRAY(indices);
+	RELEASE_ARRAY(vertices_data);
 	RELEASE_ARRAY(vertices);
-	RELEASE_ARRAY(normals);
-	RELEASE_ARRAY(colors);
-	RELEASE_ARRAY(texture_coords);
 
 	UnloadFromMemory();
 }
@@ -79,12 +68,10 @@ bool Mesh::Load(Data & data)
 		num_indices = mesh->num_indices;
 		indices = mesh->indices;
 		num_vertices = mesh->num_vertices;
-		vertices = mesh->vertices;
-		normals = mesh->normals;
-		colors = mesh->colors;
-		texture_coords = mesh->texture_coords;
+		vertices_data = mesh->vertices_data;
 		App->resources->AddMesh(this);
 	}
+	CreateVerticesFromData();
 
 	return ret;
 }
@@ -96,38 +83,21 @@ void Mesh::CreateMeta() const
 
 void Mesh::LoadToMemory()
 {
-	glGenBuffers(1, &id_vertices);
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 3, vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &id_indices);
-	glBindBuffer(GL_ARRAY_BUFFER, id_indices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	if (normals != nullptr)
+	if (id_vertices_data == 0)
 	{
-		glGenBuffers(1, &(id_normals));
-		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, normals, GL_STATIC_DRAW);
+		glGenBuffers(1, &id_vertices_data);
+		glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 13, vertices_data, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
 
-	if (colors != nullptr)
-	{
-		glGenBuffers(1, &(id_colors));
-		glBindBuffer(GL_ARRAY_BUFFER, id_colors);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, colors, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
+		
 
-	if (texture_coords != nullptr)
-	{
-		glGenBuffers(1, &(id_texture_coords));
-		glBindBuffer(GL_ARRAY_BUFFER, id_texture_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, texture_coords, GL_STATIC_DRAW);
+		glGenBuffers(1, &id_indices);
+		glBindBuffer(GL_ARRAY_BUFFER, id_indices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		InitializeMesh();
 	}
 
 	IncreaseUsedCount();
@@ -139,16 +109,47 @@ void Mesh::UnloadFromMemory()
 
 	if (GetUsedCount() == 0)
 	{
-		glDeleteBuffers(1, &id_vertices);
-		glDeleteBuffers(1, &id_indices);
-		glDeleteBuffers(1, &id_normals);
-		glDeleteBuffers(1, &id_colors);
-		glDeleteBuffers(1, &id_texture_coords);
+		glDeleteBuffers(1, &id_vertices_data);
 
-		id_vertices = 0;
-		id_indices = 0;
-		id_normals = 0;
-		id_colors = 0;
-		id_texture_coords = 0;
+		id_vertices_data = 0;
 	}
+}
+
+void Mesh::CreateVerticesFromData()
+{
+	if (vertices == nullptr && vertices_data != nullptr)
+	{
+		vertices = new float[num_vertices * 3];
+
+		for (int i = 0; i < num_vertices; ++i)
+		{
+			memcpy(vertices + i * 3, vertices_data + i * 13, sizeof(float) * 3);
+		}
+	}
+}
+
+void Mesh::InitializeMesh()
+{
+	id_vao = App->renderer3D->GenVertexArrayObject();
+
+	App->renderer3D->BindVertexArrayObject(id_vao);
+
+	App->renderer3D->BindArrayBuffer(id_vertices_data);
+
+	//vertices
+	App->renderer3D->SetVertexAttributePointer(0, 3, 13, 0);
+	App->renderer3D->EnableVertexAttributeArray(0);
+	//texture coords
+	App->renderer3D->SetVertexAttributePointer(1, 3, 13, 3);
+	App->renderer3D->EnableVertexAttributeArray(1);
+	//normals
+	App->renderer3D->SetVertexAttributePointer(2, 3, 13, 6);
+	App->renderer3D->EnableVertexAttributeArray(2);
+	//colors
+	App->renderer3D->SetVertexAttributePointer(3, 4, 13, 9);
+	App->renderer3D->EnableVertexAttributeArray(3);
+
+	App->renderer3D->BindElementArrayBuffer(id_indices);
+
+	App->renderer3D->UnbindVertexArrayObject();
 }

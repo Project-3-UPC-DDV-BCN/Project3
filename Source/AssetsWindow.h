@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Script.h"
+#include "Shader.h"
 
 class Texture;
 
@@ -20,7 +21,11 @@ private:
 	void DeleteWindow(std::string path);
 	void CreateDirectortWindow();
 	void CreateNewScriptWindow(Script::ScriptType type);
-	void CreateScript(Script::ScriptType type, std::string scriptName);
+	void CreateNewShaderWindow(Shader::ShaderType type);
+	void CreateNewMaterialWindow();
+	void CreateScript(Script::ScriptType type, std::string script_name);
+	void CreateShader(Shader::ShaderType type, std::string shader_name);
+	void CreateMaterial(std::string material_name);
 
 private:
 	uint node;
@@ -28,6 +33,8 @@ private:
 	bool show_new_folder_window;
 	bool show_delete_window;
 	bool show_new_script_window;
+	bool show_new_shader_window;
+	bool show_new_material_window = false;
 
 	bool options_is_open;
 
@@ -42,5 +49,7 @@ private:
 	std::string selected_folder;
 	std::string assets_folder_path;
 	std::string delete_path;
+
+	Shader::ShaderType shader_type;
 };
 

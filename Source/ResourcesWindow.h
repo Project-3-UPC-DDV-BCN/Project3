@@ -3,6 +3,7 @@
 #include "Resource.h"
 #include <map>
 #include <list>
+#include "Shader.h"
 
 class Texture;
 class Mesh;
@@ -26,6 +27,8 @@ public:
 	GameObject* GetGameobject() const;
 	Material* GetMaterial() const;
 	Script* GetScript() const;
+	Shader* GetShader() const;
+	void SetShaderType(Shader::ShaderType type);
 	void Reset();
 
 private:
@@ -36,6 +39,7 @@ private:
 	std::list<GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, Shader*> shaders_list;
 
 	Texture* texture_to_return;
 	Mesh* mesh_to_return;
@@ -43,6 +47,8 @@ private:
 	GameObject* gameobject_to_return;
 	Material* material_to_return;
 	Script* script_to_return;
+	Shader* shader_to_return;
+	Shader::ShaderType shader_type;
 
 public:
 	bool texture_changed;
@@ -51,5 +57,6 @@ public:
 	bool gameobject_changed;
 	bool material_changed;
 	bool script_changed;
+	bool shader_changed;
 };
 

@@ -73,6 +73,8 @@ enum update_status
 #define ASSETS_PREFABS_FOLDER_PATH "./Project/Assets/Prefabs"
 #define ASSETS_FBX_FOLDER "./Project/Assets/FBX/"
 #define ASSETS_FBX_FOLDER_PATH "./Project/Assets/FBX"
+#define ASSETS_SHADERS_FOLDER "./Project/Assets/Shaders/"
+#define ASSETS_SHADERS_FOLDER_PATH "./Project/Assets/Shaders"
 
 #define LIBRARY_FOLDER "./Project/Library/"
 #define LIBRARY_FOLDER_PATH "./Project/Library"
@@ -86,6 +88,8 @@ enum update_status
 #define LIBRARY_MATERIALS_FOLDER_PATH "./Project/Library/Materials"
 #define LIBRARY_SCRIPTS_FOLDER "./Project/Library/Scripts/"
 #define LIBRARY_SCRIPTS_FOLDER_PATH "./Project/Library/Scripts"
+#define LIBRARY_SHADERS_FOLDER "./Project/Library/Shaders/"
+#define LIBRARY_SHADERS_FOLDER_PATH "./Project/Library/Shaders"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"
@@ -102,3 +106,9 @@ enum update_status
 #define REFERENCE_ASSEMBLIES_FOLDER "./Editor_Settings/Reference_Assemblies/"
 #define CS_TEMPLATE_FILE_PATH "./Editor_Settings/Scripts_Templates/C#Script.txt"
 #define LUA_TEMPLATE_FILE_PATH "./Editor_Settings/Scripts_Templates/LuaScript.txt"
+#define VERTEX_SHADER_TEMPLATE_FILE_PATH "./Editor_Settings/Shaders_Templates/Vertex_Shader.txt"
+#define FRAGMENT_SHADER_TEMPLATE_FILE_PATH "./Editor_Settings/Shaders_Templates/Fragment_Shader.txt"
+#define SHADER_DEFAULT_FOLDER "./Editor_Settings/Default_Shaders/"
+#define SHADER_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Shaders"
+#define MATERIAL_DEFAULT_FOLDER "./Editor_Settings/Default_Materials/"
+#define MATERIAL_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Materials"

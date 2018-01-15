@@ -5,7 +5,8 @@ public class Missile {
 	int speed = 30;
 	
 	void Start () {
-		
+		TheGameObject go = null;
+		go.SetActive(true);
 	}
 	
 	void Update () {

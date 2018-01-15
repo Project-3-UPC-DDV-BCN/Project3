@@ -4,7 +4,7 @@ namespace TheEngine
 {
     public class Time
     {
-        public static float Scale
+        public static float TimeScale
         {
             get
             {

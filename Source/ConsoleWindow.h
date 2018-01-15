@@ -1,11 +1,17 @@
 #pragma once
 #include "Window.h"
-#include <vector>
+#include <map>
 
 class ConsoleWindow :
 	public Window
 {
 public:
+
+	enum MessageType
+	{
+		MessageLog, MessageWarning, MessageError, MessageDebug
+	};
+
 	ConsoleWindow();
 	virtual ~ConsoleWindow();
 
@@ -19,10 +25,6 @@ private:
 	ImGuiTextFilter filter;
 	ImVector<int> line_offsets;
 	bool scroll_to_bottom;
-	int logs;
-	int warnings;
-	int errors;
-	int debug_logs;
 	std::string logs_label;
 	std::string warnings_label;
 	std::string errors_label;
@@ -31,7 +33,12 @@ private:
 	bool show_warnings;
 	bool show_errors;
 	bool show_debug_logs;
-	std::vector<std::string> message_list;
+	int error_count;
+	int warning_count;
+	int log_count;
+	int debug_count;
+	MessageType type;
+	std::multimap<MessageType, std::string> message_list;
 	ImVec4 log_text_color;
 	ImVec4 warning_text_color;
 	ImVec4 error_text_color;

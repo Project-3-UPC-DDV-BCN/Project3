@@ -40,8 +40,6 @@ void SceneWindow::DrawWindow()
 		window_pos = ImGui::GetWindowPos();
 		DrawMenuBar();
 
-		App->renderer3D->SetActiveTexture2D(true);
-
 		if (App->renderer3D->editor_camera != nullptr && App->renderer3D->editor_camera->GetViewportTexture() != nullptr)
 		{
 			ImGui::Image((void*)App->renderer3D->editor_camera->GetViewportTexture()->GetTextureID(), size, ImVec2(0, 1), ImVec2(1, 0));
@@ -59,8 +57,6 @@ void SceneWindow::DrawWindow()
 			draw_list->AddRectFilled(preview_back_x_y, preview_back_w_h, ImGui::ColorConvertFloat4ToU32(ImVec4(0.5f, 0.5f, 0.5f, 1)));
 			draw_list->AddImage((void*)App->renderer3D->rendering_cameras.back()->GetViewportTexture()->GetTextureID(), preview_x_y, preview_w_h, ImVec2(0, 1), ImVec2(1, 0));
 		}
-
-		App->renderer3D->SetActiveTexture2D(false);
 
 		is_mouse_hovering_window = ImGui::IsMouseHoveringWindow();
 		//Necessary because left-click doesn't give focus to a window
@@ -159,6 +155,7 @@ void SceneWindow::DrawMenuBar()
 			if (ImGui::MenuItem("Shaded", "", !wireframe_mode))
 			{
 				wireframe_mode = false;
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			}
 			if (ImGui::MenuItem("Wireframe", "", wireframe_mode))
 			{

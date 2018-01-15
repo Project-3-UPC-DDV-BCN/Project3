@@ -85,7 +85,10 @@ void ModuleScene::CreateMainCamera()
 	scene_cameras.push_back(camera);
 	App->resources->AddGameObject(main_camera);
 	App->renderer3D->game_camera = camera;
-	App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+	if (App->editor->game_window->game_scene_width != 0 && App->editor->game_window->game_scene_height != 0)
+	{
+		App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+	}
 }
 
 // Load assets
@@ -205,10 +208,6 @@ update_status ModuleScene::Update(float dt)
 		{
 			if (mesh_renderer != nullptr && mesh_renderer->IsActive() && mesh_renderer->GetMesh() != nullptr)
 			{
-				if ((*it)->IsSelected())
-				{
-					App->renderer3D->SetActiveTexture2D(false);
-				}
 				App->renderer3D->AddMeshToDraw(mesh_renderer);
 			}
 			if (camera != nullptr && camera->IsActive())
@@ -247,6 +246,7 @@ update_status ModuleScene::Update(float dt)
 	}
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
+
 	return UPDATE_CONTINUE;
 }
 

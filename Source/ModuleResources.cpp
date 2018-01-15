@@ -16,6 +16,9 @@
 #include "ComponentMeshRenderer.h"
 #include "Script.h"
 #include "ModuleScriptImporter.h"
+#include "Shader.h"
+#include "ModuleShaderImporter.h"
+#include "ShaderProgram.h"
 
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -48,6 +51,31 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	materials_list.clear();
+
+	Data shprograms;
+	uint i = 0;
+	for (std::map<uint, ShaderProgram*>::iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); ++it) 
+	{
+		if (it->second->GetUsedCount() > 0)
+		{
+			shprograms.CreateSection("shprogram_" + std::to_string(i));
+			shprograms.AddUInt("uuid", it->second->GetUID());
+			shprograms.AddUInt("vertex_shader", (it->second->GetVertexShader() != nullptr) ? it->second->GetVertexShader()->GetUID() : 0);
+			shprograms.AddUInt("fragment_shader", (it->second->GetFragmentShader() != nullptr) ? it->second->GetFragmentShader()->GetUID() : 0);
+			shprograms.CloseSection();
+			++i;
+		}
+
+		RELEASE(it->second);
+	}
+	shader_programs_list.clear();
+	shprograms.AddUInt("num_sections", i);
+	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms");
+
+	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
+		RELEASE(it->second);
+	}
+	shaders_list.clear();
 }
 
 bool ModuleResources::Init(Data * editor_config)
@@ -66,11 +94,44 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
+	{
+		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+	}
+
+	CreateDefaultShaders();
+	CreateDefaultMaterial();
 	
+	std::string shprog_meta_file;
+	bool exist_shprog_meta = false;
+	if (App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
+	{
+		std::vector<std::string> files_in_shader_library = App->file_system->GetFilesInDirectory(App->file_system->StringToPathFormat(LIBRARY_SHADERS_FOLDER_PATH));
+
+		for (std::vector<std::string>::iterator it = files_in_shader_library.begin(); it != files_in_shader_library.end(); it++)
+		{
+			std::string extension = App->file_system->GetFileExtension(*it);
+			if (extension == ".shprog")
+			{
+				ShaderProgram* program = new ShaderProgram();
+				program->LoadFromLibrary((*it).c_str());
+			}
+			else if (extension == ".meta") //meta file should be loaded after all programs and shaders
+			{
+				shprog_meta_file = *it;
+				exist_shprog_meta = true;
+			}
+		}
+	}
+
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
 		CreateResource(*it);
 	}
+
+	if (exist_shprog_meta)
+		LoadShaderProgramMeta(shprog_meta_file);
+
 }
 
 void ModuleResources::AddResource(Resource * resource)
@@ -104,6 +165,12 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::MaterialResource:
 		AddMaterial((Material*)resource);
 		break;
+	case Resource::ShaderResource:
+		AddShader((Shader*)resource);
+		break;
+	case Resource::ShaderProgramResource:
+		AddShaderProgram((ShaderProgram*)resource);
+		break;
 	case Resource::Unknown:
 		break;
 	}
@@ -116,6 +183,7 @@ void ModuleResources::ImportFile(std::string path)
 	Resource::ResourceType type = AssetExtensionToResourceType(extension);
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::MeshResource;
+	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
 
 	bool exist = false;
 
@@ -170,6 +238,16 @@ void ModuleResources::ImportFile(std::string path)
 	case Resource::MaterialResource:
 		break;
 	case Resource::Unknown:
+		break;
+	case Resource::ShaderResource:
+		if (!App->file_system->DirectoryExist(ASSETS_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_SHADERS_FOLDER_PATH);
+		if (App->file_system->FileExist(ASSETS_SHADERS_FOLDER + file_name))
+		{
+			exist = true;
+			break;
+		}
+		App->file_system->Copy(path, ASSETS_SHADERS_FOLDER + file_name);
+		path = ASSETS_SHADERS_FOLDER + file_name;
 		break;
 	default:
 		break;
@@ -400,6 +478,156 @@ std::map<uint, Script*> ModuleResources::GetScriptsList() const
 	return scripts_list;
 }
 
+Shader * ModuleResources::GetShader(std::string name) const
+{
+	for (std::map<uint, Shader*>::const_iterator it = shaders_list.begin(); it != shaders_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+Shader * ModuleResources::GetShader(UID uid) const
+{
+	if (shaders_list.find(uid) != shaders_list.end()) return shaders_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddShader(Shader * shader)
+{
+	if (shader != nullptr)
+	{
+		shaders_list[shader->GetUID()] = shader;
+	}
+}
+
+void ModuleResources::RemoveShader(Shader * shader)
+{
+	if (shader)
+	{
+		std::map<uint, Shader*>::iterator it = shaders_list.find(shader->GetUID());
+		if (it != shaders_list.end()) shaders_list.erase(it);
+	}
+}
+
+std::map<uint, Shader*> ModuleResources::GetShadersList() const
+{
+	return shaders_list;
+}
+
+ShaderProgram * ModuleResources::GetShaderProgram(std::string name) const
+{
+	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+ShaderProgram * ModuleResources::GetShaderProgram(UID uid) const
+{
+	if (shader_programs_list.find(uid) != shader_programs_list.end()) return shader_programs_list.at(uid);
+	return nullptr;
+}
+
+ShaderProgram * ModuleResources::GetShaderProgram(Shader * vertex, Shader * fragment) const
+{
+	ShaderProgram* ret = nullptr;
+	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
+	{
+		if (it->second->GetVertexShader() == vertex && it->second->GetFragmentShader() == fragment)
+		{
+			ret = it->second;
+			break;
+		}
+	}
+	return ret;
+}
+
+void ModuleResources::AddShaderProgram(ShaderProgram * program)
+{
+	if (program != nullptr)
+	{
+		shader_programs_list[program->GetUID()] = program;
+	}
+}
+
+void ModuleResources::RemoveShaderProgram(ShaderProgram * program)
+{
+	if (program)
+	{
+		std::map<uint, ShaderProgram*>::iterator it = shader_programs_list.find(program->GetUID());
+		if (it != shader_programs_list.end()) shader_programs_list.erase(it);
+	}
+}
+
+std::map<uint, ShaderProgram*> ModuleResources::GetShaderProgramList() const
+{
+	return shader_programs_list;
+}
+
+void ModuleResources::LoadShaderProgramMeta(std::string path) const
+{
+	Data d;
+	d.LoadJSON(path);
+	uint sections = d.GetUInt("num_sections");
+
+	for (int i = 0; i < sections; ++i)
+	{
+		std::string section_name = "shprogram_" + std::to_string(i);
+		d.EnterSection(section_name);
+		UID program = d.GetUInt("uuid");
+		ShaderProgram* shprog = GetShaderProgram(program);
+		if (shprog != nullptr)
+		{
+			UID vert_uid = d.GetUInt("vertex_shader");
+			if (vert_uid != 0)
+			{
+				Shader* vert_shader = GetShader(vert_uid);
+				if (vert_shader != nullptr)
+				{
+					shprog->SetVertexShader(vert_shader);
+				}
+				else
+				{
+					CONSOLE_WARNING("Vertex shader %d not found for %s", vert_uid, section_name.c_str());
+				}
+			}
+
+			UID frag_uid = d.GetUInt("fragment_shader");
+			if (frag_uid != 0)
+			{
+				Shader* frag_shader = GetShader(frag_uid);
+				if (frag_shader != nullptr)
+				{
+					shprog->SetFragmentShader(frag_shader);
+				}
+				else
+				{
+					CONSOLE_WARNING("Fragment shader %d not found for %s", frag_uid, section_name.c_str());
+				}
+			}
+		}
+		else
+		{
+			CONSOLE_WARNING("%s not found!", section_name.c_str());
+		}
+
+		d.LeaveSection();
+	}
+}
+
+void ModuleResources::OnShaderUpdate(Shader * shader) const
+{
+	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
+	{
+		if (it->second->GetVertexShader() == shader || it->second->GetFragmentShader() == shader)
+		{
+			it->second->LinkShaderProgram(); //if the modified shader affects this program, link the program again
+		}
+	}
+}
+
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
@@ -412,6 +640,8 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".particleFX") return Resource::ParticleFXResource;
 	else if (str == ".scene") return Resource::SceneResource;
 	else if (str == ".ttf") return Resource::FontResource;
+	else if (str == ".vshader") return Resource::ShaderResource;
+	else if (str == ".fshader") return Resource::ShaderResource;
 
 	return Resource::Unknown;
 }
@@ -424,6 +654,8 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".mat") return Resource::MaterialResource;
 	else if (str == ".dll") return Resource::ScriptResource;
 	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
+	else if (str == ".vshader") return Resource::ShaderResource;
+	else if (str == ".fshader") return Resource::ShaderResource;
 
 	return Resource::Unknown;
 }
@@ -436,6 +668,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 	else if (type == Resource::PrefabResource) return ".prefab";
 	else if (type == Resource::MaterialResource) return ".mat";
 	else if (type == Resource::ScriptResource) return ".dll";
+	else if (type == Resource::ShaderResource) return ".shader";
 	
 	return "";
 }
@@ -504,6 +737,13 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 			library_file = directory + file_name + ".mat";
 		}
 		break;
+	case Resource::ShaderResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_SHADERS_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".shader", directory, false))
+		{
+			library_file = directory + file_name + ".shader";
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -550,6 +790,10 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::MaterialResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
 		ret = App->material_importer->ImportMaterial(file_path);
+		break;
+	case Resource::ShaderResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+		ret = App->shader_importer->ImportShader(file_path);
 		break;
 	case Resource::Unknown:
 		break;
@@ -619,6 +863,14 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		}
 		resource = (Resource*)App->material_importer->LoadMaterialFromLibrary(library_path);
 		break;
+	case Resource::ShaderResource:
+		if (GetShader(name) != nullptr)
+		{
+			resource = (Resource*)GetShader(name);
+			break;
+		}
+		resource = (Resource*)App->shader_importer->LoadShaderFromLibrary(library_path);
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -661,6 +913,13 @@ void ModuleResources::CreateResource(std::string file_path)
 						App->script_importer->ImportScript(file_path);
 					}
 				}
+				if (extension == ".vshader" || extension == ".vfshader")
+				{
+					if (App->file_system->CompareFilesTime(file_path, library_path))
+					{
+						App->shader_importer->ImportShader(file_path);
+					}
+				}
 			}
 			resource = CreateResourceFromLibrary(library_path);
 			if (resource != nullptr)
@@ -677,6 +936,13 @@ void ModuleResources::CreateResource(std::string file_path)
 			if (App->file_system->CompareFilesTime(file_path, path))
 			{
 				App->script_importer->ImportScript(file_path);
+			}
+		}
+		if (extension == ".vshader" || extension == ".fshader")
+		{
+			if (App->file_system->CompareFilesTime(file_path, path))
+			{
+				App->shader_importer->ImportShader(file_path);
 			}
 		}
 		resource = CreateResourceFromLibrary(path);
@@ -708,8 +974,10 @@ void ModuleResources::DeleteResource(std::string file_path)
 	Texture* texture = nullptr;
 	Prefab* prefab = nullptr;
 	Material* material = nullptr;
+	Shader* shader = nullptr;
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::PrefabResource;
+	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
 
 	switch (type)
 	{
@@ -763,6 +1031,15 @@ void ModuleResources::DeleteResource(std::string file_path)
 			RemoveMaterial(material);
 		}
 		break;
+	case Resource::ShaderResource:
+		shader = GetShader(resource_name);
+		if (shader != nullptr)
+		{
+			App->file_system->Delete_File(shader->GetLibraryPath());
+			App->file_system->Delete_File(file_path + ".meta");
+			RemoveShader(shader);
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -790,6 +1067,112 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 			}
 		}
 	}
+}
+
+void ModuleResources::CreateDefaultShaders()
+{
+	CONSOLE_DEBUG("-------------- Creating Default Shaders -------------");
+	if (!App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(SHADER_DEFAULT_FOLDER_PATH);
+
+	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
+	if (!App->file_system->FileExist(vert_default_path))
+	{
+		Shader* default_vert = new Shader();
+		default_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+		
+		std::string shader_text = 
+		"#version 330 core\n"
+		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec3 texCoord;\n"
+		"layout(location = 2) in vec3 normals;\n"
+		"layout(location = 3) in vec4 color;\n\n"
+		"out vec4 ourColor;\n"
+		"out vec3 Normal;\n"
+		"out vec2 TexCoord;\n\n"
+		"uniform mat4 Model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n\n"
+		"void main()\n"
+		"{ \n"
+		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+		"	ourColor = color;\n"
+		"	TexCoord = texCoord.xy;\n"
+		"}";
+
+		default_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(default_vert);
+	}
+	CreateResource(vert_default_path);
+
+	std::string frag_default_path = SHADER_DEFAULT_FOLDER "default_fragment.fshader";
+	if (!App->file_system->FileExist(frag_default_path))
+	{
+		Shader* default_frag = new Shader();
+		default_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform bool has_material_color;\n"
+			"uniform vec4 material_color;\n"
+			"uniform bool has_texture;\n"
+			"uniform sampler2D ourTexture;\n\n"
+			"void main()\n"
+			"{\n"
+			"	if(has_texture)\n"
+			"		color = texture(ourTexture, TexCoord);\n"
+			"	else if(has_material_color)\n"
+			"		color = material_color;\n"
+			"	else\n"
+			"		color = ourColor;\n"
+			"}";
+
+		default_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(default_frag);
+	}
+	CreateResource(frag_default_path);
+
+	ShaderProgram* prog = new ShaderProgram();
+	prog->SetName("default_shader_program");
+
+	Shader* vertex = GetShader("default_vertex");
+	prog->SetVertexShader(vertex);
+
+	Shader* fragment = GetShader("default_fragment");
+	prog->SetFragmentShader(fragment);
+	
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
+}
+
+void ModuleResources::CreateDefaultMaterial()
+{
+	CONSOLE_DEBUG("-------------- Creating Default Material -------------");
+	if (!App->file_system->DirectoryExist(MATERIAL_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(MATERIAL_DEFAULT_FOLDER_PATH);
+
+	std::string default_mat = MATERIAL_DEFAULT_FOLDER "default_material.mat";
+	if (!App->file_system->FileExist(default_mat))
+	{
+		Material* new_mat = new Material();
+		new_mat->SetName("default_material");
+		Data d;
+		new_mat->Save(d);
+
+		d.SaveAsBinary(default_mat);
+
+		RELEASE(new_mat);
+	}
+	CreateResource(default_mat);
 }
 
 bool ModuleResources::CheckResourceName(std::string& name)
