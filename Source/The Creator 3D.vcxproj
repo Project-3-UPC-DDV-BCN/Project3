@@ -247,6 +247,7 @@
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentCanvas.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentRectTransform.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="CSScript.cpp" />
     <ClCompile Include="CubeMap.cpp" />
@@ -353,6 +354,7 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ComponentRectTransform.h" />
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\Math\float2.inl" />

@@ -9,7 +9,7 @@ public:
 	ComponentCanvas(GameObject* attached_gameobject);
 	virtual ~ComponentCanvas();
 
-
+	bool Update();
 
 private:
 

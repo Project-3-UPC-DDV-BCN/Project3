@@ -55,6 +55,9 @@
     <Filter Include="Sources\3d Party\imGui\ImGuiTextEditor">
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameObject\Components\UI">
+      <UniqueIdentifier>{f18dd8bf-afb5-4de2-b3fb-c509ebcaa83f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -505,7 +508,7 @@
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
     <ClInclude Include="ComponentCanvas.h">
-      <Filter>Sources\GameObject\Components</Filter>
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -837,7 +840,10 @@
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -852,6 +858,9 @@
     </None>
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>Sources\3d Party\MathGeolib</Filter>
+    </None>
+    <None Include="ComponentRectTransform.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </None>
   </ItemGroup>
 </Project>
