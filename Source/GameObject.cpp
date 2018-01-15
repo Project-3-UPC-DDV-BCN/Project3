@@ -28,6 +28,7 @@ GameObject::GameObject(GameObject* parent)
 	is_selected = false;
 	is_static = false;
 	is_used_in_prefab = false;
+	is_ui = false;
 	AddComponent(Component::CompTransform);
 	used_in_scene = false;
 	uuid = App->RandomNumber().Int();
@@ -393,6 +394,16 @@ void GameObject::UpdateFactory()
 			comp_factory->CheckLifeTimes();
 		}
 	}
+}
+
+void GameObject::SetIsUI(bool set)
+{
+	is_ui = set;
+}
+
+bool GameObject::GetIsUI() const
+{
+	return is_ui;
 }
 
 void GameObject::Destroy()

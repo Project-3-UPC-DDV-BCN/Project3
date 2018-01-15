@@ -56,6 +56,12 @@ public:
 
 	void UpdateFactory();
 
+	// Sets element as UI and can be used by a component canvas
+	void SetIsUI(bool set);
+
+	// Returns true if the GameObject it's a UI element
+	bool GetIsUI() const;
+
 	void Destroy();
 	void OnDestroy();
 
@@ -83,5 +89,6 @@ private:
 	bool is_selected;
 	bool is_static;
 	bool is_used_in_prefab;
+	bool is_ui;
 };
 
