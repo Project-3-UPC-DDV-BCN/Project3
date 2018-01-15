@@ -70,6 +70,8 @@ public:
 	void Save(Data& data, bool isDuplicated = false);
 	void Load(Data & data, bool isPrefab = false);
 
+	bool Update();
+
 	void DeleteFromResourcesDestructor();
 
 public:

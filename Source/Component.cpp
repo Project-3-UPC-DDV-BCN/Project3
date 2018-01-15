@@ -78,6 +78,21 @@ void Component::SetUID(UID uid)
 	uuid = uid;
 }
 
+bool Component::Start()
+{
+	return true;
+}
+
+bool Component::Update()
+{
+	return true;
+}
+
+bool Component::CleanUp()
+{
+	return true;
+}
+
 void Component::Save(Data & data) const
 {
 }

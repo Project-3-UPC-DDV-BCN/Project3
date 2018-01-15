@@ -222,6 +222,8 @@ update_status ModuleScene::Update(float dt)
 			{
 				(*it)->UpdateScripts();
 				(*it)->UpdateFactory();
+				if (!(*it)->Update())
+					return update_status::UPDATE_ERROR;
 			}
 		}
 	}
