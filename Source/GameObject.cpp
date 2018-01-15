@@ -37,6 +37,7 @@ GameObject::~GameObject()
 {
 	App->resources->RemoveGameObject(this);
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) {
+		(*it)->CleanUp();
 		RELEASE(*it);
 	}
 
@@ -570,6 +571,20 @@ void GameObject::Load(Data & data, bool is_prefab)
 		name = tempName;
 	}
 
+}
+
+bool GameObject::Update()
+{
+	bool ret = true;
+
+	for (std::list<Component*>::iterator c = components_list.begin(); c != components_list.end(); ++c)
+	{
+		ret = (*c)->Update();
+		if (ret == false)
+			break;
+	}
+
+	return ret;
 }
 
 void GameObject::DeleteFromResourcesDestructor()

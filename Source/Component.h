@@ -28,6 +28,9 @@ public:
 	UID GetUID() const;
 	void SetUID(UID uid);
 
+	virtual bool Start();
+	virtual bool Update();
+	virtual bool CleanUp();
 
 	virtual void Save(Data& data) const = 0;
 	virtual void Load(Data& data) = 0;
