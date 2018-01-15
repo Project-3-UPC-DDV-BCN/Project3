@@ -8,15 +8,18 @@ class GameObject;
 class Component
 {
 public:
-	enum ComponentType {
+	enum ComponentType 
+	{
 		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompCircleCollider, CompAudioSource, CompAnimaton, 
 		CompScript, CompParticleSystem, CompFactory, CompUnknown
 	};
 
 	Component();
 	virtual ~Component();
+
 	virtual void OnEnable();
 	virtual void OnDisable();
+
 	void SetActive(bool active);
 	bool IsActive() const;
 	void SetGameObject(GameObject* attached_gameobject);
