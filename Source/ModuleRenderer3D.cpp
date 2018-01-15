@@ -211,38 +211,41 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 
 void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCamera * active_camera)
 {
-	AABB aabb = mesh->GetMesh()->box;
-	float3 size = aabb.Size();
-	float3 pos = aabb.CenterPoint();
-	Quat rot = Quat::identity;
-	float4x4 trans = float4x4::FromTRS(pos, rot, size);
+	if (mesh->GetMesh() != nullptr)
+	{
+		AABB aabb = mesh->GetMesh()->box;
+		float3 size = aabb.Size();
+		float3 pos = aabb.CenterPoint();
+		Quat rot = Quat::identity;
+		float4x4 trans = float4x4::FromTRS(pos, rot, size);
 
-	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
 
-	UseShaderProgram(program->GetProgramID());
+		UseShaderProgram(program->GetProgramID());
 
-	SetUniformMatrix(program->GetProgramID(), "view", active_camera->GetViewMatrix());
-	SetUniformMatrix(program->GetProgramID(), "projection", active_camera->GetProjectionMatrix());
-	SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+		SetUniformMatrix(program->GetProgramID(), "view", active_camera->GetViewMatrix());
+		SetUniformMatrix(program->GetProgramID(), "projection", active_camera->GetProjectionMatrix());
+		SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
 
-	SetUniformBool(program->GetProgramID(), "has_texture", false);
-	SetUniformBool(program->GetProgramID(), "has_material_color", true);
-	SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+		SetUniformBool(program->GetProgramID(), "has_texture", false);
+		SetUniformBool(program->GetProgramID(), "has_material_color", true);
+		SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
 
-	Mesh* cube = App->resources->GetMesh("PrimitiveCube");
-	if (cube->id_indices == 0) cube->LoadToMemory();
+		Mesh* cube = App->resources->GetMesh("PrimitiveCube");
+		if (cube->id_indices == 0) cube->LoadToMemory();
 
-	//set wireframe before render 
-	GLint polygonMode;
-	glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
-	SetWireframeMode();
+		//set wireframe before render 
+		GLint polygonMode;
+		glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+		SetWireframeMode();
 
-	BindVertexArrayObject(cube->id_vao);
-	glDrawElements(GL_TRIANGLES, cube->num_indices, GL_UNSIGNED_INT, NULL);
-	UnbindVertexArrayObject();
+		BindVertexArrayObject(cube->id_vao);
+		glDrawElements(GL_TRIANGLES, cube->num_indices, GL_UNSIGNED_INT, NULL);
+		UnbindVertexArrayObject();
 
-	//restore previous polygon mode
-	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+		//restore previous polygon mode
+		glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+	}
 }
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
