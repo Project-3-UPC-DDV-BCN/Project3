@@ -11,6 +11,9 @@ public:
 
 	bool Update();
 
+	// Returns all GameObjects that are child of the canvas that are UI.
+	std::vector<GameObject*> GetUIGOChilds();
+
 private:
 
 };
