@@ -9,6 +9,7 @@ class ComponentCamera;
 class Component;
 class ComponentScript;
 class ComponentFactory;
+class ComponentLight;
 class GameObject;
 
 class PropertiesWindow :
@@ -25,6 +26,7 @@ public:
 	void DrawCameraPanel(ComponentCamera* camera);
 	void DrawScriptPanel(ComponentScript* script);
 	void DrawFactoryPanel(ComponentFactory* factory);
+	void DrawLightPanel(ComponentLight* light);
 
 private:
 	int scripts_count;

@@ -20,6 +20,7 @@
 #include "ComponentFactory.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ComponentLight.h"
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -131,6 +132,17 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
+
+				if (ImGui::MenuItem("Light")) {
+					if (selected_gameobject->GetComponent(Component::CompLight) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompLight);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Light!");
+					}
+				}
+
 				if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
@@ -219,6 +231,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
+		break;
+	case Component::CompLight:
+		DrawLightPanel((ComponentLight*)component);
 		break;
 	default:
 		break;
@@ -561,6 +576,18 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		if (ImGui::DragFloat("Life Time", &life_time, true, 0.025f, 0))
 		{
 			factory->SetLifeTime(life_time);
+		}
+	}
+}
+
+void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
+{
+	if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
+		bool is_active = comp_light->IsActive();
+		if (ImGui::Checkbox("Active##Light", &is_active))
+		{
+			comp_light->SetActive(is_active);
 		}
 	}
 }
