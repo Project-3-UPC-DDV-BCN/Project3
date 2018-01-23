@@ -13,8 +13,8 @@
 #include "Material.h"
 #include "imgui/CustomImGui.h"
 #include "ModuleRenderer3D.h"
-#include "ComponentScript.h"
 #include "ComponentRectTransform.h"
+#include "ComponentScript.h"
 #include "Script.h"
 #include "CSScript.h"
 #include "ModuleResources.h"
@@ -132,6 +132,22 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
+
+				if (ImGui::BeginMenu("UI"))
+				{
+					if (ImGui::MenuItem("Canvas"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompCanvas) == nullptr)
+						{
+							selected_gameobject->AddComponent(Component::CompCanvas);
+						}
+						else
+							CONSOLE_WARNING("GameObject can't have more than 1 Canvas!");
+					}
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
@@ -261,21 +277,26 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 	}
 }
 
-void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform* rect_transform)
+void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_transform)
 {
-	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
 		float2 position = rect_transform->GetPos();
 		float2 anchor = rect_transform->GetAnchor();
 
-		if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
+		if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f)) 
 		{
 			rect_transform->SetPos(position);
 		}
 
-		if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.05f, 0, 1))
+		if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
 		{
 			rect_transform->SetAnchor(anchor);
+		}
+
+		if (rect_transform->GetHasCanvas())
+		{
+			ImGui::Text("Has canvas");
 		}
 	}
 }

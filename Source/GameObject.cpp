@@ -83,7 +83,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentFactory(this));
 		break;
 	case Component::CompRectTransform:
-		components_list.push_back(component = new ComponentRectTransform(this));
+		components_list.push_front(component = new ComponentRectTransform(this));
 		break;
 	case Component::CompCanvas:
 		components_list.push_back(component = new ComponentCanvas(this));
