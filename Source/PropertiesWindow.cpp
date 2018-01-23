@@ -14,6 +14,7 @@
 #include "imgui/CustomImGui.h"
 #include "ModuleRenderer3D.h"
 #include "ComponentScript.h"
+#include "ComponentRectTransform.h"
 #include "Script.h"
 #include "CSScript.h"
 #include "ModuleResources.h"
@@ -220,6 +221,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
 		break;
+	case Component::CompRectTransform:
+		DrawRectTransformPanel((ComponentRectTransform*)component);
+		break;
 	default:
 		break;
 	}
@@ -227,6 +231,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 
 void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 {
+	if (transform->GetGameObject()->GetIsUI())
+		return;
+
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 		float3 position;
 		float3 rotation;
@@ -250,6 +257,25 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f)) {
 			transform->SetScale(scale);
+		}
+	}
+}
+
+void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform* rect_transform)
+{
+	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float2 position = rect_transform->GetPos();
+		float2 anchor = rect_transform->GetAnchor();
+
+		if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
+		{
+			rect_transform->SetPos(position);
+		}
+
+		if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.05f, 0, 1))
+		{
+			rect_transform->SetAnchor(anchor);
 		}
 	}
 }
@@ -564,3 +590,4 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		}
 	}
 }
+

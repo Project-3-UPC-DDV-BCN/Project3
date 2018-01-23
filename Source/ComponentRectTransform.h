@@ -3,37 +3,43 @@
 
 #include "Component.h"
 
-class ComponentTransform;
+// TODO: REMEMBER TO SET IS UI TO FALSE WHEN DESTROYING ALL UI COMPONENTS
 
-class ComponentRectTransfrom : public Component
+class ComponentTransform;
+class ComponentCanvas;
+
+class ComponentRectTransform : public Component
 {
 public:
-	ComponentRectTransfrom(GameObject* attached_gameobject);
-	virtual ~ComponentRectTransfrom();
+	ComponentRectTransform(GameObject* attached_gameobject);
+	virtual ~ComponentRectTransform();
 
 	bool Update();
 
-	void SetRect(const float4& size);
-	float4 GetRect() const;
-
+	void SetPos(const float2& size);
+	float2 GetPos() const;
+	void SetSize(const float2& size);
+	float2 GetSize() const;
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
+	float4x4 GetAnchorTransform() const;
 
-	void SetRotation(float3 rotation);
-	float3 GetGlobalRotation() const;
-	float3 GetLocalRotation() const;
-	void SetScale(float3 scale);
-	float3 GetGlobalScale() const;
-	float3 GetLocalScale() const;
-	void UpdateGlobalMatrix();
-	const float4x4 GetMatrix() const;
-	const float* GetOpenGLMatrix() const;
-	void SetMatrix(const float4x4 &matrix);
+	bool GetHasCanvas() const;
+
+	void Save(Data& data) const;
+	void Load(Data& data);
 
 private:
-	float4 rect;
-	float2 anchor;
+	void LookForCanvas();
+	void UpdateTransform();
+	void UpdateRectTransform();
+
+private:
+	float2				pos;
+	float2				size;
+	float2			    anchor;
 	ComponentTransform* c_transform = nullptr;
+	ComponentCanvas*    c_canvas = nullptr;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

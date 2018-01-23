@@ -1,5 +1,7 @@
 #include "ComponentCanvas.h"
 #include "GameObject.h"
+#include "ComponentRectTransform.h"
+#include "ComponentTransform.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -7,10 +9,35 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	SetName("Canvas");
 	SetType(ComponentType::CompCanvas);
 	SetGameObject(attached_gameobject);
+	size = float2::zero;
 }
 
 ComponentCanvas::~ComponentCanvas()
 {
+}
+
+float2 ComponentCanvas::GetSize()
+{
+	return size;
+}
+
+float4x4 ComponentCanvas::GetOrigin()
+{
+	float4x4 origin = float4x4::identity;
+
+	ComponentTransform* c_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+
+	if (c_trans != nullptr)
+	{
+		float4x4 canvas_trans = c_trans->GetMatrix();
+		float2 canvas_size = GetSize();
+
+		origin = canvas_trans;
+		origin[0][3] -= (canvas_size.x / 2);
+		origin[1][3] -= (canvas_size.y / 2);
+	}
+
+	return origin;
 }
 
 bool ComponentCanvas::Update()
@@ -20,30 +47,11 @@ bool ComponentCanvas::Update()
 	return ret;
 }
 
-std::vector<GameObject*> ComponentCanvas::GetUIGOChilds()
+void ComponentCanvas::Save(Data & data) const
 {
-	std::vector<GameObject*> ret;
-
-	std::vector<GameObject*> to_check;
-	to_check.push_back(GetGameObject());
-
-	// Iterate through all childs and get UI childs
-	while (!to_check.empty())
-	{
-		std::vector<GameObject*>::iterator check = to_check.begin();
-
-		for (std::list<GameObject*>::iterator it = (*check)->childs.begin(); it != (*check)->childs.end(); ++it)
-		{
-			if ((*it)->GetIsUI())
-			{
-				ret.push_back(*it);
-			}
-
-			to_check.push_back(*it);
-		}
-
-		to_check.erase(check);
-	}
-
-	return ret;
 }
+
+void ComponentCanvas::Load(Data & data)
+{
+}
+

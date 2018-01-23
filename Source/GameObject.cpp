@@ -8,6 +8,8 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
+#include "ComponentRectTransform.h"
+#include "ComponentCanvas.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -79,6 +81,13 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
+		break;
+	case Component::CompRectTransform:
+		components_list.push_back(component = new ComponentRectTransform(this));
+		break;
+	case Component::CompCanvas:
+		components_list.push_back(component = new ComponentCanvas(this));
+		SetIsUI(true);
 		break;
 	default:
 		break;
@@ -399,6 +408,12 @@ void GameObject::UpdateFactory()
 
 void GameObject::SetIsUI(bool set)
 {
+	if (!is_ui && set)
+		AddComponent(Component::CompRectTransform);
+	
+	if (is_ui && !set)
+		DestroyComponent(GetComponent(Component::CompRectTransform));
+	
 	is_ui = set;
 }
 

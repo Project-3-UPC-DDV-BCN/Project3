@@ -9,6 +9,7 @@ class ComponentCamera;
 class Component;
 class ComponentScript;
 class ComponentFactory;
+class ComponentRectTransform;
 class GameObject;
 
 class PropertiesWindow :
@@ -25,6 +26,7 @@ public:
 	void DrawCameraPanel(ComponentCamera* camera);
 	void DrawScriptPanel(ComponentScript* script);
 	void DrawFactoryPanel(ComponentFactory* factory);
+	void DrawRectTransformPanel(ComponentRectTransform* rect_transform);
 
 private:
 	int scripts_count;

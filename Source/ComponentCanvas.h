@@ -9,13 +9,16 @@ public:
 	ComponentCanvas(GameObject* attached_gameobject);
 	virtual ~ComponentCanvas();
 
+	float2 GetSize();
+	float4x4 GetOrigin();
+
 	bool Update();
 
-	// Returns all GameObjects that are child of the canvas that are UI.
-	std::vector<GameObject*> GetUIGOChilds();
+	void Save(Data& data) const;
+	void Load(Data& data);
 
 private:
-
+	float2 size;
 };
 
 #endif // !_H_COMPONENT_CANVAS__
