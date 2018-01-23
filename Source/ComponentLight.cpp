@@ -1,5 +1,8 @@
 #include "ComponentLight.h"
 #include "GameObject.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleResources.h"
 
 ComponentLight::ComponentLight(GameObject * attached_gameobject)
 {
@@ -25,4 +28,24 @@ void ComponentLight::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
+}
+
+void ComponentLight::SetColor(Color color)
+{
+	this->color = color;
+}
+
+Color ComponentLight::GetColor() const
+{
+	return color;
+}
+
+void ComponentLight::SetIntensity(float intensity)
+{
+	this->intensity = intensity;
+}
+
+float ComponentLight::GetIntensity() const
+{
+	return intensity;
 }
