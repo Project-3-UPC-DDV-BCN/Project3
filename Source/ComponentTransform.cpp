@@ -88,7 +88,6 @@ float3 ComponentTransform::GetLocalScale() const
 
 void ComponentTransform::UpdateGlobalMatrix()
 {
-
 	if (!this->GetGameObject()->IsRoot())
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
@@ -122,6 +121,25 @@ void ComponentTransform::UpdateGlobalMatrix()
 	GetGameObject()->UpdateCamera();
 }
 
+void ComponentTransform::UpdateLocals()
+{
+	if (!this->GetGameObject()->IsRoot())
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
+
+		float4x4 local_transform = transform_matrix.Inverted() * parent_transform->transform_matrix;
+
+		local_transform.Decompose(position, rotation, scale);
+
+		float3 _pos, _scale;
+		Quat _rot;
+		transform_matrix.Decompose(_pos, _rot, _scale);
+		global_pos = _pos;
+		global_rot = _rot.ToEulerXYZ() * RADTODEG;
+		global_scale = _scale;
+	}
+}
+
 const float4x4 ComponentTransform::GetMatrix() const
 {
 	return transform_matrix;
@@ -135,6 +153,8 @@ const float * ComponentTransform::GetOpenGLMatrix() const
 void ComponentTransform::SetMatrix(const float4x4 & matrix)
 {
 	transform_matrix = matrix;
+
+	UpdateLocals();
 
 	if (this->GetGameObject()->IsRoot())
 	{

@@ -87,6 +87,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompCanvas:
 		components_list.push_back(component = new ComponentCanvas(this));
+		SetName("Canvas");
 		SetIsUI(true);
 		break;
 	default:
@@ -606,6 +607,7 @@ bool GameObject::Update()
 	for (std::list<Component*>::iterator c = components_list.begin(); c != components_list.end(); ++c)
 	{
 		ret = (*c)->Update();
+
 		if (ret == false)
 			break;
 	}

@@ -14,6 +14,7 @@
 #include "imgui/CustomImGui.h"
 #include "ModuleRenderer3D.h"
 #include "ComponentRectTransform.h"
+#include "ComponentCanvas.h"
 #include "ComponentScript.h"
 #include "Script.h"
 #include "CSScript.h"
@@ -240,6 +241,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompRectTransform:
 		DrawRectTransformPanel((ComponentRectTransform*)component);
 		break;
+	case Component::CompCanvas:
+		DrawCanvasPanel((ComponentCanvas*)component);
+		break;
 	default:
 		break;
 	}
@@ -297,6 +301,31 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 		if (rect_transform->GetHasCanvas())
 		{
 			ImGui::Text("Has canvas");
+		}
+	}
+}
+
+void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
+{
+	if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{	
+		const char* mode_names[] = { "Screen Space", "World Space" };
+
+		if (ImGui::Combo("Render Mode", &current_render_mode, mode_names, 2));
+
+		if (current_render_mode == 0)
+		{
+			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_SCREEN_SPACE);
+		}
+		else if (current_render_mode == 1)
+		{
+			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_WORLD_SPACE);
+
+			float2 size = canvas->GetSize();
+			if (ImGui::DragFloat2("Size", (float*)&size, true, 0.25f))
+			{
+				canvas->SetSize(size);
+			}
 		}
 	}
 }

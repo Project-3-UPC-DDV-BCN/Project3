@@ -85,9 +85,9 @@ void ModuleScene::CreateMainCamera()
 	scene_cameras.push_back(camera);
 	App->resources->AddGameObject(main_camera);
 	App->renderer3D->game_camera = camera;
-	if (App->editor->game_window->game_scene_width != 0 && App->editor->game_window->game_scene_height != 0)
+	if (App->editor->game_window->GetSize().x != 0 && App->editor->game_window->GetSize().y != 0)
 	{
-		App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+		App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 	}
 }
 
@@ -206,6 +206,8 @@ update_status ModuleScene::Update(float dt)
 		bool active_parents = RecursiveCheckActiveParents((*it));
 		if (active_parents && (*it)->IsActive())
 		{
+			(*it)->Update();
+
 			if (mesh_renderer != nullptr && mesh_renderer->IsActive() && mesh_renderer->GetMesh() != nullptr)
 			{
 				App->renderer3D->AddMeshToDraw(mesh_renderer);
@@ -215,14 +217,13 @@ update_status ModuleScene::Update(float dt)
 				if (App->renderer3D->game_camera == nullptr && (*it)->GetTag() == "Main Camera")
 				{
 					App->renderer3D->game_camera = camera;
-					App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+					App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 				}
 			}
 			if (App->IsPlaying())
 			{
 				(*it)->UpdateScripts();
 				(*it)->UpdateFactory();
-				if (!(*it)->Update())
 					return update_status::UPDATE_ERROR;
 			}
 		}
@@ -419,7 +420,7 @@ void ModuleScene::LoadScene(std::string path)
 				if (game_object->GetTag() == "Main Camera")
 				{
 					App->renderer3D->game_camera = camera;
-					App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+					App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 				}
 			}
 		}

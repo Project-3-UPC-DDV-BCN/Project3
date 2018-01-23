@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 #include "RenderTextureMSAA.h"
+#include "ComponentRectTransform.h"
 #include "ModuleInput.h"
 
 SceneWindow::SceneWindow()
@@ -109,6 +110,7 @@ void SceneWindow::DrawWindow()
 				float3 f3_rotation(rotation[0], rotation[1], rotation[2]);
 				float3 f3_scale(scale[0], scale[1], scale[2]);
 
+				bool update_ui = false;
 				switch (App->scene->mCurrentGizmoOperation)
 				{
 					case ImGuizmo::OPERATION::TRANSLATE:
@@ -117,6 +119,8 @@ void SceneWindow::DrawWindow()
 							f3_translate = App->scene->selected_gameobjects.front()->GetParent()->GetGlobalTransfomMatrix().Inverted().TransformPos(f3_translate);
 						}
 						transform->SetPosition(go_position + f3_translate);
+
+						update_ui = true;
 						break;
 					case ImGuizmo::OPERATION::ROTATE:
 						if (App->scene->selected_gameobjects.front()->GetParent() != nullptr)
@@ -124,6 +128,8 @@ void SceneWindow::DrawWindow()
 							f3_rotation = App->scene->selected_gameobjects.front()->GetParent()->GetGlobalTransfomMatrix().Inverted().TransformPos(f3_rotation);
 						}
 						transform->SetRotation(go_rotation + f3_rotation);
+
+						update_ui = true;
 						break;
 					case ImGuizmo::OPERATION::SCALE:
 						if (last_used_scale.x != f3_scale.x || last_used_scale.y != f3_scale.y || last_used_scale.z != f3_scale.z)
@@ -133,7 +139,21 @@ void SceneWindow::DrawWindow()
 							last_used_scale = tmp;
 							transform->SetScale(go_scale + f3_scale);
 						}
+
+						update_ui = true;
 						break;
+				}
+
+				if (update_ui)
+				{
+					// Update rect transform on UI
+					if (App->scene->selected_gameobjects.front()->GetIsUI())
+					{
+						ComponentRectTransform* c_recttrans = (ComponentRectTransform*)App->scene->selected_gameobjects.front()->GetComponent(Component::CompRectTransform);
+
+						if (c_recttrans != nullptr)
+							c_recttrans->UpdateRectTransform();
+					}
 				}
 			}
 			else

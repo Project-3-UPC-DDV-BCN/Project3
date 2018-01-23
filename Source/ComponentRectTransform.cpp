@@ -14,7 +14,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 
 	pos = float2::zero;
 	size = float2::zero;
-	anchor = float2::zero;
+	anchor = float2(0.5f, 0.5f);
 }
 
 ComponentRectTransform::~ComponentRectTransform()
@@ -23,7 +23,21 @@ ComponentRectTransform::~ComponentRectTransform()
 
 bool ComponentRectTransform::Update()
 {
-	return false;
+	bool ret = true;
+
+	if (!GetHasCanvas())
+	{
+		LookForCanvas();
+	}
+
+	if (GetHasCanvas())
+	{
+		ComponentTransform* c_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+
+		CONSOLE_LOG("%f %f", c_trans->GetLocalPosition().x, c_trans->GetLocalPosition().y);
+	}
+
+	return ret;
 }
 
 void ComponentRectTransform::SetPos(const float2 & _pos)
@@ -83,8 +97,8 @@ float4x4 ComponentRectTransform::GetAnchorTransform() const
 		float2 canvas_size = c_canvas->GetSize();
 		float4x4 canvas_origin = c_canvas->GetOrigin();
 
-		anchor_trans[0][3] += (canvas_size.x * anchor.x);
-		anchor_trans[0][3] += (canvas_size.y * anchor.y);
+		anchor_trans[0][3] += canvas_origin[0][3] + (canvas_size.x * anchor.x);
+		anchor_trans[0][3] += canvas_origin[1][3] + (canvas_size.y * anchor.y);
 	}
 	
 	return anchor_trans;
@@ -105,7 +119,7 @@ void ComponentRectTransform::Load(Data & data)
 
 void ComponentRectTransform::LookForCanvas()
 {
-	GameObject* parent = GetGameObject();
+	GameObject* parent = GetGameObject()->GetParent();
 
 	while (parent != nullptr)
 	{
@@ -139,8 +153,8 @@ void ComponentRectTransform::UpdateTransform()
 		float4x4 anchor_trans = GetAnchorTransform();
 
 		float4x4 final_trans = anchor_trans;
-		anchor_trans[0][3] += pos.x;
-		anchor_trans[1][3] += pos.y;
+		final_trans[0][3] += pos.x;
+		final_trans[1][3] -= pos.y;
 
 		c_trans->SetMatrix(final_trans);
 	}
@@ -157,7 +171,7 @@ void ComponentRectTransform::UpdateRectTransform()
 
 	if(c_trans != nullptr)
 	{
-		float4x4 anchor_trans = GetAnchorTransform();
+        float4x4 anchor_trans = GetAnchorTransform();
 		float4x4 game_object_trans = c_trans->GetMatrix();
 
 		float2 new_pos = float2::zero;

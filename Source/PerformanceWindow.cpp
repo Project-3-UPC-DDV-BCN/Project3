@@ -51,8 +51,6 @@ void PerformanceWindow::DrawWindow()
 
 void PerformanceWindow::AddData(float ms, float fps)
 {
-	
-
 	if (data_num == FPS_MS_SIZE)
 	{
 		for (int i = 0; i < FPS_MS_SIZE - 1; i++)

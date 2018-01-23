@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "ComponentRectTransform.h"
 #include "ComponentTransform.h"
+#include "GameWindow.h"
+#include "Application.h"
+#include "ModuleEditor.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -9,16 +12,45 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	SetName("Canvas");
 	SetType(ComponentType::CompCanvas);
 	SetGameObject(attached_gameobject);
-	size = float2::zero;
+	size = float2(1080, 720);
+	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
 }
 
 ComponentCanvas::~ComponentCanvas()
 {
 }
 
-float2 ComponentCanvas::GetSize()
+void ComponentCanvas::SetRenderMode(CanvasRenderMode mode)
 {
-	return size;
+	render_mode = mode;
+}
+
+CanvasRenderMode ComponentCanvas::GetRenderMode()
+{
+	return render_mode;
+}
+
+void ComponentCanvas::SetSize(const float2 & _size)
+{
+	size = _size;
+}
+
+float2 ComponentCanvas::GetSize() const
+{
+	float2 ret = float2::zero;
+
+	switch (render_mode)
+	{
+	case CanvasRenderMode::RENDERMODE_SCREEN_SPACE:
+		ret = App->editor->game_window->GetSize();
+		break;
+
+	case CanvasRenderMode::RENDERMODE_WORLD_SPACE:
+		ret = size;
+		break;
+	}
+
+	return ret;
 }
 
 float4x4 ComponentCanvas::GetOrigin()
@@ -40,12 +72,6 @@ float4x4 ComponentCanvas::GetOrigin()
 	return origin;
 }
 
-bool ComponentCanvas::Update()
-{
-	bool ret = true;
-
-	return ret;
-}
 
 void ComponentCanvas::Save(Data & data) const
 {

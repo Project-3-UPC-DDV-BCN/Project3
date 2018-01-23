@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-// TODO: REMEMBER TO SET IS UI TO FALSE WHEN DESTROYING ALL UI COMPONENTS
+// TODO: REMEMBER TO SET IS UI TO FALSE WHEN DESTROYING ALL UI COMPONENTS OF A GO
 
 class ComponentTransform;
 class ComponentCanvas;
@@ -13,6 +13,8 @@ class ComponentRectTransform : public Component
 public:
 	ComponentRectTransform(GameObject* attached_gameobject);
 	virtual ~ComponentRectTransform();
+
+	void UpdateRectTransform();
 
 	bool Update();
 
@@ -32,7 +34,6 @@ public:
 private:
 	void LookForCanvas();
 	void UpdateTransform();
-	void UpdateRectTransform();
 
 private:
 	float2				pos;
