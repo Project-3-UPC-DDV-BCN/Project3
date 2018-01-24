@@ -15,6 +15,7 @@ public:
 	virtual ~ComponentRectTransform();
 
 	void UpdateRectTransform();
+	void UpdateTransform();
 
 	bool Update();
 
@@ -33,7 +34,6 @@ public:
 
 private:
 	void LookForCanvas();
-	void UpdateTransform();
 
 private:
 	float2				pos;

@@ -1,6 +1,8 @@
 #ifndef _H_COMPONENT_CANVAS__
 #define _H_COMPONENT_CANVAS__
 
+#include <vector>
+#include <iostream>
 #include "Component.h"
 
 enum CanvasRenderMode
@@ -15,6 +17,8 @@ public:
 	ComponentCanvas(GameObject* attached_gameobject);
 	virtual ~ComponentCanvas();
 
+	bool Update();
+
 	void SetRenderMode(CanvasRenderMode mode);
 	CanvasRenderMode GetRenderMode();
 
@@ -27,7 +31,11 @@ public:
 	void Load(Data& data);
 
 private:
+	void UpdateRectTransforms();
+
+private:
 	float2 size;
+	float2 last_size;
 	CanvasRenderMode render_mode;
 };
 
