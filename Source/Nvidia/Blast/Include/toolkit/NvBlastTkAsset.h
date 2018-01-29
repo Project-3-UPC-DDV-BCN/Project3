@@ -30,8 +30,8 @@
 #define NVBLASTTKASSET_H
 
 #include "NvBlastTkIdentifiable.h"
-#include "NvBlastTypes.h"
-#include "PxVec3.h"
+#include "../lowlevel/NvBlastTypes.h"
+#include  "../../../PhysX/Include/foundation/PxVec3.h"
 
 // Forward declarations
 struct NvBlastAsset;

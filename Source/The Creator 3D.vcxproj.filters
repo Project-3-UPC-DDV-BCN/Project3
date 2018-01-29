@@ -189,9 +189,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Sources\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentMeshRenderer.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
@@ -1314,7 +1311,51 @@
     <ClInclude Include="Nvidia\Blast\Include\extensions\stress\NvBlastExtStressSolver.h">
       <Filter>Sources\3d Party\Nvidia\Blast</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleBlast.h" />
+    <ClInclude Include="ModuleBlastMeshImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTk.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkActor.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkAsset.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkEvent.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkFamily.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkFramework.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkGroup.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkIdentifiable.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkJoint.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkObject.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkType.h">
+      <Filter>Sources\3d Party\Nvidia\Blast</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="BlastMesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBlastMeshRenderer.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1665,7 +1706,15 @@
     <ClCompile Include="ComponentJointPrismatic.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleBlast.cpp" />
+    <ClCompile Include="ModuleBlastMeshImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="BlastMesh.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBlastMeshRenderer.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

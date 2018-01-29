@@ -31,7 +31,7 @@
 
 #include <vector>
 
-#include "NvBlastTypes.h"
+#include "../lowlevel/NvBlastTypes.h"
 
 
 namespace Nv

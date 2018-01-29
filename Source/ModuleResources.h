@@ -11,6 +11,7 @@ class Resources;
 class Material;
 class Script;
 class PhysicsMaterial;
+class BlastMesh;
 
 class ModuleResources :
 	public Module
@@ -68,6 +69,12 @@ public:
 	void RemovePhysMaterial(PhysicsMaterial* material);
 	std::map<uint, PhysicsMaterial*> GetPhysMaterialsList() const;
 
+	BlastMesh* GetBlastMesh(std::string name) const;
+	BlastMesh* GetBlastMesh(UID uid) const;
+	void AddBlastMesh(BlastMesh* mesh);
+	void RemoveBlastMesh(BlastMesh* mesh);
+	std::map<uint, BlastMesh*> GetBlastMeshesList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -92,5 +99,6 @@ private:
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, PhysicsMaterial*> phys_materials_list;
+	std::map<uint, BlastMesh*> blast_meshes_list;
 };
 

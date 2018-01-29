@@ -29,7 +29,7 @@
 #ifndef NVBLASTTKTYPE_H
 #define NVBLASTTKTYPE_H
 
-#include "NvBlastTypes.h"
+#include "../lowlevel/NvBlastTypes.h"
 
 
 

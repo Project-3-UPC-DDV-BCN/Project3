@@ -20,6 +20,7 @@
 #include "ModuleScriptImporter.h"
 #include "ModulePhysics.h"
 #include "ModulePhysMatImporter.h"
+#include "ModuleBlastMeshImporter.h"
 
 Application::Application()
 {
@@ -46,6 +47,7 @@ Application::Application()
 	script_importer = new ModuleScriptImporter(this);
 	physics = new ModulePhysics(this);
 	phys_mats_importer = new ModulePhysMatImporter(this);
+	blast_mesh_importer = new ModuleBlastMeshImporter(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -63,6 +65,7 @@ Application::Application()
 	AddModule(material_importer);
 	AddModule(script_importer);
 	AddModule(phys_mats_importer);
+	AddModule(blast_mesh_importer);
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
@@ -99,6 +102,7 @@ Application::~Application()
 	script_importer = nullptr;
 	phys_mats_importer = nullptr;
 	physics = nullptr;
+	blast_mesh_importer = nullptr;
 
 	std::list<Module*>::iterator item = list_modules.begin();
 

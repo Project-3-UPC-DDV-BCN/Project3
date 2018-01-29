@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "NvBlastGlobals.h"
+#include "../../globals/NvBlastGlobals.h"
 
 
 /**

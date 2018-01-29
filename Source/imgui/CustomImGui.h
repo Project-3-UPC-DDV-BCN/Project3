@@ -10,6 +10,7 @@ class GameObject;
 class Material;
 class Script;
 class PhysicsMaterial;
+class BlastMesh;
 
 namespace ImGui
 {
@@ -21,5 +22,6 @@ namespace ImGui
 	bool InputResourceMaterial(const char* label, Material** mat);
 	bool InputResourceScript(const char* label, Script** script);
 	bool InputResourcePhysMaterial(const char* label, PhysicsMaterial** phys_mat);
+	bool InputResourceBlastMesh(const char* label, BlastMesh** mesh);
 }
 

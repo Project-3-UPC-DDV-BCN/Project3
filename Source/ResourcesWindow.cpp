@@ -9,6 +9,7 @@
 #include "ModuleScene.h"
 #include "Script.h"
 #include "PhysicsMaterial.h"
+#include "BlastMesh.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -22,6 +23,7 @@ ResourcesWindow::ResourcesWindow()
 	material_to_return = nullptr;
 	script_to_return = nullptr;
 	phys_mat_to_return = nullptr;
+	blast_mesh_to_return = nullptr;
 
 	texture_changed = false;
 	mesh_changed = false;
@@ -30,6 +32,7 @@ ResourcesWindow::ResourcesWindow()
 	material_changed = false;
 	script_changed = false;
 	phys_mat_changed = false;
+	blast_mesh_changed = false;
 
 	type = Resource::Unknown;
 	go_filter = GoFilterNone;
@@ -198,6 +201,24 @@ void ResourcesWindow::DrawWindow()
 		break;
 	case Resource::Unknown:
 		break;
+	case Resource::BlastMeshResource:
+		blast_meshes_list = App->resources->GetBlastMeshesList();
+		if (ImGui::Selectable("None##Mesh"))
+		{
+			blast_mesh_to_return = nullptr;
+			blast_mesh_changed = true;
+			break;
+		}
+		for (std::map<uint, BlastMesh*>::const_iterator it = blast_meshes_list.begin(); it != blast_meshes_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				blast_mesh_to_return = it->second;
+				blast_mesh_changed = true;
+				break;
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -245,6 +266,11 @@ PhysicsMaterial * ResourcesWindow::GetPhysMat() const
 	return phys_mat_to_return;
 }
 
+BlastMesh * ResourcesWindow::GetBlastMesh() const
+{
+	return blast_mesh_to_return;
+}
+
 void ResourcesWindow::Reset()
 {
 	texture_changed = false;
@@ -254,6 +280,7 @@ void ResourcesWindow::Reset()
 	material_changed = false;
 	script_changed = false;
 	phys_mat_changed = false;
+	blast_mesh_changed = false;
 
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
@@ -262,6 +289,7 @@ void ResourcesWindow::Reset()
 	material_to_return = nullptr;
 	script_to_return = nullptr;
 	phys_mat_to_return = nullptr;
+	blast_mesh_to_return = nullptr;
 
 	go_filter = GoFilterNone;
 }

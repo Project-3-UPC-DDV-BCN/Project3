@@ -30,7 +30,7 @@
 #define NVBLASTTKACTOR_H
 
 #include "NvBlastTkObject.h"
-#include "NvBlastTypes.h"
+#include "../lowlevel/NvBlastTypes.h"
 
 // Forward declarations
 struct NvBlastActor;

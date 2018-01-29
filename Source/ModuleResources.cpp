@@ -18,7 +18,9 @@
 #include "ModuleScriptImporter.h"
 #include "PhysicsMaterial.h"
 #include "ModulePhysMatImporter.h"
-
+#include "BlastMesh.h"
+#include "ModuleBlastMeshImporter.h"
+#include "ComponentBlastMeshRenderer.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -109,6 +111,9 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::PhysicsMatResource:
 		AddPhysMaterial((PhysicsMaterial*)resource);
 		break;
+	case Resource::BlastMeshResource:
+		AddBlastMesh((BlastMesh*)resource);
+		break;
 	case Resource::Unknown:
 		break;
 	}
@@ -121,7 +126,7 @@ void ModuleResources::ImportFile(std::string path)
 	Resource::ResourceType type = AssetExtensionToResourceType(extension);
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::MeshResource;
-
+	
 	bool exist = false;
 
 	switch (type)
@@ -173,6 +178,16 @@ void ModuleResources::ImportFile(std::string path)
 	case Resource::GameObjectResource:
 		break;
 	case Resource::MaterialResource:
+		break;
+	case Resource::BlastMeshResource:
+		if (!App->file_system->DirectoryExist(ASSETS_FBX_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_FBX_FOLDER_PATH);
+		if (App->file_system->FileExist(ASSETS_FBX_FOLDER + file_name))
+		{
+			exist = true;
+			break;
+		}
+		App->file_system->Copy(path, ASSETS_FBX_FOLDER + file_name);
+		path = ASSETS_FBX_FOLDER + file_name;
 		break;
 	case Resource::Unknown:
 		break;
@@ -442,10 +457,48 @@ std::map<uint, PhysicsMaterial*> ModuleResources::GetPhysMaterialsList() const
 	return phys_materials_list;
 }
 
+BlastMesh * ModuleResources::GetBlastMesh(std::string name) const
+{
+	for (std::map<uint, BlastMesh*>::const_iterator it = blast_meshes_list.begin(); it != blast_meshes_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+BlastMesh * ModuleResources::GetBlastMesh(UID uid) const
+{
+	if (blast_meshes_list.find(uid) != blast_meshes_list.end()) return blast_meshes_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddBlastMesh(BlastMesh * mesh)
+{
+	if (mesh != nullptr)
+	{
+		blast_meshes_list[mesh->GetUID()] = mesh;
+	}
+}
+
+void ModuleResources::RemoveBlastMesh(BlastMesh * mesh)
+{
+	if (mesh)
+	{
+		std::map<uint, BlastMesh*>::iterator it = blast_meshes_list.find(mesh->GetUID());
+		if (it != blast_meshes_list.end()) blast_meshes_list.erase(it);
+	}
+}
+
+std::map<uint, BlastMesh*> ModuleResources::GetBlastMeshesList() const
+{
+	return blast_meshes_list;
+}
+
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
 	else if (str == ".fbx" || str == ".FBX") return Resource::MeshResource;
+	else if (str == ".bmesh") return Resource::BlastMeshResource;
 	else if (str == ".cs" || str == ".lua") return Resource::ScriptResource;
 	else if (str == ".wav" || str == ".ogg") return Resource::AudioResource;
 	else if (str == ".prefab") return Resource::PrefabResource;
@@ -463,6 +516,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 {
 	if (str == ".dds") return Resource::TextureResource;
 	else if (str == ".mesh") return Resource::MeshResource;
+	else if (str == ".bmesh") return Resource::BlastMeshResource;
 	else if (str == ".scene") return Resource::SceneResource;
 	else if (str == ".mat") return Resource::MaterialResource;
 	else if (str == ".pmat") return Resource::PhysicsMatResource;
@@ -476,6 +530,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 {
 	if (type == Resource::TextureResource) return ".dds";
 	else if (type == Resource::MeshResource) return ".mesh";
+	else if (type == Resource::BlastMeshResource) return ".bmesh";
 	else if (type == Resource::SceneResource) return ".scene";
 	else if (type == Resource::PrefabResource) return ".prefab";
 	else if (type == Resource::MaterialResource) return ".mat";
@@ -556,6 +611,13 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 			library_file = directory + file_name + ".pmat";
 		}
 		break;
+	case Resource::BlastMeshResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_MESHES_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".bmesh", directory, false))
+		{
+			library_file = directory + file_name + ".bmesh";
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -606,6 +668,10 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::PhysicsMatResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_PHYS_MATS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PHYS_MATS_FOLDER_PATH);
 		ret = App->phys_mats_importer->ImportPhysicsMaterial(file_path);
+		break;
+	case Resource::BlastMeshResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
+		ret = App->blast_mesh_importer->ImportMesh(file_path);
 		break;
 	case Resource::Unknown:
 		break;
@@ -684,6 +750,14 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		resource = (Resource*)App->phys_mats_importer->LoadPhysicsMaterialFromLibrary(library_path);
 		break;
 	case Resource::Unknown:
+		break;
+	case Resource::BlastMeshResource:
+		if (GetBlastMesh(name) != nullptr)
+		{
+			resource = (Resource*)GetBlastMesh(name);
+			break;
+		}
+		resource = (Resource*)App->blast_mesh_importer->LoadMeshFromLibrary(library_path);
 		break;
 	default:
 		break;
@@ -861,6 +935,18 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 			{
 				App->file_system->Delete_File(mesh->GetLibraryPath());
 				RemoveMesh(mesh);
+			}
+		}
+
+		ComponentBlastMeshRenderer* blast_mesh_renderer = (ComponentBlastMeshRenderer*)gameobject->GetComponent(Component::CompMeshRenderer);
+
+		if (blast_mesh_renderer != nullptr)
+		{
+			BlastMesh* blast_mesh = blast_mesh_renderer->GetMesh();
+			if (blast_mesh != nullptr)
+			{
+				App->file_system->Delete_File(blast_mesh->GetLibraryPath());
+				RemoveBlastMesh(blast_mesh);
 			}
 		}
 	}

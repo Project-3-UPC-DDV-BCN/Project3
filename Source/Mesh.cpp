@@ -59,7 +59,7 @@ bool Mesh::Load(Data & data)
 		std::string assets_path = data.GetString("assets_path");
 		if (App->file_system->FileExist(assets_path))
 		{
-			App->resources->CreateLibraryFile(Resource::TextureResource, assets_path);
+			App->resources->CreateLibraryFile(Resource::MeshResource, assets_path);
 			Load(data);
 		}
 		else

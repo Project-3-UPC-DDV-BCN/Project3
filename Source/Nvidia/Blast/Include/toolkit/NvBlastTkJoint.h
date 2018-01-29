@@ -31,7 +31,7 @@
 
 #include "NvBlastTkObject.h"
 
-#include "PxVec3.h"
+#include "../../../PhysX/Include/foundation/PxVec3.h"
 
 
 namespace Nv

@@ -32,7 +32,7 @@
 
 #include "NvBlastTkObject.h"
 
-#include "NvBlastTypes.h"
+#include "../lowlevel/NvBlastTypes.h"
 
 
 namespace Nv
@@ -74,7 +74,7 @@ public:
 	/**
 	Integer field available to the user which may be serialized.
 	*/
-	uint64_t	userIntData;
+	int64_t	userIntData;
 };
 
 } // namespace Blast

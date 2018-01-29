@@ -30,8 +30,8 @@
 #define NVBLASTEXTASSETUTILS_H
 
 
-#include "NvBlastTypes.h"
-#include "NvCTypes.h"
+#include "../../lowlevel/NvBlastTypes.h"
+#include "../../lowlevel/NvCTypes.h"
 #include <stdint.h>
 
 

@@ -22,6 +22,8 @@
 #include "ComponentCollider.h"
 #include "PhysicsMaterial.h"
 #include "ComponentJointDistance.h"
+#include "ComponentBlastMeshRenderer.h"
+#include "BlastMesh.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -125,8 +127,17 @@ void PropertiesWindow::DrawWindow()
 			if (ImGui::BeginPopup("Components"))
 			{
 				if (ImGui::MenuItem("Mesh Renderer")) {
-					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
+					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlastMeshRenderer) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
+					}
+				}
+				if (ImGui::MenuItem("Blast Mesh Renderer")) {
+					if (selected_gameobject->GetComponent(Component::CompBlastMeshRenderer) == nullptr && selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompBlastMeshRenderer);
 					}
 					else
 					{
@@ -331,6 +342,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompDistanceJoint:
 		DrawJointDistancePanel((ComponentJointDistance*)component);
 		break;
+	case Component::CompBlastMeshRenderer:
+		DrawBlastMeshRendererPanel((ComponentBlastMeshRenderer*)component);
+		break;
 	default:
 		break;
 	}
@@ -427,6 +441,37 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			ImGui::Text("Texture Format: %s", mesh_renderer->GetMaterial()->GetFormatString().c_str());
 			ImGui::Text("Texture Type: %s", mesh_renderer->GetMaterial()->GetTypeString().c_str());*/
 ImGui::TreePop();
+		}
+
+		ImGui::Spacing();
+	}
+}
+
+void PropertiesWindow::DrawBlastMeshRendererPanel(ComponentBlastMeshRenderer * blast_mesh_renderer)
+{
+	if (ImGui::CollapsingHeader("Blast Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen)) {
+		bool is_active = blast_mesh_renderer->IsActive();
+		if (ImGui::Checkbox("Active##Blast_Mesh_Renderer", &is_active))
+		{
+			blast_mesh_renderer->SetActive(is_active);
+		}
+
+		BlastMesh* mesh = blast_mesh_renderer->GetMesh();
+		if (ImGui::InputResourceMesh("Mesh", &mesh))
+		{
+			blast_mesh_renderer->SetMesh(mesh);
+		}
+
+		Material* material = blast_mesh_renderer->GetMaterial();
+		if (ImGui::InputResourceMaterial("Material", &material))
+		{
+			blast_mesh_renderer->SetMaterial(material);
+		}
+
+		Material* interior_material = blast_mesh_renderer->GetInteriorMaterial();
+		if (ImGui::InputResourceMaterial("Interior Material", &interior_material))
+		{
+			blast_mesh_renderer->SetMaterial(material);
 		}
 
 		ImGui::Spacing();

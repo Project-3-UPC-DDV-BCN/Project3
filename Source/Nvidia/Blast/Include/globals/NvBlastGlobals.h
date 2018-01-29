@@ -30,7 +30,7 @@
 #define NVBLASTGLOBALS_H
 
 #include <new>
-#include "NvBlastTypes.h"
+#include "../lowlevel/NvBlastTypes.h"
 
 
 namespace Nv

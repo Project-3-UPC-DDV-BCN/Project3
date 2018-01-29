@@ -29,10 +29,10 @@
 #ifndef NVBLASTEXTPXASSET_H
 #define NVBLASTEXTPXASSET_H
 
-#include "NvBlastTkFramework.h"
-#include "PxConvexMeshGeometry.h"
-#include "PxTransform.h"
-#include "NvBlastPreprocessor.h"
+#include "../../toolkit/NvBlastTkFramework.h"
+#include "../../../../PhysX/Include/geometry/PxConvexMeshGeometry.h"
+#include "../../../../PhysX/Include/foundation/PxTransform.h"
+#include "../../lowlevel/NvBlastPreprocessor.h"
 
 
 // Forward declarations

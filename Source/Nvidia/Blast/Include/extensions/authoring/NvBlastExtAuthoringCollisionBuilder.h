@@ -29,7 +29,7 @@
 #ifndef NVBLASTEXTAUTHORINGCOLLISIONBUILDER_H
 #define NVBLASTEXTAUTHORINGCOLLISIONBUILDER_H
 
-#include "NvBlastTypes.h"
+#include "../../lowlevel/NvBlastTypes.h"
 
 namespace physx
 {

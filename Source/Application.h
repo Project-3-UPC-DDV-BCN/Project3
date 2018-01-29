@@ -26,6 +26,7 @@ class ModuleScriptImporter;
 struct SDL_Surface;
 class ModulePhysics;
 class ModulePhysMatImporter;
+class ModuleBlastMeshImporter;
 
 class Application
 {
@@ -86,6 +87,7 @@ public:
 	ModuleScriptImporter* script_importer;
 	ModulePhysics* physics;
 	ModulePhysMatImporter* phys_mats_importer;
+	ModuleBlastMeshImporter* blast_mesh_importer;
 
 private:
 

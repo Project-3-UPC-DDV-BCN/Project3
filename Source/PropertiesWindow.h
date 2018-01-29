@@ -13,6 +13,7 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
+class ComponentBlastMeshRenderer;
 
 class PropertiesWindow :
 	public Window
@@ -24,7 +25,8 @@ public:
 	void DrawWindow();
 	void DrawComponent(Component* component);
 	void DrawTransformPanel(ComponentTransform* transform);
-	void DrawMeshRendererPanel(ComponentMeshRenderer* spriteRenderer);
+	void DrawMeshRendererPanel(ComponentMeshRenderer* mesh_renderer);
+	void DrawBlastMeshRendererPanel(ComponentBlastMeshRenderer* blast_mesh_renderer);
 	void DrawCameraPanel(ComponentCamera* camera);
 	void DrawScriptPanel(ComponentScript* script);
 	void DrawFactoryPanel(ComponentFactory* factory);

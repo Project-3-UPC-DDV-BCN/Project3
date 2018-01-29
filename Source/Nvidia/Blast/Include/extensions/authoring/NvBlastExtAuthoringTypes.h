@@ -29,10 +29,10 @@
 #ifndef NVBLASTAUTHORINGTYPES_H
 #define NVBLASTAUTHORINGTYPES_H
 
-#include <PxVec3.h>
-#include <PxVec2.h>
-#include <PxBounds3.h>
-#include "NvBlastTypes.h"
+#include "../../../../PhysX/Include/foundation/PxVec3.h"
+#include "../../../../PhysX/Include/foundation/PxVec2.h"
+#include "../../../../PhysX/Include/foundation/PxBounds3.h"
+#include "../../lowlevel/NvBlastTypes.h"
 
 #define NOT_VALID_VERTEX INT32_MAX
 

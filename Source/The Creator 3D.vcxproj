@@ -92,6 +92,8 @@
     <ClInclude Include="AboutWindow.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AppWindowConfigWindow.h" />
+    <ClInclude Include="BlastMesh.h" />
+    <ClInclude Include="ComponentBlastMeshRenderer.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentCollider.h" />
     <ClInclude Include="ComponentJointDistance.h" />
@@ -198,7 +200,7 @@
     <ClInclude Include="MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib\Time\Clock.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="ModuleBlast.h" />
+    <ClInclude Include="ModuleBlastMeshImporter.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleFileSystem.h" />
@@ -260,6 +262,17 @@
     <ClInclude Include="Nvidia\Blast\Include\extensions\serialization\NvBlastExtTkSerialization.h" />
     <ClInclude Include="Nvidia\Blast\Include\extensions\shaders\NvBlastExtDamageShaders.h" />
     <ClInclude Include="Nvidia\Blast\Include\extensions\stress\NvBlastExtStressSolver.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTk.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkActor.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkAsset.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkEvent.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkFamily.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkFramework.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkGroup.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkIdentifiable.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkJoint.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkObject.h" />
+    <ClInclude Include="Nvidia\Blast\Include\toolkit\NvBlastTkType.h" />
     <ClInclude Include="Nvidia\Flow\include\NvFlow.h" />
     <ClInclude Include="Nvidia\Flow\include\NvFlowContext.h" />
     <ClInclude Include="Nvidia\Flow\include\NvFlowContextD3D11.h" />
@@ -511,6 +524,8 @@
     <ClCompile Include="AboutWindow.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AppWindowConfigWindow.cpp" />
+    <ClCompile Include="BlastMesh.cpp" />
+    <ClCompile Include="ComponentBlastMeshRenderer.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentCollider.cpp" />
     <ClCompile Include="ComponentJointDistance.cpp" />
@@ -581,7 +596,7 @@
     <ClCompile Include="MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
-    <ClCompile Include="ModuleBlast.cpp" />
+    <ClCompile Include="ModuleBlastMeshImporter.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />

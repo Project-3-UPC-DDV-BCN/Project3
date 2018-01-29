@@ -9,6 +9,7 @@
 #include "../GameObject.h"
 #include "../Script.h"
 #include "../PhysicsMaterial.h"
+#include "../BlastMesh.h"
 
 namespace ImGui
 {
@@ -503,6 +504,81 @@ namespace ImGui
 			if (new_material != tmp_material)
 			{
 				*phys_mat = new_material;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool ImGui::InputResourceBlastMesh(const char * label, BlastMesh ** mesh)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+		BlastMesh* tmp_mesh = *mesh;
+		if (tmp_mesh != nullptr)
+		{
+			buf_display = tmp_mesh->GetName();
+		}
+		else
+		{
+			buf_display = "None(Mesh)";
+		}
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		if (ImGui::IsItemHovered() && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::BlastMeshResource)
+			{
+				RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_ButtonHovered));
+				if (ImGui::IsMouseReleased(0))
+				{
+					*mesh = (BlastMesh*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}
+		ImGui::SameLine();
+
+		if (Button("+##mesh", { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::MeshResource);
+			App->editor->resources_window->SetActive(true);
+		}
+
+		BlastMesh* new_mesh = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed)
+		{
+			new_mesh = App->editor->resources_window->GetBlastMesh();
+			if (new_mesh != tmp_mesh)
+			{
+				*mesh = new_mesh;
 				App->editor->resources_window->SetActive(false);
 				App->editor->resources_window->Reset();
 				return true;
