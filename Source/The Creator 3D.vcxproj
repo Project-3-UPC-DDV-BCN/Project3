@@ -43,7 +43,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WWISESDK)\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -54,8 +53,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <LanguageStandard>
       </LanguageStandard>
@@ -99,12 +98,10 @@
     <ClInclude Include="CSScript.h" />
     <ClInclude Include="CubeMap.h" />
     <ClInclude Include="GameWindow.h" />
-    <ClInclude Include="Geomath.h" />
     <ClInclude Include="imgui\CustomImGui.h" />
     <ClInclude Include="imgui\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="imgui\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="ImportWindow.h" />
-    <ClInclude Include="Include_Wwise.h" />
     <ClInclude Include="InputConfigWindow.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -238,7 +235,6 @@
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="Wwise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutWindow.cpp" />
@@ -254,7 +250,6 @@
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp" />
     <ClCompile Include="imgui\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="ImportWindow.cpp" />
-    <ClCompile Include="Include_Wwise.cpp" />
     <ClCompile Include="InputConfigWindow.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -348,14 +343,6 @@
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Wwise.cpp" />
-    <ClCompile Include="Wwise\IO\Common\AkDefaultLowLevelIODispatcher.cpp" />
-    <ClCompile Include="Wwise\IO\Common\AkFileLocationBase.cpp" />
-    <ClCompile Include="Wwise\IO\Common\AkFilePackage.cpp" />
-    <ClCompile Include="Wwise\IO\Common\AkFilePackageLUT.cpp" />
-    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp" />
-    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookDeferred.cpp" />
-    <ClCompile Include="Wwise\IO\Win32\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl" />

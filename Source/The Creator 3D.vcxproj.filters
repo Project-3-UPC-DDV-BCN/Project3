@@ -55,9 +55,6 @@
     <Filter Include="Sources\3d Party\imGui\ImGuiTextEditor">
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\3d Party\Wwise">
-      <UniqueIdentifier>{ec390764-093f-4844-86da-b7aa7e6199a7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -498,15 +495,6 @@
     <ClInclude Include="ComponentFactory.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Include_Wwise.h">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Wwise.h">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Geomath.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -826,33 +814,6 @@
     </ClCompile>
     <ClCompile Include="ComponentFactory.cpp">
       <Filter>Sources\GameObject\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Include_Wwise.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookDeferred.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Win32\stdafx.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Common\AkDefaultLowLevelIODispatcher.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Common\AkFileLocationBase.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Common\AkFilePackage.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Wwise\IO\Common\AkFilePackageLUT.cpp">
-      <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
