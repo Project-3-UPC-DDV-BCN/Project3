@@ -2,10 +2,15 @@
 #define __ModuleAudio_H__
 
 #include "Module.h"
+#include "Include_Wwise.h"
+#include "Geomath.h"
+#include "Wwise.h"
+//#include "DistorsionZone.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 #include <list>
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define DEFAULT_VOLUME 50
 
 class ModuleAudio : public Module
 {
@@ -15,6 +20,9 @@ public:
 	~ModuleAudio();
 
 	bool Init(Data* editor_config = nullptr);
+	bool Start();
+	update_status PreUpdate(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	// Play a music file

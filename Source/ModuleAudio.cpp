@@ -46,6 +46,21 @@ bool ModuleAudio::Init(Data* editor_config)
 	return ret;
 }
 
+bool ModuleAudio::Start()
+{
+	return false;
+}
+
+update_status ModuleAudio::PreUpdate(float dt)
+{
+	return update_status();
+}
+
+update_status ModuleAudio::PostUpdate(float dt)
+{
+	return update_status();
+}
+
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {

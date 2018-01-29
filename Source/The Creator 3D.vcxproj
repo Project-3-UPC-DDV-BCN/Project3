@@ -93,6 +93,8 @@
     <ClInclude Include="AboutWindow.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AppWindowConfigWindow.h" />
+    <ClInclude Include="AudioEvent.h" />
+    <ClInclude Include="AudioSource.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ComponentScript.h" />
@@ -226,6 +228,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDome.h" />
+    <ClInclude Include="SoundBank.h" />
     <ClInclude Include="TagsAndLayers.h" />
     <ClInclude Include="TagsAndLayersWindow.h" />
     <ClInclude Include="TextEditorWindow.h" />
@@ -247,6 +250,8 @@
     <ClCompile Include="AboutWindow.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AppWindowConfigWindow.cpp" />
+    <ClCompile Include="AudioEvent.cpp" />
+    <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
@@ -339,6 +344,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SkyDome.cpp" />
+    <ClCompile Include="SoundBank.cpp" />
     <ClCompile Include="TagsAndLayers.cpp" />
     <ClCompile Include="TagsAndLayersWindow.cpp" />
     <ClCompile Include="TextEditorWindow.cpp" />

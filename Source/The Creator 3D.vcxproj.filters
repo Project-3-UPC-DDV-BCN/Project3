@@ -58,6 +58,9 @@
     <Filter Include="Sources\3d Party\Wwise">
       <UniqueIdentifier>{b05dcfb5-f765-4cb6-9757-4ff2e955f8f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Audio">
+      <UniqueIdentifier>{83797d29-0e87-494a-b978-5cadc8bb65c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -516,6 +519,15 @@
     <ClInclude Include="Geomath.h">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClInclude>
+    <ClInclude Include="AudioEvent.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSource.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBank.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -871,6 +883,15 @@
     </ClCompile>
     <ClCompile Include="Wwise.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioEvent.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSource.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundBank.cpp">
+      <Filter>Sources\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
