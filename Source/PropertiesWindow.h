@@ -6,6 +6,7 @@
 class ComponentMeshRenderer;
 class ComponentTransform;
 class ComponentCamera;
+class ComponentParticleEmmiter; 
 class Component;
 class ComponentScript;
 class ComponentFactory;
@@ -25,6 +26,7 @@ public:
 	void DrawCameraPanel(ComponentCamera* camera);
 	void DrawScriptPanel(ComponentScript* script);
 	void DrawFactoryPanel(ComponentFactory* factory);
+	void DrawParticleEmmiterPanel(ComponentParticleEmmiter* camera);
 
 private:
 	int scripts_count;

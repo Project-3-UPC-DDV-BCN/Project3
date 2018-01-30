@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ComponentTransform.h"
+#include "ComponentParticleEmmiter.h"
 #include "ComponentCamera.h"
 #include "Mesh.h"
 #include "ModuleResources.h"
@@ -75,6 +76,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentScript(this));
 		break;
 	case Component::CompParticleSystem:
+		components_list.push_back(component = new ComponentParticleEmmiter(this));
 		break;
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));

@@ -94,6 +94,7 @@
     <ClInclude Include="AppWindowConfigWindow.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentParticleEmmiter.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="CSScript.h" />
     <ClInclude Include="CubeMap.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="Particles.h" />
     <ClInclude Include="PerformanceWindow.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Prefab.h" />
@@ -245,6 +247,7 @@
     <ClCompile Include="AppWindowConfigWindow.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentParticleEmmiter.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="CSScript.cpp" />
     <ClCompile Include="CubeMap.cpp" />
@@ -322,6 +325,7 @@
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PerformanceWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Prefab.cpp" />

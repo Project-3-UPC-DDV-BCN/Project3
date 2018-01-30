@@ -78,12 +78,13 @@ public:
 	bool LinkProgram(uint program_id);
 	void DeleteProgram(uint program_id);
 
+	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
-	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 public:
 
