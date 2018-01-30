@@ -22,6 +22,7 @@
 #include "SceneWindow.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "ComponentParticleEmmiter.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -139,7 +140,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	ms_timer.Start();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	ResetRender();
 	return UPDATE_CONTINUE;
 }
 
@@ -209,11 +210,8 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	DrawSceneGameObjects(camera, false);
 }
 
-void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCamera * active_camera)
+void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera)
 {
-	if (mesh->GetMesh() != nullptr)
-	{
-		AABB aabb = mesh->GetMesh()->box;
 		float3 size = aabb.Size();
 		float3 pos = aabb.CenterPoint();
 		Quat rot = Quat::identity;
@@ -245,7 +243,6 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 
 		//restore previous polygon mode
 		glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
-	}
 }
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
@@ -265,7 +262,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		{
 			if ((*it)->GetGameObject()->IsSelected())
 			{
-				DrawDebugCube(*it, active_camera);
+				if ((*it)->GetMesh() != nullptr)
+					DrawDebugCube((*it)->GetMesh()->box, active_camera);
 			}
 		}
 		DrawMesh(*it, active_camera);
@@ -289,8 +287,18 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			DrawMesh(*it, active_camera);
 			if ((*it)->GetGameObject()->IsSelected())
 			{
-				DrawDebugCube(*it, active_camera);
+				if ((*it)->GetMesh() != nullptr)
+					DrawDebugCube((*it)->GetMesh()->box, active_camera);
 			}
+		}
+	}
+
+	//Draw Particles
+	for (std::list<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
+	{
+		if ((*it)->ShowEmmisionArea())
+		{
+			DrawDebugCube((*it)->emit_area, active_camera);
 		}
 	}
 
@@ -351,6 +359,7 @@ void ModuleRenderer3D::ResetRender()
 	dynamic_mesh_to_draw.clear();
 	debug_primitive_to_draw.clear();
 	rendering_cameras.clear();
+	particles_to_draw.clear();
 }
 
 // Called before quitting
@@ -814,3 +823,9 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 	}
 }
 // ------------------------------------------------
+
+void ModuleRenderer3D::AddParticleToDraw(ComponentParticleEmmiter * particle)
+{
+	particles_to_draw.push_back(particle);
+}
+

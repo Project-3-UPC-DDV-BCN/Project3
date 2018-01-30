@@ -6,6 +6,7 @@
 #include <list>
 
 class ComponentMeshRenderer;
+class ComponentParticleEmmiter;
 class Primitive;
 class ComponentCamera;
 
@@ -78,7 +79,11 @@ public:
 	bool LinkProgram(uint program_id);
 	void DeleteProgram(uint program_id);
 
-	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+	//particles
+	void AddParticleToDraw(ComponentParticleEmmiter* particle);
+
+	//Debug
+	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
 
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
@@ -109,5 +114,6 @@ private:
 
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
 	std::list<Primitive*> debug_primitive_to_draw;
+	std::list<ComponentParticleEmmiter*> particles_to_draw;
 
 };

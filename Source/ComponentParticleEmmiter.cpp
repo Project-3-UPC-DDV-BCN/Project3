@@ -155,6 +155,11 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	//Create the rectangle that will be the initial emmiting area (2x2 square)
 	//emit_area = new ComponentMeshRenderer(GetGameObject());
 	//emit_area->SetMesh(App->resources->GetMesh("PrimitiveCube")); 
+
+	//Make the aabb enclose a primitive cube
+	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };
+	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
+	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 	
 	////Getting the default texture 
 	//string particles_folder_path = App->file_system->particles_path_game;

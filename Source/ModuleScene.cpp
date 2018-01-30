@@ -23,6 +23,7 @@
 #include "SkyDome.h"
 #include "ComponentScript.h";
 #include "GameWindow.h"
+#include "ComponentParticleEmmiter.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -203,6 +204,8 @@ update_status ModuleScene::Update(float dt)
 	{
 		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
 		ComponentCamera* camera = (ComponentCamera*)(*it)->GetComponent(Component::CompCamera);
+		ComponentParticleEmmiter* p_emmiter = (ComponentParticleEmmiter*)(*it)->GetComponent(Component::CompParticleSystem);
+
 		bool active_parents = RecursiveCheckActiveParents((*it));
 		if (active_parents && (*it)->IsActive())
 		{
@@ -217,6 +220,10 @@ update_status ModuleScene::Update(float dt)
 					App->renderer3D->game_camera = camera;
 					App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
 				}
+			}
+			if (p_emmiter != nullptr)
+			{
+				App->renderer3D->AddParticleToDraw(p_emmiter);
 			}
 			if (App->IsPlaying())
 			{
