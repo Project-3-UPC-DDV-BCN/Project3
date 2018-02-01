@@ -232,6 +232,10 @@ update_status ModuleScene::Update(float dt)
 				if (!(*it)->Update())
 					return update_status::UPDATE_ERROR;
 			}
+			else if(p_emmiter != nullptr)
+			{
+				p_emmiter->Update(); 
+			}
 		}
 	}
 

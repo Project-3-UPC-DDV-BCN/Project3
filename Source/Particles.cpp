@@ -2,6 +2,9 @@
 #include "Component.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ShaderProgram.h"
+#include "ModuleTime.h"
+#include "ModuleResources.h"
 #include "OpenGL.h"
 #include "Mesh.h"
 
@@ -194,6 +197,7 @@ void Particle::Update()
 
 	//Translate the particles in the necessary direction
 	movement += particle_gravity*0.01f;
+
 	components.particle_transform->SetPosition(components.particle_transform->GetLocalPosition() + movement);
 
 	//Update the particle color in case of interpolation
@@ -222,51 +226,34 @@ void Particle::Update()
 
 void Particle::Delete()
 {
-	components.particle_mesh->CleanUp(); 
+	//delete transform && animation 
+
 //	components.particle_billboarding->Delete();
 
 	components.SetToNull();
 }
 
-void Particle::Draw()
+void Particle::Draw(ComponentCamera* active_camera)
 {
-	App->renderer3D->AddMeshToDraw(components.particle_mesh); 
-	//glEnableClientState(GL_VERTEX_ARRAY);
+	//Billboard to the active camera 
 
-	//glColor3f(particle_color.r, particle_color.g, particle_color.b);
+	//Activate shader program
+	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+	App->renderer3D->UseShaderProgram(id); 
 
-	//glPushMatrix();
-	////glMultMatrixf(components.particle_transform->GetOpenGLMatrix().Transposed().ptr());
+	App->renderer3D->SetUniformMatrix(id, "Model", components.particle_transform->GetMatrix().Transposed().ptr());
+	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
+	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
-	//glBindBuffer(GL_ARRAY_BUFFER, components.particle_mesh->GetMesh()->id_vertices_data);
-	//glVertexPointer(3, GL_FLOAT, 0, NULL);
+	App->renderer3D->SetUniformBool(id, "has_texture", false); 
+	App->renderer3D->SetUniformBool(id, "has_material_color", true);
+	App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
 
-	//if (particle_texture_id != -1)
-	//{
-	//	glEnable(GL_BLEND);
-	//	glEnable(GL_ALPHA_TEST);
+	if (components.particle_mesh->id_indices == 0) components.particle_mesh->LoadToMemory(); 
 
-	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//	glBindTexture(GL_TEXTURE_2D, particle_texture_id);
-
-	//	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	//	glBindBuffer(GL_ARRAY_BUFFER, components.particle_mesh->id_uvs);
-	//	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
-	//}
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, components.particle_mesh->GetMesh()->id_indices);
-
-	//glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	//glColor3f(255, 255, 255);
-
-	//glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	//glPopMatrix();
+	App->renderer3D->BindVertexArrayObject(components.particle_mesh->id_vao); 
+	glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL); 
+	App->renderer3D->UnbindVertexArrayObject(); 
 }
 
 Particle::~Particle()

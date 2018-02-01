@@ -84,10 +84,10 @@ public:
 
 	//Debug
 	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
+	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
-	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 

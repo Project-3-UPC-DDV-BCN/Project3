@@ -48,8 +48,10 @@ struct ParticleAnimation
 
 struct ParticleComponents
 {
-	ComponentMeshRenderer* particle_mesh;
+	Mesh* particle_mesh;
 	ComponentTransform* particle_transform;
+	Texture* texture = nullptr; 
+
 	ParticleAnimation particle_animation;
 
 	void SetToNull()
@@ -71,7 +73,7 @@ public:
 	void Delete();
 
 	//Drawing
-	void Draw();
+	void Draw(ComponentCamera* active_camera);
 
 	//Setters & Getters
 	ParticleComponents GetAtributes();

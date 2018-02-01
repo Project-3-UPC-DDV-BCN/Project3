@@ -1,7 +1,7 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 
-ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
+ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
 	SetActive(true);
 	SetName("Transform");
@@ -16,6 +16,8 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
 	global_rot = float3(0.f, 0.f, 0.f);
 	global_scale = float3(1.f, 1.f, 1.f);
 	transform_matrix.SetIdentity();
+
+	this->is_particle = is_particle; 
 }
 
 ComponentTransform::~ComponentTransform()
@@ -88,8 +90,8 @@ float3 ComponentTransform::GetLocalScale() const
 
 void ComponentTransform::UpdateGlobalMatrix()
 {
-
-	if (!this->GetGameObject()->IsRoot())
+	
+	if (!is_particle && !this->GetGameObject()->IsRoot())
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
@@ -106,10 +108,14 @@ void ComponentTransform::UpdateGlobalMatrix()
 	else
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+
+		if (!is_particle)
 		{
-			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-			child_transform->UpdateGlobalMatrix();
+			for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+			{
+				ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+				child_transform->UpdateGlobalMatrix();
+			}
 		}
 
 		global_pos = position;
@@ -117,9 +123,14 @@ void ComponentTransform::UpdateGlobalMatrix()
 		global_scale = scale;
 	}
 
-	GetGameObject()->UpdateBoundingBox();
-	//If gameobject has a camera component
-	GetGameObject()->UpdateCamera();
+	if (!is_particle)
+	{
+		GetGameObject()->UpdateBoundingBox();
+
+		//If gameobject has a camera component
+		GetGameObject()->UpdateCamera();
+	}
+		
 }
 
 const float4x4 ComponentTransform::GetMatrix() const

@@ -1,5 +1,6 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentMeshRenderer.h"
+#include "ComponentCamera.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleResources.h"
@@ -19,6 +20,7 @@ void ComponentParticleEmmiter::GenerateParticles()
 		new_particle->SetDistanceToCamera(0);
 		active_particles.push_back(new_particle);
 		spawn_timer.Start();
+		CONSOLE_LOG("PARTICLE CREATED");
 	}
 
 }
@@ -33,12 +35,12 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	Particle* new_particle = new Particle();
 
 	//We create its transform
-	new_particle->components.particle_transform = new ComponentTransform(nullptr);
+	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
 	new_particle->components.particle_transform->SetPosition(particle_pos);
+	new_particle->components.particle_transform->SetRotation({ -90,0,0 }); 
 
 	//We generate the always squared surface for the particle 
-	new_particle->components.particle_mesh = new ComponentMeshRenderer(nullptr);
-//	new_particle->components.particle_mesh->SetPlaneVertices({ gameobject->transform->GetLocalPosition().x, gameobject->transform->GetLocalPosition().y, gameobject->transform->GetLocalPosition().z }, 2);
+	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitivePlane");
 
 	//Billboard the squad for always be looking at the camera, at the beggining it will be deactivated 
 	if (billboarding)
@@ -190,6 +192,12 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 bool ComponentParticleEmmiter::Start()
 {
+	spawn_timer.Start();
+
+	//Load textures
+
+	// ----
+
 	return true;
 }
 
@@ -211,16 +219,26 @@ int ComponentParticleEmmiter::GetParticlesNum()
 bool ComponentParticleEmmiter::Update()
 {
 	if (active_particles.empty() == false)
-		DrawParticles(); 
+	{
+		for (list<Particle*>::iterator it = active_particles.begin(); it != active_particles.end(); it++)
+		{
+			(*it)->Update();
+		}
+	}
+
+	GenerateParticles();
 
 	return true;
 }
 
-void ComponentParticleEmmiter::DrawParticles()
+void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 {
-	for (list<Particle*>::iterator it = active_particles.begin(); it != active_particles.end(); it++)
+	if (active_particles.empty() == false)
 	{
-		(*it)->Draw(); 
+		for (list<Particle*>::iterator it = active_particles.begin(); it != active_particles.end(); it++)
+		{
+			(*it)->Draw(active_camera);
+		}
 	}
 }
 

@@ -300,6 +300,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		{
 			DrawDebugCube((*it)->emit_area, active_camera);
 		}
+
+		(*it)->DrawParticles(active_camera); 
 	}
 
 	if (is_editor_camera)

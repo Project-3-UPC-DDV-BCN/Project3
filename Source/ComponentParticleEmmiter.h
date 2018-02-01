@@ -4,6 +4,7 @@
 #include "Particles.h"
 #include <map>
 
+class ComponentCamera; 
 using namespace std; 
 
 enum particle_system_state
@@ -23,7 +24,7 @@ public:
 
 	bool Update();
 	void UpdateRootParticle();
-	void DrawParticles(); 
+	void DrawParticles(ComponentCamera* active_camera); 
 
 	~ComponentParticleEmmiter();
 
