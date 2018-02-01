@@ -23,6 +23,7 @@ public:
 
 	bool Update();
 	void UpdateRootParticle();
+	void DrawParticles(); 
 
 	~ComponentParticleEmmiter();
 

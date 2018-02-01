@@ -210,12 +210,18 @@ int ComponentParticleEmmiter::GetParticlesNum()
 
 bool ComponentParticleEmmiter::Update()
 {
-	/*if (show_emit_area)
-	{
-		App->renderer3D->DrawDebugCube(emit_area, App->renderer3D->editor_camera);
-	}*/
+	if (active_particles.empty() == false)
+		DrawParticles(); 
 
 	return true;
+}
+
+void ComponentParticleEmmiter::DrawParticles()
+{
+	for (list<Particle*>::iterator it = active_particles.begin(); it != active_particles.end(); it++)
+	{
+		(*it)->Draw(); 
+	}
 }
 
 void ComponentParticleEmmiter::UpdateRootParticle()

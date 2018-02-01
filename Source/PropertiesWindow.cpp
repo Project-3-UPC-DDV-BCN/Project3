@@ -623,6 +623,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->SetSystemState(PARTICLE_STATE_PAUSE);
 			}
 
+			ImGui::Text("Particle System State: "); ImGui::SameLine();
+
+			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+				ImGui::TextColored({ 0,255,0,1 }, "PLAY");
+			else
+				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
+
 			ImGui::Separator();
 
 			if (ImGui::TreeNode("Emit Area"))

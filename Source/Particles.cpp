@@ -230,7 +230,7 @@ void Particle::Delete()
 
 void Particle::Draw()
 {
-	
+	App->renderer3D->AddMeshToDraw(components.particle_mesh); 
 	//glEnableClientState(GL_VERTEX_ARRAY);
 
 	//glColor3f(particle_color.r, particle_color.g, particle_color.b);
