@@ -196,7 +196,7 @@ void Particle::Update()
 {
 
 	//Translate the particles in the necessary direction
-	movement += particle_gravity*0.01f;
+	movement = particle_gravity*App->time->GetGameDt();
 
 	components.particle_transform->SetPosition(components.particle_transform->GetLocalPosition() + movement);
 

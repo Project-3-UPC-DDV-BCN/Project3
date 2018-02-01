@@ -171,7 +171,7 @@ private:
 
 	//Managing movement
 	float particle_velocity;
-	float3 particle_gravity;
+	float3 particle_gravity = {0,-1.0f,0};
 	float particle_angular_v;
 	float max_particle_lifetime;
 	float3 movement;						//This vector will be added to the position every frame
