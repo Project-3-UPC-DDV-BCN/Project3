@@ -12,6 +12,8 @@
 
 using namespace std; 
 
+class ComponentParticleEmmiter; 
+
 struct ParticleAnimation
 {
 	ParticleAnimation()
@@ -66,17 +68,18 @@ class Particle
 {
 public:
 
-	Particle();
+	Particle(ComponentParticleEmmiter* parent);
 
 	void Update();
 
-	void Delete();
+	bool Delete();
 
 	//Drawing
 	void Draw(ComponentCamera* active_camera);
 
 	//Setters & Getters
 	ParticleComponents GetAtributes();
+	void SetMovementFromStats(); 
 
 	////Billboarding
 	//void SetBillboardReference(ComponentCamera* new_reference);
@@ -171,7 +174,7 @@ private:
 
 	//Managing movement
 	float particle_velocity;
-	float3 particle_gravity = {0,-1.0f,0};
+	float3 particle_gravity; 
 	float particle_angular_v;
 	float max_particle_lifetime;
 	float3 movement;						//This vector will be added to the position every frame
@@ -180,5 +183,7 @@ private:
 	int particle_texture_id;
 	float distance_to_camera;
 	bool billboarding;
+
+	ComponentParticleEmmiter* parent_emmiter; 
 
 };
