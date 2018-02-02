@@ -433,6 +433,7 @@ void ModuleMeshImporter::CreatePrimitives() const
 {
 	CreateBox();
 	CreatePlane();
+	CreateSphere();
 }
 
 void ModuleMeshImporter::CreateBox() const
@@ -645,6 +646,97 @@ void ModuleMeshImporter::CreatePlane() const
 
 	RELEASE_ARRAY(uv);
 	RELEASE_ARRAY(vertices);
+}
+
+void ModuleMeshImporter::CreateSphere() const
+{
+	std::vector<float3> vertices;
+	std::vector<float3> normals;
+	std::vector<float3> tex_coords;
+	std::vector<uint> indicesVector;
+
+	float latitudeBands = 20;
+	float longitudeBands = 20;
+	float radius = 0.5f;
+
+	for (float latNumber = 0; latNumber <= latitudeBands; latNumber++) {
+		float theta = latNumber * PI / latitudeBands;
+		float sinTheta = sin(theta);
+		float cosTheta = cos(theta);
+
+		for (float longNumber = 0; longNumber <= longitudeBands; longNumber++) {
+			float phi = longNumber * 2 * PI / longitudeBands;
+			float sinPhi = sin(phi);
+			float cosPhi = cos(phi);
+
+			float3 normal, vertex, tex_coord;
+
+			normal.x = cosPhi * sinTheta;   // x
+			normal.y = cosTheta;            // y
+			normal.z = sinPhi * sinTheta;   // z
+			tex_coord.x = 1 - (longNumber / longitudeBands); // u
+			tex_coord.y = 1 - (latNumber / latitudeBands);   // v
+			tex_coord.z = 0.f;
+			vertex.x = radius * normal.x;
+			vertex.y = radius * normal.y;
+			vertex.z = radius * normal.z;
+
+			normals.push_back(normal);
+			tex_coords.push_back(tex_coord);
+			vertices.push_back(vertex);
+		}
+
+		for (int latNumber = 0; latNumber < latitudeBands; latNumber++) {
+			for (int longNumber = 0; longNumber < longitudeBands; longNumber++) {
+				uint first = (latNumber * ((uint)longitudeBands + 1)) + longNumber;
+				uint second = first + (uint)longitudeBands + 1;
+
+				indicesVector.push_back(first);
+				indicesVector.push_back(second);
+				indicesVector.push_back(first + 1);
+
+				indicesVector.push_back(second);
+				indicesVector.push_back(second + 1);
+				indicesVector.push_back(first + 1);
+
+			}
+		}
+	}
+
+	Mesh* sphere = new Mesh();
+	
+	sphere->SetName("PrimitiveSphere");
+
+	//indices
+	sphere->num_indices = indicesVector.size();
+	uint bytes = sizeof(uint) * sphere->num_indices;
+	sphere->indices = new uint[sphere->num_indices];
+	memcpy(sphere->indices, &indicesVector[0], bytes);
+
+	sphere->num_vertices = vertices.size();
+	//create the buffer from loaded info
+	sphere->vertices_data = new float[sphere->num_vertices * 13]; // vert pos, tex coords, normals, color
+
+	float null[3] = { 0.f,0.f,0.f };
+	float null_normal[3] = { 0.f,1.f,0.f };
+	float null_color[4] = { 1.f,1.f,1.f,1.f };
+	for (int v = 0; v < sphere->num_vertices; ++v)
+	{
+		//copy vertex pos
+		memcpy(sphere->vertices_data + v * 13, vertices[v].ptr(), sizeof(float) * 3);
+
+		//copy tex coord
+		memcpy(sphere->vertices_data + v * 13 + 3, tex_coords[v].ptr(), sizeof(float) * 3);
+
+		//copy normals
+		memcpy(sphere->vertices_data + v * 13 + 6, normals[v].ptr(), sizeof(float) * 3);
+
+		//copy colors, no initial color so copy null_color
+		memcpy(sphere->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+	}
+	sphere->CreateVerticesFromData();
+
+	App->resources->AddMesh(sphere);
 }
 
 Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
