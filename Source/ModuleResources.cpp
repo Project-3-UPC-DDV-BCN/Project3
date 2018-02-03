@@ -19,6 +19,7 @@
 #include "Shader.h"
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
+#include "Skeleton.h"
 
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -76,6 +77,11 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	shaders_list.clear();
+
+	for (std::map<uint, Skeleton*>::iterator it = skeletons_list.begin(); it != skeletons_list.end(); ++it) {
+		RELEASE(it->second);
+	}
+	skeletons_list.clear();
 }
 
 bool ModuleResources::Init(Data * editor_config)
@@ -94,10 +100,8 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
-	{
-		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
-	}
+	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))	App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_SKELETONS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SKELETONS_FOLDER_PATH);
 
 	CreateDefaultShaders();
 	CreateDefaultMaterial();
@@ -171,6 +175,8 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::ShaderProgramResource:
 		AddShaderProgram((ShaderProgram*)resource);
 		break;
+	case Resource::SkeletonResource:
+		AddSkeleton((Skeleton*)resource);
 	case Resource::Unknown:
 		break;
 	}
@@ -628,6 +634,43 @@ void ModuleResources::OnShaderUpdate(Shader * shader) const
 	}
 }
 
+Skeleton * ModuleResources::GetSkeleton(std::string name) const
+{
+	for (std::map<uint, Skeleton*>::const_iterator it = skeletons_list.begin(); it != skeletons_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+Skeleton * ModuleResources::GetSkeleton(UID uid) const
+{
+	if (skeletons_list.find(uid) != skeletons_list.end()) return skeletons_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddSkeleton(Skeleton * skeleton)
+{
+	if (skeleton != nullptr)
+	{
+		skeletons_list[skeleton->GetUID()] = skeleton;
+	}
+}
+
+void ModuleResources::RemoveSkeleton(Skeleton * skeleton)
+{
+	if (skeleton != nullptr)
+	{
+		std::map<uint, Skeleton*>::iterator it = skeletons_list.find(skeleton->GetUID());
+		if (it != skeletons_list.end()) skeletons_list.erase(it);
+	}
+}
+
+std::map<uint, Skeleton*> ModuleResources::GetSkeletonsList() const
+{
+	return skeletons_list;
+}
+
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
@@ -642,6 +685,7 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".ttf") return Resource::FontResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
+	else if (str == ".sklt") return Resource::SkeletonResource;
 
 	return Resource::Unknown;
 }
@@ -656,6 +700,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
+	else if (str == ".sklt") return Resource::SkeletonResource;
 
 	return Resource::Unknown;
 }
@@ -669,6 +714,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 	else if (type == Resource::MaterialResource) return ".mat";
 	else if (type == Resource::ScriptResource) return ".dll";
 	else if (type == Resource::ShaderResource) return ".shader";
+	else if (type == Resource::SkeletonResource) return ".sklt";
 	
 	return "";
 }
@@ -744,6 +790,13 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 			library_file = directory + file_name + ".shader";
 		}
 		break;
+	case Resource::SkeletonResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_SKELETONS_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".sklt", directory, false))
+		{
+			library_file = directory + file_name + ".sklt";
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	default:
@@ -794,6 +847,11 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::ShaderResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 		ret = App->shader_importer->ImportShader(file_path);
+		break;
+	case Resource::SkeletonResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_SKELETONS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SKELETONS_FOLDER_PATH);
+		App->file_system->Copy(file_path, LIBRARY_SKELETONS_FOLDER + App->file_system->GetFileName(file_path));
+		ret = LIBRARY_SKELETONS_FOLDER + App->file_system->GetFileName(file_path);
 		break;
 	case Resource::Unknown:
 		break;
@@ -870,6 +928,23 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			break;
 		}
 		resource = (Resource*)App->shader_importer->LoadShaderFromLibrary(library_path);
+		break;
+	case Resource::SkeletonResource:
+		if (GetSkeleton(name) != nullptr)
+		{
+			resource = (Resource*)GetSkeleton(name);
+			break;
+		}
+		if (App->file_system->FileExist(library_path))
+		{
+			Data data;
+			if (data.LoadBinary(library_path))
+			{
+				Skeleton* skeleton = new Skeleton();
+				skeleton->Load(data);
+				resource = skeleton;
+			}
+		}
 		break;
 	case Resource::Unknown:
 		break;
@@ -975,6 +1050,7 @@ void ModuleResources::DeleteResource(std::string file_path)
 	Prefab* prefab = nullptr;
 	Material* material = nullptr;
 	Shader* shader = nullptr;
+	Skeleton* skeleton = nullptr;
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::PrefabResource;
 	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
@@ -1038,6 +1114,15 @@ void ModuleResources::DeleteResource(std::string file_path)
 			App->file_system->Delete_File(shader->GetLibraryPath());
 			App->file_system->Delete_File(file_path + ".meta");
 			RemoveShader(shader);
+		}
+		break;
+	case Resource::SkeletonResource:
+		skeleton = GetSkeleton(resource_name);
+		if (skeleton != nullptr)
+		{
+			App->file_system->Delete_File(skeleton->GetLibraryPath());
+			App->file_system->Delete_File(file_path + ".meta");
+			RemoveSkeleton(skeleton);
 		}
 		break;
 	case Resource::Unknown:

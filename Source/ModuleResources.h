@@ -12,6 +12,7 @@ class Material;
 class Script;
 class Shader;
 class ShaderProgram;
+class Skeleton;
 
 class ModuleResources :
 	public Module
@@ -78,6 +79,12 @@ public:
 	void LoadShaderProgramMeta(std::string path) const;	
 	void OnShaderUpdate(Shader* shader) const;
 
+	Skeleton* GetSkeleton(std::string name) const;
+	Skeleton* GetSkeleton(UID uid) const;
+	void AddSkeleton(Skeleton* skeleton);
+	void RemoveSkeleton(Skeleton* skeleton);
+	std::map<uint, Skeleton*> GetSkeletonsList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -106,5 +113,6 @@ private:
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
+	std::map<uint, Skeleton*> skeletons_list;
 };
 
