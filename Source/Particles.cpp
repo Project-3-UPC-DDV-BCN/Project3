@@ -5,35 +5,26 @@
 #include "ShaderProgram.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
-#include "ComponentParticleEmmiter.h"
 #include "OpenGL.h"
 #include "Mesh.h"
 
-Particle::Particle(ComponentParticleEmmiter* parent)
-{	
+Particle::Particle()
+{
+	kill_me = false;
 	interpolation_timer.Start();
 	particle_color = initial_particle_color;
 	particle_angular_v = 0;
 	curr_rot = 0;
-
-	kill_me = false;
 	animated_particle = false;
 	interpolate_size = false;
 	interpolate_rotation = false;
-	parent_emmiter = parent; 
-
 	animation_timer.Start();
-	particle_timer.Start(); 
 	twister.Start();
 }
 
 ParticleComponents Particle::GetAtributes()
 {
 	return components;
-}
-
-void Particle::SetMovementFromStats()
-{
 }
 
 void Particle::SetMaxLifetime(const float& new_lifetime)
@@ -229,24 +220,17 @@ void Particle::Update()
 	//	UpdateAnimation();
 
 	//Check if they have to be deleted
-	
+	if (particle_timer.Read() > max_particle_lifetime * 1000)
+		kill_me = true;
 }
 
-bool Particle::Delete()
+void Particle::Delete()
 {
 	//delete transform && animation 
-	bool deleted = false; 
+
 //	components.particle_billboarding->Delete();
-	if (particle_timer.Read() > max_particle_lifetime * 1000)
-	{
-		deleted = true; 
-		CONSOLE_LOG("DeleteParticle");
 
-		
-		components.SetToNull();
-	}
-
-	return deleted; 
+	components.SetToNull();
 }
 
 void Particle::Draw(ComponentCamera* active_camera)

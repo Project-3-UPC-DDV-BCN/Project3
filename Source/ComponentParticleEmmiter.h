@@ -69,7 +69,6 @@ public:
 	//UI data ------
 
 	//Emiter
-	void DeleteLastParticle(); 
 
 	//Shape
 	uint curr_texture_id;					//Hold the texture that will be drawn into the particles that we are cloning
