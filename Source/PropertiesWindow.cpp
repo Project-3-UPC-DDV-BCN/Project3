@@ -8,6 +8,7 @@
 #include "TagsAndLayers.h"
 #include "ModuleEditor.h"
 #include "TagsAndLayersWindow.h"
+#include "ComponentBillboard.h"
 #include "ModuleScene.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -143,6 +144,16 @@ void PropertiesWindow::DrawWindow()
 					}
 				}
 
+				if (ImGui::MenuItem("Billboard")) {
+					if (selected_gameobject->GetComponent(Component::CompBillboard) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompBillboard);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Billboard!");
+					}
+				}
+
 				if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
@@ -229,6 +240,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompParticleSystem:
 		DrawParticleEmmiterPanel((ComponentParticleEmmiter*)component); 
+		break;
+	case Component::CompBillboard:
+		DrawBillboardPanel((ComponentBillboard*)component);
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
@@ -642,31 +656,36 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Shape"))
+			if (ImGui::TreeNode("Texture"))
 			{
-
-				//Here we get the id of the BUTTON that is pressed, the position. 
-				uint button_pressed = -1;
-				for (int i = 0; i < current_emmiter->GetTextureIDAmount(); i++)
+				static Texture* st_particle_texture = nullptr;
+				if (ImGui::InputResourceTexture("Texture", &st_particle_texture))
 				{
-					if (ImGui::ImageButton((ImTextureID)current_emmiter->GetTextureID(i), ImVec2(32, 32), ImVec2(1, 1), ImVec2(0, 0), 2, ImColor(0, 0, 0, 255)))
-						button_pressed = i;
-
-					if (i != current_emmiter->GetTextureIDAmount() - 1)
-						ImGui::SameLine();
+					current_emmiter->GetRootParticle()->components.texture = st_particle_texture;
 				}
+			
+				//Here we get the id of the BUTTON that is pressed, the position. 
+				//uint button_pressed = -1;
+				//for (int i = 0; i < current_emmiter->GetTextureIDAmount(); i++)
+				//{
+				//	if (ImGui::ImageButton((ImTextureID)current_emmiter->GetTextureID(i), ImVec2(32, 32), ImVec2(1, 1), ImVec2(0, 0), 2, ImColor(0, 0, 0, 255)))
+				//		button_pressed = i;
+
+				//	if (i != current_emmiter->GetTextureIDAmount() - 1)
+				//		ImGui::SameLine();
+				//}
 
 				//Once we have the position we can get the texture id associated with it 
-				if (button_pressed != -1)
-				{
-					uint texture_to_display = current_emmiter->GetTextureID(button_pressed);
-					current_emmiter->SetCurrentTextureID(texture_to_display);
-					current_emmiter->UpdateRootParticle();
-				}
+				//if (button_pressed != -1)
+				//{
+				//	uint texture_to_display = current_emmiter->GetTextureID(button_pressed);
+				//	current_emmiter->SetCurrentTextureID(texture_to_display);
+				//	current_emmiter->UpdateRootParticle();
+				//}
 
-				ImGui::Separator();
+				//ImGui::Separator();
 
-				ImGui::Text("Animated particles");
+				//ImGui::Text("Animated particles");
 
 				//Load the animated particles of the engine by default
 				vector<ParticleAnimation> particle_anims = current_emmiter->GetAllParticleAnimations();
@@ -829,6 +848,18 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			}
 
 		}
+
+	}
+}
+
+void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
+{
+	if (ImGui::CollapsingHeader("Component Billboard"))
+	{
+		static int billboard_type; 
+		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+		
+		billboard->SetBillboardType((BillboardingType)billboard_type);
 
 	}
 }

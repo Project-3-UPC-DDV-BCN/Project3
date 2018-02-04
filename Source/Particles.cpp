@@ -43,6 +43,11 @@ float Particle::GetMaxLifeTime() const
 	return max_particle_lifetime;
 }
 
+void Particle::SetParticleTexture(Texture* new_texture)
+{
+	components.texture = new_texture; 
+}
+
 void Particle::SetGravity(float3 grav)
 {
 	particle_gravity = grav;
@@ -76,12 +81,6 @@ void Particle::ApplyAngularVelocity()
 
 	components.particle_transform->SetRotation({-90, components.particle_transform->GetGlobalRotation().y + rads_to_spin,0});
 
-
-}
-
-void Particle::SetTextureByID(uint texture_ID)
-{
-	particle_texture_id = texture_ID;
 }
 
 void Particle::SetColor(Color new_color)
@@ -282,9 +281,14 @@ void Particle::Draw(ComponentCamera* active_camera)
 	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
 	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
-	App->renderer3D->SetUniformBool(id, "has_texture", false); 
-	App->renderer3D->SetUniformBool(id, "has_material_color", true);
-	App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+	App->renderer3D->SetUniformBool(id, "has_texture", true); 
+	App->renderer3D->SetUniformBool(id, "has_material_color", false);
+
+	if (components.texture->GetID() == 0)
+		components.texture->LoadToMemory(); 
+
+	glBindTexture(GL_TEXTURE_2D, components.texture->GetID());
+	//App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
 
 	if (components.particle_mesh->id_indices == 0) components.particle_mesh->LoadToMemory(); 
 

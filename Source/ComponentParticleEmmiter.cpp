@@ -55,7 +55,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetVelocity(velocity);
 	new_particle->SetAngular(angular_v); 
 	new_particle->SetMovement(); 
-	new_particle->SetTextureByID(curr_texture_id);
+	new_particle->SetParticleTexture(root_particle->components.texture);
 	new_particle->SetColor(color);
 	new_particle->SetGravity(gravity);
 	new_particle->SetDistanceToCamera(0);
@@ -75,13 +75,13 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//	new_particle->SetAngular(angular_v);
 	//}
 
-	if (is_animated)
-	{
-		new_particle->animated_particle = true;
-		new_particle->components.particle_animation = root_particle->components.particle_animation;
-		new_particle->components.particle_animation.timeStep = time_step;
-		new_particle->SetTextureByID(new_particle->components.particle_animation.buffer_ids[0]);
-	}
+	//if (is_animated)
+	//{
+	//	new_particle->animated_particle = true;
+	//	new_particle->components.particle_animation = root_particle->components.particle_animation;
+	//	new_particle->components.particle_animation.timeStep = time_step;
+	//	new_particle->SetTextureByID(new_particle->components.particle_animation.buffer_ids[0]);
+	//}
 
 	//float3 dds = emit_area->GetGameObject()->transform->LocalY();
 
@@ -210,7 +210,7 @@ void ComponentParticleEmmiter::CreateRootParticle()
 
 	root_particle->SetMaxLifetime(max_lifetime);
 	root_particle->SetVelocity(velocity);
-	root_particle->SetTextureByID(-1);
+	root_particle->SetParticleTexture(nullptr);
 }
 
 int ComponentParticleEmmiter::GetParticlesNum()
@@ -270,7 +270,6 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 
 	root_particle->SetMaxLifetime(max_lifetime);
 	root_particle->SetVelocity(velocity);
-	root_particle->SetTextureByID(curr_texture_id);
 	root_particle->SetAngular(angular_v); 
 	root_particle->SetColor(color);
 	root_particle->SetGravity(gravity); 

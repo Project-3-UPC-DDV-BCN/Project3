@@ -120,7 +120,7 @@ public:
 	float GetMaxLifeTime() const;
 
 	//Texture
-	void SetTextureByID(uint texture_ID);
+	void SetParticleTexture(Texture* new_texture); 
 
 	//Color
 	void SetColor(Color new_color);
@@ -185,7 +185,6 @@ private:
 	float3 movement;						//This vector will be added to the position every frame
 
 	bool kill_me;
-	int particle_texture_id;
 	float distance_to_camera;
 	bool billboarding;
 
