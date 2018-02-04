@@ -774,9 +774,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::Checkbox("Billboarding", &current_emmiter->billboarding);
 
 				if (ImGui::DragInt("Emmision Rate", &current_emmiter->emmision_rate, 1, 0, 150)) current_emmiter->UpdateRootParticle();
-				if (ImGui::DragFloat("Lifetime", &current_emmiter->max_lifetime, 1, 0, 20)) current_emmiter->UpdateRootParticle();
-				if (ImGui::SliderFloat("Velocity", &current_emmiter->velocity, 0.1f, 5)) current_emmiter->UpdateRootParticle();
-				if (ImGui::SliderFloat3("Gravity", &current_emmiter->gravity[0], -5, 5)) current_emmiter->UpdateRootParticle();
+				if (ImGui::DragFloat("Lifetime", &current_emmiter->max_lifetime, 1, 0.1f, 0, 20)) current_emmiter->UpdateRootParticle();
+				if (ImGui::SliderFloat("Initial Velocity", &current_emmiter->velocity, 0.1f, 30)) current_emmiter->UpdateRootParticle();
+				if (ImGui::SliderFloat3("Gravity", &current_emmiter->gravity[0], -1, 1)) current_emmiter->UpdateRootParticle();
 				if (ImGui::DragFloat("Angular Velocity", &current_emmiter->angular_v, 1, 0, 200)) current_emmiter->UpdateRootParticle();
 				ImGui::DragFloat("Emision Angle", &current_emmiter->emision_angle, 1, 0, 360);
 

@@ -16,6 +16,7 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	particle_color = initial_particle_color;
 	particle_angular_v = 0;
 	curr_rot = 0;
+	particle_gravity = { 0,0,0 }; 
 	emmiter = parent;
 
 	animated_particle = false;
@@ -40,6 +41,11 @@ void Particle::SetMaxLifetime(const float& new_lifetime)
 float Particle::GetMaxLifeTime() const
 {
 	return max_particle_lifetime;
+}
+
+void Particle::SetGravity(float3 grav)
+{
+	particle_gravity = grav;
 }
 
 void Particle::SetVelocity(const float & new_velocity)
@@ -96,6 +102,8 @@ void Particle::SetFinalColor(Color color)
 {
 	final_particle_color = color;
 }
+
+
 
 void Particle::SetDistanceToCamera(float new_dist)
 {
@@ -197,14 +205,21 @@ void Particle::SetInterpolationSize(bool interpolate, float3 initial_scale, floa
 	final_particle_size = final_scale;
 }
 
+void Particle::SetMovementFromStats()
+{
+	movement += particle_gravity * App->time->GetGameDt();
 
+}
+void Particle::SetMovement()
+{
+	movement = { 0, particle_velocity, 0 }; 
+	movement *= App->time->GetGameDt();
+}
 
 void Particle::Update()
 {
-
 	//Translate the particles in the necessary direction
-	movement = particle_gravity*App->time->GetGameDt();
-
+	SetMovementFromStats(); 
 	components.particle_transform->SetPosition(components.particle_transform->GetLocalPosition() + movement);
 
 	//Update the particle color in case of interpolation
@@ -218,9 +233,9 @@ void Particle::Update()
 	//Update Rotation	
 	//UpdateRotation();
 
-	////Update Billboarding
-	////if (IsBillboarding() == true)
-	////	components.particle_billboarding->Update();
+	//Update Billboarding
+	//if (IsBillboarding() == true)
+	//	components.particle_billboarding->Update();
 
 	////Animations
 	//if (animated_particle)
@@ -230,8 +245,6 @@ void Particle::Update()
 
 void Particle::DeleteNow()
 {
-	//delete transform && animation 
-
 	//components.particle_billboarding->Delete();
 	components.SetToNull();
 }

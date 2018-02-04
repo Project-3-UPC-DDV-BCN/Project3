@@ -94,34 +94,34 @@ public:
 	bool IsInterpolatingColor() const;
 	void SetInterpolatingColor(bool interpolate, Color initial_color, Color final_color);
 
-	///Scale
+	//Scale
 	void UpdateSize();
 	void SetInterpolationSize(bool interpolate, float3 initial_scale, float3 final_scale);
 
-	///Rotation
+	//Rotation
 	//void UpdateRotation();
 	//void SetInterpolationRotation(bool active, float initial_v, float final_v);
 
 	/////Force calculations
 	//void SetMovement(float3 mov);
-	//void SetGravity(float3 grav);
+	void SetGravity(float3 grav);
 
-	///Velocity
+	//Velocity
 	void SetVelocity(const float& new_velocity);
 	float GetVelocity() const;
 
-	///Rotation
+	//Rotation
 	void SetAngular(const float& new_velocity);
 	float GetAngular() const;
 
-	///Lifetime
+	//Lifetime
 	void SetMaxLifetime(const float& new_lifetime);
 	float GetMaxLifeTime() const;
 
-	///Texture
+	//Texture
 	void SetTextureByID(uint texture_ID);
 
-	///Color
+	//Color
 	void SetColor(Color new_color);
 	Color GetColor() const;
 
@@ -130,6 +130,10 @@ public:
 
 	void SetInitialColor(Color color);
 	void SetFinalColor(Color color);
+
+	//Movement
+	void SetMovementFromStats(); 
+	void SetMovement(); 
 
 	void SetDistanceToCamera(float new_dist);
 	float GetDistanceToCamera();
@@ -174,7 +178,7 @@ private:
 
 	//Managing movement
 	float particle_velocity;
-	float3 particle_gravity = {0,-1.0f,0};
+	float3 particle_gravity;
 	float particle_angular_v;
 	float max_particle_lifetime;
 	float3 movement;						//This vector will be added to the position every frame

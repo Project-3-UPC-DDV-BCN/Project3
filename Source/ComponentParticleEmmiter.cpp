@@ -53,9 +53,10 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	new_particle->SetMaxLifetime(max_lifetime);
 	new_particle->SetVelocity(velocity);
+	new_particle->SetMovement(); 
 	new_particle->SetTextureByID(curr_texture_id);
 	new_particle->SetColor(color);
-	//new_particle->SetGravity(gravity);
+	new_particle->SetGravity(gravity);
 	new_particle->SetDistanceToCamera(0);
 
 	new_particle->SetInterpolatingColor(apply_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
@@ -270,6 +271,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	root_particle->SetVelocity(velocity);
 	root_particle->SetTextureByID(curr_texture_id);
 	root_particle->SetColor(color);
+	root_particle->SetGravity(gravity); 
 
 	root_particle->SetInterpolatingColor(apply_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
 	root_particle->SetInterpolationSize(apply_size_interpolation, initial_scale, final_scale);
