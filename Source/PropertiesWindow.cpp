@@ -868,7 +868,14 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 		static int billboard_type; 
 		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
 		
-		billboard->SetBillboardType((BillboardingType)billboard_type);
+		if (billboard_type != 0)
+		{
+			billboard->SetBillboardType((BillboardingType)--billboard_type);
+			++billboard_type;
+		}
+		else
+			billboard->SetBillboardType(BILLBOARD_NONE); 
 
+			
 	}
 }

@@ -268,6 +268,11 @@ void ComponentParticleEmmiter::MoveEmmitArea()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
+	//Get the current state of the box
+	float3 position_curr;
+	float3 rotation_curr;
+	float3 scale_curr;
+
 	float3 position_inc = parent_transform->GetGlobalPosition() - emit_area.CenterPoint();
 	float3 rotation_inc; 
 	float3 scale_inc;

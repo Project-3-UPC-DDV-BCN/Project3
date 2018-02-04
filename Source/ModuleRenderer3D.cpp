@@ -21,6 +21,9 @@
 #include "CubeMap.h"
 #include "SceneWindow.h"
 #include "ModuleResources.h"
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentBillboard.h"
 #include "ShaderProgram.h"
 #include "ComponentParticleEmmiter.h"
 
@@ -332,6 +335,12 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+
+	ComponentBillboard* billboard = (ComponentBillboard*)mesh->GetGameObject()->GetComponent(Component::CompBillboard);
+	if (billboard != nullptr)
+	{
+		billboard->RotateObject(); 
+	}
 	
 	Material* material = mesh->GetMaterial();
 
