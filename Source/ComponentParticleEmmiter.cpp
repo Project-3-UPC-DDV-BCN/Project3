@@ -280,7 +280,8 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	//if (apply_rotation_interpolation) root_particle->SetInterpolationRotation(true, initial_angular_v, final_angular_v);
 	//else root_particle->SetAngular(angular_v);
 
-	if (apply_size_interpolation) root_particle->SetInterpolationSize(true, initial_scale, final_scale);
+	if (apply_size_interpolation)
+		root_particle->SetInterpolationSize(true, initial_scale, final_scale);
 }
 
 ComponentParticleEmmiter::~ComponentParticleEmmiter()

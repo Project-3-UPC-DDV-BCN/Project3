@@ -784,7 +784,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				ImGui::Text("Size Interpolation");
 
-				ImGui::InputFloat("Initial", &current_emmiter->initial_scale.x);
+				ImGui::InputFloat("Initial .2f", &current_emmiter->initial_scale.x);
 				current_emmiter->initial_scale.y = current_emmiter->initial_scale.x;
 
 				ImGui::InputFloat("Final", &current_emmiter->final_scale.x);

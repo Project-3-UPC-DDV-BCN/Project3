@@ -191,7 +191,7 @@ void Particle::UpdateSize()
 	float increment_y = total_increment.y * percentage;
 	float increment_z = 1;
 
-	float3 new_scale = { initial_particle_size.x + increment_x, initial_particle_size.y + increment_y, 1 };
+	float3 new_scale = { initial_particle_size.x + increment_x, 0,  initial_particle_size.x + increment_x };
 
 	components.particle_transform->SetScale(new_scale);
 
