@@ -3,9 +3,11 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ShaderProgram.h"
+#include "Texture.h"
 #include "ComponentParticleEmmiter.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
+#include "imgui/CustomImGui.h"
 #include "OpenGL.h"
 #include "Mesh.h"
 
@@ -307,6 +309,64 @@ void Particle::Draw(ComponentCamera* active_camera)
 	App->renderer3D->UnbindVertexArrayObject(); 
 }
 
+ParticleAnimation * Particle::GetAnimationController()
+{
+	return &components.particle_animation;
+}
+
 Particle::~Particle()
 {
 }
+
+//Animation Controller -----------
+
+Texture* ParticleAnimation::Update(Timer animation_timer)
+{
+	if (rendering_frame < 2)
+		rendering_frame++;
+	else
+	{
+		rendering_frame = 0;
+	}
+
+	return frames_stack[rendering_frame];
+}
+
+ParticleAnimation::ParticleAnimation()
+{
+	name = "";
+	timeStep = 0;
+	rendering_frame = 0;
+}
+
+int ParticleAnimation::GetNumFrames()
+{
+	return frames_stack.size();
+}
+
+void ParticleAnimation::PaintStackUI()
+{
+	int number = 1; 
+	for (vector<Texture*>::iterator it = frames_stack.begin(); it != frames_stack.end(); it++)
+	{
+		ImGui::Text(to_string(number++).c_str()); ImGui::SameLine();
+
+		ImGui::Text(". "); ImGui::SameLine();
+		ImGui::Text((*it)->GetName().c_str()); ImGui::SameLine(); 
+
+		if (ImGui::Button("X")) 
+		{
+			it = frames_stack.erase(it);
+
+			if (it == frames_stack.end())
+				break; 
+		}
+	}
+}
+
+ParticleAnimation::~ParticleAnimation()
+{
+
+}
+
+// -------------------------------

@@ -16,33 +16,17 @@ class ComponentParticleEmmiter;
 
 struct ParticleAnimation
 {
-	ParticleAnimation()
-	{
-		name = "";
-		timeStep = 0;
-		rendering_frame = 0;
-	}
+	ParticleAnimation();
+	~ParticleAnimation();
 
-	~ParticleAnimation()
-	{
+	Texture* Update(Timer animation_timer);
 
-	}
-
-	int Update(Timer animation_timer)
-	{
-		if (rendering_frame < 2)
-			rendering_frame++;
-		else
-		{
-			rendering_frame = 0;
-		}
-
-		return rendering_frame;
-	}
-
+	int GetNumFrames();
+	void PaintStackUI();
+	
 	
 	string name;
-	vector<Texture*> textures;
+	vector<Texture*> frames_stack;
 	int rendering_frame;
 	float timeStep;
 
@@ -143,6 +127,9 @@ public:
 	float IsBillboarding() const;
 
 	bool IsDead();
+
+	//Animation
+	ParticleAnimation* GetAnimationController(); 
 
 	~Particle();
 

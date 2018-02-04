@@ -658,6 +658,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Texture"))
 			{
+				
 				static Texture* st_particle_texture = nullptr;
 				if (ImGui::InputResourceTexture("Texture To Add", &st_particle_texture))
 				{
@@ -666,8 +667,15 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if(ImGui::Button("Add To Stack"))
 				{
-
+					current_emmiter->GetRootParticle()->GetAnimationController()->frames_stack.push_back(st_particle_texture);
 				}
+
+				ImGui::Text("Frame Stack Size:"); ImGui::SameLine(); 		
+				ImGui::Text(to_string(current_emmiter->GetRootParticle()->GetAnimationController()->GetNumFrames()).c_str());
+
+				current_emmiter->GetRootParticle()->GetAnimationController()->PaintStackUI(); 
+
+				ImGui::DragFloat("Time Step", &current_emmiter->GetRootParticle()->GetAnimationController()->timeStep, true, 0.1f, 0, 2.0f); 
 
 				//Draw stack of animations 
 
