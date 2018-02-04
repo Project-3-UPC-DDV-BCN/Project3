@@ -68,6 +68,8 @@ public:
 
 	void DeleteFromResourcesDestructor();
 
+	int CountAllChilds();
+
 public:
 	std::list<GameObject*> childs;
 	std::list<Component*> components_list;

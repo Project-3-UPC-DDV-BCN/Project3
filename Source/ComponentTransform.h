@@ -15,6 +15,7 @@ public:
 	void SetRotation(float3 rotation);
 	float3 GetGlobalRotation() const;
 	float3 GetLocalRotation() const;
+	Quat GetLocalRotationQuat() const;
 	void SetScale(float3 scale);
 	float3 GetGlobalScale() const;
 	float3 GetLocalScale() const;

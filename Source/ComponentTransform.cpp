@@ -65,6 +65,11 @@ float3 ComponentTransform::GetLocalRotation() const
 	return shown_rotation; //If it's the parent. local rotation = global rotation
 }
 
+Quat ComponentTransform::GetLocalRotationQuat() const
+{
+	return rotation;
+}
+
 void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;

@@ -29,6 +29,7 @@ void JointPose::SetPose(Quat& rot, float3& pos, float3& scale)
 		rotation = rot;
 		position = pos;
 		this->scale = scale;
+		set = true;
 	}
 }
 
@@ -96,6 +97,11 @@ float4x4 Joint::GetOpenGLTransformMatrix() const
 float4x4 Joint::GetLocalTransformationMatrix() const
 {
 	return initial_pose.GetTransformMatrix();
+}
+
+void Joint::SetPose(Quat & rot, float3 & pos, float3 & scale)
+{
+	initial_pose.SetPose(rot, pos, scale);
 }
 
 JointPose Joint::GetPose() const
@@ -177,7 +183,12 @@ void Skeleton::Save(Data & data) const
 {
 	if (num_joints != -1)
 	{
+		data.AddString("name", GetName());
+		data.AddString("lib_path", GetLibraryPath());
+		data.AddInt("UID", GetUID());
+
 		data.AddInt("num_joints", num_joints);
+
 		for (int i = 0; i < num_joints; ++i)
 		{
 			data.CreateSection("joint_" + std::to_string(i));
@@ -204,6 +215,10 @@ void Skeleton::Save(Data & data) const
 bool Skeleton::Load(Data & data)
 {
 	bool ret = true;
+
+	SetName(data.GetString("name"));
+	SetUID(data.GetInt("UID"));
+	SetLibraryPath(data.GetString("lib_path"));
 
 	num_joints = data.GetInt("num_joints");
 

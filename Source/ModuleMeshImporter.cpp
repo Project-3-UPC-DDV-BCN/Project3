@@ -13,6 +13,8 @@
 #include "Texture.h"
 #include "Prefab.h"
 #include "ImportWindow.h"
+#include "ComponentMeshRenderer.h"
+#include "Skeleton.h"
 
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -37,12 +39,12 @@ bool ModuleMeshImporter::Init(Data * editor_config)
 	stream.callback = &Callback;
 	aiAttachLogStream(&stream);
 
+	CreatePrimitives();
 	return true;
 }
 
 bool ModuleMeshImporter::Start()
 {
-	CreatePrimitives();
 
 	return true;
 }
@@ -73,6 +75,8 @@ std::string ModuleMeshImporter::ImportMesh(std::string path)
 		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 		data.SaveAsBinary(library_path);
 		App->resources->AddPrefab(prefab);
+
+		CreateSkeletonsAndVertexWeights(prefab, *scene);
 
 		ret = library_path;
 
@@ -205,37 +209,40 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			}
 
 			///Create the data buffer
-			mesh->vertices_data = new float[mesh->num_vertices * 13]; // vert pos, tex coords, normals, color
+			mesh->vertices_data = new float[mesh->num_vertices * 21]; // vert pos, tex coords, normals, color, influent bones ids, bones weights
+
+			memset(mesh->vertices_data, 0.0f, mesh->num_vertices * 21); //set all mem to 0
 
 			float null[3] = { 0.f,0.f,0.f };
 			float null_color[4] = { 1.f,1.f,1.f,1.f };
 			for (int v = 0; v < mesh->num_vertices; ++v)
 			{
 				//copy vertex pos
-				memcpy(mesh->vertices_data + v * 13, mesh->vertices + v * 3, sizeof(float) * 3);
+				memcpy(mesh->vertices_data + v * 21, mesh->vertices + v * 3, sizeof(float) * 3);
 
 				//copy tex coord
 				if (texture_coords != nullptr)
-					memcpy(mesh->vertices_data + v * 13 + 3, texture_coords + v * 3, sizeof(float) * 3);
+					memcpy(mesh->vertices_data + v * 21 + 3, texture_coords + v * 3, sizeof(float) * 3);
 				else
-					memcpy(mesh->vertices_data + v * 13 + 3, null, sizeof(float) * 3);
+					memcpy(mesh->vertices_data + v * 21 + 3, null, sizeof(float) * 3);
 
 				//copy normals
 				if (normals != nullptr)
-					memcpy(mesh->vertices_data + v * 13 + 6, normals + v * 3, sizeof(float) * 3);
+					memcpy(mesh->vertices_data + v * 21 + 6, normals + v * 3, sizeof(float) * 3);
 				else
-					memcpy(mesh->vertices_data + v * 13 + 6, null, sizeof(float) * 3);
+					memcpy(mesh->vertices_data + v * 21 + 6, null, sizeof(float) * 3);
 
 				//copy colors
 				if (colors != nullptr)
-					memcpy(mesh->vertices_data + v * 13 + 9, colors + v * 4, sizeof(float) * 4);
+					memcpy(mesh->vertices_data + v * 21 + 9, colors + v * 4, sizeof(float) * 4);
 				else
-					memcpy(mesh->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+					memcpy(mesh->vertices_data + v * 21 + 9, null_color, sizeof(float) * 4);
 			}
 
 			mesh->CreateVerticesFromData();
 			// -------------------------------------
 
+			// ----- Material -----
 			Material* material = nullptr;
 			if (scene.HasMaterials())
 			{
@@ -272,6 +279,7 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 					}
 				}
 			}
+			// --------------------
 
 			SaveMeshToLibrary(*mesh);
 			App->resources->AddMesh(mesh);
@@ -429,6 +437,99 @@ Texture* ModuleMeshImporter::CreateTexture(std::string mat_texture_name)
 	return material_texture;
 }
 
+void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const aiScene & scene)
+{
+	if (prefab != nullptr)
+	{
+		GameObject* root = prefab->GetRootGameObject();
+
+		Skeleton* skeleton = new Skeleton;
+
+		GameObject* mesh_go = nullptr;
+		GameObject* root_bone_node = nullptr;
+		int num_joints = 0;
+
+		for (std::list<GameObject*>::iterator it = root->childs.begin(); it != root->childs.end(); ++it)
+		{
+			if ((*it)->GetName().find("Motion") != std::string::npos)
+			{
+				root_bone_node = (*it)->childs.front(); //the motion node only has one child, the root node for the skeleton
+				num_joints = (*it)->CountAllChilds();
+				break;
+			}
+			else
+				mesh_go = (*it);
+		}
+
+		if (root_bone_node != nullptr)
+		{
+			Joint* joints = new Joint[num_joints];
+
+			// Set root bone data
+			joints->SetParentIndex(-1); //set the first joint as the root
+			joints->SetName(root_bone_node->GetName().c_str());
+
+			ComponentTransform* root_bone_trans = (ComponentTransform*)root_bone_node->GetComponent(Component::CompTransform);		
+			joints->SetPose(root_bone_trans->GetLocalRotationQuat(), root_bone_trans->GetLocalPosition(), root_bone_trans->GetLocalScale());
+			// ----------------
+
+			// Create skeleton
+			/// initialize needed data
+			std::list<GameObject*> bones_to_add; // create the list of remaining bones to add
+			std::list<int> parents; // store the parent for the bone
+			for (std::list<GameObject*>::iterator it = root_bone_node->childs.begin(); it != root_bone_node->childs.end(); ++it) //add root node childs
+			{
+				bones_to_add.push_back((*it));
+				parents.push_back(0);
+			}
+
+			//iterate for all childs till the skeleton is build
+			int curr_joint = 1;
+			std::list<GameObject*>::iterator bone = bones_to_add.begin();
+			std::list<int>::iterator bone_parent = parents.begin();
+			while (curr_joint < num_joints)
+			{
+				//add this bone childs to the lists
+				for (std::list<GameObject*>::iterator bone_child = (*bone)->childs.begin(); bone_child != (*bone)->childs.end(); ++bone_child)
+				{
+					bones_to_add.push_back(*bone_child);
+					parents.push_back(curr_joint);
+				}
+
+				//store bone information in current joint
+				(joints + curr_joint)->SetName((*bone)->GetName().c_str());
+				(joints + curr_joint)->SetParentIndex(*bone_parent);
+				ComponentTransform* trans = (ComponentTransform*)(*bone)->GetComponent(Component::CompTransform);
+				(joints + curr_joint)->SetPose(trans->GetLocalRotationQuat(), trans->GetLocalPosition(), trans->GetLocalScale());
+
+				//erase current go and parent from the lists
+				bone = bones_to_add.erase(bone);
+				bone_parent = parents.erase(bone_parent);
+
+				//increase curr_joint
+				++curr_joint;
+			}
+
+			skeleton->SetJoints(joints);
+			skeleton->SetNumJoints(num_joints);
+			skeleton->SetName(mesh_go->GetName());
+			std::string path = LIBRARY_SKELETONS_FOLDER + skeleton->GetName() + ".sklt";
+			skeleton->SetLibraryPath(path);
+
+			Data skeleton_data;
+			skeleton->Save(skeleton_data);		
+			skeleton_data.SaveAsBinary(path);
+
+			RELEASE(skeleton);
+
+			skeleton = (Skeleton*)App->resources->CreateResourceFromLibrary(path);
+
+			App->resources->GetMesh(mesh_go->GetName())->skeleton = skeleton;
+
+		}
+	}
+}
+
 void ModuleMeshImporter::CreatePrimitives() const
 {
 	CreateBox();
@@ -513,7 +614,9 @@ void ModuleMeshImporter::CreateBox() const
 
 	cube->num_vertices = num_vertices;
 	cube->num_indices = num_indices;
-	cube->vertices_data = new float[num_vertices * 13]; // vert pos, tex coords, normals, color
+	cube->vertices_data = new float[num_vertices * 21]; // vert pos, tex coords, normals, color
+
+	memset(cube->vertices_data, 0.0f, num_vertices * 21);
 
 	float* normals = nullptr;
 	float null[3] = { 0.f,0.f,0.f };
@@ -521,22 +624,22 @@ void ModuleMeshImporter::CreateBox() const
 	for (int v = 0; v < num_vertices; ++v)
 	{
 		//copy vertex pos
-		memcpy(cube->vertices_data + v * 13, vert + v * 3, sizeof(float) * 3);
+		memcpy(cube->vertices_data + v * 21, vert + v * 3, sizeof(float) * 3);
 
 		//copy tex coord
 		if (text_coords != nullptr)
-			memcpy(cube->vertices_data + v * 13 + 3, text_coords + v * 3, sizeof(float) * 3);
+			memcpy(cube->vertices_data + v * 21 + 3, text_coords + v * 3, sizeof(float) * 3);
 		else
-			memcpy(cube->vertices_data + v * 13 + 3, null, sizeof(float) * 3);
+			memcpy(cube->vertices_data + v * 21 + 3, null, sizeof(float) * 3);
 
 		//copy normals
 		if (normals != nullptr)
-			memcpy(cube->vertices_data + v * 13 + 6, normals + v * 3, sizeof(float) * 3);
+			memcpy(cube->vertices_data + v * 21 + 6, normals + v * 3, sizeof(float) * 3);
 		else
-			memcpy(cube->vertices_data + v * 13 + 6, null, sizeof(float) * 3);
+			memcpy(cube->vertices_data + v * 21 + 6, null, sizeof(float) * 3);
 
 		//copy colors, no initial color so copy null_color
-		memcpy(cube->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+		memcpy(cube->vertices_data + v * 21 + 9, null_color, sizeof(float) * 4);
 	}
 	cube->CreateVerticesFromData();
 
@@ -557,7 +660,7 @@ void ModuleMeshImporter::CreatePlane() const
 	int resZ = 2;
 
 	//vertices
-	uint num_vert = resX * resZ;
+	plane->num_vertices = resX * resZ;
 	float3 ver[4];
 	for (int z = 0; z < resZ; z++)
 	{
@@ -571,17 +674,17 @@ void ModuleMeshImporter::CreatePlane() const
 		}
 	}
 
-	float* vertices = new float[num_vert * 3];
-	for (int i = 0; i < num_vert; ++i)
+	float* vertices = new float[plane->num_vertices * 3];
+	for (int i = 0; i < plane->num_vertices; ++i)
 	{
 		memcpy(vertices + i * 3, ver[i].ptr(), sizeof(float) * 3);
 	}
 
 	//indices
-	uint num_indices = (resX - 1) * (resZ - 1) * 6;
+	plane->num_indices = (resX - 1) * (resZ - 1) * 6;
 	uint ind[6];
 	int t = 0;
-	for (int face = 0; face < num_indices / 6; ++face)
+	for (int face = 0; face < plane->num_indices / 6; ++face)
 	{
 		int i = face % (resX - 1) + (face / (resZ - 1) * resX);
 
@@ -593,8 +696,8 @@ void ModuleMeshImporter::CreatePlane() const
 		ind[t++] = i + resX + 1;
 		ind[t++] = i + 1;
 	}
-	plane->indices = new uint[num_indices];
-	memcpy(plane->indices, ind, sizeof(uint)*num_indices);
+	plane->indices = new uint[plane->num_indices];
+	memcpy(plane->indices, ind, sizeof(uint)*plane->num_indices);
 
 	//uv
 	float3 uvs[4];
@@ -606,38 +709,40 @@ void ModuleMeshImporter::CreatePlane() const
 		}
 	}
 
-	float* uv = new float[num_vert * 3];
-	for (int i = 0; i < num_vert; ++i)
+	float* uv = new float[plane->num_vertices * 3];
+	for (int i = 0; i < plane->num_vertices; ++i)
 	{
 		memcpy(uv + i * 3, uvs[i].ptr(), sizeof(float) * 3);
 	}
 
 	//create the buffer from loaded info
-	plane->vertices_data = new float[num_vert * 13]; // vert pos, tex coords, normals, color
+	plane->vertices_data = new float[plane->num_vertices * 21]; // vert pos, tex coords, normals, color
+
+	memset(plane->vertices_data, 0.0f, plane->num_vertices * 21);
 
 	float* normals = nullptr;
 	float null[3] = { 0.f,0.f,0.f };
 	float null_normal[3] = { 0.f,1.f,0.f };
 	float null_color[4] = { 1.f,1.f,1.f,1.f };
-	for (int v = 0; v < num_vert; ++v)
+	for (int v = 0; v < plane->num_vertices; ++v)
 	{
 		//copy vertex pos
-		memcpy(plane->vertices_data + v * 13, vertices + v * 3, sizeof(float) * 3);
+		memcpy(plane->vertices_data + v * 21, vertices + v * 3, sizeof(float) * 3);
 
 		//copy tex coord
 		if (uv != nullptr)
-			memcpy(plane->vertices_data + v * 13 + 3, uv + v * 3, sizeof(float) * 3);
+			memcpy(plane->vertices_data + v * 21 + 3, uv + v * 3, sizeof(float) * 3);
 		else
-			memcpy(plane->vertices_data + v * 13 + 3, null, sizeof(float) * 3);
+			memcpy(plane->vertices_data + v * 21 + 3, null, sizeof(float) * 3);
 
 		//copy normals
 		if (normals != nullptr)
-			memcpy(plane->vertices_data + v * 13 + 6, normals + v * 3, sizeof(float) * 3);
+			memcpy(plane->vertices_data + v * 21 + 6, normals + v * 3, sizeof(float) * 3);
 		else
-			memcpy(plane->vertices_data + v * 13 + 6, null_normal, sizeof(float) * 3);
+			memcpy(plane->vertices_data + v * 21 + 6, null_normal, sizeof(float) * 3);
 
 		//copy colors, no initial color so copy null_color
-		memcpy(plane->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+		memcpy(plane->vertices_data + v * 21 + 9, null_color, sizeof(float) * 4);
 	}
 	plane->CreateVerticesFromData();
 
@@ -715,7 +820,9 @@ void ModuleMeshImporter::CreateSphere() const
 
 	sphere->num_vertices = vertices.size();
 	//create the buffer from loaded info
-	sphere->vertices_data = new float[sphere->num_vertices * 13]; // vert pos, tex coords, normals, color
+	sphere->vertices_data = new float[sphere->num_vertices * 21]; // vert pos, tex coords, normals, color
+
+	memset(sphere->vertices_data, 0.0f, sphere->num_vertices * 21);
 
 	float null[3] = { 0.f,0.f,0.f };
 	float null_normal[3] = { 0.f,1.f,0.f };
@@ -723,16 +830,16 @@ void ModuleMeshImporter::CreateSphere() const
 	for (int v = 0; v < sphere->num_vertices; ++v)
 	{
 		//copy vertex pos
-		memcpy(sphere->vertices_data + v * 13, vertices[v].ptr(), sizeof(float) * 3);
+		memcpy(sphere->vertices_data + v * 21, vertices[v].ptr(), sizeof(float) * 3);
 
 		//copy tex coord
-		memcpy(sphere->vertices_data + v * 13 + 3, tex_coords[v].ptr(), sizeof(float) * 3);
+		memcpy(sphere->vertices_data + v * 21 + 3, tex_coords[v].ptr(), sizeof(float) * 3);
 
 		//copy normals
-		memcpy(sphere->vertices_data + v * 13 + 6, normals[v].ptr(), sizeof(float) * 3);
+		memcpy(sphere->vertices_data + v * 21 + 6, normals[v].ptr(), sizeof(float) * 3);
 
 		//copy colors, no initial color so copy null_color
-		memcpy(sphere->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+		memcpy(sphere->vertices_data + v * 21 + 9, null_color, sizeof(float) * 4);
 	}
 	sphere->CreateVerticesFromData();
 
@@ -776,8 +883,8 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 
 			// Load vertices_data
 			cursor += bytes;
-			bytes = sizeof(float) * mesh->num_vertices * 13;
-			mesh->vertices_data = new float[mesh->num_vertices * 13];
+			bytes = sizeof(float) * mesh->num_vertices * 21;
+			mesh->vertices_data = new float[mesh->num_vertices * 21];
 			memcpy(mesh->vertices_data, cursor, bytes);
 
 			// AABB
@@ -789,6 +896,10 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 
 			mesh->CreateVerticesFromData();
 			mesh->SetLibraryPath(path);
+
+			std::string sklt_path = LIBRARY_SKELETONS_FOLDER + App->file_system->GetFileNameWithoutExtension(path.c_str()) + ".sklt";
+
+			mesh->skeleton = (Skeleton*)App->resources->CreateResourceFromLibrary(sklt_path);
 		}
 		else
 		{
@@ -811,7 +922,7 @@ void ModuleMeshImporter::SaveMeshToLibrary(Mesh& mesh)
 
 	uint size = sizeof(ranges);
 	size += sizeof(uint) * mesh.num_indices;
-	size += sizeof(float) * mesh.num_vertices * 13;
+	size += sizeof(float) * mesh.num_vertices * 21;
 	size += sizeof(AABB);
 
 	// allocate and fill
@@ -829,7 +940,7 @@ void ModuleMeshImporter::SaveMeshToLibrary(Mesh& mesh)
 
 	// Store vertices
 	cursor += bytes;
-	bytes = sizeof(float) * mesh.num_vertices * 13;
+	bytes = sizeof(float) * mesh.num_vertices * 21;
 	memcpy(cursor, mesh.vertices_data, bytes);
 
 	// Store AABB

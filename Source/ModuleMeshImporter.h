@@ -12,6 +12,7 @@ class GameObject;
 class Data;
 class Material;
 class Texture;
+class Prefab;
 
 class ModuleMeshImporter :
 	public Module
@@ -34,6 +35,8 @@ private:
 	void GetDummyTransform(aiNode& node, aiVector3D& pos, aiQuaternion& rot, aiVector3D& scale);
 	void LoadMaterial(Material& material, const aiMaterial& ai_material);
 	Texture* CreateTexture(std::string mat_texture_path);
+
+	void CreateSkeletonsAndVertexWeights(Prefab* prefab, const aiScene& scene);
 
 	void CreatePrimitives() const;
 	void CreateBox() const;

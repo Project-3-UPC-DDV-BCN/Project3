@@ -54,6 +54,8 @@ public:
 	//Return local transformation matrix for MatGeoLib calculations
 	float4x4 GetLocalTransformationMatrix() const;
 
+	void SetPose(Quat& rot, float3& pos, float3& scale);
+
 	JointPose GetPose()const;
 	const char* GetName() const;
 

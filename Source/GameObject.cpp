@@ -593,3 +593,15 @@ void GameObject::DeleteFromResourcesDestructor()
 		RELEASE(*it);
 	}
 }
+
+int GameObject::CountAllChilds()
+{
+	int count = childs.size();
+
+	for (std::list<GameObject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+	{
+		count += (*child)->CountAllChilds();
+	}
+
+	return count;
+}

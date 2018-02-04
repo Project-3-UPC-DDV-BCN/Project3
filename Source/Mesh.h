@@ -5,6 +5,7 @@
 #include "Resource.h"
 
 class Data;
+class Skeleton;
 
 class Mesh : public Resource
 {
@@ -38,6 +39,8 @@ public:
 	AABB box;
 
 	uint id_vao = 0;
+
+	Skeleton* skeleton = nullptr;
 
 };
 
