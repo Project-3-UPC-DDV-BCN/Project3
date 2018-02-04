@@ -21,6 +21,7 @@ public:
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
+	float2 GetGlobalPos() const;
 	void SetSize(const float2& size);
 	float2 GetSize() const;
 	void SetAnchor(const float2& anchor);

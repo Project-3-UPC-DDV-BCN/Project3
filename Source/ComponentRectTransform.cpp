@@ -42,6 +42,11 @@ float2 ComponentRectTransform::GetPos() const
 	return pos;
 }
 
+float2 ComponentRectTransform::GetGlobalPos() const
+{
+	return float2();
+}
+
 void ComponentRectTransform::SetSize(const float2 & _size)
 {
 	size = _size;
@@ -88,7 +93,7 @@ float4x4 ComponentRectTransform::GetAnchorTransform() const
 		float4x4 canvas_origin = c_canvas->GetOrigin();
 
 		anchor_trans[0][3] += canvas_origin[0][3] + (canvas_size.x * anchor.x);
-		anchor_trans[0][3] += canvas_origin[1][3] + (canvas_size.y * anchor.y);
+		anchor_trans[1][3] += canvas_origin[1][3] + (canvas_size.y * anchor.y);
 	}
 	
 	return anchor_trans;
@@ -169,12 +174,11 @@ void ComponentRectTransform::UpdateTransform()
 	if (c_trans != nullptr)
 	{
 		float2 canvas_size = c_canvas->GetSize();
-		float4x4 canvas_origin = c_canvas->GetOrigin();
 		float4x4 anchor_trans = GetAnchorTransform();
 
 		float4x4 final_trans = anchor_trans;
-		final_trans[0][3] += pos.x;
-		final_trans[1][3] -= pos.y;
+		//final_trans[0][3] -= pos.x;
+		//final_trans[1][3] += pos.y;
 
 		c_trans->SetMatrix(final_trans);
 	}
