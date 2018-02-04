@@ -12,6 +12,8 @@
 
 using namespace std; 
 
+class ComponentParticleEmmiter; 
+
 struct ParticleAnimation
 {
 	ParticleAnimation()
@@ -66,11 +68,12 @@ class Particle
 {
 public:
 
-	Particle();
+	Particle(ComponentParticleEmmiter* parent);
 
 	void Update();
 
-	void Delete();
+	bool CheckIfDelete();
+	void DeleteNow();
 
 	//Drawing
 	void Draw(ComponentCamera* active_camera);
@@ -180,5 +183,7 @@ private:
 	int particle_texture_id;
 	float distance_to_camera;
 	bool billboarding;
+
+	ComponentParticleEmmiter* emmiter; 
 
 };

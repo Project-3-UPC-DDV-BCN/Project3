@@ -32,7 +32,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	LCG random;
 	float3 particle_pos = emit_area.RandomPointInside(random);
 
-	Particle* new_particle = new Particle();
+	Particle* new_particle = new Particle(this);
 
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
@@ -203,7 +203,7 @@ bool ComponentParticleEmmiter::Start()
 
 void ComponentParticleEmmiter::CreateRootParticle()
 {
-	root_particle = new Particle();
+	root_particle = new Particle(this);
 	root_particle->components.SetToNull();
 
 	root_particle->SetMaxLifetime(max_lifetime);
@@ -216,13 +216,33 @@ int ComponentParticleEmmiter::GetParticlesNum()
 	return active_particles.size();
 }
 
+void ComponentParticleEmmiter::DeleteLastParticle()
+{
+	active_particles.pop_back(); 
+}
+
 bool ComponentParticleEmmiter::Update()
 {
 	if (active_particles.empty() == false)
 	{
-		for (list<Particle*>::iterator it = active_particles.begin(); it != active_particles.end(); it++)
+		for (list<Particle*>::reverse_iterator it = active_particles.rbegin(); it != active_particles.rend();)
 		{
 			(*it)->Update();
+
+			if ((*it)->CheckIfDelete())
+			{
+				(*it)->DeleteNow();
+				active_particles.erase(--it.base());
+
+				if (active_particles.empty())
+				{
+					break;
+				}
+			}
+			else
+				it++; 
+				
+				
 		}
 	}
 

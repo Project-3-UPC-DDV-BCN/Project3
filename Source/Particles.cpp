@@ -3,21 +3,26 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ShaderProgram.h"
+#include "ComponentParticleEmmiter.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
 #include "OpenGL.h"
 #include "Mesh.h"
 
-Particle::Particle()
+Particle::Particle(ComponentParticleEmmiter * parent)
 {
 	kill_me = false;
 	interpolation_timer.Start();
 	particle_color = initial_particle_color;
 	particle_angular_v = 0;
 	curr_rot = 0;
+	emmiter = parent;
+
 	animated_particle = false;
 	interpolate_size = false;
 	interpolate_rotation = false;
+
+	particle_timer.Start();
 	animation_timer.Start();
 	twister.Start();
 }
@@ -192,6 +197,8 @@ void Particle::SetInterpolationSize(bool interpolate, float3 initial_scale, floa
 	final_particle_size = final_scale;
 }
 
+
+
 void Particle::Update()
 {
 
@@ -218,19 +225,25 @@ void Particle::Update()
 	////Animations
 	//if (animated_particle)
 	//	UpdateAnimation();
-
-	//Check if they have to be deleted
-	if (particle_timer.Read() > max_particle_lifetime * 1000)
-		kill_me = true;
+	
 }
 
-void Particle::Delete()
+void Particle::DeleteNow()
 {
 	//delete transform && animation 
 
-//	components.particle_billboarding->Delete();
-
+	//components.particle_billboarding->Delete();
 	components.SetToNull();
+}
+
+bool Particle::CheckIfDelete()
+{
+	bool ret = false; 
+	
+	if (particle_timer.Read() > max_particle_lifetime * 1000)
+		ret = true; 
+
+	return ret; 
 }
 
 void Particle::Draw(ComponentCamera* active_camera)

@@ -35,6 +35,7 @@ public:
 	void GenerateParticles();
 	Particle* CreateParticle();
 	int GetParticlesNum();
+	void DeleteLastParticle(); 
 
 	//Getters & Setters
 	int GetEmmisionRate() const;
