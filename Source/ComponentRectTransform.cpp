@@ -24,18 +24,8 @@ ComponentRectTransform::~ComponentRectTransform()
 bool ComponentRectTransform::Update()
 {
 	bool ret = true;
-
-	if (!GetHasCanvas())
-	{
-		LookForCanvas();
-	}
-
-	if (GetHasCanvas())
-	{
-		ComponentTransform* c_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
-
-		CONSOLE_LOG("%f %f", c_trans->GetLocalPosition().x, c_trans->GetLocalPosition().y);
-	}
+	
+	LookForCanvas();
 
 	return ret;
 }
@@ -109,6 +99,16 @@ bool ComponentRectTransform::GetHasCanvas() const
 	return c_canvas != nullptr;
 }
 
+bool ComponentRectTransform::GetIsCanvas() const
+{
+	return is_canvas;
+}
+
+bool ComponentRectTransform::GetCanEdit() const
+{
+	return can_edit;
+}
+
 void ComponentRectTransform::Save(Data & data) const
 {
 }
@@ -119,22 +119,42 @@ void ComponentRectTransform::Load(Data & data)
 
 void ComponentRectTransform::LookForCanvas()
 {
+	ComponentCanvas* canv = (ComponentCanvas*)GetGameObject()->GetComponent(Component::CompCanvas);
+
+	if (canv != nullptr)
+	{
+		is_canvas = true;
+		c_canvas = canv;
+
+		if (canv->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			can_edit = true;
+		else
+			can_edit = false;
+
+		return;
+	}
+
 	GameObject* parent = GetGameObject()->GetParent();
 
 	while (parent != nullptr)
 	{
-		ComponentCanvas* canv = (ComponentCanvas*)parent->GetComponent(Component::CompCanvas);
+		canv = (ComponentCanvas*)parent->GetComponent(Component::CompCanvas);
 
 		if (canv != nullptr)
 		{
 			c_canvas = canv;
-			break;
+			can_edit = true;
+			is_canvas = false;
+			return;
 		}
 		else
 		{
 			parent = parent->GetParent();
 		}
 	}
+
+	can_edit = false;
+	is_canvas = false;
 }
 
 void ComponentRectTransform::UpdateTransform()

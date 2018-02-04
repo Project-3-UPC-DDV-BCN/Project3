@@ -4,6 +4,22 @@
 #include <vector>
 #include <iostream>
 #include "Component.h"
+#include "MathGeoLib\Math\float4x4.h"
+
+class Mesh;
+
+class CanvasDrawElement
+{
+public:
+	CanvasDrawElement();
+	void SetTransform(float4x4 trans);
+	float4x4 GetTransform();
+
+private:
+	Mesh*    plane = nullptr;
+	float4x4 transform;
+	uint	 texture_id;
+};
 
 enum CanvasRenderMode
 {
@@ -27,11 +43,18 @@ public:
 
 	float4x4 GetOrigin();
 
+	void AddDrawElement(CanvasDrawElement* de);
+	void RemoveDrawElement(CanvasDrawElement* de);
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
 private:
+	void UpdateSize();
 	void UpdateRectTransforms();
+
+private:
+	std::vector<CanvasDrawElement*> draws;
 
 private:
 	float2 size;

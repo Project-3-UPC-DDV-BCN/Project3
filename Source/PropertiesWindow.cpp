@@ -244,6 +244,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompCanvas:
 		DrawCanvasPanel((ComponentCanvas*)component);
 		break;
+	case Component::CompImage:
+		DrawImagePanel((ComponentImage*)component);
+		break;
 	default:
 		break;
 	}
@@ -285,23 +288,30 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 {
 	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
-		float2 position = rect_transform->GetPos();
-		float2 anchor = rect_transform->GetAnchor();
-
-		if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f)) 
-		{
-			rect_transform->SetPos(position);
-		}
-
-		if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
-		{
-			rect_transform->SetAnchor(anchor);
-		}
-
 		if (rect_transform->GetHasCanvas())
 		{
+			if (rect_transform->GetCanEdit())
+			{
+				float2 position = rect_transform->GetPos();
+				float2 anchor = rect_transform->GetAnchor();
+
+				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
+				{
+					rect_transform->SetPos(position);
+				}
+
+				if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
+				{
+					rect_transform->SetAnchor(anchor);
+				}
+			}
+			else
+				ImGui::Text("Values are given by screen space");
+
 			ImGui::Text("Has canvas");
 		}
+		else
+			ImGui::Text("No canvas found");
 	}
 }
 
@@ -316,6 +326,8 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 		if (current_render_mode == 0)
 		{
 			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_SCREEN_SPACE);
+
+			ImGui::Text("Size: %d %d", (int)canvas->GetSize().x, (int)canvas->GetSize().y);
 		}
 		else if (current_render_mode == 1)
 		{
@@ -327,7 +339,25 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 				canvas->SetSize(size);
 			}
 		}
+
+		ImGui::Separator();
+		ImGui::Text("Create:");
+
+		if (ImGui::Button("Image"))
+		{
+			GameObject* go = App->scene->CreateGameObject(canvas->GetGameObject());
+			go->AddComponent(Component::CompImage);
+		}
 	}
+}
+
+void PropertiesWindow::DrawImagePanel(ComponentImage * canvas)
+{
+	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
+	}
+
 }
 
 void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_renderer)

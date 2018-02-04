@@ -60,6 +60,9 @@ public:
 
 	void InitScripts();
 
+	// UI
+	GameObject* CreateCanvas(GameObject* parent = nullptr);
+
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
 	void HandleInput();

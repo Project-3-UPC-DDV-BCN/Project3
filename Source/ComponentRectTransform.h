@@ -28,6 +28,8 @@ public:
 	float4x4 GetAnchorTransform() const;
 
 	bool GetHasCanvas() const;
+	bool GetIsCanvas() const;
+	bool GetCanEdit() const;
 
 	void Save(Data& data) const;
 	void Load(Data& data);
@@ -41,6 +43,8 @@ private:
 	float2			    anchor;
 	ComponentTransform* c_transform = nullptr;
 	ComponentCanvas*    c_canvas = nullptr;
+	bool				is_canvas = false;
+	bool                can_edit = true;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

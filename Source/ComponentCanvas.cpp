@@ -5,6 +5,7 @@
 #include "GameWindow.h"
 #include "Application.h"
 #include "ModuleEditor.h"
+#include "ModuleResources.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -12,6 +13,7 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	SetName("Canvas");
 	SetType(ComponentType::CompCanvas);
 	SetGameObject(attached_gameobject);
+
 	size = float2(1080, 720);
 	last_size = size;
 	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
@@ -25,12 +27,7 @@ bool ComponentCanvas::Update()
 {
 	bool ret = true;
 
-	if (size.x != last_size.x || size.y != last_size.y)
-	{
-		UpdateRectTransforms();
-
-		last_size = size;
-	}
+	UpdateSize();
 
 	return ret;
 }
@@ -68,6 +65,17 @@ float2 ComponentCanvas::GetSize() const
 	return ret;
 }
 
+void ComponentCanvas::UpdateSize()
+{
+	if (GetSize().x != last_size.x || GetSize().y != last_size.y)
+	{
+		UpdateRectTransforms();
+
+		last_size = size;
+	}
+	
+}
+
 float4x4 ComponentCanvas::GetOrigin()
 {
 	float4x4 origin = float4x4::identity;
@@ -87,6 +95,15 @@ float4x4 ComponentCanvas::GetOrigin()
 	return origin;
 }
 
+void ComponentCanvas::AddDrawElement(CanvasDrawElement * de)
+{
+	draws.push_back(de);
+}
+
+void ComponentCanvas::RemoveDrawElement(CanvasDrawElement * de)
+{
+}
+
 
 void ComponentCanvas::Save(Data & data) const
 {
@@ -104,9 +121,10 @@ void ComponentCanvas::UpdateRectTransforms()
 	// Iterate through all childs and get UI childs
 	while (!to_check.empty())
 	{
-		std::vector<GameObject*>::iterator check = to_check.begin();
+		GameObject* check = (*to_check.begin());
+		to_check.erase(to_check.begin());
 
-		for (std::list<GameObject*>::iterator it = (*check)->childs.begin(); it != (*check)->childs.end(); ++it)
+		for (std::list<GameObject*>::iterator it = check->childs.begin(); it != check->childs.end(); ++it)
 		{
 			if ((*it)->GetIsUI())
 			{
@@ -120,8 +138,20 @@ void ComponentCanvas::UpdateRectTransforms()
 
 			to_check.push_back(*it);
 		}
-
-		to_check.erase(check);
 	}
 }
 
+CanvasDrawElement::CanvasDrawElement()
+{
+	plane = App->resources->GetMesh("PrimitivePlane");
+}
+
+void CanvasDrawElement::SetTransform(float4x4 trans)
+{
+	transform = trans;
+}
+
+float4x4 CanvasDrawElement::GetTransform()
+{
+	return transform;
+}

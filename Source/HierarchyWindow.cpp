@@ -64,8 +64,13 @@ void HierarchyWindow::DrawWindow()
 				}
 				ImGui::Separator();
 			}
-			if (ImGui::MenuItem("Create Game Object")) {
+			if (ImGui::MenuItem("Create Game Object")) 
+			{
 				App->scene->CreateGameObject(nullptr);
+			}
+			if (ImGui::MenuItem("Create Canvas"))
+			{
+				App->scene->CreateCanvas(nullptr);
 			}
 
 			ImGui::EndPopup();

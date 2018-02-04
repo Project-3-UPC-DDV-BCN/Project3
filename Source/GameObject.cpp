@@ -10,6 +10,7 @@
 #include "ComponentFactory.h"
 #include "ComponentRectTransform.h"
 #include "ComponentCanvas.h"
+#include "ComponentImage.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -88,6 +89,11 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 	case Component::CompCanvas:
 		components_list.push_back(component = new ComponentCanvas(this));
 		SetName("Canvas");
+		SetIsUI(true);
+		break;
+	case Component::CompImage:
+		components_list.push_back(component = new ComponentImage(this));
+		SetName("Image");
 		SetIsUI(true);
 		break;
 	default:

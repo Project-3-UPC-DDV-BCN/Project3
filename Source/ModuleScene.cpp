@@ -118,7 +118,9 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 		Data data;
 		gameObject->Save(data, true);
 		AABB camera_pos(float3::zero, float3::zero);
-		for (int i = 0; i < saving_index; i++) {
+
+		for (int i = 0; i < saving_index; i++) 
+		{
 			GameObject* go = new GameObject();
 			data.EnterSection("GameObject_" + std::to_string(i));
 			go->Load(data, true);
@@ -506,6 +508,17 @@ void ModuleScene::InitScripts()
 			(*it)->StartScripts();
 		}
 	}
+}
+
+GameObject * ModuleScene::CreateCanvas(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompCanvas);
+
+	return ret;
 }
 
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
