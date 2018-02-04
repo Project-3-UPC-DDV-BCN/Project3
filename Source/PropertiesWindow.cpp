@@ -659,10 +659,19 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::TreeNode("Texture"))
 			{
 				static Texture* st_particle_texture = nullptr;
-				if (ImGui::InputResourceTexture("Texture", &st_particle_texture))
+				if (ImGui::InputResourceTexture("Texture To Add", &st_particle_texture))
 				{
 					current_emmiter->GetRootParticle()->components.texture = st_particle_texture;
 				}
+
+				if(ImGui::Button("Add To Stack"))
+				{
+
+				}
+
+				//Draw stack of animations 
+
+				// ---
 			
 				//Here we get the id of the BUTTON that is pressed, the position. 
 				//uint button_pressed = -1;
@@ -688,7 +697,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				//ImGui::Text("Animated particles");
 
 				//Load the animated particles of the engine by default
-				vector<ParticleAnimation> particle_anims = current_emmiter->GetAllParticleAnimations();
+		/*		vector<ParticleAnimation> particle_anims = current_emmiter->GetAllParticleAnimations();
 
 				for (int i = 0; i < particle_anims.size(); i++)
 				{
@@ -723,7 +732,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					}
 
 
-				}
+				}*/
 				ImGui::Separator();
 				ImGui::TreePop();
 			}

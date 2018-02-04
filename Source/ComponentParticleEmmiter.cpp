@@ -264,6 +264,19 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 	}
 }
 
+void ComponentParticleEmmiter::MoveEmmitArea()
+{
+	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
+
+	float3 position_inc = parent_transform->GetGlobalPosition() - emit_area.CenterPoint();
+	float3 rotation_inc; 
+	float3 scale_inc;
+
+	float4x4 rot_mat = float4x4::FromEulerXYZ(parent_transform->GetGlobalRotation().x, parent_transform->GetGlobalRotation().y, parent_transform->GetGlobalRotation().z);
+	float4x4 new_transform = float4x4::FromTRS(position_inc, rot_mat, parent_transform->GetGlobalScale());
+	emit_area.TransformAsAABB(new_transform); 
+}
+
 void ComponentParticleEmmiter::UpdateRootParticle()
 {
 	SetEmmisionRate(emmision_rate);

@@ -42,7 +42,7 @@ struct ParticleAnimation
 
 	
 	string name;
-	vector<int> buffer_ids;
+	vector<Texture*> textures;
 	int rendering_frame;
 	float timeStep;
 

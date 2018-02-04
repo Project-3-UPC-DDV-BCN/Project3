@@ -302,6 +302,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		}
 
 		(*it)->DrawParticles(active_camera); 
+		(*it)->MoveEmmitArea(); 
 	}
 
 	if (is_editor_camera)

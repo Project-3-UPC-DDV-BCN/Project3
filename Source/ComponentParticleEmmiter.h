@@ -25,6 +25,7 @@ public:
 	bool Update();
 	void UpdateRootParticle();
 	void DrawParticles(ComponentCamera* active_camera); 
+	void MoveEmmitArea(); 
 
 	~ComponentParticleEmmiter();
 
