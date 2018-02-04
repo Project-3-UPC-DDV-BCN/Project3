@@ -68,6 +68,17 @@ float Particle::GetAngular() const
 	return particle_angular_v;
 }
 
+void Particle::ApplyAngularVelocity()
+{
+	//We get AV as degrees x second
+	
+	float rads_to_spin = particle_angular_v * (2 * pi) / 360; 
+
+	components.particle_transform->SetRotation({-90, components.particle_transform->GetGlobalRotation().y + rads_to_spin,0});
+
+
+}
+
 void Particle::SetTextureByID(uint texture_ID)
 {
 	particle_texture_id = texture_ID;
@@ -230,8 +241,8 @@ void Particle::Update()
 	if (interpolate_size)
 		UpdateSize();
 
-	//Update Rotation	
-	//UpdateRotation();
+	//Apply angular velocity
+	ApplyAngularVelocity();
 
 	//Update Billboarding
 	//if (IsBillboarding() == true)

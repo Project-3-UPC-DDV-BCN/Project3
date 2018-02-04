@@ -777,14 +777,14 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (ImGui::DragFloat("Lifetime", &current_emmiter->max_lifetime, 1, 0.1f, 0, 20)) current_emmiter->UpdateRootParticle();
 				if (ImGui::SliderFloat("Initial Velocity", &current_emmiter->velocity, 0.1f, 30)) current_emmiter->UpdateRootParticle();
 				if (ImGui::SliderFloat3("Gravity", &current_emmiter->gravity[0], -1, 1)) current_emmiter->UpdateRootParticle();
-				if (ImGui::DragFloat("Angular Velocity", &current_emmiter->angular_v, 1, 0, 200)) current_emmiter->UpdateRootParticle();
+				if (ImGui::DragFloat("Angular Velocity", &current_emmiter->angular_v,1,  5.0f, -1000, 1000)) current_emmiter->UpdateRootParticle();
 				ImGui::DragFloat("Emision Angle", &current_emmiter->emision_angle, 1, 0, 360);
 
 				ImGui::Separator();
 
 				ImGui::Text("Size Interpolation");
 
-				ImGui::InputFloat("Initial .2f", &current_emmiter->initial_scale.x);
+				ImGui::InputFloat("Initial", &current_emmiter->initial_scale.x);
 				current_emmiter->initial_scale.y = current_emmiter->initial_scale.x;
 
 				ImGui::InputFloat("Final", &current_emmiter->final_scale.x);

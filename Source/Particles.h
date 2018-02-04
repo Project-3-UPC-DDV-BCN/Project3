@@ -113,6 +113,7 @@ public:
 	//Rotation
 	void SetAngular(const float& new_velocity);
 	float GetAngular() const;
+	void ApplyAngularVelocity(); 
 
 	//Lifetime
 	void SetMaxLifetime(const float& new_lifetime);

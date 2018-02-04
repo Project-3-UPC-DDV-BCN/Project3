@@ -53,6 +53,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	new_particle->SetMaxLifetime(max_lifetime);
 	new_particle->SetVelocity(velocity);
+	new_particle->SetAngular(angular_v); 
 	new_particle->SetMovement(); 
 	new_particle->SetTextureByID(curr_texture_id);
 	new_particle->SetColor(color);
@@ -270,6 +271,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	root_particle->SetMaxLifetime(max_lifetime);
 	root_particle->SetVelocity(velocity);
 	root_particle->SetTextureByID(curr_texture_id);
+	root_particle->SetAngular(angular_v); 
 	root_particle->SetColor(color);
 	root_particle->SetGravity(gravity); 
 
