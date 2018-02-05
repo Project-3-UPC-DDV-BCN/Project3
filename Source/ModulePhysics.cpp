@@ -9,27 +9,23 @@
 #include "Application.h"
 #include "ModuleTime.h"
 #include "Primitive.h"
-#include "Nvidia/Flow/include/NvFlow.h"
-#include "Nvidia/Flow/include/NvFlowContextD3D11.h"
 
 #if _DEBUG
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PhysX3DEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PhysX3CommonDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PxFoundationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PhysX3CookingDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PhysX3ExtensionsDEBUG.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PxPvdSDKDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Debug/PxTaskDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Flow/libx86/NvFlowLibDebug_win32.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3DEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3CommonDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PxFoundationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3ExtensionsDEBUG.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3CookingDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PxPvdSDKDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PxTaskDEBUG_x86.lib")
 #else
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PhysX3_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PhysX3Common_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PxFoundation_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PhysX3Cooking_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PhysX3Extensions.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PxPvdSDK_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/libx86/Release/PxTask_x86.lib")
-#pragma comment (lib, "Nvidia/Flow/libx86/NvFlowLibRelease_win32.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3Common_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PxFoundation_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3Cooking_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3Extensions.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PxPvdSDK_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PxTask_x86.lib")
 #endif
 
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -68,7 +64,7 @@ bool ModulePhysics::Init(Data * editor_config)
 		}
 		else
 		{*/
-			physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, physx::PxTolerancesScale(), true/*, pvd*/);
+			physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, physx::PxTolerancesScale(), false/*, pvd*/);
 			if (!physx_physics)
 			{
 				CONSOLE_DEBUG("Error. PxCreatePhysics failed!");
@@ -368,11 +364,22 @@ void ModulePhysics::CreateMainScene()
 	dispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = CCDShader;
-	sceneDesc.gpuDispatcher = cuda_context_manager->getGpuDispatcher();
 	sceneDesc.simulationEventCallback = this;
 
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS | physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
-	sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eGPU;
+	if (cuda_context_manager)
+	{
+		sceneDesc.gpuDispatcher = cuda_context_manager->getGpuDispatcher();
+		
+		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS | physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
+		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eGPU;
+	}
+	else
+	{
+		CONSOLE_WARNING("Can't use gpu physics. Not gpu physics are used.");
+		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
+		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eMBP;
+	}
+	
 
 	main_scene = physx_physics->createScene(sceneDesc);
 	main_scene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
