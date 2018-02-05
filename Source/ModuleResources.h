@@ -11,7 +11,9 @@ class Resources;
 class Material;
 class Script;
 class PhysicsMaterial;
-class BlastMesh;
+class BlastModel;
+class Shader;
+class ShaderProgram;
 
 class ModuleResources :
 	public Module
@@ -69,11 +71,26 @@ public:
 	void RemovePhysMaterial(PhysicsMaterial* material);
 	std::map<uint, PhysicsMaterial*> GetPhysMaterialsList() const;
 
-	BlastMesh* GetBlastMesh(std::string name) const;
-	BlastMesh* GetBlastMesh(UID uid) const;
-	void AddBlastMesh(BlastMesh* mesh);
-	void RemoveBlastMesh(BlastMesh* mesh);
-	std::map<uint, BlastMesh*> GetBlastMeshesList() const;
+	BlastModel* GetBlastModel(std::string name) const;
+	BlastModel* GetBlastModel(UID uid) const;
+	void AddBlastModel(BlastModel* mesh);
+	void RemoveBlastModel(BlastModel* mesh);
+	std::map<uint, BlastModel*> GetBlastModelsList() const;
+
+	Shader* GetShader(std::string name) const;
+	Shader* GetShader(UID uid) const;
+	void AddShader(Shader* shader);
+	void RemoveShader(Shader* shader);
+	std::map<uint, Shader*> GetShadersList() const;
+
+	ShaderProgram* GetShaderProgram(std::string name) const;
+	ShaderProgram* GetShaderProgram(UID uid) const;
+	ShaderProgram* GetShaderProgram(Shader* vertex, Shader* fragment) const;
+	void AddShaderProgram(ShaderProgram* program);
+	void RemoveShaderProgram(ShaderProgram* program);
+	std::map<uint, ShaderProgram*> GetShaderProgramList() const;
+	void LoadShaderProgramMeta(std::string path) const;	
+	void OnShaderUpdate(Shader* shader) const;
 
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
@@ -91,6 +108,9 @@ public:
 private:
 	void DeleteFBXMeshes(GameObject* gameobject);
 
+	void CreateDefaultShaders();
+	void CreateDefaultMaterial();
+
 private:
 	std::map<uint, Texture*> textures_list;
 	std::map<uint, Mesh*> meshes_list;
@@ -99,6 +119,8 @@ private:
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, PhysicsMaterial*> phys_materials_list;
-	std::map<uint, BlastMesh*> blast_meshes_list;
+	std::map<uint, BlastModel*> blast_models_list;
+	std::map<uint, Shader*> shaders_list;
+	std::map<uint, ShaderProgram*> shader_programs_list;
 };
 

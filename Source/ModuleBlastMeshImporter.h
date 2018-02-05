@@ -3,7 +3,7 @@
 #include "Module.h"
 #include <string>
 
-class BlastMesh;
+class BlastModel;
 
 namespace Nv
 {
@@ -22,7 +22,7 @@ public:
 
 	bool Init(Data* editor_config = nullptr);
 	std::string ImportMesh(std::string path);
-	BlastMesh* LoadMeshFromLibrary(std::string path);
+	BlastModel* LoadModelFromLibrary(std::string path);
 
 private:
 	Nv::Blast::ExtSerialization* serialization;

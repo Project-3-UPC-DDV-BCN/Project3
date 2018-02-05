@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include <NvCTypes.h>
+#include "../lowlevel/NvCTypes.h"
 
 namespace Nv
 {

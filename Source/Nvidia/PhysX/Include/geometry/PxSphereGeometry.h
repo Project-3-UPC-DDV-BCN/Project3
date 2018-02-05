@@ -33,6 +33,7 @@
 /** \addtogroup geomutils
 @{
 */
+
 #include "PxGeometry.h"
 
 #if !PX_DOXYGEN

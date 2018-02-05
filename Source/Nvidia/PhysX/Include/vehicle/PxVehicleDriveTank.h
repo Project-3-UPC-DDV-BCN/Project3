@@ -37,7 +37,6 @@
 #include "PxVehicleWheels.h"
 #include "PxVehicleComponents.h"
 
-
 #if !PX_DOXYGEN
 namespace physx
 {

@@ -22,10 +22,12 @@
 #include "ComponentCollider.h"
 #include "PhysicsMaterial.h"
 #include "ComponentJointDistance.h"
-#include "ComponentBlastMeshRenderer.h"
-#include "BlastMesh.h"
+#include "BlastModel.h"
+#include "ShaderProgram.h"
+#include "Shader.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -342,9 +344,6 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompDistanceJoint:
 		DrawJointDistancePanel((ComponentJointDistance*)component);
 		break;
-	case Component::CompBlastMeshRenderer:
-		DrawBlastMeshRendererPanel((ComponentBlastMeshRenderer*)component);
-		break;
 	default:
 		break;
 	}
@@ -411,9 +410,9 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			ImGui::Text("Triangle Count: %d", mesh_renderer->GetMesh()->num_indices / 3);
 			ImGui::Text("Vertex Count: %d", mesh_renderer->GetMesh()->num_vertices);
 			ImGui::Text("Indices Count: %d", mesh_renderer->GetMesh()->num_indices);
-			ImGui::Text("Normals: "); ImGui::SameLine(); (mesh_renderer->GetMesh()->id_normals > 0) ? ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes")) : ImGui::TextColored(ImVec4(1, 0, 0, 1), ("no"));
-			ImGui::Text("Colors: "); ImGui::SameLine(); (mesh_renderer->GetMesh()->id_colors > 0) ? ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes")) : ImGui::TextColored(ImVec4(1, 0, 0, 1), ("no"));
-			ImGui::Text("UV: "); ImGui::SameLine(); (mesh_renderer->GetMesh()->id_texture_coords > 0) ? ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes")) : ImGui::TextColored(ImVec4(1, 0, 0, 1), ("no"));
+			ImGui::Text("Normals: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
+			ImGui::Text("Colors: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
+			ImGui::Text("UV: "); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNodeEx("Material", ImGuiTreeNodeFlags_OpenOnArrow))
@@ -424,54 +423,28 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				ImGui::TreePop();
 				return;
 			}
-			/*ImGui::Text("Texture ID: %d", mesh_renderer->GetMaterial()->GetID());
-			ImGui::Text("Texture Path: %s", mesh_renderer->GetMaterial()->GetAssetsPath().c_str());
-			if (ImGui::IsItemHoveredRect() && ImGui::CalcTextSize(("Texture Path: " + mesh_renderer->GetMaterial()->GetAssetsPath()).c_str()).x > ImGui::GetContentRegionAvailWidth()) {
-				ImGui::BeginTooltip();
-				ImGui::Text("%s", mesh_renderer->GetMaterial()->GetAssetsPath().c_str());
-				ImGui::EndTooltip();
+			else
+			{
+				ImGui::Text("\tShaders");
+				ShaderProgram* prog = mesh_renderer->GetMaterial()->GetShaderProgram();
+
+				if (prog != nullptr)
+				{
+					Shader* vert = prog->GetVertexShader();
+					if (ImGui::InputResourceShader("Vertex Shader", &vert, Shader::ShaderType::ST_VERTEX))
+					{
+						mesh_renderer->GetMaterial()->SetVertexShader(vert);
+					}
+
+					Shader* frag = prog->GetFragmentShader();
+					if (ImGui::InputResourceShader("Fragment Shader", &frag, Shader::ShaderType::ST_FRAGMENT))
+					{
+						mesh_renderer->GetMaterial()->SetFragmentShader(frag);
+					}
+				}
+
 			}
-			ImGui::Text("Texture Name: %s", mesh_renderer->GetMaterial()->GetName().c_str());
-			if (ImGui::IsItemHoveredRect() && ImGui::CalcTextSize(("Texture Name: " + mesh_renderer->GetMaterial()->GetName()).c_str()).x > ImGui::GetContentRegionAvailWidth()) {
-				ImGui::BeginTooltip();
-				ImGui::Text("%s", mesh_renderer->GetMaterial()->GetName().c_str());
-				ImGui::EndTooltip();
-			}
-			ImGui::Text("Texture Size: %d x %d", mesh_renderer->GetMaterial()->GetWidth(), mesh_renderer->GetMaterial()->GetHeight());
-			ImGui::Text("Texture Format: %s", mesh_renderer->GetMaterial()->GetFormatString().c_str());
-			ImGui::Text("Texture Type: %s", mesh_renderer->GetMaterial()->GetTypeString().c_str());*/
-ImGui::TreePop();
-		}
-
-		ImGui::Spacing();
-	}
-}
-
-void PropertiesWindow::DrawBlastMeshRendererPanel(ComponentBlastMeshRenderer * blast_mesh_renderer)
-{
-	if (ImGui::CollapsingHeader("Blast Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen)) {
-		bool is_active = blast_mesh_renderer->IsActive();
-		if (ImGui::Checkbox("Active##Blast_Mesh_Renderer", &is_active))
-		{
-			blast_mesh_renderer->SetActive(is_active);
-		}
-
-		BlastMesh* mesh = blast_mesh_renderer->GetMesh();
-		if (ImGui::InputResourceMesh("Mesh", &mesh))
-		{
-			blast_mesh_renderer->SetMesh(mesh);
-		}
-
-		Material* material = blast_mesh_renderer->GetMaterial();
-		if (ImGui::InputResourceMaterial("Material", &material))
-		{
-			blast_mesh_renderer->SetMaterial(material);
-		}
-
-		Material* interior_material = blast_mesh_renderer->GetInteriorMaterial();
-		if (ImGui::InputResourceMaterial("Interior Material", &interior_material))
-		{
-			blast_mesh_renderer->SetMaterial(material);
+		ImGui::TreePop();
 		}
 
 		ImGui::Spacing();

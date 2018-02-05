@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "../ResourcesWindow.h"
+#include "../Shader.h"
 
 class Texture;
 class Mesh;
@@ -10,7 +11,7 @@ class GameObject;
 class Material;
 class Script;
 class PhysicsMaterial;
-class BlastMesh;
+class BlastModel;
 
 namespace ImGui
 {
@@ -22,6 +23,7 @@ namespace ImGui
 	bool InputResourceMaterial(const char* label, Material** mat);
 	bool InputResourceScript(const char* label, Script** script);
 	bool InputResourcePhysMaterial(const char* label, PhysicsMaterial** phys_mat);
-	bool InputResourceBlastMesh(const char* label, BlastMesh** mesh);
+	bool InputResourceBlastModel(const char* label, BlastModel** mesh);
+	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 }
 

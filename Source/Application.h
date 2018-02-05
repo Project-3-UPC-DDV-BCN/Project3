@@ -23,10 +23,12 @@ class ModuleTextureImporter;
 class ModulePrefabImporter;
 class ModuleMaterialImporter;
 class ModuleScriptImporter;
+class ModuleShaderImporter;
 struct SDL_Surface;
 class ModulePhysics;
 class ModulePhysMatImporter;
 class ModuleBlastMeshImporter;
+class ModuleBlast;
 
 class Application
 {
@@ -88,6 +90,8 @@ public:
 	ModulePhysics* physics;
 	ModulePhysMatImporter* phys_mats_importer;
 	ModuleBlastMeshImporter* blast_mesh_importer;
+	ModuleShaderImporter* shader_importer;
+	ModuleBlast* blast;
 
 private:
 

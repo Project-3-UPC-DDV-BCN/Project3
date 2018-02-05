@@ -92,8 +92,7 @@
     <ClInclude Include="AboutWindow.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AppWindowConfigWindow.h" />
-    <ClInclude Include="BlastMesh.h" />
-    <ClInclude Include="ComponentBlastMeshRenderer.h" />
+    <ClInclude Include="BlastModel.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentCollider.h" />
     <ClInclude Include="ComponentJointDistance.h" />
@@ -200,6 +199,7 @@
     <ClInclude Include="MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib\Time\Clock.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ModuleBlast.h" />
     <ClInclude Include="ModuleBlastMeshImporter.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleEditor.h" />
@@ -212,6 +212,7 @@
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="ModuleResources.h" />
     <ClInclude Include="ModuleScriptImporter.h" />
+    <ClInclude Include="ModuleShaderImporter.h" />
     <ClInclude Include="ModuleTextureImporter.h" />
     <ClInclude Include="ModuleTime.h" />
     <ClInclude Include="Nvidia\Blast\Include\common\NvBlastArray.h" />
@@ -503,6 +504,8 @@
     <ClInclude Include="ResourcesConfigWindow.h" />
     <ClInclude Include="ResourcesWindow.h" />
     <ClInclude Include="Script.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDome.h" />
     <ClInclude Include="TagsAndLayers.h" />
     <ClInclude Include="TagsAndLayersWindow.h" />
@@ -524,8 +527,7 @@
     <ClCompile Include="AboutWindow.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AppWindowConfigWindow.cpp" />
-    <ClCompile Include="BlastMesh.cpp" />
-    <ClCompile Include="ComponentBlastMeshRenderer.cpp" />
+    <ClCompile Include="BlastModel.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentCollider.cpp" />
     <ClCompile Include="ComponentJointDistance.cpp" />
@@ -596,6 +598,7 @@
     <ClCompile Include="MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
+    <ClCompile Include="ModuleBlast.cpp" />
     <ClCompile Include="ModuleBlastMeshImporter.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
@@ -610,6 +613,7 @@
     <ClCompile Include="ModuleResources.cpp" />
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleScriptImporter.cpp" />
+    <ClCompile Include="ModuleShaderImporter.cpp" />
     <ClCompile Include="ModuleTextureImporter.cpp" />
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
@@ -624,6 +628,8 @@
     <ClCompile Include="ResourcesConfigWindow.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SkyDome.cpp" />
     <ClCompile Include="TagsAndLayers.cpp" />
     <ClCompile Include="TagsAndLayersWindow.cpp" />

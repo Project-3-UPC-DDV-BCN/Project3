@@ -9,7 +9,8 @@
 #include "ModuleScene.h"
 #include "Script.h"
 #include "PhysicsMaterial.h"
-#include "BlastMesh.h"
+#include "BlastModel.h"
+#include "Shader.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -23,7 +24,8 @@ ResourcesWindow::ResourcesWindow()
 	material_to_return = nullptr;
 	script_to_return = nullptr;
 	phys_mat_to_return = nullptr;
-	blast_mesh_to_return = nullptr;
+	blast_model_to_return = nullptr;
+	shader_to_return = nullptr;
 
 	texture_changed = false;
 	mesh_changed = false;
@@ -32,7 +34,10 @@ ResourcesWindow::ResourcesWindow()
 	material_changed = false;
 	script_changed = false;
 	phys_mat_changed = false;
-	blast_mesh_changed = false;
+	blast_model_changed = false;
+	shader_changed = false;
+
+	shader_type = Shader::ShaderType::ST_NULL;
 
 	type = Resource::Unknown;
 	go_filter = GoFilterNone;
@@ -199,22 +204,41 @@ void ResourcesWindow::DrawWindow()
 			}
 		}
 		break;
+	case Resource::ShaderResource:
+		shaders_list = App->resources->GetShadersList();
+		if (ImGui::Selectable("None##shader"))
+		{
+			shader_to_return = nullptr;
+			shader_changed = true;
+			break;
+		}
+		for (std::map<uint, Shader*>::const_iterator it = shaders_list.begin(); it != shaders_list.end(); it++)
+		{
+			if (it->second->GetShaderType() != shader_type) continue;
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				shader_to_return = it->second;
+				shader_changed = true;
+				break;
+			}
+		}
+		break;
 	case Resource::Unknown:
 		break;
 	case Resource::BlastMeshResource:
-		blast_meshes_list = App->resources->GetBlastMeshesList();
+		blast_models_list = App->resources->GetBlastModelsList();
 		if (ImGui::Selectable("None##Mesh"))
 		{
-			blast_mesh_to_return = nullptr;
-			blast_mesh_changed = true;
+			blast_model_to_return = nullptr;
+			blast_model_changed = true;
 			break;
 		}
-		for (std::map<uint, BlastMesh*>::const_iterator it = blast_meshes_list.begin(); it != blast_meshes_list.end(); it++)
+		for (std::map<uint, BlastModel*>::const_iterator it = blast_models_list.begin(); it != blast_models_list.end(); it++)
 		{
 			if (ImGui::Selectable(it->second->GetName().c_str()))
 			{
-				blast_mesh_to_return = it->second;
-				blast_mesh_changed = true;
+				blast_model_to_return = it->second;
+				blast_model_changed = true;
 				break;
 			}
 		}
@@ -266,9 +290,19 @@ PhysicsMaterial * ResourcesWindow::GetPhysMat() const
 	return phys_mat_to_return;
 }
 
-BlastMesh * ResourcesWindow::GetBlastMesh() const
+BlastModel * ResourcesWindow::GetBlastModel() const
 {
-	return blast_mesh_to_return;
+	return blast_model_to_return;
+}
+
+Shader * ResourcesWindow::GetShader() const
+{
+	return shader_to_return;
+}
+
+void ResourcesWindow::SetShaderType(Shader::ShaderType type)
+{
+	shader_type = type;
 }
 
 void ResourcesWindow::Reset()
@@ -280,7 +314,7 @@ void ResourcesWindow::Reset()
 	material_changed = false;
 	script_changed = false;
 	phys_mat_changed = false;
-	blast_mesh_changed = false;
+	blast_model_changed = false;
 
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
@@ -289,7 +323,9 @@ void ResourcesWindow::Reset()
 	material_to_return = nullptr;
 	script_to_return = nullptr;
 	phys_mat_to_return = nullptr;
-	blast_mesh_to_return = nullptr;
+	blast_model_to_return = nullptr;
 
 	go_filter = GoFilterNone;
+
+	shader_type = Shader::ShaderType::ST_NULL;
 }

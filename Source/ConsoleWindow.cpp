@@ -7,10 +7,6 @@ ConsoleWindow::ConsoleWindow()
 	UpdateLabels();
 
 	scroll_to_bottom = false;
-	logs = 0;
-	warnings = 0;
-	errors = 0;
-	debug_logs = 0;
 	show_logs = true;
 	show_warnings = true;
 	show_errors = true;
@@ -19,6 +15,10 @@ ConsoleWindow::ConsoleWindow()
 	warning_text_color = { 1.00f, 1.00f, 0.00f ,1.00f };
 	error_text_color = { 1.00f, 0.00f, 0.00f ,1.00f };
 	debug_text_color = { 0.40f, 0.90f, 0.90f ,1.00f };
+	error_count = 0;
+	warning_count = 0;
+	log_count = 0;
+	debug_count = 0;
 }
 
 ConsoleWindow::~ConsoleWindow()
@@ -51,21 +51,34 @@ void ConsoleWindow::DrawWindow()
 		ImGui::Separator();
 		ImGui::BeginChild("scrolling");
 
-		for (int i = 0; i < message_list.size(); i++) {
-			if (show_errors && message_list[i].find("[Error]") != std::string::npos) {
-				ImGui::TextColored(error_text_color, "%s", message_list[i].c_str());
-			}
-			else if (show_warnings && message_list[i].find("[Warning]") != std::string::npos) {
-				ImGui::TextColored(warning_text_color, "%s", message_list[i].c_str());
-			}
-			else if (show_logs && message_list[i].find("[Log]") != std::string::npos) {
-				ImGui::TextColored(log_text_color,"%s", message_list[i].c_str());
-			}
-			else if (show_debug_logs && message_list[i].find("[Debug]") != std::string::npos) {
-				ImGui::TextColored(debug_text_color,"%s", message_list[i].c_str());
-			}
-			else {
-				ImGui::Text("");
+		for (std::map<MessageType, std::string>::iterator it = message_list.begin(); it != message_list.end(); it++)
+		{
+			switch (it->first)
+			{
+			case MessageLog:
+				if (show_logs)
+				{
+					ImGui::TextColored(log_text_color, "%s", it->second.c_str());
+				}
+				break;
+			case MessageWarning:
+				if (show_warnings)
+				{
+					ImGui::TextColored(warning_text_color, "%s", it->second.c_str());
+				}
+				break;
+			case MessageError:
+				if (show_errors)
+				{
+					ImGui::TextColored(error_text_color, "%s", it->second.c_str());
+				}
+				break;
+			case MessageDebug:
+				if (show_debug_logs)
+				{
+					ImGui::TextColored(debug_text_color, "%s", it->second.c_str());
+				}
+				break;
 			}
 		}
 
@@ -80,64 +93,118 @@ void ConsoleWindow::DrawWindow()
 void ConsoleWindow::Clear()
 {
 	message_list.clear();
-	logs = 0;
-	warnings = 0;
-	errors = 0;
-	debug_logs = 0;
+	error_count = 0;
+	warning_count = 0;
+	log_count = 0;
+	debug_count = 0;
 	UpdateLabels();
 }
 
-void ConsoleWindow::AddLog(std::string log, bool is_wrror, bool is_warning, bool is_debug)
+void ConsoleWindow::AddLog(std::string log, bool is_error, bool is_warning, bool is_debug)
 {
-	std::string log_prefix;
 
-	if (is_wrror) {
-		log_prefix += " [Error]  ";
-		if (errors < 99) {
-			errors++;
+	if (is_error) {
+		if (error_count == 99) {
+			std::map<MessageType, std::string>::iterator it = message_list.begin();
+			while (it != message_list.end())
+			{
+				if (it->first == MessageError)
+				{
+					break;
+				}
+				else
+				{
+					it++;
+				}
+			}
+			message_list.erase(it);
+			error_count--;
 		}
-		else {
-			message_list.erase(message_list.begin());
+
+		if (error_count < 99) {
+			message_list.insert(std::pair<MessageType, std::string>(MessageError, "[Error] " + log));
+			error_count++;
 		}
 	}
 	else if (is_warning) {
-		log_prefix += " [Warning]  ";
-		if (warnings < 99) {
-			warnings++;
+		if (warning_count == 99) {
+			std::map<MessageType, std::string>::iterator it = message_list.begin();
+			while (it != message_list.end())
+			{
+				if (it->first == MessageWarning)
+				{
+					break;
+				}
+				else
+				{
+					it++;
+				}
+			}
+			message_list.erase(it);
+			warning_count--;
 		}
-		else {
-			message_list.erase(message_list.begin());
+
+		if (warning_count < 99) {
+			message_list.insert(std::pair<MessageType, std::string>(MessageWarning, "[Warning] " + log));
+			warning_count++;
 		}
 	}
 	else if (is_debug) {
-		log_prefix += " [Debug]  ";
-		if (debug_logs < 99) {
-			debug_logs++;
+		if (debug_count == 99) {
+			std::map<MessageType, std::string>::iterator it = message_list.begin();
+			while (it != message_list.end())
+			{
+				if (it->first == MessageDebug)
+				{
+					break;
+				}
+				else
+				{
+					it++;
+				}
+			}
+			message_list.erase(it);
+			debug_count--;
 		}
-		else {
-			message_list.erase(message_list.begin());
+
+		if (debug_count < 99) {
+			message_list.insert(std::pair<MessageType, std::string>(MessageDebug, "[Debug] " + log));
+			debug_count++;
 		}
 	}
 	else {
-		log_prefix += " [Log]  ";
-		if (logs < 99) {
-			logs++;
+		if (log_count == 99) {
+			std::map<MessageType, std::string>::iterator it = message_list.begin();
+			while (it != message_list.end())
+			{
+				if (it->first == MessageLog)
+				{
+					break;
+				}
+				else
+				{
+					it++;
+				}
+			}
+			message_list.erase(it);
+			log_count--;
 		}
-		else {
-			message_list.erase(message_list.begin());
+		
+		if (log_count < 99)
+		{
+			message_list.insert(std::pair<MessageType, std::string>(MessageLog, "[Log] " + log));
+			log_count++;
 		}
 	}
 
-	log_prefix += log;
-	message_list.push_back(log_prefix);
 	scroll_to_bottom = true;
 	UpdateLabels();
 }
 
 void ConsoleWindow::UpdateLabels()
 {
-	errors_label = "Errors (" + std::to_string(errors) + ")";
-	warnings_label = "Warnings (" + std::to_string(warnings) + ")";
-	logs_label = "Logs (" + std::to_string(logs) + ")";
-	debug_label = "Debug (" + std::to_string(debug_logs) + ")";
+	errors_label = "Errors (" + std::to_string(error_count) + ")";
+	warnings_label = "Warnings (" + std::to_string(warning_count) + ")";
+	logs_label = "Logs (" + std::to_string(log_count) + ")";
+	debug_label = "Debug (" + std::to_string(debug_count) + ")";
 }

@@ -1350,11 +1350,20 @@
     <ClInclude Include="Component.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="BlastMesh.h">
+    <ClInclude Include="Shader.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentBlastMeshRenderer.h">
-      <Filter>Sources\GameObject\Components</Filter>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleShaderImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="BlastModel.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBlast.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1709,11 +1718,20 @@
     <ClCompile Include="ModuleBlastMeshImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="BlastMesh.cpp">
+    <ClCompile Include="Shader.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentBlastMeshRenderer.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleShaderImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="BlastModel.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleBlast.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

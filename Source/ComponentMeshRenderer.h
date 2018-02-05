@@ -8,6 +8,12 @@ class ComponentMeshRenderer :
 	public Component
 {
 public:
+
+	enum MeshType
+	{
+		NormalMesh, BlastMesh
+	};
+
 	ComponentMeshRenderer(GameObject* attached_gameobject);
 	virtual ~ComponentMeshRenderer();
 
@@ -15,7 +21,7 @@ public:
 	void SetMesh(Mesh* mesh);
 
 	Material* GetMaterial() const;
-	void SetMaterial(Material* texture);
+	void SetMaterial(Material* material);
 
 	void UpdateBoundingBox();
 
@@ -25,8 +31,25 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	//USED FOR BLAST MESHSES//
+
+	Material* GetInteriorMaterial() const;
+	void SetInteriorMaterial(Material* texture);
+
+	int material_indices_number;
+	int material_indices_start;
+	int interior_material_indices_number;
+	int interior_material_indices_start;
+
+	///////////////////////////////////
+
+	void SetMeshType(MeshType type);
+	MeshType GetMeshType() const;
+
 private:
 	Mesh* mesh;
 	Material* material;
+	Material* interior_material; //Only for Blast Mesh
+	MeshType mesh_type;
 };
 

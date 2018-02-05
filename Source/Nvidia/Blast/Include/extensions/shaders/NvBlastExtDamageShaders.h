@@ -29,8 +29,8 @@
 #ifndef NVBLASTEXTDAMAGESHADERS_H
 #define NVBLASTEXTDAMAGESHADERS_H
 
-#include "NvBlastTypes.h"
-#include "NvBlastDebugRender.h"
+#include "../../lowlevel/NvBlastTypes.h"
+#include "../../globals/NvBlastDebugRender.h"
 
 
 /**

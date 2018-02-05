@@ -497,25 +497,25 @@ float2 Data::GetVector2(std::string valueName)
 	std::vector<std::string> vec_names;
 	std::vector<std::string> vec_values;
 
-	if (getting_from_section) {
-		vec_names = in_section_names;
-		vec_values = in_section_values;
-	}
-	else {
-		vec_names = out_section_names;
-		vec_values = out_section_values;
-	}
+	if (EnterSection(valueName))
+	{
+		if (getting_from_section) {
+			vec_names = in_section_names;
+			vec_values = in_section_values;
+		}
 
-	std::vector<std::string>::iterator it = find(vec_names.begin(), vec_names.end(), valueName);
-	if (it != vec_names.end()) {
-		int index = it - vec_names.begin();
-		ret.x = stof(vec_values[index + 1]);
-		ret.y = stof(vec_values[index + 2]);
+		if (vec_names.size() == 2)
+		{
+			ret.x = stof(vec_values[0]);
+			ret.y = stof(vec_values[1]);
+		}
+		LeaveSection();
 	}
 	else {
 		ret.x = -1.0f;
 		ret.y = -1.0f;
 	}
+
 	return ret;
 }
 
@@ -527,27 +527,27 @@ float3 Data::GetVector3(std::string valueName)
 	std::vector<std::string> vec_names;
 	std::vector<std::string> vec_values;
 
-	if (getting_from_section) {
-		vec_names = in_section_names;
-		vec_values = in_section_values;
-	}
-	else {
-		vec_names = out_section_names;
-		vec_values = out_section_values;
-	}
+	if (EnterSection(valueName))
+	{
+		if (getting_from_section) {
+			vec_names = in_section_names;
+			vec_values = in_section_values;
+		}
 
-	std::vector<std::string>::iterator it = find(vec_names.begin(), vec_names.end(), valueName);
-	if (it != vec_names.end()) {
-		int index = it - vec_names.begin();
-		ret.x = stof(vec_values[index + 1]);
-		ret.y = stof(vec_values[index + 2]);
-		ret.z = stof(vec_values[index + 3]);
+		if (vec_names.size() == 3)
+		{
+			ret.x = stof(vec_values[0]);
+			ret.y = stof(vec_values[1]);
+			ret.z = stof(vec_values[2]);
+		}
+		LeaveSection();
 	}
 	else {
 		ret.x = -1.0f;
 		ret.y = -1.0f;
 		ret.z = -1.0f;
 	}
+
 	return ret;
 }
 
@@ -555,26 +555,24 @@ float4 Data::GetVector4(std::string valueName)
 {
 	float4 ret;
 	std::replace(valueName.begin(), valueName.end(), ' ', '_');
-
 	std::vector<std::string> vec_names;
 	std::vector<std::string> vec_values;
 
-	if (getting_from_section) {
-		vec_names = in_section_names;
-		vec_values = in_section_values;
-	}
-	else {
-		vec_names = out_section_names;
-		vec_values = out_section_values;
-	}
-
-	std::vector<std::string>::iterator it = find(vec_names.begin(), vec_names.end(), valueName);
-	if (it != vec_names.end()) {
-		int index = it - vec_names.begin();
-		ret.x = stof(vec_values[index + 1]);
-		ret.y = stof(vec_values[index + 2]);
-		ret.z = stof(vec_values[index + 3]);
-		ret.w = stof(vec_values[index + 4]);
+	if (EnterSection(valueName))
+	{
+		if (getting_from_section) {
+			vec_names = in_section_names;
+			vec_values = in_section_values;
+		}
+		
+		if(vec_names.size() == 4)
+		{
+			ret.x = stof(vec_values[0]);
+			ret.y = stof(vec_values[1]);
+			ret.z = stof(vec_values[2]);
+			ret.w = stof(vec_values[3]);
+		}
+		LeaveSection();
 	}
 	else {
 		ret.x = -1.0f;
@@ -582,6 +580,7 @@ float4 Data::GetVector4(std::string valueName)
 		ret.z = -1.0f;
 		ret.w = -1.0f;
 	}
+	
 	return ret;
 }
 

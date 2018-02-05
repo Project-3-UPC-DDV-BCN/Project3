@@ -144,6 +144,9 @@ public:
 		Identifiers mPreprocIdentifiers;
 		Classes mClasses;
 		std::string mCommentStart, mCommentEnd;
+		std::map<std::string, std::string> class_non_static_auto_complete;
+		std::map<std::string, std::string> class_static_auto_complete;
+		std::map<std::string, std::string> functions_info;
 
 		TokenRegexStrings mTokenRegexStrings;
 
@@ -157,6 +160,7 @@ public:
 		static LanguageDefinition AngelScript();
 		static LanguageDefinition Lua();
 		static LanguageDefinition CSharp();
+
 	};
 
 	TextEditor();
@@ -217,6 +221,21 @@ public:
 	static const Palette& GetLightPalette();
 
 private:
+
+	bool is_method_auto_complete_open = false;
+	bool is_word_auto_complete_open = false;
+	bool is_auto_complete_static = false;
+	static std::map<std::string, std::string> variables;
+	static std::map<std::string, std::string> custom_variables;
+	std::vector<std::string> auto_complete_word_list;
+	std::vector<std::string> auto_complete_word_list_secondary;
+	std::string auto_complete_word;
+	std::string auto_complete_word_methods;
+	bool auto_complete_is_vector = false;
+	bool auto_complete_is_quaternion = false;
+	int auto_complete_index = 0;
+	float repeat_timer = 0.05f;
+
 	typedef std::vector<std::pair<std::regex, PaletteIndex>> RegexList;
 
 	struct EditorState
@@ -277,8 +296,10 @@ private:
 	int InsertTextAt(Coordinates& aWhere, const char* aValue);
 	void AddUndo(UndoRecord& aValue);
 	Coordinates ScreenPosToCoordinates(const ImVec2& aPosition) const;
+	ImVec2 CoordinatesToScreenPos(const Coordinates coord) const;
 	Coordinates FindWordStart(const Coordinates& aFrom) const;
 	Coordinates FindWordEnd(const Coordinates& aFrom) const;
+	Coordinates FindFullWordStart(const Coordinates& aFrom) const;
 	bool IsOnWordBoundary(const Coordinates& aAt) const;
 	void RemoveLine(int aStart, int aEnd);
 	void RemoveLine(int aIndex);
@@ -288,6 +309,10 @@ private:
 	void DeleteSelection();
 	std::string GetWordUnderCursor() const;
 	std::string GetWordAt(const Coordinates& aCoords) const;
+	std::string GetFullWordAt(const Coordinates& aCoords) const;
+	void FillAutoWord(Char aChar);
+
+	std::string GetReturnTypeRecursively(std::string word, const Coordinates& aCoords);
 
 	float mLineSpacing;
 	Lines mLines;

@@ -30,7 +30,6 @@
 #ifndef PX_SOLVER_DEFS_H
 #define PX_SOLVER_DEFS_H
 
-
 #include "../PxPhysXConfig.h"
 #include "../foundation/PxVec3.h"
 #include "../foundation/PxMat33.h"

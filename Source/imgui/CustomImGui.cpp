@@ -9,7 +9,7 @@
 #include "../GameObject.h"
 #include "../Script.h"
 #include "../PhysicsMaterial.h"
-#include "../BlastMesh.h"
+#include "../BlastModel.h"
 
 namespace ImGui
 {
@@ -438,6 +438,7 @@ namespace ImGui
 
 		return false;
 	}
+
 	bool InputResourcePhysMaterial(const char * label, PhysicsMaterial ** phys_mat)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
@@ -470,6 +471,7 @@ namespace ImGui
 		{
 			buf_display = "None(Phys Material)";
 		}
+
 		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
 
 		ItemSize(rect, style.FramePadding.y);
@@ -513,7 +515,86 @@ namespace ImGui
 		return false;
 	}
 
-	bool ImGui::InputResourceBlastMesh(const char * label, BlastMesh ** mesh)
+	bool InputResourceShader(const char * label, Shader ** shader, Shader::ShaderType type)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		std::string buf_display;
+		Shader* tmp_shader = *shader;
+		if (tmp_shader != nullptr)
+		{
+			buf_display = tmp_shader->GetName();
+		}
+		else
+		{
+			buf_display = "None(Shader)";
+		}
+
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max) && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::PhysicsMatResource)
+			{
+				RenderFrame(rect.Min, rect.Max, ImGui::ColorConvertFloat4ToU32({ 0,0.8f,1,0.2f }));
+				if (ImGui::IsMouseReleased(0))
+				{
+					*shader = (Shader*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}
+		ImGui::SameLine();
+
+		char name[15];
+		sprintf(name, "+##shader%d", type);
+
+		if (Button(name, { 20, 20 }))
+		{
+			App->editor->resources_window->SetShaderType(type);
+			App->editor->resources_window->SetResourceType(Resource::ShaderResource);
+			App->editor->resources_window->SetActive(true);
+		}
+
+		Shader* new_shader = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->shader_changed)
+		{
+			new_shader = App->editor->resources_window->GetShader();
+			if (new_shader != tmp_shader)
+			{
+				*shader = new_shader;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool ImGui::InputResourceBlastModel(const char * label, BlastModel ** mesh)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
@@ -536,7 +617,7 @@ namespace ImGui
 		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
 		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
 		std::string buf_display;
-		BlastMesh* tmp_mesh = *mesh;
+		BlastModel* tmp_mesh = *mesh;
 		if (tmp_mesh != nullptr)
 		{
 			buf_display = tmp_mesh->GetName();
@@ -558,7 +639,7 @@ namespace ImGui
 				RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_ButtonHovered));
 				if (ImGui::IsMouseReleased(0))
 				{
-					*mesh = (BlastMesh*)App->editor->drag_data->resource;
+					*mesh = (BlastModel*)App->editor->drag_data->resource;
 					return true;
 				}
 			}
@@ -571,11 +652,11 @@ namespace ImGui
 			App->editor->resources_window->SetActive(true);
 		}
 
-		BlastMesh* new_mesh = nullptr;
+		BlastModel* new_mesh = nullptr;
 
 		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed)
 		{
-			new_mesh = App->editor->resources_window->GetBlastMesh();
+			new_mesh = App->editor->resources_window->GetBlastModel();
 			if (new_mesh != tmp_mesh)
 			{
 				*mesh = new_mesh;

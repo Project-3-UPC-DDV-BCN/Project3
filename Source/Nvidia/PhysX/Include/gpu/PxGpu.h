@@ -30,7 +30,6 @@
 
 #include "../PxPhysXConfig.h"
 
-
 #if PX_SUPPORT_GPU_PHYSX
 
 #include "../cudamanager/PxCudaContextManager.h"

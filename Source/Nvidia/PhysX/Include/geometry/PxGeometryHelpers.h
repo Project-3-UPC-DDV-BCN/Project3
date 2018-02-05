@@ -35,6 +35,7 @@
 */
 
 #include "../common/PxPhysXCommonConfig.h"
+
 #include "PxGeometry.h"
 #include "PxBoxGeometry.h"
 #include "PxSphereGeometry.h"
@@ -43,6 +44,7 @@
 #include "PxConvexMeshGeometry.h"
 #include "PxTriangleMeshGeometry.h"
 #include "PxHeightFieldGeometry.h"
+
 #include "../foundation/PxPlane.h"
 #include "../foundation/PxTransform.h"
 #include "../foundation/PxUnionCast.h"

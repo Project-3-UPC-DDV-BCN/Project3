@@ -26,18 +26,12 @@ public:
 	void SetWireframeMode();
 	void SaveData(Data* data);
 
-	void SetActiveLighting(bool active);
 	void SetActiveDepthTest(bool active);
 	void SetActiveCullTest(bool active);
-	void SetActiveColorMaterial(bool active);
-	void SetActiveTexture2D(bool active);
 	void SetActiveFog(bool active);
 
-	bool GetActiveLighting() const;
 	bool GetActiveDepthTest() const;
 	bool GetActiveCullTest() const;
-	bool GetActiveColorMaterial() const;
-	bool GetActiveTexture2D() const;
 	bool GetActiveFog() const;
 
 	void EnableTestLight();
@@ -49,11 +43,47 @@ public:
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
 	void ResetRender();
 
+	void BindArrayBuffer(uint id) const;
+	void BindElementArrayBuffer(uint id) const;
+
+	void UnbindArraybuffer() const;
+	void UnbindElementArrayBuffer() const;
+
+	//Shaders
+	uint GenVertexArrayObject() const;
+	void BindVertexArrayObject(uint id) const;
+	void UnbindVertexArrayObject() const;
+
+	uint CreateVertexShader(const char* source);
+	uint CreateFragmentShader(const char* source);
+	void DeleteShader(uint shader_id);
+
+	uint GetProgramBinary(uint program_id, uint buff_size, char* buff) const;
+	int GetProgramSize(uint program_id) const;
+	void LoadProgramFromBinary(uint program_id, uint buff_size, const char* buff);
+
+	void EnableVertexAttributeArray(uint id);
+	void DisableVertexAttributeArray(uint id);
+	void SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap);
+
+	void UseShaderProgram(uint id);
+	
+	void SetUniformBool(uint program, const char* name, bool data);
+	void SetUniformFloat(uint program, const char* name, float data);
+	void SetUniformVector4(uint program, const char* name, float4 data);
+	void SetUniformMatrix(uint program, const char* name, float* data);
+
+	uint CreateShaderProgram();
+	void AttachShaderToProgram(uint program_id, uint shader_id);
+	bool LinkProgram(uint program_id);
+	void DeleteProgram(uint program_id);
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
-	void DrawMesh(ComponentMeshRenderer* mesh);
+	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
+	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 public:
 
@@ -67,11 +97,8 @@ public:
 
 private:
 	bool use_vsync;
-	bool is_using_lightning;
 	bool is_using_depth_test;
 	bool is_using_cull_test;
-	bool is_using_color_material;
-	bool is_using_texture2D;
 	bool is_using_fog;
 
 	bool testing_light;

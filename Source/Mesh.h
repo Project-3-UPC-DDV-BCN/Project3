@@ -12,30 +12,31 @@ public:
 	Mesh();
 	~Mesh();
 
-	uint id_indices; // id in VRAM
-	uint num_indices;
-	uint* indices;
-
-	uint id_vertices; // id in VRAM
-	uint num_vertices;
-	float* vertices;
-
-	uint id_normals;
-	float* normals;
-
-	uint id_colors;
-	float* colors;
-
-	uint id_texture_coords;
-	float* texture_coords;
-
-	AABB box;
-
 	void Save(Data& data) const;
 	bool Load(Data& data);
 	void CreateMeta() const;
 	void LoadToMemory();
 	void UnloadFromMemory();
 
+	void CreateVerticesFromData();
+
+private:
+	//Must be call after setting the values to the mesh!!!
+	void InitializeMesh();
+
+public:
+	uint id_indices; // id in VRAM
+	uint num_indices;
+	uint* indices;
+
+	uint id_vertices_data; // id in VRAM
+	uint num_vertices;
+	
+	float* vertices_data = nullptr;
+	float* vertices = nullptr; //copy of the vertices for animation and aabb enclose
+
+	AABB box;
+
+	uint id_vao = 0;
 };
 

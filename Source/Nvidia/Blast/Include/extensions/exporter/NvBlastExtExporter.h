@@ -29,7 +29,7 @@
 #ifndef NVBLASTEXTEXPORTER_H
 #define NVBLASTEXTEXPORTER_H
 
-#include "NvBlastTypes.h"
+#include "../../lowlevel/NvBlastTypes.h"
 
 struct NvBlastAsset;
 

@@ -12,7 +12,13 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject* attached_gameobject)
 	SetType(ComponentType::CompMeshRenderer);
 	SetGameObject(attached_gameobject);
 	mesh = nullptr;
-	material = nullptr;
+	material = App->resources->GetMaterial("default_material");
+
+
+	material_indices_number = 0;
+	material_indices_start = 0;
+	interior_material_indices_number = 0;
+	interior_material_indices_start = 0;
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer()
@@ -122,6 +128,26 @@ void ComponentMeshRenderer::Load(Data & data)
 		}
 	}
 	data.LeaveSection();
+}
+
+Material * ComponentMeshRenderer::GetInteriorMaterial() const
+{
+	return interior_material;
+}
+
+void ComponentMeshRenderer::SetInteriorMaterial(Material * material)
+{
+	interior_material = material;
+}
+
+void ComponentMeshRenderer::SetMeshType(MeshType type)
+{
+	mesh_type = type;
+}
+
+ComponentMeshRenderer::MeshType ComponentMeshRenderer::GetMeshType() const
+{
+	return mesh_type;
 }
 
 

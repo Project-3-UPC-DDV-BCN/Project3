@@ -1,6 +1,6 @@
 #include "ModuleEditor.h"
 #include "Application.h"
-#include "imgui_impl_sdl.h"
+#include "imgui\imgui_impl_sdl_gl3.h"
 #include "HierarchyWindow.h"
 #include "PropertiesWindow.h"
 #include "AssetsWindow.h"
@@ -41,7 +41,7 @@ ModuleEditor::~ModuleEditor()
 
 bool ModuleEditor::Init(Data* editor_config)
 {
-	ImGui_ImplSdl_Init(App->window->window);
+	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	// (there is a default font, this is only if you want to change it. see extra_fonts/README.txt for more details)
 	ImGuiIO& io = ImGui::GetIO();
@@ -84,7 +84,7 @@ bool ModuleEditor::Init(Data* editor_config)
 
 update_status ModuleEditor::PreUpdate(float delta_time)
 {
-	ImGui_ImplSdl_NewFrame(App->window->window);
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGuizmo::BeginFrame();
 	return UPDATE_CONTINUE;
 }
@@ -272,13 +272,13 @@ bool ModuleEditor::CleanUp()
 	RELEASE(drag_data);
 	editor_windows.clear();
 	ImGui::SaveDocks();
-	ImGui_ImplSdl_Shutdown();
+	ImGui_ImplSdlGL3_Shutdown();
 	return true;
 }
 
 void ModuleEditor::HandleInput(SDL_Event * event)
 {
-	ImGui_ImplSdl_ProcessEvent(event);
+	ImGui_ImplSdlGL3_ProcessEvent(event);
 }
 
 void ModuleEditor::OpenBrowserPage(const char * url)

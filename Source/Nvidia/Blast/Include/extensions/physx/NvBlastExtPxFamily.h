@@ -29,7 +29,7 @@
 #ifndef NVBLASTEXTPXFAMILY_H
 #define NVBLASTEXTPXFAMILY_H
 
-#include "PxFiltering.h"
+#include "../../../../PhysX/Include/PxFiltering.h"
 
 
 // Forward declarations

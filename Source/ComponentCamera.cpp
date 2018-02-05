@@ -101,17 +101,6 @@ void ComponentCamera::UpdatePosition()
 	camera_frustum.up = GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized();
 }
 
-void ComponentCamera::UpdateProjection()
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glLoadMatrixf(GetProjectionMatrix());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
 float * ComponentCamera::GetProjectionMatrix() const
 {
 	static float4x4 matrix;

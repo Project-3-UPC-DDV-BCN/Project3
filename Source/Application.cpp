@@ -21,6 +21,8 @@
 #include "ModulePhysics.h"
 #include "ModulePhysMatImporter.h"
 #include "ModuleBlastMeshImporter.h"
+#include "ModuleShaderImporter.h"
+#include "ModuleBlast.h"
 
 Application::Application()
 {
@@ -48,6 +50,8 @@ Application::Application()
 	physics = new ModulePhysics(this);
 	phys_mats_importer = new ModulePhysMatImporter(this);
 	blast_mesh_importer = new ModuleBlastMeshImporter(this);
+	shader_importer = new ModuleShaderImporter(this);
+	blast = new ModuleBlast(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -65,15 +69,16 @@ Application::Application()
 	AddModule(material_importer);
 	AddModule(script_importer);
 	AddModule(phys_mats_importer);
-	AddModule(blast_mesh_importer);
+	AddModule(shader_importer);
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
-	AddModule(resources);
-	//TIME
 	AddModule(time);
-	//Game Modules
 	AddModule(physics);
+	AddModule(blast);
+	AddModule(blast_mesh_importer);
+
+	AddModule(resources);
 
 	random = new math::LCG();
 	cursor = nullptr;
@@ -103,6 +108,8 @@ Application::~Application()
 	phys_mats_importer = nullptr;
 	physics = nullptr;
 	blast_mesh_importer = nullptr;
+	shader_importer = nullptr;
+	blast = nullptr;
 
 	std::list<Module*>::iterator item = list_modules.begin();
 

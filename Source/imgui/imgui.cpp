@@ -8717,12 +8717,22 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
     bool pressed = ButtonBehavior(bb_with_spacing, id, &hovered, &held, button_flags);
     if (flags & ImGuiSelectableFlags_Disabled)
         selected = false;
-
+	
     // Render
     if (hovered || selected)
     {
         const ImU32 col = GetColorU32((held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header);
         RenderFrame(bb_with_spacing.Min, bb_with_spacing.Max, col, false, 0.0f);
+
+		if (flags & ImGuiSelectableFlags_AllowEnterKey)
+		{
+			if (IsKeyPressed(g.IO.KeyMap[ImGuiKey_Enter], false))
+			{
+				pressed = true;
+				/*ClearActiveID();
+				FocusWindow(window);*/
+			}
+		}
     }
 
     if ((flags & ImGuiSelectableFlags_SpanAllColumns) && window->DC.ColumnsCount > 1)
@@ -9813,12 +9823,12 @@ void ImGui::Separator()
     }
 }
 
-void ImGui::Spacing()
+void ImGui::Spacing(float y)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
         return;
-    ItemSize(ImVec2(0,0));
+    ItemSize(ImVec2(0,y));
 }
 
 void ImGui::Dummy(const ImVec2& size)

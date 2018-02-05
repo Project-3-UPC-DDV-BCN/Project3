@@ -29,10 +29,10 @@
 #ifndef NVBLASTEXTPXMANAGER_H
 #define NVBLASTEXTPXMANAGER_H
 
-#include "NvBlastTypes.h"
-#include "PxConvexMeshGeometry.h"
-#include "PxTransform.h"
-#include "NvPreprocessor.h"
+#include "../../lowlevel/NvBlastTypes.h"
+#include "../../../../PhysX/Include/geometry/PxConvexMeshGeometry.h"
+#include "../../../../PhysX/Include/foundation/PxTransform.h"
+#include "../../lowlevel/NvPreprocessor.h"
 
 
 // Forward declarations

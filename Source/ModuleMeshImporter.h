@@ -21,6 +21,7 @@ public:
 	~ModuleMeshImporter();
 
 	bool Init(Data* editor_config = nullptr);
+	bool Start();
 	bool CleanUp();
 
 	std::string ImportMesh(std::string path);
@@ -33,6 +34,11 @@ private:
 	void GetDummyTransform(aiNode& node, aiVector3D& pos, aiQuaternion& rot, aiVector3D& scale);
 	void LoadMaterial(Material& material, const aiMaterial& ai_material);
 	Texture* CreateTexture(std::string mat_texture_path);
+
+	void CreatePrimitives() const;
+	void CreateBox() const;
+	void CreatePlane() const;
+
 };
 
 void Callback(const char* message, char* c);

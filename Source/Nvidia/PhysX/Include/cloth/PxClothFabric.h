@@ -34,7 +34,6 @@
   @{
 */
 
-
 #include "../common/PxBase.h"
 
 #if !PX_DOXYGEN

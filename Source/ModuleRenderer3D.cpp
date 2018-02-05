@@ -21,6 +21,8 @@
 #include "CubeMap.h"
 #include "SceneWindow.h"
 #include "ModulePhysics.h"
+#include "ModuleResources.h"
+#include "ShaderProgram.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -29,11 +31,8 @@
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 	use_vsync = true;
-	is_using_lightning = false;
 	is_using_depth_test = false;
 	is_using_cull_test = false;
-	is_using_color_material = false;
-	is_using_texture2D = false;
 	is_using_fog = false;
 	testing_light = false;
 	name = "Renderer";
@@ -82,10 +81,6 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 
 		App->camera->CreateEditorCamera();
 
-		////Initialize Projection Matrix
-		//glMatrixMode(GL_PROJECTION);
-		//glLoadIdentity();
-
 		//Check for error
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -94,10 +89,6 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			ret = false;
 		}
 
-		////Initialize Modelview Matrix
-		//glMatrixMode(GL_MODELVIEW);
-		//glLoadIdentity();
-
 		//Check for error
 		error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -105,10 +96,16 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-		
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
 		glClearDepth(1.0f);
 		
+		error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			ret = false;
+		}
+
 		//Initialize clear color
 		glClearColor(0.2f, 0.2f, 0.2f, 1.f);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -121,39 +118,18 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			ret = false;
 		}
 		
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.2f, 0.2f, 0.2f, 1);
-		lights[0].diffuse.Set(1, 1, 1, 1);
-		lights[0].specular.Set(1, 1, 1, 1);
-		lights[0].SetPos(-1.0f, 1.0f, 1.0f);
-		lights[0].Init();
-		lights_count++;
-
-		lights[1].ref = GL_LIGHT1;
-		lights[1].ambient.Set(0.2f, 0.2f, 0.2f, 1);
-		lights[1].diffuse.Set(1, 1, 1, 1);
-		lights[1].specular.Set(1, 1, 1, 1);
-		lights[1].SetPos(-1.0f, 1.0f, 1.0f);
-		lights[1].Init();
-		lights_count++;
-
-		GLfloat LightModelAmbient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
-		lights[1].Active(true);
-		glEnable(GL_COLOR_MATERIAL);
-		is_using_lightning = true;
 		is_using_depth_test = true;
 		is_using_cull_test = true;
-		is_using_color_material = true;
-		is_using_texture2D = true;
 
 		glEnable(GL_MULTISAMPLE);
+
+		error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
+		}
 	}
 	
 	return ret;
@@ -163,6 +139,7 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	ms_timer.Start();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	return UPDATE_CONTINUE;
 }
@@ -170,36 +147,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	glEnable(GL_LIGHTING);
-
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
-		editor_camera->UpdateProjection();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(editor_camera->GetViewMatrix());
+		DrawEditorScene();
 	}
-
-	if (is_using_lightning)
-	{
-		if (testing_light)
-		{
-			for (uint i = 1; i < lights_count; ++i)
-				lights[i].Active(false);
-			lights[7].Active(true);
-		}
-		else
-		{
-			for (uint i = 1; i < lights_count; ++i)
-				lights[i].Active(true);
-		}
-		for (uint i = 0; i < lights_count; ++i)
-			lights[i].Render();
-	}
-
-	DrawEditorScene();
 
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
@@ -208,12 +160,15 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	dynamic_mesh_to_draw.clear();
 
-	//EditorUI can't be drawn in wireframe mode!
+	//Assert polygon mode is fill before render gui
+	GLint polygonMode;
+	glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//Disable Lighting before draw editor or shadows will appear in menu bars and ligth will affect editor colors.
-	glDisable(GL_LIGHTING);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	App->editor->DrawEditor();
+
+	//reset polygonmode to previous one
+	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 
@@ -226,25 +181,14 @@ void ModuleRenderer3D::DrawEditorScene()
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_TEXTURE_2D);
-		App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
+		//App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
 	pl.color = { 1,1,1,1 };
-	pl.Render();
-	glEnable(GL_LIGHTING);
-
-	if (App->scene->draw_octree)
-	{
-		App->scene->octree.DebugDraw();
-	}
-
-	App->physics->DrawColliders();
+	//pl.Render();
 
 	DrawSceneGameObjects(editor_camera, true);
 }
@@ -255,24 +199,55 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 
 	camera->GetViewportTexture()->Bind();
 
-	camera->UpdateProjection();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(camera->GetViewMatrix());
 
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_TEXTURE_2D);
-		App->scene->DrawSkyBox(camera->camera_frustum.pos);
+		//App->scene->DrawSkyBox(camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_LIGHTING);
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	DrawSceneGameObjects(camera, false);
+}
+
+void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCamera * active_camera)
+{
+	if (mesh->GetMesh() != nullptr)
+	{
+		AABB aabb = mesh->GetMesh()->box;
+		float3 size = aabb.Size();
+		float3 pos = aabb.CenterPoint();
+		Quat rot = Quat::identity;
+		float4x4 trans = float4x4::FromTRS(pos, rot, size);
+
+		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+
+		UseShaderProgram(program->GetProgramID());
+
+		SetUniformMatrix(program->GetProgramID(), "view", active_camera->GetViewMatrix());
+		SetUniformMatrix(program->GetProgramID(), "projection", active_camera->GetProjectionMatrix());
+		SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+
+		SetUniformBool(program->GetProgramID(), "has_texture", false);
+		SetUniformBool(program->GetProgramID(), "has_material_color", true);
+		SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+
+		Mesh* cube = App->resources->GetMesh("PrimitiveCube");
+		if (cube->id_indices == 0) cube->LoadToMemory();
+
+		//set wireframe before render 
+		GLint polygonMode;
+		glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+		SetWireframeMode();
+
+		BindVertexArrayObject(cube->id_vao);
+		glDrawElements(GL_TRIANGLES, cube->num_indices, GL_UNSIGNED_INT, NULL);
+		UnbindVertexArrayObject();
+
+		//restore previous polygon mode
+		glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+	}
 }
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
@@ -292,12 +267,10 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		{
 			if ((*it)->GetGameObject()->IsSelected())
 			{
-				DebugAABB aabb((*it)->GetMesh()->box);
-				aabb.color = { 0,1,0,1 };
-				aabb.Render();
+				DrawDebugCube(*it, active_camera);
 			}
 		}
-		DrawMesh(*it);
+		DrawMesh(*it, active_camera);
 	}
 
 	for (std::list<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
@@ -309,18 +282,16 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
 					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-					DrawMesh(*it);
+					DrawMesh(*it, active_camera);
 				}
 			}
 		}
 		else
 		{
-			DrawMesh(*it);
+			DrawMesh(*it, active_camera);
 			if ((*it)->GetGameObject()->IsSelected())
 			{
-				DebugAABB aabb((*it)->GetMesh()->box);
-				aabb.color = { 0,1,0,1 };
-				aabb.Render();
+				DrawDebugCube(*it, active_camera);
 			}
 		}
 	}
@@ -333,9 +304,14 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			{
 				DebugFrustum frustum((*it)->camera_frustum);
 				frustum.color = { 0,1,0,1 };
-				frustum.Render();
+				//frustum.Render();
 			}
 		}
+	}
+
+	if (App->scene->draw_octree)
+	{
+		//App->scene->octree.DebugDraw();
 	}
 	
 	active_camera->GetViewportTexture()->Render();
@@ -343,62 +319,28 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 }
 
-void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
+void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
-	glPushMatrix();
-	glMultMatrixf(mesh->GetGameObject()->GetOpenGLMatrix().ptr());
-
 	Material* material = mesh->GetMaterial();
+
+	uint program = 0;
 	if (material != nullptr)
 	{
+		program = material->GetShaderProgramID();
+		UseShaderProgram(program);
 		material->LoadToMemory();
 	}
-	//VERTICES
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//NORMALS
-	if (mesh->GetMesh()->id_normals > 0)
-	{
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_normals);
-		glNormalPointer(GL_FLOAT, 0, NULL);
-	}
-	//TEXTURE_COORDS
-	if (mesh->GetMesh()->id_texture_coords > 0)
-	{
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_texture_coords);
-		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
-	}
-	//COLORS
-	if (mesh->GetMesh()->id_colors > 0)
-	{
-		glEnableClientState(GL_COLOR_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->GetMesh()->id_colors);
-		glColorPointer(3, GL_FLOAT, 0, NULL);
-	}
-	//INDICES
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->GetMesh()->id_indices);
+
+	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	if (material != nullptr)
-	{
-		material->UnloadFromMemory();
-	}
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	glPopMatrix();
-
-	glEnable(GL_COLOR_MATERIAL);
-
+	UnbindVertexArrayObject();
 }
 
 void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
@@ -425,6 +367,7 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height, ComponentCamera* camera)
 {
+
 	int msaa_level = camera->GetViewportTexture()->GetCurrentMSAALevel();
 	camera->GetViewportTexture()->Destroy();
 	camera->GetViewportTexture()->Create(width, height, msaa_level);
@@ -432,14 +375,6 @@ void ModuleRenderer3D::OnResize(int width, int height, ComponentCamera* camera)
 	float ratio = (float)width / (float)height;
 	camera->SetAspectRatio(ratio);
 	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glLoadMatrixf(camera->GetProjectionMatrix());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void ModuleRenderer3D::SetWireframeMode()
@@ -457,22 +392,6 @@ void ModuleRenderer3D::SaveData(Data * data)
 	
 
 	data->CloseSection();
-}
-
-void ModuleRenderer3D::SetActiveLighting(bool active)
-{
-	is_using_lightning = active;
-
-	if (active)
-	{
-		for (uint i = 0; i < lights_count; ++i)
-			lights[i].Active(true);
-	}
-	else 
-	{
-		for (uint i = 0; i < lights_count; ++i)
-			lights[i].Active(false);
-	}
 }
 
 void ModuleRenderer3D::SetActiveDepthTest(bool active)
@@ -503,34 +422,6 @@ void ModuleRenderer3D::SetActiveCullTest(bool active)
 	}
 }
 
-void ModuleRenderer3D::SetActiveColorMaterial(bool active)
-{
-	is_using_color_material = active;
-
-	if (active)
-	{
-		glEnable(GL_COLOR_MATERIAL);
-	}
-	else
-	{
-		glDisable(GL_COLOR_MATERIAL);
-	}
-}
-
-void ModuleRenderer3D::SetActiveTexture2D(bool active)
-{
-	is_using_texture2D = active;
-
-	if (active)
-	{
-		glEnable(GL_TEXTURE_2D);
-	}
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-	}
-}
-
 void ModuleRenderer3D::SetActiveFog(bool active)
 {
 	is_using_fog = active;
@@ -545,11 +436,6 @@ void ModuleRenderer3D::SetActiveFog(bool active)
 	}
 }
 
-bool ModuleRenderer3D::GetActiveLighting() const
-{
-	return is_using_lightning;
-}
-
 bool ModuleRenderer3D::GetActiveDepthTest() const
 {
 	return is_using_depth_test;
@@ -558,16 +444,6 @@ bool ModuleRenderer3D::GetActiveDepthTest() const
 bool ModuleRenderer3D::GetActiveCullTest() const
 {
 	return is_using_cull_test;
-}
-
-bool ModuleRenderer3D::GetActiveColorMaterial() const
-{
-	return is_using_color_material;
-}
-
-bool ModuleRenderer3D::GetActiveTexture2D() const
-{
-	return is_using_texture2D;
 }
 
 bool ModuleRenderer3D::GetActiveFog() const
@@ -603,4 +479,340 @@ bool ModuleRenderer3D::IsUsingSkybox() const
 	return use_skybox;
 }
 
+void ModuleRenderer3D::BindArrayBuffer(uint id) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error bind array buffer: %s\n", gluErrorString(error));
+	}
+}
 
+void ModuleRenderer3D::BindElementArrayBuffer(uint id) const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error bind buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::UnbindArraybuffer() const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error unbind array buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::UnbindElementArrayBuffer() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR ("Error unbind buffer: %s\n", gluErrorString(error));
+	}
+}
+
+// ------------- Shaders -------------------------
+
+uint ModuleRenderer3D::GenVertexArrayObject() const
+{
+	uint ret = 0;
+	glGenVertexArrays(1, (GLuint*)&ret);
+	return ret;
+}
+
+void ModuleRenderer3D::BindVertexArrayObject(uint id) const
+{
+	glBindVertexArray(id);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error bind vertex array buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::UnbindVertexArrayObject() const
+{
+	glBindVertexArray(0);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error unbind array buffer: %s\n", gluErrorString(error));
+	}
+}
+
+uint ModuleRenderer3D::CreateVertexShader(const char * source)
+{
+	GLuint vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &source, NULL);
+	glCompileShader(vertexShader);
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (success == 0)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		CONSOLE_ERROR("Shader compilation error:\n %s", infoLog);
+		glDeleteShader(vertexShader);
+		return 0;
+	}
+	return vertexShader;
+}
+
+uint ModuleRenderer3D::CreateFragmentShader(const char * source)
+{
+	GLuint fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &source, NULL);
+	glCompileShader(fragmentShader);
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (success == 0)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		CONSOLE_ERROR("Shader compilation error:\n %s", infoLog);
+		glDeleteShader(fragmentShader);
+		return 0;
+	}
+	return fragmentShader;
+}
+
+void ModuleRenderer3D::DeleteShader(uint shader_id)
+{
+	if (shader_id != 0)
+	{
+		glDeleteShader(shader_id);
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			CONSOLE_ERROR("Error deleting shader %s\n", gluErrorString(error));
+		}
+	}
+}
+
+uint ModuleRenderer3D::GetProgramBinary(uint program_id, uint buff_size, char * buff) const
+{
+	uint ret = 0;
+
+	GLint formats = 0;
+	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);
+	GLint *binaryFormats = new GLint[formats];
+	glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, binaryFormats);
+
+	glGetProgramBinary(program_id, buff_size, (GLsizei*)&ret, (GLenum*)binaryFormats, buff);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error getting shader program %d binary! %s\n", program_id, gluErrorString(error));
+	}
+
+	RELEASE_ARRAY(binaryFormats);
+
+	return ret;
+}
+
+int ModuleRenderer3D::GetProgramSize(uint program_id) const
+{
+	int ret = 0;
+
+	glGetProgramiv(program_id, GL_PROGRAM_BINARY_LENGTH, &ret);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error getting shader program %d size! %s\n", program_id, gluErrorString(error));
+
+	}
+
+	return ret;
+}
+
+void ModuleRenderer3D::LoadProgramFromBinary(uint program_id, uint buff_size, const char * buff)
+{
+	GLint formats = 0;
+	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);
+	GLint *binaryFormats = new GLint[formats];
+	glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, binaryFormats);
+
+	glProgramBinary(program_id, (GLenum)binaryFormats, buff, buff_size);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error loading shader program binary %s\n", gluErrorString(error));
+
+	}
+}
+
+void ModuleRenderer3D::EnableVertexAttributeArray(uint id)
+{
+	glEnableVertexAttribArray(id);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error enabling vertex attribute Pointer %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::DisableVertexAttributeArray(uint id)
+{
+	glDisableVertexAttribArray(id);
+
+	//Check for error
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error disabling vertex attributePointer %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uint elements_gap, uint infogap)
+{
+	glVertexAttribPointer(id, element_size, GL_FLOAT, GL_FALSE, elements_gap * sizeof(GLfloat), (void*)(infogap * sizeof(GLfloat)));
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting vertex attributePointer %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::UseShaderProgram(uint id)
+{
+	glUseProgram(id);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error at use shader program: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float * data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform matrix %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1i(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1f(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformVector4(uint program, const char * name, float4 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform4f(modelLoc, data.x, data.y, data.z, data.w);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+uint ModuleRenderer3D::CreateShaderProgram()
+{
+	uint ret = glCreateProgram();
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error creating shader program %s\n", gluErrorString(error));
+	}
+	return ret;
+}
+
+void ModuleRenderer3D::AttachShaderToProgram(uint program_id, uint shader_id)
+{
+	if (program_id != 0 && shader_id != 0)
+	{
+		glAttachShader(program_id, shader_id);
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			CONSOLE_ERROR("Error attaching shader %s\n", gluErrorString(error));
+		}
+	}
+}
+
+bool ModuleRenderer3D::LinkProgram(uint program_id)
+{
+	bool ret = true;
+
+	if (program_id != 0)
+	{
+		glLinkProgram(program_id);
+
+		GLint success;
+		GLint valid;
+		glGetProgramiv(program_id, GL_LINK_STATUS, &success);
+		glGetProgramiv(program_id, GL_VALIDATE_STATUS, &valid);
+		if (!success || !valid) {
+			GLchar infoLog[512];
+			glGetProgramInfoLog(program_id, 512, NULL, infoLog);
+			CONSOLE_ERROR("Shader link error: %s", infoLog);
+			ret = false;
+		}
+	}
+	else ret = false;
+
+	return ret;
+}
+
+void ModuleRenderer3D::DeleteProgram(uint program_id)
+{
+	if (program_id != 0)
+	{
+		glDeleteProgram(program_id);
+
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			CONSOLE_ERROR("Error deleting shader program %s\n", gluErrorString(error));
+		}
+	}
+}
+// ------------------------------------------------

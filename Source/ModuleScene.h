@@ -15,6 +15,7 @@ class Mesh;
 class Prefab;
 class CubeMap;
 class SkyDome;
+class BlastModel;
 
 class ModuleScene : public Module
 {
@@ -55,6 +56,8 @@ public:
 
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject);
+
+	void LoadBlastModel(BlastModel* model);
 
 	void DrawSkyBox(float3 pos);
 

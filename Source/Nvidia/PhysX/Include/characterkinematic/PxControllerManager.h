@@ -35,7 +35,6 @@
 */
 
 #include "PxCharacter.h"
-
 #include "../PxPhysXConfig.h"
 #include "../foundation/PxFlags.h"
 #include "../foundation/PxErrorCallback.h"
