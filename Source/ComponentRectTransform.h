@@ -21,16 +21,20 @@ public:
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
-	float2 GetGlobalPos() const;
+	float3 GetGlobalPos();
+
 	void SetSize(const float2& size);
 	float2 GetSize() const;
+
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
+	float3 GetGlobalAnchor();
 	float4x4 GetAnchorTransform() const;
 
 	bool GetHasCanvas() const;
 	bool GetIsCanvas() const;
 	bool GetCanEdit() const;
+	float3 GetGlobalCanvasOrigin();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
