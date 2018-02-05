@@ -26,8 +26,8 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	interpolate_rotation = false;
 
 	particle_timer.Start();
-	animation_timer.Start();
 	twister.Start();
+	components.particle_animation.StartAnimation(); 
 }
 
 ParticleComponents Particle::GetAtributes()
@@ -249,9 +249,8 @@ void Particle::Update()
 	//if (IsBillboarding() == true)
 	//	components.particle_billboarding->Update();
 
-	////Animations
-	//if (animated_particle)
-	//	UpdateAnimation();
+	//Animations
+	components.texture = GetAnimationController()->PlayAnimation();
 	
 }
 
@@ -320,16 +319,44 @@ Particle::~Particle()
 
 //Animation Controller -----------
 
-Texture* ParticleAnimation::Update(Timer animation_timer)
+void ParticleAnimation::StartAnimation()
 {
-	if (rendering_frame < 2)
-		rendering_frame++;
-	else
-	{
-		rendering_frame = 0;
-	}
+	anim_timer.Start(); 
+}
 
-	return frames_stack[rendering_frame];
+Texture* ParticleAnimation::PlayAnimation()
+{
+	Texture* curr_texture; 
+
+	UpdateCurrentFrame(); 
+	curr_texture = frames_stack[rendering_frame]; 
+
+	return curr_texture; 
+}
+
+void ParticleAnimation::UpdateCurrentFrame()
+{
+	if (timeStep != 0)
+	{
+		if (anim_timer.Read() >= timeStep)
+		{
+			anim_timer.Start(); 
+			rendering_frame++; 
+
+			if (rendering_frame > frames_stack.size())
+			{
+				rendering_frame = 0; 
+			}
+		}
+	}
+	else
+		rendering_frame = 0;
+}
+
+void ParticleAnimation::StopAnimation()
+{
+	rendering_frame = 0; 
+	anim_timer.Stop(); 
 }
 
 ParticleAnimation::ParticleAnimation()
@@ -354,7 +381,10 @@ void ParticleAnimation::PaintStackUI()
 		ImGui::Text(". "); ImGui::SameLine();
 		ImGui::Text((*it)->GetName().c_str()); ImGui::SameLine(); 
 
-		if (ImGui::Button("X")) 
+		string button_name("X##"); 
+		button_name += to_string(number); 
+
+		if (ImGui::Button(button_name.c_str()))
 		{
 			it = frames_stack.erase(it);
 

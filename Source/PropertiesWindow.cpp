@@ -660,11 +660,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			{
 				
 				static Texture* st_particle_texture = nullptr;
-				if (ImGui::InputResourceTexture("Texture To Add", &st_particle_texture))
-				{
-					current_emmiter->GetRootParticle()->components.texture = st_particle_texture;
-				}
-
+				ImGui::InputResourceTexture("Texture To Add", &st_particle_texture);
+			
 				if(ImGui::Button("Add To Stack"))
 				{
 					current_emmiter->GetRootParticle()->GetAnimationController()->frames_stack.push_back(st_particle_texture);

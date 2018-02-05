@@ -51,6 +51,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 		new_particle->components.particle_billboarding->LockY();*/
 	}
 
+	//Stats
 	new_particle->SetMaxLifetime(max_lifetime);
 	new_particle->SetVelocity(velocity);
 	new_particle->SetAngular(angular_v); 
@@ -59,6 +60,9 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetColor(color);
 	new_particle->SetGravity(gravity);
 	new_particle->SetDistanceToCamera(0);
+
+	//Animations
+	new_particle->components.particle_animation = GetRootParticle()->components.particle_animation; 
 
 	new_particle->SetInterpolatingColor(apply_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
 
@@ -77,7 +81,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//if (is_animated)
 	//{
-	//	new_particle->animated_particle = true;
+	//	
 	//	new_particle->components.particle_animation = root_particle->components.particle_animation;
 	//	new_particle->components.particle_animation.timeStep = time_step;
 	//	new_particle->SetTextureByID(new_particle->components.particle_animation.buffer_ids[0]);
