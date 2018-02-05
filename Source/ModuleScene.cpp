@@ -197,6 +197,9 @@ update_status ModuleScene::Update(float dt)
 {
 	ms_timer.Start();
 
+	Shader * shady = App->resources->GetShader(0);
+
+
 	HandleInput();
 
 	for (std::list<GameObject*>::iterator it = scene_gameobjects.begin(); it != scene_gameobjects.end(); it++)

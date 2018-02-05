@@ -6,6 +6,7 @@
 #include <list>
 
 class ComponentMeshRenderer;
+class ComponentLight;
 class Primitive;
 class ComponentCamera;
 
@@ -78,6 +79,8 @@ public:
 	bool LinkProgram(uint program_id);
 	void DeleteProgram(uint program_id);
 
+	void AddLight(ComponentLight* light);
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
@@ -107,6 +110,7 @@ private:
 	int lights_count;
 
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
+	std::list<ComponentLight*> lights_on_scene;
 	std::list<Primitive*> debug_primitive_to_draw;
 
 };

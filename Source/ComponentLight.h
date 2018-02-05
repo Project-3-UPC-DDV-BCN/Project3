@@ -14,6 +14,7 @@ public:
 
 	void SetColor(Color color);
 	Color GetColor() const;
+	float4 GetColorAsFloat4() const;
 
 	void SetIntensity(float intensity);
 	float GetIntensity() const;

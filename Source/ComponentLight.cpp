@@ -10,6 +10,8 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	SetName("Light");
 	SetType(ComponentType::CompLight);
 	SetGameObject(attached_gameobject);
+	App->renderer3D->AddLight(this);
+	color = Color(1.0, 1.0, 1.0, 1.0);
 }
 
 ComponentLight::~ComponentLight()
@@ -38,6 +40,11 @@ void ComponentLight::SetColor(Color color)
 Color ComponentLight::GetColor() const
 {
 	return color;
+}
+
+float4 ComponentLight::GetColorAsFloat4() const
+{
+	return float4(color.r, color.g, color.b, 1.0f);
 }
 
 void ComponentLight::SetIntensity(float intensity)
