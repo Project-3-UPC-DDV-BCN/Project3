@@ -80,7 +80,10 @@ void ComponentRectTransform::SetAnchor(const float2 & _anchor)
 
 float2 ComponentRectTransform::GetAnchor() const
 {
-	return anchor;
+	if (!is_canvas)
+		return anchor;
+	else
+		return float2(0.0f, 0.0f);
 }
 
 float3 ComponentRectTransform::GetGlobalAnchor()
@@ -98,7 +101,7 @@ float4x4 ComponentRectTransform::GetAnchorTransform() const
 {
 	float4x4 anchor_trans = float4x4::identity;
 
-	if (GetHasCanvas())
+	if (GetHasCanvas() && !is_canvas)
 	{
 		float2 canvas_size = c_canvas->GetSize();
 		float4x4 canvas_origin = c_canvas->GetOrigin();
@@ -106,8 +109,25 @@ float4x4 ComponentRectTransform::GetAnchorTransform() const
 		anchor_trans[0][3] += canvas_origin[0][3] + (canvas_size.x * anchor.x);
 		anchor_trans[1][3] += canvas_origin[1][3] + (canvas_size.y * anchor.y);
 	}
-	
+	else if (GetHasCanvas() && is_canvas)
+	{
+		anchor_trans[0][3] = c_transform->GetMatrix()[0][3];
+		anchor_trans[1][3] = c_transform->GetMatrix()[1][3];
+	}
+
 	return anchor_trans;
+}
+
+float3 ComponentRectTransform::GetGlobalCanvasOrigin()
+{
+	float3 ret = float3::zero;
+
+	if (GetHasCanvas())
+	{
+		ret = float3(c_canvas->GetOrigin()[0][3], c_canvas->GetOrigin()[1][3], c_canvas->GetOrigin()[2][3]);
+	}
+
+	return ret;
 }
 
 bool ComponentRectTransform::GetHasCanvas() const
@@ -123,18 +143,6 @@ bool ComponentRectTransform::GetIsCanvas() const
 bool ComponentRectTransform::GetCanEdit() const
 {
 	return can_edit;
-}
-
-float3 ComponentRectTransform::GetGlobalCanvasOrigin()
-{
-	float3 ret = float3::zero;
-
-	if (GetHasCanvas())
-	{
-		ret = float3(c_canvas->GetOrigin()[0][3], c_canvas->GetOrigin()[1][3], c_canvas->GetOrigin()[2][3]);
-	}
-
-	return ret;
 }
 
 void ComponentRectTransform::Save(Data & data) const
@@ -196,7 +204,6 @@ void ComponentRectTransform::UpdateTransform()
 
 	if (c_trans != nullptr)
 	{
-		float2 canvas_size = c_canvas->GetSize();
 		float4x4 anchor_trans = GetAnchorTransform();
 
 		float4x4 final_trans = anchor_trans;
@@ -209,22 +216,22 @@ void ComponentRectTransform::UpdateTransform()
 
 void ComponentRectTransform::UpdateRectTransform()
 {
-	LookForCanvas();
+	//LookForCanvas();
 
-	if (!GetHasCanvas())
-		return;
+	//if (!GetHasCanvas())
+	//	return;
 
-	ComponentTransform* c_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	//ComponentTransform* c_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
-	if(c_trans != nullptr)
-	{
-        float4x4 anchor_trans = GetAnchorTransform();
-		float4x4 game_object_trans = c_trans->GetMatrix();
+	//if(c_trans != nullptr)
+	//{
+ //       float4x4 anchor_trans = GetAnchorTransform();
+	//	float4x4 game_object_trans = c_trans->GetMatrix();
 
-		float2 new_pos = float2::zero;
-		new_pos.x = game_object_trans[0][3] - anchor_trans[0][3];
-		new_pos.y = game_object_trans[1][3] - anchor_trans[1][3];
+	//	float2 new_pos = float2::zero;
+	//	new_pos.x = game_object_trans[0][3] - anchor_trans[0][3];
+	//	new_pos.y = game_object_trans[1][3] - anchor_trans[1][3];
 
-		pos = new_pos;
-	}
+	//	pos = new_pos;
+	//}
 }

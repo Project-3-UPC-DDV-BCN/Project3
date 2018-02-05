@@ -73,7 +73,6 @@ void ComponentCanvas::UpdateSize()
 
 		last_size = size;
 	}
-	
 }
 
 float4x4 ComponentCanvas::GetOrigin()
@@ -104,6 +103,11 @@ void ComponentCanvas::RemoveDrawElement(CanvasDrawElement * de)
 {
 }
 
+std::vector<CanvasDrawElement*> ComponentCanvas::GetDrawElements()
+{
+	return draws;
+}
+
 
 void ComponentCanvas::Save(Data & data) const
 {
@@ -115,30 +119,30 @@ void ComponentCanvas::Load(Data & data)
 
 void ComponentCanvas::UpdateRectTransforms()
 {
-	std::vector<GameObject*> to_check;
-	to_check.push_back(GetGameObject());
+	//std::vector<GameObject*> to_check;
+	//to_check.push_back(GetGameObject());
 
-	// Iterate through all childs and get UI childs
-	while (!to_check.empty())
-	{
-		GameObject* check = (*to_check.begin());
-		to_check.erase(to_check.begin());
+	//// Iterate through all childs and get UI childs
+	//while (!to_check.empty())
+	//{
+	//	GameObject* check = (*to_check.begin());
+	//	to_check.erase(to_check.begin());
 
-		for (std::list<GameObject*>::iterator it = check->childs.begin(); it != check->childs.end(); ++it)
-		{
-			if ((*it)->GetIsUI())
-			{
-				ComponentRectTransform* c_rect_tran = (ComponentRectTransform*)(*it)->GetComponent(Component::CompRectTransform);
+	//	for (std::list<GameObject*>::iterator it = check->childs.begin(); it != check->childs.end(); ++it)
+	//	{
+	//		if ((*it)->GetIsUI())
+	//		{
+	//			ComponentRectTransform* c_rect_tran = (ComponentRectTransform*)(*it)->GetComponent(Component::CompRectTransform);
 
-				if (c_rect_tran != nullptr)
-				{
-					c_rect_tran->UpdateTransform();
-				}
-			}
+	//			if (c_rect_tran != nullptr)
+	//			{
+	//				c_rect_tran->UpdateTransform();
+	//			}
+	//		}
 
-			to_check.push_back(*it);
-		}
-	}
+	//		to_check.push_back(*it);
+	//	}
+	//}
 }
 
 CanvasDrawElement::CanvasDrawElement()

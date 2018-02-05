@@ -45,6 +45,7 @@ public:
 
 	void AddDrawElement(CanvasDrawElement* de);
 	void RemoveDrawElement(CanvasDrawElement* de);
+	std::vector<CanvasDrawElement*> GetDrawElements();
 
 	void Save(Data& data) const;
 	void Load(Data& data);

@@ -3,8 +3,10 @@
 
 #include "Component.h"
 
+class ComponentRectTransform;
 class ComponentTransform;
 class ComponentCanvas;
+class CanvasDrawElement;
 
 class ComponentImage : public Component
 {
@@ -16,6 +18,13 @@ public:
 
 	void Save(Data& data) const;
 	void Load(Data& data);
+
+private:
+	ComponentRectTransform * GetRectTrans();
+
+private:
+	CanvasDrawElement* image = nullptr;
+
 };
 
 #endif // !_H_COMPONENT_IMAGE__
