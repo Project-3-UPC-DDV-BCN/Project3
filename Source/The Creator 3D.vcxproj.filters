@@ -528,6 +528,9 @@
     <ClInclude Include="SoundBank.h">
       <Filter>Sources\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Listener.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -891,6 +894,9 @@
       <Filter>Sources\Audio</Filter>
     </ClCompile>
     <ClCompile Include="SoundBank.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Listener.cpp">
       <Filter>Sources\Audio</Filter>
     </ClCompile>
   </ItemGroup>

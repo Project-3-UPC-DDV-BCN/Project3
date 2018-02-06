@@ -4,7 +4,7 @@
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-ModuleAudio::ModuleAudio(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game), music(NULL)
+ModuleAudio::ModuleAudio(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 	name = "Audio";
 } 
@@ -66,117 +66,44 @@ bool ModuleAudio::CleanUp()
 {
 	CONSOLE_DEBUG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music != NULL)
-	{
-		Mix_FreeMusic(music);
+	delete camera_listener;
+	if (soundbank != nullptr) {
+		delete soundbank;
 	}
 
-	std::list<Mix_Chunk*>::iterator item;
+	for (std::list<Wwise::SoundObject*>::iterator it = sound_obj.begin(); it != sound_obj.end(); ++it) {
 
-	for(item = fx.begin(); item != fx.end(); item++)
-	{
-		Mix_FreeChunk((*item));
+		delete (*it);
 	}
+	return Wwise::CloseWwise();
 
-	fx.clear();
-	Mix_CloseAudio();
-	Mix_Quit();
-	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	return true;
 }
 
-// Play a music file
-bool ModuleAudio::PlayMusic(const char* path, float fade_time)
+Wwise::SoundObject * ModuleAudio::CreateSoundObject(const char * name, math::float3 position)
 {
-	bool ret = true;
-	
-	if(music != NULL)
-	{
-		if(fade_time > 0.0f)
-		{
-			Mix_FadeOutMusic((int) (fade_time * 1000.0f));
-		}
-		else
-		{
-			Mix_HaltMusic();
-		}
-
-		// this call blocks until fade out is done
-		Mix_FreeMusic(music);
-	}
-
-	music = Mix_LoadMUS(path);
-
-	if(music == NULL)
-	{
-		CONSOLE_DEBUG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
-	}
-	else
-	{
-		if(fade_time > 0.0f)
-		{
-			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
-			{
-				CONSOLE_DEBUG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
-		else
-		{
-			if(Mix_PlayMusic(music, -1) < 0)
-			{
-				CONSOLE_DEBUG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
-	}
-
-	CONSOLE_DEBUG("Successfully playing %s", path);
-	return ret;
-}
-
-// Load WAV
-unsigned int ModuleAudio::LoadFx(const char* path)
-{
-	unsigned int ret = 0;
-
-	Mix_Chunk* chunk = Mix_LoadWAV(path);
-
-	if(chunk == NULL)
-	{
-		CONSOLE_DEBUG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
-	}
-	else
-	{
-		fx.push_back(chunk);
-		ret = fx.size();
-	}
+	Wwise::SoundObject* ret = Wwise::CreateSoundObj(last_go_id++, name, position.x, position.y, position.z);
+	sound_obj.push_back(ret);
 
 	return ret;
 }
 
-// Play WAV
-bool ModuleAudio::PlayFx(unsigned int id, int repeat)
+Wwise::SoundObject * ModuleAudio::GetCameraListener() const
 {
-	bool ret = false;
+	return camera_listener;
+}
 
-	Mix_Chunk* chunk = NULL;
+void ModuleAudio::SetCameraListener(Wwise::SoundObject * camera_listener)
+{
+	this->camera_listener = camera_listener;
+}
 
-	std::list<Mix_Chunk*>::iterator it = fx.begin();
+Listener * ModuleAudio::GetDefaultListener() const
+{
+	return default_listener;
+}
 
-	if (id <= fx.size())
-	{
-		for (int i = 0; i < id; i++)
-		{
-			++it;
-		}
-
-		chunk = *it;
-		Mix_PlayChannel(-1, chunk, repeat);
-
-		ret = true;
-	}
-
-	return ret;
+void ModuleAudio::SetDefaultListener(Listener* default_listener)
+{
+	this->default_listener = default_listener;
 }

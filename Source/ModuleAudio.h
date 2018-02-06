@@ -12,6 +12,10 @@
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define DEFAULT_VOLUME 50
 
+class Listener;
+class SoundBank;
+class DistorsionZone;
+
 class ModuleAudio : public Module
 {
 public:
@@ -25,6 +29,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	// Game Objects
+	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
+
 	// Play a music file
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
 
@@ -34,10 +41,28 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+
+	Wwise::SoundObject* GetCameraListener() const;
+	void SetCameraListener(Wwise::SoundObject* camera_listener);
+	Listener* GetDefaultListener() const;
+	void SetDefaultListener(Listener* default_listener);
+
 private:
 
-	Mix_Music*			music;
-	std::list<Mix_Chunk*>	fx;
+	Wwise::SoundObject* camera_listener = nullptr;
+	std::list <Wwise::SoundObject*> sound_obj;
+	std::list<SoundBank*> soundbanks;
+	std::vector<DistorsionZone*> environments;
+
+	Listener* default_listener = nullptr;
+	unsigned long listener_id = 1;
+	unsigned long last_go_id = 100;
+
+	Wwise::SoundObject*  emmiter;
+	SoundBank* soundbank = nullptr;
+	bool listener_created = false;
+	int volume = DEFAULT_VOLUME;
+	bool muted = false;
 };
 
 #endif // __ModuleAudio_H__
