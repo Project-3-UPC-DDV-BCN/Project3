@@ -21,13 +21,23 @@
 #include "ModuleResources.h"
 #include "ModuleMeshImporter.h"
 
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtSerializationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtAssetUtilsDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtPxSerializationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtTkSerializationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastTkDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtShadersDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtExporterDEBUG_x86.lib")
+#if _DEBUG
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtAssetUtilsDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPxSerializationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtTkSerializationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastTkDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtShadersDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtExporterDEBUG_x86.lib")
+#else
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtSerialization_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtAssetUtils_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPxSerialization_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtTkSerialization_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastTk_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtShaders_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtExporter_x86.lib")
+#endif
 
 ModuleBlastMeshImporter::ModuleBlastMeshImporter(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -54,6 +64,12 @@ bool ModuleBlastMeshImporter::Init(Data * editor_config)
 	{
 		CONSOLE_DEBUG("Can't initialize blast importer");
 	}
+	return true;
+}
+
+bool ModuleBlastMeshImporter::CleanUp()
+{
+	serialization->release();
 	return true;
 }
 

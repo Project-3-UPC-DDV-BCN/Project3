@@ -15,6 +15,7 @@ Texture::Texture()
 	format = UnknownFormat;
 	type = UnknownType;
 	SetType(Resource::TextureResource);
+	image_data = nullptr;
 }
 
 Texture::~Texture()
@@ -247,7 +248,6 @@ void Texture::LoadToMemory()
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
 }
 
 void Texture::UnloadFromMemory()

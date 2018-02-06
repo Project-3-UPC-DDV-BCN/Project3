@@ -8,16 +8,23 @@
 #include "ModulePhysics.h"
 #include "Application.h"
 
-#pragma comment (lib, "Nvidia/Blast/lib/NvBlastExtPhysXDEBUG_x86.lib")
+#if _DEBUG
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPhysXDEBUG_x86.lib")
+#else
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPhysX_x86.lib")
+#endif
 
 ModuleBlast::ModuleBlast(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 	name = "Blast_Module";
 	framework = nullptr;
+	px_manager = nullptr;
 }
 
 ModuleBlast::~ModuleBlast()
 {
+	framework->release();
+	px_manager->release();
 }
 
 bool ModuleBlast::Init(Data * editor_config)
@@ -32,6 +39,13 @@ bool ModuleBlast::Init(Data * editor_config)
 
 	default_material = App->physics->GetPhysXPhysics()->createMaterial(0.8, 0.7, 0.1);
 
+	return true;
+}
+
+bool ModuleBlast::CleanUp()
+{
+	px_manager->release();
+	framework->release();
 	return true;
 }
 

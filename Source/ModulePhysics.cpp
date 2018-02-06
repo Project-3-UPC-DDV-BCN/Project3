@@ -42,6 +42,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game)
 
 ModulePhysics::~ModulePhysics()
 {
+
 }
 
 bool ModulePhysics::Init(Data * editor_config)
@@ -64,7 +65,8 @@ bool ModulePhysics::Init(Data * editor_config)
 		}
 		else
 		{*/
-			physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, physx::PxTolerancesScale(), false/*, pvd*/);
+			physx::PxTolerancesScale scale;
+			physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, scale, false/*, pvd*/);
 			if (!physx_physics)
 			{
 				CONSOLE_DEBUG("Error. PxCreatePhysics failed!");
@@ -72,7 +74,9 @@ bool ModulePhysics::Init(Data * editor_config)
 			}
 			else
 			{
-				cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, physx::PxCookingParams(physx::PxTolerancesScale()));
+				physx::PxCookingParams cooking_params(scale);
+				cooking_params.buildGPUData = true;
+				cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
 				if (!cooking)
 				{
 					CONSOLE_DEBUG("Error. PxCreateCooking failed!");
@@ -361,31 +365,36 @@ void ModulePhysics::CreateMainScene()
 	
 	physx::PxSceneDesc sceneDesc(physx_physics->getTolerancesScale());
 	sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
-	dispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+	dispatcher = physx::PxDefaultCpuDispatcherCreate(4);
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = CCDShader;
 	sceneDesc.simulationEventCallback = this;
+	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
 
 	if (cuda_context_manager)
 	{
 		sceneDesc.gpuDispatcher = cuda_context_manager->getGpuDispatcher();
 		
-		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS | physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
+		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS;
 		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eGPU;
+
+		sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
+		sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
+		sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;
 	}
 	else
 	{
 		CONSOLE_WARNING("Can't use gpu physics. Not gpu physics are used.");
-		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
 		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eMBP;
 	}
 	
-
 	main_scene = physx_physics->createScene(sceneDesc);
 	main_scene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
 	main_scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 2.0f);
-	main_scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 2.0f);
-	main_scene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LIMITS, 2.0f);
 }
 
 void ModulePhysics::CreateScene()

@@ -21,6 +21,8 @@ public:
 	~ModuleBlastMeshImporter();
 
 	bool Init(Data* editor_config = nullptr);
+	bool CleanUp();
+
 	std::string ImportMesh(std::string path);
 	BlastModel* LoadModelFromLibrary(std::string path);
 

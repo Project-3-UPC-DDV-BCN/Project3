@@ -29,6 +29,7 @@ public:
 	~ModuleBlast();
 
 	bool Init(Data* editor_config = nullptr);
+	bool CleanUp();
 
 	Nv::Blast::TkFramework* GetFramework() const;
 

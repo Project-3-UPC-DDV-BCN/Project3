@@ -34,7 +34,7 @@ public:
 	//USED FOR BLAST MESHSES//
 
 	Material* GetInteriorMaterial() const;
-	void SetInteriorMaterial(Material* texture);
+	void SetInteriorMaterial(Material* material);
 
 	int material_indices_number;
 	int material_indices_start;
