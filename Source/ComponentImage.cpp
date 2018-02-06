@@ -1,4 +1,6 @@
 #include "ComponentImage.h"
+#include "GameObject.h"
+#include "ComponentCanvas.h"
 
 ComponentImage::ComponentImage(GameObject * attached_gameobject)
 {
@@ -6,6 +8,8 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 	SetName("Image");
 	SetType(ComponentType::CompImage);
 	SetGameObject(attached_gameobject);
+
+	image = new CanvasDrawElement();
 }
 
 ComponentImage::~ComponentImage()
@@ -25,4 +29,13 @@ void ComponentImage::Save(Data & data) const
 
 void ComponentImage::Load(Data & data)
 {
+}
+
+ComponentRectTransform * ComponentImage::GetRectTrans()
+{
+	ComponentRectTransform* ret = nullptr;
+
+	ret = (ComponentRectTransform*)GetGameObject()->GetComponent(Component::CompRectTransform);
+
+	return ret;
 }

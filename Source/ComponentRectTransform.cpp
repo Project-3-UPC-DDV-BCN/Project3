@@ -65,8 +65,8 @@ float4x4 ComponentRectTransform::GetOriginMatrix() const
 	float4x4 ret = float4x4::identity;
 
 	ret = c_transform->GetMatrix();
-	ret[0][3] -= size.x;
-	ret[1][3] -= size.y;
+	ret[0][3] -= (size.x/2);
+	ret[1][3] -= (size.y/2);
 
 	return ret;
 }
@@ -180,6 +180,17 @@ float2 ComponentRectTransform::GetAnchor() const
 	return anchor;
 }
 
+float2 ComponentRectTransform::GetGlobalAnchor()
+{
+	float2 ret = float2::zero;
+
+	float4x4 anchor_trans = GetAnchorTransform();
+
+	ret = float2(anchor_trans[0][3], anchor_trans[1][3]);
+
+	return ret;
+}
+
 float4x4 ComponentRectTransform::GetAnchorTransform()
 {
 	float4x4 anchor_trans = float4x4::identity;
@@ -193,7 +204,7 @@ float4x4 ComponentRectTransform::GetAnchorTransform()
 
 		anchor_trans = parent_matrix_orig;
 		anchor_trans[0][3] += (anchor.x * parent_size.x);
-		anchor_trans[0][3] += (anchor.y * parent_size.y);
+		anchor_trans[1][3] += (anchor.y * parent_size.y);
 	}
 	else
 	{

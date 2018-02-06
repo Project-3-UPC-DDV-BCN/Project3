@@ -14,6 +14,7 @@ class CanvasDrawElement
 public:
 	CanvasDrawElement();
 	void SetTransform(float4x4 trans);
+	void SetTextureId(uint id);
 	float4x4 GetTransform();
 
 private:
@@ -55,6 +56,7 @@ private:
 	void UpdateSize();
 
 private:
+
 	ComponentRectTransform* c_rect_trans = nullptr;
 
 	std::vector<CanvasDrawElement> draws;

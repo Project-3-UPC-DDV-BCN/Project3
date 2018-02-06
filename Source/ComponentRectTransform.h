@@ -37,6 +37,7 @@ public:
 
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
+	float2 GetGlobalAnchor();
 	float4x4 GetAnchorTransform();
 
 	void Save(Data& data) const;

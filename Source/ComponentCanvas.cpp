@@ -86,6 +86,7 @@ void ComponentCanvas::AddDrawElement(CanvasDrawElement de)
 	draws.push_back(de);
 }
 
+
 void ComponentCanvas::ClearDrawElements()
 {
 	draws.clear();
@@ -94,6 +95,7 @@ void ComponentCanvas::ClearDrawElements()
 std::vector<CanvasDrawElement> ComponentCanvas::GetDrawElements()
 {
 	return draws;
+
 }
 
 void ComponentCanvas::Save(Data & data) const
@@ -107,11 +109,18 @@ void ComponentCanvas::Load(Data & data)
 CanvasDrawElement::CanvasDrawElement()
 {
 	plane = App->resources->GetMesh("PrimitivePlane");
+	texture_id = 0;
+	transform = float4x4::identity;
 }
 
 void CanvasDrawElement::SetTransform(float4x4 trans)
 {
 	transform = trans;
+}
+
+void CanvasDrawElement::SetTextureId(uint id)
+{
+	texture_id = id;
 }
 
 float4x4 CanvasDrawElement::GetTransform()
