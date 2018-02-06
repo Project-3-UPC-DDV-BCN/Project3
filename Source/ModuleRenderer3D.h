@@ -71,6 +71,7 @@ public:
 	
 	void SetUniformBool(uint program, const char* name, bool data);
 	void SetUniformFloat(uint program, const char* name, float data);
+	void SetUniformVector3(uint program, const char* name, float3 data);
 	void SetUniformVector4(uint program, const char* name, float4 data);
 	void SetUniformMatrix(uint program, const char* name, float* data);
 

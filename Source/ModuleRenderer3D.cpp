@@ -336,11 +336,14 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
 	// SEND LIGHTING
 	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); it++)
 	{
 		if ((*it)->GetGameObject()->IsActive())
 		{
+			ComponentTransform* light_transform = (ComponentTransform*) (*it)->GetGameObject()->GetComponent(Component::CompTransform);
+			SetUniformVector3(program, "LighPos", light_transform->GetGlobalPosition());
 			SetUniformVector4(program, "light_color", (*it)->GetColorAsFloat4());
 		}
 	}
@@ -738,6 +741,20 @@ void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float da
 	GLint modelLoc = glGetUniformLocation(program, name);
 	if (modelLoc != -1)
 		glUniform1f(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformVector3(uint program, const char * name, float3 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform3f(modelLoc, data.x, data.y, data.z);
 	GLenum error = glGetError();
 
 	//Check for error
