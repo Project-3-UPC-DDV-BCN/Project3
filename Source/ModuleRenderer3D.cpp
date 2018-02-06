@@ -185,7 +185,7 @@ void ModuleRenderer3D::DrawEditorScene()
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	DrawLine(float3(0, 0, 0), float3(0, 0, 0));
+	DrawLine(float3(0, 0, 0), float3(2, 2, 2));
 
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
