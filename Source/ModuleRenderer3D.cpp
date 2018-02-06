@@ -22,6 +22,7 @@
 #include "SceneWindow.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "DebugDraw.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -184,6 +185,8 @@ void ModuleRenderer3D::DrawEditorScene()
 		glEnable(GL_DEPTH_TEST);
 	}
 
+	DrawLine(float3(0, 0, 0), float3(0, 0, 0));
+
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
 	pl.color = { 1,1,1,1 };
@@ -314,7 +317,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
-
 }
 
 void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)

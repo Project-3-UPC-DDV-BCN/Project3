@@ -27,6 +27,7 @@ bool ComponentRectTransform::Update()
 {
 	bool ret = true;
 
+
 	return ret;
 }
 
