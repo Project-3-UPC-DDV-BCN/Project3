@@ -51,6 +51,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 		new_particle->components.particle_billboarding->LockY();*/
 	}
 
+	//Copy Stats
 	new_particle->SetMaxLifetime(max_lifetime);
 	new_particle->SetVelocity(velocity);
 	new_particle->SetAngular(angular_v); 
@@ -60,12 +61,18 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetGravity(gravity);
 	new_particle->SetDistanceToCamera(0);
 
+	//Copy Interpolations
 	new_particle->SetInterpolatingColor(apply_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
 
 	if (apply_size_interpolation)
 		new_particle->SetInterpolationSize(apply_size_interpolation, initial_scale, final_scale);
 	else
 		new_particle->SetInterpolationSize(apply_size_interpolation, { 1,1,1 }, { 1,1,1 });
+
+	//Copy Animation
+	new_particle->components.particle_animation = root_particle->components.particle_animation; 
+	new_particle->components.texture = new_particle->GetAnimationController()->GetCurrentTexture();
+	new_particle->GetAnimationController()->Start(); 
 
 	//if (apply_rotation_interpolation)
 	//	new_particle->SetInterpolationRotation(true, initial_angular_v, final_angular_v);
@@ -155,10 +162,6 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	final_color[0] = final_color[1] = final_color[2] = final_color[3] = 0;
 
 	// ------
-
-	//Create the rectangle that will be the initial emmiting area (2x2 square)
-	//emit_area = new ComponentMeshRenderer(GetGameObject());
-	//emit_area->SetMesh(App->resources->GetMesh("PrimitiveCube")); 
 
 	//Make the aabb enclose a primitive cube
 	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };

@@ -249,9 +249,9 @@ void Particle::Update()
 	//if (IsBillboarding() == true)
 	//	components.particle_billboarding->Update();
 
-	////Animations
-	//if (animated_particle)
-	//	UpdateAnimation();
+	//Animations
+	if(GetAnimationController()->GetNumFrames() != 0)
+		components.texture = GetAnimationController()->GetCurrentTexture(); 
 	
 }
 
@@ -298,6 +298,9 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
+		glEnable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glBindTexture(GL_TEXTURE_2D, components.texture->GetID());
 	}
@@ -320,18 +323,6 @@ Particle::~Particle()
 
 //Animation Controller -----------
 
-Texture* ParticleAnimation::Update(Timer animation_timer)
-{
-	if (rendering_frame < 2)
-		rendering_frame++;
-	else
-	{
-		rendering_frame = 0;
-	}
-
-	return frames_stack[rendering_frame];
-}
-
 ParticleAnimation::ParticleAnimation()
 {
 	name = "";
@@ -347,26 +338,81 @@ int ParticleAnimation::GetNumFrames()
 void ParticleAnimation::PaintStackUI()
 {
 	int number = 1; 
-	for (vector<Texture*>::iterator it = frames_stack.begin(); it != frames_stack.end(); it++)
+	for (vector<Texture*>::iterator it = frames_stack.begin(); it != frames_stack.end();)
 	{
-		ImGui::Text(to_string(number++).c_str()); ImGui::SameLine();
+		ImGui::Text(to_string(number).c_str()); ImGui::SameLine();
 
 		ImGui::Text(". "); ImGui::SameLine();
 		ImGui::Text((*it)->GetName().c_str()); ImGui::SameLine(); 
 
-		if (ImGui::Button("X")) 
+		string button_name("X##"); 
+		button_name += to_string(number);
+
+		if (ImGui::Button(button_name.c_str()))
+		{
+			it = DeleteFromFrameStack(number);
+
+			if (frames_stack.empty())
+				break;
+		}
+		else
+			it++; 
+
+		number++; 
+	}
+}
+
+void ParticleAnimation::AddToFrameStack(Texture * new_texture)
+{
+	frames_stack.push_back(new_texture); 
+}
+
+vector<Texture*>::iterator ParticleAnimation::DeleteFromFrameStack(int to_del)
+{	
+	int counter = 0; 
+	vector<Texture*>::iterator it;
+
+	for (it = frames_stack.begin(); it != frames_stack.end(); it++)
+	{
+		if (counter++ == to_del - 1)
 		{
 			it = frames_stack.erase(it);
-
-			if (it == frames_stack.end())
-				break; 
+			return it; 
 		}
+			
 	}
+	return it; 
+}
+
+Texture * ParticleAnimation::GetCurrentTexture()
+{
+	if (GetNumFrames() == 0)
+		return nullptr; 
+
+	else if (GetNumFrames() == 1)
+		rendering_frame = 0; 
+
+	if (switcher_timer.Read() > timeStep * 1000 && timeStep != 0)
+	{
+		if (rendering_frame >= frames_stack.size() - 1)
+			rendering_frame = 0;
+		else
+			rendering_frame++; 
+
+		switcher_timer.Start(); 
+	}
+	
+	return frames_stack[rendering_frame];
 }
 
 ParticleAnimation::~ParticleAnimation()
 {
 
+}
+
+void ParticleAnimation::Start()
+{
+	switcher_timer.Start(); 
 }
 
 // -------------------------------
