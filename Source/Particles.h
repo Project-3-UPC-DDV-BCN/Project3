@@ -19,20 +19,16 @@ struct ParticleAnimation
 	ParticleAnimation();
 	~ParticleAnimation();
 
-	void StartAnimation(); 
-	Texture* PlayAnimation();
-	void UpdateCurrentFrame(); 
-	void StopAnimation(); 
+	Texture* Update(Timer animation_timer);
 
 	int GetNumFrames();
 	void PaintStackUI();
-		
+	
+	
 	string name;
 	vector<Texture*> frames_stack;
 	int rendering_frame;
 	float timeStep;
-
-	Timer anim_timer; 
 
 };
 
