@@ -94,18 +94,19 @@ float4x4 ComponentCanvas::GetOrigin()
 	return origin;
 }
 
-void ComponentCanvas::AddDrawElement(CanvasDrawElement * de)
+void ComponentCanvas::AddDrawElement(CanvasDrawElement de)
 {
 	draws.push_back(de);
 }
 
-void ComponentCanvas::RemoveDrawElement(CanvasDrawElement * de)
-{
-}
-
-std::vector<CanvasDrawElement*> ComponentCanvas::GetDrawElements()
+std::vector<CanvasDrawElement> ComponentCanvas::GetDrawElements()
 {
 	return draws;
+}
+
+void ComponentCanvas::ClearDrawElements()
+{
+	draws.clear();
 }
 
 
@@ -148,11 +149,18 @@ void ComponentCanvas::UpdateRectTransforms()
 CanvasDrawElement::CanvasDrawElement()
 {
 	plane = App->resources->GetMesh("PrimitivePlane");
+	texture_id = 0;
+	transform = float4x4::identity;
 }
 
 void CanvasDrawElement::SetTransform(float4x4 trans)
 {
 	transform = trans;
+}
+
+void CanvasDrawElement::SetTextureId(uint id)
+{
+	texture_id = id;
 }
 
 float4x4 CanvasDrawElement::GetTransform()

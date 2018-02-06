@@ -13,6 +13,7 @@ class CanvasDrawElement
 public:
 	CanvasDrawElement();
 	void SetTransform(float4x4 trans);
+	void SetTextureId(uint id);
 	float4x4 GetTransform();
 
 private:
@@ -43,9 +44,9 @@ public:
 
 	float4x4 GetOrigin();
 
-	void AddDrawElement(CanvasDrawElement* de);
-	void RemoveDrawElement(CanvasDrawElement* de);
-	std::vector<CanvasDrawElement*> GetDrawElements();
+	void AddDrawElement(CanvasDrawElement de);
+	std::vector<CanvasDrawElement> GetDrawElements();
+	void ClearDrawElements();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
@@ -55,7 +56,7 @@ private:
 	void UpdateRectTransforms();
 
 private:
-	std::vector<CanvasDrawElement*> draws;
+	std::vector<CanvasDrawElement> draws;
 
 private:
 	float2 size;
