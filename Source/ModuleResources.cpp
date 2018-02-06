@@ -1097,6 +1097,7 @@ void ModuleResources::CreateDefaultShaders()
 		"{ \n"
 		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"	
 		"	FragPos = vec3(Model * vec4(position, 1.0));"
+		"	Normal = normals;\n"
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
 		"}";
@@ -1138,12 +1139,16 @@ void ModuleResources::CreateDefaultShaders()
 			"	else\n"
 			"		color = ourColor;\n"
 			"		color = color * light_color;\n"
+			"float ambientStrength = 0.1;\n"
+			"vec3 ambient = ambientStrength * vec3(light_color);\n\n"
 
-			"vec3 norm = normalize(Normal);"
-			"vec3 lightDir = normalize(LightPos - FragPos);"
-			"float diff = max(dot(norm, lightDir), 0.0);"
-			"vec3 diffuse = diff * vec3(light_color);"
-			"vec3 result = diffuse * vec3(color);"
+			"vec3 norm = normalize(Normal);\n"
+			"vec3 lightDir = normalize(LightPos - FragPos)\n;"
+			"float diff = max(dot(norm, lightDir), 0.0);\n"
+			"vec3 diffuse = diff * vec3(light_color);\n\n"
+
+			"vec3 result = (ambient + diffuse);\n"
+			"color = vec4(result, 1.0) * color;\n"
 			"}";
 
 		default_frag->SetContent(shader_text);

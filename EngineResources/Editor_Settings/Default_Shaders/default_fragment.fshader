@@ -24,11 +24,14 @@ void main()
 	else
 		color = ourColor;
 		
-		color = color * light_color;
-		
-		vec3 norm = normalize(Normal);
-		vec3 lightDir = normalize(LightPos - FragPos);  
-		float diff = max(dot(norm, lightDir), 0.0);
-		vec3 diffuse = diff * vec3(light_color);
-		vec3 result = diffuse * vec3(color);
+	float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * vec3(light_color);
+
+	vec3 norm = normalize(Normal);
+	vec3 lightDir = normalize(LightPos - FragPos);  
+	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 diffuse = diff * vec3(light_color);
+	
+	vec3 result = (ambient + diffuse);
+	color = vec4(result, 1.0) * color;
 }

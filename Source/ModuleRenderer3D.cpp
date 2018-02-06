@@ -343,7 +343,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		if ((*it)->GetGameObject()->IsActive())
 		{
 			ComponentTransform* light_transform = (ComponentTransform*) (*it)->GetGameObject()->GetComponent(Component::CompTransform);
-			SetUniformVector3(program, "LighPos", light_transform->GetGlobalPosition());
+			float3 gbl_pos = light_transform->GetGlobalPosition();
+			SetUniformVector3(program, "LightPos", light_transform->GetGlobalPosition());
 			SetUniformVector4(program, "light_color", (*it)->GetColorAsFloat4());
 		}
 	}
