@@ -524,7 +524,38 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 
 			skeleton = (Skeleton*)App->resources->CreateResourceFromLibrary(path);
 
-			App->resources->GetMesh(mesh_go->GetName())->skeleton = skeleton;
+			Mesh* mesh = App->resources->GetMesh(mesh_go->GetName());
+			
+			if (mesh != nullptr)
+			{
+				mesh->skeleton = skeleton;
+
+				//Finally set the mesh vertices information to the mesh
+				aiMesh* ai_mesh = nullptr;
+				for (int i = 0; i < scene.mNumMeshes; ++i)
+				{
+					if (mesh_go->GetName() == scene.mMeshes[i]->mName.C_Str())
+					{
+						ai_mesh = scene.mMeshes[i];
+						break;
+					}
+				}
+
+				if (ai_mesh != nullptr)
+				{
+					if (ai_mesh->mNumBones != 0)
+					{
+						for (int bone = 0; bone < ai_mesh->mNumBones; ++bone)
+						{
+							aiBone* ai_bone = ai_mesh->mBones[bone];
+							for (int weight = 0; weight < ai_bone->mNumWeights;++weight) 
+							{//TODO}
+						}
+					}
+				}
+			}
+			else
+				CONSOLE_ERROR("Mesh %s not found while loading animation data", mesh_go->GetName().c_str());
 
 		}
 	}
