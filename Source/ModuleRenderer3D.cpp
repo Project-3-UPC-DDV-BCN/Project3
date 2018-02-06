@@ -324,22 +324,61 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
-	Material* material = mesh->GetMaterial();
-
-	uint program = 0;
-	if (material != nullptr)
+	if (mesh->GetMeshType() == ComponentMeshRenderer::NormalMesh)
 	{
-		program = material->GetShaderProgramID();
-		UseShaderProgram(program);
-		material->LoadToMemory();
+		Material* material = mesh->GetMaterial();
+
+		uint program = 0;
+		if (material != nullptr)
+		{
+			program = material->GetShaderProgramID();
+			UseShaderProgram(program);
+			material->LoadToMemory();
+		}
+
+		SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+		SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+		SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+		BindVertexArrayObject(mesh->GetMesh()->id_vao);
+		glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 	}
+	else
+	{
+		Material* material = mesh->GetMaterial();
+		Material* interior_material = mesh->GetInteriorMaterial();
 
-	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
-	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
-	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+		BindVertexArrayObject(mesh->GetMesh()->id_vao);
 
-	BindVertexArrayObject(mesh->GetMesh()->id_vao);
-	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+		uint program = 0;
+		if (material != nullptr)
+		{
+			program = material->GetShaderProgramID();
+			UseShaderProgram(program);
+			material->LoadToMemory();
+
+			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+			glDrawElements(GL_TRIANGLES, mesh->material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->material_indices_start));
+		}
+
+		program = 0;
+		if (interior_material != nullptr)
+		{
+			program = interior_material->GetShaderProgramID();
+			UseShaderProgram(program);
+			interior_material->LoadToMemory();
+
+			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+			glDrawElements(GL_TRIANGLES, mesh->interior_material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->interior_material_indices_start));
+		}
+	}
+	
 	UnbindVertexArrayObject();
 }
 

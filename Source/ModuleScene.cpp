@@ -25,6 +25,7 @@
 #include "GameWindow.h"
 #include "ModulePhysics.h"
 #include "BlastModel.h"
+#include "ModuleBlast.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -211,6 +212,11 @@ update_status ModuleScene::Update(float dt)
 			if (mesh_renderer != nullptr && mesh_renderer->IsActive() && mesh_renderer->GetMesh() != nullptr)
 			{
 				App->renderer3D->AddMeshToDraw(mesh_renderer);
+				/*if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && mesh_renderer->GetMeshType() == ComponentMeshRenderer::BlastMesh)
+				{
+					BlastModel* model = App->resources->GetBlastModelsList()[0];
+					model->m_pxAsset->
+				}*/
 			}
 			if (camera != nullptr && camera->IsActive())
 			{
@@ -486,6 +492,7 @@ void ModuleScene::CreatePrefab(GameObject * gameobject)
 void ModuleScene::LoadBlastModel(BlastModel * model)
 {
 	DuplicateGameObject(model->chunks[0]);
+	App->blast->SpawnFamily(model);
 }
 
 void ModuleScene::DrawSkyBox(float3 pos)

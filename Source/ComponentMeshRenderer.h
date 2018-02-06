@@ -31,8 +31,10 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
-	//USED FOR BLAST MESHSES//
+	void SetMeshType(MeshType type);
+	MeshType GetMeshType() const;
 
+	//USED IN BLAST MESH
 	Material* GetInteriorMaterial() const;
 	void SetInteriorMaterial(Material* material);
 
@@ -40,16 +42,14 @@ public:
 	int material_indices_start;
 	int interior_material_indices_number;
 	int interior_material_indices_start;
-
-	///////////////////////////////////
-
-	void SetMeshType(MeshType type);
-	MeshType GetMeshType() const;
+	//
 
 private:
 	Mesh* mesh;
 	Material* material;
-	Material* interior_material; //Only for Blast Mesh
 	MeshType mesh_type;
+
+	//Blast Mesh
+	Material * interior_material;
 };
 

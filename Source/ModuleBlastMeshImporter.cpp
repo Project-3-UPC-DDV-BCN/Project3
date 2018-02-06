@@ -108,6 +108,8 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 						go->SetActive(false);
 					}
 					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->AddComponent(Component::CompMeshRenderer);
+					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
+					mesh_renderer->SetName("Blast_Mesh_Renderer");
 					Mesh* mesh = new Mesh();
 					mesh->SetName(name_without_extension + "_chunk_" + std::to_string(bone_index));
 					mesh->num_vertices = reader->getVerticesCount();

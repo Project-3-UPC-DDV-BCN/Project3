@@ -7,18 +7,14 @@
 
 ComponentMeshRenderer::ComponentMeshRenderer(GameObject* attached_gameobject)
 {
-	SetActive(true);
+	SetActive(true);	
 	SetName("Mesh_Renderer");
 	SetType(ComponentType::CompMeshRenderer);
 	SetGameObject(attached_gameobject);
 	mesh = nullptr;
 	material = App->resources->GetMaterial("default_material");
-
-
-	material_indices_number = 0;
-	material_indices_start = 0;
-	interior_material_indices_number = 0;
-	interior_material_indices_start = 0;
+	interior_material = nullptr;
+	mesh_type = NormalMesh;
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer()
