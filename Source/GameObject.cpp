@@ -87,14 +87,14 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_front(component = new ComponentRectTransform(this));
 		break;
 	case Component::CompCanvas:
+		SetIsUI(true);
 		components_list.push_back(component = new ComponentCanvas(this));
 		SetName("Canvas");
-		SetIsUI(true);
 		break;
 	case Component::CompImage:
+		SetIsUI(true);
 		components_list.push_back(component = new ComponentImage(this));
 		SetName("Image");
-		SetIsUI(true);
 		break;
 	default:
 		break;

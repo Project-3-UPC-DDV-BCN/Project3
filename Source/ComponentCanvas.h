@@ -7,6 +7,7 @@
 #include "MathGeoLib\Math\float4x4.h"
 
 class Mesh;
+class ComponentRectTransform;
 
 class CanvasDrawElement
 {
@@ -35,28 +36,29 @@ public:
 
 	bool Update();
 
+	ComponentRectTransform* GetCompRectTransform() const;
+
 	void SetRenderMode(CanvasRenderMode mode);
 	CanvasRenderMode GetRenderMode();
 
 	void SetSize(const float2& size);
 	float2 GetSize() const;
 
-	float4x4 GetOrigin();
-
-	void AddDrawElement(CanvasDrawElement* de);
-	void RemoveDrawElement(CanvasDrawElement* de);
+	void AddDrawElement(CanvasDrawElement de);
+	void ClearDrawElements();
+	std::vector<CanvasDrawElement> GetDrawElements();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
 
 private:
 	void UpdateSize();
-	void UpdateRectTransforms();
 
 private:
-	std::vector<CanvasDrawElement*> draws;
+	ComponentRectTransform* c_rect_trans = nullptr;
 
-private:
+	std::vector<CanvasDrawElement> draws;
+
 	float2 size;
 	float2 last_size;
 	CanvasRenderMode render_mode;

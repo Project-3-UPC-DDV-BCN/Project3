@@ -14,38 +14,43 @@ public:
 	ComponentRectTransform(GameObject* attached_gameobject);
 	virtual ~ComponentRectTransform();
 
-	void UpdateRectTransform();
-	void UpdateTransform();
-
 	bool Update();
+
+	ComponentTransform* GetCompTransform() const;
+	ComponentTransform* GetParentCompTransform() const;
+	ComponentRectTransform* GetParentCompRectTransform() const;
+	float4x4 GetMatrix() const;
+	float4x4 GetOriginMatrix() const;
+
+	ComponentCanvas* GetCanvas(bool& go_is_canvas);
+
+	void UpdateTransform();
+	void UpdateRectTransform();
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
 	float2 GetGlobalPos() const;
+	float4x4 GetPositionTransform();
+
 	void SetSize(const float2& size);
 	float2 GetSize() const;
+
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
-	float4x4 GetAnchorTransform() const;
-
-	bool GetHasCanvas() const;
-	bool GetIsCanvas() const;
-	bool GetCanEdit() const;
+	float4x4 GetAnchorTransform();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
 
 private:
-	void LookForCanvas();
+	bool GetHasParent() const;
 
 private:
+	ComponentTransform* c_transform = nullptr;
+
 	float2				pos;
 	float2				size;
 	float2			    anchor;
-	ComponentTransform* c_transform = nullptr;
-	ComponentCanvas*    c_canvas = nullptr;
-	bool				is_canvas = false;
-	bool                can_edit = true;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

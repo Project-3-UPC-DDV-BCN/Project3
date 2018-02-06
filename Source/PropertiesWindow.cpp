@@ -288,9 +288,12 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 {
 	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
-		if (rect_transform->GetHasCanvas())
+		bool is_canvas = false;
+		ComponentCanvas* c_canvas = rect_transform->GetCanvas(is_canvas);
+
+		if (c_canvas != nullptr)
 		{
-			if (rect_transform->GetCanEdit())
+			if (c_canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE || !is_canvas)
 			{
 				float2 position = rect_transform->GetPos();
 				float2 anchor = rect_transform->GetAnchor();
