@@ -10,7 +10,6 @@
 
 void DrawLine(float3 start, float3 end)
 {
-	uint num_vertices = 2;
 	uint num_vertices = 3;
 	uint num_indices = 3;
 
