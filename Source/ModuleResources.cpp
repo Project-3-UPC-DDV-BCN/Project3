@@ -1238,6 +1238,53 @@ void ModuleResources::CreateDefaultShaders()
 	prog->LinkShaderProgram();
 
 	AddResource(prog);
+
+	//Create a grid fragment shader
+	std::string frag_grid_path = SHADER_DEFAULT_FOLDER "grid_fragment.fshader";
+	if (!App->file_system->FileExist(frag_grid_path))
+	{
+		Shader* grid_frag = new Shader();
+		grid_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform vec4 line_color;\n\n"
+			"void main()\n"
+			"{\n"
+			"	float x,y;\n"
+			"	x = fract(TexCoord.x*25.0);\n"
+			"	y = fract(TexCoord.y*25.0);\n\n"
+			"	// Draw a black and white grid.\n"
+			"	if (x > 0.95 || y > 0.95) \n	{\n"
+			"	color = line_color;\n	}\n"
+			"	else\n{\n"
+			"	discard;\n	}\n"
+			"}";
+
+		grid_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_grid_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(grid_frag);
+	}
+	CreateResource(frag_grid_path);
+
+	prog = new ShaderProgram();
+	prog->SetName("grid_shader_program");
+
+	vertex = GetShader("default_vertex");
+	prog->SetVertexShader(vertex);
+
+	fragment = GetShader("grid_fragment");
+	prog->SetFragmentShader(fragment);
+
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
 }
 
 void ModuleResources::CreateDefaultMaterial()

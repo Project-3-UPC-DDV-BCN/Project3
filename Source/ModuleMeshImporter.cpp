@@ -549,7 +549,8 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 						{
 							aiBone* ai_bone = ai_mesh->mBones[bone];
 							for (int weight = 0; weight < ai_bone->mNumWeights;++weight) 
-							{//TODO}
+							{//TODO
+							}
 						}
 					}
 				}
