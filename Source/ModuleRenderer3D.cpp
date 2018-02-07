@@ -548,6 +548,16 @@ void ModuleRenderer3D::UnbindVertexArrayObject() const
 	}
 }
 
+void ModuleRenderer3D::DeleteVertexArrayObject(uint vao)
+{
+	glDeleteVertexArrays(1, &vao);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error delete array buffer: %s\n", gluErrorString(error));
+	}
+}
+
 uint ModuleRenderer3D::CreateVertexShader(const char * source)
 {
 	GLuint vertexShader;

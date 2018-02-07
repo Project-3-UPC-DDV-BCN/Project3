@@ -6,6 +6,6 @@
 #include "Glew\include\glew.h"
 
 void DrawLine(float3 start, float3 end);
-void Draw(float* vertices, uint num_vertices, uint* indices, uint num_indices);
+void Draw(float* vertices, uint num_vertices, uint* indices, uint num_indices, int mode = 0x0004);
 
 #endif // !_H_DEBUG_DRAW__

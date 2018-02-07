@@ -53,6 +53,7 @@ public:
 	uint GenVertexArrayObject() const;
 	void BindVertexArrayObject(uint id) const;
 	void UnbindVertexArrayObject() const;
+	void DeleteVertexArrayObject(uint id);
 
 	uint CreateVertexShader(const char* source);
 	uint CreateFragmentShader(const char* source);
