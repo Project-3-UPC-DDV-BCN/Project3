@@ -2,17 +2,21 @@
 #include "Application.h"
 #include "ModuleAudio.h"
 #include "AudioEvent.h"
+#include "GameObject.h"
+#include "ComponentTransform.h"
 
 AudioSource::AudioSource(GameObject* attached_gameobject)
 {
 	SetActive(true);
 	SetName("Audio Source");
 	SetType(ComponentType::CompAudioSource);
-	SetGameObject(attached_gameobject)
+	SetGameObject(attached_gameobject);
 
-	obj = App->audio->CreateSoundObject(own->GetName(), trans->GetPosition());
-	if (App->audio->soundbank != nullptr) {
-		this->soundbank = App->audio->soundbank;
+	ComponentTransform* trans = (ComponentTransform*) attached_gameobject->GetComponent(Component::CompTransform);
+
+	obj = App->audio->CreateSoundObject(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
+	if (App->audio->GetSoundBank() != nullptr) {
+		this->soundbank = App->audio->GetSoundBank();
 		GetEvents();
 	}
 
@@ -26,17 +30,16 @@ AudioSource::~AudioSource()
 bool AudioSource::Update()
 {
 
-	if (App->tm->GetGameState() == IN_PLAY) {
-
-		Transform* trans = (Transform*)GetOwner()->FindComponentbyType(TRANSFORM);
-
+	if (App->IsPlaying()) 
+	{
+		ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
 		if (trans)
 		{
 
 
-			float3 pos = trans->GetPosition();
-			Quat rot = trans->GetRotation();
+			float3 pos = trans->GetGlobalPosition();
+			Quat rot = Quat::FromEulerXYZ(trans->GetGlobalRotation().x * DEGTORAD, trans->GetGlobalRotation().y * DEGTORAD, trans->GetGlobalRotation().z * DEGTORAD);
 
 			float3 up = rot.Transform(float3(0, 1, 0));
 			float3 front = rot.Transform(float3(0, 0, 1));

@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleAudio.h"
+#include "ModuleCamera3D.h"
+#include "ComponentCamera.h"
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
@@ -88,6 +90,31 @@ Wwise::SoundObject * ModuleAudio::CreateSoundObject(const char * name, math::flo
 	return ret;
 }
 
+Wwise::SoundObject * ModuleAudio::CreateListener(const char * name, math::float3 position)
+{
+	Wwise::SoundObject* ret;
+
+	if (!listener_created) {
+
+		float3 cam_up = App->camera->GetCamera()->camera_frustum.up;
+		float3 cam_front = App->camera->GetCamera()->camera_frustum.front;
+		float3 cam_pos = App->camera->GetCamera()->camera_frustum.pos;
+
+		ret = Wwise::CreateSoundObj(0, "Listener", cam_pos.x, cam_pos.y, cam_pos.z, true);
+		ret->SetPosition(cam_pos.x, cam_pos.y, cam_pos.z, cam_front.x, cam_front.y, cam_front.z, cam_up.x, cam_up.y, cam_up.z);
+
+		sound_obj.push_back(ret);
+		listener_created = true;
+
+	}
+	else {
+		CONSOLE_DEBUG("It exist a listener already!");
+		ret = nullptr;
+	}
+
+	return ret;
+}
+
 Wwise::SoundObject * ModuleAudio::GetCameraListener() const
 {
 	return camera_listener;
@@ -106,4 +133,24 @@ Listener * ModuleAudio::GetDefaultListener() const
 void ModuleAudio::SetDefaultListener(Listener* default_listener)
 {
 	this->default_listener = default_listener;
+}
+
+Wwise::SoundObject * ModuleAudio::GetEmmiter() const
+{
+	return emmiter;
+}
+
+void ModuleAudio::SetEmmiter(Wwise::SoundObject * emmiter)
+{
+	this->emmiter = emmiter;
+}
+
+SoundBank * ModuleAudio::GetSoundBank() const
+{
+	return soundbank;
+}
+
+void ModuleAudio::SetSoundBank(SoundBank * soundbank)
+{
+	this->soundbank = soundbank;
 }

@@ -31,21 +31,16 @@ public:
 
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
-
-	// Play a music file
-	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
-
-	// Load a WAV in memory
-	unsigned int LoadFx(const char* path);
-
-	// Play a previously loaded WAV
-	bool PlayFx(unsigned int fx, int repeat = 0);
-
+	Wwise::SoundObject* CreateListener(const char* name, math::float3 position);
 
 	Wwise::SoundObject* GetCameraListener() const;
 	void SetCameraListener(Wwise::SoundObject* camera_listener);
 	Listener* GetDefaultListener() const;
 	void SetDefaultListener(Listener* default_listener);
+	Wwise::SoundObject* GetEmmiter() const;
+	void SetEmmiter(Wwise::SoundObject* emmiter);
+	SoundBank* GetSoundBank() const;
+	void SetSoundBank(SoundBank* soundbank);
 
 private:
 
