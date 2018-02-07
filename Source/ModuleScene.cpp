@@ -212,11 +212,6 @@ update_status ModuleScene::Update(float dt)
 			if (mesh_renderer != nullptr && mesh_renderer->IsActive() && mesh_renderer->GetMesh() != nullptr)
 			{
 				App->renderer3D->AddMeshToDraw(mesh_renderer);
-				/*if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && mesh_renderer->GetMeshType() == ComponentMeshRenderer::BlastMesh)
-				{
-					BlastModel* model = App->resources->GetBlastModelsList()[0];
-					model->m_pxAsset->
-				}*/
 			}
 			if (camera != nullptr && camera->IsActive())
 			{

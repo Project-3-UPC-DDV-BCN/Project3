@@ -7,6 +7,7 @@
 #include "BlastModel.h"
 #include "ModulePhysics.h"
 #include "Application.h"
+#include "ModuleInput.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPhysXDEBUG_x86.lib")
@@ -42,6 +43,15 @@ bool ModuleBlast::Init(Data * editor_config)
 	return true;
 }
 
+update_status ModuleBlast::Update(float dt)
+{
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+	model->m_pxAsset->
+	}
+	return UPDATE_CONTINUE;
+}
+
 bool ModuleBlast::CleanUp()
 {
 	px_manager->release();
@@ -67,7 +77,7 @@ void ModuleBlast::CreateFamily(BlastModel* model)
 	family->setMaterial(mat);
 	family->getPxAsset().setAccelerator(model->dmg_accel);
 	family->subscribe(*this);
-	families.push_back(family);
+	families[family] = model;
 	model->family = family;
 }
 
@@ -85,7 +95,8 @@ void ModuleBlast::SpawnFamily(BlastModel* model)
 
 void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
 {
-	int i = 0;
+	BlastModel* model = families[&family];
+	model->actors.push_back(&actor);
 }
 
 void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)

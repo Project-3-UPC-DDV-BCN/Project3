@@ -2,7 +2,7 @@
 
 #include "Module.h"
 #include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxListener.h"
-#include <vector>
+#include <map>
 
 namespace Nv
 {
@@ -29,6 +29,7 @@ public:
 	~ModuleBlast();
 
 	bool Init(Data* editor_config = nullptr);
+	update_status Update(float dt);
 	bool CleanUp();
 
 	Nv::Blast::TkFramework* GetFramework() const;
@@ -42,7 +43,6 @@ public:
 private:
 	Nv::Blast::TkFramework* framework;
 	Nv::Blast::ExtPxManager* px_manager;
-	std::vector<Nv::Blast::ExtPxFamily*> families;
+	std::map<Nv::Blast::ExtPxFamily*, BlastModel*> families;
 	physx::PxMaterial* default_material;
 };
-

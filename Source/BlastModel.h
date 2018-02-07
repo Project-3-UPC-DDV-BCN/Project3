@@ -13,6 +13,7 @@ namespace Nv
 	{
 		class ExtPxAsset;
 		class ExtPxFamily;
+		class ExtPxActor;
 	}
 }
 
@@ -31,6 +32,7 @@ public:
 
 public:
 	std::vector<GameObject*> chunks;
+	std::vector<Nv::Blast::ExtPxActor*> actors;
 	Material* interior_material;
 
 	Nv::Blast::ExtPxAsset* m_pxAsset;
