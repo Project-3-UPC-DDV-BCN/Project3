@@ -4,6 +4,8 @@
 #include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxManager.h"
 #include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxFamily.h"
 #include "Nvidia/Blast/Include/extensions/shaders/NvBlastExtDamageShaders.h"
+#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxActor.h"
+#include "Nvidia/Blast/Include/toolkit/NvBlastTkActor.h"
 #include "BlastModel.h"
 #include "ModulePhysics.h"
 #include "Application.h"
@@ -47,7 +49,15 @@ update_status ModuleBlast::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
-	model->m_pxAsset->
+		BlastModel* model = families[0];
+		NvBlastDamageProgram program;
+		
+		program.graphShaderFunction
+		for (Nv::Blast::ExtPxActor* actor : model->actors)
+		{
+			actor->getTkActor().damage()
+		}
+		model->actors
 	}
 	return UPDATE_CONTINUE;
 }
