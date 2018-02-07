@@ -8,6 +8,7 @@
 class ComponentMeshRenderer;
 class Primitive;
 class ComponentCamera;
+class Skeleton;
 
 #define MAX_LIGHTS 8
 
@@ -86,6 +87,7 @@ private:
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 	void DrawGrid(ComponentCamera* camera);
+	void DrawSkeleton(Skeleton* skeleton, ComponentCamera* active_camera);
 
 public:
 

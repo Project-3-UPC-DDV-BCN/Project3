@@ -470,7 +470,7 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 			joints->SetName(root_bone_node->GetName().c_str());
 
 			ComponentTransform* root_bone_trans = (ComponentTransform*)root_bone_node->GetComponent(Component::CompTransform);		
-			joints->SetPose(root_bone_trans->GetLocalRotationQuat(), root_bone_trans->GetLocalPosition(), root_bone_trans->GetLocalScale());
+			joints->SetPose(Quat::FromEulerXYZ(root_bone_trans->GetGlobalRotation().x, root_bone_trans->GetGlobalRotation().y, root_bone_trans->GetGlobalRotation().z), root_bone_trans->GetGlobalPosition(), root_bone_trans->GetGlobalScale());
 			// ----------------
 
 			// Create skeleton
@@ -500,7 +500,7 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 				(joints + curr_joint)->SetName((*bone)->GetName().c_str());
 				(joints + curr_joint)->SetParentIndex(*bone_parent);
 				ComponentTransform* trans = (ComponentTransform*)(*bone)->GetComponent(Component::CompTransform);
-				(joints + curr_joint)->SetPose(trans->GetLocalRotationQuat(), trans->GetLocalPosition(), trans->GetLocalScale());
+				(joints + curr_joint)->SetPose(trans->GetLocalRotationQuat(), trans->GetLocalPosition(),trans->GetLocalScale());
 
 				//erase current go and parent from the lists
 				bone = bones_to_add.erase(bone);

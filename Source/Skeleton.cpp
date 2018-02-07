@@ -256,7 +256,7 @@ bool Skeleton::Load(Data & data)
 			float3 pos = data.GetVector3("position");
 			float3 scale = data.GetVector3("scale");
 
-			(joints + i)->GetPose().SetPose(rot, pos, scale);
+			(joints + i)->SetPose(rot, pos, scale);
 
 			data.LeaveSection();
 		}

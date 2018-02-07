@@ -41,6 +41,7 @@ public:
 	uint id_vao = 0;
 
 	Skeleton* skeleton = nullptr;
+	bool skeleton_debug_draw = false;
 
 };
 

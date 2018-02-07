@@ -22,6 +22,7 @@
 #include "SceneWindow.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "Skeleton.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -267,6 +268,36 @@ void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 	UnbindVertexArrayObject();
 }
 
+void ModuleRenderer3D::DrawSkeleton(Skeleton * skeleton, ComponentCamera* active_camera)
+{
+	//Draw a sphere for each joint
+	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+	UseShaderProgram(program->GetProgramID());
+
+	SetUniformMatrix(program->GetProgramID(), "view", active_camera->GetViewMatrix());
+	SetUniformMatrix(program->GetProgramID(), "projection", active_camera->GetProjectionMatrix());
+
+	SetUniformBool(program->GetProgramID(), "has_texture", false);
+	SetUniformBool(program->GetProgramID(), "has_material_color", true);
+	SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 1.0f, 0.0f, 1.0f));
+
+	Mesh* sphere = App->resources->GetMesh("PrimitiveSphere");
+	if (sphere->id_indices == 0) sphere->LoadToMemory();
+
+	BindVertexArrayObject(sphere->id_vao);
+
+	for (int i = 0; i < skeleton->GetNumJoints(); ++i)
+	{
+		float4x4 trans = skeleton->GetJointWorldTransformMatrix(i);
+		SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+
+		glDrawElements(GL_TRIANGLES, sphere->num_indices, GL_UNSIGNED_INT, NULL);
+	}
+
+	UnbindVertexArrayObject();
+
+}
+
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
@@ -288,6 +319,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			}
 		}
 		DrawMesh(*it, active_camera);
+		if ((*it)->GetMesh()->skeleton_debug_draw)
+			DrawSkeleton((*it)->GetMesh()->skeleton, active_camera);
 	}
 
 	for (std::list<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
@@ -300,6 +333,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				{
 					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
 					DrawMesh(*it, active_camera);
+
 				}
 			}
 		}
@@ -310,6 +344,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			{
 				DrawDebugCube(*it, active_camera);
 			}
+			if ((*it)->GetMesh()->skeleton_debug_draw)
+				DrawSkeleton((*it)->GetMesh()->skeleton, active_camera);
 		}
 	}
 

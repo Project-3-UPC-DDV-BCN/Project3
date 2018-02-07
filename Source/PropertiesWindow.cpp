@@ -320,7 +320,18 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				}
 
 			}
-		ImGui::TreePop();
+			ImGui::TreePop();
+		}
+
+		if (mesh->skeleton != nullptr)
+		{
+			if (ImGui::TreeNodeEx("Skeleton", ImGuiTreeNodeFlags_OpenOnArrow))
+			{
+				if (ImGui::Checkbox("Debug Draw##Mesh_Renderer_skeleton", &mesh->skeleton_debug_draw))
+				{
+				}
+				ImGui::TreePop();
+			}
 		}
 
 		ImGui::Spacing();
