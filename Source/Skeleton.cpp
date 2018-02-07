@@ -179,6 +179,17 @@ float * Skeleton::GetOpenGLJointWorldTransformMatrix(uint joint)
 	}
 }
 
+int Skeleton::GetJointIndex(const char * joint_name) const
+{
+	std::string name = joint_name;
+	for (int i = 0; i < num_joints; ++i)
+	{
+		if (name == joints[i].GetName())
+			return i;
+	}
+	return -1;
+}
+
 void Skeleton::Save(Data & data) const
 {
 	if (num_joints != -1)

@@ -209,7 +209,7 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			}
 
 			///Create the data buffer
-			mesh->vertices_data = new float[mesh->num_vertices * 21]; // vert pos, tex coords, normals, color, influent bones ids, bones weights
+			mesh->vertices_data = new float[mesh->num_vertices * 21]; // vert pos, tex coords, normals, color, influent joints ids, bones weights
 
 			memset(mesh->vertices_data, 0.0f, mesh->num_vertices * 21); //set all mem to 0
 
@@ -531,15 +531,15 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 				mesh->skeleton = skeleton;
 
 				//Finally set the mesh vertices information to the mesh
-				aiMesh* ai_mesh = nullptr;
-				for (int i = 0; i < scene.mNumMeshes; ++i)
+				aiMesh* ai_mesh = scene.mMeshes[0];
+				/*for (int i = 0; i < scene.mNumMeshes; ++i)
 				{
 					if (mesh_go->GetName() == scene.mMeshes[i]->mName.C_Str())
 					{
 						ai_mesh = scene.mMeshes[i];
 						break;
 					}
-				}
+				}*/
 
 				if (ai_mesh != nullptr)
 				{
@@ -548,10 +548,40 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 						for (int bone = 0; bone < ai_mesh->mNumBones; ++bone)
 						{
 							aiBone* ai_bone = ai_mesh->mBones[bone];
+							int bone_index = skeleton->GetJointIndex(ai_bone->mName.C_Str());
+
 							for (int weight = 0; weight < ai_bone->mNumWeights;++weight) 
-							{//TODO
+							{
+								aiVertexWeight vertex_weight = ai_bone->mWeights[weight];
+								uint vertex_index = vertex_weight.mVertexId;
+
+								//check the vertex bone with less weight influence
+								int less_weight_pos = -1;
+								float less_weight = 2.0f;//the weigh should be between 0 and 1
+								for (int influent_bone = 0; influent_bone < 4; ++influent_bone)
+								{
+									if (*(mesh->vertices_data + vertex_index * 21 + 13 + influent_bone + 4) < less_weight)
+									{
+										less_weight = *(mesh->vertices_data + vertex_index * 21 + 13 + influent_bone + 4); //21 is size of a vertice, 
+																														   //13 is the gap between vertex start and first influent bone pos,
+																														   //4 is the gap between the influent bone and the weight
+										less_weight_pos = influent_bone;
+									}
+									if (less_weight == 0.0f)
+										break;
+								}
+
+								//check if the weight is higher than the lower one
+								if (less_weight < vertex_weight.mWeight)
+								{
+									// if it is, modify the vertex data value
+									*(mesh->vertices_data + vertex_index * 21 + 13 + less_weight_pos) = bone_index;
+									*(mesh->vertices_data + vertex_index * 21 + 13 + less_weight_pos + 4) = vertex_weight.mWeight;
+								}
 							}
 						}
+						//Save the mesh again to library with the vertices weights loaded corrected
+						SaveMeshToLibrary(*mesh);
 					}
 				}
 			}

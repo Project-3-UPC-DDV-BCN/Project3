@@ -87,6 +87,9 @@ public:
 	//Return an openGL ready world transformation for index joint
 	float* GetOpenGLJointWorldTransformMatrix(uint joint);
 
+	//Return the index for the joint. -1 if not found
+	int GetJointIndex(const char* joint_name) const;
+
 	void Save(Data& data) const;
 	bool Load(Data& data);
 	void CreateMeta() const;
