@@ -134,6 +134,10 @@ public:
 
 	bool IsDead();
 
+	void SetWorldSpace(bool is_space); 
+	bool IsWorldSpace(); 
+	void ApplyWorldSpace(); 
+
 	//Animation
 	ParticleAnimation* GetAnimationController(); 
 
@@ -163,6 +167,8 @@ private:
 	bool interpolate_size;
 	float3 initial_particle_size;
 	float3 final_particle_size;
+
+	bool is_relative; 
 
 	bool interpolate_rotation;
 	float initial_particle_angular_v;

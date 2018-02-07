@@ -147,6 +147,12 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 {
 	transform_matrix = matrix;
 
+	if (GetGameObject() == nullptr)
+	{
+		transform_matrix = matrix;
+		return; 
+	}
+		
 	if (this->GetGameObject()->IsRoot())
 	{
 		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)

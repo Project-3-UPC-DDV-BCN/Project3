@@ -30,6 +30,21 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	twister.Start();
 }
 
+bool Particle::IsDead()
+{
+	return kill_me;
+}
+
+void Particle::SetWorldSpace(bool is_space)
+{
+	is_relative = is_space;
+}
+
+bool Particle::IsWorldSpace()
+{
+	return is_relative;
+}
+
 ParticleComponents Particle::GetAtributes()
 {
 	return components;
@@ -233,6 +248,9 @@ void Particle::Update()
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
 	components.particle_transform->SetPosition(components.particle_transform->GetLocalPosition() + movement);
+
+	if (IsWorldSpace())
+		ApplyWorldSpace(); 
 
 	//Update the particle color in case of interpolation
 	if (interpolate_colors)

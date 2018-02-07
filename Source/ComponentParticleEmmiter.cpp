@@ -20,7 +20,6 @@ void ComponentParticleEmmiter::GenerateParticles()
 		new_particle->SetDistanceToCamera(0);
 		active_particles.push_back(new_particle);
 		spawn_timer.Start();
-		CONSOLE_LOG("PARTICLE CREATED");
 	}
 
 }
@@ -60,6 +59,8 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetColor(color);
 	new_particle->SetGravity(gravity);
 	new_particle->SetDistanceToCamera(0);
+
+	new_particle->SetWorldSpace(relative_pos);
 
 	//Copy Interpolations
 	new_particle->SetInterpolatingColor(apply_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
@@ -137,7 +138,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	shapes_amount = 0;
 	emmision_rate = 1;
 	max_lifetime = 1;
-	velocity = 0.5f;
+	velocity = 5.0f;
 	curr_texture_id = -1;
 	color = Color(255, 255, 255, 0);
 	billboarding = false;
@@ -147,6 +148,8 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	reorder_time.Start();
 	is_animated = false;
 	time_step = 0.2;
+
+	relative_pos = false; 
 
 	apply_rotation_interpolation = false;
 	apply_size_interpolation = false;
@@ -167,29 +170,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };
 	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
-	
-	////Getting the default texture 
-	//string particles_folder_path = App->file_system->particles_path_game;
-	//vector<string> images = App->file_system->GetFilesInDirectory(particles_folder_path.c_str(), "png");
 
-	////Setting the id's of the images into the list, if there are
-	//for (int i = 0; i < images.size(); i++)
-	//{
-	//	string path_to_load = particles_folder_path + images[i];
-
-	//	ComponentMaterial* current_image = App->resource_manager->material_loader->ImportImage(path_to_load.c_str());
-
-	//	if (current_image != nullptr)
-	//	{
-	//		shapes_ids.push_back(current_image->textures_id);
-	//		shapes_amount++;
-	//	}
-
-	//	delete(current_image);
-	//	current_image = nullptr;
-	//}
-
-	//This is the root particle that we are going to clone
 	CreateRootParticle();
 	LoadParticleAnimations();
 
@@ -198,10 +179,6 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 bool ComponentParticleEmmiter::Start()
 {
 	spawn_timer.Start();
-
-	//Load textures
-
-	// ----
 
 	return true;
 }
@@ -297,7 +274,9 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 
 	root_particle->SetInterpolatingColor(apply_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
 	root_particle->SetInterpolationSize(apply_size_interpolation, initial_scale, final_scale);
-	root_particle->SetBillboarding(true);
+
+	root_particle->SetBillboarding(billboarding);
+	root_particle->SetWorldSpace(relative_pos);
 
 	//if (apply_rotation_interpolation) root_particle->SetInterpolationRotation(true, initial_angular_v, final_angular_v);
 	//else root_particle->SetAngular(angular_v);
@@ -365,9 +344,11 @@ void ComponentParticleEmmiter::SetSystemState(particle_system_state new_state)
 	system_state = new_state;
 }
 
-bool Particle::IsDead()
+void Particle::ApplyWorldSpace()
 {
-	return kill_me;
+	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+	float4x4 new_mat = emmiter_transform->GetMatrix() * components.particle_transform->GetMatrix(); 
+	components.particle_transform->SetMatrix(new_mat); 
 }
 
 void ComponentParticleEmmiter::DrawEmisionArea(bool show)

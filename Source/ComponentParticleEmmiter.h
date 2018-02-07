@@ -100,6 +100,7 @@ public:
 	bool billboarding;
 	bool lock_billboarding_y;
 	bool lock_billboarding_x;
+	bool relative_pos;
 
 	float max_lifetime;						//Time that particules will be rendering
 	int emmision_rate;						//How many spawn in a second
