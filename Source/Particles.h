@@ -13,6 +13,7 @@
 using namespace std; 
 
 class ComponentParticleEmmiter; 
+class ComponentBillboard; 
 
 struct ParticleAnimation
 {
@@ -41,8 +42,10 @@ struct ParticleAnimation
 struct ParticleComponents
 {
 	Mesh* particle_mesh;
+	Texture* texture = nullptr;
+
 	ComponentTransform* particle_transform;
-	Texture* texture = nullptr; 
+	ComponentBillboard* billboard; 
 
 	ParticleAnimation particle_animation;
 
@@ -50,7 +53,7 @@ struct ParticleComponents
 	{
 		particle_mesh = nullptr;
 		particle_transform = nullptr;
-		//particle_billboarding = nullptr;
+		billboard = nullptr;
 	}
 };
 

@@ -1,5 +1,6 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentMeshRenderer.h"
+#include "ComponentBillboard.h"
 #include "ComponentCamera.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
@@ -29,7 +30,8 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
-	float3 particle_pos = emit_area.RandomPointInside(random);
+	float3 particle_pos = emit_area_obb.RandomPointInside(random);
+	emit_area_obb.LocalToWorld().TransformPos(particle_pos); 
 
 	Particle* new_particle = new Particle(this);
 
@@ -44,11 +46,11 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//Billboard the squad for always be looking at the camera, at the beggining it will be deactivated 
 	if (billboarding)
 	{
-		/*new_particle->SetBillboarding(true);
-		new_particle->components.particle_billboarding = new ComponentBillboarding(nullptr, new_particle);
-		new_particle->SetBillboardReference(App->renderer3D->rendering_cam);
-		new_particle->components.particle_billboarding->LockY();*/
+		new_particle->SetBillboarding(true);
+		new_particle->components.billboard = new ComponentBillboard(new_particle);
 	}
+	else
+		new_particle->SetBillboarding(false);
 
 	//Copy Stats
 	new_particle->SetMaxLifetime(max_lifetime);
@@ -150,6 +152,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	time_step = 0.2;
 
 	relative_pos = false; 
+	billboarding = false; 
 
 	apply_rotation_interpolation = false;
 	apply_size_interpolation = false;
@@ -167,12 +170,14 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	// ------
 
 	//Make the aabb enclose a primitive cube
+	AABB emit_area; 
 	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };
 	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
+	emit_area_obb.SetFrom(emit_area); 
+
 	CreateRootParticle();
-	LoadParticleAnimations();
 
 }
 
@@ -253,13 +258,14 @@ void ComponentParticleEmmiter::MoveEmmitArea()
 	float3 rotation_curr;
 	float3 scale_curr;
 
-	float3 position_inc = parent_transform->GetGlobalPosition() - emit_area.CenterPoint();
+	float3 position_inc = parent_transform->GetGlobalPosition() - emit_area_obb.CenterPoint();
 	float3 rotation_inc; 
 	float3 scale_inc;
 
-	float4x4 rot_mat = float4x4::FromEulerXYZ(parent_transform->GetGlobalRotation().x, parent_transform->GetGlobalRotation().y, parent_transform->GetGlobalRotation().z);
+	float4x4 rot_mat = float4x4::FromEulerXYZ(parent_transform->GetGlobalRotation().x * DEGTORAD, parent_transform->GetGlobalRotation().y* DEGTORAD, parent_transform->GetGlobalRotation().z* DEGTORAD);
 	float4x4 new_transform = float4x4::FromTRS(position_inc, rot_mat, parent_transform->GetGlobalScale());
-	emit_area.TransformAsAABB(new_transform); 
+
+	emit_area_obb.Transform(new_transform);
 }
 
 void ComponentParticleEmmiter::UpdateRootParticle()
@@ -347,23 +353,12 @@ void ComponentParticleEmmiter::SetSystemState(particle_system_state new_state)
 void Particle::ApplyWorldSpace()
 {
 	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-	float4x4 new_mat = emmiter_transform->GetMatrix() * components.particle_transform->GetMatrix(); 
-	components.particle_transform->SetMatrix(new_mat); 
-}
+	
+	float4x4 emmiter_rot = emmiter_transform->GetMatrix(); 
+	float4x4 particle_rot = components.particle_transform->GetMatrix(); 
 
-void ComponentParticleEmmiter::DrawEmisionArea(bool show)
-{
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glLineWidth(2.0f);
-	//glColor3f(0, 0, 255);
-
-	//emit_area->Update();
-
-	//glColor3f(255, 255, 255);
-	//glLineWidth(1.0f);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+	particle_rot = emmiter_rot * particle_rot; 
+	components.particle_transform->SetMatrix(particle_rot);
 }
 
 int ComponentParticleEmmiter::GetTextureID(int pos)
@@ -385,36 +380,6 @@ uint ComponentParticleEmmiter::GetCurrentTextureID() const
 {
 	return curr_texture_id;
 }
-
-void ComponentParticleEmmiter::LoadParticleAnimations()
-{
-	//Load the animated particles of the engine by default
-
-	//THISstd::string path(App->file_system->particles_path_game);
-
-	//vector<string> animation_folders = App->file_system->GetFoldersInDirectory(path.c_str());
-
-	//for (int i = 0; i < animation_folders.size(); i++)
-	//{
-	//	ParticleAnimation new_particle_anim;
-	//	new_particle_anim.name = animation_folders[i];
-
-	//	string folder_path(path + new_particle_anim.name + '\\');
-
-	//	vector<string> anim_set = App->file_system->GetFilesInDirectory(folder_path.c_str(), "png");
-
-	//	//Load the images and add it to the buffer 
-	//	for (int j = 0; j < anim_set.size(); j++)
-	//	{
-	//		string image_path(folder_path + anim_set[j]);
-	//		ComponentMaterial* image_cmp = App->resource_manager->material_loader->ImportImage(image_path.c_str());
-	//		new_particle_anim.buffer_ids.push_back(image_cmp->textures_id);
-	//	}
-
-	//	particle_animations.push_back(new_particle_anim);
-	//}
-}
-
 
 vector<ParticleAnimation> ComponentParticleEmmiter::GetAllParticleAnimations()
 {

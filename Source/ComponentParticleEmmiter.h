@@ -52,16 +52,11 @@ public:
 	particle_system_state GetSystemState() const;
 	void SetSystemState(particle_system_state new_state);
 
-	//Draws & images
-	void DrawEmisionArea(bool show);
-
 	int GetTextureID(int pos);
 	int GetTextureIDAmount();
 
 	void SetCurrentTextureID(uint texture_id);
 	uint GetCurrentTextureID() const;
-
-	void LoadParticleAnimations();
 
 	vector<ParticleAnimation> GetAllParticleAnimations();
 	Particle* GetRootParticle() const;
@@ -109,7 +104,7 @@ public:
 	float3 gravity;							//Gravity
 	float emision_angle;					//This is the max angle thet will be given to the particle
 											
-	AABB emit_area;							//Emmiter surface 
+	OBB emit_area_obb; 
 
 private:
 

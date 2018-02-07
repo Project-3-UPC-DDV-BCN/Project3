@@ -2,6 +2,7 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 #include "Application.h"
+#include "Particles.h"
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 
@@ -10,6 +11,20 @@ ComponentBillboard::ComponentBillboard(GameObject* attached_gameobject)
 	SetGameObject(attached_gameobject);
 	SetActive(true);
 	SetType(Component::CompBillboard);
+	SetAttachedToParticle(false); 
+	particle_attached = nullptr; 
+
+	AttachToCamera(App->renderer3D->editor_camera);
+}
+
+ComponentBillboard::ComponentBillboard(Particle * attached_particle)
+{
+	SetGameObject(nullptr);
+	SetActive(true);
+	SetType(Component::CompBillboard);
+	SetBillboardType(BILLBOARD_ALL); 
+	SetAttachedToParticle(true);
+	particle_attached = attached_particle; 
 
 	AttachToCamera(App->renderer3D->editor_camera);
 }
@@ -24,15 +39,30 @@ void ComponentBillboard::SetBillboardType(BillboardingType new_type)
 	billboarding_type = new_type; 
 }
 
+void ComponentBillboard::SetAttachedToParticle(bool attached)
+{
+	attached_to_particle = attached; 
+}
+
+bool ComponentBillboard::GetAttachedToParticle() const
+{
+	return attached_to_particle;
+}
+
 bool ComponentBillboard::RotateObject()
 {
 	bool ret = true; 
 
 	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
 		return false; 
-
+	
 	//Get the director vector which the object/particle is currently pointing at (Z axis)
-	ComponentTransform* object_transform = (ComponentTransform*)GetGameObject()->GetComponent(ComponentType::CompTransform);
+	ComponentTransform* object_transform;
+	if(!attached_to_particle)
+		object_transform = (ComponentTransform*)GetGameObject()->GetComponent(ComponentType::CompTransform);
+	else
+		object_transform = (ComponentTransform*)particle_attached->components.particle_transform;
+
 	float3 object_z = object_transform->GetMatrix().WorldZ();
 
 	//Get the director vector which the object/particle should be pointing at 
@@ -110,7 +140,6 @@ bool ComponentBillboard::RotateObject()
 
 	object_transform->SetRotation({ angle_x*RADTODEG, angle_y*RADTODEG, 0 });
 
-	
 	return ret;
 }
 

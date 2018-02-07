@@ -217,6 +217,7 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 {
 		float3 size = aabb.Size();
 		float3 pos = aabb.CenterPoint();
+		
 		Quat rot = Quat::identity;
 		float4x4 trans = float4x4::FromTRS(pos, rot, size);
 
@@ -246,6 +247,43 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 
 		//restore previous polygon mode
 		glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+}
+
+void ModuleRenderer3D::DrawDebugOBB(OBB& obb, ComponentCamera * active_camera)
+{
+	float3 size = obb.Size();
+	float3 pos = obb.CenterPoint();
+	float3x3 rot_mat = obb.LocalToWorld().RotatePart(); 
+	Quat rot = rot_mat.ToQuat(); 
+
+	float4x4 trans = float4x4::FromTRS(pos, rot, size);
+
+	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+
+	UseShaderProgram(program->GetProgramID());
+
+	SetUniformMatrix(program->GetProgramID(), "view", active_camera->GetViewMatrix());
+	SetUniformMatrix(program->GetProgramID(), "projection", active_camera->GetProjectionMatrix());
+	SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+
+	SetUniformBool(program->GetProgramID(), "has_texture", false);
+	SetUniformBool(program->GetProgramID(), "has_material_color", true);
+	SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+
+	Mesh* cube = App->resources->GetMesh("PrimitiveCube");
+	if (cube->id_indices == 0) cube->LoadToMemory();
+
+	//set wireframe before render 
+	GLint polygonMode;
+	glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
+	SetWireframeMode();
+
+	BindVertexArrayObject(cube->id_vao);
+	glDrawElements(GL_TRIANGLES, cube->num_indices, GL_UNSIGNED_INT, NULL);
+	UnbindVertexArrayObject();
+
+	//restore previous polygon mode
+	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 }
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
@@ -299,13 +337,14 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Particles
 	for (std::list<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
+		(*it)->MoveEmmitArea();
 		if ((*it)->ShowEmmisionArea())
 		{
-			DrawDebugCube((*it)->emit_area, active_camera);
+			DrawDebugOBB((*it)->emit_area_obb, active_camera);
 		}
 
 		(*it)->DrawParticles(active_camera); 
-		(*it)->MoveEmmitArea(); 
+	
 	}
 
 	if (is_editor_camera)

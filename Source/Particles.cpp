@@ -5,6 +5,7 @@
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "ComponentParticleEmmiter.h"
+#include "ComponentBillboard.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
 #include "imgui/CustomImGui.h"
@@ -239,7 +240,7 @@ void Particle::SetMovementFromStats()
 }
 void Particle::SetMovement()
 {
-	movement = { 0, particle_velocity, 0 }; 
+	movement = emmiter->emit_area_obb.axis[1] * particle_velocity;
 	movement *= App->time->GetGameDt();
 }
 
@@ -292,6 +293,8 @@ bool Particle::CheckIfDelete()
 void Particle::Draw(ComponentCamera* active_camera)
 {
 	//Billboard to the active camera 
+	if (billboarding)
+		components.billboard->RotateObject(); 
 
 	//Activate shader program
 	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
@@ -316,7 +319,6 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		glEnable(GL_BLEND);
 		glEnable(GL_ALPHA_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

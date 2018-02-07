@@ -4,6 +4,7 @@
 
 class ComponentTransform; 
 class ComponentCamera; 
+class Particle; 
 
 enum BillboardingType
 {
@@ -18,6 +19,7 @@ class ComponentBillboard: public Component
 public:
 
 	ComponentBillboard(GameObject* attached_gameobject);
+	ComponentBillboard(Particle* attached_particle); 
 
 	bool RotateObject(); 
 
@@ -29,10 +31,15 @@ public:
 	void AttachToCamera(ComponentCamera* new_reference);
 	void SetBillboardType(BillboardingType new_type); 
 
+	void SetAttachedToParticle(bool attached); 
+	bool GetAttachedToParticle() const; 
+
 private:
 
-	BillboardingType billboarding_type; 
-	
+	BillboardingType billboarding_type; 	
 	ComponentCamera* reference; 
+
+	bool attached_to_particle; 
+	Particle* particle_attached; 
 
 };

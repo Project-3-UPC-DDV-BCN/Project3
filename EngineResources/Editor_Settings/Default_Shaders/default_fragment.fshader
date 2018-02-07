@@ -18,4 +18,7 @@ void main()
 		color = material_color;
 	else
 		color = ourColor;
+		
+	if(color.a == 0.0f)
+		discard; 
 }
