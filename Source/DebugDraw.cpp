@@ -16,13 +16,13 @@ void DrawLine(float3 start, float3 end)
 	float* vertices = new float[num_vertices * 3];
 	uint* indices = new uint[num_indices];
 
-	vertices[0] = -1;
-	vertices[1] = -1;
-	vertices[2] = 0;
+	vertices[0] = start.x;
+	vertices[1] = start.y;
+	vertices[2] = start.z;
 
-	vertices[3] = 1;
-	vertices[4] = -1;
-	vertices[5] = 0;
+	vertices[3] = end.x;
+	vertices[4] = end.y;
+	vertices[5] = end.z;
 
 	indices[0] = 0;
 	indices[1] = 1;
@@ -35,10 +35,37 @@ void DrawLine(float3 start, float3 end)
 
 void Draw(float* vertices, uint num_vertices, uint* indices, uint num_indices, int mode)
 {
+	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture); 
+	glActiveTexture(GL_TEXTURE0);
+	GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+	GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+	GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
+	GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
+	GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
+	GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
+	GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
+	GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
+	GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
+	GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
+	GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
+	GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
+	GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
+	GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
+	GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
+	GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
+	GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
+	GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
+	GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_SCISSOR_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(10, 10, 1));
+	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
 
 	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
 
@@ -90,4 +117,99 @@ void Draw(float* vertices, uint num_vertices, uint* indices, uint num_indices, i
 
 	App->renderer3D->UnbindVertexArrayObject();
 	App->renderer3D->DeleteVertexArrayObject(vao);
+
+	glUseProgram(last_program);
+	glBindTexture(GL_TEXTURE_2D, last_texture);
+	glBindSampler(0, last_sampler);
+	glActiveTexture(last_active_texture);
+	glBindVertexArray(last_vertex_array);
+	glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
+	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
+	glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
+	if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
+	if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+	if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
+	if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
+	glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
+	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
+}
+
+DebugShape::DebugShape(uint _num_vertices, float * _vertices, uint _num_indices, uint * _indices)
+{
+	if (_num_vertices > 0)
+	{
+		// Vertices
+		vertices = new float[_num_vertices * 3];
+		memcpy(vertices, _vertices, sizeof(float) * _num_vertices * 3);
+		num_vertices = _num_vertices;
+
+		if (_num_indices > 0)
+		{
+			// Indices
+			indices = new uint[_num_indices];
+			memcpy(indices, _indices, sizeof(uint) * _num_indices);
+			num_indices = _num_indices;
+		}
+	}
+}
+
+void DebugShape::CleanUp()
+{
+	num_vertices = 0;
+	num_vertices = 0;
+
+	RELEASE_ARRAY(vertices);
+	RELEASE_ARRAY(indices);
+}
+
+void DebugShape::SetTransform(float4x4 _transform)
+{
+	transform = _transform;
+}
+
+void DebugShape::SetColour(float4 _colour)
+{
+	colour = _colour;
+}
+
+void DebugShape::SetMode(int _mode)
+{
+	mode = _mode;
+}
+
+uint DebugShape::GetNumVertices()
+{
+	return num_vertices;
+}
+
+float * DebugShape::GetVertices()
+{
+	return vertices;
+}
+
+uint DebugShape::GetNumIndices()
+{
+	return num_indices;
+}
+
+uint * DebugShape::GetIndices()
+{
+	return indices;
+}
+
+float4 DebugShape::GetColour()
+{
+	return colour;
+}
+
+float4x4 DebugShape::GetTransform()
+{
+	return transform;
+}
+
+int DebugShape::GetMode()
+{
+	return mode;
 }
