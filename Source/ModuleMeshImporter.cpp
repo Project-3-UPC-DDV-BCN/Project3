@@ -469,8 +469,9 @@ void ModuleMeshImporter::CreateSkeletonsAndVertexWeights(Prefab * prefab, const 
 			joints->SetParentIndex(-1); //set the first joint as the root
 			joints->SetName(root_bone_node->GetName().c_str());
 
-			ComponentTransform* root_bone_trans = (ComponentTransform*)root_bone_node->GetComponent(Component::CompTransform);		
-			joints->SetPose(Quat::FromEulerXYZ(root_bone_trans->GetGlobalRotation().x, root_bone_trans->GetGlobalRotation().y, root_bone_trans->GetGlobalRotation().z), root_bone_trans->GetGlobalPosition(), root_bone_trans->GetGlobalScale());
+			ComponentTransform* root_bone_trans = (ComponentTransform*)root_bone_node->GetComponent(Component::CompTransform);
+			float4x4 t = root_bone_trans->GetMatrix();
+			joints->SetPose(t.RotatePart().ToQuat(), root_bone_trans->GetGlobalPosition(), root_bone_trans->GetGlobalScale());
 			// ----------------
 
 			// Create skeleton
