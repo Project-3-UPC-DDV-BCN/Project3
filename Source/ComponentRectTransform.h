@@ -20,6 +20,7 @@ public:
 	ComponentTransform* GetParentCompTransform() const;
 	ComponentRectTransform* GetParentCompRectTransform() const;
 	float4x4 GetMatrix() const;
+	float2 GetGlobalOrigin();
 	float4x4 GetOriginMatrix() const;
 
 	ComponentCanvas* GetCanvas(bool& go_is_canvas);

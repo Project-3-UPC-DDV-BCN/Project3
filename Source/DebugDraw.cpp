@@ -173,7 +173,7 @@ void DebugDraw::Quad(float3 center, float2 size)
 	delete[] indices;
 }
 
-void DebugDraw::Quad(float4x4 transform, float2 size)
+void DebugDraw::Quad(float4x4 transform, float2 size, float4 colour)
 {
 	uint num_vertices = 4;
 	uint num_indices = 8;
@@ -217,6 +217,47 @@ void DebugDraw::Quad(float4x4 transform, float2 size)
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
 	shape.SetTransform(transform);
+	shape.SetColour(colour);
+
+	AddShape(shape);
+
+	delete[] vertices;
+	delete[] indices;
+}
+
+void DebugDraw::Circle(float4x4 transform, float rad, float4 colour)
+{
+	int slices = 30;
+
+	float angle_slice = 360 / slices;
+
+	uint num_vertices = slices;
+	uint num_indices = slices*2;
+
+	float* vertices = new float[num_vertices * 3];
+	uint* indices = new uint[num_indices];
+
+	float curr_angle = 0;
+	for(int i = 0; i < slices; i++)
+	{
+		vertices[(i * 3)] = cos(curr_angle * DEGTORAD) * rad;
+		vertices[(i * 3) + 1] = sin(curr_angle * DEGTORAD) * rad;
+		vertices[(i * 3) + 2] = 0;
+
+		curr_angle += angle_slice;
+
+		indices[i*2] = i;
+
+		if (i+1 < slices)
+			indices[(i * 2) + 1] = i + 1;
+		else
+			indices[(i * 2) + 1] = 0;
+	}
+
+	DebugShape shape(num_vertices, vertices, num_indices, indices);
+	shape.SetMode(GL_LINES);
+	shape.SetTransform(transform);
+	shape.SetColour(colour);
 
 	AddShape(shape);
 

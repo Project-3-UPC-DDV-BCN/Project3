@@ -31,6 +31,8 @@ bool ComponentRectTransform::Update()
 	bool ret = true;
 
 	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
+	App->renderer3D->GetDebugDraw()->Circle(GetAnchorTransform(), 10);
+	App->renderer3D->GetDebugDraw()->Circle(GetOriginMatrix(), 10, float4(1, 0.0f, 0.0f, 1.0f));
 
 	return ret;
 }
@@ -63,6 +65,13 @@ ComponentRectTransform * ComponentRectTransform::GetParentCompRectTransform() co
 float4x4 ComponentRectTransform::GetMatrix() const
 {
 	return c_transform->GetMatrix();
+}
+
+float2 ComponentRectTransform::GetGlobalOrigin()
+{
+	float4x4 mat = GetOriginMatrix();
+
+	return float2(mat[0][3], mat[1][3]);
 }
 
 float4x4 ComponentRectTransform::GetOriginMatrix() const
@@ -234,7 +243,7 @@ bool ComponentRectTransform::GetHasParent() const
 
 void ComponentRectTransform::UpdateTransform()
 {
-	c_transform->SetMatrix(GetPositionTransform());
+	c_transform->SetMatrix(GetPositionTransform().Inverted());
 }
 
 void ComponentRectTransform::UpdateTransformAndChilds()

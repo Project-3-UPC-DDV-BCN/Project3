@@ -322,6 +322,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 			ImGui::Separator();
 			ImGui::Text("Debug");
 
+			ImGui::Text("Global origin: x%f, y%f", rect_transform->GetGlobalOrigin().x, rect_transform->GetGlobalOrigin().y);
 			ImGui::Text("Global anchor: x:%f, y:%f", rect_transform->GetGlobalAnchor().x, rect_transform->GetGlobalAnchor().y);
 			ImGui::Text("Global pos: x:%f, y:%f", rect_transform->GetGlobalPos().x, rect_transform->GetGlobalPos().y);
 		}
