@@ -297,10 +297,16 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 			{
 				float2 position = rect_transform->GetPos();
 				float2 anchor = rect_transform->GetAnchor();
+				float2 size = rect_transform->GetSize();
 
 				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
 				{
 					rect_transform->SetPos(position);
+				}
+
+				if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))
+				{
+					rect_transform->SetSize(size);
 				}
 
 				if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))

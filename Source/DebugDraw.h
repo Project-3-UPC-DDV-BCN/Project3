@@ -45,7 +45,8 @@ public:
 	DebugDraw();
 
 	void Line(float3 start, float3 end);
-	void Quad(float3 center, float2 size, float4x4 transform = float4x4::identity);
+	void Quad(float3 center, float2 size);
+	void Quad(float4x4 transform, float2 size);
 
 	void Render(ComponentCamera* cameras);
 	void Clear();
@@ -56,8 +57,5 @@ private:
 private:
 	std::vector<DebugShape> shapes;
 };
-//
-//void DrawLine(float3 start, float3 end);
-//void Draw(float* vertices, uint num_vertices, uint* indices, uint num_indices, int mode = 0x0004);
 
 #endif // !_H_DEBUG_DRAW__

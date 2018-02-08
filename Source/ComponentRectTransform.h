@@ -25,7 +25,10 @@ public:
 	ComponentCanvas* GetCanvas(bool& go_is_canvas);
 
 	void UpdateTransform();
+	void UpdateTransformAndChilds();
+
 	void UpdateRectTransform();
+	void UpdateRectTransformAndChilds();
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;

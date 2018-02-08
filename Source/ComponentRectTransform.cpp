@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 #include "ComponentCanvas.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
+#include "DebugDraw.h"
 
 ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 {
@@ -27,6 +30,7 @@ bool ComponentRectTransform::Update()
 {
 	bool ret = true;
 
+	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
 
 	return ret;
 }
@@ -110,7 +114,7 @@ void ComponentRectTransform::SetPos(const float2 & _pos)
 {
 	pos = _pos;
 
-	UpdateTransform();
+	UpdateTransformAndChilds();
 }
 
 float2 ComponentRectTransform::GetPos() const
@@ -149,7 +153,7 @@ void ComponentRectTransform::SetSize(const float2 & _size)
 {
 	size = _size;
 
-	UpdateTransform();
+	UpdateTransformAndChilds();
 }
 
 float2 ComponentRectTransform::GetSize() const
@@ -173,7 +177,7 @@ void ComponentRectTransform::SetAnchor(const float2 & _anchor)
 	if (anchor.y > 1)
 		anchor.y = 1;
 
-	UpdateTransform();
+	UpdateTransformAndChilds();
 }
 
 float2 ComponentRectTransform::GetAnchor() const
@@ -233,7 +237,7 @@ void ComponentRectTransform::UpdateTransform()
 	c_transform->SetMatrix(GetPositionTransform());
 }
 
-void ComponentRectTransform::UpdateRectTransform()
+void ComponentRectTransform::UpdateTransformAndChilds()
 {
 	std::list<GameObject*> to_change;
 
@@ -247,14 +251,47 @@ void ComponentRectTransform::UpdateRectTransform()
 
 		if (c_rect_trans != nullptr)
 		{
-			float4x4 anchor_trans = c_rect_trans->GetAnchorTransform();
-			float4x4 transform = c_rect_trans->GetMatrix();
+			c_rect_trans->UpdateTransform();
+		}
 
-			float2 new_pos = float2::zero;
-			new_pos.x = transform[0][3] - anchor_trans[0][3];
-			new_pos.y = transform[1][3] - anchor_trans[1][3];
+		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
+		{
+			to_change.push_back(*ch);
+		}
 
-			c_rect_trans->SetPos(new_pos);
+		to_change.erase(it);
+
+		it = to_change.begin();
+	}
+}
+
+void ComponentRectTransform::UpdateRectTransform()
+{
+	float4x4 anchor_trans = GetAnchorTransform();
+	float4x4 transform = GetMatrix();
+
+	float2 new_pos = float2::zero;
+	new_pos.x = transform[0][3] - anchor_trans[0][3];
+	new_pos.y = transform[1][3] - anchor_trans[1][3];
+
+	SetPos(new_pos);
+}
+
+void ComponentRectTransform::UpdateRectTransformAndChilds()
+{
+	std::list<GameObject*> to_change;
+
+	to_change.push_back(GetGameObject());
+
+	std::list<GameObject*>::iterator it = to_change.begin();
+
+	while (to_change.size() > 0)
+	{
+		ComponentRectTransform* c_rect_trans = (ComponentRectTransform*)(*it)->GetComponent(Component::CompRectTransform);
+
+		if (c_rect_trans != nullptr)
+		{
+			c_rect_trans->UpdateRectTransform();
 		}
 
 		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)

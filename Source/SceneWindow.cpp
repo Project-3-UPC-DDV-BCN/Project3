@@ -149,10 +149,10 @@ void SceneWindow::DrawWindow()
 					// Update rect transform on UI
 					if (App->scene->selected_gameobjects.front()->GetIsUI())
 					{
-						ComponentRectTransform* c_recttrans = (ComponentRectTransform*)App->scene->selected_gameobjects.front()->GetComponent(Component::CompRectTransform);
+						ComponentRectTransform* c_rect_trans = (ComponentRectTransform*)App->scene->selected_gameobjects.front()->GetComponent(Component::CompRectTransform);
 
-						if (c_recttrans != nullptr)
-							c_recttrans->UpdateRectTransform();
+						if (c_rect_trans != nullptr)
+							c_rect_trans->UpdateRectTransformAndChilds();
 					}
 				}
 			}

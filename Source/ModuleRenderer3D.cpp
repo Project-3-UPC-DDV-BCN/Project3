@@ -186,8 +186,6 @@ void ModuleRenderer3D::DrawEditorScene()
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	//debug_draw->Line(float3(0, 0, 0), float3(10, 10, 10));
-	debug_draw->Quad(float3(0, 0, 0), float2(10, 10));
 	// Debug Draw render
 	debug_draw->Render(editor_camera);
 	debug_draw->Clear();

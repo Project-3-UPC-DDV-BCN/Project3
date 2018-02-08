@@ -9,121 +9,6 @@
 #include "MathGeoLib\Math\Quat.h"
 #include "ComponentCamera.h"
 
-//void DrawLine(float3 start, float3 end)
-//{
-//	uint num_vertices = 2;
-//	uint num_indices = 2;
-//
-//	float* vertices = new float[num_vertices * 3];
-//	uint* indices = new uint[num_indices];
-//
-//	vertices[0] = start.x;
-//	vertices[1] = start.y;
-//	vertices[2] = start.z;
-//
-//	vertices[3] = end.x;
-//	vertices[4] = end.y;
-//	vertices[5] = end.z;
-//
-//	indices[0] = 0;
-//	indices[1] = 1;
-//
-//	Draw(vertices, num_vertices, indices, num_indices, GL_LINES);
-//
-//	delete[] vertices;
-//	delete[] indices;
-//}
-//
-//void Draw(float* vertices, uint num_vertices, uint* indices, uint num_indices, int mode)
-//{
-//	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture); 
-//	glActiveTexture(GL_TEXTURE0);
-//	GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-//	GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-//	GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
-//	GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-//	GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
-//	GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
-//	GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
-//	GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
-//	GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
-//	GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
-//	GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
-//	GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
-//	GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
-//	GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
-//	GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
-//	GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
-//	GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
-//	GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
-//	GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
-//
-//	glEnable(GL_BLEND);
-//	glBlendEquation(GL_FUNC_ADD);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//	glDisable(GL_CULL_FACE);
-//	glDisable(GL_DEPTH_TEST);
-//	glEnable(GL_SCISSOR_TEST);
-//	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//
-//	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
-//
-//	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
-//
-//	glUseProgram(program->GetProgramID());
-//	App->renderer3D->SetUniformMatrix(program->GetProgramID(), "view", App->renderer3D->editor_camera->GetViewMatrix());
-//	App->renderer3D->SetUniformMatrix(program->GetProgramID(), "projection", App->renderer3D->editor_camera->GetProjectionMatrix());
-//	App->renderer3D->SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
-//
-//	App->renderer3D->SetUniformVector4(program->GetProgramID(), "debug_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
-//
-//	//Mesh* plane = App->resources->GetMesh("PrimitivePlane");
-//
-//	uint id_vertices_data = 0;
-//	uint id_indices = 0;
-//
-//	uint vao = App->renderer3D->GenVertexArrayObject();
-//
-//	glGenBuffers(1, &id_vertices_data);
-//	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
-//	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STREAM_DRAW);
-//
-//	App->renderer3D->BindVertexArrayObject(vao);
-//	App->renderer3D->SetVertexAttributePointer(0, 3, 0, 0);
-//	App->renderer3D->EnableVertexAttributeArray(0);
-//
-//	glGenBuffers(1, &id_indices);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STREAM_DRAW);
-//
-//	glDrawElements(mode, num_indices, GL_UNSIGNED_INT, nullptr);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//	glDeleteBuffers(1, &id_vertices_data);
-//	glDeleteBuffers(1, &id_indices);
-//
-//	App->renderer3D->UnbindVertexArrayObject();
-//	App->renderer3D->DeleteVertexArrayObject(vao);
-//
-//	glUseProgram(last_program);
-//	glBindTexture(GL_TEXTURE_2D, last_texture);
-//	glBindSampler(0, last_sampler);
-//	glActiveTexture(last_active_texture);
-//	glBindVertexArray(last_vertex_array);
-//	glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
-//	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
-//	glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
-//	if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-//	if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-//	if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-//	if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
-//	glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
-//	glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-//	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
-//}
-
 DebugShape::DebugShape(uint _num_vertices, float * _vertices, uint _num_indices, uint * _indices)
 {
 	if (_num_vertices > 0)
@@ -238,7 +123,7 @@ void DebugDraw::Line(float3 start, float3 end)
 	delete[] indices;
 }
 
-void DebugDraw::Quad(float3 center, float2 size, float4x4 transform)
+void DebugDraw::Quad(float3 center, float2 size)
 {
 	uint num_vertices = 4;
 	uint num_indices = 8;
@@ -250,6 +135,56 @@ void DebugDraw::Quad(float3 center, float2 size, float4x4 transform)
 	float3 down_left = float3(center.x - (size.x/2), center.y - (size.y/2), center.z);
 	float3 down_right = float3(center.x + (size.x / 2), center.y - (size.y / 2), center.z);
 	float3 up_right = float3(center.x + (size.x / 2), center.y + (size.y / 2), center.z);
+
+	vertices[0] = up_left.x;
+	vertices[1] = up_left.y;
+	vertices[2] = up_left.z;
+
+	vertices[3] = down_left.x;
+	vertices[4] = down_left.y;
+	vertices[5] = down_left.z;
+
+	vertices[6] = down_right.x;
+	vertices[7] = down_right.y;
+	vertices[8] = down_right.z;
+
+	vertices[9] = up_right.x;
+	vertices[10] = up_right.y;
+	vertices[11] = up_right.z;
+
+	indices[0] = 0;
+	indices[1] = 1;
+
+	indices[2] = 1;
+	indices[3] = 2;
+
+	indices[4] = 2;
+	indices[5] = 3;
+
+	indices[6] = 3;
+	indices[7] = 0;
+
+	DebugShape shape(num_vertices, vertices, num_indices, indices);
+	shape.SetMode(GL_LINES);
+
+	AddShape(shape);
+
+	delete[] vertices;
+	delete[] indices;
+}
+
+void DebugDraw::Quad(float4x4 transform, float2 size)
+{
+	uint num_vertices = 4;
+	uint num_indices = 8;
+
+	float* vertices = new float[num_vertices * 3];
+	uint* indices = new uint[num_indices];
+
+	float3 up_left = float3(-(size.x / 2), (size.y / 2), 0);
+	float3 down_left = float3(-(size.x / 2), -(size.y / 2), 0);
+	float3 down_right = float3((size.x / 2), -(size.y / 2), 0);
+	float3 up_right = float3((size.x / 2), (size.y / 2), 0);
 
 	vertices[0] = up_left.x;
 	vertices[1] = up_left.y;
