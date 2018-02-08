@@ -253,19 +253,20 @@ void ComponentParticleEmmiter::MoveEmmitArea()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	//Get the current state of the box
-	float3 position_curr;
-	float3 rotation_curr;
-	float3 scale_curr;
+	//Position increment
+	float3 pos_increment = parent_transform->GetGlobalPosition() - emit_area_obb.CenterPoint(); 
 
-	float3 position_inc = parent_transform->GetGlobalPosition() - emit_area_obb.CenterPoint();
-	float3 rotation_inc; 
-	float3 scale_inc;
+	//Rotation increment
+	float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
+	float3 obb_rot = emit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ(); 
 
-	float4x4 rot_mat = float4x4::FromEulerXYZ(parent_transform->GetGlobalRotation().x * DEGTORAD, parent_transform->GetGlobalRotation().y* DEGTORAD, parent_transform->GetGlobalRotation().z* DEGTORAD);
-	float4x4 new_transform = float4x4::FromTRS(position_inc, rot_mat, parent_transform->GetGlobalScale());
+	float3 inc_angle = parent_eule_rot - obb_rot; 
 
-	emit_area_obb.Transform(new_transform);
+	//Apply
+	float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
+	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, parent_transform->GetGlobalScale());
+
+	emit_area_obb.Transform(transform_to_apply);	
 }
 
 void ComponentParticleEmmiter::UpdateRootParticle()
