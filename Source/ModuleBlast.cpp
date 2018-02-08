@@ -10,6 +10,7 @@
 #include "ModulePhysics.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include <d3d11_1.h>
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPhysXDEBUG_x86.lib")
@@ -22,6 +23,8 @@ ModuleBlast::ModuleBlast(Application* app, bool start_enabled, bool is_game) : M
 	name = "Blast_Module";
 	framework = nullptr;
 	px_manager = nullptr;
+	damage_desc_buffer = new FixedBuffer(64 * 1024);
+	damage_params_buffer = new FixedBuffer(1024);
 }
 
 ModuleBlast::~ModuleBlast()
@@ -49,15 +52,27 @@ update_status ModuleBlast::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
-		BlastModel* model = families[0];
+		BlastModel* model = families.begin()->second;
 		NvBlastDamageProgram program;
-		
-		program.graphShaderFunction
+		program.graphShaderFunction = NvBlastExtFalloffGraphShader;
+		program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
+
+		NvBlastExtRadialDamageDesc desc =
+		{
+			1000, { 0.2, 0.2, 0 }, 1.0, 2.0
+		};
+
+		const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
+		NvBlastExtProgramParams params =
+		{
+			buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
+		};
+
+		const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
 		for (Nv::Blast::ExtPxActor* actor : model->actors)
 		{
-			actor->getTkActor().damage()
+			actor->getTkActor().damage(program, buffered_program_params);
 		}
-		model->actors
 	}
 	return UPDATE_CONTINUE;
 }

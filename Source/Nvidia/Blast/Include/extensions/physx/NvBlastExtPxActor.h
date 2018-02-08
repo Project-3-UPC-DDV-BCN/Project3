@@ -29,7 +29,7 @@
 #ifndef NVBLASTEXTPXACTOR_H
 #define NVBLASTEXTPXACTOR_H
 
-#include "NvBlastTypes.h"
+#include "../../lowlevel/NvBlastTypes.h"
 
 
 // Forward declarations
