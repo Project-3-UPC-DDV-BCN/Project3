@@ -295,7 +295,6 @@ void ModuleRenderer3D::DrawSkeleton(Skeleton * skeleton, ComponentCamera* active
 	}
 
 	UnbindVertexArrayObject();
-
 }
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)

@@ -71,6 +71,7 @@ bool Mesh::Load(Data & data)
 		num_vertices = mesh->num_vertices;
 		vertices_data = mesh->vertices_data;
 		App->resources->AddMesh(this);
+		skeleton = mesh->skeleton;
 	}
 	CreateVerticesFromData();
 
