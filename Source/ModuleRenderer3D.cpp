@@ -336,8 +336,13 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+	//TODO: Calculate Normal Matrix here and send it as uniform.
+	// We need this because transitioning to World Space gives a non accurate Normal.
+	// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
 	// SEND LIGHTING
+	// First send Camera Position, just once.
+	SetUniformVector3(program, "camera_pos", App->camera->GetPosition());
 	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); it++)
 	{
 		if ((*it)->GetGameObject()->IsActive())

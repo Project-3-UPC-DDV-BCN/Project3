@@ -1089,15 +1089,15 @@ void ModuleResources::CreateDefaultShaders()
 		"out vec4 ourColor;\n"
 		"out vec3 Normal;\n"
 		"out vec3 FragPos;\n"
-		"out vec2 TexCoord;\n\n"
+		"out vec2 TexCoord;\n"
 		"uniform mat4 Model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n\n"
 		"void main()\n"
 		"{ \n"
 		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"	
+		"	Normal = mat3(transpose(inverse(Model))) * normals;\n"
 		"	FragPos = vec3(Model * vec4(position, 1.0));"
-		"	Normal = normals;\n"
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
 		"}";
@@ -1127,7 +1127,8 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform vec4 material_color;\n"
 			"uniform bool has_texture;\n"
 			"uniform vec4 light_color;\n"
-			"uniform sampler2D ourTexture;\n\n"
+			"uniform sampler2D ourTexture;\n"
+			"uniform vec3 camera_pos;\n\n"
 			"uniform vec3 LightPos;\n\n"
 			"void main()\n"
 			"{\n"
@@ -1147,7 +1148,14 @@ void ModuleResources::CreateDefaultShaders()
 			"float diff = max(dot(norm, lightDir), 0.0);\n"
 			"vec3 diffuse = diff * vec3(light_color);\n\n"
 
-			"vec3 result = (ambient + diffuse);\n"
+			"float specularStrength = 0.8;\n"
+			"vec3 view_direction = normalize(camera_pos - FragPos);\n"
+			"vec3 reflect_direction = reflect(-lightDir, norm);\n\n"
+
+			"float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 64);\n"
+			"vec3 specular = specularStrength * spec * vec3(light_color);\n\n"
+
+			"vec3 result = (ambient + diffuse + specular);\n"
 			"color = vec4(result, 1.0) * color;\n"
 			"}";
 

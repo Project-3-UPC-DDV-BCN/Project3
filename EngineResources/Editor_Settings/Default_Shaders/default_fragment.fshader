@@ -10,6 +10,7 @@ uniform vec4 material_color;
 uniform bool has_texture;
 uniform vec4 light_color;
 uniform sampler2D ourTexture;
+uniform vec3 camera_pos;
 
 uniform vec3 LightPos;
 
@@ -32,6 +33,13 @@ void main()
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * vec3(light_color);
 	
-	vec3 result = (ambient + diffuse);
+	float specularStrength = 0.8;
+	vec3 view_direction = normalize(camera_pos - FragPos);
+	vec3 reflect_direction = reflect(-lightDir, norm);
+	
+	float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 64);
+	vec3 specular = specularStrength * spec * vec3(light_color);
+	
+	vec3 result = (ambient + diffuse + specular);
 	color = vec4(result, 1.0) * color;
 }
