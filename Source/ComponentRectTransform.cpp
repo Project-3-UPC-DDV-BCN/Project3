@@ -30,6 +30,11 @@ bool ComponentRectTransform::Update()
 {
 	bool ret = true;
 
+	if (GetMatrix()[0][3] < 0)
+	{
+		int i = 0;
+	}
+
 	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
 	App->renderer3D->GetDebugDraw()->Circle(GetAnchorTransform(), 10);
 	App->renderer3D->GetDebugDraw()->Circle(GetOriginMatrix(), 10, float4(1, 0.0f, 0.0f, 1.0f));
@@ -142,6 +147,11 @@ float2 ComponentRectTransform::GetGlobalPos() const
 		float4x4 transform = c_trans->GetMatrix();
 
 		ret = float2(transform[0][3], transform[1][3]);
+
+		if (ret.x > 0)
+		{
+			int i = 0;
+		}
 	}
 
 	return ret;
@@ -155,12 +165,23 @@ float4x4 ComponentRectTransform::GetPositionTransform()
 	final_trans[0][3] += pos.x;
 	final_trans[1][3] += pos.y;
 
+	if (final_trans[0][3] > 0)
+	{
+		int i = 0;
+	}
+
 	return final_trans;
 }
 
 void ComponentRectTransform::SetSize(const float2 & _size)
 {
 	size = _size;
+
+	if (size.x < 0)
+		size.x = 0;
+
+	if (size.y < 0)
+		size.y = 0;
 
 	UpdateTransformAndChilds();
 }
@@ -243,7 +264,7 @@ bool ComponentRectTransform::GetHasParent() const
 
 void ComponentRectTransform::UpdateTransform()
 {
-	c_transform->SetMatrix(GetPositionTransform().Inverted());
+	c_transform->SetMatrix(GetPositionTransform());
 }
 
 void ComponentRectTransform::UpdateTransformAndChilds()

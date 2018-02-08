@@ -16,7 +16,7 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 
 	c_rect_trans = (ComponentRectTransform*)GetGameObject()->GetComponent(Component::CompRectTransform);
 
-	size = float2(1080, 720);
+	size = float2(1280, 720);
 	last_size = size;
 	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
 }

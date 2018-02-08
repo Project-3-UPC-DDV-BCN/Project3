@@ -127,7 +127,7 @@ void ComponentTransform::UpdateLocals()
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		float4x4 local_transform = transform_matrix.Inverted() * parent_transform->transform_matrix;
+		float4x4 local_transform = transform_matrix * parent_transform->transform_matrix.Inverted();
 
 		local_transform.Decompose(position, rotation, scale);
 
