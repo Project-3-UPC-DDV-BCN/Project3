@@ -8,6 +8,7 @@
 class ComponentMeshRenderer;
 class Primitive;
 class ComponentCamera;
+class DebugDraw;
 
 #define MAX_LIGHTS 8
 
@@ -49,6 +50,8 @@ public:
 	void UnbindArraybuffer() const;
 	void UnbindElementArrayBuffer() const;
 
+	DebugDraw* GetDebugDraw();
+
 	//Shaders
 	uint GenVertexArrayObject() const;
 	void BindVertexArrayObject(uint id) const;
@@ -87,7 +90,6 @@ private:
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 public:
-
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
@@ -95,6 +97,7 @@ public:
 	std::list<ComponentCamera*> rendering_cameras;
 	ComponentCamera* editor_camera;
 	ComponentCamera* game_camera;
+	DebugDraw* debug_draw = nullptr;
 
 private:
 	bool use_vsync;

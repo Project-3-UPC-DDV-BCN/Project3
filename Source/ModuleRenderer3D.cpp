@@ -40,6 +40,7 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	game_camera = nullptr;
 	use_skybox = true;
 	lights_count = 0;
+	debug_draw = new DebugDraw();
 }
 
 // Destructor
@@ -185,8 +186,11 @@ void ModuleRenderer3D::DrawEditorScene()
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	DrawLine(float3(0, 0, 0), float3(0, 0, 2)); DrawLine(float3(0, 0, 2), float3(0, 2, 2));
-
+	//debug_draw->Line(float3(0, 0, 0), float3(10, 10, 10));
+	debug_draw->Quad(float3(0, 0, 0), float2(10, 10));
+	// Debug Draw render
+	debug_draw->Render(editor_camera);
+	debug_draw->Clear();
 
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
@@ -362,6 +366,10 @@ bool ModuleRenderer3D::CleanUp()
 	CONSOLE_DEBUG("Destroying 3D Renderer");
 	SDL_GL_DeleteContext(context);
 	rendering_cameras.clear();
+
+	debug_draw->Clear();
+	RELEASE(debug_draw);
+
 	return true;
 }
 
@@ -518,6 +526,11 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	{
 		CONSOLE_ERROR ("Error unbind buffer: %s\n", gluErrorString(error));
 	}
+}
+
+DebugDraw * ModuleRenderer3D::GetDebugDraw()
+{
+	return debug_draw;
 }
 
 // ------------- Shaders -------------------------
