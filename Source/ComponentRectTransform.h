@@ -36,6 +36,9 @@ public:
 	float2 GetGlobalPos() const;
 	float4x4 GetPositionTransform();
 
+	void SetRotation(const float3& rotation);
+	float3 GetLocalRotation() const;
+
 	void SetSize(const float2& size);
 	float2 GetSize() const;
 

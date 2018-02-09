@@ -296,12 +296,18 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 			if (c_canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE || !is_canvas)
 			{
 				float2 position = rect_transform->GetPos();
+				float3 rotation = rect_transform->GetLocalRotation();
 				float2 anchor = rect_transform->GetAnchor();
 				float2 size = rect_transform->GetSize();
 
 				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
 				{
 					rect_transform->SetPos(position);
+				}
+
+				if (ImGui::DragFloat3("Rotation", (float*)&rotation, true, 0.25f))
+				{
+					rect_transform->SetRotation(rotation);
 				}
 
 				if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))

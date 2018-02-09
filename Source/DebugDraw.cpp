@@ -225,9 +225,9 @@ void DebugDraw::Quad(float4x4 transform, float2 size, float4 colour)
 	delete[] indices;
 }
 
-void DebugDraw::Circle(float4x4 transform, float rad, float4 colour)
+void DebugDraw::Circle(float4x4 transform, float rad, float4 colour, uint resolution)
 {
-	int slices = 30;
+	int slices = resolution;
 
 	float angle_slice = 360 / slices;
 

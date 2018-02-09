@@ -30,14 +30,21 @@ bool ComponentRectTransform::Update()
 {
 	bool ret = true;
 
-	if (GetMatrix()[0][3] < 0)
+	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
+	App->renderer3D->GetDebugDraw()->Circle(GetAnchorTransform(), 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
+	App->renderer3D->GetDebugDraw()->Circle(GetOriginMatrix(), 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
+
+	float4x4 mat = GetMatrix();
+	float4x4 ma = GetOriginMatrix();
+
+	ComponentTransform * ct = GetParentCompTransform();
+
+	if (ct != nullptr)
 	{
+		float4x4 m = ct->GetMatrix();
+
 		int i = 0;
 	}
-
-	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
-	App->renderer3D->GetDebugDraw()->Circle(GetAnchorTransform(), 10);
-	App->renderer3D->GetDebugDraw()->Circle(GetOriginMatrix(), 10, float4(1, 0.0f, 0.0f, 1.0f));
 
 	return ret;
 }
@@ -84,8 +91,10 @@ float4x4 ComponentRectTransform::GetOriginMatrix() const
 	float4x4 ret = float4x4::identity;
 
 	ret = c_transform->GetMatrix();
-	ret[0][3] -= (size.x/2);
-	ret[1][3] -= (size.y/2);
+
+	ret[0][3] -= (size.x / 2);
+	ret[1][3] -= (size.y / 2);
+	ret[2][3] = 0;
 
 	return ret;
 }
@@ -147,11 +156,6 @@ float2 ComponentRectTransform::GetGlobalPos() const
 		float4x4 transform = c_trans->GetMatrix();
 
 		ret = float2(transform[0][3], transform[1][3]);
-
-		if (ret.x > 0)
-		{
-			int i = 0;
-		}
 	}
 
 	return ret;
@@ -171,6 +175,18 @@ float4x4 ComponentRectTransform::GetPositionTransform()
 	}
 
 	return final_trans;
+}
+
+void ComponentRectTransform::SetRotation(const float3 & rotation)
+{
+	c_transform->SetRotation(rotation);
+
+	UpdateTransformAndChilds();
+}
+
+float3 ComponentRectTransform::GetLocalRotation() const
+{
+	return c_transform->GetLocalRotation();
 }
 
 void ComponentRectTransform::SetSize(const float2 & _size)

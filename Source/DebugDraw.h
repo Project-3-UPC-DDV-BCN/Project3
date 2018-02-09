@@ -47,7 +47,7 @@ public:
 	void Line(float3 start, float3 end);
 	void Quad(float3 center, float2 size);
 	void Quad(float4x4 transform, float2 size, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
-	void Circle(float4x4 transform, float rad, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
+	void Circle(float4x4 transform, float rad, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f), uint resolution = 13);
 
 	void Render(ComponentCamera* cameras);
 	void Clear();
