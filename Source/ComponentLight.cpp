@@ -42,6 +42,11 @@ Color ComponentLight::GetColor() const
 	return color;
 }
 
+float* ComponentLight::GetColorToEdit() const
+{
+	return (float*)&color;
+}
+
 float4 ComponentLight::GetColorAsFloat4() const
 {
 	return float4(color.r, color.g, color.b, 1.0f);
@@ -55,4 +60,19 @@ void ComponentLight::SetIntensity(float intensity)
 float ComponentLight::GetIntensity() const
 {
 	return intensity;
+}
+
+LightType ComponentLight::GetType() const
+{
+	return type;
+}
+
+void ComponentLight::SetType(LightType type)
+{
+	this->type = type;
+}
+
+void ComponentLight::SetType(uint type)
+{
+	this->type = (LightType)type;
 }

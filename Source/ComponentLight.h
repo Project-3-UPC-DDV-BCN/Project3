@@ -2,6 +2,13 @@
 #include "Component.h"
 #include "Color.h"
 
+enum LightType {
+	DIRECTIONAL_LIGHT = 0,
+	POINT_LIGHT,
+	SPOT_LIGHT,
+	UNKNOWN_LIGHT
+};
+
 class ComponentLight :
 	public Component
 {
@@ -14,13 +21,18 @@ public:
 
 	void SetColor(Color color);
 	Color GetColor() const;
+	float* GetColorToEdit() const;
 	float4 GetColorAsFloat4() const;
 
 	void SetIntensity(float intensity);
 	float GetIntensity() const;
 
+	LightType GetType() const;
+	void SetType(LightType type);
+	void SetType(uint type);
+
 private:
 	Color color = White;
 	float intensity = 1.0f;
+	LightType type = POINT_LIGHT;
 };
-

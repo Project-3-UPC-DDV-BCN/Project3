@@ -589,14 +589,19 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 		{
 			comp_light->SetActive(is_active);
 		}
-		if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen)) {
-			float3 color(comp_light->GetColorAsFloat4().x, comp_light->GetColorAsFloat4().y, comp_light->GetColorAsFloat4().z);
 
-			if (ImGui::DragFloat3("RGB", (float*)&color, is_active, 0.25f)) {
-				Color col = { color.x, color.y, color.z, 1.0f };
-				comp_light->SetColor(col);
-			}
+		ImGui::Separator();
+
+		if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen)) 
+		{
+			ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+			flags |= ImGuiColorEditFlags_RGB;
+
+			ImGui::ColorPicker4("Current Color##4", comp_light->GetColorToEdit(), flags);
 		}
 
+		
+
+		
 	}
 }
