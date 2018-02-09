@@ -45,7 +45,7 @@ public:
 	DebugDraw();
 
 	void Line(float3 start, float3 end, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
-	void Quad(float3 center, float2 size, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	void Quad(float3 center, float2 size, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
 	void Quad(float4x4 transform, float2 size, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
 	void Circle(float4x4 transform, float rad, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f), uint resolution = 13);
 
