@@ -95,7 +95,7 @@ DebugDraw::DebugDraw()
 {
 }
 
-void DebugDraw::Line(float3 start, float3 end)
+void DebugDraw::Line(float3 start, float3 end, float4 colour)
 {
 	uint num_vertices = 2;
 	uint num_indices = 2;
@@ -116,6 +116,7 @@ void DebugDraw::Line(float3 start, float3 end)
 
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
+	shape.SetColour(colour);
 
 	AddShape(shape);
 
@@ -123,7 +124,7 @@ void DebugDraw::Line(float3 start, float3 end)
 	delete[] indices;
 }
 
-void DebugDraw::Quad(float3 center, float2 size)
+void DebugDraw::Quad(float3 center, float2 size, float4 colour)
 {
 	uint num_vertices = 4;
 	uint num_indices = 8;
@@ -166,6 +167,7 @@ void DebugDraw::Quad(float3 center, float2 size)
 
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
+	shape.SetColour(colour);
 
 	AddShape(shape);
 

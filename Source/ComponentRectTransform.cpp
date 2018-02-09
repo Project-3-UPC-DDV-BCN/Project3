@@ -33,6 +33,7 @@ bool ComponentRectTransform::Update()
 	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
 	App->renderer3D->GetDebugDraw()->Circle(GetAnchorTransform(), 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
 	App->renderer3D->GetDebugDraw()->Circle(GetOriginMatrix(), 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
+	App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
 
 	float4x4 mat = GetMatrix();
 	float4x4 ma = GetOriginMatrix();
@@ -138,17 +139,15 @@ float2 ComponentRectTransform::GetPos() const
 	return pos;
 }
 
-float2 ComponentRectTransform::GetGlobalPos() const
+float3 ComponentRectTransform::GetGlobalPos() const
 {
-	float2 ret = float2::zero;
+	float3 ret = float3::zero;
 
 	ComponentTransform* c_trans = GetCompTransform();
 
 	if (c_trans != nullptr)
 	{
-		float4x4 transform = c_trans->GetMatrix();
-
-		ret = float2(transform[0][3], transform[1][3]);
+		ret = c_trans->GetGlobalPosition();
 	}
 
 	return ret;
@@ -221,13 +220,18 @@ float2 ComponentRectTransform::GetAnchor() const
 	return anchor;
 }
 
-float2 ComponentRectTransform::GetGlobalAnchor()
+float3 ComponentRectTransform::GetAnchorGlobalPos()
 {
-	float2 ret = float2::zero;
+	float3 ret = float3::zero;
 
 	float4x4 anchor_trans = GetAnchorTransform();
 
-	ret = float2(anchor_trans[0][3], anchor_trans[1][3]);
+	float3 transform;
+	Quat rot;
+	float3 sca;
+	anchor_trans.Decompose(transform, rot, sca);
+
+	ret = transform;
 
 	return ret;
 }

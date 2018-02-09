@@ -33,7 +33,7 @@ public:
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
-	float2 GetGlobalPos() const;
+	float3 GetGlobalPos() const;
 	float4x4 GetPositionTransform();
 
 	void SetRotation(const float3& rotation);
@@ -44,7 +44,7 @@ public:
 
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
-	float2 GetGlobalAnchor();
+	float3 GetAnchorGlobalPos();
 	float4x4 GetAnchorTransform();
 
 	void Save(Data& data) const;
