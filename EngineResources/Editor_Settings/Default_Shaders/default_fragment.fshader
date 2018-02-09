@@ -12,7 +12,22 @@ uniform vec4 light_color;
 uniform sampler2D ourTexture;
 uniform vec3 camera_pos;
 
-uniform vec3 LightPos;
+struct Light 
+{
+vec3 position;
+vec3 direction;
+float cutOff;
+
+vec3 ambient;
+vec3 diffuse;
+vec3 specular;
+
+float constant;
+float linear;
+float quadratic;
+};
+
+uniform Light light;
 
 void main()
 {
@@ -24,22 +39,24 @@ void main()
 		color = material_color;
 	else
 		color = ourColor;
-		
-	float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * vec3(light_color);
+		color = color * light_color;
+    vec3 ambient = light.ambient * vec3(light_color);
 
 	vec3 norm = normalize(Normal);
-	vec3 lightDir = normalize(LightPos - FragPos);  
+	vec3 lightDir = normalize(light.position - FragPos);  
 	float diff = max(dot(norm, lightDir), 0.0);
-	vec3 diffuse = diff * vec3(light_color);
+	vec3 diffuse = light.diffuse * diff * vec3(light_color);
 	
-	float specularStrength = 0.8;
 	vec3 view_direction = normalize(camera_pos - FragPos);
 	vec3 reflect_direction = reflect(-lightDir, norm);
-	
 	float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 64);
-	vec3 specular = specularStrength * spec * vec3(light_color);
+	vec3 specular = light.specular * spec * vec3(light_color);
 	
+	float distance = length(light.position - FragPos);
+	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));  
+	ambient *= attenuation;
+	diffuse *= attenuation;
+	specular *= attenuation;
 	vec3 result = (ambient + diffuse + specular);
 	color = vec4(result, 1.0) * color;
 }

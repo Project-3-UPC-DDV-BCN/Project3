@@ -590,7 +590,26 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			comp_light->SetActive(is_active);
 		}
 
-		ImGui::Separator();
+		ImGui::Text("Type:");
+		ImGui::SameLine();
+		if (ImGui::SmallButton((comp_light->GetTypeString() + "##types").c_str())) {
+			ImGui::OpenPopup("Types##light");
+		}
+		if (ImGui::BeginPopup("Types##light")) {
+				if (comp_light->GetType() != DIRECTIONAL_LIGHT && ImGui::MenuItem("Directional")) 
+				{		
+					comp_light->SetTypeToDirectional();
+				}
+				if (comp_light->GetType() != POINT_LIGHT && ImGui::MenuItem("Point"))
+				{
+					comp_light->SetTypeToPoint();
+				}
+				if (comp_light->GetType() != SPOT_LIGHT && ImGui::MenuItem("Spot"))
+				{
+					comp_light->SetTypeToSpot();
+				}
+			ImGui::EndPopup();
+		}
 
 		if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen)) 
 		{
@@ -598,10 +617,6 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			flags |= ImGuiColorEditFlags_RGB;
 
 			ImGui::ColorPicker4("Current Color##4", comp_light->GetColorToEdit(), flags);
-		}
-
-		
-
-		
+		}		
 	}
 }

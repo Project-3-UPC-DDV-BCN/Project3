@@ -67,12 +67,35 @@ LightType ComponentLight::GetType() const
 	return type;
 }
 
-void ComponentLight::SetType(LightType type)
+std::string ComponentLight::GetTypeString() const
 {
-	this->type = type;
+	switch (type) {
+	case DIRECTIONAL_LIGHT:
+		return "Directional";
+		break;
+	case POINT_LIGHT:
+		return "Point";
+		break;
+	case SPOT_LIGHT:
+		return "Spot";
+		break;
+	default:
+		return "Error";
+		break;
+	}
 }
 
-void ComponentLight::SetType(uint type)
+void ComponentLight::SetTypeToDirectional()
 {
-	this->type = (LightType)type;
+	type = DIRECTIONAL_LIGHT;
+}
+
+void ComponentLight::SetTypeToPoint()
+{
+	type = POINT_LIGHT;
+}
+
+void ComponentLight::SetTypeToSpot()
+{
+	type = SPOT_LIGHT;
 }

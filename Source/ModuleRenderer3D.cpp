@@ -346,11 +346,32 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); it++)
 	{
 		if ((*it)->GetGameObject()->IsActive())
-		{
+		{		
+			/*lightingShader.setVec3("light.position", camera.Position);
+			lightingShader.setVec3("light.direction", camera.Front);
+			lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));*/
+			/*switch ((*it)->GetType())
+			{
+			case DIRECTIONAL_LIGHT:
+				SetUniformUInt(program, "light_type", );
+				break;
+			case POINT_LIGHT:
+				break;
+			case SPOT_LIGHT:
+				break;
+			default:
+				break;
+			}*/
 			ComponentTransform* light_transform = (ComponentTransform*) (*it)->GetGameObject()->GetComponent(Component::CompTransform);
-			float3 gbl_pos = light_transform->GetGlobalPosition();
-			SetUniformVector3(program, "LightPos", light_transform->GetGlobalPosition());
+
+			SetUniformFloat(program, "light.constant", 1.0f);
+			SetUniformFloat(program, "light.linear", 1.0f);
+			SetUniformFloat(program, "light.quadratic", 1.0f);
+			SetUniformVector3(program, "light.position", light_transform->GetGlobalPosition());
 			SetUniformVector4(program, "light_color", (*it)->GetColorAsFloat4());
+			SetUniformVector3(program, "light.ambient", float3(0.1f, 0.1f,0.1f));
+			SetUniformVector3(program, "light.diffuse", float3(0.8f, 0.8f, 0.8f));
+			SetUniformVector3(program, "light.specular", float3(1.0f, 1.0f, 1.0f));
 		}
 	}
 
@@ -719,6 +740,20 @@ void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float *
 	GLint modelLoc = glGetUniformLocation(program, name);
 	if (modelLoc != -1)
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform matrix %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformUInt(uint program, const char * name, uint data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1ui(modelLoc, data);
 	GLenum error = glGetError();
 
 	//Check for error

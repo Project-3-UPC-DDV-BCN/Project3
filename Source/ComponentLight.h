@@ -28,8 +28,10 @@ public:
 	float GetIntensity() const;
 
 	LightType GetType() const;
-	void SetType(LightType type);
-	void SetType(uint type);
+	std::string GetTypeString() const;
+	void SetTypeToDirectional();
+	void SetTypeToPoint();
+	void SetTypeToSpot();
 
 private:
 	Color color = White;
