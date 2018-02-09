@@ -3,6 +3,22 @@
 #include "Script.h"
 #include "Shader.h"
 
+struct File
+{
+	std::string name;
+	std::string extension;
+	std::string path;
+};
+
+struct Directory
+{
+	std::string name;
+	std::string path;
+	std::vector<Directory> subdirectories;
+	std::vector<File> directory_files;
+	long long current_modified_time = 0;
+};
+
 class Texture;
 
 class AssetsWindow :
@@ -26,6 +42,8 @@ private:
 	void CreateScript(Script::ScriptType type, std::string script_name);
 	void CreateShader(Shader::ShaderType type, std::string shader_name);
 	void CreateMaterial(std::string material_name);
+	void CheckDirectory(Directory directory);
+	void FillDirectories(Directory parent, std::string directory_path);
 
 private:
 	uint node;
@@ -51,5 +69,8 @@ private:
 	std::string delete_path;
 
 	Shader::ShaderType shader_type;
+
+	std::vector<Directory> directories;
+	std::vector<File> files;
 };
 

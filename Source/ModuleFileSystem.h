@@ -39,7 +39,7 @@ public:
 	std::string GetFullPath(std::string file_name);
 	//Returns true if file1 time is greater than file2 time
 	bool CompareFilesTime(std::string file1_path, std::string file2_path);
-	fs::file_time_type GetModifiedTime(std::string file_path);
+	long long GetModifiedTime(std::string file_path);
 
 	std::string StringToPathFormat(std::string path);
 };

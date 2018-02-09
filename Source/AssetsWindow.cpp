@@ -43,6 +43,9 @@ AssetsWindow::AssetsWindow()
 	}
 	assets_folder_path = App->file_system->StringToPathFormat(ASSETS_FOLDER_PATH);
 	selected_folder = assets_folder_path;
+
+	Directory dir;
+	FillDirectories(dir, assets_folder_path);
 }
 
 AssetsWindow::~AssetsWindow()
@@ -639,6 +642,46 @@ void AssetsWindow::CreateMaterial(std::string material_name)
 
 	RELEASE(new_mat);
 	App->resources->CreateResource(selected_folder + "\\" + new_file_name);
+}
+
+void AssetsWindow::CheckDirectory(Directory directory)
+{
+	long long current_modified_time = App->file_system->GetModifiedTime(directory.path);
+	if (current_modified_time > directory.current_modified_time)
+	{
+		directory.current_modified_time = current_modified_time;
+		directory.directory_files.clear();
+		std::vector<std::string> files = App->file_system->GetFilesInDirectory(directory.path);
+		for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); it++)
+		{
+			File file;
+			file.path = *it;
+			file.extension = App->file_system->GetFileExtension(*it);
+			file.name = App->file_system->GetFileNameWithoutExtension(*it);
+		}
+	}
+}
+
+void AssetsWindow::FillDirectories(Directory parent, std::string directory_path)
+{
+	Directory dir;
+	dir.path = directory_path;
+	dir.name = App->file_system->GetDirectoryName(directory_path);
+	dir.current_modified_time = App->file_system->GetModifiedTime(directory_path);
+	std::vector<std::string> files = App->file_system->GetFilesInDirectory(directory_path);
+	for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); it++)
+	{
+		File file;
+		file.path = *it;
+		file.extension = App->file_system->GetFileExtension(*it);
+		file.name = App->file_system->GetFileNameWithoutExtension(*it);
+		dir.directory_files.push_back(file);
+	}
+	std::vector<std::string> sub_directories = App->file_system->GetSubDirectories(directory_path);
+	for (std::vector<std::string>::iterator it = sub_directories.begin(); it != sub_directories.end(); it++)
+	{
+		
+	}
 }
 
 void AssetsWindow::DeleteWindow(std::string path)
