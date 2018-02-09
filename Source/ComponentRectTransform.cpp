@@ -39,13 +39,6 @@ bool ComponentRectTransform::Update()
 
 	ComponentTransform * ct = GetParentCompTransform();
 
-	if (ct != nullptr)
-	{
-		float4x4 m = ct->GetMatrix();
-
-		int i = 0;
-	}
-
 	return ret;
 }
 
@@ -92,9 +85,9 @@ float4x4 ComponentRectTransform::GetOriginMatrix() const
 
 	ret = c_transform->GetMatrix();
 
-	ret[0][3] -= (size.x / 2);
-	ret[1][3] -= (size.y / 2);
-	ret[2][3] = 0;
+	float4x4 movement = ret.FromTRS(float3(-(size.x / 2), -(size.y / 2), 0), Quat::identity, float3::one);
+
+	ret = c_transform->GetMatrix() * movement;
 
 	return ret;
 }
@@ -166,13 +159,10 @@ float4x4 ComponentRectTransform::GetPositionTransform()
 	float4x4 anchor_trans = GetAnchorTransform();
 
 	float4x4 final_trans = anchor_trans;
-	final_trans[0][3] += pos.x;
-	final_trans[1][3] += pos.y;
 
-	if (final_trans[0][3] > 0)
-	{
-		int i = 0;
-	}
+	float4x4 movement = final_trans.FromTRS(float3(pos.x, pos.y, 0), Quat::identity, float3::one);
+	
+	final_trans = anchor_trans * movement;
 
 	return final_trans;
 }
@@ -254,8 +244,10 @@ float4x4 ComponentRectTransform::GetAnchorTransform()
 		float2 parent_size = parent_c_rect_trans->GetSize();
 
 		anchor_trans = parent_matrix_orig;
-		anchor_trans[0][3] += (anchor.x * parent_size.x);
-		anchor_trans[1][3] += (anchor.y * parent_size.y);
+
+		float4x4 movement = anchor_trans.FromTRS(float3((anchor.x * parent_size.x), (anchor.y * parent_size.y), 0), Quat::identity, float3::one);
+
+		anchor_trans = parent_c_rect_trans->GetOriginMatrix() * movement;
 	}
 	else
 	{

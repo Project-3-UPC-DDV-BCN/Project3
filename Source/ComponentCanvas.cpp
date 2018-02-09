@@ -95,7 +95,6 @@ void ComponentCanvas::ClearDrawElements()
 std::vector<CanvasDrawElement> ComponentCanvas::GetDrawElements()
 {
 	return draws;
-
 }
 
 void ComponentCanvas::Save(Data & data) const

@@ -16,14 +16,17 @@ public:
 
 	bool Update();
 
+	void SetTextureId(uint texture_id);
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
 private:
+	ComponentCanvas* GetCanvas();
 	ComponentRectTransform * GetRectTrans();
 
 private:
-	CanvasDrawElement* image = nullptr;
+	uint texture_id = 0;
 
 };
 
