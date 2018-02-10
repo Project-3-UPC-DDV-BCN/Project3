@@ -19,22 +19,21 @@ public:
 	ComponentTransform* GetCompTransform() const;
 	ComponentTransform* GetParentCompTransform() const;
 	ComponentRectTransform* GetParentCompRectTransform() const;
-	float4x4 GetMatrix() const;
-	float2 GetGlobalOrigin();
-	float4x4 GetOriginMatrix() const;
-
 	ComponentCanvas* GetCanvas(bool& go_is_canvas);
 
 	void UpdateTransform();
-	void UpdateTransformAndChilds();
-
 	void UpdateRectTransform();
-	void UpdateRectTransformAndChilds();
+
+	float4x4 GetMatrix() const;
+	float3 GetOriginLocalPos();
+	float2 GetOriginGlobalPos();
+	float4x4 GetOriginMatrix() const;
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
+	float3 GetLocalPos() const;
 	float3 GetGlobalPos() const;
-	float4x4 GetPositionTransform();
+	float3 GetPreferedPos();
 
 	void SetRotation(const float3& rotation);
 	float3 GetLocalRotation() const;
@@ -44,6 +43,7 @@ public:
 
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
+	float3 GetAnchorLocalPos();
 	float3 GetAnchorGlobalPos();
 	float4x4 GetAnchorTransform();
 
@@ -59,6 +59,7 @@ private:
 	float2				pos;
 	float2				size;
 	float2			    anchor;
+	float3				rotation;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

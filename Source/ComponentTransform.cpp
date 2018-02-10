@@ -24,8 +24,8 @@ ComponentTransform::~ComponentTransform()
 
 void ComponentTransform::SetPosition(float3 position)
 {
-	this->position = position;
-	UpdateGlobalMatrix();
+this->position = position;
+UpdateGlobalMatrix();
 }
 
 float3 ComponentTransform::GetGlobalPosition() const
@@ -123,21 +123,27 @@ void ComponentTransform::UpdateGlobalMatrix()
 
 void ComponentTransform::UpdateLocals()
 {
-	if (!this->GetGameObject()->IsRoot())
+	float4x4 local_transform = float4x4::identity;
+
+	if(!this->GetGameObject()->IsRoot())
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
-
-		float4x4 local_transform = transform_matrix * parent_transform->transform_matrix.Inverted();
-
-		local_transform.Decompose(position, rotation, scale);
-
-		float3 _pos, _scale;
-		Quat _rot;
-		transform_matrix.Decompose(_pos, _rot, _scale);
-		global_pos = _pos;
-		global_rot = _rot.ToEulerXYZ() * RADTODEG;
-		global_scale = _scale;
+		local_transform = transform_matrix * parent_transform->transform_matrix.Inverted();
 	}
+	else
+	{
+		local_transform = transform_matrix;
+	}
+
+	local_transform.Decompose(position, rotation, scale);
+
+	float3 _pos, _scale;
+	Quat _rot;
+	transform_matrix.Decompose(_pos, _rot, _scale);
+	global_pos = _pos;
+	global_rot = _rot.ToEulerXYZ() * RADTODEG;
+	global_scale = _scale;
+	
 }
 
 const float4x4 ComponentTransform::GetMatrix() const

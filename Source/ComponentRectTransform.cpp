@@ -18,6 +18,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	pos = float2::zero;
 	size = float2::zero;
 	anchor = float2(0.5f, 0.5f);
+	rotation = float3::zero;
 
 	UpdateTransform();
 }
@@ -34,11 +35,6 @@ bool ComponentRectTransform::Update()
 	App->renderer3D->GetDebugDraw()->Circle(GetAnchorTransform(), 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
 	App->renderer3D->GetDebugDraw()->Circle(GetOriginMatrix(), 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
 	App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
-
-	float4x4 mat = GetMatrix();
-	float4x4 ma = GetOriginMatrix();
-
-	ComponentTransform * ct = GetParentCompTransform();
 
 	return ret;
 }
@@ -64,31 +60,6 @@ ComponentRectTransform * ComponentRectTransform::GetParentCompRectTransform() co
 
 	if (GetHasParent())
 		ret = (ComponentRectTransform*)GetGameObject()->GetParent()->GetComponent(Component::CompRectTransform);
-
-	return ret;
-}
-
-float4x4 ComponentRectTransform::GetMatrix() const
-{
-	return c_transform->GetMatrix();
-}
-
-float2 ComponentRectTransform::GetGlobalOrigin()
-{
-	float4x4 mat = GetOriginMatrix();
-
-	return float2(mat[0][3], mat[1][3]);
-}
-
-float4x4 ComponentRectTransform::GetOriginMatrix() const
-{
-	float4x4 ret = float4x4::identity;
-
-	ret = c_transform->GetMatrix();
-
-	float4x4 movement = ret.FromTRS(float3(-(size.x / 2), -(size.y / 2), 0), Quat::identity, float3::one);
-
-	ret = c_transform->GetMatrix() * movement;
 
 	return ret;
 }
@@ -127,11 +98,47 @@ ComponentCanvas * ComponentRectTransform::GetCanvas(bool& go_is_canvas)
 	return ret;
 }
 
+float4x4 ComponentRectTransform::GetMatrix() const
+{
+	return c_transform->GetMatrix();
+}
+
+float3 ComponentRectTransform::GetOriginLocalPos()
+{
+	float3 ret = float3::zero;
+
+	float3 pos = c_transform->GetLocalPosition();
+
+	ret = pos - float3(size.x/2, size.y/2, 0);
+
+	return ret;
+}
+
+float2 ComponentRectTransform::GetOriginGlobalPos()
+{
+	float4x4 mat = GetOriginMatrix();
+
+	return float2(mat[0][3], mat[1][3]);
+}
+
+float4x4 ComponentRectTransform::GetOriginMatrix() const
+{
+	float4x4 ret = float4x4::identity;
+
+	ret = c_transform->GetMatrix();
+
+	float4x4 movement = ret.FromTRS(float3(-(size.x / 2), -(size.y / 2), 0), Quat::identity, float3::one);
+
+	ret = c_transform->GetMatrix() * movement;
+
+	return ret;
+}
+
 void ComponentRectTransform::SetPos(const float2 & _pos)
 {
 	pos = _pos;
 
-	UpdateTransformAndChilds();
+	UpdateTransform();
 }
 
 float2 ComponentRectTransform::GetPos() const
@@ -139,38 +146,32 @@ float2 ComponentRectTransform::GetPos() const
 	return pos;
 }
 
+float3 ComponentRectTransform::GetLocalPos() const
+{
+	return c_transform->GetLocalPosition();
+}
+
 float3 ComponentRectTransform::GetGlobalPos() const
+{
+	return c_transform->GetGlobalPosition();
+}
+
+float3 ComponentRectTransform::GetPreferedPos()
 {
 	float3 ret = float3::zero;
 
-	ComponentTransform* c_trans = GetCompTransform();
+	float3 anchor_pos = GetAnchorLocalPos();
 
-	if (c_trans != nullptr)
-	{
-		ret = c_trans->GetGlobalPosition();
-	}
+	ret.x = anchor_pos.x + pos.x;
+	ret.y = anchor_pos.y + pos.y;
 
 	return ret;
 }
 
-float4x4 ComponentRectTransform::GetPositionTransform()
+void ComponentRectTransform::SetRotation(const float3 & _rotation)
 {
-	float4x4 anchor_trans = GetAnchorTransform();
-
-	float4x4 final_trans = anchor_trans;
-
-	float4x4 movement = final_trans.FromTRS(float3(pos.x, pos.y, 0), Quat::identity, float3::one);
-	
-	final_trans = anchor_trans * movement;
-
-	return final_trans;
-}
-
-void ComponentRectTransform::SetRotation(const float3 & rotation)
-{
-	c_transform->SetRotation(rotation);
-
-	UpdateTransformAndChilds();
+	c_transform->SetRotation(_rotation);
+	rotation = _rotation;
 }
 
 float3 ComponentRectTransform::GetLocalRotation() const
@@ -218,6 +219,25 @@ void ComponentRectTransform::SetAnchor(const float2 & _anchor)
 float2 ComponentRectTransform::GetAnchor() const
 {
 	return anchor;
+}
+
+float3 ComponentRectTransform::GetAnchorLocalPos()
+{
+	float3 ret = float3::zero;
+
+	ComponentRectTransform* parent_c_rect_trans = GetParentCompRectTransform();
+
+	if (parent_c_rect_trans != nullptr)
+	{
+		float2 parent_size = parent_c_rect_trans->GetSize();
+
+		ret = parent_c_rect_trans->GetOriginLocalPos();
+
+		ret.x += anchor.x * parent_size.x;
+		ret.y += anchor.y * parent_size.y;
+	}
+
+	return ret;
 }
 
 float3 ComponentRectTransform::GetAnchorGlobalPos()
@@ -276,7 +296,9 @@ bool ComponentRectTransform::GetHasParent() const
 
 void ComponentRectTransform::UpdateTransform()
 {
-	c_transform->SetMatrix(GetPositionTransform());
+	c_transform->SetPosition(GetPreferedPos());
+
+	c_transform->SetRotation(rotation);
 }
 
 void ComponentRectTransform::UpdateTransformAndChilds()
@@ -309,14 +331,14 @@ void ComponentRectTransform::UpdateTransformAndChilds()
 
 void ComponentRectTransform::UpdateRectTransform()
 {
-	float4x4 anchor_trans = GetAnchorTransform();
-	float4x4 transform = GetMatrix();
+	//float4x4 anchor_trans = GetAnchorTransform();
+	//float4x4 transform = GetMatrix();
 
-	float2 new_pos = float2::zero;
-	new_pos.x = transform[0][3] - anchor_trans[0][3];
-	new_pos.y = transform[1][3] - anchor_trans[1][3];
+	//float2 new_pos = float2::zero;
+	//new_pos.x = transform[0][3] - anchor_trans[0][3];
+	//new_pos.y = transform[1][3] - anchor_trans[1][3];
 
-	SetPos(new_pos);
+	//SetPos(new_pos);
 }
 
 void ComponentRectTransform::UpdateRectTransformAndChilds()
