@@ -8,6 +8,8 @@
 #include "GameObject.h"
 #include "Mesh.h"
 
+#include <map>
+
 #include "OpenGL.h"
 
 void ComponentParticleEmmiter::GenerateParticles()
@@ -18,8 +20,7 @@ void ComponentParticleEmmiter::GenerateParticles()
 	if (spawn_timer.Read() > emmision_frequency)
 	{
 		Particle* new_particle = CreateParticle();
-		new_particle->SetDistanceToCamera(0);
-		active_particles.push_back(new_particle);
+		active_particles.insert(pair<float, Particle* > (new_particle->GetDistanceToCamera(),new_particle));
 		spawn_timer.Start();
 	}
 
@@ -60,7 +61,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetParticleTexture(root_particle->components.texture);
 	new_particle->SetColor(color);
 	new_particle->SetGravity(gravity);
-	new_particle->SetDistanceToCamera(0);
 
 	new_particle->SetWorldSpace(relative_pos);
 
@@ -84,16 +84,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//	new_particle->SetInterpolationRotation(false, 0, 0);
 	//	new_particle->SetAngular(angular_v);
 	//}
-
-	//if (is_animated)
-	//{
-	//	new_particle->animated_particle = true;
-	//	new_particle->components.particle_animation = root_particle->components.particle_animation;
-	//	new_particle->components.particle_animation.timeStep = time_step;
-	//	new_particle->SetTextureByID(new_particle->components.particle_animation.buffer_ids[0]);
-	//}
-
-	//float3 dds = emit_area->GetGameObject()->transform->LocalY();
 
 	if (emision_angle > 0)
 	{
@@ -205,21 +195,24 @@ int ComponentParticleEmmiter::GetParticlesNum()
 
 void ComponentParticleEmmiter::DeleteLastParticle()
 {
-	active_particles.pop_back(); 
+	multimap<float, Particle*>::iterator it = active_particles.end();
+
+	active_particles.erase(it); 
 }
 
 bool ComponentParticleEmmiter::Update()
 {
 	if (active_particles.empty() == false)
 	{
-		for (list<Particle*>::reverse_iterator it = active_particles.rbegin(); it != active_particles.rend();)
+		for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();)
 		{
-			(*it)->Update();
+			(*it).second->Update();
 
-			if ((*it)->CheckIfDelete())
+			if ((*it).second->CheckIfDelete())
 			{
-				(*it)->DeleteNow();
-				active_particles.erase(--it.base());
+				(*it).second->DeleteNow();
+				
+				it = active_particles.erase(it);
 
 				if (active_particles.empty())
 				{
@@ -242,9 +235,9 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 {
 	if (active_particles.empty() == false)
 	{
-		for (list<Particle*>::iterator it = active_particles.begin(); it != active_particles.end(); it++)
+		for (multimap<float, Particle*>::reverse_iterator it = active_particles.rbegin(); it != active_particles.rend(); it++)
 		{
-			(*it)->Draw(active_camera);
+			(*it).second->Draw(active_camera);
 		}
 	}
 }
@@ -302,6 +295,16 @@ void ComponentParticleEmmiter::Save(Data & data) const
 
 void ComponentParticleEmmiter::Load(Data & data)
 {
+}
+
+void ComponentParticleEmmiter::ReoderParticles(ComponentCamera * rendering_camera)
+{
+	//We get the position of the camera
+	ComponentTransform* camera_transform = (ComponentTransform*)rendering_camera->GetGameObject()->GetComponent(CompTransform); 
+	float3 camera_position = camera_transform->GetGlobalPosition(); 
+
+	//Now we iterate and set a distance
+
 }
 
 int ComponentParticleEmmiter::GetEmmisionRate() const

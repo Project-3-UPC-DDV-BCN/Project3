@@ -129,7 +129,6 @@ public:
 	void SetMovementFromStats(); 
 	void SetMovement(); 
 
-	void SetDistanceToCamera(float new_dist);
 	float GetDistanceToCamera();
 
 	void SetBillboarding(float new_dist);

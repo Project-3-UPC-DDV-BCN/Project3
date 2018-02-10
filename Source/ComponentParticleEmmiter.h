@@ -32,6 +32,8 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	void ReoderParticles(ComponentCamera* rendering_camera);
+
 	//Spawning
 	void GenerateParticles();
 	Particle* CreateParticle();
@@ -112,14 +114,13 @@ private:
 
 	//General Management
 	Particle* root_particle;				 //This will be the particle that will be cloned over time
-	list<Particle*> active_particles;		 //Particles that are currently beeing rendered
+	multimap<float, Particle*> active_particles;		 //Particles that are currently beeing rendered
 
 	vector<ParticleAnimation> particle_animations;
 
 	float particles_lifetime;				 //Lifetime of the particules spawned
 	particle_system_state system_state;		 //Inner play & pause 
 
-	multimap<float, Particle*> particles_sorted;
 	Timer reorder_time;
 
 	//Spawn Management

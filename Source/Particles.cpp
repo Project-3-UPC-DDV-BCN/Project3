@@ -1,6 +1,9 @@
 #include "Particles.h"
 #include "Component.h"
 #include "Application.h"
+#include "GameObject.h"
+#include "ComponentTransform.h"
+#include "ComponentCamera.h"
 #include "ModuleRenderer3D.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -132,18 +135,14 @@ void Particle::SetFinalColor(Color color)
 }
 
 
-
-void Particle::SetDistanceToCamera(float new_dist)
-{
-	distance_to_camera = new_dist;
-}
-
 float Particle::GetDistanceToCamera()
 {
-	//float distance = (App->renderer3D->rendering_cam->frustum.pos - components.particle_transform->GetLocalPosition()).Length();
-	//distance_to_camera = distance;
+	//We get the current camera
+	float3 camera_position = App->renderer3D->editor_camera->camera_frustum.pos;
 
-	return distance_to_camera;
+	//Compute the distance & return
+	float distance = (camera_position - components.particle_transform->GetGlobalPosition()).Length();
+	return distance;
 }
 
 void Particle::SetBillboarding(float new_dist)
@@ -319,6 +318,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
+		glEnable(GL_BLEND); 
 		glEnable(GL_ALPHA_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
