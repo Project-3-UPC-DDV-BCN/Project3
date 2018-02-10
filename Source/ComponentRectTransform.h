@@ -22,7 +22,10 @@ public:
 	ComponentCanvas* GetCanvas(bool& go_is_canvas);
 
 	void UpdateTransform();
+	void UpdateTransformAndChilds();
+
 	void UpdateRectTransform();
+	void UpdateRectTransformAndChilds();
 
 	float4x4 GetMatrix() const;
 	float3 GetOriginLocalPos();
