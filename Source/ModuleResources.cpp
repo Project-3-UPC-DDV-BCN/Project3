@@ -1118,63 +1118,156 @@ void ModuleResources::CreateDefaultShaders()
 
 		std::string shader_text =
 			"#version 330 core\n"
-			"in vec4 ourColor;\n"
-			"in vec3 Normal;\n"
-			"in vec2 TexCoord;\n"
-			"out vec3 FragPos;\n"
-			"out vec4 color;\n\n"
-			"uniform bool has_material_color;\n"
-			"uniform vec4 material_color;\n"
-			"uniform bool has_texture;\n"
-			"uniform vec4 light_color;\n"
-			"uniform sampler2D ourTexture;\n"
-			"uniform vec3 camera_pos;\n\n"
-			"struct Light\n"
-			"{\n"
-			"vec3 position;\n"
-			"vec3 direction;\n"
-			"float cutOff;\n\n"
+		"	in vec4 ourColor;\n"
+		"in vec3 Normal;\n"
+		"in vec3 FragPos;\n"
+		"in vec2 TexCoord;\n"
+		"out vec4 color;\n"
+		"uniform bool has_material_color;\n"
+		"uniform vec4 material_color;\n"
+		"uniform bool has_texture;\n"
+		"uniform sampler2D ourTexture;\n\n"
 
-			"vec3 ambient;\n"
-			"vec3 diffuse;\n"
-			"vec3 specular;\n\n"
+		"struct Material {\n"
+		"	sampler2D diffuse;\n"
+		"	sampler2D specular;\n"
+		"	float shininess;\n"
+		"};\n\n"
 
-			"float constant;\n"
-			"float linear;\n"
-			"float quadratic;\n"
-			"};\n\n"
+		"struct DirLight {\n"
+		"	vec3 direction;\n\n"
 
-			"uniform Light light;\n\n"
-			"void main()\n"
+		"	vec3 ambient;\n"
+		"	vec3 diffuse;\n"
+		"	vec3 specular;\n\n"
+
+		"	vec4 color;\n"
+		"};\n\n"
+
+		"struct PointLight {\n"
+		"	vec3 position;\n\n"
+
+		"	float constant;\n"
+		"	float linear;\n"
+		"	float quadratic;\n\n"
+
+		"	vec3 ambient;\n"
+		"	vec3 diffuse;\n"
+		"	vec3 specular;\n\n"
+			
+	"		vec4 color;\n"
+	"	};\n"
+
+	"	struct SpotLight {\n"
+		"	vec3 position;\n"
+		"	vec3 direction;\n"
+		"	float cutOff;\n"
+		"	float outerCutOff;\n\n"
+
+		"	float constant;\n"
+		"	float linear;\n"
+		"	float quadratic;\n\n"
+
+		"	vec3 ambient;\n"
+		"	vec3 diffuse;\n"
+		"	vec3 specular;\n"
+	"		vec4 color;\n"
+	"	};\n\n"
+
+"#define NR_POINT_LIGHTS 4\n\n"
+
+	"	uniform vec3 viewPos;\n"
+	"	uniform DirLight dirLight;\n"
+	"	uniform PointLight pointLights[NR_POINT_LIGHTS];\n"
+	"	uniform SpotLight spotLight;\n"
+	"	uniform Material material;\n\n"
+
+	"	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);\n"
+	"	vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n"
+	"	vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n\n"
+
+		"void main()\n"
+		"{\n"
+			"if (has_texture)\n"
 			"{\n"
-			"	if(has_texture)\n"
-			"		color = texture(ourTexture, TexCoord);\n"
-			"{\n"
-			"	else if(has_material_color)\n"
-			"		color = material_color;\n"
-			"	else\n"
-			"		color = ourColor;\n"
-			"color = color * light_color;\n"
-			"vec3 ambient = light.ambient * vec3(light_color);\n\n"
+			"	color = texture(ourTexture, TexCoord);\n"
+			"}\n"
+			"else if (has_material_color)\n"
+			"	color = material_color;\n"
+			"else\n"
+			"	color = ourColor;\n\n"
 
 			"vec3 norm = normalize(Normal);\n"
-			"vec3 lightDir = normalize(light.position - FragPos)\n;"
-			"float diff = max(dot(norm, lightDir), 0.0);\n"
-			"vec3 diffuse = light.diffuse * diff * vec3(light_color);\n\n"
+			"vec3 viewDir = normalize(viewPos - FragPos);\n\n"
+			"vec3 result = CalcDirLight(dirLight, norm, viewDir);\n\n"
 
-			"vec3 view_direction = normalize(camera_pos - FragPos);\n"
-			"vec3 reflect_direction = reflect(-lightDir, norm);\n\n"
-			"float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 64);\n"
-			"vec3 specular = light.specular * spec * vec3(light_color);\n\n"
+		//	"for (int i = 0; i < NR_POINT_LIGHTS; i++)\n"
+				//"vec3 result = CalcPointLight(pointLights[0], norm, FragPos, viewDir);\n\n"
 
-			"float distance = length(light.position - FragPos);\n"
-			"float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+			//"result += CalcSpotLight(spotLight, norm, FragPos, viewDir);\n\n"
+
+			"color = vec4(result, 1.0);\n"
+		"}\n\n"
+
+		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
+		"{\n"
+			"vec3 lightDir = normalize(-light.direction);\n\n"
+
+			"float diff = max(dot(normal, lightDir), 0.0);\n\n"
+
+			"vec3 reflectDir = reflect(-lightDir, normal);\n"
+			"float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n\n"
+
+			"vec3 ambient = light.ambient * vec3(color);\n"
+			"vec3 diffuse = light.diffuse * diff * vec3(color);\n"
+			"vec3 specular = light.specular * spec;\n"
+			"return (ambient + diffuse + specular);\n"
+		"}\n\n"
+
+		"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
+		"{\n"
+			"vec3 lightDir = normalize(light.position - fragPos);\n\n"
+
+			"float diff = max(dot(normal, lightDir), 0.0);\n\n"
+
+			"vec3 reflectDir = reflect(-lightDir, normal);\n"
+			"float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
+
+			"float distance = length(light.position - fragPos);\n"
+			"float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n\n"
+
+			"vec3 ambient = light.ambient * vec3(color);\n"
+			"vec3 diffuse = light.diffuse * diff * vec3(color);\n"
+			"vec3 specular = light.specular * spec;\n"
 			"ambient *= attenuation;\n"
 			"diffuse *= attenuation;\n"
-			"specular *= attenuation;\n\n"
+			"specular *= attenuation;\n"
+			"return (ambient + diffuse + specular) * vec3(light.color);\n"
+		"}\n\n"
 
-			"vec3 result = (ambient + diffuse + specular);\n"
-			"color = vec4(result, 1.0) * color;\n"
+		"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
+		"{\n"
+			"vec3 lightDir = normalize(light.position - fragPos);\n\n"
+
+			"float diff = max(dot(normal, lightDir), 0.0);\n\n"
+
+			"vec3 reflectDir = reflect(-lightDir, normal);\n"
+			"float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n\n"
+
+			"float distance = length(light.position - fragPos);\n"
+			"float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n\n"
+
+			"float theta = dot(lightDir, normalize(-light.direction));\n"
+			"float epsilon = light.cutOff - light.outerCutOff;\n"
+			"float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);\n\n"
+
+			"vec3 ambient = light.ambient * vec3(color);\n"
+			"vec3 diffuse = light.diffuse * diff * vec3(color);\n"
+			"vec3 specular = light.specular * spec;\n"
+			"ambient *= attenuation * intensity;\n"
+			"diffuse *= attenuation * intensity;\n"
+			"specular *= attenuation * intensity;\n"
+			"return (ambient + diffuse + specular) * vec3(light.color);\n"
 			"}";
 
 		default_frag->SetContent(shader_text);

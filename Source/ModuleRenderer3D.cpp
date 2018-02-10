@@ -347,31 +347,49 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	{
 		if ((*it)->GetGameObject()->IsActive())
 		{		
-			/*lightingShader.setVec3("light.position", camera.Position);
-			lightingShader.setVec3("light.direction", camera.Front);
-			lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));*/
-			/*switch ((*it)->GetType())
+			ComponentTransform* light_transform = nullptr;
+			light_transform = (ComponentTransform*)(*it)->GetGameObject()->GetComponent(Component::CompTransform);
+			switch ((*it)->GetType())
 			{
 			case DIRECTIONAL_LIGHT:
-				SetUniformUInt(program, "light_type", );
+				SetUniformVector3(program, "dirLight.direction", light_transform->GetGlobalRotation());
+				SetUniformVector3(program, "dirLight.ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
+				SetUniformVector3(program, "dirLight.diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
+				SetUniformVector3(program, "dirLight.specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
+
+				SetUniformVector4(program, "dirLight.color", (*it)->GetColorAsFloat4());
 				break;
-			case POINT_LIGHT:
+			case POINT_LIGHT:	
+				SetUniformVector3(program, "pointLights[0].position", light_transform->GetGlobalPosition());
+				SetUniformFloat(program, "pointLights[0].constant", 1.0f);
+				SetUniformFloat(program, "pointLights[0].linear", 1.0f);
+				SetUniformFloat(program, "pointLights[0].quadratic", 1.0f);
+
+				SetUniformVector3(program, "pointLights[0].ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
+				SetUniformVector3(program, "pointLights[0].diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
+				SetUniformVector3(program, "pointLights[0].specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
+
+				SetUniformVector4(program, "pointLights[0].color", (*it)->GetColorAsFloat4());
 				break;
 			case SPOT_LIGHT:
+				SetUniformVector3(program, "spotLight.position", light_transform->GetGlobalPosition());
+				SetUniformVector3(program, "spotLight.direction", light_transform->GetGlobalRotation());
+				SetUniformFloat(program, "spotLight.constant", 1.0f);
+				SetUniformFloat(program, "spotLight.linear", 1.0f);
+				SetUniformFloat(program, "spotLight.quadratic", 1.0f);
+
+				SetUniformVector3(program, "spotLight.ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
+				SetUniformVector3(program, "spotLight.diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
+				SetUniformVector3(program, "spotLight.specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
+
+				SetUniformVector4(program, "spotLight.color", (*it)->GetColorAsFloat4());
+
+				SetUniformFloat(program, "spotLight.cutOff", 1.0f);
+				SetUniformFloat(program, "spotLight.outerCutOff", 1.0f);
 				break;
 			default:
 				break;
-			}*/
-			ComponentTransform* light_transform = (ComponentTransform*) (*it)->GetGameObject()->GetComponent(Component::CompTransform);
-
-			SetUniformFloat(program, "light.constant", 1.0f);
-			SetUniformFloat(program, "light.linear", 1.0f);
-			SetUniformFloat(program, "light.quadratic", 1.0f);
-			SetUniformVector3(program, "light.position", light_transform->GetGlobalPosition());
-			SetUniformVector4(program, "light_color", (*it)->GetColorAsFloat4());
-			SetUniformVector3(program, "light.ambient", float3(0.1f, 0.1f,0.1f));
-			SetUniformVector3(program, "light.diffuse", float3(0.8f, 0.8f, 0.8f));
-			SetUniformVector3(program, "light.specular", float3(1.0f, 1.0f, 1.0f));
+			}
 		}
 	}
 

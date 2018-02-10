@@ -24,17 +24,27 @@ public:
 	float* GetColorToEdit() const;
 	float4 GetColorAsFloat4() const;
 
-	void SetIntensity(float intensity);
-	float GetIntensity() const;
-
 	LightType GetType() const;
 	std::string GetTypeString() const;
 	void SetTypeToDirectional();
 	void SetTypeToPoint();
 	void SetTypeToSpot();
 
+	void SetDiffuse(float diffuse);
+	void SetAmbient(float ambient);
+	void SetSpecular(float specular);
+
+	float GetDiffuse() const;
+	float GetAmbient() const;
+	float GetSpecular() const;
+	float* GetDiffuseToEdit() const;
+	float* GetAmbientToEdit() const;
+	float* GetSpecularToEdit() const;
+
 private:
 	Color color = White;
-	float intensity = 1.0f;
-	LightType type = POINT_LIGHT;
+	LightType type = DIRECTIONAL_LIGHT;
+	float diffuse = 10.0f;
+	float ambient = 3.0f;
+	float specular = 10.0f;
 };

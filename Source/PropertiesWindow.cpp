@@ -582,22 +582,24 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 
 void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 {
-	if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) 
+	if (comp_light != nullptr)
 	{
-		bool is_active = comp_light->IsActive();
-		if (ImGui::Checkbox("Active##Light", &is_active))
+		if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			comp_light->SetActive(is_active);
-		}
+			bool is_active = comp_light->IsActive();
+			if (ImGui::Checkbox("Active##Light", &is_active))
+			{
+				comp_light->SetActive(is_active);
+			}
 
-		ImGui::Text("Type:");
-		ImGui::SameLine();
-		if (ImGui::SmallButton((comp_light->GetTypeString() + "##types").c_str())) {
-			ImGui::OpenPopup("Types##light");
-		}
-		if (ImGui::BeginPopup("Types##light")) {
-				if (comp_light->GetType() != DIRECTIONAL_LIGHT && ImGui::MenuItem("Directional")) 
-				{		
+			ImGui::Text("Type:");
+			ImGui::SameLine();
+			if (ImGui::SmallButton((comp_light->GetTypeString() + "##types").c_str())) {
+				ImGui::OpenPopup("Types##light");
+			}
+			if (ImGui::BeginPopup("Types##light")) {
+				if (comp_light->GetType() != DIRECTIONAL_LIGHT && ImGui::MenuItem("Directional"))
+				{
 					comp_light->SetTypeToDirectional();
 				}
 				if (comp_light->GetType() != POINT_LIGHT && ImGui::MenuItem("Point"))
@@ -608,15 +610,21 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				{
 					comp_light->SetTypeToSpot();
 				}
-			ImGui::EndPopup();
+				ImGui::EndPopup();
+			}
+			if (ImGui::DragFloat("Ambient", comp_light->GetAmbientToEdit(), is_active, 0.25f, 0.0f)) {
+			}
+			if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+			}
+			if (ImGui::DragFloat("Specular", comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
+			}
+			if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+				flags |= ImGuiColorEditFlags_RGB;
+
+				ImGui::ColorPicker4("Current Color##4", comp_light->GetColorToEdit(), flags);
+			}
 		}
-
-		if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen)) 
-		{
-			ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
-			flags |= ImGuiColorEditFlags_RGB;
-
-			ImGui::ColorPicker4("Current Color##4", comp_light->GetColorToEdit(), flags);
-		}		
 	}
 }
