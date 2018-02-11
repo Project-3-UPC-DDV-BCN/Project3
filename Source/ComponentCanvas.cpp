@@ -110,6 +110,12 @@ CanvasDrawElement::CanvasDrawElement()
 	plane = App->resources->GetMesh("PrimitivePlane");
 	texture_id = 0;
 	transform = float4x4::identity;
+	size = float2::zero;
+}
+
+void CanvasDrawElement::SetSize(float2 _size)
+{
+	size = _size;
 }
 
 void CanvasDrawElement::SetTransform(float4x4 trans)
@@ -124,5 +130,16 @@ void CanvasDrawElement::SetTextureId(uint id)
 
 float4x4 CanvasDrawElement::GetTransform()
 {
-	return transform;
+	float4x4 ret = float4x4::identity;
+
+	float4x4 size_trans = ret.FromTRS(float3::zero, Quat::identity, float3(size.x, size.y, 0));
+
+	ret = transform * size_trans;
+
+	return ret;;
+}
+
+uint CanvasDrawElement::GetTextureId()
+{
+	return texture_id;
 }

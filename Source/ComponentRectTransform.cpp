@@ -114,11 +114,16 @@ float3 ComponentRectTransform::GetOriginLocalPos()
 	return ret;
 }
 
-float2 ComponentRectTransform::GetOriginGlobalPos()
+float3 ComponentRectTransform::GetOriginGlobalPos()
 {
 	float4x4 mat = GetOriginMatrix();
 
-	return float2(mat[0][3], mat[1][3]);
+	float3 transform;
+	Quat rot;
+	float3 sca;
+	mat.Decompose(transform, rot, sca);
+
+	return transform;
 }
 
 float4x4 ComponentRectTransform::GetOriginMatrix() const
@@ -156,22 +161,11 @@ float3 ComponentRectTransform::GetGlobalPos() const
 	return c_transform->GetGlobalPosition();
 }
 
-float3 ComponentRectTransform::GetPreferedPos()
-{
-	float3 ret = float3::zero;
-
-	float3 anchor_pos = GetAnchorLocalPos();
-
-	ret.x = anchor_pos.x + pos.x;
-	ret.y = anchor_pos.y + pos.y;
-
-	return ret;
-}
-
 void ComponentRectTransform::SetRotation(const float3 & _rotation)
 {
-	c_transform->SetRotation(_rotation);
 	rotation = _rotation;
+
+	UpdateTransform();
 }
 
 float3 ComponentRectTransform::GetLocalRotation() const
@@ -279,6 +273,18 @@ float4x4 ComponentRectTransform::GetAnchorTransform()
 	}
 
 	return anchor_trans;
+}
+
+float3 ComponentRectTransform::GetPreferedPos()
+{
+	float3 ret = float3::zero;
+
+	float3 anchor_pos = GetAnchorLocalPos();
+
+	ret.x = anchor_pos.x + pos.x;
+	ret.y = anchor_pos.y + pos.y;
+
+	return ret;
 }
 
 void ComponentRectTransform::Save(Data & data) const

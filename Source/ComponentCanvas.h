@@ -13,12 +13,18 @@ class CanvasDrawElement
 {
 public:
 	CanvasDrawElement();
+
+	void SetSize(float2 size);
 	void SetTransform(float4x4 trans);
 	void SetTextureId(uint id);
 	float4x4 GetTransform();
 
+	float4x4 GetTransform();
+	uint GetTextureId();
+
 private:
 	Mesh*    plane = nullptr;
+	float2   size;
 	float4x4 transform;
 	uint	 texture_id;
 };
@@ -56,9 +62,9 @@ private:
 	void UpdateSize();
 
 private:
-
 	ComponentRectTransform* c_rect_trans = nullptr;
 
+	ComponentCamera*			   render_camera = nullptr;
 	std::vector<CanvasDrawElement> draws;
 
 	float2 size;

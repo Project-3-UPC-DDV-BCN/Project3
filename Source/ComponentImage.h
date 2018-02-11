@@ -26,6 +26,8 @@ private:
 	ComponentRectTransform * GetRectTrans();
 
 private:
+	ComponentRectTransform* c_rect_trans = nullptr;
+
 	uint texture_id = 0;
 
 };

@@ -10,7 +10,9 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 	SetType(ComponentType::CompImage);
 	SetGameObject(attached_gameobject);
 
-	GetRectTrans()->SetSize(float2(100, 100));
+	c_rect_trans = GetRectTrans();
+
+	c_rect_trans->SetSize(float2(100, 100));
 }
 
 ComponentImage::~ComponentImage()
@@ -26,8 +28,9 @@ bool ComponentImage::Update()
 	if (canvas != nullptr)
 	{
 		CanvasDrawElement de;
-		de.SetTransform(GetRectTrans()->GetMatrix());
+		de.SetTransform(c_rect_trans->GetMatrix());
 		de.SetTextureId(texture_id);
+		de.SetSize(c_rect_trans->GetSize());
 		canvas->AddDrawElement(de);
 	}
 

@@ -29,14 +29,13 @@ public:
 
 	float4x4 GetMatrix() const;
 	float3 GetOriginLocalPos();
-	float2 GetOriginGlobalPos();
+	float3 GetOriginGlobalPos();
 	float4x4 GetOriginMatrix() const;
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
 	float3 GetLocalPos() const;
 	float3 GetGlobalPos() const;
-	float3 GetPreferedPos();
 
 	void SetRotation(const float3& rotation);
 	float3 GetLocalRotation() const;
@@ -49,6 +48,8 @@ public:
 	float3 GetAnchorLocalPos();
 	float3 GetAnchorGlobalPos();
 	float4x4 GetAnchorTransform();
+
+	float3 GetPreferedPos();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
