@@ -238,6 +238,8 @@ update_status ModuleEditor::Update(float deltaTime)
 	if (ImGui::Button("Step", { 50,40 })) {
 		App->UpdateStep();
 	}
+	ImGui::SameLine();
+
 	ImGui::Separator();
 	ImGui::BeginDockspace();
 	for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); it++) {

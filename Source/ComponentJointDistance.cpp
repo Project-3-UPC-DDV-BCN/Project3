@@ -18,11 +18,11 @@ ComponentJointDistance::ComponentJointDistance(GameObject* attached_gameobject)
 		physx::PxVec3 offset = physx::PxVec3(0, 0, 0);
 		joint = App->physics->CreateDistanceJoint(rigidbody->GetRigidBody(), physx::PxTransform(offset), nullptr, physx::PxTransform(offset));
 		joint->setConstraintFlag(physx::PxConstraintFlag::eVISUALIZATION, true);
-		/*joint->setDistanceJointFlag(physx::PxDistanceJointFlag::eMAX_DISTANCE_ENABLED, true);
+		joint->setDistanceJointFlag(physx::PxDistanceJointFlag::eMAX_DISTANCE_ENABLED, true);
 		joint->setDistanceJointFlag(physx::PxDistanceJointFlag::eMIN_DISTANCE_ENABLED, true);
-		SetMaxDistance(0.1f);
-		SetMinDistance(0);
-		SetTolerance(0.1f);*/
+		SetMaxDistance(10);
+		SetMinDistance(0.1f);
+		SetTolerance(0);
 		SetEnablePreprocessing(true);
 		SetEnableCollisions(false);
 	}
@@ -69,24 +69,18 @@ bool ComponentJointDistance::IsBroken() const
 
 void ComponentJointDistance::SetConnectedBody(GameObject * body)
 {
-	CONSOLE_LOG("1");
 	physx::PxRigidActor* actor = nullptr;
 	if (body)
 	{
-		CONSOLE_LOG("2");
 		ComponentRigidBody* rb = (ComponentRigidBody*)body->GetComponent(Component::CompRigidBody);
 		if (rb)
 		{
-			CONSOLE_LOG("3");
 			actor = rb->GetRigidBody();
 		}
 	}
 	physx::PxVec3 offset = physx::PxVec3(0, 0, 0);
-	CONSOLE_LOG("4");
 	joint->setActors(rigidbody->GetRigidBody(), actor);
-	CONSOLE_LOG("5");
 	joint->setLocalPose(physx::PxJointActorIndex::eACTOR1, physx::PxTransform(offset));
-	CONSOLE_LOG("6");
 }
 
 GameObject * ComponentJointDistance::GetConnectedBody()

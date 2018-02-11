@@ -40,6 +40,8 @@ public:
 
 	physx::PxCooking* GetPhysXCooking() const;
 	physx::PxPhysics* GetPhysXPhysics() const;
+	physx::PxDefaultCpuDispatcher* GetPhysXCpuDispatcher() const;
+	physx::PxFoundation* GetPhysXFoundation() const;
 	void DrawColliders();
 
 private:

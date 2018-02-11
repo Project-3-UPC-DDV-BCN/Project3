@@ -6,14 +6,17 @@
 #include "Nvidia/Blast/Include/extensions/shaders/NvBlastExtDamageShaders.h"
 #include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxActor.h"
 #include "Nvidia/Blast/Include/toolkit/NvBlastTkActor.h"
+#include "Nvidia/Blast/Include/toolkit/NvBlastTkGroup.h"
+#include "Nvidia/Blast/Include/extensions/physx/NvBlastPxCallbacks.h"
+#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxTask.h"
 #include "BlastModel.h"
 #include "ModulePhysics.h"
 #include "Application.h"
 #include "ModuleInput.h"
-#include <d3d11_1.h>
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPhysXDEBUG_x86.lib")
+
 #else
 #pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPhysX_x86.lib")
 #endif
@@ -45,6 +48,14 @@ bool ModuleBlast::Init(Data * editor_config)
 
 	default_material = App->physics->GetPhysXPhysics()->createMaterial(0.8, 0.7, 0.1);
 
+	phys_task_manager = physx::PxTaskManager::createTaskManager(App->physics->GetPhysXFoundation()->getErrorCallback(), App->physics->GetPhysXCpuDispatcher(), 0);
+
+	Nv::Blast::TkGroupDesc gdesc;
+	gdesc.workerCount = phys_task_manager->getCpuDispatcher()->getWorkerCount();
+	group = framework->createGroup(gdesc);
+
+	task_manager = Nv::Blast::ExtGroupTaskManager::create(*phys_task_manager, group);
+
 	return true;
 }
 
@@ -59,7 +70,7 @@ update_status ModuleBlast::Update(float dt)
 
 		NvBlastExtRadialDamageDesc desc =
 		{
-			1000, { 0.2, 0.2, 0 }, 1.0, 2.0
+			1000, { 0.2, 5, 0 }, 1.0, 2.0
 		};
 
 		const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
@@ -73,6 +84,20 @@ update_status ModuleBlast::Update(float dt)
 		{
 			actor->getTkActor().damage(program, buffered_program_params);
 		}
+
+		if (model->actors[0]->getTkActor().isPending())
+		{
+			//model->actors[0]->getTkActor().
+		}
+
+		App->physics->GetScene(0)->simulate(dt);
+		App->physics->GetScene(0)->fetchResults(true);
+
+		task_manager->process();
+		task_manager->wait();
+
+		model->family->postSplitUpdate();
+
 	}
 	return UPDATE_CONTINUE;
 }
@@ -93,7 +118,7 @@ void ModuleBlast::CreateFamily(BlastModel* model)
 {
 	Nv::Blast::ExtPxFamilyDesc desc;
 	desc.actorDesc = nullptr;
-	desc.group = nullptr;
+	desc.group = group;
 	desc.pxAsset = model->m_pxAsset;
 
 	NvBlastExtMaterial* mat = new NvBlastExtMaterial();
@@ -121,6 +146,14 @@ void ModuleBlast::SpawnFamily(BlastModel* model)
 void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
 {
 	BlastModel* model = families[&family];
+	const uint32_t* chunkIndices = actor.getChunkIndices();
+	uint32_t chunkCount = actor.getChunkCount();
+	for (uint32_t i = 0; i < chunkCount; i++)
+	{
+		uint32_t chunkIndex = chunkIndices[i];
+		GameObject* go = model->chunks[chunkIndex];
+	}
+	actor.getPhysXActor().userData = model->chunks[0];
 	model->actors.push_back(&actor);
 }
 

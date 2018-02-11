@@ -29,7 +29,7 @@
 #ifndef NVBLASTEXTPXTASK_H
 #define NVBLASTEXTPXTASK_H
 
-#include "NvBlastTypes.h"
+#include "../../lowlevel/NvBlastTypes.h"
 
 
 // Forward declarations

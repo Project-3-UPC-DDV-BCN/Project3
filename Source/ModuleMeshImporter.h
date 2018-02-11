@@ -38,7 +38,6 @@ private:
 	void CreatePrimitives() const;
 	void CreateBox() const;
 	void CreatePlane() const;
-
 };
 
 void Callback(const char* message, char* c);

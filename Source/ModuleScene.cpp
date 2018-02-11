@@ -35,6 +35,7 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : M
 	main_camera = nullptr;
 	skybox = nullptr;
 	tmp_scene_data = new Data();
+	triangles_count = 0;
 }
 
 ModuleScene::~ModuleScene()
@@ -148,6 +149,8 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 					if (mesh->box.maxPoint.z > camera_pos.maxPoint.z) camera_pos.maxPoint.z = mesh->box.maxPoint.z;
 				}
 				mesh_renderer->LoadToMemory();
+				triangles_count += mesh->num_indices / 3;
+				CONSOLE_LOG("Faces: %d", triangles_count);
 			}
 		}
 		data.ClearData();

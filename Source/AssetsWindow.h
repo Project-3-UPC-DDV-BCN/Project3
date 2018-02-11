@@ -53,5 +53,7 @@ private:
 	std::string delete_path;
 
 	Shader::ShaderType shader_type;
+
+	bool show_window = true;
 };
 

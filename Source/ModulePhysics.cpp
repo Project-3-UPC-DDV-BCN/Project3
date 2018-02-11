@@ -418,6 +418,7 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
 	physx::PxTransform phys_transform = dynamic->getGlobalPose();
 	GameObject* go = (GameObject*)actor->userData;
+	//if (go->GetName() == "wall") return;
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
 	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
@@ -502,6 +503,16 @@ physx::PxCooking * ModulePhysics::GetPhysXCooking() const
 physx::PxPhysics * ModulePhysics::GetPhysXPhysics() const
 {
 	return physx_physics;
+}
+
+physx::PxDefaultCpuDispatcher * ModulePhysics::GetPhysXCpuDispatcher() const
+{
+	return dispatcher;
+}
+
+physx::PxFoundation * ModulePhysics::GetPhysXFoundation() const
+{
+	return physx_foundation;
 }
 
 void ModulePhysics::DrawColliders()

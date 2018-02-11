@@ -42,12 +42,15 @@ namespace Nv
 		class TkFramework;
 		class ExtPxManager;
 		class ExtPxFamily;
+		class TkGroup;
+		class ExtGroupTaskManager;
 	}
 }
 
 namespace physx
 {
 	class PxMaterial;
+	class PxTaskManager;
 }
 
 class BlastModel;
@@ -78,4 +81,7 @@ private:
 	physx::PxMaterial* default_material;
 	FixedBuffer* damage_desc_buffer;
 	FixedBuffer* damage_params_buffer;
+	physx::PxTaskManager* phys_task_manager;
+	Nv::Blast::TkGroup* group;
+	Nv::Blast::ExtGroupTaskManager* task_manager;
 };

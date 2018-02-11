@@ -87,6 +87,8 @@ public:
 
 	Data* tmp_scene_data;
 
+	int triangles_count;
+
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;
