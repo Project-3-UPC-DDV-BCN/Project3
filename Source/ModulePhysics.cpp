@@ -108,7 +108,7 @@ bool ModulePhysics::Init(Data * editor_config)
 
 update_status ModulePhysics::Update(float dt)
 {
-	if (App->IsPlaying())
+	if (App->IsPlaying() || App->IsPaused())
 	{
 		if (physx_physics && physx_physics->getNbScenes() > 0) {
 			int scene_mum = physx_physics->getNbScenes();
