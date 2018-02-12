@@ -748,7 +748,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::SliderFloat("Initial Velocity", &current_emmiter->velocity, 0.1f, 30); 
 				ImGui::SliderFloat3("Gravity", &current_emmiter->gravity[0], -1, 1);
 				ImGui::DragFloat("Angular Velocity", &current_emmiter->angular_v, 1, 5.0f, -1000, 1000);
-				ImGui::DragFloat("Emision Angle", &current_emmiter->emision_angle, 1, 0, 360);
+				ImGui::SliderFloat("Emision Angle", &current_emmiter->emision_angle, 0, 180);
 
 				current_emmiter->UpdateRootParticle();
 

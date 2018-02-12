@@ -18,12 +18,12 @@
 Particle::Particle(ComponentParticleEmmiter * parent)
 {
 	kill_me = false;
-	interpolation_timer.Start();
 	particle_color = initial_particle_color;
 	particle_angular_v = 0;
 	curr_rot = 0;
 	particle_gravity = { 0,0,0 }; 
 	emmiter = parent;
+	emmision_angle = 0; 
 
 	animated_particle = false;
 	interpolate_size = false;
@@ -31,6 +31,7 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 
 	particle_timer.Start();
 	animation_timer.Start();
+	interpolation_timer.Start();
 	twister.Start();
 }
 
@@ -132,6 +133,47 @@ void Particle::SetInitialColor(Color color)
 void Particle::SetFinalColor(Color color)
 {
 	final_particle_color = color;
+}
+
+float Particle::GetEmmisionAngle()
+{
+	return emmision_angle;
+}
+
+void Particle::SetEmmisionAngle(float new_angle)
+{
+	emmision_angle = new_angle; 
+}
+
+float3 Particle::GetEmmisionVector()
+{
+	float3 direction;
+	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+	//First we create a vector matching the Y axis
+	direction = emmiter_transform->GetMatrix().WorldY();
+
+	//We apply the rotation angle to the vector 
+	Quat y_rotation;
+	y_rotation.FromEulerXYZ(0, 0, 45 * DEGTORAD);
+	direction = y_rotation.Transform(direction);
+
+	//We apply a rotation on X for randomization
+	Quat x_rotation;
+	x_rotation.FromEulerXYZ(0, 45 * DEGTORAD, 0);
+	direction = x_rotation.Transform(direction);
+
+	//Dir is the maximum angle direction so we hace to add some randomnes 
+	float from_point_to_origin = direction.x;
+	from_point_to_origin = from_point_to_origin - (from_point_to_origin*0.5);
+
+	//We multiply by -1 
+	LCG random_num;
+	int random = random_num.Int(0, 2);
+
+	if(random)
+		direction *= -1;
+
+	return direction;
 }
 
 
@@ -239,7 +281,15 @@ void Particle::SetMovementFromStats()
 }
 void Particle::SetMovement()
 {
-	movement = emmiter->emit_area_obb.axis[1] * particle_velocity;
+	if (GetEmmisionAngle() == 0)
+	{
+		movement = emmiter->emit_area_obb.axis[1] * particle_velocity;
+	}
+	else
+	{
+		movement = GetEmmisionVector(); 
+	}
+
 	movement *= App->time->GetGameDt();
 }
 

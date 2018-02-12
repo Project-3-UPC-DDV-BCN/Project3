@@ -82,6 +82,7 @@ public:
 	//void UpdateAnimation();
 
 	//Interpolation
+
 	///Color
 	void UpdateColor();
 	bool IsInterpolatingColor() const;
@@ -124,6 +125,11 @@ public:
 
 	void SetInitialColor(Color color);
 	void SetFinalColor(Color color);
+
+	//Emission angle
+	float GetEmmisionAngle();
+	void SetEmmisionAngle(float new_angle); 
+	float3 GetEmmisionVector();
 
 	//Movement
 	void SetMovementFromStats(); 
@@ -184,6 +190,7 @@ private:
 	float particle_angular_v;
 	float max_particle_lifetime;
 	float3 movement;						//This vector will be added to the position every frame
+	float emmision_angle; 
 
 	bool kill_me;
 	float distance_to_camera;

@@ -1,6 +1,7 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentBillboard.h"
+#include "GameObject.h"
 #include "ComponentCamera.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
@@ -57,13 +58,14 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetMaxLifetime(max_lifetime);
 	new_particle->SetVelocity(velocity);
 	new_particle->SetAngular(angular_v); 
-	new_particle->SetMovement(); 
 	new_particle->SetParticleTexture(root_particle->components.texture);
 	new_particle->SetColor(color);
 	new_particle->SetGravity(gravity);
+	new_particle->SetEmmisionAngle(root_particle->GetEmmisionAngle());
+	new_particle->SetMovement();
 
 	new_particle->SetWorldSpace(relative_pos);
-
+	
 	//Copy Interpolations
 	new_particle->SetInterpolatingColor(apply_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
 
@@ -84,31 +86,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//	new_particle->SetInterpolationRotation(false, 0, 0);
 	//	new_particle->SetAngular(angular_v);
 	//}
-
-	if (emision_angle > 0)
-	{
-		//First we generate a random number between 0 and 360 that will be the X direction
-		int emision_x = random.Int(1, 180);
-
-		//This will be the angle that the particle will have, random between 0 & max angle 
-		int emision_y = random.Int(1, emision_angle);
-
-		////From those 2, we get the final direction 
-	//	float3 final_direction = emit_area->GetGameObject()->GetComponent(ComponentType::CompTransform)->LocalY();
-
-		//First we rotate around x
-		float3x3 y_rot_mat = float3x3::FromEulerXYZ(emision_y, 0, 0);
-		//final_direction = y_rot_mat.Transform(final_direction);
-
-		//Then we rotate around y
-		float3x3 x_rot_mat = float3x3::FromEulerXYZ(0, emision_x, 0);
-	//	final_direction = x_rot_mat.Transform(final_direction);
-
-		//new_particle->SetMovement(final_direction);
-
-	}
-	else
-		//new_particle->SetMovement(emit_area->GetGameObject()->GetComponent(ComponentType::CompTransform)->LocalY()*velocity);
 
 	return new_particle;
 }
@@ -271,6 +248,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	root_particle->SetAngular(angular_v); 
 	root_particle->SetColor(color);
 	root_particle->SetGravity(gravity); 
+	root_particle->SetEmmisionAngle(emision_angle); 
 
 	root_particle->SetInterpolatingColor(apply_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
 	root_particle->SetInterpolationSize(apply_size_interpolation, initial_scale, final_scale);
