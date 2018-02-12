@@ -177,13 +177,6 @@ float3 Particle::GetEmmisionVector()
 	float from_point_to_origin = direction.x;
 	from_point_to_origin = from_point_to_origin - (from_point_to_origin*amount);
 
-	//We multiply by -1 
-	LCG random_inverter;
-	int invert = random_inverter.Int(1, 2);
-
-	if(invert == 1)
-		direction.x *= -1;
-
 	return direction;
 }
 
@@ -293,14 +286,12 @@ void Particle::SetMovementFromStats()
 void Particle::SetMovement()
 {
 	if (GetEmmisionAngle() == 0)
-	{
 		movement = emmiter->emit_area_obb.axis[1] * particle_velocity;
-	}
-	else
-	{
+	else	
 		movement = GetEmmisionVector(); 
-	}
-
+	
+	movement.Normalize(); 
+	movement *= particle_velocity;
 	movement *= App->time->GetGameDt();
 }
 
