@@ -89,7 +89,7 @@ private:
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
-	void DrawCanvas(ComponentCanvas* canvas);
+	void DrawCanvas(ComponentCanvas* canvas, ComponentCamera* camera, bool editor_camera = true);
 
 public:
 	Light lights[MAX_LIGHTS];

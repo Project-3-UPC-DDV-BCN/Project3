@@ -89,6 +89,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 	case Component::CompCanvas:
 		SetIsUI(true);
 		components_list.push_back(component = new ComponentCanvas(this));
+		is_canvas = true;
 		SetName("Canvas");
 		break;
 	case Component::CompImage:
@@ -126,11 +127,16 @@ Component * GameObject::GetComponent(std::string component_type)
 void GameObject::DestroyComponent(Component* component)
 {
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) {
-		if (*it == component) {
+		if (*it == component) 
+		{
+			if (component->GetType() == Component::CompCanvas)
+				is_canvas = false;
+
 			RELEASE(*it);
 			it = components_list.erase(it);
 		}
-		else {
+		else 
+		{
 			it++;
 		}
 	}
@@ -427,6 +433,11 @@ void GameObject::SetIsUI(bool set)
 bool GameObject::GetIsUI() const
 {
 	return is_ui;
+}
+
+bool GameObject::GetIsCanvas() const
+{
+	return is_canvas;
 }
 
 void GameObject::Destroy()

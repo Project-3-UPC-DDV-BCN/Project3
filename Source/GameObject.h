@@ -62,6 +62,8 @@ public:
 	// Returns true if the GameObject it's a UI element
 	bool GetIsUI() const;
 
+	bool GetIsCanvas() const;
+
 	void Destroy();
 	void OnDestroy();
 
@@ -92,5 +94,6 @@ private:
 	bool is_static;
 	bool is_used_in_prefab;
 	bool is_ui;
+	bool is_canvas;
 };
 

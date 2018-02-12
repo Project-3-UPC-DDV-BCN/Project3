@@ -23,6 +23,7 @@ public:
 	float4x4 GetTransform() const;
 	uint GetTextureId() const;
 	float4 GetColour() const;
+	Mesh* GetPlane() const;
 
 private:
 	Mesh*    plane = nullptr;

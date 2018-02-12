@@ -164,3 +164,8 @@ float4 CanvasDrawElement::GetColour() const
 {
 	return colour;
 }
+
+Mesh * CanvasDrawElement::GetPlane() const
+{
+	return plane;
+}

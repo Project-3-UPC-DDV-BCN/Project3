@@ -49,14 +49,18 @@ public:
 	float3 GetAnchorGlobalPos();
 	float4x4 GetAnchorTransform();
 
-	void SetScaleAnchor(const float2 scale_anchor);
-	float2 GetScaleAnchor() const;
-	float3 GetScaleAnchorLocalPos();
-	float3 GetScaleAnchorGlobalPos();
-	float4x4 GetScaleAnchorTransform();
-
 	void SetScale(const float& scale);
 	float GetScale() const;
+
+	void SetSnapUp(bool set);
+	void SetSnapDown(bool set);
+	void SetSnapLeft(bool set);
+	void SetSnapRight(bool set);
+
+	bool GetSnapUp();
+	bool GetSnapDown();
+	bool GetSnapLeft();
+	bool GetSnapRight();
 
 	float3 GetPreferedPos();
 
@@ -72,9 +76,13 @@ private:
 	float2				pos;
 	float2				size;
 	float2			    anchor;
-	float2				scale_anchor;
 	float3				rotation;
 	float				scale;
+
+	bool			    snap_up;
+	bool				snap_down;
+	bool				snap_left;
+	bool				snap_right;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

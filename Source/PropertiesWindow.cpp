@@ -298,9 +298,13 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				float2 position = rect_transform->GetPos();
 				float3 rotation = rect_transform->GetLocalRotation();
 				float2 anchor = rect_transform->GetAnchor();
-				float2 scale_anchor = rect_transform->GetScaleAnchor();
 				float2 size = rect_transform->GetSize();
 				float scale = rect_transform->GetScale();
+
+				bool snap_up = rect_transform->GetSnapUp();
+				bool snap_down = rect_transform->GetSnapDown();
+				bool snap_left = rect_transform->GetSnapLeft();
+				bool snap_right = rect_transform->GetSnapRight();
 
 				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
 				{
@@ -322,15 +326,30 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetAnchor(anchor);
 				}
 
-				if (ImGui::DragFloat2("Scale Anchor", (float*)&scale_anchor, true, 0.01f, 0, 1))
-				{
-					rect_transform->SetScaleAnchor(scale_anchor);
-				}
-
 				if (ImGui::DragFloat("Scale", (float*)&scale, true, 0.01f, 0))
 				{
 					rect_transform->SetScale(scale);
 				}
+
+				if (ImGui::Checkbox("Snap Up", &snap_up))
+				{
+					rect_transform->SetSnapUp(snap_up);
+				}
+
+				if (ImGui::Checkbox("Snap Down", &snap_down))
+				{
+					rect_transform->SetSnapDown(snap_down);
+				}
+
+				if (ImGui::Checkbox("Snap Left", &snap_left))
+				{
+					rect_transform->SetSnapLeft(snap_left);
+				}
+				if (ImGui::Checkbox("Snap Right", &snap_right))
+				{
+					rect_transform->SetSnapRight(snap_right);
+				}
+
 			}
 			else
 				ImGui::Text("Values are given by screen space");

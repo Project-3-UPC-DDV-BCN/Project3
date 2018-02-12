@@ -18,9 +18,12 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	pos = float2::zero;
 	size = float2::zero;
 	anchor = float2(0.5f, 0.5f);
-	scale_anchor = float2(0.5f, 0.5f);
 	rotation = float3::zero;
 	scale = 1;
+	snap_up = true;
+	snap_down = true;
+	snap_left = true;
+	snap_right = true;
 
 	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
@@ -35,12 +38,10 @@ bool ComponentRectTransform::Update()
 	bool ret = true;
 
 	float4x4 global_anchor_trans = GetAnchorTransform(); global_anchor_trans.RemoveScale();
-	float4x4 global_scale_anchor_trans = GetScaleAnchorTransform(); global_scale_anchor_trans.RemoveScale();
 	float4x4 global_origin_trans = GetOriginMatrix(); global_origin_trans.RemoveScale();
 
 	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
 	App->renderer3D->GetDebugDraw()->Circle(global_anchor_trans, 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
-	App->renderer3D->GetDebugDraw()->Circle(global_scale_anchor_trans, 5, float4(0.0f, 0.5f, 1.0f, 1.0f));
 	App->renderer3D->GetDebugDraw()->Circle(global_origin_trans, 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
 	App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
 
@@ -287,110 +288,64 @@ float4x4 ComponentRectTransform::GetAnchorTransform()
 	return anchor_trans;
 }
 
-void ComponentRectTransform::SetScaleAnchor(const float2 _scale_anchor)
-{
-	bool is_canvas = false;
-	GetCanvas(is_canvas);
-
-	if (!is_canvas)
-	{
-		scale_anchor = _scale_anchor;
-
-		if (scale_anchor.x < 0)
-			scale_anchor.x = 0;
-
-		if (scale_anchor.x > 1)
-			scale_anchor.x = 1;
-
-		if (scale_anchor.y < 0)
-			scale_anchor.y = 0;
-
-		if (scale_anchor.y > 1)
-			scale_anchor.y = 1;
-
-		UpdateTransform();
-	}
-	else
-	{
-		scale_anchor = float2(0.5f, 0.5f);
-	}
-}
-
-float2 ComponentRectTransform::GetScaleAnchor() const
-{
-	return scale_anchor;
-}
-
-float3 ComponentRectTransform::GetScaleAnchorLocalPos()
-{
-	float3 ret = float3::zero;
-
-	ComponentRectTransform* parent_c_rect_trans = GetParentCompRectTransform();
-
-	if (parent_c_rect_trans != nullptr)
-	{
-		float2 parent_size = parent_c_rect_trans->GetSize();
-
-		ret = parent_c_rect_trans->GetOriginLocalPos();
-
-		ret.x += scale_anchor.x * parent_size.x;
-		ret.y += scale_anchor.y * parent_size.y;
-	}
-
-	return ret;
-}
-
-float3 ComponentRectTransform::GetScaleAnchorGlobalPos()
-{
-	float3 ret = float3::zero;
-
-	float4x4 scale_anchor_trans = GetScaleAnchorTransform();
-
-	float3 transform;
-	Quat rot;
-	float3 sca;
-	scale_anchor_trans.Decompose(transform, rot, sca);
-
-	ret = transform;
-
-	return ret;
-}
-
-float4x4 ComponentRectTransform::GetScaleAnchorTransform()
-{
-	float4x4 anchor_trans = float4x4::identity;
-
-	ComponentRectTransform* parent_c_rect_trans = GetParentCompRectTransform();
-
-	if (GetHasParent() && parent_c_rect_trans != nullptr)
-	{
-		float4x4 parent_matrix_orig = parent_c_rect_trans->GetOriginMatrix();
-		float2 parent_size = parent_c_rect_trans->GetSize();
-
-		anchor_trans = parent_matrix_orig;
-
-		float4x4 movement = anchor_trans.FromTRS(float3((scale_anchor.x * parent_size.x), (scale_anchor.y * parent_size.y), 0), Quat::identity, float3::one);
-
-		anchor_trans = parent_matrix_orig * movement;
-	}
-	else
-	{
-		anchor_trans = c_transform->GetMatrix();
-	}
-
-	return anchor_trans;
-}
-
 void ComponentRectTransform::SetScale(const float & _scale)
 {
 	scale = _scale;
 
-	UpdateTransform();
+	UpdateTransformAndChilds();
 }
 
 float ComponentRectTransform::GetScale() const
 {
 	return scale;
+}
+
+void ComponentRectTransform::SetSnapUp(bool set)
+{
+	snap_up = set;
+
+	UpdateTransform();
+}
+
+void ComponentRectTransform::SetSnapDown(bool set)
+{
+	snap_down = set;
+
+	UpdateTransform();
+}
+
+void ComponentRectTransform::SetSnapLeft(bool set)
+{
+	snap_left = set;
+
+	UpdateTransform();
+}
+
+void ComponentRectTransform::SetSnapRight(bool set)
+{
+	snap_right = set;
+
+	UpdateTransform();
+}
+
+bool ComponentRectTransform::GetSnapUp()
+{
+	return snap_up;
+}
+
+bool ComponentRectTransform::GetSnapDown()
+{
+	return snap_down;
+}
+
+bool ComponentRectTransform::GetSnapLeft()
+{
+	return snap_left;
+}
+
+bool ComponentRectTransform::GetSnapRight()
+{
+	return snap_right;
 }
 
 float3 ComponentRectTransform::GetPreferedPos()
@@ -420,7 +375,26 @@ bool ComponentRectTransform::GetHasParent() const
 
 void ComponentRectTransform::UpdateTransform()
 {
-	c_transform->SetPosition(GetPreferedPos());
+	float3 prefered_pos = GetPreferedPos();
+
+	if (snap_right)
+	{
+	
+	}
+	if (snap_left)
+	{
+		
+	}
+	if (snap_up)
+	{
+	
+	}
+	if (snap_down)
+	{
+
+	}
+
+	c_transform->SetPosition(float3(prefered_pos.x, prefered_pos.y, prefered_pos.z));
 
 	c_transform->SetRotation(rotation);
 

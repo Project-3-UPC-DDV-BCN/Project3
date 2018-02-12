@@ -14,6 +14,7 @@
 #include "ComponentCamera.h"
 #include "RenderTexture.h"
 #include "ModuleCamera3D.h"
+#include "ComponentCanvas.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "ModuleScene.h"
@@ -148,8 +149,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
-	// TODO
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
@@ -256,8 +255,29 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
-void ModuleRenderer3D::DrawCanvas(ComponentCanvas * canvas)
+void ModuleRenderer3D::DrawCanvas(ComponentCanvas * canvas, ComponentCamera* camera, bool editor_camera)
 {
+	std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
+
+	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+
+	UseShaderProgram(program->GetProgramID());
+
+	for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
+	{
+		SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
+		SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
+		SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
+
+		SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
+		SetUniformBool(program->GetProgramID(), "has_material_color", (*it).GetTextureId() == 0);
+		SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
+
+		if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
+
+		BindVertexArrayObject((*it).GetPlane()->id_vao);
+	}
+
 }
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
