@@ -20,6 +20,7 @@
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
 #include "Skeleton.h"
+#include "AnimationClip.h"
 
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -82,6 +83,11 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	skeletons_list.clear();
+
+	for (std::map<uint, AnimationClip*>::iterator it = animation_clips.begin(); it != animation_clips.end(); ++it) {
+		RELEASE(it->second);
+	}
+	animation_clips.clear();
 }
 
 bool ModuleResources::Init(Data * editor_config)
@@ -153,6 +159,7 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::SceneResource:
 		break;
 	case Resource::AnimationResource:
+		AddAnimationClip((AnimationClip*)resource);
 		break;
 	case Resource::PrefabResource:
 		AddPrefab((Prefab*)resource);
@@ -218,6 +225,7 @@ void ModuleResources::ImportFile(std::string path)
 	case Resource::SceneResource:
 		break;
 	case Resource::AnimationResource:
+		//TODO
 		break;
 	case Resource::PrefabResource:
 		if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
@@ -671,6 +679,43 @@ std::map<uint, Skeleton*> ModuleResources::GetSkeletonsList() const
 	return skeletons_list;
 }
 
+AnimationClip * ModuleResources::GetAnimationClip(std::string name) const
+{
+	for (std::map<uint, AnimationClip*>::const_iterator it = animation_clips.begin(); it != animation_clips.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+AnimationClip * ModuleResources::GetAnimationClip(UID uid) const
+{
+	if (animation_clips.find(uid) != animation_clips.end()) return animation_clips.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddAnimationClip(AnimationClip * animation_clip)
+{
+	if (animation_clip != nullptr)
+	{
+		animation_clips[animation_clip->GetUID()] = animation_clip;
+	}
+}
+
+void ModuleResources::RemoveAnimationClip(AnimationClip * animation_clip)
+{
+	if (animation_clip != nullptr)
+	{
+		std::map<uint, AnimationClip*>::iterator it = animation_clips.find(animation_clip->GetUID());
+		if (it != animation_clips.end()) animation_clips.erase(it);
+	}
+}
+
+std::map<uint, AnimationClip*> ModuleResources::GetAnimationClipsList() const
+{
+	return animation_clips;
+}
+
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
@@ -686,6 +731,7 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
 	else if (str == ".sklt") return Resource::SkeletonResource;
+	else if (str == ".anim") return Resource::AnimationResource;
 
 	return Resource::Unknown;
 }
@@ -701,6 +747,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
 	else if (str == ".sklt") return Resource::SkeletonResource;
+	else if (str == ".anim") return Resource::AnimationResource;
 
 	return Resource::Unknown;
 }
@@ -715,6 +762,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 	else if (type == Resource::ScriptResource) return ".dll";
 	else if (type == Resource::ShaderResource) return ".shader";
 	else if (type == Resource::SkeletonResource) return ".sklt";
+	else if (type == Resource::AnimationResource) return ".anim";
 	
 	return "";
 }
@@ -755,6 +803,11 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 	case Resource::SceneResource:
 		break;
 	case Resource::AnimationResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_ANIMATIONS_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".anim", directory, false))
+		{
+			library_file = directory + file_name + ".anim";
+		}
 		break;
 	case Resource::PrefabResource:
 		directory = App->file_system->StringToPathFormat(LIBRARY_PREFABS_FOLDER);
@@ -825,6 +878,9 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::SceneResource:
 		break;
 	case Resource::AnimationResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_ANIMATIONS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_ANIMATIONS_FOLDER_PATH);
+		App->file_system->Copy(file_path, LIBRARY_ANIMATIONS_FOLDER + App->file_system->GetFileName(file_path));
+		ret = LIBRARY_ANIMATIONS_FOLDER + App->file_system->GetFileName(file_path);
 		break;
 	case Resource::PrefabResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
@@ -890,6 +946,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 	case Resource::SceneResource:
 		break;
 	case Resource::AnimationResource:
+		//TODO
 		break;
 	case Resource::PrefabResource:
 		if (GetPrefab(name) != nullptr)
@@ -1259,7 +1316,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	x = fract(TexCoord.x*25.0);\n"
 			"	y = fract(TexCoord.y*25.0);\n\n"
 			"	// Draw a black and white grid.\n"
-			"	if (x > 0.95 || y > 0.95) \n	{\n"
+			"	if (x > 0.93 || y > 0.93) \n	{\n"
 			"	color = line_color;\n	}\n"
 			"	else\n{\n"
 			"	discard;\n	}\n"

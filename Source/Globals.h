@@ -92,6 +92,8 @@ enum update_status
 #define LIBRARY_SHADERS_FOLDER_PATH "./Project/Library/Shaders"
 #define LIBRARY_SKELETONS_FOLDER "./Project/Library/Skeletons/"
 #define LIBRARY_SKELETONS_FOLDER_PATH "./Project/Library/Skeletons"
+#define LIBRARY_ANIMATIONS_FOLDER "./Project/Library/Animations/"
+#define LIBRARY_ANIMATIONS_FOLDER_PATH "./Project/Library/Animations"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"

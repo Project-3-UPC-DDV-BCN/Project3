@@ -13,6 +13,7 @@ class Script;
 class Shader;
 class ShaderProgram;
 class Skeleton;
+class AnimationClip;
 
 class ModuleResources :
 	public Module
@@ -85,6 +86,12 @@ public:
 	void RemoveSkeleton(Skeleton* skeleton);
 	std::map<uint, Skeleton*> GetSkeletonsList() const;
 
+	AnimationClip* GetAnimationClip(std::string name) const;
+	AnimationClip* GetAnimationClip(UID uid) const;
+	void AddAnimationClip(AnimationClip* animation_clip);
+	void RemoveAnimationClip(AnimationClip* animation_clip);
+	std::map<uint, AnimationClip*> GetAnimationClipsList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -114,5 +121,6 @@ private:
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 	std::map<uint, Skeleton*> skeletons_list;
+	std::map<uint, AnimationClip*> animation_clips;
 };
 

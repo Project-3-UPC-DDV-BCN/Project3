@@ -14,7 +14,7 @@ void main()
 	y = fract(TexCoord.y*25.0);
 
 	// Draw a black and white grid.
-	if (x > 0.95 || y > 0.95) 
+	if (x > 0.93 || y > 0.93) 
 	{
 	color = line_color;
 	}
