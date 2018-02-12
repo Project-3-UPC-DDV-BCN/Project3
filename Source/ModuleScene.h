@@ -87,5 +87,4 @@ public:
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;
-	
 };

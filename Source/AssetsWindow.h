@@ -8,14 +8,15 @@ struct File
 	std::string name;
 	std::string extension;
 	std::string path;
+	long long current_modified_time = 0;
 };
 
 struct Directory
 {
 	std::string name;
 	std::string path;
-	std::vector<Directory> sub_directories;
-	std::vector<File> directory_files;
+	std::vector<Directory*> sub_directories;
+	std::vector<File*> directory_files;
 	long long current_modified_time = 0;
 };
 
@@ -43,7 +44,8 @@ private:
 	void CreateShader(Shader::ShaderType type, std::string shader_name);
 	void CreateMaterial(std::string material_name);
 	void CheckDirectory(Directory& directory);
-	void FillDirectories(Directory& parent, std::string directory_path);
+	void FillDirectories(Directory* parent, std::string directory_path);
+	void CleanUp(Directory& directory);
 
 private:
 	uint node;
@@ -70,6 +72,6 @@ private:
 
 	Shader::ShaderType shader_type;
 
-	std::vector<Directory> directories;
+	std::vector<Directory*> directories;
 };
 
