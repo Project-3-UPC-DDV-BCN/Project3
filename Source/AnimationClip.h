@@ -2,21 +2,42 @@
 #define __ANIMATIONCLIP_H__
 
 #include "Resource.h"
+#include "Skeleton.h"
+#include <map>
+#include <vector>
 
 class Data;
 
-class AnimationClip : public Resource
+class AnimationSample
 {
-	AnimationClip();
-
-	void Save(Data& data) const = 0;
-	bool Load(Data& data) = 0;
-	void CreateMeta() const = 0;
-	void LoadToMemory() = 0;
-	void UnloadFromMemory() = 0;
+public:
+	AnimationSample();
+	~AnimationSample();
 
 private:
+	JointPose joint_info;
+	double frame = -1;
 
+};
+
+class AnimationClip : public Resource
+{
+public:
+	AnimationClip();
+	~AnimationClip();
+
+	void Save(Data& data) const;
+	bool Load(Data& data);
+	void CreateMeta() const;
+	void LoadToMemory();
+	void UnloadFromMemory();
+
+private:
+	Skeleton * skeleton = nullptr;
+	double duration = 0.0;
+	double ticks_per_sec = 0.0;
+	std::map<int, std::vector<AnimationSample*>> anim_frames;
+	bool loop = false;
 };
 
 #endif
