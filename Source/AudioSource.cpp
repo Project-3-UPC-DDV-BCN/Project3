@@ -29,6 +29,7 @@ AudioSource::~AudioSource()
 
 bool AudioSource::Update()
 {
+	bool ret = true;
 
 	if (App->IsPlaying()) 
 	{
@@ -58,6 +59,8 @@ bool AudioSource::Update()
 			events_to_play.clear();
 		}
 	}
+
+	return ret;
 }
 
 void AudioSource::PlayMusic(double audio_id)

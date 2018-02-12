@@ -50,17 +50,17 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	return false;
+	return true;
 }
 
 update_status ModuleAudio::PreUpdate(float dt)
 {
-	return update_status();
+	return update_status::UPDATE_CONTINUE;
 }
 
 update_status ModuleAudio::PostUpdate(float dt)
 {
-	return update_status();
+	return update_status::UPDATE_CONTINUE;
 }
 
 // Called before quitting

@@ -10,7 +10,7 @@ class Component
 public:
 	enum ComponentType {
 		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompCircleCollider, CompAudioSource, CompAnimaton, 
-		CompScript, CompParticleSystem, CompFactory, CompAudioSource, CompAudioListener, CompUnknown
+		CompScript, CompParticleSystem, CompFactory, CompAudioListener, CompUnknown
 	};
 
 	Component();
