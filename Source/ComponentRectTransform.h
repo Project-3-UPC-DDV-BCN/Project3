@@ -49,6 +49,15 @@ public:
 	float3 GetAnchorGlobalPos();
 	float4x4 GetAnchorTransform();
 
+	void SetScaleAnchor(const float2 scale_anchor);
+	float2 GetScaleAnchor() const;
+	float3 GetScaleAnchorLocalPos();
+	float3 GetScaleAnchorGlobalPos();
+	float4x4 GetScaleAnchorTransform();
+
+	void SetScale(const float& scale);
+	float GetScale() const;
+
 	float3 GetPreferedPos();
 
 	void Save(Data& data) const;
@@ -63,7 +72,9 @@ private:
 	float2				pos;
 	float2				size;
 	float2			    anchor;
+	float2				scale_anchor;
 	float3				rotation;
+	float				scale;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

@@ -39,6 +39,16 @@ ComponentRectTransform * ComponentCanvas::GetCompRectTransform() const
 	return c_rect_trans;
 }
 
+void ComponentCanvas::SetRenderCamera(ComponentCamera * _render_camera)
+{
+	render_camera = _render_camera;
+}
+
+ComponentCamera * ComponentCanvas::GetRenderCamera() const
+{
+	return render_camera;
+}
+
 void ComponentCanvas::SetRenderMode(CanvasRenderMode mode)
 {
 	render_mode = mode;
@@ -111,24 +121,30 @@ CanvasDrawElement::CanvasDrawElement()
 	texture_id = 0;
 	transform = float4x4::identity;
 	size = float2::zero;
+	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-void CanvasDrawElement::SetSize(float2 _size)
+void CanvasDrawElement::SetSize(const float2& _size)
 {
 	size = _size;
 }
 
-void CanvasDrawElement::SetTransform(float4x4 trans)
+void CanvasDrawElement::SetTransform(const float4x4& trans)
 {
 	transform = trans;
 }
 
-void CanvasDrawElement::SetTextureId(uint id)
+void CanvasDrawElement::SetTextureId(const uint& id)
 {
 	texture_id = id;
 }
 
-float4x4 CanvasDrawElement::GetTransform()
+void CanvasDrawElement::SetColour(const float4 & _colour)
+{
+	colour = _colour;
+}
+
+float4x4 CanvasDrawElement::GetTransform() const
 {
 	float4x4 ret = float4x4::identity;
 
@@ -139,7 +155,12 @@ float4x4 CanvasDrawElement::GetTransform()
 	return ret;;
 }
 
-uint CanvasDrawElement::GetTextureId()
+uint CanvasDrawElement::GetTextureId() const
 {
 	return texture_id;
+}
+
+float4 CanvasDrawElement::GetColour() const
+{
+	return colour;
 }

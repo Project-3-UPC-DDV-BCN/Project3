@@ -8,6 +8,7 @@
 class ComponentMeshRenderer;
 class Primitive;
 class ComponentCamera;
+class ComponentCanvas;
 class DebugDraw;
 
 #define MAX_LIGHTS 8
@@ -88,6 +89,7 @@ private:
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+	void DrawCanvas(ComponentCanvas* canvas);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -112,5 +114,6 @@ private:
 
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
 	std::list<Primitive*> debug_primitive_to_draw;
+	std::list<ComponentCanvas*> ui_to_draw;
 
 };

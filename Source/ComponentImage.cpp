@@ -9,6 +9,9 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 	SetName("Image");
 	SetType(ComponentType::CompImage);
 	SetGameObject(attached_gameobject);
+	
+	texture_id = 0;
+	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	c_rect_trans = GetRectTrans();
 
@@ -29,17 +32,23 @@ bool ComponentImage::Update()
 	{
 		CanvasDrawElement de;
 		de.SetTransform(c_rect_trans->GetMatrix());
-		de.SetTextureId(texture_id);
 		de.SetSize(c_rect_trans->GetSize());
+		de.SetTextureId(texture_id);
+		de.SetColour(colour);
 		canvas->AddDrawElement(de);
 	}
 
 	return ret;
 }
 
-void ComponentImage::SetTextureId(uint _texture_id)
+void ComponentImage::SetTextureId(const uint &_texture_id)
 {
 	texture_id = _texture_id;
+}
+
+float4 ComponentImage::SetColour(const float4 & colour)
+{
+	return colour;
 }
 
 void ComponentImage::Save(Data & data) const

@@ -254,6 +254,10 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
+void ModuleRenderer3D::DrawCanvas(ComponentCanvas * canvas)
+{
+}
+
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();

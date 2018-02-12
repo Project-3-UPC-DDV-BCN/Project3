@@ -15,18 +15,21 @@ class CanvasDrawElement
 public:
 	CanvasDrawElement();
 
-	void SetSize(float2 size);
-	void SetTransform(float4x4 trans);
-	void SetTextureId(uint id);
+	void SetSize(const float2& size);
+	void SetTransform(const float4x4& trans);
+	void SetTextureId(const uint& id);
+	void SetColour(const float4& colour);
 
-	float4x4 GetTransform();
-	uint GetTextureId();
+	float4x4 GetTransform() const;
+	uint GetTextureId() const;
+	float4 GetColour() const;
 
 private:
 	Mesh*    plane = nullptr;
 	float2   size;
 	float4x4 transform;
 	uint	 texture_id;
+	float4   colour;
 };
 
 enum CanvasRenderMode
@@ -44,6 +47,9 @@ public:
 	bool Update();
 
 	ComponentRectTransform* GetCompRectTransform() const;
+
+	void SetRenderCamera(ComponentCamera* render_camera);
+	ComponentCamera* GetRenderCamera() const;
 
 	void SetRenderMode(CanvasRenderMode mode);
 	CanvasRenderMode GetRenderMode();

@@ -16,7 +16,8 @@ public:
 
 	bool Update();
 
-	void SetTextureId(uint texture_id);
+	void SetTextureId(const uint& texture_id);
+	float4 SetColour(const float4& colour);
 
 	void Save(Data& data) const;
 	void Load(Data& data);
@@ -28,7 +29,8 @@ private:
 private:
 	ComponentRectTransform* c_rect_trans = nullptr;
 
-	uint texture_id = 0;
+	uint texture_id;
+	float4 colour;
 
 };
 
