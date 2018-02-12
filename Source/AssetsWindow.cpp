@@ -42,10 +42,10 @@ AssetsWindow::AssetsWindow()
 		}
 	}
 	assets_folder_path = App->file_system->StringToPathFormat(ASSETS_FOLDER_PATH);
-	selected_folder = assets_folder_path;
 
 	Directory dir;
 	FillDirectories(dir, assets_folder_path);
+	selected_folder = directories.front();
 }
 
 AssetsWindow::~AssetsWindow()
@@ -57,11 +57,19 @@ AssetsWindow::~AssetsWindow()
 
 void AssetsWindow::DrawWindow()
 {
+	PerfTimer timer;
+	timer.Start();
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) {
 		ImGui::Columns(2);
 		node = 0;
 		ImGui::Spacing();
-		DrawChilds(assets_folder_path);
+		
+		for (Directory& dir : directories)
+		{
+			CheckDirectory(dir);
+		}
+
+		DrawChilds(directories.front());
 
 		if (ImGui::IsMouseClicked(1) && ImGui::IsMouseHoveringWindow()) {
 			ImGui::SetNextWindowPos(ImGui::GetMousePos());
@@ -69,7 +77,7 @@ void AssetsWindow::DrawWindow()
 			ImGui::OpenPopup("Folder Options");
 		}
 
-		if (!App->file_system->DirectoryIsEmpty(selected_folder)) {
+		if (!selected_folder.sub_directories.empty()) {
 			if (ImGui::BeginPopup("Folder Options"))
 			{
 				if (ImGui::MenuItem("Create Folder")) {
@@ -78,13 +86,13 @@ void AssetsWindow::DrawWindow()
 					show_new_script_window = false;
 					show_new_shader_window = false;
 				}
-				if (App->file_system->GetDirectoryName(selected_folder) != "Assets") {
+				if (selected_folder.name != "Assets") {
 					if (ImGui::MenuItem("Delete")) {
 						show_delete_window = true;
 						show_new_folder_window = false;
 						show_new_script_window = false;
 						show_new_shader_window = false;
-						delete_path = selected_folder;
+						delete_path = selected_folder.path;
 					}
 				}
 				ImGui::EndPopup();
@@ -104,20 +112,17 @@ void AssetsWindow::DrawWindow()
 
 		if (ImGui::BeginChild("Files", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar, App->IsPlaying())) 
 		{
-			if (!selected_folder.empty()) 
+			if (!selected_folder.directory_files.empty()) 
 			{
-				std::vector<std::string> files = App->file_system->GetFilesInDirectory(selected_folder);
-				for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); it++)
+				for (std::vector<File>::iterator it = selected_folder.directory_files.begin(); it != selected_folder.directory_files.end(); it++)
 				{
 					bool selected = false;
 					float font_size = ImGui::GetFontSize();
-					std::string file_extension = App->file_system->GetFileExtension(*it);
-					std::string file_name = App->file_system->GetFileNameWithoutExtension(*it);
-					Resource::ResourceType type = (Resource::ResourceType)App->resources->AssetExtensionToResourceType(file_extension);
+					Resource::ResourceType type = (Resource::ResourceType)App->resources->AssetExtensionToResourceType((*it).extension);
 					switch (type)
 					{
 					case Resource::TextureResource:
-						texture_icon = App->resources->GetTexture(file_name);
+						texture_icon = App->resources->GetTexture((*it).name);
 						ImGui::Image((ImTextureID)texture_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
 						ImGui::SameLine();
 						break;
@@ -134,7 +139,7 @@ void AssetsWindow::DrawWindow()
 						break;
 					}
 
-					if (*it == selected_file_path) {
+					if ((*it).path == selected_file_path) {
 						if (App->scene->selected_gameobjects.empty()) {
 							selected = true;
 						}
@@ -142,32 +147,32 @@ void AssetsWindow::DrawWindow()
 							selected_file_path.clear();
 						}
 					}
-					ImGui::Selectable((file_name + file_extension).c_str(), &selected);
+					ImGui::Selectable(((*it).name + (*it).extension).c_str(), &selected);
 					if (ImGui::IsItemHoveredRect()) 
 					{
 						asset_hovered = true;
 						
 						if (ImGui::IsMouseDragging() && !App->editor->drag_data->hasData)
 						{
-							Resource::ResourceType type = App->resources->AssetExtensionToResourceType(file_extension);
+							Resource::ResourceType type = App->resources->AssetExtensionToResourceType((*it).extension);
 							Resource* resource = nullptr;
 							switch (type)
 							{
 							case Resource::TextureResource:
-								resource = (Resource*)App->resources->GetTexture(file_name);
+								resource = (Resource*)App->resources->GetTexture((*it).name);
 								break;
 							case Resource::MeshResource:
-								resource = (Resource*)App->resources->GetMesh(file_name);
+								resource = (Resource*)App->resources->GetMesh((*it).name);
 								break;
 							case Resource::SceneResource:
 								break;
 							case Resource::AnimationResource:
 								break;
 							case Resource::PrefabResource:
-								resource = (Resource*)App->resources->GetPrefab(file_name);
+								resource = (Resource*)App->resources->GetPrefab((*it).name);
 								break;
 							case Resource::ScriptResource:
-								resource = (Resource*)App->resources->GetScript(file_name);
+								resource = (Resource*)App->resources->GetScript((*it).name);
 								break;
 							case Resource::AudioResource:
 								break;
@@ -180,10 +185,10 @@ void AssetsWindow::DrawWindow()
 							case Resource::GameObjectResource:
 								break;
 							case Resource::MaterialResource:
-								resource = (Resource*)App->resources->GetMaterial(file_name);
+								resource = (Resource*)App->resources->GetMaterial((*it).name);
 								break;
 							case Resource::ShaderResource:
-								resource = (Resource*)App->resources->GetShader(file_name);
+								resource = (Resource*)App->resources->GetShader((*it).name);
 								break;
 							case Resource::Unknown:
 								break;
@@ -200,7 +205,7 @@ void AssetsWindow::DrawWindow()
 						else
 						{
 							if (!options_is_open && (ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1))) {
-								selected_file_path = *it;
+								selected_file_path = (*it).path;
 								App->scene->selected_gameobjects.clear();
 								if (ImGui::IsMouseClicked(1)) {
 									ImGui::SetNextWindowPos(ImGui::GetMousePos());
@@ -370,33 +375,32 @@ void AssetsWindow::DrawWindow()
 		}
 	}
 	ImGui::EndDock();
+	float ms = timer.ReadMs();
+	CONSOLE_LOG("%.3f", ms);
 }
 
-void AssetsWindow::DrawChilds(std::string path)
+void AssetsWindow::DrawChilds(Directory& directory)
 {
-	std::string path_name;
-	path_name = App->file_system->GetDirectoryName(path);
-	sprintf_s(node_name, 150, "%s##node_%i", path_name.c_str(), node++);
+	sprintf_s(node_name, 150, "%s##node_%i", directory.name.c_str(), node++);
 	uint flag = 0;
 
-	if (!App->file_system->DirectoryHasSubDirectories(path))
+	if (directory.sub_directories.empty())
 	{
 		flag |= ImGuiTreeNodeFlags_Leaf;
 	}
 
 	flag |= ImGuiTreeNodeFlags_OpenOnArrow;
 
-	if (selected_folder == path && !show_new_folder_window) {
+	if (selected_folder.path == directory.path && !show_new_folder_window) {
 		flag |= ImGuiTreeNodeFlags_Selected;
 	}
 
 	if (ImGui::TreeNodeExI(node_name, (ImTextureID)folder_icon->GetID(), flag))
 	{
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1)) {
-			selected_folder = path;
+			selected_folder = directory;
 		}
-		std::vector<std::string> sub_directories = App->file_system->GetSubDirectories(path);
-		for (std::vector<std::string>::iterator it = sub_directories.begin(); it != sub_directories.end(); it++)
+		for (std::vector<Directory>::iterator it = directory.sub_directories.begin(); it != directory.sub_directories.end(); it++)
 		{
 			DrawChilds(*it);
 		}
@@ -404,7 +408,7 @@ void AssetsWindow::DrawChilds(std::string path)
 	}
 	else {
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1)) {
-			selected_folder = path;
+			selected_folder = directory;
 		}
 	}
 }
@@ -426,8 +430,8 @@ void AssetsWindow::CreateDirectortWindow()
 	ImGui::Spacing();
 	if (ImGui::Button("Confirm")) {
 		std::string str(inputText);
-		std::string temp = selected_folder;
-		if (App->file_system->Create_Directory(selected_folder += ("\\" + str))) {
+		Directory temp = selected_folder;
+		if (App->file_system->Create_Directory(selected_folder.path += ("\\" + str))) {
 			show_new_folder_window = false;
 		}
 		else {
@@ -513,11 +517,11 @@ void AssetsWindow::CreateScript(Script::ScriptType type, std::string scriptName)
 
 		in_file.close();
 
-		std::ofstream output_file(selected_folder + "\\" + new_file_name);
+		std::ofstream output_file(selected_folder.path + "\\" + new_file_name);
 		output_file << str;
 		output_file.close();
 
-		App->resources->CreateResource(selected_folder + "\\" + new_file_name);
+		App->resources->CreateResource(selected_folder.path + "\\" + new_file_name);
 	}
 }
 
@@ -621,11 +625,11 @@ void AssetsWindow::CreateShader(Shader::ShaderType type, std::string shader_name
 
 		in_file.close();
 
-		std::ofstream output_file(selected_folder + "\\" + new_file_name);
+		std::ofstream output_file(selected_folder.path + "\\" + new_file_name);
 		output_file << str;
 		output_file.close();
 
-		App->resources->CreateResource(selected_folder + "\\" + new_file_name);
+		App->resources->CreateResource(selected_folder.path + "\\" + new_file_name);
 	}
 }
 
@@ -638,13 +642,13 @@ void AssetsWindow::CreateMaterial(std::string material_name)
 	Data d;
 	new_mat->Save(d);
 
-	d.SaveAsBinary(selected_folder + "\\" + new_file_name);
+	d.SaveAsBinary(selected_folder.path + "\\" + new_file_name);
 
 	RELEASE(new_mat);
-	App->resources->CreateResource(selected_folder + "\\" + new_file_name);
+	App->resources->CreateResource(selected_folder.path + "\\" + new_file_name);
 }
 
-void AssetsWindow::CheckDirectory(Directory directory)
+void AssetsWindow::CheckDirectory(Directory& directory)
 {
 	long long current_modified_time = App->file_system->GetModifiedTime(directory.path);
 	if (current_modified_time > directory.current_modified_time)
@@ -662,7 +666,7 @@ void AssetsWindow::CheckDirectory(Directory directory)
 	}
 }
 
-void AssetsWindow::FillDirectories(Directory parent, std::string directory_path)
+void AssetsWindow::FillDirectories(Directory& parent, std::string directory_path)
 {
 	Directory dir;
 	dir.path = directory_path;
@@ -677,10 +681,16 @@ void AssetsWindow::FillDirectories(Directory parent, std::string directory_path)
 		file.name = App->file_system->GetFileNameWithoutExtension(*it);
 		dir.directory_files.push_back(file);
 	}
+	directories.push_back(dir);
 	std::vector<std::string> sub_directories = App->file_system->GetSubDirectories(directory_path);
 	for (std::vector<std::string>::iterator it = sub_directories.begin(); it != sub_directories.end(); it++)
 	{
-		
+		FillDirectories(dir, *it);
+	}
+
+	if (!parent.path.empty())
+	{
+		parent.sub_directories.push_back(dir);
 	}
 }
 
