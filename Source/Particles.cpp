@@ -154,24 +154,34 @@ float3 Particle::GetEmmisionVector()
 	direction = emmiter_transform->GetMatrix().WorldY();
 
 	//We apply the rotation angle to the vector 
+	LCG random_angle_z;
+	int angle_z = random_angle_z.Int(0, emmision_angle);
+
 	float3x3 z_rotation;
-	z_rotation = z_rotation.FromEulerXYZ(0, 0, 45 * DEGTORAD);
+	z_rotation = z_rotation.FromEulerXYZ(0, 0, angle_z * DEGTORAD);
 	direction = z_rotation.Transform(direction);
 
 	//We apply a rotation on X for randomization
+	LCG random_angle_y;
+	int angle_y = random_angle_y.Int(0, 360);
+
 	float3x3 y_rotation;
-	y_rotation = y_rotation.FromEulerXYZ(0, 45 * DEGTORAD, 0);
+	y_rotation = y_rotation.FromEulerXYZ(0, angle_y * DEGTORAD, 0);
 	direction = y_rotation.Transform(direction);
 
 	//Dir is the maximum angle direction so we hace to add some randomnes 
+	LCG random_percentage;
+	int amount = random_percentage.Int(0, 100);
+	amount /= 10; 
+
 	float from_point_to_origin = direction.x;
-	from_point_to_origin = from_point_to_origin - (from_point_to_origin*0.5);
+	from_point_to_origin = from_point_to_origin - (from_point_to_origin*amount);
 
 	//We multiply by -1 
-	LCG random_num;
-	int random = random_num.Int(0, 2);
+	LCG random_inverter;
+	int invert = random_inverter.Int(1, 2);
 
-	if(random)
+	if(invert == 1)
 		direction.x *= -1;
 
 	return direction;
