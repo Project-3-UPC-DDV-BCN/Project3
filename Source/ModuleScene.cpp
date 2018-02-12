@@ -521,6 +521,17 @@ GameObject * ModuleScene::CreateCanvas(GameObject * parent)
 	return ret;
 }
 
+GameObject * ModuleScene::CreateImage(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompImage);
+
+	return ret;
+}
+
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
 	bool ret = true;

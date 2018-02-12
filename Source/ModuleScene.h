@@ -62,6 +62,7 @@ public:
 
 	// UI
 	GameObject* CreateCanvas(GameObject* parent = nullptr);
+	GameObject* CreateImage(GameObject* parent = nullptr);
 
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);

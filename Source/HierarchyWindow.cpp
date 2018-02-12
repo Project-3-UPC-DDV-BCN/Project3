@@ -52,12 +52,31 @@ void HierarchyWindow::DrawWindow()
 						gameobject_to_rename = App->scene->selected_gameobjects.front();
 						rename_window_y = ImGui::GetMousePos().y;
 					}
-					if (ImGui::MenuItem("Create Child")) {
+					if (ImGui::MenuItem("Create Child")) 
+					{
 						GameObject* parent = nullptr;
 						parent = App->scene->selected_gameobjects.front();
 						App->scene->CreateGameObject(parent);
 						open_gameobject_node = parent;
 					}
+
+					if (ImGui::BeginMenu("Child UI"))
+					{
+						if (ImGui::MenuItem("Canvas"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateCanvas(parent);
+						}
+
+						if (ImGui::MenuItem("Image"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateImage(parent);
+						}
+
+						ImGui::EndMenu();
+					}
+
 					if (ImGui::MenuItem("Create prefab")) {
 						App->scene->CreatePrefab(App->scene->selected_gameobjects.front());
 					}
@@ -68,9 +87,20 @@ void HierarchyWindow::DrawWindow()
 			{
 				App->scene->CreateGameObject(nullptr);
 			}
-			if (ImGui::MenuItem("Create Canvas"))
+
+			if (ImGui::BeginMenu("UI"))
 			{
-				App->scene->CreateCanvas(nullptr);
+				if (ImGui::MenuItem("Canvas"))
+				{
+					App->scene->CreateCanvas(nullptr);
+				}
+
+				if (ImGui::MenuItem("Image"))
+				{
+					App->scene->CreateImage(nullptr);
+				}
+
+				ImGui::EndMenu();
 			}
 
 			ImGui::EndPopup();

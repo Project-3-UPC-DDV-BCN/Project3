@@ -207,7 +207,7 @@ void ComponentRectTransform::SetAnchor(const float2 & _anchor)
 	if (anchor.y > 1)
 		anchor.y = 1;
 
-	UpdateTransformAndChilds();
+	UpdateTransform();
 }
 
 float2 ComponentRectTransform::GetAnchor() const
@@ -313,6 +313,11 @@ void ComponentRectTransform::UpdateTransformAndChilds()
 
 	to_change.push_back(GetGameObject());
 
+	for (std::list<GameObject*>::iterator ch = GetGameObject()->childs.begin(); ch != GetGameObject()->childs.end(); ++ch)
+	{
+		to_change.push_back(*ch);
+	}
+
 	std::list<GameObject*>::iterator it = to_change.begin();
 
 	while (to_change.size() > 0)
@@ -322,11 +327,6 @@ void ComponentRectTransform::UpdateTransformAndChilds()
 		if (c_rect_trans != nullptr)
 		{
 			c_rect_trans->UpdateTransform();
-		}
-
-		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
-		{
-			to_change.push_back(*ch);
 		}
 
 		to_change.erase(it);

@@ -8,6 +8,7 @@
 
 class Mesh;
 class ComponentRectTransform;
+class ComponentCamera;
 
 class CanvasDrawElement
 {
@@ -17,7 +18,6 @@ public:
 	void SetSize(float2 size);
 	void SetTransform(float4x4 trans);
 	void SetTextureId(uint id);
-	float4x4 GetTransform();
 
 	float4x4 GetTransform();
 	uint GetTextureId();
