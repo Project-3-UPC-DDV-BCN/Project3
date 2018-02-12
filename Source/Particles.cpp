@@ -149,18 +149,19 @@ float3 Particle::GetEmmisionVector()
 {
 	float3 direction;
 	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+
 	//First we create a vector matching the Y axis
 	direction = emmiter_transform->GetMatrix().WorldY();
 
 	//We apply the rotation angle to the vector 
-	Quat y_rotation;
-	y_rotation.FromEulerXYZ(0, 0, 45 * DEGTORAD);
-	direction = y_rotation.Transform(direction);
+	float3x3 z_rotation;
+	z_rotation = z_rotation.FromEulerXYZ(0, 0, 45 * DEGTORAD);
+	direction = z_rotation.Transform(direction);
 
 	//We apply a rotation on X for randomization
-	Quat x_rotation;
-	x_rotation.FromEulerXYZ(0, 45 * DEGTORAD, 0);
-	direction = x_rotation.Transform(direction);
+	float3x3 y_rotation;
+	y_rotation = y_rotation.FromEulerXYZ(0, 45 * DEGTORAD, 0);
+	direction = y_rotation.Transform(direction);
 
 	//Dir is the maximum angle direction so we hace to add some randomnes 
 	float from_point_to_origin = direction.x;
@@ -171,7 +172,7 @@ float3 Particle::GetEmmisionVector()
 	int random = random_num.Int(0, 2);
 
 	if(random)
-		direction *= -1;
+		direction.x *= -1;
 
 	return direction;
 }
