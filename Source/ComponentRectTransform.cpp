@@ -20,6 +20,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	anchor = float2(0.5f, 0.5f);
 	rotation = float3::zero;
 
+	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
 }
 
@@ -105,13 +106,7 @@ float4x4 ComponentRectTransform::GetMatrix() const
 
 float3 ComponentRectTransform::GetOriginLocalPos()
 {
-	float3 ret = float3::zero;
-
-	float3 pos = c_transform->GetLocalPosition();
-
-	ret = pos - float3(size.x/2, size.y/2, 0);
-
-	return ret;
+	return float3(-size.x/2, -size.y/2, 0);
 }
 
 float3 ComponentRectTransform::GetOriginGlobalPos()
@@ -193,21 +188,31 @@ float2 ComponentRectTransform::GetSize() const
 
 void ComponentRectTransform::SetAnchor(const float2 & _anchor)
 {
-	anchor = _anchor;
+	bool is_canvas = false;
+	GetCanvas(is_canvas);
 
-	if (anchor.x < 0)
-		anchor.x = 0;
-	
-	if (anchor.x > 1)
-		anchor.x = 1;
+	if (!is_canvas)
+	{
+		anchor = _anchor;
 
-	if (anchor.y < 0)
-		anchor.y = 0;
+		if (anchor.x < 0)
+			anchor.x = 0;
 
-	if (anchor.y > 1)
-		anchor.y = 1;
+		if (anchor.x > 1)
+			anchor.x = 1;
 
-	UpdateTransform();
+		if (anchor.y < 0)
+			anchor.y = 0;
+
+		if (anchor.y > 1)
+			anchor.y = 1;
+
+		UpdateTransform();
+	}
+	else
+	{
+		anchor = float2(0.5f, 0.5f);
+	}
 }
 
 float2 ComponentRectTransform::GetAnchor() const
