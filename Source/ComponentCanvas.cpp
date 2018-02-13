@@ -159,9 +159,9 @@ float4x4 CanvasDrawElement::GetTransform() const
 {
 	float4x4 ret = float4x4::identity;
 
-	float4x4 size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90, 0, 0), float3(size.x, 1, size.y));
+	float4x4 size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, 1, size.y));
 
-	ret = size_trans * transform;
+	ret = transform * size_trans;
 
 	return ret;;
 }

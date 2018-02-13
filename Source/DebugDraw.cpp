@@ -305,6 +305,8 @@ void DebugDraw::Render(ComponentCamera* camera)
 	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
 	glUseProgram(program->GetProgramID());
 
+	glLineWidth(2);
+
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
 		uint id_vertices_data = 0;
@@ -348,6 +350,7 @@ void DebugDraw::Render(ComponentCamera* camera)
 	// -----------
 
 	// DeActivate
+	glLineWidth(1);
 	glUseProgram(last_program);
 	glBindTexture(GL_TEXTURE_2D, last_texture);
 	glBindSampler(0, last_sampler);

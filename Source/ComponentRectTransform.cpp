@@ -40,7 +40,7 @@ bool ComponentRectTransform::Update()
 	float4x4 global_anchor_trans = GetAnchorTransform(); global_anchor_trans.RemoveScale();
 	float4x4 global_origin_trans = GetOriginMatrix(); global_origin_trans.RemoveScale();
 
-	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size);
+	App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), size, float4(0.0f, 0.5f, 1.0f, 1.0f));
 	App->renderer3D->GetDebugDraw()->Circle(global_anchor_trans, 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
 	App->renderer3D->GetDebugDraw()->Circle(global_origin_trans, 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
 	App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
