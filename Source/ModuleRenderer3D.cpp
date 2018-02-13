@@ -292,7 +292,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			}
 
 			SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
-			SetUniformBool(program->GetProgramID(), "has_material_color", (*it).GetTextureId() == 0);
+			SetUniformBool(program->GetProgramID(), "has_material_color", true);
 			SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
 
 			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
@@ -302,6 +302,9 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
 
 			glDrawElements(GL_TRIANGLES, (*it).GetPlane()->num_indices, GL_UNSIGNED_INT, NULL);
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+			UnbindVertexArrayObject();
 		}
 	}
 
