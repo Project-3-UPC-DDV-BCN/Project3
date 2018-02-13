@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleResources.h"
+#include "ModuleRenderer3D.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -29,7 +30,17 @@ bool ComponentCanvas::Update()
 {
 	bool ret = true;
 
+	App->renderer3D->AddCanvasToDraw(this);
+
 	UpdateSize();
+
+	return ret;
+}
+
+bool ComponentCanvas::CleanUp()
+{
+	bool ret = true;
+
 
 	return ret;
 }

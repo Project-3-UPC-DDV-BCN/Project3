@@ -160,7 +160,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		DrawSceneCameras(*it);
 	}
 	
-	dynamic_mesh_to_draw.clear();
+	ResetRender();
 
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
@@ -255,27 +255,54 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
-void ModuleRenderer3D::DrawCanvas(ComponentCanvas * canvas, ComponentCamera* camera, bool editor_camera)
+void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 {
-	std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
-
-	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
-
-	UseShaderProgram(program->GetProgramID());
-
-	for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
+	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 	{
-		SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
-		SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
-		SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
+		std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
 
-		SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
-		SetUniformBool(program->GetProgramID(), "has_material_color", (*it).GetTextureId() == 0);
-		SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
+		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
 
-		if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
+		UseShaderProgram(program->GetProgramID());
 
-		BindVertexArrayObject((*it).GetPlane()->id_vao);
+		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
+		{
+			// WORLD
+			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			{
+				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
+				SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
+				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
+			}
+
+			// ORTHO
+			else
+			{
+				float ortho_projection[4][4] =
+				{
+				{ 2.0f / App->window->GetWidth(), 0.0f,                             0.0f, 0.0f },
+				{ 0.0f,                           2.0f / -App->window->GetHeight(), 0.0f, 0.0f },
+				{ 0.0f,                           0.0f,                            -1.0f, 0.0f },
+				{ -1.0f,                          1.0f,                             0.0f, 1.0f },
+				};
+
+				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
+				SetUniformMatrix(program->GetProgramID(), "projection", &ortho_projection[0][0]);
+				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
+			}
+
+			SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
+			SetUniformBool(program->GetProgramID(), "has_material_color", (*it).GetTextureId() == 0);
+			SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
+
+			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
+
+			BindVertexArrayObject((*it).GetPlane()->id_vao);
+
+			glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
+
+			glDrawElements(GL_TRIANGLES, (*it).GetPlane()->num_indices, GL_UNSIGNED_INT, NULL);
+		}
 	}
 
 }
@@ -344,6 +371,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		//App->scene->octree.DebugDraw();
 	}
 	
+	DrawCanvas(active_camera, true);
+
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
 }
@@ -377,11 +406,22 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 	dynamic_mesh_to_draw.push_back(mesh);
 }
 
+void ModuleRenderer3D::AddCanvasToDraw(ComponentCanvas * canvas)
+{
+	canvas_to_draw.push_back(canvas);
+}
+
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
 	debug_primitive_to_draw.clear();
 	rendering_cameras.clear();
+	debug_draw->Clear();
+
+	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+		(*cv)->ClearDrawElements();
+	
+	canvas_to_draw.clear();
 }
 
 // Called before quitting

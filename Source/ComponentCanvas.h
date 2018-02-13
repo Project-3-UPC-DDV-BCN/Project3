@@ -46,6 +46,7 @@ public:
 	virtual ~ComponentCanvas();
 
 	bool Update();
+	bool CleanUp();
 
 	ComponentRectTransform* GetCompRectTransform() const;
 

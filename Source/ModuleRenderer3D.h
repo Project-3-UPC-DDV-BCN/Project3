@@ -43,6 +43,7 @@ public:
 	bool IsUsingSkybox()const;
 
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
+	void AddCanvasToDraw(ComponentCanvas* canvas);
 	void ResetRender();
 
 	void BindArrayBuffer(uint id) const;
@@ -89,7 +90,7 @@ private:
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
-	void DrawCanvas(ComponentCanvas* canvas, ComponentCamera* camera, bool editor_camera = true);
+	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -114,6 +115,6 @@ private:
 
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
 	std::list<Primitive*> debug_primitive_to_draw;
-	std::list<ComponentCanvas*> ui_to_draw;
+	std::list<ComponentCanvas*> canvas_to_draw;
 
 };

@@ -132,6 +132,7 @@ void GameObject::DestroyComponent(Component* component)
 			if (component->GetType() == Component::CompCanvas)
 				is_canvas = false;
 
+			(*it)->CleanUp();
 			RELEASE(*it);
 			it = components_list.erase(it);
 		}
