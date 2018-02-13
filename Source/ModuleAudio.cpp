@@ -19,31 +19,8 @@ ModuleAudio::~ModuleAudio()
 bool ModuleAudio::Init(Data* editor_config)
 {
 	CONSOLE_DEBUG("Loading Audio Mixer");
-	bool ret = true;
-	SDL_Init(0);
-
-	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
-	{
-		CONSOLE_DEBUG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
-
-	// load support for the OGG format
-	int flags = MIX_INIT_OGG;
-	int init = Mix_Init(flags);
-
-	if((init & flags) != flags)
-	{
-		CONSOLE_DEBUG("Could not initialize Mixer lib. Mix_Init: %s", Mix_GetError());
-		ret = false;
-	}
-
-	//Initialize SDL_mixer
-	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	{
-		CONSOLE_DEBUG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-		ret = false;
-	}
+	
+	bool ret = Wwise::InitWwise("English(US)");
 
 	return ret;
 }

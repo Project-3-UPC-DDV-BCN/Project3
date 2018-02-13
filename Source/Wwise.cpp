@@ -15,7 +15,6 @@ bool Wwise::InitWwise(const char* language)
 	
 	ret = Wwise::InitMemSettings();
 
-
 	//Initialize stream manager
 	ret = Wwise::InitStreamSettings();
 
