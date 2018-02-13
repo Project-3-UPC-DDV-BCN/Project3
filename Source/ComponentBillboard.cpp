@@ -51,95 +51,67 @@ bool ComponentBillboard::GetAttachedToParticle() const
 
 bool ComponentBillboard::RotateObject()
 {
-	bool ret = true; 
+	bool ret = true;
 
 	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
-		return false; 
-	
+		return false;
+
 	//Get the director vector which the object/particle is currently pointing at (Z axis)
 	ComponentTransform* object_transform;
-	if(!attached_to_particle)
+
+	float3 reference_axis = { 0,0,-1 };
+
+	if (!attached_to_particle)
 		object_transform = (ComponentTransform*)GetGameObject()->GetComponent(ComponentType::CompTransform);
 	else
 		object_transform = (ComponentTransform*)particle_attached->components.particle_transform;
 
 	float3 object_z = object_transform->GetMatrix().WorldZ();
+	object_z *= -1;
 
 	//Get the director vector which the object/particle should be pointing at 
-	float3 direction = object_transform->GetGlobalPosition() - reference->camera_frustum.pos; 
-	direction.Normalize(); 
+	float3 direction = object_transform->GetGlobalPosition() - reference->camera_frustum.pos;
 
-	////Crete Y axis
-	//float3 new_y = direction.Perpendicular(); 
+	if (billboarding_type == BILLBOARD_Y)
+		direction.y = 0;
 
-	////Create X axis
-	//float3 new_x = direction.Cross(new_y); 
+	else if (billboarding_type == BILLBOARD_X)
+		direction.x = 0;
 
-	////Construct new mat
-	//float4x4 new_mat = float4x4::FromT
+	direction.Normalize();
+	direction *= -1;
 
-	////Apply the mat
-	//object_transform->SetMatrix(new_mat);
+	//Get the angle between where the object is pointing at and where the object should be pointing at in XZ plane
+	float3 desired_pos_projection_xz = { direction.x, 0, direction.z };
+	float3 projection_z_on_xz = { object_z.x, 0, object_z.z };
 
-	//Get the difference angle which we should increment depending on the billboard type
-	float angle_x; 
-	float angle_y; 
+	float angle_xz = desired_pos_projection_xz.AngleBetweenNorm(reference_axis)*RADTODEG;
 
-	float3 prev_projection;
-	float3 next_projection;
+	//Get the angle between where the object is pointing at and where the object should be pointing at in XY plane
+	float3 desired_pos_projection_xy = { 0, direction.y, direction.z };
+	float angle_xy = desired_pos_projection_xy.AngleBetweenNorm(reference_axis)*RADTODEG;
 
-	float3 plane_ref = { 0,0,1 }; 
+	if (reference->camera_frustum.pos.x > 0)
+		angle_xz *= -1;
 
-	angle_x = angle_y = 0.0f; 
+	if (reference->camera_frustum.pos.y < 0)
+		angle_xy *= -1;
 
 	switch (billboarding_type)
 	{
 	case BILLBOARD_X:
-
-		prev_projection = { 0, object_z.y, object_z.z };
-		next_projection = { 0, direction.y, direction.z };
-
-		angle_x = plane_ref.AngleBetween(next_projection);
-
-		if (direction.y >= 0)
-			angle_x *= -1;
-
-		break; 
+		object_transform->SetRotation({ angle_xy, 0, 0 });
+		break;
 
 	case BILLBOARD_Y:
-		prev_projection = { object_z.x, 0,  object_z.z };
-		next_projection = { direction.x, 0, direction.z };
-
-		angle_y = plane_ref.AngleBetween(next_projection);
-
-		if (direction.x <= 0)
-			angle_y *= -1; 
-
+		object_transform->SetRotation({ 0, angle_xz, 0 });
 		break;
 
 	case BILLBOARD_ALL:
-
-		prev_projection = { 0, object_z.y, object_z.z };
-		next_projection = { 0, direction.y, direction.z };
-
-		angle_x = plane_ref.AngleBetween(next_projection);
-
-		if (direction.y >= 0)
-			angle_x *= -1;
-
-		prev_projection = { object_z.x, 0,  object_z.z };
-		next_projection = { direction.x, 0, direction.z };
-
-		angle_y = plane_ref.AngleBetween(next_projection);
-
-		if (direction.x <= 0)
-			angle_y *= -1;
-
+		object_transform->SetRotation({ angle_xy, angle_xz, 0 });
 		break;
 	}
-
-	object_transform->SetRotation({ angle_x*RADTODEG, angle_y*RADTODEG, 0 });
-
+		
 	return ret;
 }
 
