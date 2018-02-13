@@ -16,6 +16,8 @@ public:
 	ComponentLight(GameObject* attached_gameobject);
 	virtual ~ComponentLight();
 
+	bool CleanUp();
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
@@ -37,14 +39,20 @@ public:
 	float GetDiffuse() const;
 	float GetAmbient() const;
 	float GetSpecular() const;
+	float GetCutOff() const;
+	float GetOuterCutOff() const;
 	float* GetDiffuseToEdit() const;
 	float* GetAmbientToEdit() const;
 	float* GetSpecularToEdit() const;
+	float* GetCutOffToEdit() const;
+	float* GetOuterCutOffToEdit() const;
 
 private:
 	Color color = White;
-	LightType type = DIRECTIONAL_LIGHT;
+	LightType type = POINT_LIGHT;
 	float diffuse = 10.0f;
 	float ambient = 3.0f;
 	float specular = 10.0f;
+	float cutOff = 12.0f;
+	float outercutOff = 12.0f;
 };

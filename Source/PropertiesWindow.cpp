@@ -612,11 +612,27 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				}
 				ImGui::EndPopup();
 			}
-			if (ImGui::DragFloat("Ambient", comp_light->GetAmbientToEdit(), is_active, 0.25f, 0.0f)) {
-			}
+
 			if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 			}
-			if (ImGui::DragFloat("Specular", comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
+
+			switch (comp_light->GetType())
+			{
+			case DIRECTIONAL_LIGHT:
+				break;
+			case SPOT_LIGHT:
+				if (ImGui::DragFloat("Specular", comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat("CutOff", comp_light->GetCutOffToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat("OuterCutOff", comp_light->GetOuterCutOffToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				break;
+			case POINT_LIGHT:
+				if (ImGui::DragFloat("Specular", comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat("Ambient", comp_light->GetAmbientToEdit(), is_active, 0.25f, 0.0f)) {
+				}
 			}
 			if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen))
 			{

@@ -342,6 +342,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 
 	// SEND LIGHTING
 	// First send Camera Position, just once.
+	int DirCount = 0, PointCount = 0, SpotCount = 0;
 	SetUniformVector3(program, "camera_pos", App->camera->GetPosition());
 	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); it++)
 	{
@@ -349,31 +350,38 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		{		
 			ComponentTransform* light_transform = nullptr;
 			light_transform = (ComponentTransform*)(*it)->GetGameObject()->GetComponent(Component::CompTransform);
+			std::string plstr;
 			switch ((*it)->GetType())
 			{
 			case DIRECTIONAL_LIGHT:
-				SetUniformVector3(program, "dirLight.direction", light_transform->GetGlobalRotation());
+				SetUniformVector3(program, "dirLight.direction", light_transform->GetMatrix().WorldZ());
 				SetUniformVector3(program, "dirLight.ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
 				SetUniformVector3(program, "dirLight.diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
 				SetUniformVector3(program, "dirLight.specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
 
 				SetUniformVector4(program, "dirLight.color", (*it)->GetColorAsFloat4());
+
+				DirCount++;
 				break;
 			case POINT_LIGHT:	
-				SetUniformVector3(program, "pointLights[0].position", light_transform->GetGlobalPosition());
-				SetUniformFloat(program, "pointLights[0].constant", 1.0f);
-				SetUniformFloat(program, "pointLights[0].linear", 1.0f);
-				SetUniformFloat(program, "pointLights[0].quadratic", 1.0f);
+				plstr = "pointLights[" + std::to_string(PointCount) + "].";
+
+				SetUniformVector3(program, (plstr + "position").c_str(), light_transform->GetGlobalPosition());
+				SetUniformFloat(program, (plstr + "constant").c_str(), 1.0f);
+				SetUniformFloat(program, (plstr + "linear").c_str(), 1.0f);
+				SetUniformFloat(program, (plstr + "quadratic").c_str(), 1.0f);
 
 				SetUniformVector3(program, "pointLights[0].ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
 				SetUniformVector3(program, "pointLights[0].diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
 				SetUniformVector3(program, "pointLights[0].specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
 
 				SetUniformVector4(program, "pointLights[0].color", (*it)->GetColorAsFloat4());
+
+				PointCount++;
 				break;
 			case SPOT_LIGHT:
 				SetUniformVector3(program, "spotLight.position", light_transform->GetGlobalPosition());
-				SetUniformVector3(program, "spotLight.direction", light_transform->GetGlobalRotation());
+				SetUniformVector3(program, "spotLight.direction", light_transform->GetMatrix().WorldZ());
 				SetUniformFloat(program, "spotLight.constant", 1.0f);
 				SetUniformFloat(program, "spotLight.linear", 1.0f);
 				SetUniformFloat(program, "spotLight.quadratic", 1.0f);
@@ -384,8 +392,10 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 
 				SetUniformVector4(program, "spotLight.color", (*it)->GetColorAsFloat4());
 
-				SetUniformFloat(program, "spotLight.cutOff", 1.0f);
-				SetUniformFloat(program, "spotLight.outerCutOff", 1.0f);
+				SetUniformFloat(program, "spotLight.cutOff", cos(12.5*DEGTORAD));
+				SetUniformFloat(program, "spotLight.outerCutOff", cos(15.0*DEGTORAD));
+
+				SpotCount++;
 				break;
 			default:
 				break;
@@ -901,5 +911,40 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 void ModuleRenderer3D::AddLight(ComponentLight * light)
 {
 	lights_on_scene.push_back(light);
+}
+void ModuleRenderer3D::RemoveLight(ComponentLight * light)
+{
+	if (light != nullptr)
+	{
+		int DirCount = 0, PointCount = 0, SpotCount = 0;
+		for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); ++it)
+		{
+				switch (light->GetType())
+				{
+				case DIRECTIONAL_LIGHT:
+					if ((*it) != nullptr && (*it) == light)
+					{
+						it = lights_on_scene.erase(it);
+					}
+					DirCount++;
+					break;
+				case POINT_LIGHT:
+					if ((*it) != nullptr && (*it) == light)
+					{
+						it = lights_on_scene.erase(it);
+					}
+					PointCount++;
+					break;
+				case SPOT_LIGHT:
+					if ((*it) != nullptr && (*it) == light)
+					{
+						it = lights_on_scene.erase(it);
+					}
+					SpotCount++;
+					break;
+				}
+			}
+		}
+	}
 }
 // ------------------------------------------------

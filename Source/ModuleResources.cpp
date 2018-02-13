@@ -1201,10 +1201,10 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 viewDir = normalize(viewPos - FragPos);\n\n"
 			"vec3 result = CalcDirLight(dirLight, norm, viewDir);\n\n"
 
-		//	"for (int i = 0; i < NR_POINT_LIGHTS; i++)\n"
-				//"vec3 result = CalcPointLight(pointLights[0], norm, FragPos, viewDir);\n\n"
+			"for (int i = 0; i < NR_POINT_LIGHTS; i++)\n"
+				"result += CalcPointLight(pointLights[0], norm, FragPos, viewDir);\n\n"
 
-			//"result += CalcSpotLight(spotLight, norm, FragPos, viewDir);\n\n"
+			"result += CalcSpotLight(spotLight, norm, FragPos, viewDir);\n\n"
 
 			"color = vec4(result, 1.0);\n"
 		"}\n\n"
@@ -1264,9 +1264,9 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 ambient = light.ambient * vec3(color);\n"
 			"vec3 diffuse = light.diffuse * diff * vec3(color);\n"
 			"vec3 specular = light.specular * spec;\n"
-			"ambient *= attenuation * intensity;\n"
-			"diffuse *= attenuation * intensity;\n"
-			"specular *= attenuation * intensity;\n"
+			"ambient *= attenuation;\n"
+			"diffuse *= attenuation;\n"
+			"specular *= attenuation;\n"
 			"return (ambient + diffuse + specular) * vec3(light.color);\n"
 			"}";
 

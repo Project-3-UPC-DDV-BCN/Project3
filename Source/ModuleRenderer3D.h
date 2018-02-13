@@ -82,7 +82,7 @@ public:
 	void DeleteProgram(uint program_id);
 
 	void AddLight(ComponentLight* light);
-
+	void RemoveLight(ComponentLight* light);
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
