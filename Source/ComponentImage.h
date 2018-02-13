@@ -17,7 +17,8 @@ public:
 	bool Update();
 
 	void SetTextureId(const uint& texture_id);
-	float4 SetColour(const float4& colour);
+	void SetColour(const float4& colour);
+	float4 GetColour() const;
 
 	void Save(Data& data) const;
 	void Load(Data& data);

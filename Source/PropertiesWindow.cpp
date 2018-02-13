@@ -16,6 +16,7 @@
 #include "ComponentRectTransform.h"
 #include "ComponentCanvas.h"
 #include "ComponentScript.h"
+#include "ComponentImage.h"
 #include "Script.h"
 #include "CSScript.h"
 #include "ModuleResources.h"
@@ -336,6 +337,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetSnapUp(snap_up);
 				}
 
+				ImGui::SameLine();
 				if (ImGui::Checkbox("Snap Down", &snap_down))
 				{
 					rect_transform->SetSnapDown(snap_down);
@@ -345,6 +347,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				{
 					rect_transform->SetSnapLeft(snap_left);
 				}
+				ImGui::SameLine();
 				if (ImGui::Checkbox("Snap Right", &snap_right))
 				{
 					rect_transform->SetSnapRight(snap_right);
@@ -356,14 +359,14 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 
 			ImGui::Text("Has canvas");
 
-			ImGui::Separator();
+	/*		ImGui::Separator();
 			ImGui::Text("Debug");
 
 			ImGui::Text("Global origin: x%f, y%f", rect_transform->GetOriginGlobalPos().x, rect_transform->GetOriginGlobalPos().y);
 			ImGui::Text("Global anchor: x:%f, y:%f", rect_transform->GetAnchorGlobalPos().x, rect_transform->GetAnchorGlobalPos().y);
 			ImGui::Text("Global pos: x:%f, y:%f", rect_transform->GetGlobalPos().x, rect_transform->GetGlobalPos().y);
 			ImGui::Text("Local pos: x%f, y%f", rect_transform->GetLocalPos().x, rect_transform->GetLocalPos().y);
-			ImGui::Text("local origin: x%f, y%f", rect_transform->GetOriginLocalPos().x, rect_transform->GetOriginLocalPos().y);
+			ImGui::Text("local origin: x%f, y%f", rect_transform->GetOriginLocalPos().x, rect_transform->GetOriginLocalPos().y);*/
 		}
 		else
 			ImGui::Text("No canvas found");
@@ -406,10 +409,17 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 	}
 }
 
-void PropertiesWindow::DrawImagePanel(ComponentImage * canvas)
+void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 {
 	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().w, image->GetColour().z};
+
+		ImGui::Text("Colour");
+		if(ImGui::ColorEdit4("", colour))
+		{
+			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
+		}
 
 	}
 

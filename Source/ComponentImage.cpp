@@ -46,7 +46,12 @@ void ComponentImage::SetTextureId(const uint &_texture_id)
 	texture_id = _texture_id;
 }
 
-float4 ComponentImage::SetColour(const float4 & colour)
+void ComponentImage::SetColour(const float4 & _colour)
+{
+	colour = _colour;
+}
+
+float4 ComponentImage::GetColour() const
 {
 	return colour;
 }
