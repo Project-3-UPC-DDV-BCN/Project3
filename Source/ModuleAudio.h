@@ -6,7 +6,8 @@
 #include "Geomath.h"
 #include "Wwise.h"
 //#include "DistorsionZone.h"
-#include "SDL_mixer\include\SDL_mixer.h"
+
+#include <string>
 #include <list>
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
@@ -29,9 +30,17 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+
+	SoundBank* LoadSoundBank(std::string path);
+	unsigned int GetBankInfo(std::string path, SoundBank* &bank);
+
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
 	Wwise::SoundObject* CreateListener(const char* name, math::float3 position);
+
+	void SetRTPvalue(const char* rtpc, float value);
+	void StopAllEvents();
+	void ImGuiDraw();
 
 	Wwise::SoundObject* GetCameraListener() const;
 	void SetCameraListener(Wwise::SoundObject* camera_listener);
