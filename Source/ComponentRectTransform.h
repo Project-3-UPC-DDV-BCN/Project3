@@ -45,6 +45,10 @@ public:
 	float3 GetLocalRotation() const;
 
 	void SetSize(const float2& size);
+	void SetLeft(const float& left);
+	void SetRight(const float& right);
+	void SetUp(const float& up);
+	void SetDown(const float& down);
 	float2 GetSize() const;
 	float2 GetScaledSize() const;
 
