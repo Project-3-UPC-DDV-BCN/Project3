@@ -132,8 +132,11 @@ float ComponentCanvas::GetScale() const
 		ret = scale;
 		break;
 	case CanvasScaleMode::SCALEMODE_WITH_SCREEN_SIZE:
-		float ratio = size.x / reference_size.x;
-		ret = ratio;
+		float ratio_x = size.x / reference_size.x;
+		float ratio_y = size.y / reference_size.y;
+
+		ret = ratio_x;
+
 		break;
 	}
 
