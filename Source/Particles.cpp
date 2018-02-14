@@ -101,7 +101,7 @@ void Particle::ApplyAngularVelocity()
 	
 	float rads_to_spin = particle_angular_v * (2 * pi) / 360; 
 
-	components.particle_transform->SetRotation({-90, components.particle_transform->GetGlobalRotation().y + rads_to_spin,0});
+	//components.particle_transform->SetRotation({-90, components.particle_transform->GetGlobalRotation().y + rads_to_spin,0});
 
 }
 
@@ -345,7 +345,10 @@ void Particle::Draw(ComponentCamera* active_camera)
 {
 	//Billboard to the active camera 
 	if (billboarding)
-		components.billboard->RotateObject(); 
+	{		
+		components.billboard->RotateObject();
+	}
+		
 
 	//Activate shader program
 	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
@@ -380,7 +383,14 @@ void Particle::Draw(ComponentCamera* active_camera)
 	if (components.particle_mesh->id_indices == 0) components.particle_mesh->LoadToMemory(); 
 
 	App->renderer3D->BindVertexArrayObject(components.particle_mesh->id_vao); 
-	glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL); 
+ 
+	if (billboarding && components.billboard->GetBillboardType() != BILLBOARD_NONE)
+	{
+		glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	}
+	else
+		glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL); 
+
 	App->renderer3D->UnbindVertexArrayObject(); 
 }
 

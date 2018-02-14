@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "ComponentBillboard.h"
 #include "Particles.h"
 #include <map>
 
@@ -74,6 +75,7 @@ public:
 											
 	Color color;							//Color
 	float angular_v;
+	BillboardingType billboard_type; 
 
 	//Interpolations
 	int initial_color[4];
@@ -85,9 +87,9 @@ public:
 	float initial_angular_v;
 	float final_angular_v;
 
-	bool apply_color_interpolation;			//If true, the particles instanciated will be given 2 colors and they will interpolate between them
-	bool apply_size_interpolation;
-	bool apply_rotation_interpolation;
+	bool change_color_interpolation;			//If true, the particles instanciated will be given 2 colors and they will interpolate between them
+	bool change_size_interpolation;
+	bool change_rotation_interpolation;
 
 	//Animated particle 
 	bool is_animated;

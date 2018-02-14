@@ -721,7 +721,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::Button("Apply"))
 					{
-						current_emmiter->apply_color_interpolation = true;
+						current_emmiter->change_color_interpolation = true;
 
 						Color initial(current_emmiter->initial_color[0], current_emmiter->initial_color[1], current_emmiter->initial_color[2], current_emmiter->initial_color[3]);
 						Color final(current_emmiter->final_color[0], current_emmiter->final_color[1], current_emmiter->final_color[2], current_emmiter->final_color[3]);
@@ -740,7 +740,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Motion"))
 			{
-				ImGui::Checkbox("Billboarding", &current_emmiter->billboarding); ImGui::SameLine(); 
+				
 				ImGui::Checkbox("Relative Position", &current_emmiter->relative_pos);
 
 				ImGui::DragInt("Emmision Rate", &current_emmiter->emmision_rate, 1, 1, 0, 150);
@@ -750,46 +750,78 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Angular Velocity", &current_emmiter->angular_v, 1, 5.0f, -1000, 1000);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->emision_angle, 0, 179);
 
+				if (ImGui::TreeNode("Billboard"))
+				{
+					ImGui::Checkbox("Billboarding", &current_emmiter->billboarding);
+
+					static int billboard_type;
+					ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+
+					if (billboard_type != 0)
+					{
+						current_emmiter->billboard_type = (BillboardingType)--billboard_type;
+						++billboard_type;
+					}
+					else
+						current_emmiter->billboard_type = BILLBOARD_NONE;
+
+					ImGui::TreePop(); 
+				}
+
+				if (ImGui::TreeNode("Interpolations"))
+				{
+					if (ImGui::TreeNode("Size"))
+					{
+						static float3 init_scale = {1,1,1};
+						static float3 fin_scale = { 1,1,1 };
+
+						ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 1, 10000);
+						init_scale.y = init_scale.x;
+
+						ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 1, 10000);
+						fin_scale.y = fin_scale.x;
+
+						if (ImGui::Button("Apply Scale"))
+						{
+							current_emmiter->change_size_interpolation = true;
+							current_emmiter->initial_scale = init_scale; 
+							current_emmiter->final_scale = fin_scale;
+
+							current_emmiter->UpdateRootParticle();
+						}
+
+						ImGui::TreePop();
+					}
+
+					if (ImGui::TreeNode("Rotation"))
+					{
+						static float init_angular_v = 0;
+						static float fin_angular_v = 0;
+
+						ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
+
+						ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+
+						if (ImGui::Button("Apply Rotation"))
+						{
+							current_emmiter->change_rotation_interpolation = true;
+							current_emmiter->UpdateRootParticle();
+						}
+						ImGui::SameLine();
+
+						if (ImGui::Button("Stop Applying"))
+						{
+							current_emmiter->change_rotation_interpolation = false;
+							current_emmiter->UpdateRootParticle();
+						}
+
+						ImGui::TreePop();
+					}
+
+					ImGui::TreePop();
+				}
+
 				current_emmiter->UpdateRootParticle();
-
-				ImGui::Separator();
-
-				ImGui::Text("Size Interpolation");
-
-				ImGui::InputFloat("Initial", &current_emmiter->initial_scale.x);
-				current_emmiter->initial_scale.y = current_emmiter->initial_scale.x;
-
-				ImGui::InputFloat("Final", &current_emmiter->final_scale.x);
-				current_emmiter->final_scale.y = current_emmiter->final_scale.x;
-
-				if (ImGui::Button("Apply Scale"))
-				{
-					current_emmiter->apply_size_interpolation = true;
-					current_emmiter->UpdateRootParticle();
-				}
-
-				ImGui::Separator();
-
-				ImGui::Text("Rotation Interpolation");
-
-				ImGui::Text("Initial Spins/sec");
-				ImGui::DragFloat("  ", &current_emmiter->initial_angular_v, 0.5, 0, 5);
-
-				ImGui::Text("Final Spins/sec");
-				ImGui::DragFloat(" ", &current_emmiter->final_angular_v);
-
-				if (ImGui::Button("Apply Rotation"))
-				{
-					current_emmiter->apply_rotation_interpolation = true;
-					current_emmiter->UpdateRootParticle();
-				}
-				ImGui::SameLine();
-
-				if (ImGui::Button("Stop Applying"))
-				{
-					current_emmiter->apply_rotation_interpolation = false;
-					current_emmiter->UpdateRootParticle();
-				}
 
 				ImGui::Separator();
 

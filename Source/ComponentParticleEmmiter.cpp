@@ -40,19 +40,23 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
 	new_particle->components.particle_transform->SetPosition(particle_pos);
-	new_particle->components.particle_transform->SetRotation({ -90,0,0 }); 
 
 	//We generate the always squared surface for the particle 
 	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitivePlane");
 
 	//Billboard the squad for always be looking at the camera, at the beggining it will be deactivated 
-	if (billboarding)
+	if (billboarding && billboard_type != BILLBOARD_NONE)
 	{
 		new_particle->SetBillboarding(true);
 		new_particle->components.billboard = new ComponentBillboard(new_particle);
+		new_particle->components.billboard->SetBillboardType(billboard_type); 
 	}
 	else
+	{
 		new_particle->SetBillboarding(false);
+		new_particle->components.particle_transform->SetRotation({ -90,0,0 });
+	}
+		
 
 	//Copy Stats
 	new_particle->SetMaxLifetime(max_lifetime);
@@ -67,12 +71,14 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetWorldSpace(relative_pos);
 	
 	//Copy Interpolations
-	new_particle->SetInterpolatingColor(apply_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
+	new_particle->SetInterpolatingColor(change_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
 
-	if (apply_size_interpolation)
-		new_particle->SetInterpolationSize(apply_size_interpolation, initial_scale, final_scale);
+	if (change_size_interpolation)
+	{
+		new_particle->SetInterpolationSize(change_size_interpolation, initial_scale, final_scale);
+	}
 	else
-		new_particle->SetInterpolationSize(apply_size_interpolation, { 1,1,1 }, { 1,1,1 });
+		new_particle->SetInterpolationSize(change_size_interpolation, { 1,1,1 }, { 1,1,1 });
 
 	//Copy Animation
 	new_particle->components.particle_animation = root_particle->components.particle_animation; 
@@ -96,6 +102,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	SetGameObject(parent);
 	SetActive(true); 
 	SetType(Component::CompParticleSystem); 
+	billboard_type = BILLBOARD_NONE; 
 
 	//Emmiter properties -------
 	emmision_frequency = 1000;
@@ -121,9 +128,9 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	relative_pos = false; 
 	billboarding = false; 
 
-	apply_rotation_interpolation = false;
-	apply_size_interpolation = false;
-	apply_color_interpolation = false;
+	change_rotation_interpolation = false;
+	change_size_interpolation = false;
+	change_color_interpolation = false;
 
 	initial_scale = { 1,1,1 };
 	final_scale = { 1,1,1 };
@@ -250,8 +257,8 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	root_particle->SetGravity(gravity); 
 	root_particle->SetEmmisionAngle(emision_angle); 
 
-	root_particle->SetInterpolatingColor(apply_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
-	root_particle->SetInterpolationSize(apply_size_interpolation, initial_scale, final_scale);
+	root_particle->SetInterpolatingColor(change_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
+	root_particle->SetInterpolationSize(change_size_interpolation, initial_scale, final_scale);
 
 	root_particle->SetBillboarding(billboarding);
 	root_particle->SetWorldSpace(relative_pos);
@@ -259,7 +266,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	//if (apply_rotation_interpolation) root_particle->SetInterpolationRotation(true, initial_angular_v, final_angular_v);
 	//else root_particle->SetAngular(angular_v);
 
-	if (apply_size_interpolation)
+	if (change_size_interpolation)
 		root_particle->SetInterpolationSize(true, initial_scale, final_scale);
 }
 

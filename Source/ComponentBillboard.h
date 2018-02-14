@@ -30,6 +30,7 @@ public:
 
 	void AttachToCamera(ComponentCamera* new_reference);
 	void SetBillboardType(BillboardingType new_type); 
+	BillboardingType GetBillboardType(); 
 
 	void SetAttachedToParticle(bool attached); 
 	bool GetAttachedToParticle() const; 

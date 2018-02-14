@@ -39,6 +39,11 @@ void ComponentBillboard::SetBillboardType(BillboardingType new_type)
 	billboarding_type = new_type; 
 }
 
+BillboardingType ComponentBillboard::GetBillboardType()
+{
+	return billboarding_type;
+}
+
 void ComponentBillboard::SetAttachedToParticle(bool attached)
 {
 	attached_to_particle = attached; 
