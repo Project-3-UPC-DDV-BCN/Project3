@@ -413,6 +413,15 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 {
 	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		Texture* tex = nullptr;
+		if (ImGui::InputResourceTexture("Texture", &tex))
+		{
+			if (tex != nullptr)
+			{
+				image->SetTextureId(tex->GetID());
+			}
+		}
+
 		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().w, image->GetColour().z};
 
 		ImGui::Text("Colour");

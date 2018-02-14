@@ -107,9 +107,37 @@ ComponentCanvas * ComponentRectTransform::GetCanvas(bool& go_is_canvas)
 	return ret;
 }
 
+ComponentCanvas * ComponentRectTransform::GetCanvas()
+{
+	bool is_canvas;
+	return GetCanvas(is_canvas);
+}
+
 float4x4 ComponentRectTransform::GetMatrix() const
 {
 	return c_transform->GetMatrix();
+}
+
+float4x4 ComponentRectTransform::GetOrtoMatrix() 
+{
+	float4x4 ret = float4x4::identity;
+
+	ComponentCanvas* canvas = GetCanvas();
+
+	ComponentRectTransform* rect_trans = canvas->GetCompRectTransform();
+
+	float4x4 canvas_matrix = float4x4::identity;
+
+	if (rect_trans != nullptr)
+	{
+		canvas_matrix = rect_trans->GetMatrix();
+	}
+
+	float4x4 matrix = GetMatrix();
+
+	ret = matrix * canvas_matrix.Inverted();
+
+	return ret;
 }
 
 float3 ComponentRectTransform::GetOriginLocalPos()

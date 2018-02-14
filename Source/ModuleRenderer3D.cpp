@@ -315,7 +315,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
 				SetUniformMatrix(program->GetProgramID(), "projection", &ortho_projection[0][0]);
-				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
+				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetOrtoTransform().Transposed().ptr());
 			}
 
 			SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);

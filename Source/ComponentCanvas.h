@@ -17,10 +17,12 @@ public:
 
 	void SetSize(const float2& size);
 	void SetTransform(const float4x4& trans);
+	void SetOrtoTransform(const float4x4& trans);
 	void SetTextureId(const uint& id);
 	void SetColour(const float4& colour);
 
 	float4x4 GetTransform() const;
+	float4x4 GetOrtoTransform() const;
 	uint GetTextureId() const;
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
@@ -29,6 +31,7 @@ private:
 	Mesh*    plane = nullptr;
 	float2   size;
 	float4x4 transform;
+	float4x4 orto_transform;
 	uint	 texture_id;
 	float4   colour;
 };

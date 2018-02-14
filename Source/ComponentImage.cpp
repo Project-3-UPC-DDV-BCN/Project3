@@ -32,6 +32,7 @@ bool ComponentImage::Update()
 	{
 		CanvasDrawElement de;
 		de.SetTransform(c_rect_trans->GetMatrix());
+		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		de.SetSize(c_rect_trans->GetSize());
 		de.SetTextureId(texture_id);
 		de.SetColour(colour);
