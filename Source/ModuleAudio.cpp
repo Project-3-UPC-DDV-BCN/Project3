@@ -30,13 +30,13 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	Data bank_file;
+	/*Data bank_file;
 	std::string path_ = ASSETS_FOLDER;
 	path_ += "blend.json";
 	bank_file.LoadJSON(path_);
 
 	bank_file;
-
+*/
 	return true;
 }
 
