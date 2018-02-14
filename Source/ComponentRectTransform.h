@@ -82,6 +82,7 @@ private:
 
 private:
 	ComponentTransform* c_transform = nullptr;
+	ComponentCanvas*	c_canvas = nullptr;
 
 	float2				pos;
 	float2				size;
