@@ -534,6 +534,9 @@
     <ClInclude Include="DistorsionZone.h">
       <Filter>Sources\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="AudioWindow.h">
+      <Filter>Sources\EditorUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -904,6 +907,9 @@
     </ClCompile>
     <ClCompile Include="DistorsionZone.cpp">
       <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioWindow.cpp">
+      <Filter>Sources\EditorUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
