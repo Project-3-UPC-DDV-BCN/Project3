@@ -19,7 +19,11 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 
 	size = float2(1280, 720);
 	last_size = size;
+	reference_size = size;
+
 	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
+	scale_mode = CanvasScaleMode::SCALEMODE_CONSTANT_SIZE;
+	scale = 1.0f;
 }
 
 ComponentCanvas::~ComponentCanvas()
@@ -65,9 +69,19 @@ void ComponentCanvas::SetRenderMode(CanvasRenderMode mode)
 	render_mode = mode;
 }
 
-CanvasRenderMode ComponentCanvas::GetRenderMode()
+CanvasRenderMode ComponentCanvas::GetRenderMode() const
 {
 	return render_mode;
+}
+
+void ComponentCanvas::SetScaleMode(CanvasScaleMode _scale_mode)
+{
+	scale_mode = _scale_mode;
+}
+
+CanvasScaleMode ComponentCanvas::GetScaleMode() const
+{
+	return scale_mode;
 }
 
 void ComponentCanvas::SetSize(const float2 & _size)
@@ -87,6 +101,39 @@ float2 ComponentCanvas::GetSize() const
 
 	case CanvasRenderMode::RENDERMODE_WORLD_SPACE:
 		ret = size;
+		break;
+	}
+
+	return ret;
+}
+
+void ComponentCanvas::SetReferenceSize(const float2 & _reference_size)
+{
+	reference_size = _reference_size;
+}
+
+float2 ComponentCanvas::GetReferenceSize() const
+{
+	return reference_size;
+}
+
+void ComponentCanvas::SetScale(const float & _scale)
+{
+	scale = _scale;
+}
+
+float ComponentCanvas::GetScale() const
+{
+	float ret = 0;
+
+	switch (scale_mode)
+	{
+	case CanvasScaleMode::SCALEMODE_CONSTANT_SIZE:
+		ret = scale;
+		break;
+	case CanvasScaleMode::SCALEMODE_WITH_SCREEN_SIZE:
+		float ratio = size.x / reference_size.x;
+		ret = ratio;
 		break;
 	}
 
@@ -133,6 +180,7 @@ CanvasDrawElement::CanvasDrawElement()
 	transform = float4x4::identity;
 	size = float2::zero;
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	flip = false;
 }
 
 void CanvasDrawElement::SetSize(const float2& _size)
@@ -160,11 +208,21 @@ void CanvasDrawElement::SetColour(const float4 & _colour)
 	colour = _colour;
 }
 
+void CanvasDrawElement::SetFlip(const bool & _flip)
+{
+	flip = _flip;
+}
+
 float4x4 CanvasDrawElement::GetTransform() const
 {
 	float4x4 ret = float4x4::identity;
 
-	float4x4 size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
+	float4x4 size_trans = float4x4::identity;
+
+	if(!flip)
+		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
+	else
+		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, 1, size.y));
 
 	ret = transform * size_trans;
 
@@ -175,7 +233,12 @@ float4x4 CanvasDrawElement::GetOrtoTransform() const
 {
 	float4x4 ret = float4x4::identity;
 
-	float4x4 size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, 1, size.y));
+	float4x4 size_trans = float4x4::identity;
+
+	if (!flip)
+		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
+	else
+		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, 1, size.y));
 
 	ret = orto_transform * size_trans;
 

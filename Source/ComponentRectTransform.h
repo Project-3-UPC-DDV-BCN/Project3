@@ -37,6 +37,7 @@ public:
 
 	void SetPos(const float2& size);
 	float2 GetPos() const;
+	float2 GetScaledPos();
 	float3 GetLocalPos() const;
 	float3 GetGlobalPos() const;
 
@@ -45,6 +46,7 @@ public:
 
 	void SetSize(const float2& size);
 	float2 GetSize() const;
+	float2 GetScaledSize() const;
 
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;

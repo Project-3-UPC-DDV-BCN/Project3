@@ -7,6 +7,7 @@ class ComponentRectTransform;
 class ComponentTransform;
 class ComponentCanvas;
 class CanvasDrawElement;
+class Texture;
 
 class ComponentImage : public Component
 {
@@ -16,9 +17,14 @@ public:
 
 	bool Update();
 
-	void SetTextureId(const uint& texture_id);
+	void SetTexture(Texture* text);
+	Texture* GetTexture() const;
+
 	void SetColour(const float4& colour);
 	float4 GetColour() const;
+
+	void SetFlip(const bool& flip);
+	bool GetFlip() const;
 
 	void Save(Data& data) const;
 	void Load(Data& data);
@@ -30,8 +36,9 @@ private:
 private:
 	ComponentRectTransform* c_rect_trans = nullptr;
 
-	uint texture_id;
+	Texture* texture;
 	float4 colour;
+	bool flip;
 
 };
 

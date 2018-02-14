@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ComponentCanvas.h"
 #include "ComponentRectTransform.h"
+#include "Texture.h"
 
 ComponentImage::ComponentImage(GameObject * attached_gameobject)
 {
@@ -10,8 +11,9 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 	SetType(ComponentType::CompImage);
 	SetGameObject(attached_gameobject);
 	
-	texture_id = 0;
+	texture = nullptr;
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	flip = false;
 
 	c_rect_trans = GetRectTrans();
 
@@ -33,18 +35,29 @@ bool ComponentImage::Update()
 		CanvasDrawElement de;
 		de.SetTransform(c_rect_trans->GetMatrix());
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-		de.SetSize(c_rect_trans->GetSize());
-		de.SetTextureId(texture_id);
+		de.SetSize(c_rect_trans->GetScaledSize());
 		de.SetColour(colour);
+		de.SetFlip(flip);
+
+		if(texture != nullptr)
+		{
+			de.SetTextureId(texture->GetID());
+		}
+
 		canvas->AddDrawElement(de);
 	}
 
 	return ret;
 }
 
-void ComponentImage::SetTextureId(const uint &_texture_id)
+void ComponentImage::SetTexture(Texture* _texture)
 {
-	texture_id = _texture_id;
+	texture = _texture;
+}
+
+Texture* ComponentImage::GetTexture() const
+{
+	return texture;
 }
 
 void ComponentImage::SetColour(const float4 & _colour)
@@ -55,6 +68,16 @@ void ComponentImage::SetColour(const float4 & _colour)
 float4 ComponentImage::GetColour() const
 {
 	return colour;
+}
+
+void ComponentImage::SetFlip(const bool & _flip)
+{
+	flip = _flip;
+}
+
+bool ComponentImage::GetFlip() const
+{
+	return flip;
 }
 
 void ComponentImage::Save(Data & data) const

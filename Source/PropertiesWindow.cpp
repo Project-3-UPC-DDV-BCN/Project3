@@ -327,10 +327,10 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetAnchor(anchor);
 				}
 
-				if (ImGui::DragFloat("Scale", (float*)&scale, true, 0.01f, 0))
+	/*			if (ImGui::DragFloat("Scale", (float*)&scale, true, 0.01f, 0))
 				{
 					rect_transform->SetScale(scale);
-				}
+				}*/
 
 				if (ImGui::Checkbox("Snap Up", &snap_up))
 				{
@@ -378,8 +378,9 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 	if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{	
 		const char* mode_names[] = { "Screen Space", "World Space" };
+		const char* scale_names[] = { "Constant Size", "Scale with screen size" };
 
-		if (ImGui::Combo("Render Mode", &current_render_mode, mode_names, 2));
+		ImGui::Combo("Render Mode", &current_render_mode, mode_names, 2);
 
 		if (current_render_mode == 0)
 		{
@@ -398,13 +399,30 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 			}
 		}
 
-		ImGui::Separator();
-		ImGui::Text("Create:");
+		ImGui::Combo("Scale Mode", &current_scale_mode, scale_names, 2);
 
-		if (ImGui::Button("Image"))
+		if (current_scale_mode == 0)
 		{
-			GameObject* go = App->scene->CreateGameObject(canvas->GetGameObject());
-			go->AddComponent(Component::CompImage);
+			canvas->SetScaleMode(CanvasScaleMode::SCALEMODE_CONSTANT_SIZE);
+
+			float scale = canvas->GetScale();
+			if (ImGui::DragFloat("Scale", &scale, true, 0.01f, 0.0f))
+			{
+				canvas->SetScale(scale);
+			}
+		}
+		else if (current_scale_mode == 1)
+		{
+			canvas->SetScaleMode(CanvasScaleMode::SCALEMODE_WITH_SCREEN_SIZE);
+
+			float2 reference_size = canvas->GetReferenceSize();
+
+			if (ImGui::DragFloat2("Reference Size", (float*)&reference_size, true, 0.1f, 0))
+			{
+				canvas->SetReferenceSize(reference_size);
+			}
+
+			ImGui::Text("Scale: %f", canvas->GetScale());
 		}
 	}
 }
@@ -413,16 +431,27 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 {
 	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		Texture* tex = nullptr;
-		if (ImGui::InputResourceTexture("Texture", &tex))
+		Texture* tex = image->GetTexture();
+
+		if(ImGui::InputResourceTexture("Texture", &tex));
+			image->SetTexture(tex);
+
+		if (image->GetTexture() != nullptr)
 		{
-			if (tex != nullptr)
-			{
-				image->SetTextureId(tex->GetID());
-			}
+			image->SetTexture(tex);
+
+			uint width; uint height;
+			tex->GetSize(width, height);
+			ImGui::Text("Texture original size: x:%d y:%d", width, height);
 		}
 
-		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().w, image->GetColour().z};
+		bool flip = image->GetFlip();
+		if (ImGui::Checkbox("Flip", &flip))
+		{
+			image->SetFlip(flip);
+		}
+
+		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().w, image->GetColour().z };
 
 		ImGui::Text("Colour");
 		if(ImGui::ColorEdit4("", colour))

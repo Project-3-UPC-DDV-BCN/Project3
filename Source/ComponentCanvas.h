@@ -20,6 +20,7 @@ public:
 	void SetOrtoTransform(const float4x4& trans);
 	void SetTextureId(const uint& id);
 	void SetColour(const float4& colour);
+	void SetFlip(const bool& flip);
 
 	float4x4 GetTransform() const;
 	float4x4 GetOrtoTransform() const;
@@ -33,6 +34,7 @@ private:
 	float4x4 transform;
 	float4x4 orto_transform;
 	uint	 texture_id;
+	bool	 flip;
 	float4   colour;
 };
 
@@ -40,6 +42,12 @@ enum CanvasRenderMode
 {
 	RENDERMODE_SCREEN_SPACE,
 	RENDERMODE_WORLD_SPACE,
+};
+
+enum CanvasScaleMode
+{
+	SCALEMODE_CONSTANT_SIZE,
+	SCALEMODE_WITH_SCREEN_SIZE,
 };
 
 class ComponentCanvas : public Component
@@ -57,10 +65,19 @@ public:
 	ComponentCamera* GetRenderCamera() const;
 
 	void SetRenderMode(CanvasRenderMode mode);
-	CanvasRenderMode GetRenderMode();
+	CanvasRenderMode GetRenderMode() const;
+
+	void SetScaleMode(CanvasScaleMode scale_mode);
+	CanvasScaleMode GetScaleMode() const;
 
 	void SetSize(const float2& size);
 	float2 GetSize() const;
+
+	void SetReferenceSize(const float2& size);
+	float2 GetReferenceSize() const;
+
+	void SetScale(const float& scale);
+	float GetScale() const;
 
 	void AddDrawElement(CanvasDrawElement de);
 	void ClearDrawElements();
@@ -80,7 +97,12 @@ private:
 
 	float2 size;
 	float2 last_size;
+	float2 reference_size;
+
 	CanvasRenderMode render_mode;
+	CanvasScaleMode scale_mode;
+
+	float scale;
 };
 
 #endif // !_H_COMPONENT_CANVAS__
