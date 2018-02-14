@@ -317,9 +317,12 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetRotation(rotation);
 				}
 
-				if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))
+				if (!is_canvas)
 				{
-					rect_transform->SetSize(size);
+					if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))
+					{
+						rect_transform->SetSize(size);
+					}
 				}
 
 				if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
@@ -393,11 +396,13 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_WORLD_SPACE);
 
 			float2 size = canvas->GetSize();
-			if (ImGui::DragFloat2("Size", (float*)&size, true, 0.25f))
+			if (ImGui::DragFloat2("Canvas Size", (float*)&size, true, 0.25f))
 			{
 				canvas->SetSize(size);
 			}
 		}
+
+		ImGui::Separator();
 
 		ImGui::Combo("Scale Mode", &current_scale_mode, scale_names, 2);
 

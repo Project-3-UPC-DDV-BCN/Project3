@@ -152,7 +152,7 @@ void SceneWindow::DrawWindow()
 						ComponentRectTransform* c_rect_trans = (ComponentRectTransform*)App->scene->selected_gameobjects.front()->GetComponent(Component::CompRectTransform);
 
 						if (c_rect_trans != nullptr)
-							c_rect_trans->UpdateRectTransformAndChilds();
+							c_rect_trans->UpdateRectTransform();
 					}
 				}
 			}

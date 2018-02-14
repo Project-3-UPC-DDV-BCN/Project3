@@ -86,6 +86,12 @@ CanvasScaleMode ComponentCanvas::GetScaleMode() const
 
 void ComponentCanvas::SetSize(const float2 & _size)
 {
+	if (size.x < 0)
+		size.x = 0;
+
+	if (size.y < 0)
+		size.y = 0;
+
 	size = _size;
 }
 

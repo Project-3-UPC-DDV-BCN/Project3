@@ -45,10 +45,10 @@ public:
 	float3 GetLocalRotation() const;
 
 	void SetSize(const float2& size);
-	void SetLeft(const float& left);
-	void SetRight(const float& right);
-	void SetUp(const float& up);
-	void SetDown(const float& down);
+	void SetLeftSize(const float& left);
+	void SetRightSize(const float& right);
+	void SetUpSize(const float& up);
+	void SetDownSize(const float& down);
 	float2 GetSize() const;
 	float2 GetScaledSize() const;
 
@@ -60,6 +60,7 @@ public:
 
 	void SetScale(const float& scale);
 	float GetScale() const;
+	float2 GetScaleAxis() const;
 
 	void SetSnapUp(bool set);
 	void SetSnapDown(bool set);
@@ -85,7 +86,6 @@ private:
 	float2				pos;
 	float2				size;
 	float2			    anchor;
-	float3				rotation;
 	float				scale;
 
 	bool			    snap_up;

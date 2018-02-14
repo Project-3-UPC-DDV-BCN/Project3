@@ -18,7 +18,6 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	pos = float2::zero;
 	size = float2::zero;
 	anchor = float2(0.5f, 0.5f);
-	rotation = float3::zero;
 	scale = 1;
 	snap_up = true;
 	snap_down = true;
@@ -227,7 +226,7 @@ float3 ComponentRectTransform::GetGlobalPos() const
 
 void ComponentRectTransform::SetRotation(const float3 & _rotation)
 {
-	rotation = _rotation;
+	c_transform->SetRotation(_rotation);
 
 	UpdateTransform();
 }
@@ -239,6 +238,8 @@ float3 ComponentRectTransform::GetLocalRotation() const
 
 void ComponentRectTransform::SetSize(const float2 & _size)
 {
+	float2 scaled_pos = GetScaledPos();
+
 	size = _size;
 
 	if (size.x < 0)
@@ -247,7 +248,47 @@ void ComponentRectTransform::SetSize(const float2 & _size)
 	if (size.y < 0)
 		size.y = 0;
 
+	float2 new_scaled_pos = GetScaledPos();
+
+	pos += scaled_pos - new_scaled_pos;
+
 	UpdateTransformAndChilds();
+}
+
+void ComponentRectTransform::SetLeftSize(const float & left)
+{
+	float difference = size.x - left;
+
+	size.x = left;
+
+	pos.x += difference / 2;
+}
+
+void ComponentRectTransform::SetRightSize(const float & right)
+{
+	float difference = size.x - right;
+
+	size.x = right;
+
+	pos.x -= difference / 2;
+}
+
+void ComponentRectTransform::SetUpSize(const float & up)
+{
+	float difference = size.y - up;
+
+	size.y = up;
+
+	pos.y += difference / 2;
+}
+
+void ComponentRectTransform::SetDownSize(const float & down)
+{
+	float difference = size.y - down;
+
+	size.y = down;
+
+	pos.y -= difference / 2;
 }
 
 float2 ComponentRectTransform::GetSize() const
@@ -259,14 +300,8 @@ float2 ComponentRectTransform::GetScaledSize() const
 {
 	float2 ret = size;
 
-	if (snap_right || snap_left)
-	{
-		ret.x *= scale;
-	}
-	if (snap_up || snap_down)
-	{
-		ret.y *= scale;
-	}
+	ret.x *= GetScaleAxis().x;
+	ret.y *= GetScaleAxis().y;
 
 	return ret;
 }
@@ -377,30 +412,158 @@ float ComponentRectTransform::GetScale() const
 	return scale;
 }
 
+float2 ComponentRectTransform::GetScaleAxis() const
+{
+	float2 ret = float2::one;
+
+	if (snap_right || snap_left)
+	{
+		ret.x = scale;
+	}
+	if (snap_up || snap_down)
+	{
+		ret.y = scale;
+	}
+
+	return ret;
+}
+
 void ComponentRectTransform::SetSnapUp(bool set)
 {
-	snap_up = set;
+	if (!set && snap_up)
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_up = set;
+
+		float2 new_scaled_size = GetScaledSize();
+		float2 new_size = last_scaled_size - new_scaled_size + size;
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
+	else
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_up = set;
+
+		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
 
 	UpdateTransform();
 }
 
 void ComponentRectTransform::SetSnapDown(bool set)
 {
-	snap_down = set;
+	if (!set && snap_down)
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_down = set;
+
+		float2 new_scaled_size = GetScaledSize();
+		float2 new_size = last_scaled_size - new_scaled_size + size;
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
+	else
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_down = set;
+
+		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
 
 	UpdateTransform();
 }
 
 void ComponentRectTransform::SetSnapLeft(bool set)
 {
-	snap_left = set;
+	if (!set && snap_left)
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_left = set;
+
+		float2 new_scaled_size = GetScaledSize();
+		float2 new_size = last_scaled_size - new_scaled_size + size;
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
+	else
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_left = set;
+
+		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
 
 	UpdateTransform();
 }
 
 void ComponentRectTransform::SetSnapRight(bool set)
 {
-	snap_right = set;
+	if (!set && snap_right)
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_right = set;
+
+		float2 new_scaled_size = GetScaledSize();
+		float2 new_size = last_scaled_size - new_scaled_size + size;
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
+	else
+	{
+		float2 last_scaled_pos = GetScaledPos();
+		float2 last_scaled_size = GetScaledSize();
+
+		snap_right = set;
+
+		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
+		SetSize(new_size);
+
+		float2 new_scaled_pos = GetScaledPos();
+		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
+		SetPos(new_pos);
+	}
 
 	UpdateTransform();
 }
@@ -455,8 +618,6 @@ void ComponentRectTransform::UpdateTransform()
 	float3 prefered_pos = GetPreferedPos();
 
 	c_transform->SetPosition(float3(prefered_pos.x, prefered_pos.y, prefered_pos.z));
-
-	c_transform->SetRotation(rotation);
 }
 
 void ComponentRectTransform::UpdateTransformAndChilds()
@@ -489,14 +650,17 @@ void ComponentRectTransform::UpdateTransformAndChilds()
 
 void ComponentRectTransform::UpdateRectTransform()
 {
-	//float4x4 anchor_trans = GetAnchorTransform();
-	//float4x4 transform = GetMatrix();
+	float4x4 anchor_trans = GetAnchorTransform();
+	float4x4 transform = GetMatrix();
 
-	//float2 new_pos = float2::zero;
-	//new_pos.x = transform[0][3] - anchor_trans[0][3];
-	//new_pos.y = transform[1][3] - anchor_trans[1][3];
+	float4x4 local_trans = transform * anchor_trans.Inverted();
 
-	//SetPos(new_pos);
+	float3 pos;
+	Quat rot;
+	float3 scale;
+	local_trans.Decompose(pos, rot, scale);
+
+	SetPos(float2(pos.x, pos.y));
 }
 
 void ComponentRectTransform::UpdateRectTransformAndChilds()
