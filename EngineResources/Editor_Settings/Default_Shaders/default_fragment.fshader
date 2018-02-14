@@ -24,6 +24,7 @@ struct DirLight {
     vec3 specular;
 	
 	vec4 color;
+	bool active;
 };
 
 struct PointLight {
@@ -38,6 +39,7 @@ struct PointLight {
     vec3 specular;
 	
 	vec4 color;
+	bool active;
 };
 
 struct SpotLight {
@@ -55,14 +57,17 @@ struct SpotLight {
     vec3 diffuse;
     vec3 specular;
 	vec4 color;	
+	bool active;
 };
 
-#define NR_POINT_LIGHTS 4
+#define NR_POINT_LIGHTS 8
+#define NR_DIREC_LIGHTS 2
+#define NR_SPOT_LIGHTS 8
 
 uniform vec3 viewPos;
-uniform DirLight dirLight;
+uniform DirLight dirLights[NR_DIREC_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform Material material;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -82,17 +87,23 @@ void main()
 		
 		vec3 norm = normalize(Normal);
 		vec3 viewDir = normalize(viewPos - FragPos);
-		vec3 result = CalcDirLight(dirLight, norm, viewDir);
+		vec3 result = vec3(0.0, 0.0, 0.0);
+		
+		for (int i = 0; i < NR_DIREC_LIGHTS; i++)
+			result += CalcDirLight(dirLights[i], norm, viewDir);
 
-			for (int i = 0; i < NR_POINT_LIGHTS; i++)
-				result += CalcPointLight(pointLights[0], norm, FragPos, viewDir);
-
-			result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+		for (int k = 0; k < NR_POINT_LIGHTS; k++)
+			result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);
+				
+		for (int j = 0; j < NR_SPOT_LIGHTS; j++)
+			result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
   
     color = vec4(result, 1.0);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
+{
+if (light.active == true)
 {
     vec3 lightDir = normalize(-light.direction);
 
@@ -105,9 +116,14 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     vec3 diffuse = light.diffuse * diff * vec3(color);
     vec3 specular = light.specular * spec;
     return (ambient + diffuse + specular) * vec3(light.color);
+		}
+	else 
+		return vec3(0.0,0.0,0.0);
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+if (light.active == true)
 {
     vec3 lightDir = normalize(light.position - fragPos);
 
@@ -126,9 +142,14 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation;
     specular *= attenuation;
     return (ambient + diffuse + specular) * vec3(light.color);
+	}
+	else 
+		return vec3(0.0,0.0,0.0);
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+if (light.active == true)
 {
     vec3 lightDir = normalize(light.position - fragPos);
 
@@ -151,4 +172,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular) * vec3(light.color);
+	}
+	else 
+		return vec3(0.0,0.0,0.0);
 }

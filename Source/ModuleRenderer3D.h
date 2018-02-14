@@ -12,6 +12,10 @@ class ComponentCamera;
 
 #define MAX_LIGHTS 8
 
+#define MAX_DIR_LIGHT 2
+#define MAX_SPO_LIGHT 8
+#define MAX_POI_LIGHT 8
+
 class ModuleRenderer3D : public Module
 {
 public:

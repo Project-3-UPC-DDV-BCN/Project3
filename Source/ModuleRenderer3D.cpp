@@ -342,58 +342,97 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 
 	// SEND LIGHTING
 	// First send Camera Position, just once.
-	int DirCount = 0, PointCount = 0, SpotCount = 0;
+
+	PerfTimer timing;
+	timing.Start();
+
+	int DirCount = 0, PointCount = 0, SpotCount = 0;  	std::string plstr, tmp;
 	SetUniformVector3(program, "camera_pos", App->camera->GetPosition());
-	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); it++)
+	const char* name;
+	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); ++it)
 	{
 		if ((*it)->GetGameObject()->IsActive())
 		{		
 			ComponentTransform* light_transform = nullptr;
 			light_transform = (ComponentTransform*)(*it)->GetGameObject()->GetComponent(Component::CompTransform);
-			std::string plstr;
 			switch ((*it)->GetType())
 			{
 			case DIRECTIONAL_LIGHT:
-				SetUniformVector3(program, "dirLight.direction", light_transform->GetMatrix().WorldZ());
-				SetUniformVector3(program, "dirLight.ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
-				SetUniformVector3(program, "dirLight.diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
-				SetUniformVector3(program, "dirLight.specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
-
-				SetUniformVector4(program, "dirLight.color", (*it)->GetColorAsFloat4());
+				if (DirCount < MAX_DIR_LIGHT)
+				{
+					plstr = "dirLights[" + std::to_string(DirCount) + "].";
+					tmp = plstr + "direction";
+					SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
+					tmp = plstr + "ambient";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
+					tmp = plstr + "diffuse";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
+					tmp = plstr + "specular";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
+					tmp = plstr + "color";
+					SetUniformVector4(program, tmp.c_str(), (*it)->GetColorAsFloat4());
+					tmp = plstr + "active";
+					SetUniformBool(program, tmp.c_str(), true);
+				}
 
 				DirCount++;
 				break;
 			case POINT_LIGHT:	
-				plstr = "pointLights[" + std::to_string(PointCount) + "].";
-
-				SetUniformVector3(program, (plstr + "position").c_str(), light_transform->GetGlobalPosition());
-				SetUniformFloat(program, (plstr + "constant").c_str(), 1.0f);
-				SetUniformFloat(program, (plstr + "linear").c_str(), 1.0f);
-				SetUniformFloat(program, (plstr + "quadratic").c_str(), 1.0f);
-
-				SetUniformVector3(program, "pointLights[0].ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
-				SetUniformVector3(program, "pointLights[0].diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
-				SetUniformVector3(program, "pointLights[0].specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
-
-				SetUniformVector4(program, "pointLights[0].color", (*it)->GetColorAsFloat4());
+				if (PointCount < MAX_POI_LIGHT)
+				{
+					plstr = "pointLights[" + std::to_string(PointCount) + "].";
+					tmp = plstr + "position";
+					SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
+					tmp = plstr + "constant";
+					SetUniformFloat(program, tmp.c_str(), 1.0f);
+					tmp = plstr + "linear";
+					SetUniformFloat(program, tmp.c_str(), 1.0f);
+					tmp = plstr + "quadratic";
+					SetUniformFloat(program, tmp.c_str(), 1.0f);
+					tmp = plstr + "ambient";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
+					tmp = plstr + "diffuse";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
+					tmp = plstr + "specular";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
+					tmp = plstr + "color";
+					SetUniformVector4(program, tmp.c_str(), (*it)->GetColorAsFloat4());
+					tmp = plstr + "active";
+					SetUniformBool(program, tmp.c_str(), true);
+				}
 
 				PointCount++;
 				break;
 			case SPOT_LIGHT:
-				SetUniformVector3(program, "spotLight.position", light_transform->GetGlobalPosition());
-				SetUniformVector3(program, "spotLight.direction", light_transform->GetMatrix().WorldZ());
-				SetUniformFloat(program, "spotLight.constant", 1.0f);
-				SetUniformFloat(program, "spotLight.linear", 1.0f);
-				SetUniformFloat(program, "spotLight.quadratic", 1.0f);
-
-				SetUniformVector3(program, "spotLight.ambient", float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
-				SetUniformVector3(program, "spotLight.diffuse", float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
-				SetUniformVector3(program, "spotLight.specular", float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
-
-				SetUniformVector4(program, "spotLight.color", (*it)->GetColorAsFloat4());
-
-				SetUniformFloat(program, "spotLight.cutOff", cos(12.5*DEGTORAD));
-				SetUniformFloat(program, "spotLight.outerCutOff", cos(15.0*DEGTORAD));
+				if (SpotCount < MAX_SPO_LIGHT)
+				{
+					plstr = "spotLights[" + std::to_string(SpotCount) + "].";
+					tmp = plstr + "position";
+					name = tmp.c_str();
+					SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
+					tmp = plstr + "direction";
+					SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
+					tmp = plstr + "constant";
+					SetUniformFloat(program, tmp.c_str(), 1.0f);
+					tmp = plstr + "linear";
+					SetUniformFloat(program, tmp.c_str(), 1.0f);
+					tmp = plstr + "quadratic";
+					SetUniformFloat(program, tmp.c_str(), 1.0f);
+					tmp = plstr + "ambient";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
+					tmp = plstr + "diffuse";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
+					tmp = plstr + "specular";
+					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
+					tmp = plstr + "color";
+					SetUniformVector4(program, tmp.c_str(), (*it)->GetColorAsFloat4());
+					tmp = plstr + "cutOff";
+					SetUniformFloat(program, tmp.c_str(), cos(12.5*DEGTORAD));
+					tmp = plstr + "outercutOff";
+					SetUniformFloat(program, tmp.c_str(), cos(15.0*DEGTORAD));
+					tmp = plstr + "active";
+					SetUniformBool(program, tmp.c_str(), true);
+				}
 
 				SpotCount++;
 				break;
@@ -402,6 +441,29 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			}
 		}
 	}
+
+	// Setting everything else to 0
+
+	for (uint dircount = DirCount; dircount < MAX_DIR_LIGHT; ++dircount)
+	{
+		plstr = "dirLights[" + std::to_string(DirCount) + "].";
+		tmp = plstr + "active";
+		SetUniformBool(program, tmp.c_str(), false);
+	}
+	for (uint pointcount = PointCount; pointcount < MAX_POI_LIGHT; ++pointcount)
+	{
+		plstr = "pointLights[" + std::to_string(PointCount) + "].";
+		tmp = plstr + "active";
+		SetUniformBool(program, tmp.c_str(), false);
+	}
+	for (uint spotcount = SpotCount; spotcount < MAX_SPO_LIGHT; ++spotcount)
+	{
+		plstr = "spotLights[" + std::to_string(SpotCount) + "].";
+		tmp = plstr + "active";
+		SetUniformBool(program, tmp.c_str(), false);
+	}
+
+	int x = timing.ReadMs();
 
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
@@ -919,30 +981,9 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 		int DirCount = 0, PointCount = 0, SpotCount = 0;
 		for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); ++it)
 		{
-				switch (light->GetType())
-				{
-				case DIRECTIONAL_LIGHT:
-					if ((*it) != nullptr && (*it) == light)
-					{
-						it = lights_on_scene.erase(it);
-					}
-					DirCount++;
-					break;
-				case POINT_LIGHT:
-					if ((*it) != nullptr && (*it) == light)
-					{
-						it = lights_on_scene.erase(it);
-					}
-					PointCount++;
-					break;
-				case SPOT_LIGHT:
-					if ((*it) != nullptr && (*it) == light)
-					{
-						it = lights_on_scene.erase(it);
-					}
-					SpotCount++;
-					break;
-				}
+			if ((*it) != nullptr && (*it) == light)
+			{
+				it = lights_on_scene.erase(it);
 			}
 		}
 	}

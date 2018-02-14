@@ -11,7 +11,7 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	SetType(ComponentType::CompLight);
 	SetGameObject(attached_gameobject);
 	App->renderer3D->AddLight(this);
-	type = POINT_LIGHT;
+	type = SPOT_LIGHT;
 	color = Color(1.0, 1.0, 1.0, 1.0);
 }
 
@@ -21,7 +21,7 @@ ComponentLight::~ComponentLight()
 
 bool ComponentLight::CleanUp()
 {
-
+	App->renderer3D->RemoveLight(this);
 	return true;
 }
 
@@ -84,8 +84,8 @@ std::string ComponentLight::GetTypeString() const
 
 void ComponentLight::SetTypeToDirectional()
 {
-	ambient = 0;
-	specular = 0;
+	ambient = 0.0;
+	specular = 0.0;
 	cutOff = 0;
 	outercutOff = 0;
 	type = DIRECTIONAL_LIGHT;
@@ -102,7 +102,7 @@ void ComponentLight::SetTypeToPoint()
 
 void ComponentLight::SetTypeToSpot()
 {
-	ambient = 0;
+	ambient = 10.0;
 	specular = 2.5;
 	cutOff = 12.0f;
 	outercutOff = 12.0f;

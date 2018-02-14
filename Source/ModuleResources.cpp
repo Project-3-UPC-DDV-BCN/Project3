@@ -1142,6 +1142,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	vec3 specular;\n\n"
 
 		"	vec4 color;\n"
+			"bool active;\n"
 		"};\n\n"
 
 		"struct PointLight {\n"
@@ -1156,6 +1157,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	vec3 specular;\n\n"
 			
 	"		vec4 color;\n"
+			"bool active;\n"
 	"	};\n"
 
 	"	struct SpotLight {\n"
@@ -1172,14 +1174,17 @@ void ModuleResources::CreateDefaultShaders()
 		"	vec3 diffuse;\n"
 		"	vec3 specular;\n"
 	"		vec4 color;\n"
+			"bool active;\n"
 	"	};\n\n"
 
-"#define NR_POINT_LIGHTS 4\n\n"
+	"#define NR_POINT_LIGHTS 4\n\n"
+	"#define NR_DIREC_LIGHTS 2\n"
+	"#define NR_SPOT_LIGHTS 8\n\n"
 
 	"	uniform vec3 viewPos;\n"
-	"	uniform DirLight dirLight;\n"
+	"	uniform DirLight dirLights[NR_DIREC_LIGHTS];\n"
 	"	uniform PointLight pointLights[NR_POINT_LIGHTS];\n"
-	"	uniform SpotLight spotLight;\n"
+	"	uniform SpotLight spotLights[NR_SPOT_LIGHTS];\n"
 	"	uniform Material material;\n\n"
 
 	"	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);\n"
@@ -1199,18 +1204,24 @@ void ModuleResources::CreateDefaultShaders()
 
 			"vec3 norm = normalize(Normal);\n"
 			"vec3 viewDir = normalize(viewPos - FragPos);\n\n"
-			"vec3 result = CalcDirLight(dirLight, norm, viewDir);\n\n"
+			"vec3 result = vec3(0.0, 0.0, 0.0);"
 
-			"for (int i = 0; i < NR_POINT_LIGHTS; i++)\n"
-				"result += CalcPointLight(pointLights[0], norm, FragPos, viewDir);\n\n"
+			"for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
+				"result += CalcDirLight(dirLights[i], norm, viewDir);\n"
 
-			"result += CalcSpotLight(spotLight, norm, FragPos, viewDir);\n\n"
+			"for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
+				"result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);\n"
+
+			"for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
+				"result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);\n"
 
 			"color = vec4(result, 1.0);\n"
 		"}\n\n"
 
 		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
 		"{\n"
+				"if (light.active == true)\n"
+				"{\n"
 			"vec3 lightDir = normalize(-light.direction);\n\n"
 
 			"float diff = max(dot(normal, lightDir), 0.0);\n\n"
@@ -1222,10 +1233,15 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 diffuse = light.diffuse * diff * vec3(color);\n"
 			"vec3 specular = light.specular * spec;\n"
 			"return (ambient + diffuse + specular);\n"
+			"}\n"
+			"else\n"
+			"return vec3(0.0, 0.0, 0.0);\n"
 		"}\n\n"
 
 		"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
 		"{\n"
+			"if (light.active == true)\n"
+			"{\n"
 			"vec3 lightDir = normalize(light.position - fragPos);\n\n"
 
 			"float diff = max(dot(normal, lightDir), 0.0);\n\n"
@@ -1243,10 +1259,15 @@ void ModuleResources::CreateDefaultShaders()
 			"diffuse *= attenuation;\n"
 			"specular *= attenuation;\n"
 			"return (ambient + diffuse + specular) * vec3(light.color);\n"
+			"}\n"
+			"else\n"
+			"return vec3(0.0, 0.0, 0.0);\n"
 		"}\n\n"
 
 		"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
 		"{\n"
+			"if (light.active == true)\n"
+			"{\n"
 			"vec3 lightDir = normalize(light.position - fragPos);\n\n"
 
 			"float diff = max(dot(normal, lightDir), 0.0);\n\n"
@@ -1268,6 +1289,9 @@ void ModuleResources::CreateDefaultShaders()
 			"diffuse *= attenuation;\n"
 			"specular *= attenuation;\n"
 			"return (ambient + diffuse + specular) * vec3(light.color);\n"
+			"}\n"
+			"else\n"
+			"return vec3(0.0, 0.0, 0.0);\n"
 			"}";
 
 		default_frag->SetContent(shader_text);

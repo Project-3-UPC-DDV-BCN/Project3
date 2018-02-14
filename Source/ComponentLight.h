@@ -49,7 +49,7 @@ public:
 
 private:
 	Color color = White;
-	LightType type = POINT_LIGHT;
+	LightType type = SPOT_LIGHT;
 	float diffuse = 10.0f;
 	float ambient = 3.0f;
 	float specular = 10.0f;
