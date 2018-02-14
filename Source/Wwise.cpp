@@ -4,6 +4,7 @@
 #include "include_wwise.h"
 #include "Wwise/IO/Win32/AkFilePackageLowLevelIOBlocking.h"
 #include <AK/Plugin/AkRoomVerbFXFactory.h>
+#include <AK\SoundEngine\Common\AkSoundEngine.h>
 
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
@@ -103,7 +104,7 @@ bool Wwise::InitDeviceSettings()
 
 bool Wwise::InitSoundEngine()
 {
-	AkInitSettings initSettings;
+	/*AkInitSettings initSettings;
 	AkPlatformInitSettings platformInitSettings;
 	AK::SoundEngine::GetDefaultInitSettings(initSettings);
 	AK::SoundEngine::GetDefaultPlatformInitSettings(platformInitSettings);
@@ -113,6 +114,16 @@ bool Wwise::InitSoundEngine()
 		return false;
 	}
 	else {
+		return true;
+	}*/
+
+	if (AK::SoundEngine::Init(NULL, NULL) != AK_Success) // Default values
+	{
+		assert(!"Could not initialize the Sound Engine.");
+		return false;
+	}
+	else 
+	{
 		return true;
 	}
 }
