@@ -712,8 +712,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				
 				ImGui::Checkbox("Relative Position", &current_emmiter->relative_pos);
 
-				ImGui::DragInt("Emmision Rate", &current_emmiter->emmision_rate, 1, 1, 0, 1000);
-				ImGui::DragFloat("Lifetime", &current_emmiter->max_lifetime, 1, 0.1f, 0, 20);
+				ImGui::DragInt("Emmision Rate", &current_emmiter->emmision_rate, 1, 1, 1, 1000);
+				ImGui::DragFloat("Lifetime", &current_emmiter->max_lifetime, 1, 0.1f, 0.1f, 20);
 				ImGui::SliderFloat("Initial Velocity", &current_emmiter->velocity, 0.1f, 30); 
 				ImGui::SliderFloat3("Gravity", &current_emmiter->gravity[0], -1, 1);
 				ImGui::DragFloat("Angular Velocity", &current_emmiter->angular_v, 1, 5.0f, -1000, 1000);
@@ -804,7 +804,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
 
-					if (ImGui::Button("Apply Rotation Interpolation"))
+					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
 						current_emmiter->change_rotation_interpolation = true;
 

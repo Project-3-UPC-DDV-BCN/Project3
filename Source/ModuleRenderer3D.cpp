@@ -340,7 +340,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		(*it)->AddaptEmmitAreaAABB();
 		if ((*it)->ShowEmmisionArea())
 		{
-			DrawDebugOBB((*it)->emit_area_obb, active_camera);
+			DrawDebugOBB((*it)->emmit_area_obb, active_camera);
 		}
 
 		(*it)->DrawParticles(active_camera); 

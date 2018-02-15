@@ -55,25 +55,21 @@ public:
 	particle_system_state GetSystemState() const;
 	void SetSystemState(particle_system_state new_state);
 
-	int GetTextureID(int pos);
-	int GetTextureIDAmount();
-
-	void SetCurrentTextureID(uint texture_id);
-	uint GetCurrentTextureID() const;
-
 	vector<ParticleAnimation> GetAllParticleAnimations();
 	Particle* GetRootParticle() const;
 
 public:
 
-	//UI data ------
+	//UI Data				
 
-	//Emiter
+	float max_lifetime;						//Time that particules will be rendering
+	int emmision_rate;						//How many spawn in a second
+	float velocity;							//Velocity at what the particles are emmited
 
-	//Shape
-	uint curr_texture_id;					//Hold the texture that will be drawn into the particles that we are cloning
-											
-	Color color;							//Color
+	float3 gravity;							//Gravity
+	float emision_angle;					//This is the max angle thet will be given to the particle
+
+	Color color;							
 	float angular_v;
 	BillboardingType billboard_type; 
 
@@ -85,61 +81,57 @@ public:
 	float height_increment; 
 	float depth_increment; 
 
-
 	//Interpolations
-	int initial_color[4];
-	int final_color[4];
-
+	///Size
+	bool change_size_interpolation;
 	float3 initial_scale;
 	float3 final_scale;
 
+	///Rotation
+	bool change_rotation_interpolation;
 	float initial_angular_v;
 	float final_angular_v;
 
-	bool change_color_interpolation;			//If true, the particles instanciated will be given 2 colors and they will interpolate between them
-	bool change_size_interpolation;
-	bool change_rotation_interpolation;
+	///Alpha
 
-	//Animated particle 
+	///Color
+	bool change_color_interpolation;
+	int initial_color[4];
+	int final_color[4];
+
+	//Animation system 
 	bool is_animated;
 	float time_step;
 
-	//Motion
+	//Billboarding
+
+	//Booleans
 	bool billboarding;
-	bool lock_billboarding_y;
-	bool lock_billboarding_x;
 	bool relative_pos;
-
-	float max_lifetime;						//Time that particules will be rendering
-	int emmision_rate;						//How many spawn in a second
-	float velocity;							//Velocity at what the particles are emmited
-
-	float3 gravity;							//Gravity
-	float emision_angle;					//This is the max angle thet will be given to the particle
-											
-	OBB emit_area_obb; 
+		
+	//Emmit area AABB
+	OBB emmit_area_obb; 
 
 private:
 
 private:
 
-	//General Management
-	Particle* root_particle;				 //This will be the particle that will be cloned over time
-	multimap<float, Particle*> active_particles;		 //Particles that are currently beeing rendered
-
+	//Lists
+	Particle* root_particle;							//This will be the particle that will be cloned over time
+	multimap<float, Particle*> active_particles;		//Particles that are currently beeing rendered
 	vector<ParticleAnimation> particle_animations;
 
-	float particles_lifetime;				 //Lifetime of the particules spawned
-	particle_system_state system_state;		 //Inner play & pause 
+	//Timers
+	Timer spawn_timer;									//Timer to control the emmision rate 
 
-	Timer reorder_time;
-
+	//Data
+	float particles_lifetime;							//Lifetime of the particules spawned
+	particle_system_state system_state;					//Inner play & pause 
+	
 	//Spawn Management
-	float emmision_frequency;				//Difference between spawn
-	Timer spawn_timer;
+	float emmision_frequency;							//Difference between spawn
 
 	//Debug
-	bool show_emit_area;					//boolean for showing the emmiter area
-	vector<uint> shapes_ids;				//This list will hold the id's of the textures that can give shape to the particles
-	uint shapes_amount;
+	bool show_emit_area;								//boolean for showing the emmiter area
+	
 };

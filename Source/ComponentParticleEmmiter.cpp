@@ -32,8 +32,8 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
-	float3 particle_pos = emit_area_obb.RandomPointInside(random);
-	emit_area_obb.LocalToWorld().TransformPos(particle_pos); 
+	float3 particle_pos = emmit_area_obb.RandomPointInside(random);
+	emmit_area_obb.LocalToWorld().TransformPos(particle_pos);
 
 	Particle* new_particle = new Particle(this);
 
@@ -113,17 +113,14 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	particles_lifetime = 0.0f;
 	system_state = PARTICLE_STATE_PAUSE;
 
-	shapes_amount = 0;
 	emmision_rate = 1;
 	max_lifetime = 1;
 	velocity = 5.0f;
-	curr_texture_id = -1;
 	color = Color(255, 255, 255, 0);
 	billboarding = false;
 	gravity = { 0,0,0 };
 	angular_v = 0;
 	emision_angle = 0;
-	reorder_time.Start();
 	is_animated = false;
 	time_step = 0.2;
 
@@ -159,7 +156,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-	emit_area_obb.SetFrom(emit_area); 
+	emmit_area_obb.SetFrom(emit_area); 
 
 	CreateRootParticle();
 
@@ -241,11 +238,11 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
 	//Position increment
-	float3 pos_increment = parent_transform->GetGlobalPosition() - emit_area_obb.CenterPoint(); 
+	float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area_obb.CenterPoint();
 
 	//Rotation increment
 	float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
-	float3 obb_rot = emit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ(); 
+	float3 obb_rot = emmit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ();
 
 	float3 inc_angle = parent_eule_rot - obb_rot; 
 
@@ -254,7 +251,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, {width_increment + 1,height_increment + 1,depth_increment + 1 });
 
-	emit_area_obb.Transform(transform_to_apply);	
+	emmit_area_obb.Transform(transform_to_apply);
 }
 
 void ComponentParticleEmmiter::UpdateRootParticle()
@@ -364,25 +361,6 @@ void Particle::ApplyWorldSpace()
 	components.particle_transform->SetMatrix(particle_rot);
 }
 
-int ComponentParticleEmmiter::GetTextureID(int pos)
-{
-	return shapes_ids[pos];
-}
-
-int ComponentParticleEmmiter::GetTextureIDAmount()
-{
-	return shapes_amount;
-}
-
-void ComponentParticleEmmiter::SetCurrentTextureID(uint texture_id)
-{
-	curr_texture_id = texture_id;
-}
-
-uint ComponentParticleEmmiter::GetCurrentTextureID() const
-{
-	return curr_texture_id;
-}
 
 vector<ParticleAnimation> ComponentParticleEmmiter::GetAllParticleAnimations()
 {

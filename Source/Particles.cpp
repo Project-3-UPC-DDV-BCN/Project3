@@ -315,7 +315,7 @@ void Particle::SetMovementFromStats()
 void Particle::SetMovement()
 {
 	if (GetEmmisionAngle() == 0)
-		movement = emmiter->emit_area_obb.axis[1] * particle_velocity;
+		movement = emmiter->emmit_area_obb.axis[1] * particle_velocity;
 	else	
 		movement = GetEmmisionVector(); 
 	
