@@ -54,6 +54,9 @@ public:
 	void UnbindArraybuffer() const;
 	void UnbindElementArrayBuffer() const;
 
+	void AddLight(ComponentLight* light);
+	void RemoveLight(ComponentLight* light);
+
 	//Shaders
 	uint GenVertexArrayObject() const;
 	void BindVertexArrayObject(uint id) const;
@@ -85,8 +88,7 @@ public:
 	bool LinkProgram(uint program_id);
 	void DeleteProgram(uint program_id);
 
-	void AddLight(ComponentLight* light);
-	void RemoveLight(ComponentLight* light);
+	void SendLight(uint program_id);
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
@@ -95,7 +97,6 @@ private:
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 public:
 
-	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
@@ -115,7 +116,7 @@ private:
 	int lights_count;
 
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
-	//std::list<ComponentLight*> lights_on_scene;
+
 	ComponentLight* dir_lights[MAX_DIR_LIGHT];
 	ComponentLight* poi_lights[MAX_POI_LIGHT];
 	ComponentLight* spo_lights[MAX_SPO_LIGHT];

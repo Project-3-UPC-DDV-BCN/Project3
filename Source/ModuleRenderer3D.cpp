@@ -147,7 +147,6 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	ms_timer.Start();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	return UPDATE_CONTINUE;
@@ -156,6 +155,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	ms_timer.Start();
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
@@ -349,124 +349,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	// We need this because transitioning to World Space gives a non accurate Normal.
 	// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
-	// SEND LIGHTING
-	// First send Camera Position, just once.
-
-	PerfTimer timing;
-	timing.Start();
-
-	SetUniformVector3(program, "viewPos", App->camera->GetPosition());
-	
-
-	std::string plstr, tmp;
-
-	// Directional Lights
-	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
-	{
-		plstr = "dirLights[" + std::to_string(i) + "].";
-		if (dir_lights[i] == nullptr || dir_lights[i]->IsActive() == false)
-		{		
-			tmp = plstr + "active";
-			SetUniformBool(program, tmp.c_str(), false);
-		}
-		else
-		{
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
-			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
-			tmp = plstr + "ambient";
-			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient()));
-			tmp = plstr + "diffuse";
-			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetDiffuse(), dir_lights[i]->GetDiffuse(), dir_lights[i]->GetDiffuse()));
-			tmp = plstr + "specular";
-			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetSpecular(), dir_lights[i]->GetSpecular(), dir_lights[i]->GetSpecular()));
-			tmp = plstr + "color";
-			SetUniformVector4(program, tmp.c_str(), dir_lights[i]->GetColorAsFloat4());
-			tmp = plstr + "active";
-			SetUniformBool(program, tmp.c_str(), true);
-
-		}
-	}
-
-	// Spot Lights
-	for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
-	{
-		plstr = "spotLights[" + std::to_string(i) + "].";
-		if (spo_lights[i] == nullptr || spo_lights[i]->IsActive() == false)
-		{
-			tmp = plstr + "active";
-			SetUniformBool(program, tmp.c_str(), false);
-		}
-		else
-		{
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
-
-			tmp = plstr + "position";
-			name = tmp.c_str();
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
-			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
-			tmp = plstr + "constant";
-			SetUniformFloat(program, tmp.c_str(), 1.0f);
-			tmp = plstr + "linear";
-			SetUniformFloat(program, tmp.c_str(), 1.0f);
-			tmp = plstr + "quadratic";
-			SetUniformFloat(program, tmp.c_str(), 1.0f);
-			tmp = plstr + "ambient";
-			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetAmbient(), spo_lights[i]->GetAmbient(), spo_lights[i]->GetAmbient()));
-			tmp = plstr + "diffuse";
-			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetDiffuse(), spo_lights[i]->GetDiffuse(), spo_lights[i]->GetDiffuse()));
-			tmp = plstr + "specular";
-			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetSpecular(), spo_lights[i]->GetSpecular(), spo_lights[i]->GetSpecular()));
-			tmp = plstr + "color";
-			SetUniformVector4(program, tmp.c_str(), spo_lights[i]->GetColorAsFloat4());
-			tmp = plstr + "cutOff";
-			SetUniformFloat(program, tmp.c_str(), cos(spo_lights[i]->GetCutOff()*DEGTORAD));
-			tmp = plstr + "outercutOff";
-			SetUniformFloat(program, tmp.c_str(), cos(spo_lights[i]->GetOuterCutOff()*DEGTORAD));
-			tmp = plstr + "active";
-			SetUniformBool(program, tmp.c_str(), true);
-		}
-	}
-
-	//Point Lights
-	for (uint i = 0; i < MAX_POI_LIGHT; ++i)
-	{
-		plstr = "pointLights[" + std::to_string(i) + "].";
-		if (poi_lights[i] == nullptr || poi_lights[i]->IsActive() == false)
-		{
-			tmp = plstr + "active";
-			SetUniformBool(program, tmp.c_str(), false);
-		}
-		else
-		{
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
-
-			tmp = plstr + "position";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
-			tmp = plstr + "constant";
-			SetUniformFloat(program, tmp.c_str(), 1.0f);
-			tmp = plstr + "linear";
-			SetUniformFloat(program, tmp.c_str(), 1.0f);
-			tmp = plstr + "quadratic";
-			SetUniformFloat(program, tmp.c_str(), 1.0f);
-			tmp = plstr + "ambient";
-			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetAmbient(), poi_lights[i]->GetAmbient(), poi_lights[i]->GetAmbient()));
-			tmp = plstr + "diffuse";
-			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetDiffuse(), poi_lights[i]->GetDiffuse(), poi_lights[i]->GetDiffuse()));
-			tmp = plstr + "specular";
-			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetSpecular(), poi_lights[i]->GetSpecular(), poi_lights[i]->GetSpecular()));
-			tmp = plstr + "color";
-			SetUniformVector4(program, tmp.c_str(), poi_lights[i]->GetColorAsFloat4());
-			tmp = plstr + "active";
-			SetUniformBool(program, tmp.c_str(), true);
-		}
-	}
-
-	int x = timing.ReadMs();
+	SendLight(program);
 
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
@@ -646,6 +529,98 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	if (error != GL_NO_ERROR)
 	{
 		CONSOLE_ERROR ("Error unbind buffer: %s\n", gluErrorString(error));
+	}
+}
+
+
+void ModuleRenderer3D::AddLight(ComponentLight * light)
+{
+	if (light != nullptr)
+	{
+		switch (light->GetType())
+		{
+		case DIRECTIONAL_LIGHT:
+
+			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+			{
+				if (dir_lights[i] == nullptr)
+				{
+					dir_lights[i] = light;
+					return;
+					// ADD WARNING
+					//CONSOLE_WARNING();
+				}
+				CONSOLE_WARNING("Exceeded limit of directional lights.");
+			}
+			break;
+		case SPOT_LIGHT:
+			for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+			{
+				if (spo_lights[i] == nullptr)
+				{
+					spo_lights[i] = light;
+					return;
+					// ADD WARNING
+				}
+				CONSOLE_WARNING("Exceeded limit of spot lights.");
+			}
+			break;
+		case POINT_LIGHT:
+			for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+			{
+				if (poi_lights[i] == nullptr)
+				{
+					poi_lights[i] = light;
+					return;
+					// ADD WARNING
+				}
+				CONSOLE_WARNING("Exceeded limit of point lights.");
+			}
+			break;
+		}
+	}
+}
+void ModuleRenderer3D::RemoveLight(ComponentLight * light)
+{
+	if (light != nullptr)
+	{
+		switch (light->GetType())
+		{
+		case DIRECTIONAL_LIGHT:
+			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+			{
+				if (dir_lights[i] == light)
+				{
+					dir_lights[i] = nullptr;
+					return;
+					// ADD WARNING
+					//CONSOLE_WARNING();
+				}
+			}
+			break;
+		case SPOT_LIGHT:
+			for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+			{
+				if (spo_lights[i] == light)
+				{
+					spo_lights[i] = nullptr;
+					return;
+					// ADD WARNING
+				}
+			}
+			break;
+		case POINT_LIGHT:
+			for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+			{
+				if (poi_lights[i] == light)
+				{
+					poi_lights[i] = nullptr;
+					return;
+					// ADD WARNING
+				}
+			}
+			break;
+		}
 	}
 }
 
@@ -973,91 +948,122 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 		}
 	}
 }
-void ModuleRenderer3D::AddLight(ComponentLight * light)
+void ModuleRenderer3D::SendLight(uint program)
 {
-	if (light != nullptr)
+	// ----------------------------------------
+	// ---------- SEND LIGHTING ---------------
+	// ----------------------------------------
+	// First send Camera Position, just once.
+
+	SetUniformVector3(program, "viewPos", App->camera->GetPosition());
+
+
+	std::string plstr, tmp;
+
+	// Directional Lights
+	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
 	{
-		switch (light->GetType())
+		plstr = "dirLights[" + std::to_string(i) + "].";
+		if (dir_lights[i] == nullptr || dir_lights[i]->IsActive() == false)
 		{
-		case DIRECTIONAL_LIGHT:
-			
-			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
-			{
-				if (dir_lights[i] == nullptr)
-				{
-					dir_lights[i] = light;
-					return;
-					// ADD WARNING
-					//CONSOLE_WARNING();
-				}
-			}
-			break;
-		case SPOT_LIGHT:
-			for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
-			{
-				if (spo_lights[i] == nullptr)
-				{
-						spo_lights[i] = light;
-						return;
-						// ADD WARNING
-				} 
-			}
-			break;
-		case POINT_LIGHT:
-			for (uint i = 0; i < MAX_POI_LIGHT; ++i)
-			{
-				if (poi_lights[i] == nullptr)
-				{
-					poi_lights[i] = light;
-					return;
-					// ADD WARNING
-				}
-			}
-			break;
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), false);
+		}
+		else
+		{
+			ComponentTransform* light_transform = nullptr;
+			light_transform = (ComponentTransform*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+			tmp = plstr + "direction";
+			SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
+			tmp = plstr + "ambient";
+			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient()));
+			tmp = plstr + "diffuse";
+			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetDiffuse(), dir_lights[i]->GetDiffuse(), dir_lights[i]->GetDiffuse()));
+			tmp = plstr + "specular";
+			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetSpecular(), dir_lights[i]->GetSpecular(), dir_lights[i]->GetSpecular()));
+			tmp = plstr + "color";
+			SetUniformVector4(program, tmp.c_str(), dir_lights[i]->GetColorAsFloat4());
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), true);
+
 		}
 	}
-}
-void ModuleRenderer3D::RemoveLight(ComponentLight * light)
-{
-	if (light != nullptr)
+
+	// Spot Lights
+	for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
 	{
-		switch (light->GetType())
+		plstr = "spotLights[" + std::to_string(i) + "].";
+		if (spo_lights[i] == nullptr || spo_lights[i]->IsActive() == false)
 		{
-		case DIRECTIONAL_LIGHT:
-			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
-			{
-				if (dir_lights[i] == light)
-				{
-					dir_lights[i] = nullptr;
-					return;
-					// ADD WARNING
-					//CONSOLE_WARNING();
-				}
-			}
-			break;
-		case SPOT_LIGHT:
-			for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
-			{
-				if (spo_lights[i] == light)
-				{
-					spo_lights[i] = nullptr;
-					return;
-					// ADD WARNING
-				}
-			}
-			break;
-		case POINT_LIGHT:
-			for (uint i = 0; i < MAX_POI_LIGHT; ++i)
-			{
-				if (poi_lights[i] == light)
-				{
-					poi_lights[i] = nullptr;
-					return;
-					// ADD WARNING
-				}
-			}
-			break;
-		}	
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), false);
+		}
+		else
+		{
+			ComponentTransform* light_transform = nullptr;
+			light_transform = (ComponentTransform*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+
+			tmp = plstr + "position";
+			SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
+			tmp = plstr + "direction";
+			SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
+			tmp = plstr + "constant";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "linear";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "quadratic";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "ambient";
+			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetAmbient(), spo_lights[i]->GetAmbient(), spo_lights[i]->GetAmbient()));
+			tmp = plstr + "diffuse";
+			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetDiffuse(), spo_lights[i]->GetDiffuse(), spo_lights[i]->GetDiffuse()));
+			tmp = plstr + "specular";
+			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetSpecular(), spo_lights[i]->GetSpecular(), spo_lights[i]->GetSpecular()));
+			tmp = plstr + "color";
+			SetUniformVector4(program, tmp.c_str(), spo_lights[i]->GetColorAsFloat4());
+			tmp = plstr + "cutOff";
+			SetUniformFloat(program, tmp.c_str(), cos(spo_lights[i]->GetCutOff()*DEGTORAD));
+			tmp = plstr + "outercutOff";
+			SetUniformFloat(program, tmp.c_str(), cos(spo_lights[i]->GetOuterCutOff()*DEGTORAD));
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), true);
+		}
 	}
+
+	//Point Lights
+	for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+	{
+		plstr = "pointLights[" + std::to_string(i) + "].";
+		if (poi_lights[i] == nullptr || poi_lights[i]->IsActive() == false)
+		{
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), false);
+		}
+		else
+		{
+			ComponentTransform* light_transform = nullptr;
+			light_transform = (ComponentTransform*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+
+			tmp = plstr + "position";
+			SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
+			tmp = plstr + "constant";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "linear";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "quadratic";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "ambient";
+			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetAmbient(), poi_lights[i]->GetAmbient(), poi_lights[i]->GetAmbient()));
+			tmp = plstr + "diffuse";
+			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetDiffuse(), poi_lights[i]->GetDiffuse(), poi_lights[i]->GetDiffuse()));
+			tmp = plstr + "specular";
+			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetSpecular(), poi_lights[i]->GetSpecular(), poi_lights[i]->GetSpecular()));
+			tmp = plstr + "color";
+			SetUniformVector4(program, tmp.c_str(), poi_lights[i]->GetColorAsFloat4());
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), true);
+		}
+	}
+
 }
 // ------------------------------------------------
