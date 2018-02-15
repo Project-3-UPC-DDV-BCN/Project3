@@ -13,7 +13,7 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	SetType(ComponentType::CompRigidBody);
 	SetGameObject(attached_gameobject);
 	rigidbody = App->physics->CreateDynamicRigidBody();
-	rigidbody->userData = attached_gameobject;
+	//rigidbody->userData = attached_gameobject;
 
 	//ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
 	float* matrix = attached_gameobject->GetOpenGLMatrix().ptr();
@@ -29,12 +29,12 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	phys_transform.q = physx::PxQuat(q.x * RADTODEG, q.y * RADTODEG, q.z * RADTODEG, q.w * RADTODEG);*/
 	rigidbody->setGlobalPose(phys_transform);
 
-	SetMass(1);
+	SetMass(10000000);
 	SetUseGravity(true);
 	SetKinematic(false);
 	SetLinearDamping(0);
 	SetAngularDamping(0.05f);
-	SetLinearVelocity(float3(0, 0, 0));
+	SetLinearVelocity(float3(0, -10, 0));
 	SetLinearDamping(0);
 }
 

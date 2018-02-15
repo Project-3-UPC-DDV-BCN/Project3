@@ -9,6 +9,8 @@
 #include "Application.h"
 #include "ModuleTime.h"
 #include "Primitive.h"
+#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtImpactDamageManager.h"
+#include "ModuleBlast.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3DEBUG_x86.lib")
@@ -364,10 +366,10 @@ void ModulePhysics::CreateMainScene()
 	cuda_context_manager = PxCreateCudaContextManager(*physx_foundation, cudaContextManagerDesc);
 	
 	physx::PxSceneDesc sceneDesc(physx_physics->getTolerancesScale());
-	sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+	sceneDesc.gravity = physx::PxVec3(0.0f, 0.0f, 0.0f);
 	dispatcher = physx::PxDefaultCpuDispatcherCreate(4);
 	sceneDesc.cpuDispatcher = dispatcher;
-	sceneDesc.filterShader = CCDShader;
+	sceneDesc.filterShader = Nv::Blast::ExtImpactDamageManager::FilterShader; //CCDShader;
 	sceneDesc.simulationEventCallback = this;
 	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
 
@@ -415,16 +417,16 @@ void ModulePhysics::CreateScene()
 
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
-	physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
+	/*physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
 	physx::PxTransform phys_transform = dynamic->getGlobalPose();
-	GameObject* go = (GameObject*)actor->userData;
-	//if (go->GetName() == "wall") return;
+	GameObject* go = (GameObject*)actor->userData;*/
+	/*if (go->GetName() == "wall") return;
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
 	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
 	float3 rotation = rot_quat.ToEulerXYZ();
 	transform->SetPosition(position);
-	transform->SetRotation(rotation);
+	transform->SetRotation(rotation);*/
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
@@ -489,6 +491,10 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			//Call OnCollisionExit in script module
 		}
 	}
+
+	Nv::Blast::ExtImpactDamageManager* impact_manager = App->blast->GetImpactManager();
+	impact_manager->onContact(pairHeader, pairs, nbPairs);
+	impact_manager->applyDamage();
 }
 
 void ModulePhysics::onAdvance(const physx::PxRigidBody * const * bodyBuffer, const physx::PxTransform * poseBuffer, const physx::PxU32 count)

@@ -49,56 +49,67 @@ bool ModuleBlast::Init(Data * editor_config)
 	default_material = App->physics->GetPhysXPhysics()->createMaterial(0.8, 0.7, 0.1);
 
 	phys_task_manager = physx::PxTaskManager::createTaskManager(App->physics->GetPhysXFoundation()->getErrorCallback(), App->physics->GetPhysXCpuDispatcher(), 0);
+	settings.damageFunctionData = this;
+	impact_damage_manager = Nv::Blast::ExtImpactDamageManager::create(px_manager, settings);
 
 	Nv::Blast::TkGroupDesc gdesc;
 	gdesc.workerCount = phys_task_manager->getCpuDispatcher()->getWorkerCount();
 	group = framework->createGroup(gdesc);
 
-	task_manager = Nv::Blast::ExtGroupTaskManager::create(*phys_task_manager, group);
+	task_manager = Nv::Blast::ExtGroupTaskManager::create(*phys_task_manager);
+	task_manager->setGroup(group);
 
 	return true;
 }
 
 update_status ModuleBlast::Update(float dt)
 {
+	BlastModel* model = families.begin()->second;
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
 		BlastModel* model = families.begin()->second;
-		NvBlastDamageProgram program;
-		program.graphShaderFunction = NvBlastExtFalloffGraphShader;
-		program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
+		//NvBlastDamageProgram program;
+		//program.graphShaderFunction = NvBlastExtFalloffGraphShader;
+		//program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
 
-		NvBlastExtRadialDamageDesc desc =
-		{
-			1000, { 0.2, 5, 0 }, 1.0, 2.0
-		};
+		//NvBlastExtRadialDamageDesc desc =
+		//{
+		//	1000, { 0.2, 5, 0 }, 1.0, 2.0
+		//};
 
-		const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
-		NvBlastExtProgramParams params =
-		{
-			buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
-		};
+		//const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
+		//NvBlastExtProgramParams params =
+		//{
+		//	buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
+		//};
 
-		const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
-		for (Nv::Blast::ExtPxActor* actor : model->actors)
-		{
-			actor->getTkActor().damage(program, buffered_program_params);
-		}
+		//const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
+		//for (Nv::Blast::ExtPxActor* actor : model->actors)
+		//{
+		//	actor->getTkActor().damage(program, buffered_program_params);
+		//}
 
-		if (model->actors[0]->getTkActor().isPending())
-		{
-			//model->actors[0]->getTkActor().
-		}
+		//if (model->actors[0]->getTkActor().isPending())
+		//{
+		//	//model->actors[0]->getTkActor().
+		//}
 
-		App->physics->GetScene(0)->simulate(dt);
-		App->physics->GetScene(0)->fetchResults(true);
+		///*App->physics->GetScene(0)->simulate(dt);
+		//App->physics->GetScene(0)->fetchResults(true);*/
 
-		task_manager->process();
-		task_manager->wait();
+		/*task_manager->process();
+		task_manager->wait();*/
+
+		group->process();
 
 		model->family->postSplitUpdate();
 
 	}
+
+	group->process();
+
+	model->family->postSplitUpdate();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -112,6 +123,11 @@ bool ModuleBlast::CleanUp()
 Nv::Blast::TkFramework * ModuleBlast::GetFramework() const
 {
 	return framework;
+}
+
+Nv::Blast::ExtImpactDamageManager * ModuleBlast::GetImpactManager() const
+{
+	return impact_damage_manager;
 }
 
 void ModuleBlast::CreateFamily(BlastModel* model)
@@ -153,7 +169,7 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 	}
-	actor.getPhysXActor().userData = model->chunks[0];
+	//actor.getPhysXActor().userData = model->chunks[0];
 	model->actors.push_back(&actor);
 }
 

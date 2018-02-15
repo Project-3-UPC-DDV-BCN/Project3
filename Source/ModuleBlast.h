@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxListener.h"
+#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtImpactDamageManager.h"
 #include <map>
 #include <vector>
 
@@ -67,6 +68,7 @@ public:
 	bool CleanUp();
 
 	Nv::Blast::TkFramework* GetFramework() const;
+	Nv::Blast::ExtImpactDamageManager* GetImpactManager() const;
 
 	void CreateFamily(BlastModel* model);
 	void SpawnFamily(BlastModel* model);
@@ -84,4 +86,6 @@ private:
 	physx::PxTaskManager* phys_task_manager;
 	Nv::Blast::TkGroup* group;
 	Nv::Blast::ExtGroupTaskManager* task_manager;
+	Nv::Blast::ExtImpactDamageManager* impact_damage_manager;
+	Nv::Blast::ExtImpactSettings settings;
 };

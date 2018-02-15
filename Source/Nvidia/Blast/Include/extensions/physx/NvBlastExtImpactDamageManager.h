@@ -29,8 +29,8 @@
 #ifndef NVBLASTEXTIMPACTDAMAGEMANAGER_H
 #define NVBLASTEXTIMPACTDAMAGEMANAGER_H
 
-#include "PxFiltering.h"
-#include "NvPreprocessor.h"
+#include "../../../../PhysX/Include/PxFiltering.h"
+#include "../../lowlevel/NvPreprocessor.h"
 
 // Forward declarations
 namespace physx
