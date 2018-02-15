@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(Wwise)\**</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\include;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
