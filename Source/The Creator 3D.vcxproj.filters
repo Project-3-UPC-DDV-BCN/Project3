@@ -61,6 +61,9 @@
     <Filter Include="Sources\Audio">
       <UniqueIdentifier>{83797d29-0e87-494a-b978-5cadc8bb65c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3d Party\Parson">
+      <UniqueIdentifier>{1dbfddcf-d4e4-458f-9a0b-1f1ce259303c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -537,6 +540,12 @@
     <ClInclude Include="AudioWindow.h">
       <Filter>Sources\EditorUI</Filter>
     </ClInclude>
+    <ClInclude Include="Parson\parson.h">
+      <Filter>Sources\3d Party\Parson</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonTool.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -910,6 +919,12 @@
     </ClCompile>
     <ClCompile Include="AudioWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Parson\parson.c">
+      <Filter>Sources\3d Party\Parson</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonTool.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

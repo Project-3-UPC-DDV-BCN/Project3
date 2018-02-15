@@ -130,6 +130,7 @@
     <ClInclude Include="imgui\stb_textedit.h" />
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_impl_sdl.h" />
+    <ClInclude Include="JsonTool.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="LuaScript.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="Parson\parson.h" />
     <ClInclude Include="PerformanceWindow.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Prefab.h" />
@@ -284,6 +286,7 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="imgui_impl_sdl.cpp" />
+    <ClCompile Include="JsonTool.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Listener.cpp" />
     <ClCompile Include="log.cpp" />
@@ -338,6 +341,7 @@
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="Parson\parson.c" />
     <ClCompile Include="PerformanceWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Prefab.cpp" />
