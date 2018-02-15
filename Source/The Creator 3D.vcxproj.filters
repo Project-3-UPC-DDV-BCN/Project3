@@ -507,6 +507,7 @@
     <ClInclude Include="ComponentLight.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Thread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -836,9 +837,13 @@
     <ClCompile Include="ModuleShaderImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="ComponentLight.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="Thread.cpp" />
+>>>>>>> origin/development
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
