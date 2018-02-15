@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 
+#include "Listener.h"
+
 AudioSource::AudioSource(GameObject* attached_gameobject)
 {
 	SetActive(true);
@@ -37,8 +39,6 @@ bool AudioSource::Update()
 
 		if (trans)
 		{
-
-
 			float3 pos = trans->GetGlobalPosition();
 			Quat rot = Quat::FromEulerXYZ(trans->GetGlobalRotation().x * DEGTORAD, trans->GetGlobalRotation().y * DEGTORAD, trans->GetGlobalRotation().z * DEGTORAD);
 
@@ -131,6 +131,11 @@ void AudioSource::GetEvents()
 
 		}
 	}
+}
+
+void AudioSource::ApplyReverb(float value, const char * bus)
+{
+	obj->SetAuxiliarySends(value, bus, App->audio->GetDefaultListener()->GetId());
 }
 
 //void AudioSource::Serialize(JSON_File * doc)

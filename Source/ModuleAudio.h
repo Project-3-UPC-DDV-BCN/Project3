@@ -5,7 +5,6 @@
 #include "Include_Wwise.h"
 #include "Geomath.h"
 #include "Wwise.h"
-//#include "DistorsionZone.h"
 
 #include <string>
 #include <list>
@@ -14,8 +13,10 @@
 #define DEFAULT_VOLUME 50
 
 class Listener;
+class GameObject;
 class SoundBank;
 class DistorsionZone;
+class JSONTool;
 
 class ModuleAudio : public Module
 {
@@ -42,6 +43,11 @@ public:
 	void StopAllEvents();
 	void ImGuiDraw();
 
+	//Environments
+	void AddEnvironment(DistorsionZone* zone);
+	void DeleteEnvironment(DistorsionZone* zone);
+	bool CheckEnvironments(GameObject* go);
+
 	Wwise::SoundObject* GetCameraListener() const;
 	void SetCameraListener(Wwise::SoundObject* camera_listener);
 	Listener* GetDefaultListener() const;
@@ -67,6 +73,8 @@ private:
 	bool listener_created = false;
 	int volume = DEFAULT_VOLUME;
 	bool muted = false;
+
+	JSONTool* json = nullptr;
 };
 
 #endif // __ModuleAudio_H__

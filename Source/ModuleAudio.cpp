@@ -3,9 +3,18 @@
 #include "ModuleFileSystem.h"
 #include "ModuleAudio.h"
 #include "ModuleCamera3D.h"
-#include "ComponentCamera.h"
-#include "SoundBank.h"
+#include "JsonTool.h"
 
+#include "GameObject.h"
+#include "ComponentCamera.h"
+#include "ComponentTransform.h"
+#include "ComponentMeshRenderer.h"
+#include "Mesh.h"
+
+#include "SoundBank.h"
+#include "DistorsionZone.h"
+#include "AudioSource.h"
+#include "Listener.h"
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
@@ -24,6 +33,7 @@ bool ModuleAudio::Init(Data* editor_config)
 	CONSOLE_DEBUG("Loading Audio Mixer");
 	
 	bool ret = Wwise::InitWwise("English(US)");
+	json = new JSONTool();
 
 	return ret;
 }
@@ -85,28 +95,17 @@ SoundBank * ModuleAudio::LoadSoundBank(std::string path)
 
 unsigned int ModuleAudio::GetBankInfo(std::string path, SoundBank *& bank)
 {
-
 	unsigned int ret = 0;
-	
-	Data bank_file;
 
-	if (!bank_file.LoadJSON(path.c_str()))
+	JSON_File * bank_file = json->LoadJSON(path.c_str());
+	bank_file->RootObject();
+
+	if (bank_file == nullptr) 
 	{
 		CONSOLE_DEBUG("Error reading bank json file");
 	}
-	else
+	else 
 	{
-
-	}
-
-	
-	/*
-	bank_file->RootObject();
-
-	if (bank_file == nullptr) {
-		LOG_OUT("Error reading bank json file");
-	}
-	else {
 		bank_file->ChangeObject("SoundBanksInfo");
 		int n_banks = bank_file->ArraySize("SoundBanks");
 		for (int i = 0; i < n_banks; i++) {
@@ -128,11 +127,10 @@ unsigned int ModuleAudio::GetBankInfo(std::string path, SoundBank *& bank)
 				bank_file->MoveToInsideArray("SoundBanks", i);
 				new_event->Load(bank_file, bank, j);
 				bank->events.push_back(new_event);
-
 			}
 		}
+	}
 
-	}*/
 	return ret;
 }
 
@@ -183,6 +181,59 @@ void ModuleAudio::StopAllEvents()
 
 void ModuleAudio::ImGuiDraw()
 {
+}
+
+void ModuleAudio::AddEnvironment(DistorsionZone * zone)
+{
+	environments.push_back(zone);
+}
+
+void ModuleAudio::DeleteEnvironment(DistorsionZone * zone)
+{
+	for (int i = 0; i < environments.size(); i++)
+	{
+		if (environments[i] == zone)
+		{
+			environments.erase((environments.begin() + i));
+			break;
+		}
+	}
+}
+
+bool ModuleAudio::CheckEnvironments(GameObject * go)
+{
+	bool ret = false;
+
+	ComponentTransform* t = (ComponentTransform*)go->GetComponent(Component::ComponentType::CompTransform);
+	ComponentMeshRenderer* meshrend = (ComponentMeshRenderer*)go->GetComponent(Component::ComponentType::CompMeshRenderer);
+	AudioSource* audio = (AudioSource*)go->GetComponent(Component::ComponentType::CompAudioSource);
+	Listener* list = (Listener*)go->GetComponent(Component::ComponentType::CompAudioListener);
+	if (!t || !audio || !meshrend)
+		return ret;
+
+	for (int i = 0; i < environments.size(); i++)
+	{
+		float value = 0.0;
+		if (environments[i]->CheckCollision(meshrend->GetMesh()->box));
+		{
+			value = environments[i]->distorsion_value;
+		}
+		audio->ApplyReverb(value, environments[i]->bus.c_str());
+	}
+
+	if (list != nullptr) {
+		for (int i = 0; i < environments.size(); i++)
+		{
+			float value = 0.0;
+			if (environments[i]->CheckCollision(meshrend->GetMesh()->box));
+			{
+				value = environments[i]->distorsion_value;
+			}
+			list->ApplyReverb(value, environments[i]->bus.c_str());
+		}
+	}
+
+	return ret; return false;
 }
 
 Wwise::SoundObject * ModuleAudio::GetCameraListener() const

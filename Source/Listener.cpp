@@ -36,4 +36,5 @@ AkGameObjectID Listener::GetId() const
 
 void Listener::ApplyReverb(float value, const char * bus)
 {
+	obj->SetAuxiliarySends(value, bus, App->audio->GetDefaultListener()->GetId());
 }

@@ -1,35 +1,38 @@
-/*#include "DistorsionZone.h"
-#include "Transform.h"
+#include "DistorsionZone.h"
 #include "Application.h"
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleImGui.h"
 
-DistorsionZone::DistorsionZone(GameObject * own) : Component(own)
+#include "GameObject.h"
+#include "ComponentTransform.h"
+
+#include "OpenGL.h"
+
+DistorsionZone::DistorsionZone(GameObject * attached_gameobject)
 {
-	Setname("Distorsion Zone");
-	SetType(DIST_ZONE);
+	SetActive(true);
+	SetName("Distorsion Zone");
+	SetType(Component::ComponentType::CompAudioDistZone);
+	SetGameObject(attached_gameobject);
 	zone.SetNegativeInfinity();
 	App->audio->AddEnvironment(this);
 	
 }
 
-DistorsionZone::DistorsionZone()
+DistorsionZone::~DistorsionZone()
 {
-	Setname("Distorsion Zone");
-	SetType(DIST_ZONE);
-	zone.SetNegativeInfinity();
-	App->audio->DeleteEnvironment(this);
 }
 
 bool DistorsionZone::Update()
 {
-	Transform* trans = (Transform*)owner->FindComponentbyType(TRANSFORM);
+	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::ComponentType::CompTransform);
+	
 	if (trans)
 	{
-		float3 pos = trans->GetPosition();
-		Quat rot = trans->GetRotation();
-		float3 scale = trans->GetScale();
+		float3 pos = trans->GetGlobalPosition();
+		Quat rot = Quat::FromEulerXYZ(trans->GetGlobalRotation().x * DEGTORAD, trans->GetGlobalRotation().y * DEGTORAD, trans->GetGlobalRotation().z * DEGTORAD);
+		float3 scale = trans->GetLocalScale();
+
 		zone.pos = pos;
 		zone.axis[0] = rot.Transform(float3(1, 0, 0));
 		zone.axis[1] = rot.Transform(float3(0, 1, 0));
@@ -126,19 +129,17 @@ bool DistorsionZone::CheckCollision(AABB target)
 
 void DistorsionZone::UI_draw()
 {
-	if (ImGui::CollapsingHeader("Distorsion Zone")) {
-		char* bus_name = new char[41];
+	//if (ImGui::CollapsingHeader("Distorsion Zone")) {
+	//	char* bus_name = new char[41];
 
-		std::copy(bus.begin(), bus.end(), bus_name);
-		bus_name[bus.length()] = '\0';
+	//	std::copy(bus.begin(), bus.end(), bus_name);
+	//	bus_name[bus.length()] = '\0';
 
-		ImGui::InputText("Target bus", bus_name, 40);
-		bus = bus_name;
+	//	ImGui::InputText("Target bus", bus_name, 40);
+	//	bus = bus_name;
 
-		ImGui::DragFloat("Value", &distorsion_value, 0.1, 0.0, 12.0, "%.1f");
+	//	ImGui::DragFloat("Value", &distorsion_value, 0.1, 0.0, 12.0, "%.1f");
 
-		delete[] bus_name;
-	}
+	//	delete[] bus_name;
+	//}
 }
-
-*/

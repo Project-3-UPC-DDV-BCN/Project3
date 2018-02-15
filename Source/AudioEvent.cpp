@@ -1,5 +1,5 @@
 #include "AudioEvent.h"
-#include "Data.h"
+#include "JsonTool.h"
 #include "AudioSource.h"
 
 AudioEvent::AudioEvent()
@@ -14,19 +14,17 @@ void AudioEvent::UnLoad()
 {
 }
 
-void AudioEvent::Load(std::string * file, SoundBank * p, int id)
+void AudioEvent::Load(JSON_File * file, SoundBank * p, int id)
 {
 	// Add Data* data to function;
 
-
-	/*
 	bool succes = file->MoveToInsideArray("IncludedEvents", id);
 	if (succes) {
 		CONSOLE_DEBUG("Can be readed");
 	}
 	this->id = file->GetNumber("Id");
 	this->name = file->GetString("Name");
-	this->parent = p;*/
+	this->parent = p;
 }
 
 void AudioEvent::UIDraw(AudioSource* parent )

@@ -9,6 +9,7 @@
 
 class SoundBank;
 class AudioSource;
+class JSON_File;
 
 class AudioEvent {
 
@@ -18,7 +19,7 @@ public:
 	~AudioEvent();
 	void UnLoad();
 
-	void Load(std::string* file, SoundBank* p,int id);
+	void Load(JSON_File * file, SoundBank* p,int id);
 	std::string name;
 	uint id = 0;
 	bool in_3D = false;

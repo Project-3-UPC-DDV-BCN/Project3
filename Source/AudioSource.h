@@ -24,6 +24,7 @@ public :
 	void UI_draw();
 	void GetEvents();
 	//void Serialize(JSON_File* doc);
+	void ApplyReverb(float value, const char* bus);
 
 public:
 	SoundBank* soundbank = nullptr;

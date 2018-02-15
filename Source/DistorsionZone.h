@@ -1,4 +1,3 @@
-/*#pragma once
 #ifndef _DISTORSIONZONE_H_
 #define _DISTORSIONZONE_H_
 
@@ -7,12 +6,13 @@
 #include "Component.h"
 #include "Geomath.h"
 
-class DistorsionZone : public Component {
-
+class DistorsionZone : 
+	public Component 
+{
 public:
 
-	DistorsionZone(GameObject* own);
-	DistorsionZone();
+	DistorsionZone(GameObject* attached_gameobject);
+	~DistorsionZone();
 	bool Update();
 	void DebugDraw();
 	bool CheckCollision(AABB target);
@@ -31,4 +31,3 @@ public:
 
 
 #endif
-*/
