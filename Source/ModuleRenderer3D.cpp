@@ -40,6 +40,15 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	game_camera = nullptr;
 	use_skybox = true;
 	lights_count = 0;
+
+	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+		dir_lights[i] = nullptr;
+
+	for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+		spo_lights[i] = nullptr;
+
+	for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+		poi_lights[i] = nullptr;
 }
 
 // Destructor
@@ -346,7 +355,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	PerfTimer timing;
 	timing.Start();
 
-	SetUniformVector3(program, "camera_pos", App->camera->GetPosition());
+	SetUniformVector3(program, "viewPos", App->camera->GetPosition());
 	
 
 	std::string plstr, tmp;
@@ -457,90 +466,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		}
 	}
 
-
-	/*
-	for (std::list<ComponentLight*>::iterator it = lights_on_scene.begin(); it != lights_on_scene.end(); ++it)
-	{
-		if ((*it)->GetGameObject()->IsActive())
-		{		
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)(*it)->GetGameObject()->GetComponent(Component::CompTransform);
-			switch ((*it)->GetType())
-			{
-			case DIRECTIONAL_LIGHT:
-				if (DirCount < MAX_DIR_LIGHT)
-				{
-					plstr = "dirLights[" + std::to_string(DirCount) + "].";
-					tmp = plstr + "direction";
-					SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
-					tmp = plstr + "ambient";
-					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
-					tmp = plstr + "diffuse";
-					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
-					tmp = plstr + "specular";
-					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
-					tmp = plstr + "color";
-					SetUniformVector4(program, tmp.c_str(), (*it)->GetColorAsFloat4());
-					tmp = plstr + "active";
-					SetUniformBool(program, tmp.c_str(), true);
-				}
-
-				DirCount++;
-				break;
-			case POINT_LIGHT:	
-				if (PointCount < MAX_POI_LIGHT)
-				{
-					plstr = "pointLights[" + std::to_string(PointCount) + "].";
-					tmp = plstr + "position";
-					SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
-					tmp = plstr + "constant";
-					SetUniformFloat(program, tmp.c_str(), 1.0f);
-					tmp = plstr + "linear";
-					SetUniformFloat(program, tmp.c_str(), 1.0f);
-					tmp = plstr + "quadratic";
-					SetUniformFloat(program, tmp.c_str(), 1.0f);
-					tmp = plstr + "ambient";
-					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetAmbient(), (*it)->GetAmbient(), (*it)->GetAmbient()));
-					tmp = plstr + "diffuse";
-					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetDiffuse(), (*it)->GetDiffuse(), (*it)->GetDiffuse()));
-					tmp = plstr + "specular";
-					SetUniformVector3(program, tmp.c_str(), float3((*it)->GetSpecular(), (*it)->GetSpecular(), (*it)->GetSpecular()));
-					tmp = plstr + "color";
-					SetUniformVector4(program, tmp.c_str(), (*it)->GetColorAsFloat4());
-					tmp = plstr + "active";
-					SetUniformBool(program, tmp.c_str(), true);
-				}
-
-				PointCount++;
-				break;
-		
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	*/
-	// Setting everything else to 0
-	/*
-	for (uint dircount = DirCount; dircount < MAX_DIR_LIGHT; ++dircount)
-	{
-		plstr = "dirLights[" + std::to_string(DirCount) + "].";
-		tmp = plstr + "active";
-		SetUniformBool(program, tmp.c_str(), false);
-	}
-	for (uint pointcount = PointCount; pointcount < MAX_POI_LIGHT; ++pointcount)
-	{
-		
-	}
-	for (uint spotcount = SpotCount; spotcount < MAX_SPO_LIGHT; ++spotcount)
-	{
-		plstr = "spotLights[" + std::to_string(SpotCount) + "].";
-		tmp = plstr + "active";
-		SetUniformBool(program, tmp.c_str(), false);
-	}
-	*/
 	int x = timing.ReadMs();
+
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 	UnbindVertexArrayObject();
