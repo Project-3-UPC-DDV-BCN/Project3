@@ -14,7 +14,8 @@ public:
 	AkGameObjectID GetId() const;
 	void ApplyReverb(float value, const char* bus);
 
-
+	void Save(Data& data) const;
+	void Load(Data& data);
 private:
 
 	Wwise::SoundObject* obj;

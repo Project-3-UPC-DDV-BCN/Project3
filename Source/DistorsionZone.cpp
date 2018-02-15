@@ -41,6 +41,8 @@ bool DistorsionZone::Update()
 
 		DebugDraw();
 	}
+
+	return true;
 }
 
 void DistorsionZone::DebugDraw()
@@ -142,4 +144,12 @@ void DistorsionZone::UI_draw()
 
 	//	delete[] bus_name;
 	//}
+}
+
+void DistorsionZone::Save(Data & data) const
+{
+}
+
+void DistorsionZone::Load(Data & data)
+{
 }

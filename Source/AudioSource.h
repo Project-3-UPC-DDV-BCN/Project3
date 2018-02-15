@@ -26,6 +26,9 @@ public :
 	//void Serialize(JSON_File* doc);
 	void ApplyReverb(float value, const char* bus);
 
+	void Save(Data& data) const;
+	void Load(Data& data);
+
 public:
 	SoundBank* soundbank = nullptr;
 private:

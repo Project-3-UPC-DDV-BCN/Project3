@@ -16,6 +16,8 @@
 #include "AudioSource.h"
 #include "Listener.h"
 
+#include "ModuleScene.h"
+
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 ModuleAudio::ModuleAudio(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -40,24 +42,39 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	/*Data bank_file;
-	std::string path_ = ASSETS_FOLDER;
-	path_ += "blend.json";
-	bank_file.LoadJSON(path_);
+	std::string s = ASSETS_FOLDER;
+	s += "Blend.json";
+	LoadSoundBank("Blend.json");
+	
+	SoundBank* sbk;
+	GameObject* go = App->scene->CreateGameObject();
+	go->SetName("Audio");
+	AudioSource* as = (AudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
-	bank_file;
-*/
+	as->PlayEvent("Play_Blend");
+
+	GameObject* go_ = App->scene->CreateGameObject();
+	go_->AddComponent(Component::ComponentType::CompAudioListener);
 
 	return true;
 }
 
 update_status ModuleAudio::PreUpdate(float dt)
 {
+	if (!muted) {
+		SetRTPvalue("Volume", volume);
+	}
+	else {
+		SetRTPvalue("Volume", 0);
+	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 
 update_status ModuleAudio::PostUpdate(float dt)
 {
+	AK::SoundEngine::RenderAudio();
+
 	return update_status::UPDATE_CONTINUE;
 }
 

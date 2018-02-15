@@ -80,11 +80,15 @@ void AudioSource::PlayEvent(uint id)
 
 void AudioSource::PlayEvent(const char * event_name)
 {
-	if (obj == nullptr) {
+	if (obj != nullptr) 
+	{
+		obj->PlayEvent(event_name);
+		CONSOLE_DEBUG("Event played: %s", event_name);
+	}
+	else
+	{
 		CONSOLE_DEBUG("Nullptr");
 	}
-	obj->PlayEvent(event_name);
-	CONSOLE_DEBUG("Event played: %s", event_name);
 }
 
 void AudioSource::StopEvent(uint id)
@@ -136,6 +140,14 @@ void AudioSource::GetEvents()
 void AudioSource::ApplyReverb(float value, const char * bus)
 {
 	obj->SetAuxiliarySends(value, bus, App->audio->GetDefaultListener()->GetId());
+}
+
+void AudioSource::Save(Data & data) const
+{
+}
+
+void AudioSource::Load(Data & data)
+{
 }
 
 //void AudioSource::Serialize(JSON_File * doc)
