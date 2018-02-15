@@ -9,8 +9,8 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2017.1.3  Build: 6377
-  Copyright (c) 2006-2017 Audiokinetic Inc.
+  Version: v2017.2.1  Build: 6524
+  Copyright (c) 2006-2018 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
@@ -190,7 +190,7 @@ public:
 			fileAttributes = fileInfo.dwFileAttributes;
 		}
 #else
-		fileAttributes = GetFileAttributes( (LPCSTR) in_pszBasePath );
+		fileAttributes = GetFileAttributes( in_pszBasePath );
 #endif
 		if (fileAttributes == INVALID_FILE_ATTRIBUTES)
 			return AK_Fail;  //something is wrong with your path!

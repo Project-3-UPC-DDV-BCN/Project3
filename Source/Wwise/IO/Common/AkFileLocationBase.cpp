@@ -9,8 +9,8 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2017.1.3  Build: 6377
-  Copyright (c) 2006-2017 Audiokinetic Inc.
+  Version: v2017.2.1  Build: 6524
+  Copyright (c) 2006-2018 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
@@ -24,7 +24,7 @@ written agreement between you and Audiokinetic Inc.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../Win32/stdafx.h"
+#include "stdafx.h"
 #include "AkFileLocationBase.h"
 
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>
@@ -34,7 +34,8 @@ written agreement between you and Audiokinetic Inc.
 #endif //AK_SUPPORT_WCHAR
 #include <stdio.h>
 #include <AK/Tools/Common/AkAssert.h>
-#include "../Win32/AkFileHelpers.h"
+
+#include "AkFileHelpers.h"
 
 
 #define MAX_NUMBER_STRING_SIZE      (10)    // 4G
