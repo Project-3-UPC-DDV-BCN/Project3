@@ -323,32 +323,37 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					{
 						rect_transform->SetSize(size);
 					}
+				}
 
-					if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
-					{
-						rect_transform->SetAnchor(anchor);
-					}
+				if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
+				{
+					rect_transform->SetAnchor(anchor);
+				}
 
-					if (ImGui::Checkbox("Snap Up", &snap_up))
-					{
-						rect_transform->SetSnapUp(snap_up);
-					}
+	/*			if (ImGui::DragFloat("Scale", (float*)&scale, true, 0.01f, 0))
+				{
+					rect_transform->SetScale(scale);
+				}*/
 
-					ImGui::SameLine();
-					if (ImGui::Checkbox("Snap Down", &snap_down))
-					{
-						rect_transform->SetSnapDown(snap_down);
-					}
+				if (ImGui::Checkbox("Snap Up", &snap_up))
+				{
+					rect_transform->SetSnapUp(snap_up);
+				}
 
-					if (ImGui::Checkbox("Snap Left", &snap_left))
-					{
-						rect_transform->SetSnapLeft(snap_left);
-					}
-					ImGui::SameLine();
-					if (ImGui::Checkbox("Snap Right", &snap_right))
-					{
-						rect_transform->SetSnapRight(snap_right);
-					}
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Snap Down", &snap_down))
+				{
+					rect_transform->SetSnapDown(snap_down);
+				}
+
+				if (ImGui::Checkbox("Snap Left", &snap_left))
+				{
+					rect_transform->SetSnapLeft(snap_left);
+				}
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Snap Right", &snap_right))
+				{
+					rect_transform->SetSnapRight(snap_right);
 				}
 
 			}
