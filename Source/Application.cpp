@@ -19,6 +19,7 @@
 #include "ModuleMaterialImporter.h"
 #include "ModuleScriptImporter.h"
 #include "ModuleShaderImporter.h"
+#include "ModuleFonts.h"
 
 Application::Application()
 {
@@ -44,6 +45,7 @@ Application::Application()
 	material_importer = new ModuleMaterialImporter(this);
 	script_importer = new ModuleScriptImporter(this);
 	shader_importer = new ModuleShaderImporter(this);
+	fonts = new ModuleFonts(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -65,6 +67,8 @@ Application::Application()
 	AddModule(scene);
 	AddModule(editor);
 	AddModule(resources);
+	AddModule(fonts);
+
 	//TIME
 	AddModule(time);
 	//Game Modules
