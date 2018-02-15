@@ -2,24 +2,6 @@
 #define _H_COMPONENT_CANVAS__
 
 #include "Module.h"
-#include <vector>
-#include <string>
-
-class FontFace
-{
-public:
-	FontFace();
-};
-
-class Font
-{
-public:
-	Font();
-
-private:
-	std::vector<FT_Face> faces;
-	std::string filepathname;
-};
 
 class ModuleFonts : public Module
 {
@@ -32,7 +14,7 @@ public:
 	bool CleanUp();
 
 private:
-	FT_Library  library;
+
 
 };
 
