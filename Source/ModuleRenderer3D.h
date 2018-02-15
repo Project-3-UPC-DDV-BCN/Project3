@@ -39,9 +39,6 @@ public:
 	bool GetActiveCullTest() const;
 	bool GetActiveFog() const;
 
-	void EnableTestLight();
-	void DisableTestLight();
-
 	void ActiveSkybox(bool active);
 	bool IsUsingSkybox()const;
 

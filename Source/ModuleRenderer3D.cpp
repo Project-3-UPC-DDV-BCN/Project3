@@ -464,24 +464,6 @@ bool ModuleRenderer3D::GetActiveFog() const
 	return is_using_fog;
 }
 
-void ModuleRenderer3D::EnableTestLight()
-{
-	lights[7].ref = GL_LIGHT7;
-	lights[7].Active(true);
-	for (uint i = 1; i < lights_count - 1; ++i)
-		lights[i].Active(false);
-	testing_light = true;
-}
-
-void ModuleRenderer3D::DisableTestLight()
-{
-	lights[7].Active(false);
-	for (uint i = 1; i < lights_count - 1; ++i)
-		lights[i].Active(true);
-	lights[7].ref = 0;
-	testing_light = false;
-}
-
 void ModuleRenderer3D::ActiveSkybox(bool active)
 {
 	use_skybox = active;
