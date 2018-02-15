@@ -26,7 +26,8 @@ public:
 	float* GetColorToEdit() const;
 	float4 GetColorAsFloat4() const;
 
-	LightType GetType() const;
+	LightType GetLightType() const;
+	void SetLightType(LightType type);
 	std::string GetTypeString() const;
 	void SetTypeToDirectional();
 	void SetTypeToPoint();
@@ -35,6 +36,8 @@ public:
 	void SetDiffuse(float diffuse);
 	void SetAmbient(float ambient);
 	void SetSpecular(float specular);
+	void SetCutOff(float cutoff);
+	void SetOuterCutOff(float outercutoff);
 
 	float GetDiffuse() const;
 	float GetAmbient() const;

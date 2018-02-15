@@ -598,15 +598,15 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				ImGui::OpenPopup("Types##light");
 			}
 			if (ImGui::BeginPopup("Types##light")) {
-				if (comp_light->GetType() != DIRECTIONAL_LIGHT && ImGui::MenuItem("Directional"))
+				if (comp_light->GetLightType() != DIRECTIONAL_LIGHT && ImGui::MenuItem("Directional"))
 				{
 					comp_light->SetTypeToDirectional();
 				}
-				if (comp_light->GetType() != POINT_LIGHT && ImGui::MenuItem("Point"))
+				if (comp_light->GetLightType() != POINT_LIGHT && ImGui::MenuItem("Point"))
 				{
 					comp_light->SetTypeToPoint();
 				}
-				if (comp_light->GetType() != SPOT_LIGHT && ImGui::MenuItem("Spot"))
+				if (comp_light->GetLightType() != SPOT_LIGHT && ImGui::MenuItem("Spot"))
 				{
 					comp_light->SetTypeToSpot();
 				}
@@ -616,7 +616,7 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 			}
 
-			switch (comp_light->GetType())
+			switch (comp_light->GetLightType())
 			{
 			case DIRECTIONAL_LIGHT:
 				break;

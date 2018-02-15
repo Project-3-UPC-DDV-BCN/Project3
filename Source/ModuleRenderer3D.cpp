@@ -519,7 +519,7 @@ void ModuleRenderer3D::AddLight(ComponentLight * light)
 {
 	if (light != nullptr)
 	{
-		switch (light->GetType())
+		switch (light->GetLightType())
 		{
 		case DIRECTIONAL_LIGHT:
 
@@ -566,7 +566,7 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 {
 	if (light != nullptr)
 	{
-		switch (light->GetType())
+		switch (light->GetLightType())
 		{
 		case DIRECTIONAL_LIGHT:
 			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
