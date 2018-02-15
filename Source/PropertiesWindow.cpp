@@ -132,18 +132,7 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
-
-				if (ImGui::MenuItem("Light")) {
-					if (selected_gameobject->GetComponent(Component::CompLight) == nullptr) {
-						selected_gameobject->AddComponent(Component::CompLight);
-					}
-					else
-					{
-						CONSOLE_WARNING("GameObject can't have more than 1 Light!");
-					}
-				}
-
-				if (ImGui::BeginMenu("Script")) {
+			if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
 

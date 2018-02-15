@@ -110,6 +110,16 @@ GameObject * ModuleScene::CreateGameObject(GameObject * parent)
 	return ret;
 }
 
+GameObject * ModuleScene::CreateLightObject(GameObject * parent)
+{
+	GameObject* ret = new GameObject(parent);
+	RenameDuplicatedGameObject(ret);
+	AddGameObjectToScene(ret);
+	App->resources->AddGameObject(ret);
+	ret->AddComponent(Component::CompLight);
+	return ret;
+}
+
 GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 {
 	GameObject* ret = nullptr;
