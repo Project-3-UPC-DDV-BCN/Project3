@@ -101,6 +101,7 @@
     <ClInclude Include="CSScript.h" />
     <ClInclude Include="CubeMap.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="imgui\CustomImGui.h" />
     <ClInclude Include="imgui\ImGuiColorTextEdit\TextEditor.h" />
@@ -199,7 +200,7 @@
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleFileSystem.h" />
-    <ClInclude Include="ModuleFonts.h" />
+    <ClInclude Include="ModuleFontImporter.h" />
     <ClInclude Include="ModuleMaterialImporter.h" />
     <ClInclude Include="ModuleMeshImporter.h" />
     <ClInclude Include="ModulePrefabImporter.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="CSScript.cpp" />
     <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="imgui\CustomImGui.cpp" />
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp" />
@@ -318,7 +320,7 @@
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
-    <ClCompile Include="ModuleFonts.cpp" />
+    <ClCompile Include="ModuleFontImporter.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleMaterialImporter.cpp" />
     <ClCompile Include="ModuleMeshImporter.cpp" />

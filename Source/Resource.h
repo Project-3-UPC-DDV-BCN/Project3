@@ -9,7 +9,8 @@ class Resource
 {
 public:
 
-	enum ResourceType {
+	enum ResourceType 
+	{
 		TextureResource, MeshResource, SceneResource, AnimationResource, PrefabResource, ScriptResource, 
 		AudioResource, ParticleFXResource, FontResource, RenderTextureResource, GameObjectResource, MaterialResource, ShaderResource, ShaderProgramResource, Unknown
 	};

@@ -24,7 +24,7 @@ class ModulePrefabImporter;
 class ModuleMaterialImporter;
 class ModuleScriptImporter;
 class ModuleShaderImporter;
-class ModuleFonts;
+class ModuleFontImporter;
 struct SDL_Surface;
 
 class Application
@@ -85,7 +85,7 @@ public:
 	ModuleMaterialImporter* material_importer;
 	ModuleScriptImporter* script_importer;
 	ModuleShaderImporter* shader_importer;
-	ModuleFonts* fonts;
+	ModuleFontImporter* font_importer;
 
 private:
 
