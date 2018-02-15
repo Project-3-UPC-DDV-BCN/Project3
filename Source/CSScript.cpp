@@ -1469,6 +1469,20 @@ int CSScript::GetMouseYMotion()
 	return App->input->GetMouseYMotion();
 }
 
+int CSScript::GetControllerJoystickMove(int pad, MonoString * axis)
+{
+	const char* key = mono_string_to_utf8(axis);
+	JOYSTICK_MOVES code = App->input->StringToJoyMove(key);
+	return App->input->GetControllerJoystickMove(pad,code);
+}
+
+int CSScript::GetControllerButton(int pad, MonoString * button)
+{
+	const char* key = mono_string_to_utf8(button);
+	SDL_Keycode code = App->input->StringToKey(key);
+	return App->input->GetControllerButton(pad,code);
+}
+
 void CSScript::CreateGameObject(MonoObject * object)
 {
 	if (!inside_function)

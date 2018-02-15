@@ -112,6 +112,8 @@ public:
 	MonoObject* GetMousePosition();
 	int GetMouseXMotion();
 	int GetMouseYMotion();
+	int GetControllerJoystickMove(int pad, MonoString* axis);
+	int GetControllerButton(int pad, MonoString* button);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);

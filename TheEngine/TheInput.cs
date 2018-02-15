@@ -30,5 +30,11 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetMouseYMotion();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetControllerButton(int pad, string button);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetControllerJoystickMove(int pad, string axis);
     }
 }

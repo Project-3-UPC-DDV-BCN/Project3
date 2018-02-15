@@ -88,6 +88,8 @@ private:
 	static MonoObject* GetMousePosition();
 	static int GetMouseXMotion();
 	static int GetMouseYMotion();
+	static int GetControllerJoystickMove(int pad, MonoString* axis);
+	static int GetControllerButton(int pad, MonoString* button);
 
 	//CONSOLE
 	static void Log(MonoObject* object);

@@ -278,6 +278,8 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheInput::GetMousePosition", (const void*)GetMousePosition);
 	mono_add_internal_call("TheEngine.TheInput::GetMouseXMotion", (const void*)GetMouseXMotion);
 	mono_add_internal_call("TheEngine.TheInput::GetMouseYMotion", (const void*)GetMouseYMotion);
+	mono_add_internal_call("TheEngine.TheInput::GetControllerButton", (const void*)GetControllerButton);
+	mono_add_internal_call("TheEngine.TheInput::GetControllerJoystickMove", (const void*)GetControllerJoystickMove);
 
 	//CONSOLE
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Log", (const void*)Log);
@@ -503,6 +505,16 @@ int ModuleScriptImporter::GetMouseXMotion()
 int ModuleScriptImporter::GetMouseYMotion()
 {
 	return current_script->GetMouseYMotion();
+}
+
+int ModuleScriptImporter::GetControllerJoystickMove(int pad, MonoString * axis)
+{
+	return current_script->GetControllerJoystickMove(pad, axis);
+}
+
+int ModuleScriptImporter::GetControllerButton(int pad, MonoString * button)
+{
+	return current_script->GetControllerButton(pad, button);
 }
 
 void ModuleScriptImporter::Log(MonoObject * object)
