@@ -18,12 +18,12 @@ void ComponentParticleEmmiter::GenerateParticles()
 	if (system_state == PARTICLE_STATE_PAUSE)
 		return;
 
-	if (spawn_timer.Read() > emmision_frequency)
-	{
+	/*if (spawn_timer.Read() > emmision_frequency)
+	{*/
 		Particle* new_particle = CreateParticle();
 		active_particles.insert(pair<float, Particle* > (new_particle->GetDistanceToCamera(),new_particle));
 		spawn_timer.Start();
-	}
+	//}
 
 }
 
@@ -42,7 +42,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->components.particle_transform->SetPosition(particle_pos);
 
 	//We generate the always squared surface for the particle 
-	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitivePlane");
+	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitiveParticlePlane");
 
 	//Billboard the squad for always be looking at the camera, at the beggining it will be deactivated 
 	if (billboarding && billboard_type != BILLBOARD_NONE)
@@ -54,10 +54,9 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	else
 	{
 		new_particle->SetBillboarding(false);
-		new_particle->components.particle_transform->SetRotation({ -90,0,0 });
+		//new_particle->components.particle_transform->SetRotation({ -90,0,0 });
 	}
 		
-
 	//Copy Stats
 	new_particle->SetMaxLifetime(max_lifetime);
 	new_particle->SetVelocity(velocity);
@@ -71,8 +70,10 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetWorldSpace(relative_pos);
 	
 	//Copy Interpolations
+	///Color
 	new_particle->SetInterpolatingColor(change_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
 
+	///Size
 	if (change_size_interpolation)
 	{
 		new_particle->SetInterpolationSize(change_size_interpolation, initial_scale, final_scale);
@@ -80,18 +81,19 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	else
 		new_particle->SetInterpolationSize(change_size_interpolation, { 1,1,1 }, { 1,1,1 });
 
+	///Rotation
+	if (change_rotation_interpolation)
+		new_particle->SetInterpolationRotation(initial_angular_v, final_angular_v);
+	else
+	{
+		new_particle->SetInterpolationRotation(0, 0);
+		new_particle->SetAngular(angular_v);
+	}
+
 	//Copy Animation
 	new_particle->components.particle_animation = root_particle->components.particle_animation; 
 	new_particle->components.texture = new_particle->GetAnimationController()->GetCurrentTexture();
 	new_particle->GetAnimationController()->Start(); 
-
-	//if (apply_rotation_interpolation)
-	//	new_particle->SetInterpolationRotation(true, initial_angular_v, final_angular_v);
-	//else
-	//{
-	//	new_particle->SetInterpolationRotation(false, 0, 0);
-	//	new_particle->SetAngular(angular_v);
-	//}
 
 	return new_particle;
 }
@@ -124,6 +126,14 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	reorder_time.Start();
 	is_animated = false;
 	time_step = 0.2;
+
+	emmit_width = 1; 
+	emmit_height = 1; 
+	emmit_depth = 1; 
+
+	width_increment = 0; 
+	height_increment = 0; 
+	depth_increment = 0; 
 
 	relative_pos = false; 
 	billboarding = false; 
@@ -226,7 +236,7 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 	}
 }
 
-void ComponentParticleEmmiter::MoveEmmitArea()
+void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
@@ -241,7 +251,8 @@ void ComponentParticleEmmiter::MoveEmmitArea()
 
 	//Apply
 	float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
-	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, parent_transform->GetGlobalScale());
+
+	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, {width_increment + 1,height_increment + 1,depth_increment + 1 });
 
 	emit_area_obb.Transform(transform_to_apply);	
 }
@@ -259,6 +270,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 
 	root_particle->SetInterpolatingColor(change_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
 	root_particle->SetInterpolationSize(change_size_interpolation, initial_scale, final_scale);
+	root_particle->SetInterpolationRotation(initial_angular_v, final_angular_v); 
 
 	root_particle->SetBillboarding(billboarding);
 	root_particle->SetWorldSpace(relative_pos);
@@ -305,8 +317,10 @@ void ComponentParticleEmmiter::SetEmmisionRate(float new_emision_rate)
 
 void ComponentParticleEmmiter::SetFrequencyFromRate(int rate)
 {
+
 	if (rate != 0)
 		emmision_frequency = (1000 / rate);
+
 }
 
 bool ComponentParticleEmmiter::ShowEmmisionArea() const

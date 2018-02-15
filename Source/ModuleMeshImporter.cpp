@@ -433,6 +433,7 @@ void ModuleMeshImporter::CreatePrimitives() const
 {
 	CreateBox();
 	CreatePlane();
+	CreateParticlePlane(); 
 }
 
 void ModuleMeshImporter::CreateBox() const
@@ -641,6 +642,107 @@ void ModuleMeshImporter::CreatePlane() const
 	plane->CreateVerticesFromData();
 
 	plane->SetName("PrimitivePlane");
+	App->resources->AddMesh(plane);
+
+	RELEASE_ARRAY(uv);
+	RELEASE_ARRAY(vertices);
+}
+
+void ModuleMeshImporter::CreateParticlePlane() const
+{
+	Mesh* plane = new Mesh();
+
+	float length = 1.f;
+	float width = 1.f;
+	int resX = 2; // 2 minimum
+	int resZ = 2;
+
+	//vertices
+	plane->num_vertices = resX * resZ;
+	float3 ver[4];
+	for (int z = 0; z < resZ; z++)
+	{
+		// [ -length / 2, length / 2 ]
+		float zPos = ((float)z / (resZ - 1) - .5f) * length;
+		for (int x = 0; x < resX; x++)
+		{
+			// [ -width / 2, width / 2 ]
+			float xPos = ((float)x / (resX - 1) - .5f) * width;
+			ver[x + z * resX] = float3(xPos, zPos, 0.f);
+		}
+	}
+
+	float* vertices = new float[plane->num_vertices * 3];
+	for (int i = 0; i < plane->num_vertices; ++i)
+	{
+		memcpy(vertices + i * 3, ver[i].ptr(), sizeof(float) * 3);
+	}
+
+	//indices
+	plane->num_indices = (resX - 1) * (resZ - 1) * 6;
+	uint ind[6];
+	int t = 0;
+	for (int face = 0; face < plane->num_indices / 6; ++face)
+	{
+		int i = face % (resX - 1) + (face / (resZ - 1) * resX);
+
+		ind[t++] = i + resX;
+		ind[t++] = i + 1;
+		ind[t++] = i;
+
+		ind[t++] = i + resX;
+		ind[t++] = i + resX + 1;
+		ind[t++] = i + 1;
+	}
+	plane->indices = new uint[plane->num_indices];
+	memcpy(plane->indices, ind, sizeof(uint)*plane->num_indices);
+
+	//uv
+	float3 uvs[4];
+	for (int v = 0; v < resZ; v++)
+	{
+		for (int u = 0; u < resX; u++)
+		{
+			uvs[u + v * resX] = float3((float)u / (resX - 1), (float)v / (resZ - 1), 0.f);
+		}
+	}
+
+	float* uv = new float[plane->num_vertices * 3];
+	for (int i = 0; i < plane->num_vertices; ++i)
+	{
+		memcpy(uv + i * 3, uvs[i].ptr(), sizeof(float) * 3);
+	}
+
+	//create the buffer from loaded info
+	plane->vertices_data = new float[plane->num_vertices * 13]; // vert pos, tex coords, normals, color
+
+	float* normals = nullptr;
+	float null[3] = { 0.f,0.f,0.f };
+	float null_normal[3] = { 0.f,1.f,0.f };
+	float null_color[4] = { 1.f,1.f,1.f,1.f };
+	for (int v = 0; v < plane->num_vertices; ++v)
+	{
+		//copy vertex pos
+		memcpy(plane->vertices_data + v * 13, vertices + v * 3, sizeof(float) * 3);
+
+		//copy tex coord
+		if (uv != nullptr)
+			memcpy(plane->vertices_data + v * 13 + 3, uv + v * 3, sizeof(float) * 3);
+		else
+			memcpy(plane->vertices_data + v * 13 + 3, null, sizeof(float) * 3);
+
+		//copy normals
+		if (normals != nullptr)
+			memcpy(plane->vertices_data + v * 13 + 6, normals + v * 3, sizeof(float) * 3);
+		else
+			memcpy(plane->vertices_data + v * 13 + 6, null_normal, sizeof(float) * 3);
+
+		//copy colors, no initial color so copy null_color
+		memcpy(plane->vertices_data + v * 13 + 9, null_color, sizeof(float) * 4);
+	}
+	plane->CreateVerticesFromData();
+
+	plane->SetName("PrimitiveParticlePlane");
 	App->resources->AddMesh(plane);
 
 	RELEASE_ARRAY(uv);

@@ -278,6 +278,37 @@ void Particle::SetInterpolationSize(bool interpolate, float3 initial_scale, floa
 	final_particle_size = final_scale;
 }
 
+void Particle::UpdateRotation()
+{
+	//Get the percentatge that has passed
+	float time_ex = interpolation_timer.Read() / 1000;
+	float time_dec = interpolation_timer.Read() % 1000;
+	float time = time_ex + time_dec / 1000;
+
+	float percentage = (time / (max_particle_lifetime));
+
+	//Get the increment
+	float velocity_increment = final_particle_angular_v - initial_particle_angular_v; 
+	float rotation_increment = velocity_increment * percentage;
+
+	float3 curr_rot = components.particle_transform->GetGlobalRotation(); 
+
+	//Apply the increment to the particle
+	if (curr_rot.x > 360)
+		curr_rot.x = 0;
+
+	components.particle_transform->SetRotation({ curr_rot.x, curr_rot.y + rotation_increment, curr_rot.z});
+
+}
+
+void Particle::SetInterpolationRotation(float initial_v, float final_v)
+{
+	interpolate_rotation = true;
+
+	initial_particle_angular_v = initial_v; 
+	final_particle_angular_v = final_v; 
+}
+
 void Particle::SetMovementFromStats()
 {
 	movement += particle_gravity * App->time->GetGameDt();
@@ -311,6 +342,9 @@ void Particle::Update()
 	//Update scale
 	if (interpolate_size)
 		UpdateSize();
+
+	if (interpolate_rotation)
+		UpdateRotation(); 
 
 	//Apply angular velocity
 	ApplyAngularVelocity();
@@ -346,7 +380,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 	//Billboard to the active camera 
 	if (billboarding)
 	{		
-		components.billboard->RotateObject();
+		components.billboard->RotateObject();		
 	}
 		
 
@@ -384,13 +418,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 	App->renderer3D->BindVertexArrayObject(components.particle_mesh->id_vao); 
  
-	if (billboarding && components.billboard->GetBillboardType() != BILLBOARD_NONE)
-	{
-		glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
-	}
-	else
-		glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL); 
-
+	glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+		
 	App->renderer3D->UnbindVertexArrayObject(); 
 }
 

@@ -93,8 +93,8 @@ public:
 	void SetInterpolationSize(bool interpolate, float3 initial_scale, float3 final_scale);
 
 	//Rotation
-	//void UpdateRotation();
-	//void SetInterpolationRotation(bool active, float initial_v, float final_v);
+	void UpdateRotation();
+	void SetInterpolationRotation(float initial_v, float final_v);
 
 	/////Force calculations
 	//void SetMovement(float3 mov);

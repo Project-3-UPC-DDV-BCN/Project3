@@ -105,7 +105,7 @@ bool ComponentBillboard::RotateObject()
 	switch (billboarding_type)
 	{
 	case BILLBOARD_X:
-		object_transform->SetRotation({ angle_xy, 0, 0 });
+		object_transform->SetRotation({ angle_xy, 0, 0 });		
 		break;
 
 	case BILLBOARD_Y:

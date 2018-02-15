@@ -26,7 +26,7 @@ public:
 	bool Update();
 	void UpdateRootParticle();
 	void DrawParticles(ComponentCamera* active_camera); 
-	void MoveEmmitArea(); 
+	void AddaptEmmitAreaAABB(); 
 
 	~ComponentParticleEmmiter();
 
@@ -76,6 +76,15 @@ public:
 	Color color;							//Color
 	float angular_v;
 	BillboardingType billboard_type; 
+
+	float emmit_width; 
+	float emmit_height; 
+	float emmit_depth; 
+
+	float width_increment; 
+	float height_increment; 
+	float depth_increment; 
+
 
 	//Interpolations
 	int initial_color[4];
