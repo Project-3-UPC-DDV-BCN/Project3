@@ -1,13 +1,13 @@
-#include "Thread.h"
-#include <thread>
-
-
-Thread::Thread(void* function, void* args)
-{
-	thread(function, args);
-}
-
-
-Thread::~Thread()
-{
-}
+//#include "Thread.h"
+//#include <thread>
+//
+//
+//Thread::Thread(void* function, void* args)
+//{
+//	thread(function, args);
+//}
+//
+//
+//Thread::~Thread()
+//{
+//}
