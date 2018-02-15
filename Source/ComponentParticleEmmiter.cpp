@@ -18,12 +18,12 @@ void ComponentParticleEmmiter::GenerateParticles()
 	if (system_state == PARTICLE_STATE_PAUSE)
 		return;
 
-	/*if (spawn_timer.Read() > emmision_frequency)
-	{*/
+	if (spawn_timer.Read() > emmision_frequency)
+	{
 		Particle* new_particle = CreateParticle();
 		active_particles.insert(pair<float, Particle* > (new_particle->GetDistanceToCamera(),new_particle));
 		spawn_timer.Start();
-	//}
+	}
 
 }
 

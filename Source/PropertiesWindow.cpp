@@ -794,6 +794,29 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
+
+				if (ImGui::TreeNode("Alpha"))
+				{
+					static float init_angular_v = 0;
+					static float fin_angular_v = 0;
+
+					ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
+
+					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+
+					if (ImGui::Button("Apply Rotation Interpolation"))
+					{
+						current_emmiter->change_rotation_interpolation = true;
+
+						current_emmiter->initial_angular_v = init_angular_v;
+						current_emmiter->final_angular_v = fin_angular_v;
+
+						current_emmiter->UpdateRootParticle();
+					}
+
+					ImGui::TreePop();
+				}
+
 				if (ImGui::TreeNode("Color"))
 				{
 					current_emmiter->UpdateRootParticle();

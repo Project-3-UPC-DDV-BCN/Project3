@@ -97,11 +97,9 @@ float Particle::GetAngular() const
 
 void Particle::ApplyAngularVelocity()
 {
-	//We get AV as degrees x second
-	
+	//We get AV as degrees x second	
 	float rads_to_spin = particle_angular_v * (2 * pi) / 360; 
-
-	//components.particle_transform->SetRotation({-90, components.particle_transform->GetGlobalRotation().y + rads_to_spin,0});
+	components.particle_transform->SetRotation({ components.particle_transform->GetGlobalRotation().x, components.particle_transform->GetGlobalRotation().y, components.particle_transform->GetGlobalRotation().z + rads_to_spin });
 
 }
 
@@ -297,7 +295,7 @@ void Particle::UpdateRotation()
 	if (curr_rot.x > 360)
 		curr_rot.x = 0;
 
-	components.particle_transform->SetRotation({ curr_rot.x, curr_rot.y + rotation_increment, curr_rot.z});
+	components.particle_transform->SetRotation({ curr_rot.x, curr_rot.y, curr_rot.z + rotation_increment });
 
 }
 
@@ -348,10 +346,6 @@ void Particle::Update()
 
 	//Apply angular velocity
 	ApplyAngularVelocity();
-
-	//Update Billboarding
-	//if (IsBillboarding() == true)
-	//	components.particle_billboarding->Update();
 
 	//Animations
 	if(GetAnimationController()->GetNumFrames() != 0)
