@@ -17,28 +17,32 @@
 
 Particle::Particle(ComponentParticleEmmiter * parent)
 {
-	kill_me = false;
+	//Interpolations
+	///Size
+	interpolate_size = false;
+
+	///Color
+	interpolate_colors = false;
 	particle_color = initial_particle_color;
-	particle_angular_v = 0;
+
+	///Rotation
+	interpolate_rotation = false;
 	curr_rot = 0;
+
+	//Stats
+	particle_angular_v = 0;
+	
 	particle_gravity = { 0,0,0 }; 
 	emmiter = parent;
 	emmision_angle = 0; 
-
-	animated_particle = false;
-	interpolate_size = false;
-	interpolate_rotation = false;
-
+	
+	//Timers
 	particle_timer.Start();
 	animation_timer.Start();
 	interpolation_timer.Start();
 	twister.Start();
 }
 
-bool Particle::IsDead()
-{
-	return kill_me;
-}
 
 void Particle::SetWorldSpace(bool is_space)
 {
@@ -97,10 +101,8 @@ float Particle::GetAngular() const
 
 void Particle::ApplyAngularVelocity()
 {
-	//We get AV as degrees x second	
 	float rads_to_spin = particle_angular_v * (2 * pi) / 360; 
-	components.particle_transform->SetRotation({ components.particle_transform->GetGlobalRotation().x, components.particle_transform->GetGlobalRotation().y, components.particle_transform->GetGlobalRotation().z + rads_to_spin });
-
+	GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
 }
 
 void Particle::SetColor(Color new_color)
@@ -185,7 +187,7 @@ float Particle::GetDistanceToCamera()
 	float3 camera_position = App->renderer3D->editor_camera->camera_frustum.pos;
 
 	//Compute the distance & return
-	float distance = (camera_position - components.particle_transform->GetGlobalPosition()).Length();
+	float distance = (camera_position - GetAtributes().particle_transform->GetGlobalPosition()).Length();
 	return distance;
 }
 
@@ -211,11 +213,13 @@ void Particle::UpdateColor()
 
 	float percentage = (time / (max_particle_lifetime));
 
+	//Setting the increment in each component
 	float increment_r = color_difference[0] * percentage;
 	float increment_g = color_difference[1] * percentage;
 	float increment_b = color_difference[2] * percentage;
 	float increment_a = color_difference[3] * percentage;
 
+	//Applying the increment
 	particle_color.r = (initial_particle_color.r + increment_r) / 255;
 	particle_color.g = (initial_particle_color.g + increment_g) / 255;
 	particle_color.b = (initial_particle_color.b + increment_b) / 255;
@@ -255,16 +259,16 @@ void Particle::UpdateSize()
 	float time = time_ex + time_dec / 1000;
 
 	float percentage = (time / (max_particle_lifetime));
-
 	float3 total_increment((final_particle_size.x - initial_particle_size.x), (final_particle_size.y - initial_particle_size.y), 1);
 
+	//Get the increment in each component
 	float increment_x = total_increment.x * percentage;
 	float increment_y = total_increment.y * percentage;
 	float increment_z = 1;
 
+	//Apply the increment
 	float3 new_scale = { initial_particle_size.x + increment_x, 0,  initial_particle_size.x + increment_x };
-
-	components.particle_transform->SetScale(new_scale);
+	GetAtributes().particle_transform->SetScale(new_scale);
 
 }
 
@@ -289,13 +293,13 @@ void Particle::UpdateRotation()
 	float velocity_increment = final_particle_angular_v - initial_particle_angular_v; 
 	float rotation_increment = velocity_increment * percentage;
 
-	float3 curr_rot = components.particle_transform->GetGlobalRotation(); 
+	float3 curr_rot = GetAtributes().particle_transform->GetGlobalRotation(); 
 
 	//Apply the increment to the particle
 	if (curr_rot.x > 360)
 		curr_rot.x = 0;
 
-	components.particle_transform->SetRotation({ curr_rot.x, curr_rot.y, curr_rot.z + rotation_increment });
+	GetAtributes().particle_transform->SetRotation({ curr_rot.x, curr_rot.y, curr_rot.z + rotation_increment });
 
 }
 
@@ -314,11 +318,13 @@ void Particle::SetMovementFromStats()
 }
 void Particle::SetMovement()
 {
+	//Getting the angle in which the particle have to be launched
 	if (GetEmmisionAngle() == 0)
 		movement = emmiter->emmit_area_obb.axis[1] * particle_velocity;
 	else	
 		movement = GetEmmisionVector(); 
 	
+	//Setting the movement vector
 	movement.Normalize(); 
 	movement *= particle_velocity;
 	movement *= App->time->GetGameDt();
@@ -328,7 +334,7 @@ void Particle::Update()
 {
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
-	components.particle_transform->SetPosition(components.particle_transform->GetLocalPosition() + movement);
+	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + movement);
 
 	if (IsWorldSpace())
 		ApplyWorldSpace(); 
@@ -341,6 +347,7 @@ void Particle::Update()
 	if (interpolate_size)
 		UpdateSize();
 
+	//Update rotation
 	if (interpolate_rotation)
 		UpdateRotation(); 
 
@@ -355,8 +362,8 @@ void Particle::Update()
 
 void Particle::DeleteNow()
 {
-	//components.particle_billboarding->Delete();
-	components.SetToNull();
+	//GetAtributes().particle_billboarding->Delete();
+	GetAtributes().SetToNull();
 }
 
 bool Particle::CheckIfDelete()
@@ -374,19 +381,18 @@ void Particle::Draw(ComponentCamera* active_camera)
 	//Billboard to the active camera 
 	if (billboarding)
 	{		
-		components.billboard->RotateObject();		
+		GetAtributes().billboard->RotateObject();		
 	}
 		
-
 	//Activate shader program
 	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
 	App->renderer3D->UseShaderProgram(id); 
 
-	App->renderer3D->SetUniformMatrix(id, "Model", components.particle_transform->GetMatrix().Transposed().ptr());
+	App->renderer3D->SetUniformMatrix(id, "Model", GetAtributes().particle_transform->GetMatrix().Transposed().ptr());
 	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
 	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
-	if (components.texture == nullptr)
+	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
@@ -395,24 +401,24 @@ void Particle::Draw(ComponentCamera* active_camera)
 	}
 	else
 	{
-		if (components.texture->GetID() == 0)
-			components.texture->LoadToMemory();
+		if (GetAtributes().texture->GetID() == 0)
+			GetAtributes().texture->LoadToMemory();
 
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		glEnable(GL_BLEND); 
+	/*	glEnable(GL_BLEND); 
 		glEnable(GL_ALPHA_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
-		glBindTexture(GL_TEXTURE_2D, components.texture->GetID());
+		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
 	}
 
-	if (components.particle_mesh->id_indices == 0) components.particle_mesh->LoadToMemory(); 
+	if (GetAtributes().particle_mesh->id_indices == 0) GetAtributes().particle_mesh->LoadToMemory(); 
 
-	App->renderer3D->BindVertexArrayObject(components.particle_mesh->id_vao); 
+	App->renderer3D->BindVertexArrayObject(GetAtributes().particle_mesh->id_vao); 
  
-	glDrawElements(GL_TRIANGLES, components.particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, GetAtributes().particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
 		
 	App->renderer3D->UnbindVertexArrayObject(); 
 }

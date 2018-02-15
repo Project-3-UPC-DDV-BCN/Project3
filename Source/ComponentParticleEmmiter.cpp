@@ -54,7 +54,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	else
 	{
 		new_particle->SetBillboarding(false);
-		//new_particle->components.particle_transform->SetRotation({ -90,0,0 });
 	}
 		
 	//Copy Stats
@@ -113,6 +112,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	particles_lifetime = 0.0f;
 	system_state = PARTICLE_STATE_PAUSE;
 
+	// UI Data
 	emmision_rate = 1;
 	max_lifetime = 1;
 	velocity = 5.0f;
@@ -158,8 +158,8 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 	emmit_area_obb.SetFrom(emit_area); 
 
+	//Create the root particle
 	CreateRootParticle();
-
 }
 
 bool ComponentParticleEmmiter::Start()
@@ -197,8 +197,10 @@ bool ComponentParticleEmmiter::Update()
 	{
 		for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();)
 		{
+			//Update
 			(*it).second->Update();
 
+			//Delete ----
 			if ((*it).second->CheckIfDelete())
 			{
 				(*it).second->DeleteNow();
@@ -212,6 +214,8 @@ bool ComponentParticleEmmiter::Update()
 			}
 			else
 				it++; 
+
+			// ---
 				
 				
 		}
@@ -258,6 +262,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 {
 	SetEmmisionRate(emmision_rate);
 
+	//Stats
 	root_particle->SetMaxLifetime(max_lifetime);
 	root_particle->SetVelocity(velocity);
 	root_particle->SetAngular(angular_v); 
@@ -265,18 +270,15 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	root_particle->SetGravity(gravity); 
 	root_particle->SetEmmisionAngle(emision_angle); 
 
-	root_particle->SetInterpolatingColor(change_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
-	root_particle->SetInterpolationSize(change_size_interpolation, initial_scale, final_scale);
-	root_particle->SetInterpolationRotation(initial_angular_v, final_angular_v); 
+	//Interpolations
+	if (change_color_interpolation) root_particle->SetInterpolatingColor(change_color_interpolation, Color(initial_color[0], initial_color[1], initial_color[2], initial_color[3]), Color(final_color[0], final_color[1], final_color[2], final_color[3]));
+	if (change_size_interpolation) root_particle->SetInterpolationSize(change_size_interpolation, initial_scale, final_scale);
+	if (change_rotation_interpolation) root_particle->SetInterpolationRotation(initial_angular_v, final_angular_v);
 
+	//Billboard & relative pos
 	root_particle->SetBillboarding(billboarding);
 	root_particle->SetWorldSpace(relative_pos);
 
-	//if (apply_rotation_interpolation) root_particle->SetInterpolationRotation(true, initial_angular_v, final_angular_v);
-	//else root_particle->SetAngular(angular_v);
-
-	if (change_size_interpolation)
-		root_particle->SetInterpolationSize(true, initial_scale, final_scale);
 }
 
 ComponentParticleEmmiter::~ComponentParticleEmmiter()
@@ -361,11 +363,6 @@ void Particle::ApplyWorldSpace()
 	components.particle_transform->SetMatrix(particle_rot);
 }
 
-
-vector<ParticleAnimation> ComponentParticleEmmiter::GetAllParticleAnimations()
-{
-	return particle_animations;
-}
 
 Particle * ComponentParticleEmmiter::GetRootParticle() const
 {

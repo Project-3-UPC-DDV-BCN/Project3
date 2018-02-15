@@ -62,6 +62,7 @@ class Particle
 public:
 
 	Particle(ComponentParticleEmmiter* parent);
+	~Particle();
 
 	void Update();
 
@@ -70,18 +71,6 @@ public:
 
 	//Drawing
 	void Draw(ComponentCamera* active_camera);
-
-	//Setters & Getters
-	ParticleComponents GetAtributes();
-
-	////Billboarding
-	//void SetBillboardReference(ComponentCamera* new_reference);
-	//ComponentCamera* GetBillboardReference();
-
-	////Animation
-	//void UpdateAnimation();
-
-	//Interpolation
 
 	///Color
 	void UpdateColor();
@@ -140,8 +129,6 @@ public:
 	void SetBillboarding(float new_dist);
 	float IsBillboarding() const;
 
-	bool IsDead();
-
 	void SetWorldSpace(bool is_space); 
 	bool IsWorldSpace(); 
 	void ApplyWorldSpace(); 
@@ -149,12 +136,16 @@ public:
 	//Animation
 	ParticleAnimation* GetAnimationController(); 
 
-	~Particle();
+	//Setters & Getters ----
+	ParticleComponents GetAtributes();
+
+	// ----
+
+
 
 public:
 
 	ParticleComponents components;			//Components of the particle
-	bool animated_particle;
 
 private:
 
@@ -168,21 +159,22 @@ private:
 	Color particle_color;
 
 	//Interpolations
+	///Color
 	bool interpolate_colors;
 	Color initial_particle_color;
 	Color final_particle_color;
+	int color_difference[4];
 
+	///Size
 	bool interpolate_size;
 	float3 initial_particle_size;
 	float3 final_particle_size;
 
-	bool is_relative; 
-
+	///Rotation
 	bool interpolate_rotation;
 	float initial_particle_angular_v;
 	float final_particle_angular_v;
 	float curr_rot;
-	int color_difference[4];
 
 	//Managing movement
 	float particle_velocity;
@@ -191,11 +183,12 @@ private:
 	float max_particle_lifetime;
 	float3 movement;						//This vector will be added to the position every frame
 	float emmision_angle; 
+	bool is_relative;
 
-	bool kill_me;
 	float distance_to_camera;
 	bool billboarding;
 
+	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 
 
 };

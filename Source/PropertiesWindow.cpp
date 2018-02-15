@@ -609,7 +609,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::Separator();
 
 			static int particle_template;
-			ImGui::Combo("Templates", &particle_template, "Select Template\0Smoke\0Custom\0");
+			ImGui::Combo("Templates", &particle_template, "Select Template\0Custom\0");
 
 			if (particle_template == 0)
 				return;
@@ -624,6 +624,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			bool update_root = false;
 
+			ImGui::Separator(); 
+
 			if (ImGui::Button("PLAY"))
 			{
 				current_emmiter->SetSystemState(PARTICLE_STATE_PLAY);
@@ -637,6 +639,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->SetSystemState(PARTICLE_STATE_PAUSE);
 			}
 
+			ImGui::SameLine(); 
 			ImGui::Text("Particle System State: "); ImGui::SameLine();
 
 			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
@@ -686,7 +689,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				ImGui::DragFloat("Time Step", &current_emmiter->GetRootParticle()->GetAnimationController()->timeStep, true, 0.1f, 0, 2.0f); 
 
-				ImGui::Separator();
 				ImGui::TreePop();
 			}
 
@@ -739,12 +741,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				current_emmiter->UpdateRootParticle();
 
-				ImGui::Separator();
-
-				if (ImGui::Button("Save as Template"))
-				{
-
-				}
 				ImGui::TreePop();
 			}
 
@@ -763,6 +759,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::Button("Apply Scale Interpolation"))
 					{
+						current_emmiter->change_size_interpolation = true;
+
 						current_emmiter->initial_scale = init_scale;
 						current_emmiter->final_scale = fin_scale;
 
@@ -861,6 +859,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				}
 
 				ImGui::TreePop();
+			}
+
+			ImGui::Separator(); 
+
+			if (ImGui::Button("Save as Template"))
+			{
+
 			}
 
 		}

@@ -18,49 +18,55 @@ class ComponentParticleEmmiter : public Component
 {
 
 public:
+	//Common methods
 	ComponentParticleEmmiter(GameObject* parent);
+	~ComponentParticleEmmiter();
 
 	bool Start();
-	void CreateRootParticle();
-
 	bool Update();
-	void UpdateRootParticle();
-	void DrawParticles(ComponentCamera* active_camera); 
-	void AddaptEmmitAreaAABB(); 
-
-	~ComponentParticleEmmiter();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
 
-	void ReoderParticles(ComponentCamera* rendering_camera);
+	//Root particle
+	void CreateRootParticle();
+	void UpdateRootParticle();
 
-	//Spawning
+	//Draws
+	void DrawParticles(ComponentCamera* active_camera); 
+
+	//Particle Management
 	void GenerateParticles();
 	Particle* CreateParticle();
 	int GetParticlesNum();
-	void DeleteLastParticle(); 
+	void DeleteLastParticle();
+	void ReoderParticles(ComponentCamera* rendering_camera);
+	void AddaptEmmitAreaAABB();
 
-	//Getters & Setters
+	//Getters & Setters ----
+	///Emmision Rate
 	int GetEmmisionRate() const;
 	void SetEmmisionRate(float new_emision_rate);
 	void SetFrequencyFromRate(int rate);
 
+	///Emmision area
 	bool ShowEmmisionArea() const;
 	void SetShowEmmisionArea(bool new_show);
 
+	///Lifetime
 	float GetLifetime() const;
 	void SetLifeTime(float new_show);
 
+	///System state
 	particle_system_state GetSystemState() const;
 	void SetSystemState(particle_system_state new_state);
 
-	vector<ParticleAnimation> GetAllParticleAnimations();
+	///Root particle
 	Particle* GetRootParticle() const;
 
 public:
 
-	//UI Data				
+	//UI Data -------	
 
 	float max_lifetime;						//Time that particules will be rendering
 	int emmision_rate;						//How many spawn in a second
@@ -119,7 +125,6 @@ private:
 	//Lists
 	Particle* root_particle;							//This will be the particle that will be cloned over time
 	multimap<float, Particle*> active_particles;		//Particles that are currently beeing rendered
-	vector<ParticleAnimation> particle_animations;
 
 	//Timers
 	Timer spawn_timer;									//Timer to control the emmision rate 
