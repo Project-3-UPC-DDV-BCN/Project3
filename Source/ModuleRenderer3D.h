@@ -115,7 +115,11 @@ private:
 	int lights_count;
 
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
-	std::list<ComponentLight*> lights_on_scene;
+	//std::list<ComponentLight*> lights_on_scene;
+	ComponentLight* dir_lights[MAX_DIR_LIGHT];
+	ComponentLight* poi_lights[MAX_POI_LIGHT];
+	ComponentLight* spo_lights[MAX_SPO_LIGHT];
+
 	std::list<Primitive*> debug_primitive_to_draw;
 
 };

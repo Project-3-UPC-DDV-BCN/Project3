@@ -84,29 +84,36 @@ std::string ComponentLight::GetTypeString() const
 
 void ComponentLight::SetTypeToDirectional()
 {
+	App->renderer3D->RemoveLight(this);
 	ambient = 0.0;
 	specular = 0.0;
 	cutOff = 0;
 	outercutOff = 0;
 	type = DIRECTIONAL_LIGHT;
+	App->renderer3D->AddLight(this);
 }
 
 void ComponentLight::SetTypeToPoint()
 {
+	App->renderer3D->RemoveLight(this);
 	ambient = 2.5;
 	specular = 2.5;
 	cutOff = 0;
 	outercutOff = 0;
 	type = POINT_LIGHT;
+	App->renderer3D->AddLight(this);
 }
 
 void ComponentLight::SetTypeToSpot()
 {
+	App->renderer3D->RemoveLight(this);
 	ambient = 10.0;
 	specular = 2.5;
 	cutOff = 12.0f;
 	outercutOff = 12.0f;
 	type = SPOT_LIGHT;
+	App->renderer3D->RemoveLight(this);
+	App->renderer3D->AddLight(this);
 }
 
 void ComponentLight::SetDiffuse(float diffuse)
