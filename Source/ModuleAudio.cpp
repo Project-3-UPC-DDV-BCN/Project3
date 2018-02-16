@@ -42,8 +42,6 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	std::string s = ASSETS_FOLDER;
-	s += "Blend.json";
 	LoadSoundBank("Blend.json");
 	
 	SoundBank* sbk;
