@@ -481,9 +481,9 @@ void ModuleScene::CreatePrefab(GameObject * gameobject)
 	App->resources->CreateResource(assets_path);
 }
 
-void ModuleScene::DrawSkyBox(float3 pos)
+void ModuleScene::DrawSkyBox(float3 pos, ComponentCamera* active_camera)
 {
-	skybox->RenderCubeMap(pos);
+	skybox->RenderCubeMap(pos, active_camera);
 }
 
 void ModuleScene::InitScripts()

@@ -1079,25 +1079,25 @@ void ModuleResources::CreateDefaultShaders()
 	{
 		Shader* default_vert = new Shader();
 		default_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
-		
-		std::string shader_text = 
-		"#version 330 core\n"
-		"layout(location = 0) in vec3 position;\n"
-		"layout(location = 1) in vec3 texCoord;\n"
-		"layout(location = 2) in vec3 normals;\n"
-		"layout(location = 3) in vec4 color;\n\n"
-		"out vec4 ourColor;\n"
-		"out vec3 Normal;\n"
-		"out vec2 TexCoord;\n\n"
-		"uniform mat4 Model;\n"
-		"uniform mat4 view;\n"
-		"uniform mat4 projection;\n\n"
-		"void main()\n"
-		"{ \n"
-		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
-		"	ourColor = color;\n"
-		"	TexCoord = texCoord.xy;\n"
-		"}";
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n"
+			"layout(location = 2) in vec3 normals;\n"
+			"layout(location = 3) in vec4 color;\n\n"
+			"out vec4 ourColor;\n"
+			"out vec3 Normal;\n"
+			"out vec2 TexCoord;\n\n"
+			"uniform mat4 Model;\n"
+			"uniform mat4 view;\n"
+			"uniform mat4 projection;\n\n"
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	ourColor = color;\n"
+			"	TexCoord = texCoord.xy;\n"
+			"}";
 
 		default_vert->SetContent(shader_text);
 		std::ofstream outfile(vert_default_path.c_str(), std::ofstream::out);
@@ -1114,7 +1114,7 @@ void ModuleResources::CreateDefaultShaders()
 		default_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
 
 		std::string shader_text =
-			"#version 330 core\n"
+			"#version 400 core\n"
 			"in vec4 ourColor;\n"
 			"in vec3 Normal;\n"
 			"in vec2 TexCoord;\n\n"
@@ -1149,7 +1149,127 @@ void ModuleResources::CreateDefaultShaders()
 
 	Shader* fragment = GetShader("default_fragment");
 	prog->SetFragmentShader(fragment);
-	
+
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
+
+	//Create a grid fragment shader
+	std::string frag_grid_path = SHADER_DEFAULT_FOLDER "grid_fragment.fshader";
+	if (!App->file_system->FileExist(frag_grid_path))
+	{
+		Shader* grid_frag = new Shader();
+		grid_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform vec4 line_color;\n\n"
+			"void main()\n"
+			"{\n"
+			"	float x,y;\n"
+			"	x = fract(TexCoord.x*25.0);\n"
+			"	y = fract(TexCoord.y*25.0);\n\n"
+			"	// Draw a black and white grid.\n"
+			"	if (x > 0.93 || y > 0.93) \n	{\n"
+			"	color = line_color;\n	}\n"
+			"	else\n{\n"
+			"	discard;\n	}\n"
+			"}";
+
+		grid_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_grid_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(grid_frag);
+	}
+	CreateResource(frag_grid_path);
+
+	prog = new ShaderProgram();
+	prog->SetName("grid_shader_program");
+
+	vertex = GetShader("default_vertex");
+	prog->SetVertexShader(vertex);
+
+	fragment = GetShader("grid_fragment");
+	prog->SetFragmentShader(fragment);
+
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
+
+	// cubemap shader
+	std::string vert_cubemap_path = SHADER_DEFAULT_FOLDER "cubemap_vertex.vshader";
+	if (!App->file_system->FileExist(vert_cubemap_path))
+	{
+		Shader* cubemap_vert = new Shader();
+		cubemap_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n"
+			"layout(location = 2) in vec3 normals;\n"
+			"layout(location = 3) in vec4 color;\n\n"
+			"out vec4 ourColor;\n"
+			"out vec3 Normal;\n"
+			"out vec3 TexCoord;\n\n"
+			"uniform mat4 Model;\n"
+			"uniform mat4 view;\n"
+			"uniform mat4 projection;\n\n"
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	ourColor = color;\n"
+			"	TexCoord = -position;\n"
+			"}";
+
+		cubemap_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_cubemap_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(cubemap_vert);
+	}
+	CreateResource(vert_cubemap_path);
+
+	std::string frag_cubemap_path = SHADER_DEFAULT_FOLDER "cubemap_fragment.fshader";
+	if (!App->file_system->FileExist(frag_cubemap_path))
+	{
+		Shader* cubemap_frag = new Shader();
+		cubemap_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec3 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform samplerCube ourTexture;\n\n"
+			"void main()\n"
+			"{\n"
+			"	color = texture(ourTexture, TexCoord);\n"
+			"}";
+
+		cubemap_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_cubemap_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(cubemap_frag);
+	}
+	CreateResource(frag_cubemap_path);
+
+	prog = new ShaderProgram();
+	prog->SetName("cubemap_shader_program");
+
+	vertex = GetShader("cubemap_vertex");
+	prog->SetVertexShader(vertex);
+
+	fragment = GetShader("cubemap_fragment");
+	prog->SetFragmentShader(fragment);
+
 	prog->LinkShaderProgram();
 
 	AddResource(prog);
