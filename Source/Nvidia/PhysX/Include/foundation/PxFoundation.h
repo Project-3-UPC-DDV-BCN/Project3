@@ -34,8 +34,8 @@
   @{
 */
 
-#include "Px.h"
-#include "PxErrors.h"
+#include "foundation/Px.h"
+#include "foundation/PxErrors.h"
 
 #if !PX_DOXYGEN
 namespace physx

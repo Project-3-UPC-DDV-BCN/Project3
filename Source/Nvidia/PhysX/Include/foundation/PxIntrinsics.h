@@ -30,16 +30,16 @@
 #ifndef PXFOUNDATION_PXINTRINSICS_H
 #define PXFOUNDATION_PXINTRINSICS_H
 
-#include "PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 #if PX_WINDOWS_FAMILY
-#include "windows/PxWindowsIntrinsics.h"
+#include "foundation/windows/PxWindowsIntrinsics.h"
 #elif(PX_LINUX || PX_ANDROID || PX_APPLE_FAMILY || PX_PS4)
-#include "unix/PxUnixIntrinsics.h"
+#include "foundation/unix/PxUnixIntrinsics.h"
 #elif PX_XBOXONE
-#include "XboxOne/PxXboxOneIntrinsics.h"
+#include "foundation/XboxOne/PxXboxOneIntrinsics.h"
 #elif PX_SWITCH
-#include "switch/PxSwitchIntrinsics.h"
+#include "foundation/switch/PxSwitchIntrinsics.h"
 #else
 #error "Platform not supported!"
 #endif

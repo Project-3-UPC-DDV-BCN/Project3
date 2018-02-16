@@ -33,8 +33,8 @@
   @{
 */
 
-#include "PxVehicleWheels.h"
-#include "PxVehicleComponents.h"
+#include "vehicle/PxVehicleWheels.h"
+#include "vehicle/PxVehicleComponents.h"
 
 #if !PX_DOXYGEN
 namespace physx

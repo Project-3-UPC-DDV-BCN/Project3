@@ -34,13 +34,13 @@
   @{
 */
 
-#include "../PxPhysXConfig.h"
-#include "../common/PxBase.h"
-#include "../cooking/PxCooking.h"
-#include "../foundation/PxIO.h"
-#include "../common/PxTolerancesScale.h"
-#include "../common/PxTypeInfo.h"
-#include "../common/PxStringTable.h"
+#include "PxPhysXConfig.h"
+#include "common/PxBase.h"
+#include "cooking/PxCooking.h"
+#include "foundation/PxIO.h"
+#include "common/PxTolerancesScale.h"
+#include "common/PxTypeInfo.h"
+#include "common/PxStringTable.h"
 
 //
 // Important: if you adjust the comment about binary compatible versions below, don't forget to adjust the compatibility list in

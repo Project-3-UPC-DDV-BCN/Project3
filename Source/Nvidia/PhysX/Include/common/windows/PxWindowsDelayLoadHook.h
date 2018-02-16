@@ -31,9 +31,9 @@
 #ifndef PX_PHYSICS_DELAY_LOAD_HOOK
 #define PX_PHYSICS_DELAY_LOAD_HOOK
 
-#include "../../foundation/PxPreprocessor.h"
-#include "../../foundation/windows/PxWindowsFoundationDelayLoadHook.h"
-#include "../PxPhysXCommonConfig.h"
+#include "foundation/PxPreprocessor.h"
+#include "foundation/windows/PxWindowsFoundationDelayLoadHook.h"
+#include "common/PxPhysXCommonConfig.h"
 
 /** \addtogroup foundation
 @{

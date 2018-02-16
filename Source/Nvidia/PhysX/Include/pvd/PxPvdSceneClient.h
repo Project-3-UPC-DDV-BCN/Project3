@@ -34,7 +34,7 @@
 @{
 */
 
-#include "../foundation/PxFlags.h"
+#include "foundation/PxFlags.h"
 
 namespace physx
 {

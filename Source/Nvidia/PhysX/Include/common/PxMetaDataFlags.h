@@ -31,7 +31,7 @@
 #ifndef PX_PHYSICS_METADATA_FLAGS
 #define PX_PHYSICS_METADATA_FLAGS
 
-#include "../foundation/Px.h"
+#include "foundation/Px.h"
 
 #if !PX_DOXYGEN
 namespace physx

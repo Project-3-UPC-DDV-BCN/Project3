@@ -31,9 +31,8 @@
 #ifndef PX_PVD_DELAY_LOAD_HOOK
 #define PX_PVD_DELAY_LOAD_HOOK
 
-#include "../../foundation/PxPreprocessor.h"
-#include "../../foundation/windows/PxWindowsFoundationDelayLoadHook.h"
-//#include "../foundation/PxWindowsFoundationDelayLoadHook.h"
+#include "foundation/PxPreprocessor.h"
+#include "foundation/windows/PxWindowsFoundationDelayLoadHook.h"
 #include "../PxPvd.h"
 
 /** \addtogroup pvd

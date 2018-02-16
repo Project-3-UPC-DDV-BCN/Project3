@@ -35,9 +35,9 @@
   @{
 */
 
-#include "../common/PxPhysXCommonConfig.h"
+#include "common/PxPhysXCommonConfig.h"
 #include "PxClothMeshDesc.h"
-#include "../cloth/PxClothFabric.h"
+#include "cloth/PxClothFabric.h"
 
 #if !PX_DOXYGEN
 namespace physx

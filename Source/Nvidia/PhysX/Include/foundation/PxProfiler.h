@@ -28,7 +28,7 @@
 #ifndef PXFOUNDATION_PXPROFILER_H
 #define PXFOUNDATION_PXPROFILER_H
 
-#include "PxFoundation.h"
+#include "foundation/PxFoundation.h"
 
 namespace physx
 {

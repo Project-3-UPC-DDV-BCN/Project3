@@ -33,8 +33,8 @@
   @{
 */
 
-#include "PxQuat.h"
-#include "PxPlane.h"
+#include "foundation/PxQuat.h"
+#include "foundation/PxPlane.h"
 
 #if !PX_DOXYGEN
 namespace physx

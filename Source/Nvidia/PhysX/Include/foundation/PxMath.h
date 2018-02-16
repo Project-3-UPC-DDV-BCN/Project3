@@ -34,7 +34,7 @@
 @{
 */
 
-#include "PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 #if PX_VC
 #pragma warning(push)
@@ -46,8 +46,8 @@
 #endif
 
 #include <float.h>
-#include "../foundation/PxIntrinsics.h"
-#include "../foundation/PxAssert.h"
+#include "foundation/PxIntrinsics.h"
+#include "foundation/PxAssert.h"
 
 #if !PX_DOXYGEN
 namespace physx

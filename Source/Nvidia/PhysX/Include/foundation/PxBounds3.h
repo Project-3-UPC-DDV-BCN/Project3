@@ -34,8 +34,8 @@
 @{
 */
 
-#include "PxTransform.h"
-#include "PxMat33.h"
+#include "foundation/PxTransform.h"
+#include "foundation/PxMat33.h"
 
 #if !PX_DOXYGEN
 namespace physx

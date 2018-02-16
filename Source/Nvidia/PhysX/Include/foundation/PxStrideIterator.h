@@ -30,8 +30,8 @@
 #ifndef PXFOUNDATION_PXSTRIDEITERATOR_H
 #define PXFOUNDATION_PXSTRIDEITERATOR_H
 
-#include "Px.h"
-#include "PxAssert.h"
+#include "foundation/Px.h"
+#include "foundation/PxAssert.h"
 
 /** \addtogroup foundation
   @{

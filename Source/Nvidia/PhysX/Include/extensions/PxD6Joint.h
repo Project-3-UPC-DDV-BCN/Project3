@@ -34,9 +34,9 @@
   @{
 */
 
-#include "PxJoint.h"
-#include "PxJointLimit.h"
-#include "../foundation/PxFlags.h"
+#include "extensions/PxJoint.h"
+#include "extensions/PxJointLimit.h"
+#include "foundation/PxFlags.h"
 
 #if !PX_DOXYGEN
 namespace physx

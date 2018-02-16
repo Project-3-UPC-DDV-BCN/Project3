@@ -34,7 +34,7 @@
 @{
 */
 
-#include "PxSimpleTypes.h"
+#include "foundation/PxSimpleTypes.h"
 
 /** files to always include */
 #include <string.h>

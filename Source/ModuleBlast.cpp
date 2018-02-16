@@ -1,21 +1,33 @@
 #include "ModuleBlast.h"
-#include "Nvidia/Blast/Include/toolkit/NvBlastTkFramework.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxAsset.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxManager.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxFamily.h"
-#include "Nvidia/Blast/Include/extensions/shaders/NvBlastExtDamageShaders.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxActor.h"
-#include "Nvidia/Blast/Include/toolkit/NvBlastTkActor.h"
-#include "Nvidia/Blast/Include/toolkit/NvBlastTkGroup.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastPxCallbacks.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxTask.h"
+#include <NvBlastTkFramework.h>
+#include <NvBlastExtPxAsset.h>
+#include <NvBlastExtPxManager.h>
+#include <NvBlastExtPxFamily.h>
+#include <NvBlastExtDamageShaders.h>
+#include <NvBlastExtPxActor.h>
+#include <NvBlastTkActor.h>
+#include <NvBlastTkGroup.h>
+#include <NvBlastPxCallbacks.h>
+#include <NvBlastExtPxTask.h>
 #include "BlastModel.h"
 #include "ModulePhysics.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "GameObject.h"
 
 #if _DEBUG
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtAssetUtilsDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtAuthoringDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtExporterDEBUG_x86.lib")
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPhysXDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPxSerializationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtShadersDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtStressDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtTkSerializationDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastGlobalsDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastTkDEBUG_x86.lib")
 
 #else
 #pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPhysX_x86.lib")
@@ -106,7 +118,8 @@ update_status ModuleBlast::Update(float dt)
 
 	}
 
-	group->process();
+	task_manager->process();
+	task_manager->wait();
 
 	model->family->postSplitUpdate();
 
@@ -157,6 +170,7 @@ void ModuleBlast::SpawnFamily(BlastModel* model)
 		2000.f
 	};
 	model->family->spawn(physx::PxTransform(physx::PxVec3(0, 0, 0)), physx::PxVec3(1, 1, 1), spawn_settings);
+	//ProcessGroup();
 }
 
 void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
@@ -168,6 +182,7 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 	{
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
+		go->SetActive(true);
 	}
 	//actor.getPhysXActor().userData = model->chunks[0];
 	model->actors.push_back(&actor);
@@ -175,5 +190,27 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 
 void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
 {
-	int i = 0;
+	BlastModel* model = families[&family];
+	const uint32_t* chunkIndices = actor.getChunkIndices();
+	uint32_t chunkCount = actor.getChunkCount();
+	for (uint32_t i = 0; i < chunkCount; i++)
+	{
+		uint32_t chunkIndex = chunkIndices[i];
+		GameObject* go = model->chunks[chunkIndex];
+		go->SetActive(false);
+	}
+}
+
+void ModuleBlast::ProcessGroup()
+{
+	BlastModel* model = families.begin()->second;
+	group->process();
+	model->family->postSplitUpdate();
+}
+
+void ModuleBlast::ApplyDamage()
+{
+	//BlastModel* model = families.begin()->second;
+	impact_damage_manager->applyDamage();
+	//model->family->postSplitUpdate();
 }

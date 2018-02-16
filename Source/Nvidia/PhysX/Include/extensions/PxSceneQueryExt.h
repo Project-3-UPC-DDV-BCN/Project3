@@ -34,9 +34,9 @@
   @{
 */
 
-#include "../PxPhysXConfig.h"
+#include "PxPhysXConfig.h"
 
-#include "../PxScene.h"
+#include "PxScene.h"
 
 #if !PX_DOXYGEN
 namespace physx

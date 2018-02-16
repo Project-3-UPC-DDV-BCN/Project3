@@ -34,7 +34,7 @@
   @{
 */
 
-#include "PxParticleReadData.h"
+#include "particles/PxParticleReadData.h"
 
 #if !PX_DOXYGEN
 namespace physx

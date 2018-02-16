@@ -34,8 +34,8 @@
   @{
 */
 
-#include "PxJoint.h"
-#include "PxJointLimit.h"
+#include "extensions/PxJoint.h"
+#include "extensions/PxJointLimit.h"
 
 #if !PX_DOXYGEN
 namespace physx

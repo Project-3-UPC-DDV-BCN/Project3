@@ -28,11 +28,11 @@
 #ifndef PXCUDACONTEXTMANAGER_PXGPUCOPYDESC_H
 #define PXCUDACONTEXTMANAGER_PXGPUCOPYDESC_H
 
-#include "../foundation/PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 #if PX_SUPPORT_GPU_PHYSX
 
-#include "../task/PxTaskDefine.h"
+#include "task/PxTaskDefine.h"
 
 namespace physx
 {

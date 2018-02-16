@@ -28,11 +28,11 @@
 #ifndef PXCUDACONTEXTMANAGER_PXCUDAMEMORYMANAGER_H
 #define PXCUDACONTEXTMANAGER_PXCUDAMEMORYMANAGER_H
 
-#include "../foundation/PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 #if PX_SUPPORT_GPU_PHYSX
 
-#include "../task/PxTaskDefine.h"
+#include "task/PxTaskDefine.h"
 
 // some macros to keep the source code more readable
 #define PX_ALLOC_INFO(name, ID) __FILE__, __LINE__, name, physx::PxAllocId::ID

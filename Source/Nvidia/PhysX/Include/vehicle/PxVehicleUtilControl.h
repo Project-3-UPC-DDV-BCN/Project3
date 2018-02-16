@@ -32,11 +32,11 @@
 /** \addtogroup vehicle
   @{
 */
+#include "vehicle/PxVehicleSDK.h"
+#include "vehicle/PxVehicleDrive4W.h"
+#include "vehicle/PxVehicleDriveNW.h"
+#include "vehicle/PxVehicleDriveTank.h"
 
-#include "PxVehicleSDK.h"
-#include "PxVehicleDrive4W.h"
-#include "PxVehicleDriveNW.h"
-#include "PxVehicleDriveTank.h"
 
 #if !PX_DOXYGEN
 namespace physx

@@ -9,17 +9,17 @@
 #include "Application.h"
 #include "ModuleTime.h"
 #include "Primitive.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtImpactDamageManager.h"
 #include "ModuleBlast.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3DEBUG_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3CommonDEBUG_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PxFoundationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3ExtensionsDEBUG.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3ExtensionsDEBUG_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3CookingDEBUG_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PxPvdSDKDEBUG_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PxTaskDEBUG_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PsFastXmlDEBUG_x86.lib")
 #else
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3Common_x86.lib")
@@ -28,6 +28,7 @@
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PhysX3Extensions.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PxPvdSDK_x86.lib")
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PxTask_x86.lib")
+#pragma comment (lib, "Nvidia/PhysX/lib/lib_release/PsFastXml_x86.lib")
 #endif
 
 ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -119,7 +120,9 @@ update_status ModulePhysics::Update(float dt)
 				physx::PxScene* scene;
 				physx_physics->getScenes(&scene, 1, i);
 				scene->simulate(dt);
+				App->blast->ApplyDamage();
 				scene->fetchResults(true);
+				//App->blast->ProcessGroup();
 
 				physx::PxU32 active_actors_num;
 				physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
@@ -371,7 +374,7 @@ void ModulePhysics::CreateMainScene()
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = Nv::Blast::ExtImpactDamageManager::FilterShader; //CCDShader;
 	sceneDesc.simulationEventCallback = this;
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM;
+	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM | physx::PxSceneFlag::eENABLE_STABILIZATION;
 
 	if (cuda_context_manager)
 	{
@@ -419,8 +422,8 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
 	/*physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
 	physx::PxTransform phys_transform = dynamic->getGlobalPose();
-	GameObject* go = (GameObject*)actor->userData;*/
-	/*if (go->GetName() == "wall") return;
+	GameObject* go = (GameObject*)actor->userData;
+	if (go->GetName() == "wall") return;
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
 	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
@@ -494,7 +497,6 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 
 	Nv::Blast::ExtImpactDamageManager* impact_manager = App->blast->GetImpactManager();
 	impact_manager->onContact(pairHeader, pairs, nbPairs);
-	impact_manager->applyDamage();
 }
 
 void ModulePhysics::onAdvance(const physx::PxRigidBody * const * bodyBuffer, const physx::PxTransform * poseBuffer, const physx::PxU32 count)

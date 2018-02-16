@@ -35,8 +35,8 @@
   @{
 */
 
-#include "../common/PxPhysXCommonConfig.h"
-#include "../PxQueryReport.h"
+#include "common/PxPhysXCommonConfig.h"
+#include "PxQueryReport.h"
 
 #if !PX_DOXYGEN
 namespace physx

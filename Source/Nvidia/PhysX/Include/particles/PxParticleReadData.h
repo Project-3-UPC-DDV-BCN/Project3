@@ -34,9 +34,9 @@
   @{
 */
 
-#include "../foundation/PxStrideIterator.h"
-#include "../foundation/PxFlags.h"
-#include "../PxLockedData.h"
+#include "foundation/PxStrideIterator.h"
+#include "foundation/PxFlags.h"
+#include "PxLockedData.h"
 #include "PxParticleFlag.h"
 
 #if !PX_DOXYGEN

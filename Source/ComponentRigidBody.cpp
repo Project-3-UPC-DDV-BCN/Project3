@@ -34,7 +34,7 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	SetKinematic(false);
 	SetLinearDamping(0);
 	SetAngularDamping(0.05f);
-	SetLinearVelocity(float3(0, -10, 0));
+	SetLinearVelocity(float3(0, -100, 0));
 	SetLinearDamping(0);
 }
 

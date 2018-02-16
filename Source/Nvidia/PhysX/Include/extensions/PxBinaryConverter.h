@@ -34,7 +34,7 @@
 @{
 */
 
-#include "../common/PxPhysXCommonConfig.h"
+#include "common/PxPhysXCommonConfig.h"
 
 #if !PX_DOXYGEN
 namespace physx

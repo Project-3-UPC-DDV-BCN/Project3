@@ -28,15 +28,15 @@
 #ifndef PXCUDACONTEXTMANAGER_PXGPUCOPYDESCQUEUE_H
 #define PXCUDACONTEXTMANAGER_PXGPUCOPYDESCQUEUE_H
 
-#include "../foundation/PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 #if PX_SUPPORT_GPU_PHYSX
 
-#include "../foundation/PxAssert.h"
-#include "../task/PxTaskDefine.h"
-#include "../task/PxGpuDispatcher.h"
-#include "PxGpuCopyDesc.h"
-#include "PxCudaContextManager.h"
+#include "foundation/PxAssert.h"
+#include "task/PxTaskDefine.h"
+#include "task/PxGpuDispatcher.h"
+#include "cudamanager/PxGpuCopyDesc.h"
+#include "cudamanager/PxCudaContextManager.h"
 
 /* forward decl to avoid including <cuda.h> */
 typedef struct CUstream_st* CUstream;

@@ -33,9 +33,8 @@
 /** \addtogroup geomutils
 @{
 */
-
-#include "PxGeometry.h"
-#include "../foundation/PxVec3.h"
+#include "geometry/PxGeometry.h"
+#include "foundation/PxVec3.h"
 
 #if !PX_DOXYGEN
 namespace physx

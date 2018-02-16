@@ -28,7 +28,7 @@
 #ifndef PXTASK_PXTASKDEFINE_H
 #define PXTASK_PXTASKDEFINE_H
 
-#include "../foundation/PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 #ifndef PX_SUPPORT_PXTASK_PROFILING
 #define PX_SUPPORT_PXTASK_PROFILING 1

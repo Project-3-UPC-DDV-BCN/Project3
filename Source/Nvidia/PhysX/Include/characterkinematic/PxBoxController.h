@@ -34,8 +34,8 @@
   @{
 */
 
-#include "PxCharacter.h"
-#include "PxController.h"
+#include "characterkinematic/PxCharacter.h"
+#include "characterkinematic/PxController.h"
 
 #if !PX_DOXYGEN
 namespace physx

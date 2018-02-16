@@ -31,7 +31,7 @@
 #ifndef PX_PHYSICS_EXTENSIONS_CLOTH_EDGE_QUADIFIER_H
 #define PX_PHYSICS_EXTENSIONS_CLOTH_EDGE_QUADIFIER_H
 
-#include "../common/PxPhysXCommonConfig.h"
+#include "common/PxPhysXCommonConfig.h"
 #include "PxClothMeshDesc.h"
 
 #if !PX_DOXYGEN

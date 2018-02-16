@@ -34,8 +34,8 @@
 @{
 */
 
-#include "../foundation/PxAssert.h"
-#include "../foundation/PxMemory.h"
+#include "foundation/PxAssert.h"
+#include "foundation/PxMemory.h"
 
 #if !PX_DOXYGEN
 namespace physx

@@ -33,9 +33,8 @@
 /** \addtogroup particles
   @{
 */
-
-#include "PxParticleFluidReadData.h"
-#include "PxParticleBase.h"
+#include "particles/PxParticleFluidReadData.h"
+#include "particles/PxParticleBase.h"
 
 #if !PX_DOXYGEN
 namespace physx

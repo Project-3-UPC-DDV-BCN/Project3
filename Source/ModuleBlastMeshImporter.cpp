@@ -1,13 +1,13 @@
 #include "ModuleBlastMeshImporter.h"
 #include <vector>
-#include "Nvidia/Blast/Include/toolkit/NvBlastTkAsset.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxAsset.h"
-#include "Nvidia/Blast/Include/extensions/serialization/NvBlastExtPxSerialization.h"
-#include "Nvidia/Blast/Include/extensions/serialization/NvBlastExtSerialization.h"
-#include "Nvidia/Blast/Include/extensions/serialization/NvBlastExtTkSerialization.h"
-#include "Nvidia/Blast/Include/extensions/assetutils/NvBlastExtAssetUtils.h"
-#include "Nvidia/Blast/Include/extensions/shaders/NvBlastExtDamageShaders.h"
-#include "Nvidia/Blast/Include/extensions/exporter/NvBlastExtExporter.h"
+#include <NvBlastTkAsset.h>
+#include <NvBlastExtPxAsset.h>
+#include <NvBlastExtPxSerialization.h>
+#include <NvBlastExtSerialization.h>
+#include <NvBlastExtTkSerialization.h>
+#include <NvBlastExtAssetUtils.h>
+#include <NvBlastExtDamageShaders.h>
+#include <NvBlastExtExporter.h>
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "Data.h"
@@ -21,23 +21,23 @@
 #include "ModuleResources.h"
 #include "ModuleMeshImporter.h"
 
-#if _DEBUG
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtAssetUtilsDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPxSerializationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtTkSerializationDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastTkDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtShadersDEBUG_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtExporterDEBUG_x86.lib")
-#else
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtSerialization_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtAssetUtils_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPxSerialization_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtTkSerialization_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastTk_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtShaders_x86.lib")
-#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtExporter_x86.lib")
-#endif
+//#if _DEBUG
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtAssetUtilsDEBUG_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPxSerializationDEBUG_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtTkSerializationDEBUG_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastTkDEBUG_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtShadersDEBUG_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtExporterDEBUG_x86.lib")
+//#else
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtSerialization_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtAssetUtils_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPxSerialization_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtTkSerialization_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastTk_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtShaders_x86.lib")
+//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtExporter_x86.lib")
+//#endif
 
 ModuleBlastMeshImporter::ModuleBlastMeshImporter(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {

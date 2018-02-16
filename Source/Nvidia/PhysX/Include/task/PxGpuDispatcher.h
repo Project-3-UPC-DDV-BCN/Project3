@@ -28,8 +28,8 @@
 #ifndef PXTASK_PXGPUDISPATCHER_H
 #define PXTASK_PXGPUDISPATCHER_H
 
-#include "PxTaskDefine.h"
-#include "PxTask.h"
+#include "task/PxTaskDefine.h"
+#include "task/PxTask.h"
 
 /* forward decl to avoid including <cuda.h> */
 typedef struct CUstream_st* CUstream;

@@ -29,9 +29,9 @@
 #ifndef PXTASK_PXGPUTASK_H
 #define PXTASK_PXGPUTASK_H
 
-#include "PxTaskDefine.h"
-#include "PxTask.h"
-#include "PxGpuDispatcher.h"
+#include "task/PxTaskDefine.h"
+#include "task/PxTask.h"
+#include "task/PxGpuDispatcher.h"
 
 namespace physx
 {

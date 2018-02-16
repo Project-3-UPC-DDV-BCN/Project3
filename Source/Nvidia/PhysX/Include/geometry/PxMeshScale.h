@@ -34,9 +34,9 @@
 @{
 */
 
-#include "../common/PxPhysXCommonConfig.h"
-#include "../foundation/PxMat33.h"
-#include "../foundation/PxAssert.h"
+#include "common/PxPhysXCommonConfig.h"
+#include "foundation/PxMat33.h"
+#include "foundation/PxAssert.h"
 
 /** \brief Minimum allowed absolute magnitude for each of mesh scale's components (x,y,z).
 	\note Only positive scale values are allowed for convex meshes. */

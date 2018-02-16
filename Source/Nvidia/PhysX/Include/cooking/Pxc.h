@@ -31,7 +31,7 @@
 #ifndef PX_COOKING_NX
 #define PX_COOKING_NX
 
-#include "../foundation/Px.h"
+#include "foundation/Px.h"
 
 // define API function declaration
 #if PX_WINDOWS

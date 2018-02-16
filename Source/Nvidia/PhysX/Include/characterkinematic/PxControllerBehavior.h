@@ -33,8 +33,8 @@
   @{
 */
 
-#include "../PxFiltering.h"
-#include "PxCharacter.h"
+#include "PxFiltering.h"
+#include "characterkinematic/PxCharacter.h"
 
 #if !PX_DOXYGEN
 namespace physx

@@ -1,6 +1,6 @@
 #pragma once
 #include "Module.h"
-#include "Nvidia/PhysX/Include/PxPhysicsAPI.h"
+#include <PxPhysicsAPI.h>
 #include "MathGeoLib/Geometry/AABB.h"
 #include <map>
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Module.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtPxListener.h"
-#include "Nvidia/Blast/Include/extensions/physx/NvBlastExtImpactDamageManager.h"
+#include <NvBlastExtPxListener.h>
+#include <NvBlastExtImpactDamageManager.h>
 #include <map>
 #include <vector>
 
@@ -75,6 +75,9 @@ public:
 
 	void onActorCreated(Nv::Blast::ExtPxFamily& family, Nv::Blast::ExtPxActor& actor);
 	void onActorDestroyed(Nv::Blast::ExtPxFamily& family, Nv::Blast::ExtPxActor& actor);
+
+	void ProcessGroup();
+	void ApplyDamage();
 
 private:
 	Nv::Blast::TkFramework* framework;

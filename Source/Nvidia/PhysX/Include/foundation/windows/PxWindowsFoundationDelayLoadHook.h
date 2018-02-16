@@ -30,7 +30,7 @@
 #ifndef PX_FOUNDATION_DELAY_LOAD_HOOK
 #define PX_FOUNDATION_DELAY_LOAD_HOOK
 
-#include "../PxPreprocessor.h"
+#include "foundation/PxPreprocessor.h"
 
 /** \addtogroup foundation
 @{

@@ -36,9 +36,9 @@
 
 // This needs to be included in Foundation just for the debug renderer
 
-#include "../PxPhysXConfig.h"
-#include "../foundation/PxTransform.h"
-#include "../foundation/PxAssert.h"
+#include "PxPhysXConfig.h"
+#include "foundation/PxTransform.h"
+#include "foundation/PxAssert.h"
 
 #if !PX_DOXYGEN
 namespace physx

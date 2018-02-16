@@ -34,9 +34,9 @@
 @{
 */
 
-#include "Px.h"
-#include "PxIntrinsics.h"
-#include "PxSimpleTypes.h"
+#include "foundation/Px.h"
+#include "foundation/PxIntrinsics.h"
+#include "foundation/PxSimpleTypes.h"
 
 #if !PX_DOXYGEN
 namespace physx
@@ -81,7 +81,7 @@ PX_FORCE_INLINE void* PxMemSet(void* dest, PxI32 c, PxU32 count)
 
 \return Pointer to destination memory block
 */
-PX_FORCE_INLINE void* PxMemCopy(void* dest, const void* src, PxU32 count)
+PX_FORCE_INLINE void* PxMemCopy(void* PX_RESTRICT dest, const void* PX_RESTRICT src, PxU32 count)
 {
 	return physx::intrinsics::memCopy(dest, src, count);
 }
