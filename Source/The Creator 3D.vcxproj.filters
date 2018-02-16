@@ -528,14 +528,11 @@
     <ClInclude Include="ComponentText.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="STB\stb_rect_pack.h">
+    <ClInclude Include="STB\_engine_stb_truetype_.h">
       <Filter>Sources\3d Party\STB</Filter>
     </ClInclude>
-    <ClInclude Include="STB\stb_textedit.h">
-      <Filter>Sources\3d Party\STB</Filter>
-    </ClInclude>
-    <ClInclude Include="STB\stb_truetype.h">
-      <Filter>Sources\3d Party\STB</Filter>
+    <ClInclude Include="UsefulFunctions.h">
+      <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -886,6 +883,9 @@
     </ClCompile>
     <ClCompile Include="ComponentText.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UsefulFunctions.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

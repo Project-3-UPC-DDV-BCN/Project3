@@ -1,9 +1,12 @@
 #ifndef _H_RESOURCE_FONT__
 #define _H_RESOURCE_FONT__
 
+#include <string>
+
 #include "Resource.h"
 #include "ModuleFontImporter.h"
-#include "ModuleFontImporter.h"
+
+#include "imgui/stb_truetype.h"
 
 class Font : public Resource
 {
@@ -24,18 +27,16 @@ public:
 	int GetHeight();
 	int GetLineHeight();
 	stbtt_fontinfo GetInfo();
-	const char* GetFilePath();
 
 private:
 	private:
-	std::string    name = nullptr;
+	std::string    name;
 	unsigned char* bitmap = nullptr;
 	uint		   bitmap_size = 0;
 	int			   width = 0;
 	int			   height = 0;
 	int			   line_height = 0;
 	stbtt_fontinfo info;
-	std::string	   filepath = nullptr;
 };
 
 #endif //!_H_RESOURCE_FONT__

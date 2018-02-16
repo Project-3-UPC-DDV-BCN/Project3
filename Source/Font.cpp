@@ -1,9 +1,17 @@
 #include "Font.h"
-#include "freetype/ftglyph.h" 
 #include "OpenGL.h"
 
-Font::Font(const char * _filepath, const char * _name, unsigned char * _bitmap, uint _bitmap_size, int _height, int _width, int _line_height, stbtt_fontinfo _info)
+Font::Font(const char * _filepath, const char * _name, unsigned char * _bitmap, uint _bitmap_size, int _height, int _width, int _line_height, stbtt_fontinfo _info) : Resource()
 {
+	name = _name;
+	bitmap = _bitmap;
+	bitmap_size = _bitmap_size;
+	height = _height;
+	width = _width;
+	line_height = _line_height;
+	info = _info;
+
+	SetAssetsPath(_filepath);
 }
 
 void Font::Save(Data & data) const
@@ -65,9 +73,4 @@ int Font::GetLineHeight()
 stbtt_fontinfo Font::GetInfo()
 {
 	return info;
-}
-
-const char* Font::GetFilePath()
-{
-	return filepath.c_str();
 }

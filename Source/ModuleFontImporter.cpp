@@ -2,6 +2,9 @@
 #include "Globals.h"
 #include "Font.h"
 
+#define STB_TRUETYPE_IMPLEMENTATION
+#include "imgui\stb_truetype.h"
+
 ModuleFontImporter::ModuleFontImporter(Application * app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 }
@@ -63,7 +66,17 @@ Font* ModuleFontImporter::LoadFont(const char * filepath)
 	fonts.push_back(font);
 
 	return font;
+}
 
-	//return nullptr;
+Font * ModuleFontImporter::GetFontAlreadyLoaded(const char * filepath)
+{
+	Font* ret = nullptr;
+
+	for (std::vector<Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
+	{
+		if((*it)->GetAssetsPath())
+	}
+
+	return ret;
 }
 

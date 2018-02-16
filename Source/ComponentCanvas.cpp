@@ -163,7 +163,6 @@ void ComponentCanvas::AddDrawElement(CanvasDrawElement de)
 	draws.push_back(de);
 }
 
-
 void ComponentCanvas::ClearDrawElements()
 {
 	draws.clear();

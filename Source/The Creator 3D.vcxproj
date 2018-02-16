@@ -230,14 +230,13 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDome.h" />
-    <ClInclude Include="STB\stb_rect_pack.h" />
-    <ClInclude Include="STB\stb_textedit.h" />
-    <ClInclude Include="STB\stb_truetype.h" />
+    <ClInclude Include="STB\_engine_stb_truetype_.h" />
     <ClInclude Include="TagsAndLayers.h" />
     <ClInclude Include="TagsAndLayersWindow.h" />
     <ClInclude Include="TextEditorWindow.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="tinyfiledialogs.h" />
+    <ClInclude Include="UsefulFunctions.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="AssetsWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -356,6 +355,7 @@
     <ClCompile Include="TextEditorWindow.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
+    <ClCompile Include="UsefulFunctions.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="AssetsWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />

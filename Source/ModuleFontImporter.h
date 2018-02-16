@@ -5,8 +5,6 @@
 #include <vector>
 #include <string>
 
-#include "STB\stb_truetype.h"
-
 class Font;
 class Texture;
 
@@ -21,6 +19,7 @@ public:
 	bool CleanUp();
 
 	Font* LoadFont(const char* filepath);
+	Font* GetFontAlreadyLoaded(const char* filepath);
 	//void UnloadFont(Font* font);
 	//Texture LoadText(const char* text, Font* font, uint size);
 
