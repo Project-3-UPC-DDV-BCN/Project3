@@ -1,46 +1,9 @@
 #include "Font.h"
-#include "freetype/ftglyph.h"
+#include "freetype/ftglyph.h" 
+#include "OpenGL.h"
 
-FontFace::FontFace(FT_Face _face)
+Font::Font(const char * _filepath, const char * _name, unsigned char * _bitmap, uint _bitmap_size, int _height, int _width, int _line_height, stbtt_fontinfo _info)
 {
-	face = _face;
-}
-
-FT_Face FontFace::GetFace()
-{
-	return face;
-}
-
-int FontFace::LoadText(std::string text, int size)
-{
-	FT_Set_Pixel_Sizes(face, 0, size);
-
-	for (int i = 0; i < text.length(); ++i)
-	{
-		FT_Load_Char(face, text[i], FT_LOAD_RENDER);
-
-		FT_GlyphSlot glyph = face->glyph;
-	}
-}
-
-void Font::AddFace(FontFace face)
-{
-	faces.push_back(face);
-}
-
-std::vector<FontFace> Font::GetFaces()
-{
-	return faces;
-}
-
-std::string Font::GetFilePath()
-{
-	return filepathname;
-}
-
-Font::Font(const char * filepath)
-{
-	filepathname = filepath;
 }
 
 void Font::Save(Data & data) const
@@ -62,4 +25,49 @@ void Font::LoadToMemory()
 
 void Font::UnloadFromMemory()
 {
+}
+
+void Font::CleanUp()
+{
+	RELEASE_ARRAY(bitmap);
+}
+
+const char* Font::GetName()
+{
+	return name.c_str();
+}
+
+unsigned char* Font::GetBitmap()
+{
+	return bitmap;
+}
+
+uint Font::GetBitmapSize()
+{
+	return bitmap_size;
+}
+
+int Font::GetWidth()
+{
+	return width;
+}
+
+int Font::GetHeight()
+{
+	return height;
+}
+
+int Font::GetLineHeight()
+{
+	return line_height;
+}
+
+stbtt_fontinfo Font::GetInfo()
+{
+	return info;
+}
+
+const char* Font::GetFilePath()
+{
+	return filepath.c_str();
 }

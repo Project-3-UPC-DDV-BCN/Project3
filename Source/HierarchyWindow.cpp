@@ -74,6 +74,12 @@ void HierarchyWindow::DrawWindow()
 							App->scene->CreateImage(parent);
 						}
 
+						if (ImGui::MenuItem("Text"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateText(parent);
+						}
+
 						ImGui::EndMenu();
 					}
 
@@ -99,6 +105,12 @@ void HierarchyWindow::DrawWindow()
 				{
 					App->scene->CreateImage(nullptr);
 				}
+
+				if (ImGui::MenuItem("Text"))
+				{
+					App->scene->CreateText(nullptr);
+				}
+
 
 				ImGui::EndMenu();
 			}

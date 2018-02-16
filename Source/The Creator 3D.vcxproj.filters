@@ -58,6 +58,9 @@
     <Filter Include="Sources\GameObject\Components\UI">
       <UniqueIdentifier>{f18dd8bf-afb5-4de2-b3fb-c509ebcaa83f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3d Party\STB">
+      <UniqueIdentifier>{1f6b60ca-d3fd-44d3-9047-7ed21e715213}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -522,6 +525,18 @@
     <ClInclude Include="ModuleFontImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentText.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="STB\stb_rect_pack.h">
+      <Filter>Sources\3d Party\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="STB\stb_textedit.h">
+      <Filter>Sources\3d Party\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="STB\stb_truetype.h">
+      <Filter>Sources\3d Party\STB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -868,6 +883,9 @@
     </ClCompile>
     <ClCompile Include="ModuleFontImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentText.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

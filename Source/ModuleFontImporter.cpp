@@ -2,8 +2,6 @@
 #include "Globals.h"
 #include "Font.h"
 
-#pragma comment (lib, "FreeType/lib/freetype.lib")
-
 ModuleFontImporter::ModuleFontImporter(Application * app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 }
@@ -15,12 +13,6 @@ ModuleFontImporter::~ModuleFontImporter()
 bool ModuleFontImporter::Init(Data * editor_config)
 {
 	bool ret = true;
-
-	FT_Error error = FT_Init_FreeType(&library);
-	if (error)
-	{
-		CONSOLE_LOG("An error occurred during FreeType library initialization");
-	}
 
 	return ret;
 }
@@ -38,72 +30,40 @@ bool ModuleFontImporter::CleanUp()
 {
 	bool ret = true;
 
-	FT_Done_FreeType(library);
-
 	return ret;
 }
 
-Font * ModuleFontImporter::LoadFont(const char * filepath)
+Font* ModuleFontImporter::LoadFont(const char * filepath)
 {
-	Font* ret = new Font(filepath);
-
-	bool next_face = true;
-	int face_index = 0;
-
-	bool found = false;
-	for (std::vector<Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
+	long size = 0;
+	unsigned char* fontBuffer = nullptr;
+	
+	FILE * fontFile = fopen(filepath, "rb");
+	fseek(fontFile, 0, SEEK_END);
+	size = ftell(fontFile); /* how long is the file ? */
+	fseek(fontFile, 0, SEEK_SET); /* reset */
+	
+	fontBuffer = new unsigned char[size];
+	
+	fread(fontBuffer, size, 1, fontFile);
+	fclose(fontFile);
+	
+	stbtt_fontinfo info;
+	if (!stbtt_InitFont(&info, fontBuffer, 0))
 	{
-		if ((*it)->GetFilePath() == filepath)
-		{
-			found = true;
-			ret = *it;
-		}
+		CONSOLE_LOG("Loading font failed");
 	}
+	
+	int b_w = 512; /* bitmap width */
+	int b_h = 128; /* bitmap height */
+	int l_h = 64; /* line height */
+	
+	
+	Font* font = new Font(filepath, "name", fontBuffer, size, b_w, b_h, l_h, info);
+	fonts.push_back(font);
 
-	if (!found)
-	{
-		bool next_face = true;
-		int face_index = 0;
+	return font;
 
-		while (next_face)
-		{
-			FT_Face face;
-
-			FT_Error error = FT_New_Face(library, filepath, face_index, &face);
-			if (error)
-			{
-				next_face = false;
-			}
-			else
-			{
-				ret->AddFace(face);
-			}
-
-			++face_index;
-		}
-	}
-
-	return ret;
-}
-
-void ModuleFontImporter::InitFont(Font * font)
-{
-	std::vector<FontFace> faces = font->GetFaces();
-
-	for (std::vector<FontFace>::iterator it = faces.begin(); it != faces.end(); ++it)
-	{
-		FT_Face curr_face = (*it).GetFace();
-
-		for (int i = 0; i < 256; ++i)
-		{
-			//Load and render glyph
-			FT_Error error = FT_Load_Char(curr_face, i, FT_LOAD_RENDER);
-
-			if (!error)
-			{
-				curr_face->name
-			}
-		}
-	}
+	//return nullptr;
 }
 

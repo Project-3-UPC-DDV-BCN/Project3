@@ -12,6 +12,7 @@ class ComponentFactory;
 class ComponentRectTransform;
 class ComponentCanvas;
 class ComponentImage;
+class ComponentText;
 class GameObject;
 
 class PropertiesWindow :
@@ -30,7 +31,8 @@ public:
 	void DrawFactoryPanel(ComponentFactory* factory);
 	void DrawRectTransformPanel(ComponentRectTransform* rect_transform);
 	void DrawCanvasPanel(ComponentCanvas* canvas);
-	void DrawImagePanel(ComponentImage* canvas);
+	void DrawImagePanel(ComponentImage* image);
+	void DrawTextPanel(ComponentText* text);
 
 private:
 	int scripts_count;

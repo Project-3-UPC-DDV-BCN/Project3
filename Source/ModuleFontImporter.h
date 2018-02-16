@@ -5,10 +5,10 @@
 #include <vector>
 #include <string>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include "STB\stb_truetype.h"
 
 class Font;
+class Texture;
 
 class ModuleFontImporter : public Module
 {
@@ -21,12 +21,10 @@ public:
 	bool CleanUp();
 
 	Font* LoadFont(const char* filepath);
+	//void UnloadFont(Font* font);
+	//Texture LoadText(const char* text, Font* font, uint size);
 
 private:
-	void InitFont(Font* font);
-
-private:
-	FT_Library  library;
 	std::vector<Font*> fonts;
 };
 

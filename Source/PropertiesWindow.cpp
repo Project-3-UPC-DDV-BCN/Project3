@@ -248,6 +248,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompImage:
 		DrawImagePanel((ComponentImage*)component);
 		break;
+	case Component::CompText:
+		DrawTextPanel((ComponentText*)component);
+		break;
 	default:
 		break;
 	}
@@ -457,9 +460,16 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 		{
 			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
 		}
+	}
+}
+
+void PropertiesWindow::DrawTextPanel(ComponentText * text)
+{
+	if (ImGui::CollapsingHeader("Text", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
 
 	}
-
 }
 
 void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_renderer)

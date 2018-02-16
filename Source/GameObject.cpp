@@ -11,6 +11,7 @@
 #include "ComponentRectTransform.h"
 #include "ComponentCanvas.h"
 #include "ComponentImage.h"
+#include "ComponentText.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -96,6 +97,11 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		SetIsUI(true);
 		components_list.push_back(component = new ComponentImage(this));
 		SetName("Image");
+		break;
+	case Component::CompText:
+		SetIsUI(true);
+		components_list.push_back(component = new ComponentText(this));
+		SetName("Text");
 		break;
 	default:
 		break;

@@ -3,38 +3,39 @@
 
 #include "Resource.h"
 #include "ModuleFontImporter.h"
-
-class FontFace
-{
-public:
-	FontFace(FT_Face face);
-
-	FT_Face GetFace();
-	int LoadText(std::string text, int size);
-
-private:
-	FT_Face face;
-	uint texture_id;
-};
+#include "ModuleFontImporter.h"
 
 class Font : public Resource
 {
 public:
-	Font(const char* filepath);
+	Font(const char* _filepath, const char * _name, unsigned char * _bitmap, uint _bitmap_size, int _height, int _width, int _line_height, stbtt_fontinfo _info);
 
 	void Save(Data& data) const;
 	bool Load(Data& data);
 	void CreateMeta() const;
 	void LoadToMemory();
 	void UnloadFromMemory();
+	void CleanUp();
 
-	void AddFace(FontFace face);
-	std::vector<FontFace> GetFaces();
-	std::string GetFilePath();
+	const char* GetName();
+	unsigned char* GetBitmap();
+	uint GetBitmapSize();
+	int GetWidth();
+	int GetHeight();
+	int GetLineHeight();
+	stbtt_fontinfo GetInfo();
+	const char* GetFilePath();
 
 private:
-	std::vector<FontFace> faces;
-	std::string filepathname;
+	private:
+	std::string    name = nullptr;
+	unsigned char* bitmap = nullptr;
+	uint		   bitmap_size = 0;
+	int			   width = 0;
+	int			   height = 0;
+	int			   line_height = 0;
+	stbtt_fontinfo info;
+	std::string	   filepath = nullptr;
 };
 
-#endif !_H_RESOURCE_FONT__
+#endif //!_H_RESOURCE_FONT__
