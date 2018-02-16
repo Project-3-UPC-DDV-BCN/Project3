@@ -23,6 +23,7 @@ public:
 	~ModuleScene();
 
 	void CreateMainCamera();
+	void CreateMainLight();
 
 	bool Start();
 	update_status Update(float dt);

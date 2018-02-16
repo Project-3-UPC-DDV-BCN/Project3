@@ -50,6 +50,13 @@ public:
 	float* GetCutOffToEdit() const;
 	float* GetOuterCutOffToEdit() const;
 
+	void SetPositionOffset(float3 pos);
+	float3 GetPosOffset() const;
+	void SetRotationOffset(float3 rotation);
+	float3 GetRotationOffset() const;
+	float3 GetLightPosition() const;
+	float3 GetLightRotation() const;
+
 private:
 	Color color = White;
 	LightType type = SPOT_LIGHT;
@@ -58,4 +65,7 @@ private:
 	float specular = 10.0f;
 	float cutOff = 12.0f;
 	float outercutOff = 12.0f;
+
+	float3 light_offset_pos;
+	float3 light_offset_rotation;
 };

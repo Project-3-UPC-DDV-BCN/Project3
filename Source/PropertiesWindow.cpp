@@ -132,7 +132,12 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
-			if (ImGui::BeginMenu("Script")) {
+				if (ImGui::MenuItem("Light")) {
+					if (selected_gameobject->GetComponent(Component::CompLight) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompLight);
+					}
+				}
+				if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
 
@@ -602,14 +607,27 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				ImGui::EndPopup();
 			}
 
-			if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
-			}
+			float3 light_pos = comp_light->GetPosOffset();
+			float3 light_rot = comp_light->GetRotationOffset();
 
 			switch (comp_light->GetLightType())
 			{
 			case DIRECTIONAL_LIGHT:
+				if (ImGui::DragFloat3("Rotation##light_rotation", (float*)&light_rot, is_active, 0.25f, 0.0f)) {
+					comp_light->SetRotationOffset(light_rot);
+				}
+				if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
 				break;
 			case SPOT_LIGHT:
+				if (ImGui::DragFloat3("Position##light_pos", (float*)&light_pos, is_active, 0.25f, 0.0f)) {
+					comp_light->SetPositionOffset(light_pos);
+				}
+				if (ImGui::DragFloat3("Rotation##light_rotation", (float*)&light_rot, is_active, 0.25f, 0.0f)) {
+					comp_light->SetRotationOffset(light_rot);
+				}
+				if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
 				if (ImGui::DragFloat("Specular", comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
 				}
 				if (ImGui::DragFloat("CutOff", comp_light->GetCutOffToEdit(), is_active, 0.25f, 0.0f)) {
@@ -618,18 +636,20 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				}
 				break;
 			case POINT_LIGHT:
+				if (ImGui::DragFloat3("Position##light_pos", (float*)&light_pos, is_active, 0.25f, 0.0f)) {
+					comp_light->SetPositionOffset(light_pos);
+				}
+				if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
 				if (ImGui::DragFloat("Specular", comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
 				}
 				if (ImGui::DragFloat("Ambient", comp_light->GetAmbientToEdit(), is_active, 0.25f, 0.0f)) {
 				}
 			}
-			if (ImGui::CollapsingHeader("Color", ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
-				flags |= ImGuiColorEditFlags_RGB;
-
-				ImGui::ColorPicker4("Current Color##4", comp_light->GetColorToEdit(), flags);
-			}
+			ImGui::Text("Light Color");
+			ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+			flags |= ImGuiColorEditFlags_RGB;
+			ImGui::ColorPicker4("Current Color##4", comp_light->GetColorToEdit(), flags);
 		}
 	}
 }

@@ -14,6 +14,8 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	SetGameObject(attached_gameobject);
 	App->renderer3D->AddLight(this);
 	color = Color(1.0, 1.0, 1.0, 1.0);
+	light_offset_pos = float3::zero;
+	light_offset_rotation = float3::zero;
 }
 
 ComponentLight::~ComponentLight()
@@ -116,8 +118,7 @@ void ComponentLight::SetTypeToDirectional()
 	outercutOff = 0;
 	type = DIRECTIONAL_LIGHT;
 
-	ComponentTransform* trans = (ComponentTransform*) GetGameObject()->GetComponent(Component::CompTransform);
-	trans->SetRotation(float3 (-250, -35, 0));
+	light_offset_rotation = { -100, -150, 0 };
 
 	App->renderer3D->AddLight(this);
 }
@@ -226,4 +227,40 @@ float * ComponentLight::GetCutOffToEdit() const
 float * ComponentLight::GetOuterCutOffToEdit() const
 {
 	return (float*)&outercutOff;
+}
+
+void ComponentLight::SetPositionOffset(float3 pos)
+{
+	light_offset_pos = pos;
+}
+
+float3 ComponentLight::GetPosOffset() const
+{
+	return light_offset_pos;
+}
+
+void ComponentLight::SetRotationOffset(float3 rotation)
+{
+	light_offset_rotation = rotation;
+}
+
+float3 ComponentLight::GetRotationOffset() const
+{
+	return light_offset_rotation;
+}
+
+float3 ComponentLight::GetLightPosition() const
+{
+	float3 new_pos;
+	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	new_pos = transform->GetGlobalPosition() + light_offset_pos;
+	return new_pos;
+}
+
+float3 ComponentLight::GetLightRotation() const
+{
+	float3 new_rot;
+	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	new_rot = transform->GetMatrix().WorldZ() + light_offset_rotation;
+	return new_rot;
 }

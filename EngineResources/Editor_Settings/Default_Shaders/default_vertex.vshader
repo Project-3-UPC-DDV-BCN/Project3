@@ -6,9 +6,8 @@ layout(location = 3) in vec4 color;
 
 out vec4 ourColor;
 out vec3 Normal;
-out vec2 TexCoord;
 out vec3 FragPos;
-
+out vec2 TexCoord;
 uniform mat4 Model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -16,8 +15,7 @@ uniform mat4 projection;
 void main()
 { 
 	gl_Position = projection * view * Model * vec4(position, 1.0f);
-	FragPos = vec3(Model * vec4(position, 1.0));
 	Normal = mat3(transpose(inverse(Model))) * normals;
-	ourColor = color;
+	FragPos = vec3(Model * vec4(position, 1.0));	ourColor = color;
 	TexCoord = texCoord.xy;
 }

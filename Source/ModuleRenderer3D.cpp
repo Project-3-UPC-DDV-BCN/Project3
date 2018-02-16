@@ -953,10 +953,11 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 		else
 		{
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+			ComponentLight* light = nullptr;
+			light = (ComponentLight*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompLight);
+
 			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
+			SetUniformVector3(program, tmp.c_str(), light->GetLightRotation());
 			tmp = plstr + "ambient";
 			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient()));
 			tmp = plstr + "diffuse";
@@ -982,13 +983,13 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 		else
 		{
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+			ComponentLight* light = nullptr;
+			light = (ComponentLight*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompLight);
 
 			tmp = plstr + "position";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
+			SetUniformVector3(program, tmp.c_str(), light->GetLightPosition());
 			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetMatrix().WorldZ());
+			SetUniformVector3(program, tmp.c_str(), light->GetLightRotation());
 			tmp = plstr + "constant";
 			SetUniformFloat(program, tmp.c_str(), 1.0f);
 			tmp = plstr + "linear";
@@ -1023,11 +1024,11 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 		else
 		{
-			ComponentTransform* light_transform = nullptr;
-			light_transform = (ComponentTransform*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+			ComponentLight* light = nullptr;
+			light = (ComponentLight*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompLight);
 
 			tmp = plstr + "position";
-			SetUniformVector3(program, tmp.c_str(), light_transform->GetGlobalPosition());
+			SetUniformVector3(program, tmp.c_str(), light->GetLightPosition());
 			tmp = plstr + "constant";
 			SetUniformFloat(program, tmp.c_str(), 1.0f);
 			tmp = plstr + "linear";

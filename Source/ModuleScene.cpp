@@ -23,6 +23,7 @@
 #include "SkyDome.h"
 #include "ComponentScript.h";
 #include "GameWindow.h"
+#include "ComponentLight.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -58,6 +59,7 @@ bool ModuleScene::Start()
 	mCurrentGizmoMode = ImGuizmo::LOCAL;
 
 	CreateMainCamera();
+	CreateMainLight();
 
 	skybox = new CubeMap(500);
 	skybox->SetCubeMapTopTexture(EDITOR_SKYBOX_FOLDER"top.bmp");
@@ -89,6 +91,17 @@ void ModuleScene::CreateMainCamera()
 	{
 		App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
 	}
+}
+
+void ModuleScene::CreateMainLight()
+{
+	GameObject* main_light = new GameObject();
+	main_light->SetName("Directional Light");
+	ComponentLight* light = (ComponentLight*)main_light->AddComponent(Component::CompLight);
+	light->SetTypeToDirectional();
+	scene_gameobjects.push_back(main_light);
+	root_gameobjects.push_back(main_light);
+	App->resources->AddGameObject(main_light);
 }
 
 // Load assets
@@ -403,6 +416,7 @@ void ModuleScene::NewScene(bool loading_scene)
 	if (!loading_scene)
 	{
 		CreateMainCamera();
+		CreateMainLight();
 	}
 }
 
