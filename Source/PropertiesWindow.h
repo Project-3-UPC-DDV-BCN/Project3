@@ -31,5 +31,6 @@ public:
 private:
 	int scripts_count;
 	int factories_count;
+	int lights_count;
 };
 

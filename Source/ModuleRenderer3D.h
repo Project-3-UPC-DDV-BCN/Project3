@@ -86,6 +86,10 @@ public:
 	void DeleteProgram(uint program_id);
 
 	void SendLight(uint program_id);
+	int GetDirectionalLightCount() const;
+	int GetSpotLightCount() const;
+	int GetPointLightCount() const;
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
@@ -117,6 +121,10 @@ private:
 	ComponentLight* dir_lights[MAX_DIR_LIGHT];
 	ComponentLight* poi_lights[MAX_POI_LIGHT];
 	ComponentLight* spo_lights[MAX_SPO_LIGHT];
+
+	int directional_light_count;
+	int point_light_count;
+	int spot_light_count;
 
 	std::list<Primitive*> debug_primitive_to_draw;
 

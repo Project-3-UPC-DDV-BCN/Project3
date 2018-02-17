@@ -39,7 +39,6 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	editor_camera = nullptr;
 	game_camera = nullptr;
 	use_skybox = true;
-	lights_count = 0;
 
 	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
 		dir_lights[i] = nullptr;
@@ -49,6 +48,10 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 
 	for (uint i = 0; i < MAX_POI_LIGHT; ++i)
 		poi_lights[i] = nullptr;
+
+	directional_light_count = 0;
+	point_light_count = 0;
+	spot_light_count = 0;
 }
 
 // Destructor
@@ -528,11 +531,9 @@ void ModuleRenderer3D::AddLight(ComponentLight * light)
 				if (dir_lights[i] == nullptr)
 				{
 					dir_lights[i] = light;
+					directional_light_count++;
 					return;
-					// ADD WARNING
-					//CONSOLE_WARNING();
 				}
-				CONSOLE_WARNING("Exceeded limit of directional lights.");
 			}
 			break;
 		case SPOT_LIGHT:
@@ -541,10 +542,9 @@ void ModuleRenderer3D::AddLight(ComponentLight * light)
 				if (spo_lights[i] == nullptr)
 				{
 					spo_lights[i] = light;
+					spot_light_count++;
 					return;
-					// ADD WARNING
 				}
-				CONSOLE_WARNING("Exceeded limit of spot lights.");
 			}
 			break;
 		case POINT_LIGHT:
@@ -553,10 +553,9 @@ void ModuleRenderer3D::AddLight(ComponentLight * light)
 				if (poi_lights[i] == nullptr)
 				{
 					poi_lights[i] = light;
+					point_light_count++;
 					return;
-					// ADD WARNING
 				}
-				CONSOLE_WARNING("Exceeded limit of point lights.");
 			}
 			break;
 		}
@@ -574,9 +573,8 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 				if (dir_lights[i] == light)
 				{
 					dir_lights[i] = nullptr;
+					directional_light_count--;
 					return;
-					// ADD WARNING
-					//CONSOLE_WARNING();
 				}
 			}
 			break;
@@ -586,8 +584,8 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 				if (spo_lights[i] == light)
 				{
 					spo_lights[i] = nullptr;
+					spot_light_count--;
 					return;
-					// ADD WARNING
 				}
 			}
 			break;
@@ -597,8 +595,8 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 				if (poi_lights[i] == light)
 				{
 					poi_lights[i] = nullptr;
+					point_light_count--;
 					return;
-					// ADD WARNING
 				}
 			}
 			break;
@@ -1048,5 +1046,17 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 	}
 
+}
+int ModuleRenderer3D::GetDirectionalLightCount() const
+{
+	return directional_light_count;
+}
+int ModuleRenderer3D::GetSpotLightCount() const
+{
+	return spot_light_count;
+}
+int ModuleRenderer3D::GetPointLightCount() const
+{
+	return point_light_count;
 }
 // ------------------------------------------------

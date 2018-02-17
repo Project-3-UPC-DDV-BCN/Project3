@@ -67,8 +67,6 @@ private:
 	float outercutOff = 12.0f;
 
 	float3 light_offset_pos;
-	float3 light_offset_rotation;
+	float3 light_offset_direction;
 	float3 direction;
-	float3 position;
-	bool initial_direction_set;
 };
