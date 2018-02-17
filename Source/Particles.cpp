@@ -397,7 +397,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 	}
 	else
 	{
@@ -407,9 +407,11 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-	/*	glEnable(GL_BLEND); 
-		glEnable(GL_ALPHA_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
+		//glEnable(GL_BLEND); 
+		//glEnable(GL_ALPHA_TEST);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
 	}

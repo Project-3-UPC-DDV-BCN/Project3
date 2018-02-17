@@ -11,14 +11,12 @@ uniform bool has_texture;
 uniform sampler2D ourTexture;
 
 void main()
-{
-	if(color.a == 0.0f)
-		discard; 
-		
+{		
 	if(has_texture)
 		color = texture(ourTexture, TexCoord);
 	else if(has_material_color)
 		color = material_color;
 	else
 		color = ourColor;
+		
 }

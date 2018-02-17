@@ -287,10 +287,172 @@ ComponentParticleEmmiter::~ComponentParticleEmmiter()
 
 void ComponentParticleEmmiter::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.CreateSection("Particle");
+
+	// Emmit area -----
+	data.AddBool("Show_Emit_Area", show_emit_area); 
+
+	data.AddFloat("Emit_Width", emmit_width); 
+	data.AddFloat("Emit_Height", emmit_height);
+	data.AddFloat("Emit_Depth", emmit_depth);
+
+	// -----
+
+	// Textures ----
+
+	if(root_particle->GetAnimationController()->GetNumFrames() == 0)
+		data.AddBool("Has_Texture", false);
+	else
+	{
+		data.AddBool("Has_Texture", true);
+
+		int frame_num = 1; 
+		for (vector<Texture*>::iterator it = root_particle->components.particle_animation.frames_stack.begin(); it != root_particle->components.particle_animation.frames_stack.end(); it++)
+		{
+			string tex_name("Frame_");
+			tex_name += to_string(frame_num); 
+			frame_num++; 
+
+			data.AddInt(tex_name, (*it)->GetUID()); 
+		}
+	}
+
+	//------
+
+	// Colors -----
+
+	// ------
+
+	// Motion -----
+
+	data.AddBool("Relative_Pos", relative_pos); 
+	data.AddBool("Emmision_Rate", emmision_rate);
+	data.AddBool("Lifetime", max_lifetime);
+	data.AddBool("Initial_Velocity", velocity);
+	data.AddVector3("Gravity", gravity);
+	data.AddBool("Angular_Velocity", angular_v);
+	data.AddBool("Emmision_Angle", emision_angle);
+
+	// ------
+
+	// Interpolation -----
+
+	if (change_color_interpolation)
+	{
+		data.AddBool("Color_Interpolation", true);
+	}
+	else
+		data.AddBool("Color_Interpolation", false); 
+	
+	if (change_size_interpolation)
+	{
+		data.AddBool("Size_Interpolation", true);
+
+		data.AddVector3("Initial_Size", initial_scale); 
+		data.AddVector3("Final_Size", final_scale);
+	}
+	else
+		data.AddBool("Size_Interpolation", false);
+
+	if (change_rotation_interpolation)
+	{
+		data.AddBool("Rotation_Interpolation", true);
+
+		data.AddFloat("Initial_Rotation", initial_angular_v);
+		data.AddFloat("Final_Rotation", final_angular_v);
+	}
+	else
+		data.AddBool("Rotation_Interpolation", false);
+
+	// ------
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
 {
+	SetType((Component::ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	data.EnterSection("Particle");
+
+	// Emmit area -----
+	show_emit_area = data.GetBool("Show_Emit_Area"); 
+
+	emmit_width = data.GetFloat("Emit_Width"); 
+	emmit_height = data.GetFloat("Emit_Height");
+	emmit_depth = data.GetFloat("Emit_Depth");
+
+	// -----
+
+	// Textures ----
+
+	if (root_particle->GetAnimationController()->GetNumFrames() == 0)
+		data.AddBool("Has_Texture", false);
+	else
+	{
+		data.AddBool("Has_Texture", true);
+
+		int frame_num = 1;
+		for (vector<Texture*>::iterator it = root_particle->components.particle_animation.frames_stack.begin(); it != root_particle->components.particle_animation.frames_stack.end(); it++)
+		{
+			string tex_name("Frame_");
+			tex_name += to_string(frame_num);
+			frame_num++;
+
+			data.AddInt(tex_name, (*it)->GetUID());
+		}
+	}
+
+	//------
+
+	// Colors -----
+
+	// ------
+
+	// Motion -----
+
+	data.AddBool("Relative_Pos", relative_pos);
+	data.AddBool("Emmision_Rate", emmision_rate);
+	data.AddBool("Lifetime", max_lifetime);
+	data.AddBool("Initial_Velocity", velocity);
+	data.AddVector3("Gravity", gravity);
+	data.AddBool("Angular_Velocity", angular_v);
+	data.AddBool("Emmision_Angle", emision_angle);
+
+	// ------
+
+	// Interpolation -----
+
+	if (change_color_interpolation)
+	{
+		data.AddBool("Color_Interpolation", true);
+	}
+	else
+		data.AddBool("Color_Interpolation", false);
+
+	if (change_size_interpolation)
+	{
+		data.AddBool("Size_Interpolation", true);
+
+		data.AddVector3("Initial_Size", initial_scale);
+		data.AddVector3("Final_Size", final_scale);
+	}
+	else
+		data.AddBool("Size_Interpolation", false);
+
+	if (change_rotation_interpolation)
+	{
+		data.AddBool("Rotation_Interpolation", true);
+
+		data.AddFloat("Initial_Rotation", initial_angular_v);
+		data.AddFloat("Final_Rotation", final_angular_v);
+	}
+	else
+		data.AddBool("Rotation_Interpolation", false);
+
+	// ------
 }
 
 void ComponentParticleEmmiter::ReoderParticles(ComponentCamera * rendering_camera)

@@ -606,25 +606,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 		if (current_emmiter->IsActive())
 		{
-			ImGui::Separator();
+			//ImGui::Separator();
 
-			static int particle_template;
-			ImGui::Combo("Templates", &particle_template, "Select Template\0Custom\0");
+			//static int particle_template;
+			//ImGui::Combo("Templates", &particle_template, "Select Template\0Custom\0");
 
-			if (particle_template == 0)
-				return;
+			//if (particle_template == 0)
+			//	return;
 
-			switch (particle_template)
-			{
-			case 1:
-				//Here we set properties for the particles to look like smoke 
+			//switch (particle_template)
+			//{
+			//case 1:
+			//	//Here we set properties for the particles to look like smoke 
 
-				break;
-			}
+			//	break;
+			//}
 
-			bool update_root = false;
+			//bool update_root = false;
 
-			ImGui::Separator(); 
+			//ImGui::Separator(); 
 
 			if (ImGui::Button("PLAY"))
 			{
@@ -859,13 +859,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				}
 
 				ImGui::TreePop();
-			}
-
-			ImGui::Separator(); 
-
-			if (ImGui::Button("Save as Template"))
-			{
-
 			}
 
 		}
