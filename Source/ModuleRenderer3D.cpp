@@ -277,7 +277,6 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
 
 	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);

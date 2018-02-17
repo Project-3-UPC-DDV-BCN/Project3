@@ -22,16 +22,22 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	void SetText(const char* text);
+	std::string GetText();
+
 private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
+	void UpdateText();
 
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
 
+	std::string text;
+
 	Font* font;
 	float4 colour;
-	bool flip;
+	bool bold;
 	uint texture;
 
 };

@@ -1,17 +1,10 @@
 #include "Font.h"
 #include "OpenGL.h"
 
-Font::Font(const char * _filepath, const char * _name, unsigned char * _bitmap, uint _bitmap_size, int _height, int _width, int _line_height, stbtt_fontinfo _info) : Resource()
+Font::Font(const char * _filepath) : Resource()
 {
-	name = _name;
-	bitmap = _bitmap;
-	bitmap_size = _bitmap_size;
-	height = _height;
-	width = _width;
-	line_height = _line_height;
-	info = _info;
-
 	SetAssetsPath(_filepath);
+	SetFontSize(24);
 }
 
 void Font::Save(Data & data) const
@@ -37,40 +30,43 @@ void Font::UnloadFromMemory()
 
 void Font::CleanUp()
 {
-	RELEASE_ARRAY(bitmap);
+	TTF_CloseFont(font);
 }
 
-const char* Font::GetName()
+void Font::SetFontSize(uint _size)
 {
-	return name.c_str();
+	TTF_CloseFont(font);
+
+	font = TTF_OpenFont(GetAssetsPath().c_str(), _size);
+
+	valid = false;
+	if (font != nullptr)
+		valid = true;
+
+	size = _size;
 }
 
-unsigned char* Font::GetBitmap()
+TTF_Font * Font::GetTTFFont()
 {
-	return bitmap;
+	return font;
 }
 
-uint Font::GetBitmapSize()
+const char * Font::GetFamilyName()
 {
-	return bitmap_size;
+	return TTF_FontFaceFamilyName(font);
 }
 
-int Font::GetWidth()
+const char * Font::GetStyleName()
 {
-	return width;
+	return TTF_FontFaceStyleName(font);
 }
 
-int Font::GetHeight()
+uint Font::GetFontSize()
 {
-	return height;
+	return size;
 }
 
-int Font::GetLineHeight()
+bool Font::GetValid() const
 {
-	return line_height;
-}
-
-stbtt_fontinfo Font::GetInfo()
-{
-	return info;
+	return valid;
 }

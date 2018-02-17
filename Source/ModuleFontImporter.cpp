@@ -1,9 +1,15 @@
 #include "ModuleFontImporter.h"
 #include "Globals.h"
 #include "Font.h"
+#include "UsefulFunctions.h"
+#include "Texture.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
+#include "OpenGL.h"
 
-#define STB_TRUETYPE_IMPLEMENTATION
-#include "imgui\stb_truetype.h"
+#include "SDL/include/SDL.h"
+#include "SDL_ttf/include/SDL_ttf.h"
+#pragma comment( lib, "SDL_ttf/libx86/SDL2_ttf.lib" )
 
 ModuleFontImporter::ModuleFontImporter(Application * app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -17,6 +23,14 @@ bool ModuleFontImporter::Init(Data * editor_config)
 {
 	bool ret = true;
 
+	CONSOLE_LOG("Init True Type Font library");
+
+	if (TTF_Init() == -1)
+	{
+		CONSOLE_LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+		ret = false;
+	}
+
 	return ret;
 }
 
@@ -24,7 +38,7 @@ bool ModuleFontImporter::Start()
 {
 	bool ret = true;
 
-	LoadFont("C:/Users/guillemsc1/Documents/GitHub/Project3/EngineResources/arial.ttf");
+	LoadFont("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
 
 	return ret;
 }
@@ -33,50 +47,139 @@ bool ModuleFontImporter::CleanUp()
 {
 	bool ret = true;
 
+	ClearFonts();
+	TTF_Quit();
+
 	return ret;
 }
 
 Font* ModuleFontImporter::LoadFont(const char * filepath)
 {
-	long size = 0;
-	unsigned char* fontBuffer = nullptr;
-	
-	FILE * fontFile = fopen(filepath, "rb");
-	fseek(fontFile, 0, SEEK_END);
-	size = ftell(fontFile); /* how long is the file ? */
-	fseek(fontFile, 0, SEEK_SET); /* reset */
-	
-	fontBuffer = new unsigned char[size];
-	
-	fread(fontBuffer, size, 1, fontFile);
-	fclose(fontFile);
-	
-	stbtt_fontinfo info;
-	if (!stbtt_InitFont(&info, fontBuffer, 0))
+	Font* font = GetFont(filepath);
+
+	if (font == nullptr)
 	{
-		CONSOLE_LOG("Loading font failed");
+		font = new Font(filepath);
+		
+		if (font->GetValid())
+		{
+			fonts.push_back(font);
+		}
+		else
+		{
+			CONSOLE_ERROR("Error loading font with path (Wrong path?): %s", filepath);
+		}
 	}
-	
-	int b_w = 512; /* bitmap width */
-	int b_h = 128; /* bitmap height */
-	int l_h = 64; /* line height */
-	
-	
-	Font* font = new Font(filepath, "name", fontBuffer, size, b_w, b_h, l_h, info);
-	fonts.push_back(font);
 
 	return font;
 }
 
-Font * ModuleFontImporter::GetFontAlreadyLoaded(const char * filepath)
+void ModuleFontImporter::UnloadFont(Font * font)
+{
+	for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
+	{
+		if (font == (*it))
+		{
+			font->CleanUp();
+			RELEASE(font);
+			fonts.erase(it);
+			break;
+		}
+	}
+}
+
+Font * ModuleFontImporter::GetFont(const char * filepath) const
 {
 	Font* ret = nullptr;
 
-	for (std::vector<Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
+	for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
 	{
-		if((*it)->GetAssetsPath())
+		if (TextCmp((*it)->GetAssetsPath().c_str(), filepath))
+		{
+			ret = (*it);
+			break;
+		}
 	}
 
 	return ret;
 }
+
+void ModuleFontImporter::ClearFonts()
+{
+	for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
+	{
+		(*it)->CleanUp();
+		delete (*it);
+	}
+
+	fonts.clear();
+}
+
+uint ModuleFontImporter::LoadText(const char * text, Font * font, bool bold, bool italic, bool underline, bool strikethrough)
+{
+	int id = 0;
+	
+	if (font != nullptr)
+	{
+		SDL_Texture* texture = nullptr;
+
+		SDL_Color color = { 255.0f, 255.0f, 255.0f, 255.0f };
+		TTF_Font* ttf_font = font->GetTTFFont();
+		int style = 0;
+
+		if(bold)
+		{
+			style |= TTF_STYLE_BOLD;
+		}
+
+		if (italic)
+		{
+			style |= TTF_STYLE_ITALIC;
+		}
+
+		if (underline)
+		{
+			style |= TTF_STYLE_UNDERLINE;
+		}
+
+		if (strikethrough)
+		{
+			style |= TTF_STYLE_STRIKETHROUGH;
+		}
+
+		TTF_SetFontStyle(ttf_font, style);
+
+		SDL_Surface* surface = TTF_RenderText_Blended(ttf_font, text, color);
+
+		if (surface == NULL)
+		{
+			CONSOLE_ERROR("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+		}
+		else
+		{
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glGenTextures(1, (GLuint*)&id);
+			glBindTexture(GL_TEXTURE_2D, id);
+
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+
+			// Finish
+			SDL_FreeSurface(surface);
+			TTF_SetFontStyle(ttf_font, TTF_STYLE_NORMAL);
+		}
+	}
+
+	return id;
+}
+
+void ModuleFontImporter::UnloadText(uint id)
+{
+	if(id > 0)
+		glDeleteTextures(1, &id);
+}
+
 

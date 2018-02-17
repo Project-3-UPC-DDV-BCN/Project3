@@ -5,13 +5,12 @@
 
 #include "Resource.h"
 #include "ModuleFontImporter.h"
-
-#include "imgui/stb_truetype.h"
+#include "SDL_ttf/include/SDL_ttf.h"
 
 class Font : public Resource
 {
 public:
-	Font(const char* _filepath, const char * _name, unsigned char * _bitmap, uint _bitmap_size, int _height, int _width, int _line_height, stbtt_fontinfo _info);
+	Font(const char* _filepath);
 
 	void Save(Data& data) const;
 	bool Load(Data& data);
@@ -20,23 +19,19 @@ public:
 	void UnloadFromMemory();
 	void CleanUp();
 
-	const char* GetName();
-	unsigned char* GetBitmap();
-	uint GetBitmapSize();
-	int GetWidth();
-	int GetHeight();
-	int GetLineHeight();
-	stbtt_fontinfo GetInfo();
+	void SetFontSize(uint size);
+
+	TTF_Font* GetTTFFont();
+	const char* GetFamilyName();
+	const char* GetStyleName();
+	uint GetFontSize();
+	bool GetValid() const;
 
 private:
-	private:
-	std::string    name;
-	unsigned char* bitmap = nullptr;
-	uint		   bitmap_size = 0;
-	int			   width = 0;
-	int			   height = 0;
-	int			   line_height = 0;
-	stbtt_fontinfo info;
+	TTF_Font* font = nullptr;
+	uint size;
+	bool valid = false;
+
 };
 
 #endif //!_H_RESOURCE_FONT__

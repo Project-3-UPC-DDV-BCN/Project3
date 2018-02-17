@@ -7,13 +7,10 @@
 #include "MathGeoLib\Math\float2.h"
 #include "MathGeoLib\Math\float4.h"
 
-class ImVec2;
-class ImVec4;
-
 // -----------------------------------------
 // -----------------------------------------
 
-// USEFULL FUNCTIONS //
+// USEFUL FUNCTIONS //
 
 // -----------------------------------------
 // -----------------------------------------
@@ -24,7 +21,7 @@ float AngleFromTwoPoints(float x1, float y1, float x2, float y2);
 // Returns the distance from two points(can be a negative distance)
 float DistanceFromTwoPoints(float x1, float y1, float x2, float y2);
 
-// Compares two char*, true if success
+// Compares two char*, returns true if equal
 bool TextCmp(const char* text1, const char* text2);
 
 // Copies a string to another

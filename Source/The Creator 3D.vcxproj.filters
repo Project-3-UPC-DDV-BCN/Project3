@@ -58,9 +58,6 @@
     <Filter Include="Sources\GameObject\Components\UI">
       <UniqueIdentifier>{f18dd8bf-afb5-4de2-b3fb-c509ebcaa83f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\3d Party\STB">
-      <UniqueIdentifier>{1f6b60ca-d3fd-44d3-9047-7ed21e715213}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -528,11 +525,8 @@
     <ClInclude Include="ComponentText.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="STB\_engine_stb_truetype_.h">
-      <Filter>Sources\3d Party\STB</Filter>
-    </ClInclude>
     <ClInclude Include="UsefulFunctions.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -885,7 +879,7 @@
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
     <ClCompile Include="UsefulFunctions.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
