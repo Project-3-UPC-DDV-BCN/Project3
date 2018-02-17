@@ -42,7 +42,7 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Blend.json");
+	LoadSoundBank("Blend.bnk");
 	
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();

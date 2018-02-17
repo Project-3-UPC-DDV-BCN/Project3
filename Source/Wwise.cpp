@@ -1,5 +1,6 @@
 #include "Wwise.h"
 #include <assert.h>
+#include <string>
 #include "Globals.h"
 #include "include_wwise.h"
 #include "Wwise/IO/Win32/AkFilePackageLowLevelIOBlocking.h"
@@ -53,7 +54,9 @@ bool Wwise::InitWwise(const char* language)
 	SetLanguage(language);
 
 	//Loads the Init Sound Bank
-	LoadBank("SoundBanks/Init.bnk");
+	std::string init_path = ASSETS_SOUNDBANK_FOLDER;
+	init_path += "Init.bnk";
+	LoadBank(init_path.c_str());
 
 
 	return ret;

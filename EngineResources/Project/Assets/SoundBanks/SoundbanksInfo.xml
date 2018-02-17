@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="125">
+	<RootPaths>
+		<ProjectRoot>C:\Users\USUARIO\Documents\WwiseProjects\BlendingMusic\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\USUARIO\Documents\WwiseProjects\BlendingMusic\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\Users\USUARIO\Documents\GitHub\3D-Engine\Game\SoundBanks\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\Users\USUARIO\Documents\WwiseProjects\BlendingMusic\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1284457726" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Blending</ObjectPath>
+			<ShortName>Blending</ShortName>
+			<Path>Blending.bnk</Path>
+			<IncludedEvents>
+				<Event Id="2569342999" Name="Play_Blend" ObjectPath="\Events\Default Work Unit\Play_Blend"/>
+				<Event Id="3506347524" Name="Play_Short_Music" ObjectPath="\Events\Default Work Unit\Play_Short_Music"/>
+				<Event Id="3601250804" Name="Play_spell4" ObjectPath="\Events\Default Work Unit\Play_spell4"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="102774834" Language="SFX">
+					<ShortName>Muddy Waters - Hoochie Coochie Man.wav</ShortName>
+					<Path>SFX\Muddy Waters - Hoochie Coochie Man_F17FB28C.wem</Path>
+				</File>
+				<File Id="147483896" Language="SFX">
+					<ShortName>jack_in_the_box-Mike_Koenig-710345321.wav</ShortName>
+					<Path>SFX\jack_in_the_box-Mike_Koenig-710345321_F17FB28C.wem</Path>
+				</File>
+				<File Id="227208942" Language="SFX">
+					<ShortName>BAD TO THE BONE.wav</ShortName>
+					<Path>SFX\BAD TO THE BONE_F17FB28C.wem</Path>
+				</File>
+				<File Id="614144253" Language="SFX">
+					<ShortName>spell4.wav</ShortName>
+					<Path>SFX\spell4_F17FB28C.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="3916118898" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Blend</ObjectPath>
+			<ShortName>Blend</ShortName>
+			<Path>Blend.bnk</Path>
+			<IncludedEvents>
+				<Event Id="2569342999" Name="Play_Blend" ObjectPath="\Events\Default Work Unit\Play_Blend"/>
+				<Event Id="3506347524" Name="Play_Short_Music" ObjectPath="\Events\Default Work Unit\Play_Short_Music"/>
+				<Event Id="3601250804" Name="Play_spell4" ObjectPath="\Events\Default Work Unit\Play_spell4"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="102774834" Language="SFX">
+					<ShortName>Muddy Waters - Hoochie Coochie Man.wav</ShortName>
+					<Path>SFX\Muddy Waters - Hoochie Coochie Man_F17FB28C.wem</Path>
+				</File>
+				<File Id="147483896" Language="SFX">
+					<ShortName>jack_in_the_box-Mike_Koenig-710345321.wav</ShortName>
+					<Path>SFX\jack_in_the_box-Mike_Koenig-710345321_F17FB28C.wem</Path>
+				</File>
+				<File Id="227208942" Language="SFX">
+					<ShortName>BAD TO THE BONE.wav</ShortName>
+					<Path>SFX\BAD TO THE BONE_F17FB28C.wem</Path>
+				</File>
+				<File Id="614144253" Language="SFX">
+					<ShortName>spell4.wav</ShortName>
+					<Path>SFX\spell4_F17FB28C.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
