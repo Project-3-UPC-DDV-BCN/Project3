@@ -3,68 +3,18 @@
   "Platform": "Windows",
   "BasePlatform": "Windows",
   "SchemaVersion": "11",
-  "SoundbankVersion": "125",
+  "SoundbankVersion": "128",
   "RootPaths": {
-   "ProjectRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\BlendingMusic\\",
-   "SourceFilesRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\BlendingMusic\\.cache\\Windows\\",
-   "SoundBanksRoot": "C:\\Users\\USUARIO\\Documents\\GitHub\\3D-Engine\\Game\\SoundBanks\\",
+   "ProjectRoot": "C:\\Users\\Simón Stoyanov\\Documents\\WwiseProjects\\test\\",
+   "SourceFilesRoot": "C:\\Users\\Simón Stoyanov\\Documents\\WwiseProjects\\test\\.cache\\Windows\\",
+   "SoundBanksRoot": "D:\\Project3\\EngineResources\\Project\\Assets\\SoundBanks\\",
    "ExternalSourcesInputFile": "",
-   "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\BlendingMusic\\GeneratedSoundBanks\\Windows\\"
+   "ExternalSourcesOutputRoot": "C:\\Users\\Simón Stoyanov\\Documents\\WwiseProjects\\test\\GeneratedSoundBanks\\Windows\\"
   },
   "DialogueEvents": [],
   "StreamedFiles": [],
   "MediaFilesNotInAnyBank": [],
   "SoundBanks": [
-   {
-    "Id": "1284457726",
-    "Language": "SFX",
-    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Blending",
-    "ShortName": "Blending",
-    "Path": "Blending.bnk",
-    "IncludedEvents": [
-     {
-      "Id": "2569342999",
-      "Name": "Play_Blend",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Blend"
-     },
-     {
-      "Id": "3506347524",
-      "Name": "Play_Short_Music",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Short_Music"
-     },
-     {
-      "Id": "3601250804",
-      "Name": "Play_spell4",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_spell4"
-     }
-    ],
-    "IncludedMemoryFiles": [
-     {
-      "Id": "102774834",
-      "Language": "SFX",
-      "ShortName": "Muddy Waters - Hoochie Coochie Man.wav",
-      "Path": "SFX\\Muddy Waters - Hoochie Coochie Man_F17FB28C.wem"
-     },
-     {
-      "Id": "147483896",
-      "Language": "SFX",
-      "ShortName": "jack_in_the_box-Mike_Koenig-710345321.wav",
-      "Path": "SFX\\jack_in_the_box-Mike_Koenig-710345321_F17FB28C.wem"
-     },
-     {
-      "Id": "227208942",
-      "Language": "SFX",
-      "ShortName": "BAD TO THE BONE.wav",
-      "Path": "SFX\\BAD TO THE BONE_F17FB28C.wem"
-     },
-     {
-      "Id": "614144253",
-      "Language": "SFX",
-      "ShortName": "spell4.wav",
-      "Path": "SFX\\spell4_F17FB28C.wem"
-     }
-    ]
-   },
    {
     "Id": "1355168291",
     "Language": "SFX",
@@ -73,52 +23,24 @@
     "Path": "Init.bnk"
    },
    {
-    "Id": "3916118898",
+    "Id": "3157003241",
     "Language": "SFX",
-    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Blend",
-    "ShortName": "Blend",
-    "Path": "Blend.bnk",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Test",
+    "ShortName": "Test",
+    "Path": "Test.bnk",
     "IncludedEvents": [
      {
-      "Id": "2569342999",
-      "Name": "Play_Blend",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Blend"
-     },
-     {
-      "Id": "3506347524",
-      "Name": "Play_Short_Music",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Short_Music"
-     },
-     {
-      "Id": "3601250804",
-      "Name": "Play_spell4",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_spell4"
+      "Id": "4258653052",
+      "Name": "Test_Event",
+      "ObjectPath": "\\Events\\Default Work Unit\\Test_Event"
      }
     ],
     "IncludedMemoryFiles": [
      {
-      "Id": "102774834",
+      "Id": "650563162",
       "Language": "SFX",
-      "ShortName": "Muddy Waters - Hoochie Coochie Man.wav",
-      "Path": "SFX\\Muddy Waters - Hoochie Coochie Man_F17FB28C.wem"
-     },
-     {
-      "Id": "147483896",
-      "Language": "SFX",
-      "ShortName": "jack_in_the_box-Mike_Koenig-710345321.wav",
-      "Path": "SFX\\jack_in_the_box-Mike_Koenig-710345321_F17FB28C.wem"
-     },
-     {
-      "Id": "227208942",
-      "Language": "SFX",
-      "ShortName": "BAD TO THE BONE.wav",
-      "Path": "SFX\\BAD TO THE BONE_F17FB28C.wem"
-     },
-     {
-      "Id": "614144253",
-      "Language": "SFX",
-      "ShortName": "spell4.wav",
-      "Path": "SFX\\spell4_F17FB28C.wem"
+      "ShortName": "cave_song.wav",
+      "Path": "SFX\\cave_song_1C9C67B2.wem"
      }
     ]
    }

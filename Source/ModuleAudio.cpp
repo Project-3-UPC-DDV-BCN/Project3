@@ -42,14 +42,14 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Blend.bnk");
+	LoadSoundBank("Test.bnk");
 	
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
 	go->SetName("Audio");
 	AudioSource* as = (AudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
-	as->PlayEvent("Play_Blend");
+	as->PlayEvent("Test_Event");
 
 	GameObject* go_ = App->scene->CreateGameObject();
 	go_->AddComponent(Component::ComponentType::CompAudioListener);
