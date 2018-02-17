@@ -607,14 +607,14 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				ImGui::EndPopup();
 			}
 
-			float3 light_pos = comp_light->GetPosOffset();
-			float3 light_rot = comp_light->GetRotationOffset();
+			float3 light_pos = comp_light->GetPositionOffset();
+			float3 light_rot = comp_light->GetDirectionOffset();
 
 			switch (comp_light->GetLightType())
 			{
 			case DIRECTIONAL_LIGHT:
 				if (ImGui::DragFloat3("Rotation##light_rotation", (float*)&light_rot, is_active, 0.25f, 0.0f)) {
-					comp_light->SetRotationOffset(light_rot);
+					comp_light->SetDirectionOffset(light_rot);
 				}
 				if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 				}
@@ -624,7 +624,7 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 					comp_light->SetPositionOffset(light_pos);
 				}
 				if (ImGui::DragFloat3("Rotation##light_rotation", (float*)&light_rot, is_active, 0.25f, 0.0f)) {
-					comp_light->SetRotationOffset(light_rot);
+					comp_light->SetDirectionOffset(light_rot);
 				}
 				if (ImGui::DragFloat("Diffuse", comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 				}

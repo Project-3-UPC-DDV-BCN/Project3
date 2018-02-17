@@ -957,7 +957,7 @@ void ModuleRenderer3D::SendLight(uint program)
 			light = (ComponentLight*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompLight);
 
 			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light->GetLightRotation());
+			SetUniformVector3(program, tmp.c_str(), light->GetLightDirection());
 			tmp = plstr + "ambient";
 			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient()));
 			tmp = plstr + "diffuse";
@@ -989,7 +989,7 @@ void ModuleRenderer3D::SendLight(uint program)
 			tmp = plstr + "position";
 			SetUniformVector3(program, tmp.c_str(), light->GetLightPosition());
 			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light->GetLightRotation());
+			SetUniformVector3(program, tmp.c_str(), light->GetLightDirection());
 			tmp = plstr + "constant";
 			SetUniformFloat(program, tmp.c_str(), 1.0f);
 			tmp = plstr + "linear";

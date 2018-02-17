@@ -51,11 +51,11 @@ public:
 	float* GetOuterCutOffToEdit() const;
 
 	void SetPositionOffset(float3 pos);
-	float3 GetPosOffset() const;
-	void SetRotationOffset(float3 rotation);
-	float3 GetRotationOffset() const;
+	float3 GetPositionOffset() const;
+	void SetDirectionOffset(float3 rotation);
+	float3 GetDirectionOffset() const;
 	float3 GetLightPosition() const;
-	float3 GetLightRotation() const;
+	float3 GetLightDirection() const;
 
 private:
 	Color color = White;
@@ -68,4 +68,7 @@ private:
 
 	float3 light_offset_pos;
 	float3 light_offset_rotation;
+	float3 direction;
+	float3 position;
+	bool initial_direction_set;
 };
