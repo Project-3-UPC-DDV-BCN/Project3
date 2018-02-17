@@ -387,12 +387,13 @@ void ModuleInput::StoreStringKeys()
 	stringControllerAxis["LEFTJOY_UP"] = LEFTJOY_UP;
 	stringControllerAxis["LEFTJOY_DOWN"] = LEFTJOY_DOWN;
 	stringControllerAxis["LEFTJOY_RIGHT"] = LEFTJOY_RIGHT;
-	stringControllerAxis["RIGHTJOY_LEFT"] = LEFTJOY_LEFT;
+	stringControllerAxis["LEFTJOY_LEFT"] = LEFTJOY_LEFT;
 	stringControllerAxis["RIGHTJOY_UP"] = RIGHTJOY_UP;
 	stringControllerAxis["RIGHTJOY_DOWN"] = RIGHTJOY_DOWN;
 	stringControllerAxis["RIGHTJOY_RIGHT"] = RIGHTJOY_RIGHT;
 	stringControllerAxis["RIGHTJOY_LEFT"] = RIGHTJOY_LEFT;
 	stringControllerAxis["RIGHT_TRIGGER"] = RIGHT_TRIGGER;
+	stringControllerAxis["LEFT_TRIGGER"] = LEFT_TRIGGER;
 }
 
 SDL_Keycode ModuleInput::StringToKey(std::string key)

@@ -4,6 +4,8 @@ namespace TheEngine
 {
     public class TheInput
     {
+        public const int MaxJoystickMove = 32767;
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsKeyDown(string key_name);
 
