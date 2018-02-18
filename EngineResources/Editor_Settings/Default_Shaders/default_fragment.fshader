@@ -4,6 +4,8 @@ in vec4 ourColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoord;
+in vec3 Tangents;
+in vec3 Bitangents;
 out vec4 color;
 
 uniform bool has_material_color;
