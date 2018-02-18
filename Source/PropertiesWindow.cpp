@@ -205,7 +205,7 @@ void PropertiesWindow::DrawWindow()
 
 				if (ImGui::BeginMenu("New Factory")) {
 					static char input_text[30];
-					ImGui::InputText("Factory Name", input_text, 30);
+					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
 					ImGui::Spacing();
 					if (ImGui::Button("Create"))
 					{
@@ -522,7 +522,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				strncpy(textToRender, str.data(), str.size());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::InputText(("##" + (*it)->fieldName + script_name).c_str(), textToRender, 256)) {
+				if (ImGui::InputText(("##" + (*it)->fieldName + script_name).c_str(), textToRender, 256, ImGuiInputTextFlags_EnterReturnsTrue)) {
 					comp_script->GetScript()->SetStringProperty((*it)->fieldName.c_str(), textToRender);
 				}
 				memset(textToRender, 0, sizeof textToRender);
