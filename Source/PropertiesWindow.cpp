@@ -473,6 +473,8 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 	{
 		float colour[4] = { text->GetColour().x, text->GetColour().y, text->GetColour().w, text->GetColour().z };
 
+		uint size = text->GetFontSize();
+
 		bool bold = text->GetStyleBold();
 		bool italic = text->GetStyleItalic();
 		bool underline = text->GetStyleUnderline();
@@ -483,6 +485,13 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 		if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
 		{
 			text->SetText(buffer);
+		}
+
+		ImGui::Text("Font: %s", text->GetFontName());
+
+		if (ImGui::DragFloat("Size", (float*)&size, true, 1, 2, 500));
+		{
+			text->SetFontSize(size);
 		}
 
 		ImGui::Text("Colour");

@@ -188,4 +188,44 @@ void ModuleFontImporter::UnloadText(uint id)
 		glDeleteTextures(1, &id);
 }
 
+float2 ModuleFontImporter::CalcTextSize(const char * text, Font * font, bool bold, bool italic, bool underline, bool strikethrough)
+{
+	float2 size;
+
+	if (font != nullptr)
+	{
+		TTF_Font* ttf_font = font->GetTTFFont();
+		int style = 0;
+
+		if (bold)
+		{
+			style |= TTF_STYLE_BOLD;
+		}
+
+		if (italic)
+		{
+			style |= TTF_STYLE_ITALIC;
+		}
+
+		if (underline)
+		{
+			style |= TTF_STYLE_UNDERLINE;
+		}
+
+		if (strikethrough)
+		{
+			style |= TTF_STYLE_STRIKETHROUGH;
+		}
+
+		int size_w, size_h = 0;
+		if (TTF_SizeText(ttf_font, text, &size_w, &size_h) == 0)
+		{
+			size.x = size_w;
+			size.y = size_h;
+		}
+	}
+
+	return size;
+}
+
 

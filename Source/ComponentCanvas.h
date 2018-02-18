@@ -22,7 +22,7 @@ public:
 	void SetColour(const float4& colour);
 	void SetFlip(const bool& flip);
 
-	float4x4 GetTransform() const;
+	float4x4 GetTransform();
 	float4x4 GetOrtoTransform() const;
 	uint GetTextureId() const;
 	float4 GetColour() const;

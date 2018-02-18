@@ -221,11 +221,17 @@ void CanvasDrawElement::SetFlip(const bool & _flip)
 	flip = _flip;
 }
 
-float4x4 CanvasDrawElement::GetTransform() const
+float4x4 CanvasDrawElement::GetTransform()
 {
 	float4x4 ret = float4x4::identity;
 
 	float4x4 size_trans = float4x4::identity;
+
+	if (size.x == 0)
+		size.x = 1;
+
+	if (size.y == 0)
+		size.y = 1;
 
 	if(!flip)
 		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));

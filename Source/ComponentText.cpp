@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "UsefulFunctions.h"
+#include "MathGeoLib\Math\Quat.h"
 
 ComponentText::ComponentText(GameObject * attached_gameobject)
 {
@@ -36,14 +37,20 @@ bool ComponentText::Update()
 {
 	bool ret = true;
 
+	if (update_text)
+	{
+		UpdateText();
+		update_text = false;
+	}
+
 	ComponentCanvas* canvas = GetCanvas();
 
 	if (canvas != nullptr)
 	{
 		CanvasDrawElement de;
-		de.SetTransform(c_rect_trans->GetMatrix());
+		de.SetTransform(GetTextTransform());
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-		de.SetSize(c_rect_trans->GetScaledSize());
+		de.SetSize(float2(0.0f, 0.0f));
 		de.SetColour(colour);
 		de.SetFlip(true);
 
@@ -69,13 +76,36 @@ void ComponentText::SetText(const char * _text)
 	{
 		text = _text;
 
-		UpdateText();
+		update_text = true;
 	}
 }
 
 std::string ComponentText::GetText()
 {
 	return text;
+}
+
+void ComponentText::SetFontSize(uint size)
+{
+	if (font != nullptr)
+	{
+		font->SetFontSize(size);
+	}
+}
+
+uint ComponentText::GetFontSize() const
+{
+	return font->GetFontSize();
+}
+
+const char * ComponentText::GetFontName()
+{
+	if (font != nullptr)
+	{
+		return font->GetFamilyName();
+	}
+
+	return "";
 }
 
 void ComponentText::SetColour(const float4 & _colour)
@@ -108,7 +138,7 @@ void ComponentText::SetColour(const float4 & _colour)
 		if (colour.z < 0)
 			colour.z =1;
 
-		UpdateText();
+		update_text = true;
 	}
 }
 
@@ -123,7 +153,7 @@ void ComponentText::SetStyleBold(const bool& set)
 	{
 		bold = set;
 
-		UpdateText();
+		update_text = true;
 	}
 }
 
@@ -133,7 +163,7 @@ void ComponentText::SetStyleItalic(const bool& set)
 	{
 		italic = set;
 
-		UpdateText();
+		update_text = true;
 	}
 }
 
@@ -143,7 +173,7 @@ void ComponentText::SetStyleUnderline(const bool& set)
 	{
 		underline = set;
 
-		UpdateText();
+		update_text = true;
 	}
 }
 
@@ -153,7 +183,7 @@ void ComponentText::SetStyelStrikethrough(const bool& set)
 	{
 		strikethrough = set;
 
-		UpdateText();
+		update_text = true;
 	}
 }
 
@@ -202,5 +232,23 @@ void ComponentText::UpdateText()
 		App->font_importer->UnloadText(texture);
 
 	float4 colour255 = float4(colour.x * 255, colour.y * 255 , colour.z * 255 , colour.w * 255 );
+
+	text_size = App->font_importer->CalcTextSize(text.c_str(), font, bold, italic, underline, strikethrough);
+
 	texture = App->font_importer->LoadText(text.c_str(), font, colour255, bold, italic, underline, strikethrough);
+}
+
+float4x4 ComponentText::GetTextTransform()
+{
+	float4x4 ret = float4x4::identity;
+
+	float4x4 trans = c_rect_trans->GetMatrix();
+
+	trans.RemoveScale();
+
+	float4x4 scale_trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(text_size.x, text_size.y, 1));
+
+	ret = trans * scale_trans;
+
+	return ret;
 }

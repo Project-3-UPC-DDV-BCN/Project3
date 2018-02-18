@@ -25,6 +25,10 @@ public:
 	void SetText(const char* text);
 	std::string GetText();
 
+	void SetFontSize(uint size);
+	uint GetFontSize() const;
+	const char* GetFontName();
+
 	void SetColour(const float4& colour);
 	float4 GetColour() const;
 
@@ -42,12 +46,15 @@ private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
 	void UpdateText();
+	float4x4 GetTextTransform();
 
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
+	bool update_text = false;
 
 	Font* font;
 	uint texture;
+	float2 text_size;
 
 	std::string text;
 	float4 colour;
