@@ -115,15 +115,20 @@ void ModuleFontImporter::ClearFonts()
 	fonts.clear();
 }
 
-uint ModuleFontImporter::LoadText(const char * text, Font * font, bool bold, bool italic, bool underline, bool strikethrough)
+uint ModuleFontImporter::LoadText(const char * text, Font * font, float4 colour, bool bold, bool italic, bool underline, bool strikethrough)
 {
 	int id = 0;
 	
 	if (font != nullptr)
 	{
+		if (TextCmp(text, ""))
+		{
+			text = " ";
+		}
+
 		SDL_Texture* texture = nullptr;
 
-		SDL_Color color = { 255.0f, 255.0f, 255.0f, 255.0f };
+		SDL_Color color = { colour.x, colour.y, colour.w, colour.z };
 		TTF_Font* ttf_font = font->GetTTFFont();
 		int style = 0;
 
@@ -164,7 +169,8 @@ uint ModuleFontImporter::LoadText(const char * text, Font * font, bool bold, boo
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
 
 			// Finish

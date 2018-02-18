@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "SDL/include/SDL_pixels.h"
+#include "MathGeoLib\Math\float4.h"
 
 class Font;
 class Texture;
@@ -23,7 +24,7 @@ public:
 	void  UnloadFont(Font* font);
 	Font* GetFont(const char* filepath) const;
 	void ClearFonts();
-	uint LoadText(const char * text, Font* font, bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
+	uint LoadText(const char * text, Font* font, float4 colour = float4(255, 255, 255, 255), bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
 	void UnloadText(uint id);
 
 private:

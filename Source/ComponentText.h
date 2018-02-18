@@ -25,6 +25,19 @@ public:
 	void SetText(const char* text);
 	std::string GetText();
 
+	void SetColour(const float4& colour);
+	float4 GetColour() const;
+
+	void SetStyleBold(const bool& set);
+	void SetStyleItalic(const bool& set);
+	void SetStyleUnderline(const bool& set);
+	void SetStyelStrikethrough(const bool& set);
+
+	bool GetStyleBold() const;
+	bool GetStyleItalic() const;
+	bool GetStyleUnderline() const;
+	bool GetStyelStrikethrough() const;
+
 private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
@@ -33,12 +46,15 @@ private:
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
 
-	std::string text;
-
 	Font* font;
+	uint texture;
+
+	std::string text;
 	float4 colour;
 	bool bold;
-	uint texture;
+	bool italic;
+	bool underline;
+	bool strikethrough;
 
 };
 

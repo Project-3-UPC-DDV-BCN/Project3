@@ -37,7 +37,5 @@ public:
 private:
 	int scripts_count;
 	int factories_count;
-	int current_render_mode = 0;
-	int current_scale_mode = 0;
 };
 

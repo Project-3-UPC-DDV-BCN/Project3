@@ -14,7 +14,11 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	SetGameObject(attached_gameobject);
 
 	texture = 0;
-	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	colour = float4(1, 1, 1, 1);
+	bold = false;
+	italic = false;
+	underline = false;
+	strikethrough = false;
 
 	c_rect_trans = GetRectTrans();
 
@@ -63,8 +67,8 @@ void ComponentText::SetText(const char * _text)
 {
 	if (!TextCmp(_text, text.c_str()))
 	{
-		App->font_importer->UnloadText(texture);
 		text = _text;
+
 		UpdateText();
 	}
 }
@@ -72,6 +76,105 @@ void ComponentText::SetText(const char * _text)
 std::string ComponentText::GetText()
 {
 	return text;
+}
+
+void ComponentText::SetColour(const float4 & _colour)
+{
+	if (colour.x != _colour.x || colour.y != _colour.y || colour.w != _colour.w || colour.z != _colour.z)
+	{
+		colour = _colour;
+
+		if (colour.x > 1)
+			colour.x = 1;
+
+		if (colour.x < 0)
+			colour.x = 0;
+
+		if (colour.y > 1)
+			colour.y = 1;
+
+		if (colour.y < 0)
+			colour.y = 0;
+
+		if (colour.w > 1)
+			colour.w = 1;
+
+		if (colour.w < 0)
+			colour.w = 1;
+
+		if (colour.z > 1)
+			colour.z = 0;
+
+		if (colour.z < 0)
+			colour.z =1;
+
+		UpdateText();
+	}
+}
+
+float4 ComponentText::GetColour() const
+{
+	return colour;
+}
+
+void ComponentText::SetStyleBold(const bool& set)
+{
+	if (set != bold)
+	{
+		bold = set;
+
+		UpdateText();
+	}
+}
+
+void ComponentText::SetStyleItalic(const bool& set)
+{
+	if (set != italic)
+	{
+		italic = set;
+
+		UpdateText();
+	}
+}
+
+void ComponentText::SetStyleUnderline(const bool& set)
+{
+	if (set != underline)
+	{
+		underline = set;
+
+		UpdateText();
+	}
+}
+
+void ComponentText::SetStyelStrikethrough(const bool& set)
+{
+	if (set != strikethrough)
+	{
+		strikethrough = set;
+
+		UpdateText();
+	}
+}
+
+bool ComponentText::GetStyleBold() const
+{
+	return bold;
+}
+
+bool ComponentText::GetStyleItalic() const
+{
+	return italic;
+}
+
+bool ComponentText::GetStyleUnderline() const
+{
+	return underline;
+}
+
+bool ComponentText::GetStyelStrikethrough() const
+{
+	return strikethrough;
 }
 
 ComponentCanvas * ComponentText::GetCanvas()
@@ -95,5 +198,9 @@ ComponentRectTransform * ComponentText::GetRectTrans()
 
 void ComponentText::UpdateText()
 {
-	texture = App->font_importer->LoadText(text.c_str(), font);
+	if(texture != 0)
+		App->font_importer->UnloadText(texture);
+
+	float4 colour255 = float4(colour.x * 255, colour.y * 255 , colour.z * 255 , colour.w * 255 );
+	texture = App->font_importer->LoadText(text.c_str(), font, colour255, bold, italic, underline, strikethrough);
 }

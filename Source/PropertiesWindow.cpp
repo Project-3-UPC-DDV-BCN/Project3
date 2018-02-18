@@ -17,6 +17,7 @@
 #include "ComponentCanvas.h"
 #include "ComponentScript.h"
 #include "ComponentImage.h"
+#include "ComponentText.h"
 #include "Script.h"
 #include "CSScript.h"
 #include "ModuleResources.h"
@@ -378,17 +379,20 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 	if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{	
 		const char* mode_names[] = { "Screen Space", "World Space" };
+		int render_mode = canvas->GetRenderMode();
+
 		const char* scale_names[] = { "Constant Size", "Scale with screen size" };
+		int scale_mode = canvas->GetScaleMode();
 
-		ImGui::Combo("Render Mode", &current_render_mode, mode_names, 2);
+		ImGui::Combo("Render Mode", &render_mode, mode_names, 2);
 
-		if (current_render_mode == 0)
+		if (render_mode == 0)
 		{
 			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_SCREEN_SPACE);
 
 			ImGui::Text("Size: %d %d", (int)canvas->GetSize().x, (int)canvas->GetSize().y);
 		}
-		else if (current_render_mode == 1)
+		else if (render_mode == 1)
 		{
 			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_WORLD_SPACE);
 
@@ -401,9 +405,9 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 
 		ImGui::Separator();
 
-		ImGui::Combo("Scale Mode", &current_scale_mode, scale_names, 2);
+		ImGui::Combo("Scale Mode", &scale_mode, scale_names, 2);
 
-		if (current_scale_mode == 0)
+		if (scale_mode == 0)
 		{
 			canvas->SetScaleMode(CanvasScaleMode::SCALEMODE_CONSTANT_SIZE);
 
@@ -413,7 +417,7 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 				canvas->SetScale(scale);
 			}
 		}
-		else if (current_scale_mode == 1)
+		else if (scale_mode == 1)
 		{
 			canvas->SetScaleMode(CanvasScaleMode::SCALEMODE_WITH_SCREEN_SIZE);
 
@@ -453,12 +457,12 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 			image->SetFlip(flip);
 		}
 
-		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().w, image->GetColour().z };
+		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().z, image->GetColour().w };
 
 		ImGui::Text("Colour");
 		if(ImGui::ColorEdit4("", colour))
 		{
-			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
+			image->SetColour(float4(colour[0], colour[1], colour[2], colour[]));
 		}
 	}
 }
@@ -467,8 +471,46 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 {
 	if (ImGui::CollapsingHeader("Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		float colour[4] = { text->GetColour().x, text->GetColour().y, text->GetColour().w, text->GetColour().z };
 
+		bool bold = text->GetStyleBold();
+		bool italic = text->GetStyleItalic();
+		bool underline = text->GetStyleUnderline();
+		bool strikethrough = text->GetStyelStrikethrough();
 
+		char buffer[255];
+		strcpy(buffer, text->GetText().c_str());
+		if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
+		{
+			text->SetText(buffer);
+		}
+
+		ImGui::Text("Colour");
+		if (ImGui::ColorEdit4("", colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			text->SetColour(float4(colour[0], colour[1], colour[3], colour[2]));
+		}
+
+		ImGui::Text("Character");
+		if(ImGui::Checkbox("Bold", &bold))
+		{
+			text->SetStyleBold(bold);
+		}
+
+		if (ImGui::Checkbox("Italic", &italic))
+		{
+			text->SetStyleItalic(italic);
+		}
+
+		if (ImGui::Checkbox("Underline", &underline))
+		{
+			text->SetStyleUnderline(underline);
+		}
+
+		if (ImGui::Checkbox("Strikethrough", &strikethrough))
+		{
+			text->SetStyelStrikethrough(strikethrough);
+		}
 	}
 }
 
