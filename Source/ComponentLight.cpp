@@ -14,8 +14,10 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	color = Color(1.0, 1.0, 1.0, 1.0);
 	light_offset_pos = float3::zero;
 	light_offset_direction = float3::zero;
+	position = float3::zero;
 	SetTypeToSpot();
-	SetDirectionOffset({ 0,0,0 });
+	/*SetDirectionOffset({ 0,0,0 });*/
+	//SetPositionOffset({ 0,0,0 });
 }
 
 ComponentLight::~ComponentLight()
@@ -131,7 +133,7 @@ void ComponentLight::SetTypeToPoint()
 	cutOff = 0;
 	outercutOff = 0;
 	type = POINT_LIGHT;
-	SetDirectionOffset({ 0,0,0 });
+	//SetDirectionOffset({ 0,0,0 });
 
 	App->renderer3D->AddLight(this);
 }
@@ -144,7 +146,7 @@ void ComponentLight::SetTypeToSpot()
 	cutOff = 12.0f;
 	outercutOff = 12.0f;
 	type = SPOT_LIGHT;
-	SetDirectionOffset({ 0,0,0 });
+	//SetDirectionOffset({ 0,0,0 });
 
 	App->renderer3D->AddLight(this);
 }
@@ -227,6 +229,8 @@ float * ComponentLight::GetOuterCutOffToEdit() const
 void ComponentLight::SetPositionOffset(float3 pos)
 {
 	light_offset_pos = pos;
+	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	position = transform->GetGlobalPosition() + pos;
 }
 
 float3 ComponentLight::GetPositionOffset() const
@@ -234,19 +238,13 @@ float3 ComponentLight::GetPositionOffset() const
 	return light_offset_pos;
 }
 
-void ComponentLight::SetDirectionOffset(float3 rotation)
+void ComponentLight::SetDirectionOffset(float3 offset_direction)
 {
-	light_offset_direction = rotation;
 	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
-	float4x4 mat = transform->GetMatrix();
-	float3 pos, scale;
-	Quat quat;
-	mat.Decompose(pos, quat, scale);
-	float3 rot = quat.ToEulerXYZ();
-	rot += light_offset_direction;
-	float4x4 mat2;
-	mat2 = float4x4::FromEulerXYZ(DegToRad(rot.x), DegToRad(rot.y), DegToRad(rot.z));
-	direction = mat2.WorldZ();
+	float3 rot = transform->GetGlobalRotation() + offset_direction;
+	float4x4 mat;
+	mat = float4x4::FromEulerXYZ(DegToRad(rot.x), DegToRad(rot.y), DegToRad(rot.z));
+	direction = mat.WorldZ();
 }
 
 float3 ComponentLight::GetDirectionOffset() const
@@ -256,13 +254,32 @@ float3 ComponentLight::GetDirectionOffset() const
 
 float3 ComponentLight::GetLightPosition() const
 {
-	float3 position;
-	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
-	position = transform->GetGlobalPosition() + light_offset_pos;
+	//CONSOLE_LOG("%.3f, %.3f, %.3f", position.x, position.y, position.z);
 	return position;
 }
 
 float3 ComponentLight::GetLightDirection() const
 {
 	return direction;
+}
+
+void ComponentLight::SetDirectionFromGO(float3 pre_direction)
+{
+	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	float3 rot;
+	rot = pre_direction + light_offset_direction;
+	Quat q = Quat::FromEulerXYZ(DegToRad(rot.x), DegToRad(rot.y), DegToRad(rot.z));
+	float4x4 mat = float4x4::FromTRS(light_offset_pos, q, { 1,1,1 });
+	float4x4 parent_mat = transform->GetMatrix();
+	mat = parent_mat * mat;
+	float3 pos_, scale_;
+	Quat q2;
+	mat.Decompose(pos_, q2, scale_);
+	position = pos_ + light_offset_pos;
+	direction = mat.WorldZ();
+}
+
+void ComponentLight::SetPositionFromGO(float3 pre_position)
+{
+	position = pre_position + light_offset_pos;
 }

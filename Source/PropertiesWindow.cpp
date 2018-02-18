@@ -663,19 +663,19 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			switch (comp_light->GetLightType())
 			{
 			case DIRECTIONAL_LIGHT:
-				if (ImGui::DragFloat3(("Direction##directional_light_rotation" + std::to_string(lights_count)).c_str(), (float*)&light_rot, is_active, 0.25f, 0.0f)) {
+				/*if (ImGui::DragFloat3(("Direction##directional_light_rotation" + std::to_string(lights_count)).c_str(), (float*)&light_rot, is_active, 0.25f, 0.0f)) {
 					comp_light->SetDirectionOffset(light_rot);
-				}
+				}*/
 				if (ImGui::DragFloat(("Diffuse##directional_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 				}
 				break;
 			case SPOT_LIGHT:
-				if (ImGui::DragFloat3(("Position##spot_light_pos" + std::to_string(lights_count)).c_str(), (float*)&light_pos, is_active, 0.25f, 0.0f)) {
+				/*if (ImGui::DragFloat3(("Position##spot_light_pos" + std::to_string(lights_count)).c_str(), (float*)&light_pos, is_active, 0.25f, 0.0f)) {
 					comp_light->SetPositionOffset(light_pos);
 				}
 				if (ImGui::DragFloat3(("Direction##spot_light_rotation" + std::to_string(lights_count)).c_str(), (float*)&light_rot, is_active, 0.25f, 0.0f)) {
 					comp_light->SetDirectionOffset(light_rot);
-				}
+				}*/
 				if (ImGui::DragFloat(("Diffuse##spot_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 				}
 				if (ImGui::DragFloat(("Specular##spot_" + std::to_string(lights_count)).c_str(), comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
@@ -686,9 +686,9 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 				}
 				break;
 			case POINT_LIGHT:
-				if (ImGui::DragFloat3(("Position##point_light_pos" + std::to_string(lights_count)).c_str(), (float*)&light_pos, is_active, 0.25f, 0.0f)) {
+				/*if (ImGui::DragFloat3(("Position##point_light_pos" + std::to_string(lights_count)).c_str(), (float*)&light_pos, is_active, 0.25f, 0.0f)) {
 					comp_light->SetPositionOffset(light_pos);
-				}
+				}*/
 				if (ImGui::DragFloat(("Diffuse##point_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
 				}
 				if (ImGui::DragFloat(("Specular##point_" + std::to_string(lights_count)).c_str(), comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {

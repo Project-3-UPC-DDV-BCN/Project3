@@ -56,6 +56,8 @@ public:
 	float3 GetDirectionOffset() const;
 	float3 GetLightPosition() const;
 	float3 GetLightDirection() const;
+	void SetDirectionFromGO(float3 pre_direction);
+	void SetPositionFromGO(float3 pre_position);
 
 private:
 	Color color = White;
@@ -69,4 +71,5 @@ private:
 	float3 light_offset_pos;
 	float3 light_offset_direction;
 	float3 direction;
+	float3 position;
 };
