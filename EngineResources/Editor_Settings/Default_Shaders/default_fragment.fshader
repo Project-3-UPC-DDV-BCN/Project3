@@ -9,15 +9,10 @@ out vec4 color;
 uniform bool has_material_color;
 uniform vec4 material_color;
 uniform bool has_texture;
+uniform bool has_normalmap;
 
 uniform sampler2D Tex_Diffuse;
 uniform sampler2D Tex_NormalMap;
-
-struct Material {
-	sampler2D diffuse;
-	sampler2D specular;
-	float shininess;
-};
 
 struct DirLight {
 	vec3 direction;
@@ -70,7 +65,6 @@ uniform vec3 viewPos;
 uniform DirLight dirLights[NR_DIREC_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
-uniform Material material;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -86,6 +80,12 @@ else if (has_material_color)
 	color = material_color;
 else
 	color = ourColor;
+
+if (has_normalmap)
+{
+vec3 normal_m = texture(Tex_NormalMap, TexCoord).rgb;
+normal_m = normalize(normal_m * 2.0 - 1.0);
+}	
 
 vec3 norm = normalize(Normal);
 vec3 viewDir = normalize(viewPos - FragPos);

@@ -1086,6 +1086,8 @@ void ModuleResources::CreateDefaultShaders()
 		"layout(location = 1) in vec3 texCoord;\n"
 		"layout(location = 2) in vec3 normals;\n"
 		"layout(location = 3) in vec4 color;\n\n"
+		"layout(location = 4) in vec3 tangents;\n"
+		"layout(location = 5) in vec3 bitangents;\n"
 		"out vec4 ourColor;\n"
 		"out vec3 Normal;\n"
 		"out vec2 TexCoord;\n"
@@ -1128,11 +1130,6 @@ void ModuleResources::CreateDefaultShaders()
 		"uniform bool has_texture;\n"
 		"uniform sampler2D Tex_Diffuse;\n\n"
 		"uniform sampler2D Tex_NormalMap;\n\n"
-		"struct Material {\n"
-		"	sampler2D diffuse;\n"
-		"	sampler2D specular;\n"
-		"	float shininess;\n"
-		"};\n\n"
 
 		"struct DirLight {\n"
 		"	vec3 direction;\n\n"
@@ -1185,7 +1182,6 @@ void ModuleResources::CreateDefaultShaders()
 		"uniform DirLight dirLights[NR_DIREC_LIGHTS];\n"
 		"uniform PointLight pointLights[NR_POINT_LIGHTS];\n"
 		"uniform SpotLight spotLights[NR_SPOT_LIGHTS];\n"
-		"uniform Material material;\n\n"
 
 		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);\n"
 		"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n"
