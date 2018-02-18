@@ -79,6 +79,7 @@ public:
 	void SetUniformVector4(uint program, const char* name, float4 data);
 	void SetUniformMatrix(uint program, const char* name, float* data);
 	void SetUniformUInt(uint program, const char* name, uint data);
+	void SetUniformInt(uint program, const char* name, int data);
 
 	uint CreateShaderProgram();
 	void AttachShaderToProgram(uint program_id, uint shader_id);

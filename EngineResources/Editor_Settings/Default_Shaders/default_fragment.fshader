@@ -9,7 +9,9 @@ out vec4 color;
 uniform bool has_material_color;
 uniform vec4 material_color;
 uniform bool has_texture;
-uniform sampler2D ourTexture;
+
+uniform sampler2D Tex_Diffuse;
+uniform sampler2D Tex_NormalMap;
 
 struct Material {
 	sampler2D diffuse;
@@ -78,7 +80,7 @@ void main()
 {
 if (has_texture)
 {
-	color = texture(ourTexture, TexCoord);
+	color = texture(Tex_Diffuse, TexCoord);
 }
 else if (has_material_color)
 	color = material_color;

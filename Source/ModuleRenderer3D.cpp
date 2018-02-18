@@ -811,6 +811,23 @@ void ModuleRenderer3D::SetUniformUInt(uint program, const char * name, uint data
 	}
 }
 
+
+void ModuleRenderer3D::SetUniformInt(uint program, const char * name, int data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1i(modelLoc, data);
+
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform matrix %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+
 void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
