@@ -232,6 +232,11 @@ void Material::LoadToMemory()
 		has_tex = true;
 	}
 
+	if (normalmap_texture != nullptr && normalmap_texture->GetID() != 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
+	}
+
 	bool has_mat_color = false;
 	if (diffuse_color.a != 0.0f)
 	{
