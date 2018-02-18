@@ -518,6 +518,14 @@ void ModuleScene::InitScripts()
 	}
 }
 
+void ModuleScene::SetParticleSystemsState(particle_system_state new_state)
+{
+	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+	{
+		(*it)->SetSystemState(new_state); 
+	}
+}
+
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
 	bool ret = true;

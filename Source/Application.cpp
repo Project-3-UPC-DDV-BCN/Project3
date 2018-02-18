@@ -347,6 +347,7 @@ void Application::Play()
 		App->scene->saving_index = 0;
 		App->scene->is_game = true;
 		App->scene->InitScripts();
+		App->scene->SetParticleSystemsState(PARTICLE_STATE_PLAY); 
 	}
 }
 
