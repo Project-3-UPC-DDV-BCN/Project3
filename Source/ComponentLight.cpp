@@ -49,6 +49,7 @@ void ComponentLight::Save(Data & data) const
 
 void ComponentLight::Load(Data & data)
 {
+	App->renderer3D->RemoveLight(this);
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
@@ -60,6 +61,7 @@ void ComponentLight::Load(Data & data)
 	SetSpecular(data.GetFloat("specular"));
 	SetCutOff(data.GetFloat("cutOff"));
 	SetOuterCutOff(data.GetFloat("outercutOff"));
+	App->renderer3D->AddLight(this);
 }
 
 void ComponentLight::SetColor(Color color)
