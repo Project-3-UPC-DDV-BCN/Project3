@@ -71,11 +71,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::TextureResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Texture* new_texture = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_texture = App->editor->resources_window->GetTexture();
 			if (new_texture != tmp_texture)
@@ -148,11 +149,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::MeshResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Mesh* new_mesh = nullptr;
 		
-		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_mesh = App->editor->resources_window->GetMesh();
 			if (new_mesh != tmp_mesh)
@@ -212,11 +214,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::PrefabResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Prefab* new_prefab = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->prefab_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->prefab_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_prefab = App->editor->resources_window->GetPrefab();
 			if (new_prefab != tmp_prefab)
@@ -289,11 +292,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::GameObjectResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		GameObject* new_gameoject = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->gameobject_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->gameobject_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_gameoject = App->editor->resources_window->GetGameobject();
 			if (new_gameoject != tmp_gameobject)
@@ -366,11 +370,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::MaterialResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Material* new_material = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->material_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->material_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_material = App->editor->resources_window->GetMaterial();
 			if (new_material != tmp_material)
@@ -430,11 +435,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::ScriptResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Script* new_script = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->script_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->script_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_script = App->editor->resources_window->GetScript();
 			if (new_script != tmp_script)
@@ -497,11 +503,12 @@ namespace ImGui
 			App->editor->resources_window->SetShaderType(type);
 			App->editor->resources_window->SetResourceType(Resource::ShaderResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Shader* new_shader = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->script_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->script_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_shader = App->editor->resources_window->GetShader();
 			if (new_shader != tmp_script)

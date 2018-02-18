@@ -11,6 +11,7 @@ class ComponentScript;
 class ComponentFactory;
 class ComponentLight;
 class GameObject;
+class Texture;
 
 class PropertiesWindow :
 	public Window
@@ -32,5 +33,8 @@ private:
 	int scripts_count;
 	int factories_count;
 	int lights_count;
+
+	Texture* texture1_ = nullptr;
+	Texture* texture2_ = nullptr;
 };
 
