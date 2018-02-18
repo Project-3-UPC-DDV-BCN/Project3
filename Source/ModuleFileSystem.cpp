@@ -232,11 +232,10 @@ bool ModuleFileSystem::CompareFilesTime(std::string file1_path, std::string file
 	return false;
 }
 
-long long ModuleFileSystem::GetModifiedTime(std::string file_path)
+fs::file_time_type ModuleFileSystem::GetModifiedTime(std::string file_path)
 {
-	if (!FileExist(file_path)) return 0;
 	fs::file_time_type time = fs::last_write_time(file_path);
-	return time.time_since_epoch().count();;
+	return time;
 }
 
 std::string ModuleFileSystem::StringToPathFormat(std::string path)

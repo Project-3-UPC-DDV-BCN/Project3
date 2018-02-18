@@ -67,6 +67,9 @@ void HierarchyWindow::DrawWindow()
 			if (ImGui::MenuItem("Create Game Object")) {
 				App->scene->CreateGameObject(nullptr);
 			}
+			if (ImGui::MenuItem("Create Light Object")) {
+				App->scene->CreateLightObject(nullptr);
+			}
 
 			ImGui::EndPopup();
 		}

@@ -65,8 +65,9 @@ namespace ImGui
 			}
 		}
 		ImGui::SameLine();
-
-		if (Button("+##texture", { 20, 20 }))
+		std::string button_id("+##texture_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::TextureResource);
 			App->editor->resources_window->SetActive(true);
@@ -141,7 +142,9 @@ namespace ImGui
 		}
 		ImGui::SameLine();
 
-		if (Button("+##mesh", { 20, 20 }))
+		std::string button_id("+##mesh_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::MeshResource);
 			App->editor->resources_window->SetActive(true);
@@ -203,7 +206,9 @@ namespace ImGui
 			return false;
 		ImGui::SameLine();
 
-		if (Button("+##prefab", { 20, 20 }))
+		std::string button_id("+##prefab_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::PrefabResource);
 			App->editor->resources_window->SetActive(true);
@@ -278,7 +283,9 @@ namespace ImGui
 		}
 		ImGui::SameLine();
 
-		if (Button("+##gameobject", { 20, 20 }))
+		std::string button_id("+##gameobject_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::GameObjectResource);
 			App->editor->resources_window->SetActive(true);
@@ -353,7 +360,9 @@ namespace ImGui
 		}
 		ImGui::SameLine();
 
-		if (Button("+## material", { 20, 20 }))
+		std::string button_id("+##material_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::MaterialResource);
 			App->editor->resources_window->SetActive(true);
@@ -415,7 +424,9 @@ namespace ImGui
 			return false;
 		ImGui::SameLine();
 
-		if (Button("+##script", { 20, 20 }))
+		std::string button_id("+##script_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::ScriptResource);
 			App->editor->resources_window->SetActive(true);
@@ -477,9 +488,11 @@ namespace ImGui
 		ImGui::SameLine();
 
 		char name[15];
-		sprintf(name,"+##shader%d", type);
+		sprintf(name,"+##shader%d_", type);
 
-		if (Button(name, { 20, 20 }))
+		std::string button_id(name);
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetShaderType(type);
 			App->editor->resources_window->SetResourceType(Resource::ShaderResource);
