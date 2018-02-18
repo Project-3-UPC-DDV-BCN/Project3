@@ -84,7 +84,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(rjoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y += rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y -= rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -92,7 +92,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(rjoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y -= rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y += rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 		

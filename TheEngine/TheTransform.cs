@@ -84,6 +84,22 @@ namespace TheEngine
             }
         }
 
+        public TheVector3 UpDirection
+        {
+            get
+            {
+                return GlobalRotation.ToQuaternion() * TheVector3.Up;
+            }
+        }
+
+        public TheVector3 RightDirection
+        {
+            get
+            {
+                return GlobalRotation.ToQuaternion() * TheVector3.Right;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetPosition(bool is_global);
 
