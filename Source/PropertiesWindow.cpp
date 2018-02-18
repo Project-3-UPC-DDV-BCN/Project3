@@ -462,7 +462,7 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 		ImGui::Text("Colour");
 		if(ImGui::ColorEdit4("", colour))
 		{
-			image->SetColour(float4(colour[0], colour[1], colour[2], colour[]));
+			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
 		}
 	}
 }
