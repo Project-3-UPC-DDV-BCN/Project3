@@ -30,7 +30,18 @@
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastTkDEBUG_x86.lib")
 
 #else
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlast_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtAssetUtils_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtAuthoring_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtExporter_x86.lib")
 #pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPhysX_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPxSerialization_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtSerialization_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtShaders_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtStress_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtTkSerialization_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastGlobals_x86.lib")
+#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastTk_x86.lib")
 #endif
 
 ModuleBlast::ModuleBlast(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -105,16 +116,6 @@ update_status ModuleBlast::Update(float dt)
 		//{
 		//	//model->actors[0]->getTkActor().
 		//}
-
-		///*App->physics->GetScene(0)->simulate(dt);
-		//App->physics->GetScene(0)->fetchResults(true);*/
-
-		/*task_manager->process();
-		task_manager->wait();*/
-
-		group->process();
-
-		model->family->postSplitUpdate();
 
 	}
 
@@ -199,13 +200,6 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(false);
 	}
-}
-
-void ModuleBlast::ProcessGroup()
-{
-	BlastModel* model = families.begin()->second;
-	group->process();
-	model->family->postSplitUpdate();
 }
 
 void ModuleBlast::ApplyDamage()

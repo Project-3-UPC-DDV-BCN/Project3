@@ -94,9 +94,12 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (App->input->GetKey(key_forward) == KEY_REPEAT) new_pos += tmp_camera_frustum->front * speed;
 		if (App->input->GetKey(key_backward) == KEY_REPEAT) new_pos -= tmp_camera_frustum->front * speed;
-		if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed;
-		if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed;
+		//if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed;
+		//if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed;
 
+		// TEMPORAL FOR LIGHT TESTING
+		if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed * 4;
+		if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed * 4;
 		if (App->input->GetKey(key_left) == KEY_REPEAT) new_pos -= tmp_camera_frustum->WorldRight() * speed;
 		if (App->input->GetKey(key_right) == KEY_REPEAT) new_pos += tmp_camera_frustum->WorldRight() * speed;
 

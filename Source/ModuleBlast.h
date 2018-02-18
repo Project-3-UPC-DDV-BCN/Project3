@@ -76,7 +76,6 @@ public:
 	void onActorCreated(Nv::Blast::ExtPxFamily& family, Nv::Blast::ExtPxActor& actor);
 	void onActorDestroyed(Nv::Blast::ExtPxFamily& family, Nv::Blast::ExtPxActor& actor);
 
-	void ProcessGroup();
 	void ApplyDamage();
 
 private:

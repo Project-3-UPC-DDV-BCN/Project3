@@ -11,6 +11,7 @@
 #include "ComponentRigidBody.h"
 #include "ComponentCollider.h"
 #include "ComponentJointDistance.h"
+#include "ComponentLight.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -93,6 +94,8 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompDistanceJoint:
 		components_list.push_back(component = new ComponentJointDistance(this));
+	case Component::CompLight:
+		components_list.push_back(component = new ComponentLight(this));
 		break;
 	default:
 		break;

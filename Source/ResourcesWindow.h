@@ -38,6 +38,8 @@ public:
 	BlastModel* GetBlastModel() const;
 	Shader* GetShader() const;
 	void SetShaderType(Shader::ShaderType type);
+	void SetCurrentInputName(std::string name);
+	std::string GetCurrentInputName() const;
 	void Reset();
 
 private:
@@ -75,5 +77,7 @@ public:
 	
 	GameObjectFilter go_filter;
 	bool shader_changed;
+
+	std::string current_input_name;
 };
 

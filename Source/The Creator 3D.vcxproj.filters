@@ -544,7 +544,7 @@
       <Filter>Sources\3d Party\Nvidia\Flow</Filter>
     </ClInclude>
     <ClInclude Include="Nvidia\Flow\include\NvFlowTypes.h">
-      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+	  <Filter>Sources\3d Party\Nvidia\Flow</Filter>
     </ClInclude>
     <ClInclude Include="ModuleBlastMeshImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -566,6 +566,9 @@
     </ClInclude>
     <ClInclude Include="ModuleBlast.h">
       <Filter>Sources\Modules</Filter>
+	</ClInclude>
+    <ClInclude Include="ComponentLight.h">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -931,6 +934,9 @@
     </ClCompile>
     <ClCompile Include="ModuleBlast.cpp">
       <Filter>Sources\Modules</Filter>
+	</ClCompile>
+    <ClCompile Include="ComponentLight.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

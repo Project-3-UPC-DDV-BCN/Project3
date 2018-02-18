@@ -26,6 +26,7 @@
 #include "ModulePhysics.h"
 #include "BlastModel.h"
 #include "ModuleBlast.h"
+#include "ComponentLight.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -62,6 +63,7 @@ bool ModuleScene::Start()
 	mCurrentGizmoMode = ImGuizmo::LOCAL;
 
 	CreateMainCamera();
+	CreateMainLight();
 
 	skybox = new CubeMap(500);
 	skybox->SetCubeMapTopTexture(EDITOR_SKYBOX_FOLDER"top.bmp");
@@ -95,6 +97,17 @@ void ModuleScene::CreateMainCamera()
 	}
 }
 
+void ModuleScene::CreateMainLight()
+{
+	GameObject* main_light = new GameObject();
+	main_light->SetName("Directional Light");
+	ComponentLight* light = (ComponentLight*)main_light->AddComponent(Component::CompLight);
+	light->SetTypeToDirectional();
+	scene_gameobjects.push_back(main_light);
+	root_gameobjects.push_back(main_light);
+	App->resources->AddGameObject(main_light);
+}
+
 // Load assets
 bool ModuleScene::CleanUp()
 {
@@ -111,6 +124,16 @@ GameObject * ModuleScene::CreateGameObject(GameObject * parent)
 	RenameDuplicatedGameObject(ret);
 	AddGameObjectToScene(ret);
 	App->resources->AddGameObject(ret);
+	return ret;
+}
+
+GameObject * ModuleScene::CreateLightObject(GameObject * parent)
+{
+	GameObject* ret = new GameObject(parent);
+	RenameDuplicatedGameObject(ret);
+	AddGameObjectToScene(ret);
+	App->resources->AddGameObject(ret);
+	ret->AddComponent(Component::CompLight);
 	return ret;
 }
 
@@ -189,19 +212,13 @@ update_status ModuleScene::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleScene::PostUpdate(float dt)
-{
-	for (std::list<GameObject*>::iterator it = scene_gameobjects.begin(); it != scene_gameobjects.end(); it++)
-	{
-		(*it)->UpdateGlobalMatrix();
-	}
-	return UPDATE_CONTINUE;
-}
-
 // Update
 update_status ModuleScene::Update(float dt)
 {
 	ms_timer.Start();
+
+	Shader * shady = App->resources->GetShader(0);
+
 
 	HandleInput();
 
@@ -396,6 +413,7 @@ void ModuleScene::NewScene(bool loading_scene)
 	if (!loading_scene)
 	{
 		CreateMainCamera();
+		CreateMainLight();
 	}
 }
 

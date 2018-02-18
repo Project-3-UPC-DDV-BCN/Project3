@@ -9,6 +9,7 @@ class ComponentCamera;
 class Component;
 class ComponentScript;
 class ComponentFactory;
+class ComponentLight;
 class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
@@ -31,11 +32,13 @@ public:
 	void DrawRigidBodyPanel(ComponentRigidBody* rigidbody);
 	void DrawColliderPanel(ComponentCollider* collider);
 	void DrawJointDistancePanel(ComponentJointDistance* joint);
+	void DrawLightPanel(ComponentLight* light);
 
 private:
 	int scripts_count;
 	int factories_count;
 	int colliders_count;
 	int distance_joints_count;
+	int lights_count;
 };
 
