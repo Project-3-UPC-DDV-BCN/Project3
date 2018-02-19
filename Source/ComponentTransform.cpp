@@ -1,5 +1,6 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "ComponentLight.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
 {
@@ -45,8 +46,10 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
-	this->shown_rotation = rotation;
-	this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
+	float3 diff = rotation - shown_rotation;
+	shown_rotation = rotation;
+	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
 }
 
@@ -93,8 +96,14 @@ void ComponentTransform::UpdateGlobalMatrix()
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
+		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
+
+		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+		{
+			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+			child_transform->UpdateGlobalMatrix();
+		}
 
 		float3 _pos, _scale;
 		Quat _rot;
@@ -120,6 +129,12 @@ void ComponentTransform::UpdateGlobalMatrix()
 	GetGameObject()->UpdateBoundingBox();
 	//If gameobject has a camera component
 	GetGameObject()->UpdateCamera();
+	//ComponentLight* light = (ComponentLight*)GetGameObject()->GetComponent(Component::CompLight);
+	//if (light)
+	//{
+	//	//light->SetPositionFromGO(global_pos);
+	//	light->SetDirectionFromGO(global_rot);
+	//}
 }
 
 const float4x4 ComponentTransform::GetMatrix() const

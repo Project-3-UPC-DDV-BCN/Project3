@@ -14,7 +14,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>The-Creator</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -94,6 +94,7 @@
     <ClInclude Include="AppWindowConfigWindow.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentLight.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="CSScript.h" />
     <ClInclude Include="CubeMap.h" />
@@ -227,7 +228,6 @@
     <ClInclude Include="TagsAndLayersWindow.h" />
     <ClInclude Include="TextEditorWindow.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Thread.h" />
     <ClInclude Include="tinyfiledialogs.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="AssetsWindow.h" />
@@ -246,6 +246,7 @@
     <ClCompile Include="AppWindowConfigWindow.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentLight.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="CSScript.cpp" />
     <ClCompile Include="CubeMap.cpp" />
@@ -339,7 +340,6 @@
     <ClCompile Include="TagsAndLayersWindow.cpp" />
     <ClCompile Include="TextEditorWindow.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Thread.cpp" />
     <ClCompile Include="tinyfiledialogs.c" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="AssetsWindow.cpp" />

@@ -8,6 +8,7 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
+#include "ComponentLight.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -78,6 +79,9 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
+		break;
+	case Component::CompLight:
+		components_list.push_back(component = new ComponentLight(this));
 		break;
 	default:
 		break;

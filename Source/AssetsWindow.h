@@ -66,12 +66,11 @@ private:
 	Texture* folder_icon;
 
 	std::string selected_file_path;
-	Directory selected_folder;
+	Directory* selected_folder;
 	std::string assets_folder_path;
 	std::string delete_path;
 
 	Shader::ShaderType shader_type;
-
 	std::vector<Directory*> directories;
 };
 
