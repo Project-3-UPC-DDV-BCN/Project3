@@ -1202,7 +1202,7 @@ void ModuleResources::CreateDefaultShaders()
 		"{\n"
 			"if (has_texture)\n"
 			"{\n"
-			"	color = texture(Tex_NormalMap, TexCoord);\n"
+			"	color = texture(Tex_Diffuse, TexCoord);\n"
 			"}\n"
 			"else if (has_material_color)\n"
 			"	color = material_color;\n"

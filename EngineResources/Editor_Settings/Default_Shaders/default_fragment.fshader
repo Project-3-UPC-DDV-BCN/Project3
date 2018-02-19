@@ -78,7 +78,7 @@ void main()
 {
 if (has_texture)
 {
-	color = texture(Tex_NormalMap, TexCoord);
+	color = texture(Tex_Diffuse, TexCoord);
 }
 else if (has_material_color)
 	color = material_color;
