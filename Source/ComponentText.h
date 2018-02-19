@@ -18,6 +18,7 @@ public:
 	virtual ~ComponentText();
 
 	bool Update();
+	bool CleanUp();
 
 	void Save(Data& data) const;
 	void Load(Data& data);

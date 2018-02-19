@@ -38,8 +38,6 @@ bool ModuleFontImporter::Start()
 {
 	bool ret = true;
 
-	LoadFont("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
-
 	return ret;
 }
 
@@ -53,23 +51,22 @@ bool ModuleFontImporter::CleanUp()
 	return ret;
 }
 
-Font* ModuleFontImporter::LoadFont(const char * filepath)
+Font* ModuleFontImporter::LoadFontInstance(const char * filepath)
 {
-	Font* font = GetFont(filepath);
-
-	if (font == nullptr)
+	Font* font = new Font(filepath);
+	
+	if (font->GetValid())
 	{
-		font = new Font(filepath);
-		
-		if (font->GetValid())
-		{
-			fonts.push_back(font);
-		}
-		else
-		{
-			CONSOLE_ERROR("Error loading font with path (Wrong path?): %s", filepath);
-		}
+		fonts.push_back(font);
 	}
+	else
+	{
+		CONSOLE_ERROR("Error loading font with path (Wrong path?): %s", filepath);
+
+		font->CleanUp();
+		RELEASE(font);
+	}
+	
 
 	return font;
 }
@@ -86,22 +83,6 @@ void ModuleFontImporter::UnloadFont(Font * font)
 			break;
 		}
 	}
-}
-
-Font * ModuleFontImporter::GetFont(const char * filepath) const
-{
-	Font* ret = nullptr;
-
-	for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
-	{
-		if (TextCmp((*it)->GetAssetsPath().c_str(), filepath))
-		{
-			ret = (*it);
-			break;
-		}
-	}
-
-	return ret;
 }
 
 void ModuleFontImporter::ClearFonts()

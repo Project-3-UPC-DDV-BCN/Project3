@@ -473,7 +473,7 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 	{
 		float colour[4] = { text->GetColour().x, text->GetColour().y, text->GetColour().w, text->GetColour().z };
 
-		uint size = text->GetFontSize();
+		int size = text->GetFontSize();
 
 		bool bold = text->GetStyleBold();
 		bool italic = text->GetStyleItalic();
@@ -489,7 +489,7 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 
 		ImGui::Text("Font: %s", text->GetFontName());
 
-		if (ImGui::DragFloat("Size", (float*)&size, true, 1, 2, 500));
+		if (ImGui::DragInt("Font Size", &size, true))
 		{
 			text->SetFontSize(size);
 		}

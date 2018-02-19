@@ -25,8 +25,8 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 
 	c_rect_trans->SetSize(float2(100, 40));
 
-	font = App->font_importer->LoadFont("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
-	SetText("This is a fucking test");
+	font = App->font_importer->LoadFontInstance("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
+	SetText("Text Component");
 }
 
 ComponentText::~ComponentText()
@@ -41,6 +41,7 @@ bool ComponentText::Update()
 	{
 		UpdateText();
 		update_text = false;
+		c_rect_trans->SetSize(text_size);
 	}
 
 	ComponentCanvas* canvas = GetCanvas();
@@ -50,7 +51,7 @@ bool ComponentText::Update()
 		CanvasDrawElement de;
 		de.SetTransform(GetTextTransform());
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-		de.SetSize(float2(0.0f, 0.0f));
+		de.SetSize(float2(1, 1));
 		de.SetColour(colour);
 		de.SetFlip(true);
 
@@ -58,6 +59,15 @@ bool ComponentText::Update()
 		
 		canvas->AddDrawElement(de);
 	}
+
+	return ret;
+}
+
+bool ComponentText::CleanUp()
+{
+	bool ret = true;
+
+	App->font_importer->UnloadFont(font);
 
 	return ret;
 }
@@ -89,7 +99,15 @@ void ComponentText::SetFontSize(uint size)
 {
 	if (font != nullptr)
 	{
+		if (size < 0)
+			size = 0;
+
+		if (size > 1000)
+			size = 1000;
+
 		font->SetFontSize(size);
+
+		update_text = true;
 	}
 }
 
@@ -246,7 +264,7 @@ float4x4 ComponentText::GetTextTransform()
 
 	trans.RemoveScale();
 
-	float4x4 scale_trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(text_size.x, text_size.y, 1));
+	float4x4 scale_trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(text_size.x * 0.1f, text_size.y * 0.1f, 1));
 
 	ret = trans * scale_trans;
 

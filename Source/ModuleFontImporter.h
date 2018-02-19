@@ -20,9 +20,8 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	Font* LoadFont(const char* filepath);
+	Font* LoadFontInstance(const char* filepath);
 	void  UnloadFont(Font* font);
-	Font* GetFont(const char* filepath) const;
 	void ClearFonts();
 
 	uint LoadText(const char * text, Font* font, float4 colour = float4(255, 255, 255, 255), bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
