@@ -8,9 +8,9 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
-#include "AudioSource.h"
-#include "Listener.h"
-#include "DistorsionZone.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -81,13 +81,13 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentFactory(this));
 		break;
 	case Component::CompAudioSource:
-		components_list.push_back(component = new AudioSource(this));
+		components_list.push_back(component = new ComponentAudioSource(this));
 		break;
 	case Component::CompAudioListener:
-		components_list.push_back(component = new Listener(this));
+		components_list.push_back(component = new ComponentListener(this));
 		break;
 	case Component::CompAudioDistZone:
-		components_list.push_back(component = new DistorsionZone(this));
+		components_list.push_back(component = new ComponentDistorsionZone(this));
 		break;
 	default:
 		break;

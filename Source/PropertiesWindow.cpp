@@ -20,6 +20,9 @@
 #include "ComponentFactory.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -169,6 +172,22 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Audio")) {
+					if (ImGui::MenuItem("Audio Listener"))
+					{
+						ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+					}
+					if (ImGui::MenuItem("Audio Source"))
+					{
+						ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
+					}
+					if (ImGui::MenuItem("Distorsion Zone"))
+					{
+						ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("New Factory")) {
 					static char input_text[30];
 					ImGui::InputText("Factory Name", input_text, 30);
@@ -208,8 +227,6 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompCircleCollider:
 		break;
-	case Component::CompAudioSource:
-		break;
 	case Component::CompAnimaton:
 		break;
 	case Component::CompScript:
@@ -219,6 +236,15 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
+		break;
+	case Component::CompAudioListener:
+		DrawAudioListener((ComponentListener*)component);
+		break;
+	case Component::CompAudioSource:
+		DrawAudioSource((ComponentAudioSource*)component);
+		break;
+	case Component::CompAudioDistZone:
+		DrawAudioDistZone((ComponentDistorsionZone*)component);
 		break;
 	default:
 		break;
@@ -563,4 +589,16 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 			factory->SetLifeTime(life_time);
 		}
 	}
+}
+
+void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
+{
+}
+
+void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
+{
+}
+
+void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
+{
 }

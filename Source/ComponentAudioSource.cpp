@@ -1,13 +1,13 @@
-#include "AudioSource.h"
+#include "ComponentAudioSource.h"
 #include "Application.h"
 #include "ModuleAudio.h"
 #include "AudioEvent.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
 
-#include "Listener.h"
+#include "ComponentListener.h"
 
-AudioSource::AudioSource(GameObject* attached_gameobject)
+ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 {
 	SetActive(true);
 	SetName("Audio Source");
@@ -24,12 +24,12 @@ AudioSource::AudioSource(GameObject* attached_gameobject)
 
 }
 
-AudioSource::~AudioSource()
+ComponentAudioSource::~ComponentAudioSource()
 {
 	//App->audio->UnRegisterGO(id);
 }
 
-bool AudioSource::Update()
+bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
@@ -63,22 +63,22 @@ bool AudioSource::Update()
 	return ret;
 }
 
-void AudioSource::PlayMusic(double audio_id)
+void ComponentAudioSource::PlayMusic(double audio_id)
 {
 	AK::SoundEngine::PostEvent(audio_id, obj->GetID(), AK_EnableGetMusicPlayPosition);
 }
 
-void AudioSource::PlayMusic(const char * name)
+void ComponentAudioSource::PlayMusic(const char * name)
 {
 	AK::SoundEngine::PostEvent(name, obj->GetID(), AK_EnableGetMusicPlayPosition);
 }
 
-void AudioSource::PlayEvent(uint id)
+void ComponentAudioSource::PlayEvent(uint id)
 {
 	AK::SoundEngine::PostEvent(id, obj->GetID());
 }
 
-void AudioSource::PlayEvent(const char * event_name)
+void ComponentAudioSource::PlayEvent(const char * event_name)
 {
 	if (obj != nullptr) 
 	{
@@ -91,11 +91,11 @@ void AudioSource::PlayEvent(const char * event_name)
 	}
 }
 
-void AudioSource::StopEvent(uint id)
+void ComponentAudioSource::StopEvent(uint id)
 {
 }
 
-void AudioSource::SendEvent(const char * name)
+void ComponentAudioSource::SendEvent(const char * name)
 {
 	for (int i = 0; i < events.size(); i++) {
 		if (!strcmp(events[i]->name.c_str(),name)) {
@@ -104,12 +104,12 @@ void AudioSource::SendEvent(const char * name)
 	}
 }
 
-AkGameObjectID AudioSource::GetID() const
+AkGameObjectID ComponentAudioSource::GetID() const
 {
 	return obj->GetID();
 }
 
-void AudioSource::UI_draw()
+void ComponentAudioSource::UI_draw()
 {
 	if(events.empty())
 	GetEvents();
@@ -126,7 +126,7 @@ void AudioSource::UI_draw()
 	}
 }
 
-void AudioSource::GetEvents()
+void ComponentAudioSource::GetEvents()
 {
 	if (soundbank != nullptr) {
 		for (int i = 0; i < soundbank->events.size(); i++) {
@@ -137,20 +137,20 @@ void AudioSource::GetEvents()
 	}
 }
 
-void AudioSource::ApplyReverb(float value, const char * bus)
+void ComponentAudioSource::ApplyReverb(float value, const char * bus)
 {
 	obj->SetAuxiliarySends(value, bus, App->audio->GetDefaultListener()->GetId());
 }
 
-void AudioSource::Save(Data & data) const
+void ComponentAudioSource::Save(Data & data) const
 {
 }
 
-void AudioSource::Load(Data & data)
+void ComponentAudioSource::Load(Data & data)
 {
 }
 
-//void AudioSource::Serialize(JSON_File * doc)
+//void ComponentAudioSource::Serialize(JSON_File * doc)
 //{
 //	if (doc == nullptr)
 //		return;

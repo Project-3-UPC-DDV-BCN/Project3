@@ -1,6 +1,6 @@
 #include "AudioEvent.h"
 #include "JsonTool.h"
-#include "AudioSource.h"
+#include "ComponentAudioSource.h"
 
 AudioEvent::AudioEvent()
 {
@@ -25,7 +25,7 @@ void AudioEvent::Load(JSON_File * file, SoundBank * p, int id)
 	this->parent = p;
 }
 
-void AudioEvent::UIDraw(AudioSource* parent )
+void AudioEvent::UIDraw(ComponentAudioSource* parent )
 {
 	if (ImGui::CollapsingHeader(name.c_str())) {
 		if (ImGui::Button("Play")) {

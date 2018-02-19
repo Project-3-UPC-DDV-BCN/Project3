@@ -1,4 +1,4 @@
-#include "DistorsionZone.h"
+#include "ComponentDistorsionZone.h"
 #include "Application.h"
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
@@ -8,7 +8,7 @@
 
 #include "OpenGL.h"
 
-DistorsionZone::DistorsionZone(GameObject * attached_gameobject)
+ComponentDistorsionZone::ComponentDistorsionZone(GameObject * attached_gameobject)
 {
 	SetActive(true);
 	SetName("Distorsion Zone");
@@ -19,11 +19,11 @@ DistorsionZone::DistorsionZone(GameObject * attached_gameobject)
 	
 }
 
-DistorsionZone::~DistorsionZone()
+ComponentDistorsionZone::~ComponentDistorsionZone()
 {
 }
 
-bool DistorsionZone::Update()
+bool ComponentDistorsionZone::Update()
 {
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::ComponentType::CompTransform);
 	
@@ -45,7 +45,7 @@ bool DistorsionZone::Update()
 	return true;
 }
 
-void DistorsionZone::DebugDraw()
+void ComponentDistorsionZone::DebugDraw()
 {
 	float3 corners[8];
 	OBB box = zone;
@@ -124,12 +124,12 @@ void DistorsionZone::DebugDraw()
 	delete[] colors;
 }
 
-bool DistorsionZone::CheckCollision(AABB target)
+bool ComponentDistorsionZone::CheckCollision(AABB target)
 {
 	return zone.Intersects(target);
 }
 
-void DistorsionZone::UI_draw()
+void ComponentDistorsionZone::UI_draw()
 {
 	//if (ImGui::CollapsingHeader("Distorsion Zone")) {
 	//	char* bus_name = new char[41];
@@ -146,10 +146,10 @@ void DistorsionZone::UI_draw()
 	//}
 }
 
-void DistorsionZone::Save(Data & data) const
+void ComponentDistorsionZone::Save(Data & data) const
 {
 }
 
-void DistorsionZone::Load(Data & data)
+void ComponentDistorsionZone::Load(Data & data)
 {
 }

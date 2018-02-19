@@ -6,13 +6,13 @@
 #include "Component.h"
 #include "Geomath.h"
 
-class DistorsionZone : 
+class ComponentDistorsionZone : 
 	public Component 
 {
 public:
 
-	DistorsionZone(GameObject* attached_gameobject);
-	~DistorsionZone();
+	ComponentDistorsionZone(GameObject* attached_gameobject);
+	~ComponentDistorsionZone();
 	bool Update();
 	void DebugDraw();
 	bool CheckCollision(AABB target);

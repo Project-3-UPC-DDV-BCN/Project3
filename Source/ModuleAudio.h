@@ -12,10 +12,10 @@
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define DEFAULT_VOLUME 50
 
-class Listener;
+class ComponentListener;
 class GameObject;
 class SoundBank;
-class DistorsionZone;
+class ComponentDistorsionZone;
 class JSONTool;
 
 class ModuleAudio : public Module
@@ -44,14 +44,14 @@ public:
 	void ImGuiDraw();
 
 	//Environments
-	void AddEnvironment(DistorsionZone* zone);
-	void DeleteEnvironment(DistorsionZone* zone);
+	void AddEnvironment(ComponentDistorsionZone* zone);
+	void DeleteEnvironment(ComponentDistorsionZone* zone);
 	bool CheckEnvironments(GameObject* go);
 
 	Wwise::SoundObject* GetCameraListener() const;
 	void SetCameraListener(Wwise::SoundObject* camera_listener);
-	Listener* GetDefaultListener() const;
-	void SetDefaultListener(Listener* default_listener);
+	ComponentListener* GetDefaultListener() const;
+	void SetDefaultListener(ComponentListener* default_listener);
 	Wwise::SoundObject* GetEmmiter() const;
 	void SetEmmiter(Wwise::SoundObject* emmiter);
 	SoundBank* GetSoundBank() const;
@@ -62,9 +62,9 @@ private:
 	Wwise::SoundObject* camera_listener = nullptr;
 	std::list <Wwise::SoundObject*> sound_obj;
 	std::list<SoundBank*> soundbanks;
-	std::vector<DistorsionZone*> environments;
+	std::vector<ComponentDistorsionZone*> environments;
 
-	Listener* default_listener = nullptr;
+	ComponentListener* default_listener = nullptr;
 	unsigned long listener_id = 1;
 	unsigned long last_go_id = 100;
 

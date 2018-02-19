@@ -6,12 +6,12 @@
 
 class AudioEvent;
 
-class AudioSource : 
+class ComponentAudioSource : 
 	public Component 
 {
 public :
-	AudioSource(GameObject* attached_gameobject);
-	~AudioSource();
+	ComponentAudioSource(GameObject* attached_gameobject);
+	~ComponentAudioSource();
 
 	bool Update();
 	void PlayMusic(double audio_id);

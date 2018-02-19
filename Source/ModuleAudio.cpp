@@ -12,9 +12,9 @@
 #include "Mesh.h"
 
 #include "SoundBank.h"
-#include "DistorsionZone.h"
-#include "AudioSource.h"
-#include "Listener.h"
+#include "ComponentDistorsionZone.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
 
 #include "ModuleScene.h"
 
@@ -47,7 +47,7 @@ bool ModuleAudio::Start()
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
 	go->SetName("Audio");
-	AudioSource* as = (AudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
+	ComponentAudioSource* as = (ComponentAudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
 	as->PlayEvent("Test_Event");
 
@@ -198,12 +198,12 @@ void ModuleAudio::ImGuiDraw()
 {
 }
 
-void ModuleAudio::AddEnvironment(DistorsionZone * zone)
+void ModuleAudio::AddEnvironment(ComponentDistorsionZone * zone)
 {
 	environments.push_back(zone);
 }
 
-void ModuleAudio::DeleteEnvironment(DistorsionZone * zone)
+void ModuleAudio::DeleteEnvironment(ComponentDistorsionZone * zone)
 {
 	for (int i = 0; i < environments.size(); i++)
 	{
@@ -221,8 +221,8 @@ bool ModuleAudio::CheckEnvironments(GameObject * go)
 
 	ComponentTransform* t = (ComponentTransform*)go->GetComponent(Component::ComponentType::CompTransform);
 	ComponentMeshRenderer* meshrend = (ComponentMeshRenderer*)go->GetComponent(Component::ComponentType::CompMeshRenderer);
-	AudioSource* audio = (AudioSource*)go->GetComponent(Component::ComponentType::CompAudioSource);
-	Listener* list = (Listener*)go->GetComponent(Component::ComponentType::CompAudioListener);
+	ComponentAudioSource* audio = (ComponentAudioSource*)go->GetComponent(Component::ComponentType::CompAudioSource);
+	ComponentListener* list = (ComponentListener*)go->GetComponent(Component::ComponentType::CompAudioListener);
 	if (!t || !audio || !meshrend)
 		return ret;
 
@@ -261,12 +261,12 @@ void ModuleAudio::SetCameraListener(Wwise::SoundObject * camera_listener)
 	this->camera_listener = camera_listener;
 }
 
-Listener * ModuleAudio::GetDefaultListener() const
+ComponentListener * ModuleAudio::GetDefaultListener() const
 {
 	return default_listener;
 }
 
-void ModuleAudio::SetDefaultListener(Listener* default_listener)
+void ModuleAudio::SetDefaultListener(ComponentListener* default_listener)
 {
 	this->default_listener = default_listener;
 }

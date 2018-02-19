@@ -4,12 +4,12 @@
 #include "Component.h"
 #include "ModuleAudio.h"
 
-class Listener 
+class ComponentListener 
 	: public Component 
 {
 public:
-	Listener(GameObject* attached_gameobject);
-	~Listener();
+	ComponentListener(GameObject* attached_gameobject);
+	~ComponentListener();
 	bool Update();
 	AkGameObjectID GetId() const;
 	void ApplyReverb(float value, const char* bus);

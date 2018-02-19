@@ -525,16 +525,7 @@
     <ClInclude Include="AudioEvent.h">
       <Filter>Sources\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioSource.h">
-      <Filter>Sources\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="SoundBank.h">
-      <Filter>Sources\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Listener.h">
-      <Filter>Sources\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="DistorsionZone.h">
       <Filter>Sources\Audio</Filter>
     </ClInclude>
     <ClInclude Include="AudioWindow.h">
@@ -545,6 +536,15 @@
     </ClInclude>
     <ClInclude Include="JsonTool.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentDistorsionZone.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentAudioSource.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentListener.h">
+      <Filter>Sources\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -905,16 +905,7 @@
     <ClCompile Include="AudioEvent.cpp">
       <Filter>Sources\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="AudioSource.cpp">
-      <Filter>Sources\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="SoundBank.cpp">
-      <Filter>Sources\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Listener.cpp">
-      <Filter>Sources\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="DistorsionZone.cpp">
       <Filter>Sources\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AudioWindow.cpp">
@@ -925,6 +916,15 @@
     </ClCompile>
     <ClCompile Include="JsonTool.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentDistorsionZone.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAudioSource.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentListener.cpp">
+      <Filter>Sources\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

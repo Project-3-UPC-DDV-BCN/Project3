@@ -8,7 +8,7 @@
 #include "SoundBank.h"
 
 class SoundBank;
-class AudioSource;
+class ComponentAudioSource;
 class JSON_File;
 
 class AudioEvent {
@@ -23,7 +23,7 @@ public:
 	std::string name;
 	uint id = 0;
 	bool in_3D = false;
-	void UIDraw(AudioSource* parent);
+	void UIDraw(ComponentAudioSource* parent);
 
 	AkPlayingID playing_id = 0L;
 	AkCallbackFunc event_call_back = nullptr;

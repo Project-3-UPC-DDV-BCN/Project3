@@ -1,11 +1,11 @@
-#include "Listener.h"
+#include "ComponentListener.h"
 #include "Application.h"
 #include "ModuleAudio.h"
 #include "AudioEvent.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
 
-Listener::Listener(GameObject * attached_gameobject)
+ComponentListener::ComponentListener(GameObject * attached_gameobject)
 {
 	SetActive(true);
 	SetName("Audio Listener");
@@ -18,15 +18,15 @@ Listener::Listener(GameObject * attached_gameobject)
 	App->audio->SetDefaultListener(this);
 }
 
-Listener::~Listener()
+ComponentListener::~ComponentListener()
 {
 }
 
-bool Listener::Update()
+bool ComponentListener::Update()
 {
 	bool ret = true;
 
-	//Update Listener Positioin
+	//Update ComponentListener Positioin
 
 	ComponentTransform* trans = (ComponentTransform*) GetGameObject()->GetComponent(Component::ComponentType::CompTransform);
 
@@ -51,20 +51,20 @@ bool Listener::Update()
 	return ret;
 }
 
-AkGameObjectID Listener::GetId() const
+AkGameObjectID ComponentListener::GetId() const
 {
 	return obj->GetID();
 }
 
-void Listener::ApplyReverb(float value, const char * bus)
+void ComponentListener::ApplyReverb(float value, const char * bus)
 {
 	obj->SetAuxiliarySends(value, bus, App->audio->GetDefaultListener()->GetId());
 }
 
-void Listener::Save(Data & data) const
+void ComponentListener::Save(Data & data) const
 {
 }
 
-void Listener::Load(Data & data)
+void ComponentListener::Load(Data & data)
 {
 }
