@@ -49,7 +49,7 @@ bool ModuleAudio::Start()
 	go->SetName("Audio");
 	ComponentAudioSource* as = (ComponentAudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
-	as->PlayEvent("Test_Event");
+	as->SendEvent("Test_Event");
 
 	GameObject* go_ = App->scene->CreateGameObject();
 	go_->AddComponent(Component::ComponentType::CompAudioListener);

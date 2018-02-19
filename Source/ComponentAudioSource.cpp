@@ -130,9 +130,7 @@ void ComponentAudioSource::GetEvents()
 {
 	if (soundbank != nullptr) {
 		for (int i = 0; i < soundbank->events.size(); i++) {
-
 			events.push_back(soundbank->events[i]);
-
 		}
 	}
 }
@@ -144,10 +142,17 @@ void ComponentAudioSource::ApplyReverb(float value, const char * bus)
 
 void ComponentAudioSource::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
 }
 
 void ComponentAudioSource::Load(Data & data)
 {
+	SetType((Component::ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	GetEvents();
 }
 
 std::vector<AudioEvent*> ComponentAudioSource::GetEventsVector() const
@@ -159,15 +164,4 @@ std::vector<AudioEvent*> ComponentAudioSource::GetEventsToPlayVector() const
 {
 	return events_to_play;
 }
-
-//void ComponentAudioSource::Serialize(JSON_File * doc)
-//{
-//	if (doc == nullptr)
-//		return;
-//
-//	doc->SetNumber("type", type);
-//	doc->SetNumber("ownerUID", (owner != nullptr) ? owner->GetUID() : -1);
-//	doc->SetString("name", name);
-//}
-
 

@@ -131,8 +131,14 @@ bool ComponentDistorsionZone::CheckCollision(AABB target)
 
 void ComponentDistorsionZone::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
 }
 
 void ComponentDistorsionZone::Load(Data & data)
 {
+	SetType((Component::ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
 }

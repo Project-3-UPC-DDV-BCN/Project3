@@ -313,6 +313,21 @@ void Wwise::SoundObject::SetPosition(float x, float y, float z, float x_front, f
 		CONSOLE_DEBUG("Couldn't update position");
 }
 
+AkVector Wwise::SoundObject::GetPosition() const
+{
+	return position;
+}
+
+AkVector Wwise::SoundObject::GetTop() const
+{
+	return top;
+}
+
+AkVector Wwise::SoundObject::GetFront() const
+{
+	return front;
+}
+
 void Wwise::SoundObject::SetListener(unsigned long * id)
 {
 	AKRESULT res = AK::SoundEngine::SetListeners(SoundID, (AkGameObjectID*)id, 1);
