@@ -85,30 +85,29 @@ else if (has_material_color)
 else
 	color = ourColor;
 
-vec3 normal; vec3 viewDir;
+vec3 normal; vec3 viewDir;  vec3 fragPosarg;
 	
 if (has_normalmap)
 {
-normal = texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0;
-//vec3 TangentViewPos = TBN * viewPos;
-//viewDir = normalize(TangentViewPos - TangentFragPos);
-viewDir = normalize(viewPos - FragPos);
+normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);
+vec3 TangentViewPos = TBN * viewPos;
+viewDir = normalize(TangentViewPos - TangentFragPos);
+fragPosarg = TangentFragPos;
 }	
 else
 {
 normal = normalize(Normal);
-
 viewDir = normalize(viewPos - FragPos);
+fragPosarg = FragPos;
 }
-
 
 vec3 result = vec3(0.0, 0.0, 0.0);
 for (int i = 0; i < NR_DIREC_LIGHTS; i++)
 result += CalcDirLight(dirLights[i], normal, viewDir);
 for (int k = 0; k < NR_POINT_LIGHTS; k++)
-result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);
+result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);
 for (int j = 0; j < NR_SPOT_LIGHTS; j++)
-result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
+result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);
 color = vec4(result, 1.0);
 }
 
@@ -116,8 +115,12 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
 	if (light.active == true)
 	{
-		vec3 lightDir = normalize(-light.direction);
-
+	vec3 lightDir;
+	if (has_normalmap)
+	{
+		lightDir = normalize(-TBN * light.direction);
+	}
+	else lightDir = (-light.direction);
 		float diff = max(dot(lightDir, normal), 0.0);
 
 		vec3 reflectDir = reflect(-lightDir, normal);
@@ -137,13 +140,21 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	if (light.active == true)
 	{
-		vec3 lightDir = normalize(light.position - fragPos);
-
-		float diff = max(dot(normal, lightDir), 0.0);
+	vec3 lightPos; vec3 lightDir;
+	if (has_normalmap)
+	{
+		lightPos = TBN * light.position;
+		lightDir = normalize(lightPos - fragPos);
+	}
+	else lightDir = normalize(light.position - fragPos);
+	
+		float diff = max(dot(lightDir, normal), 0.0);
 
 		vec3 reflectDir = reflect(-lightDir, normal);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-		float distance = length(light.position - fragPos);
+		vec3 halfwayDir = normalize(lightDir + viewDir);		
+		float spec = pow(max(dot(normal, halfwayDir), 0.0), 32);
+		
+		float distance = length(lightPos - fragPos);
 		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
 		vec3 ambient = light.ambient * vec3(color);
@@ -162,14 +173,21 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	if (light.active == true)
 	{
-		vec3 lightDir = normalize(light.position - fragPos);
+	vec3 lightPos; vec3 lightDir;
+	if (has_normalmap)
+	{
+		lightPos = TBN * light.position;
+		lightDir = normalize(lightPos - fragPos);
+	}
+	else lightDir = normalize(light.position - fragPos);
 
-		float diff = max(dot(normal, lightDir), 0.0);
+		float diff = max(dot(lightDir, normal), 0.0);
 
 		vec3 reflectDir = reflect(-lightDir, normal);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+		vec3 halfwayDir = normalize(lightDir + viewDir);	
+		float spec = pow(max(dot(normal, halfwayDir), 0.0), 32);
 
-		float distance = length(light.position - fragPos);
+		float distance = length(lightPos - fragPos);
 		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
 		float theta = dot(lightDir, normalize(-light.direction));
