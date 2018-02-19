@@ -4,10 +4,12 @@ in vec4 ourColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoord;
-in vec3 Tangents;
-in vec3 Bitangents;
+in vec3 TangentFragPos;
+in mat3 TBN;
 out vec4 color;
 
+//uniform vec3 TangentLightPos;
+//uniform vec3 TangentViewPos;
 uniform bool has_material_color;
 uniform vec4 material_color;
 uniform bool has_texture;
@@ -76,28 +78,37 @@ void main()
 {
 if (has_texture)
 {
-	color = texture(Tex_Diffuse, TexCoord);
+	color = texture(Tex_NormalMap, TexCoord);
 }
 else if (has_material_color)
 	color = material_color;
 else
 	color = ourColor;
 
+vec3 normal; vec3 viewDir;
+	
 if (has_normalmap)
 {
-vec3 normal_m = texture(Tex_NormalMap, TexCoord).rgb;
-normal_m = normalize(normal_m * 2.0 - 1.0);
+normal = texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0;
+//vec3 TangentViewPos = TBN * viewPos;
+//viewDir = normalize(TangentViewPos - TangentFragPos);
+viewDir = normalize(viewPos - FragPos);
 }	
+else
+{
+normal = normalize(Normal);
 
-vec3 norm = normalize(Normal);
-vec3 viewDir = normalize(viewPos - FragPos);
+viewDir = normalize(viewPos - FragPos);
+}
 
-vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
-result += CalcDirLight(dirLights[i], norm, viewDir);
+
+vec3 result = vec3(0.0, 0.0, 0.0);
+for (int i = 0; i < NR_DIREC_LIGHTS; i++)
+result += CalcDirLight(dirLights[i], normal, viewDir);
 for (int k = 0; k < NR_POINT_LIGHTS; k++)
-result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);
+result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);
 for (int j = 0; j < NR_SPOT_LIGHTS; j++)
-result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
+result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
 color = vec4(result, 1.0);
 }
 
@@ -107,10 +118,11 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 	{
 		vec3 lightDir = normalize(-light.direction);
 
-		float diff = max(dot(normal, lightDir), 0.0);
+		float diff = max(dot(lightDir, normal), 0.0);
 
 		vec3 reflectDir = reflect(-lightDir, normal);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+		vec3 halfwayDir = normalize(lightDir + viewDir);
+		float spec = pow(max(dot(normal, halfwayDir), 0.0), 32);
 
 		vec3 ambient = light.ambient * vec3(color);
 		vec3 diffuse = light.diffuse * diff * vec3(color);

@@ -225,13 +225,12 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	bool has_tex = false;
+	bool has_tex = false, has_normalmap = false;
 	if (diffuse_texture != nullptr && diffuse_texture->GetID() != 0)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
-		//App->renderer3D->SetUniformUInt(GetShaderProgramID(), "Tex_Diffuse", diffuse_texture->GetID());
-
+		App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Diffuse", diffuse_texture->GetID());
 		has_tex = true;
 	}
 
@@ -239,9 +238,8 @@ void Material::LoadToMemory()
 	{
 		glActiveTexture(GL_TEXTURE1);		
 		glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
-
-		//has_tex = true;
-		//App->renderer3D->SetUniformUInt(GetShaderProgramID(), "Tex_NormalMap", normalmap_texture->GetID());
+		App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_NormalMap", normalmap_texture->GetID());
+		has_normalmap = true;
 	}
 
 	bool has_mat_color = false;
@@ -252,6 +250,7 @@ void Material::LoadToMemory()
 	}
 
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture", has_tex);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
 	
 }
