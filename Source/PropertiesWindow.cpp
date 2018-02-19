@@ -597,8 +597,38 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
+	if (audio_source->GetEventsVector().empty())
+		audio_source->GetEvents();
+
+	if (ImGui::CollapsingHeader("Audio Source")) {
+		if (audio_source->soundbank != nullptr) {
+			std::string soundbank_name = "SoundBank: ";
+			soundbank_name += audio_source->soundbank->name.c_str();
+			if (ImGui::TreeNode(soundbank_name.c_str()))
+			{
+				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) {
+					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
+				}
+
+				ImGui::TreePop();
+			}
+		}
+	}
 }
 
 void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
 {
+	if (ImGui::CollapsingHeader("Distorsion Zone")) {
+		char* bus_name = new char[41];
+
+		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
+		bus_name[dist_zone->bus.length()] = '\0';
+
+		ImGui::InputText("Target bus", bus_name, 40);
+		dist_zone->bus = bus_name;
+
+		ImGui::DragFloat("Value", &dist_zone->distorsion_value, true, 0.1, 0.0, 12.0, "%.1f");
+
+		delete[] bus_name;
+	}
 }

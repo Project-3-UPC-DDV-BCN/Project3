@@ -16,7 +16,6 @@ public:
 	bool Update();
 	void DebugDraw();
 	bool CheckCollision(AABB target);
-	void UI_draw();
 
 	void Save(Data& data) const;
 	void Load(Data& data);

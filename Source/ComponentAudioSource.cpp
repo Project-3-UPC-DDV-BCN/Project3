@@ -150,6 +150,16 @@ void ComponentAudioSource::Load(Data & data)
 {
 }
 
+std::vector<AudioEvent*> ComponentAudioSource::GetEventsVector() const
+{
+	return events;
+}
+
+std::vector<AudioEvent*> ComponentAudioSource::GetEventsToPlayVector() const
+{
+	return events_to_play;
+}
+
 //void ComponentAudioSource::Serialize(JSON_File * doc)
 //{
 //	if (doc == nullptr)

@@ -29,6 +29,9 @@ public :
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	std::vector<AudioEvent*> GetEventsVector() const;
+	std::vector<AudioEvent*> GetEventsToPlayVector() const;
+
 public:
 	SoundBank* soundbank = nullptr;
 private:

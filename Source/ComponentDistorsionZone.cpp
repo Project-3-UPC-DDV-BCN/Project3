@@ -129,23 +129,6 @@ bool ComponentDistorsionZone::CheckCollision(AABB target)
 	return zone.Intersects(target);
 }
 
-void ComponentDistorsionZone::UI_draw()
-{
-	//if (ImGui::CollapsingHeader("Distorsion Zone")) {
-	//	char* bus_name = new char[41];
-
-	//	std::copy(bus.begin(), bus.end(), bus_name);
-	//	bus_name[bus.length()] = '\0';
-
-	//	ImGui::InputText("Target bus", bus_name, 40);
-	//	bus = bus_name;
-
-	//	ImGui::DragFloat("Value", &distorsion_value, 0.1, 0.0, 12.0, "%.1f");
-
-	//	delete[] bus_name;
-	//}
-}
-
 void ComponentDistorsionZone::Save(Data & data) const
 {
 }
