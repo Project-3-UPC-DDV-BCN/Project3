@@ -24,6 +24,7 @@
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
 #include "DebugDraw.h"
+#include "GameWindow.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -294,7 +295,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 		{
 			// WORLD
-			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 			{
 				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
 				SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
@@ -304,12 +305,14 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			// ORTHO
 			else
 			{
+				float2 win_size = App->editor->game_window->GetSize();
+
 				float ortho_projection[4][4] =
 				{
-				{ 2.0f / App->window->GetWidth(), 0.0f,                             0.0f, 0.0f },
-				{ 0.0f,                           2.0f / -App->window->GetHeight(), 0.0f, 0.0f },
-				{ 0.0f,                           0.0f,                            -1.0f, 0.0f },
-				{ -1.0f,                          1.0f,                             0.0f, 1.0f },
+				{ 2.0f / win_size.x,       0.0f,               0.0f, 0.0f },
+				{ 0.0f,                    2.0f / -win_size.y, 0.0f, 0.0f },
+				{ 0.0f,                    0.0f,              -1.0f, 0.0f },
+				{ -1.0f,                   1.0f,               0.0f, 1.0f },
 				};
 
 				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());

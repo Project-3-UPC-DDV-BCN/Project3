@@ -7,6 +7,7 @@
 #include "ModuleEditor.h"
 #include "ModuleResources.h"
 #include "ModuleRenderer3D.h"
+#include "Mesh.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -272,4 +273,10 @@ float4 CanvasDrawElement::GetColour() const
 Mesh * CanvasDrawElement::GetPlane() const
 {
 	return plane;
+}
+
+AABB CanvasDrawElement::GetBBox()
+{
+	plane->box.Transform(GetTransform());
+	return plane->box;
 }

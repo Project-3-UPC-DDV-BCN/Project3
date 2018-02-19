@@ -146,7 +146,7 @@ float4x4 ComponentRectTransform::GetOrtoMatrix()
 
 	float4x4 matrix = GetMatrix();
 
-	ret = matrix * canvas_matrix.Inverted();
+	ret = matrix; /** canvas_matrix.Inverted();*/
 
 	return ret;
 }

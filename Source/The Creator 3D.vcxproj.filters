@@ -58,9 +58,6 @@
     <Filter Include="Sources\GameObject\Components\UI">
       <UniqueIdentifier>{f18dd8bf-afb5-4de2-b3fb-c509ebcaa83f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\3d Party\SDL_FontCache">
-      <UniqueIdentifier>{59dc0a07-5157-4234-9e8d-87540f760f87}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -531,9 +528,6 @@
     <ClInclude Include="UsefulFunctions.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="SDL_FontCache.h">
-      <Filter>Sources\3d Party\SDL_FontCache</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -886,9 +880,6 @@
     </ClCompile>
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="SDL_FontCache.c">
-      <Filter>Sources\3d Party\SDL_FontCache</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

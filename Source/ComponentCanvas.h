@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Component.h"
 #include "MathGeoLib\Math\float4x4.h"
+#include "MathGeoLib\Geometry\AABB.h"
 
 class Mesh;
 class ComponentRectTransform;
@@ -27,6 +28,7 @@ public:
 	uint GetTextureId() const;
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
+	AABB GetBBox();
 
 private:
 	Mesh*    plane = nullptr;
