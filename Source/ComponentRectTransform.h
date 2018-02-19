@@ -62,6 +62,9 @@ public:
 	float GetScale() const;
 	float2 GetScaleAxis() const;
 
+	void SetRatio(float ratio);
+	float GetRatio() const;
+
 	void SetSnapUp(bool set);
 	void SetSnapDown(bool set);
 	void SetSnapLeft(bool set);

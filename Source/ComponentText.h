@@ -47,7 +47,6 @@ private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
 	void UpdateText();
-	float4x4 GetTextTransform();
 
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
@@ -63,6 +62,8 @@ private:
 	bool italic;
 	bool underline;
 	bool strikethrough;
+
+	float de_scaler;
 
 };
 

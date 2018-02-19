@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "OpenGL.h"
+#include "SDL_FontCache.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_ttf/include/SDL_ttf.h"
