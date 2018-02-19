@@ -128,6 +128,7 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			root->SetName(root_go_name);
 			ComponentTransform* transform = (ComponentTransform*)root->GetComponent(Component::CompTransform);
 			math::Quat math_quat(quat.x, quat.y, quat.z, quat.w);
+			if (math_quat.x == 0.f && math_quat.y == 0.f && math_quat.z == 0.f)	math_quat.w = 1.f;
 			float3 rotation = math::RadToDeg(math_quat.ToEulerXYZ());
 			transform->SetPosition({ pos.x, pos.y, pos.z });
 			transform->SetRotation(rotation);
