@@ -21,7 +21,6 @@ public :
 	void StopEvent(uint id);
 	void SendEvent(const char* name);
 	AkGameObjectID GetID()const;
-	void UI_draw();
 	void GetEvents();
 	//void Serialize(JSON_File* doc);
 	void ApplyReverb(float value, const char* bus);

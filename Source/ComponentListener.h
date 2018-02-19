@@ -11,6 +11,7 @@ public:
 	ComponentListener(GameObject* attached_gameobject);
 	~ComponentListener();
 	bool Update();
+	void UpdatePosition();
 	AkGameObjectID GetId() const;
 	void ApplyReverb(float value, const char* bus);
 

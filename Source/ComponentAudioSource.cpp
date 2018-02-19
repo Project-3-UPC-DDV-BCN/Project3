@@ -109,23 +109,6 @@ AkGameObjectID ComponentAudioSource::GetID() const
 	return obj->GetID();
 }
 
-void ComponentAudioSource::UI_draw()
-{
-	if(events.empty())
-	GetEvents();
-
-	if(ImGui::CollapsingHeader("Audio Source")) {
-		if (soundbank != nullptr) {
-			ImGui::Text("SoundBank: %s", soundbank->name.c_str());
-			if (ImGui::CollapsingHeader("Events")) {
-				for (int i = 0; i < events.size(); i++) {
-					events[i]->UIDraw(this);
-				}
-			}
-		}
-	}
-}
-
 void ComponentAudioSource::GetEvents()
 {
 	if (soundbank != nullptr) {
