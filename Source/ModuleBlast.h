@@ -5,6 +5,7 @@
 #include <NvBlastExtImpactDamageManager.h>
 #include <map>
 #include <vector>
+#include <set>
 
 class FixedBuffer
 {
@@ -90,4 +91,5 @@ private:
 	Nv::Blast::ExtGroupTaskManager* task_manager;
 	Nv::Blast::ExtImpactDamageManager* impact_damage_manager;
 	Nv::Blast::ExtImpactSettings settings;
+	std::set<Nv::Blast::ExtPxActor*> actors;
 };

@@ -505,12 +505,6 @@ void ModuleScene::CreatePrefab(GameObject * gameobject)
 	App->resources->CreateResource(assets_path);
 }
 
-void ModuleScene::LoadBlastModel(BlastModel * model)
-{
-	DuplicateGameObject(model->chunks[0]);
-	App->blast->SpawnFamily(model);
-}
-
 void ModuleScene::DrawSkyBox(float3 pos)
 {
 	skybox->RenderCubeMap(pos);

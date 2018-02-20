@@ -16,6 +16,7 @@
 #include "Material.h"
 #include "PhysicsMaterial.h"
 #include "BlastModel.h"
+#include "ModuleBlast.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -392,7 +393,7 @@ void AssetsWindow::DrawWindow()
 						BlastModel* model = App->resources->GetBlastModel(file_name);
 						if (model)
 						{
-							App->scene->LoadBlastModel(model);
+							App->blast->SpawnFamily(model);
 						}
 						else
 						{

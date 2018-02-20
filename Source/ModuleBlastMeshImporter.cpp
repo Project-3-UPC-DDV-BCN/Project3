@@ -95,8 +95,19 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 
 				BlastModel* model = new BlastModel();
 				model->chunks.resize(reader->getBoneCount());
+				uint32_t* infl;
+				reader->getBoneInfluences(infl);
+				physx::PxVec3* vertice_pos = reader->getPositionArray();
+				physx::PxVec2* vertice_uv = reader->getUvArray();
+				physx::PxVec3* vertice_normals = reader->getNormalsArray();
+				uint vertices_count = reader->getVerticesCount();
+				std::vector<int32_t> indRemap(reader->getVerticesCount(), -1);
+				uint indices_count = reader->getIndicesCount();
+				uint* indices_array = reader->getIndexArray();
+
 				for (uint bone_index = 0; bone_index < reader->getBoneCount(); ++bone_index)
 				{
+					std::fill(indRemap.begin(), indRemap.end(), -1);
 					GameObject* go = new GameObject();
 					if (bone_index == 0)
 					{
@@ -110,48 +121,82 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->AddComponent(Component::CompMeshRenderer);
 					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
 					mesh_renderer->SetName("Blast_Mesh_Renderer");
+
+					std::vector<float> vertex_data;
+					for (int i = 0; i < vertices_count; i++)
+					{
+						if (bone_index == infl[i])
+						{
+							indRemap[i] = (int32_t)vertex_data.size() / 13;
+							vertex_data.push_back(vertice_pos[i].x);
+							vertex_data.push_back(vertice_pos[i].y);
+							vertex_data.push_back(vertice_pos[i].z);
+							vertex_data.push_back(vertice_uv[i].x);
+							vertex_data.push_back(vertice_uv[i].y);
+							vertex_data.push_back(0);
+							vertex_data.push_back(vertice_normals[i].x);
+							vertex_data.push_back(vertice_normals[i].y);
+							vertex_data.push_back(vertice_normals[i].z);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+						}
+					}
+
+					int vertex_data_size = vertex_data.size();
 					Mesh* mesh = new Mesh();
 					mesh->SetName(name_without_extension + "_chunk_" + std::to_string(bone_index));
-					mesh->num_vertices = reader->getVerticesCount();
-					mesh->vertices_data = new float[mesh->num_vertices * 13];
-					physx::PxVec3* vertice_pos = reader->getPositionArray();
-					physx::PxVec2* vertice_uv = reader->getUvArray();
-					physx::PxVec3* vertice_normals = reader->getNormalsArray();
-					for (int i = 0, j = 0; i < mesh->num_vertices; i++, j += 13)
+					mesh->num_vertices = vertex_data.size() / 13;
+					mesh->vertices_data = new float[vertex_data_size];
+					
+					for (int i = 0; i < vertex_data_size; i += 13)
 					{
-						mesh->vertices_data[j] = vertice_pos[i].x;
-						mesh->vertices_data[j + 1] = vertice_pos[i].y;
-						mesh->vertices_data[j + 2] = vertice_pos[i].z;
-						mesh->vertices_data[j + 3] = vertice_uv[i].x;
-						mesh->vertices_data[j + 4] = vertice_uv[i].y;
-						mesh->vertices_data[j + 5] = 0;
-						mesh->vertices_data[j + 6] = vertice_normals[i].x;
-						mesh->vertices_data[j + 7] = vertice_normals[i].y;
-						mesh->vertices_data[j + 8] = vertice_normals[i].z;
-						mesh->vertices_data[j + 9] = 1;
-						mesh->vertices_data[j + 10] = 1;
-						mesh->vertices_data[j + 11] = 1;
-						mesh->vertices_data[j + 12] = 1;
+						mesh->vertices_data[i] = vertex_data[i];
+						mesh->vertices_data[i + 1] = vertex_data[i + 1];
+						mesh->vertices_data[i + 2] = vertex_data[i + 2];
+						mesh->vertices_data[i + 3] = vertex_data[i + 3];
+						mesh->vertices_data[i + 4] = vertex_data[i + 4];
+						mesh->vertices_data[i + 5] = vertex_data[i + 5];
+						mesh->vertices_data[i + 6] = vertex_data[i + 6];
+						mesh->vertices_data[i + 7] = vertex_data[i + 7];
+						mesh->vertices_data[i + 8] = vertex_data[i + 8];
+						mesh->vertices_data[i + 9] = vertex_data[i + 9];
+						mesh->vertices_data[i + 10] = vertex_data[i + 10];
+						mesh->vertices_data[i + 11] = vertex_data[i + 11];
+						mesh->vertices_data[i + 12] = vertex_data[i + 12];
 					}
-					mesh->num_indices = reader->getIndicesCount();
+
+					std::vector<int> indices_data;
+					for (uint32_t j = 0; j < indices_count; j += 3)
+					{
+						for (int tv : { 0, 1, 2})
+						{
+							uint32_t oldIndex = indices_array[j + tv];
+							int32_t newIndex = indRemap[oldIndex];
+							if (newIndex >= 0)
+							{
+								indices_data.push_back(reader->getMaterialIds()[j]);
+								indices_data.push_back(newIndex);
+							}
+						}
+					}
+
+					int indices_data_size = indices_data.size();
+					mesh->num_indices = indices_data_size / 2;
 					mesh->indices = new uint[mesh->num_indices];
-					uint* indice = reader->getIndexArray();
+					
 					std::vector<uint> material_indices;
 					std::vector<uint> interior_material_indices;
-					for (uint i = 0, j = 0; i < mesh->num_indices; i += 3, j++)
+					for (uint i = 0; i < indices_data_size; i+=2)
 					{
-						int mat_index = reader->getMaterialIds()[j];
-						if (mat_index == 0)
+						if (indices_data[i] == 0)
 						{
-							material_indices.push_back(indice[i]);
-							material_indices.push_back(indice[i + 1]);
-							material_indices.push_back(indice[i + 2]);
+							material_indices.push_back(indices_data[i+1]);
 						}
 						else
 						{
-							interior_material_indices.push_back(indice[i]);
-							interior_material_indices.push_back(indice[i + 1]);
-							interior_material_indices.push_back(indice[i + 2]);
+							interior_material_indices.push_back(indices_data[i+1]);
 						}
 					}
 
@@ -166,6 +211,7 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 					{
 						mesh->indices[j] = interior_material_indices[i];
 					}
+
 					mesh->CreateVerticesFromData();
 					Material* material = App->resources->GetMaterial(reader->getMaterialName(0));
 					Material* interior_material = App->resources->GetMaterial(reader->getMaterialName(1));
@@ -188,7 +234,9 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 				Data data;
 				model->Save(data);
 				data.SaveAsBinary(LIBRARY_BMODEL_FOLDER + name_without_extension + ".bmodel");
+				data.SaveAsJSON(LIBRARY_BMODEL_FOLDER + name_without_extension + ".bmodel");
 				RELEASE(model);
+				NVBLAST_FREE(infl);
 			}
 		}
 	}

@@ -42,7 +42,7 @@ public:
 	int material_indices_start;
 	int interior_material_indices_number;
 	int interior_material_indices_start;
-	//
+	////////////////////////////////////////
 
 private:
 	Mesh* mesh;

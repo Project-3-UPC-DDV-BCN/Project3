@@ -14,6 +14,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "GameObject.h"
+#include "ModuleScene.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastDEBUG_x86.lib")
@@ -119,6 +120,11 @@ update_status ModuleBlast::Update(float dt)
 
 	}
 
+	for (Nv::Blast::ExtPxActor* actor : actors)
+	{
+
+	}
+
 	task_manager->process();
 	task_manager->wait();
 
@@ -171,7 +177,6 @@ void ModuleBlast::SpawnFamily(BlastModel* model)
 		2000.f
 	};
 	model->family->spawn(physx::PxTransform(physx::PxVec3(0, 0, 0)), physx::PxVec3(1, 1, 1), spawn_settings);
-	//ProcessGroup();
 }
 
 void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
@@ -184,9 +189,10 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(true);
+		App->scene->DuplicateGameObject(go);
 	}
 	//actor.getPhysXActor().userData = model->chunks[0];
-	model->actors.push_back(&actor);
+	actors.emplace(&actor);
 }
 
 void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
@@ -199,7 +205,9 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(false);
+		App->scene->AddGameObjectToDestroy(go);
 	}
+	actors.erase(actors.find(&actor));
 }
 
 void ModuleBlast::ApplyDamage()

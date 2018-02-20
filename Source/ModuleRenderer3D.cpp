@@ -336,7 +336,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
-
+	App->resources;
 	if (mesh->GetMeshType() == ComponentMeshRenderer::NormalMesh)
 	{
 		Material* material = mesh->GetMaterial();
@@ -372,6 +372,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		uint program = 0;
 		if (material != nullptr)
 		{
+			interior_material->SetDiffuseColor(0, 0.5, 0.5);
 			program = material->GetShaderProgramID();
 			UseShaderProgram(program);
 			material->LoadToMemory();
@@ -380,12 +381,19 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 
+			//TODO: Calculate Normal Matrix here and send it as uniform.
+			// We need this because transitioning to World Space gives a non accurate Normal.
+			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
+
+			SendLight(program);
+
 			glDrawElements(GL_TRIANGLES, mesh->material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->material_indices_start));
 		}
 
 		program = 0;
 		if (interior_material != nullptr)
 		{
+			interior_material->SetDiffuseColor(1, 1, 1);
 			program = interior_material->GetShaderProgramID();
 			UseShaderProgram(program);
 			interior_material->LoadToMemory();
