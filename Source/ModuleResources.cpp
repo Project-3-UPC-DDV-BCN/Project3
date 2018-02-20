@@ -1302,22 +1302,6 @@ void ModuleResources::CreateDefaultShaders()
 	}
 	CreateResource(frag_default_path);
 
-
-	std::string debug_vert_default_path = SHADER_DEFAULT_FOLDER "default_debug_vertex.vshader";
-
-	if (!App->file_system->FileExist(vert_default_path))
-	{
-
-	}
-	CreateResource(debug_vert_default_path);
-
-	std::string debug_frag_default_path = SHADER_DEFAULT_FOLDER "default_debug_fragment.fshader";
-
-	if (!App->file_system->FileExist(debug_frag_default_path))
-	{
-
-	}
-
 	ShaderProgram* prog = new ShaderProgram();
 	prog->SetName("default_shader_program");
 
@@ -1326,6 +1310,9 @@ void ModuleResources::CreateDefaultShaders()
 
 	Shader* fragment = GetShader("default_fragment");
 	prog->SetFragmentShader(fragment);
+
+	AddResource(prog);
+
 	
 	//Default Debug Shaders
 	std::string deb_vert_default_path = SHADER_DEFAULT_FOLDER "default_debug_vertex.vshader";
