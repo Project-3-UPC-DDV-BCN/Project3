@@ -1,56 +1,48 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class Slave1Movement {
 
 	TheTransform trans;
 	public int controller_sensibility = 100;
-	
+	public int trigger_sensibility = 0;
 	public float rotate_speed = 1.0f;
 	public float vertical_thrust = 5.0f;
 	public float throttle_increment = 0.1f;
+	public float throttle_slow_increment = 0.3f;
 	public float max_vel = 10.0f;
 	public float acceleration = 1.0f;
+	public float slow_acceleration = 10.0f;
 	
 	private float curr_vel = 0.0f;
-	private float vel_percent = 0.0f; //from 1.0 to -1.0
-	
-	
-	private enum ThrottleState
-	{
-		TS_NULL,
-		TS_FORDWARD,
-		TS_STATIC,
-		TS_BACKWARD,
-	}
-	
-	ThrottleState throttle = TS_NULL;
+	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
+	bool slowing = false;
 	
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
-		throttle = TS_STATIC;
 	}
 	
 	void Update () 
 	{
-		int rjoy_up = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_UP");
-		int rjoy_down = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_DOWN");
-		int rjoy_right = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_RIGHT");
-		int rjoy_left = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_LEFT");
+		//int rjoy_up = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_UP");
+		//int rjoy_down = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_DOWN");
+		//int rjoy_right = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_RIGHT");
+		//int rjoy_left = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_LEFT");
 		
 		int ljoy_up = TheInput.GetControllerJoystickMove(0,"LEFTJOY_UP");
 		int ljoy_down = TheInput.GetControllerJoystickMove(0,"LEFTJOY_DOWN");
 		int ljoy_right = TheInput.GetControllerJoystickMove(0,"LEFTJOY_RIGHT");
 		int ljoy_left = TheInput.GetControllerJoystickMove(0,"LEFTJOY_LEFT");
 		
-		//int right_trigger = TheInput.GetControllerJoystickMove(0,"RIGHT_TRIGGER");
+		int right_trigger = TheInput.GetControllerJoystickMove(0,"RIGHT_TRIGGER");
 		//int left_trigger = TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER");
 		
 		if(ljoy_up > controller_sensibility)
 		{
 			float move_percentage = (float)(ljoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -58,7 +50,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_down - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -66,7 +58,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z += rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y -= rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -74,123 +66,50 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z -= rotate_speed*move_percentage*Time.DeltaTime;
-			trans.LocalRotation = new_rot;
-		}
-
-		if(rjoy_up > controller_sensibility)
-		{
-			float move_percentage = (float)(rjoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			TheVector3 new_pos = trans.LocalPosition;
-			new_pos += vertical_thrust*move_percentage*Time.DeltaTime*trans.UpDirection;
-			trans.LocalPosition = new_pos;
-		}
-
-		if(rjoy_down > controller_sensibility)
-		{
-			float move_percentage = (float)(rjoy_down - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			TheVector3 new_pos = trans.LocalPosition;
-			new_pos -= vertical_thrust*move_percentage*Time.DeltaTime*trans.UpDirection;
-			trans.LocalPosition = new_pos;
-		}
-
-		if(rjoy_right > controller_sensibility)
-		{
-			float move_percentage = (float)(rjoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y -= rotate_speed*move_percentage*Time.DeltaTime;
-			trans.LocalRotation = new_rot;
-		}
-
-		if(rjoy_left > controller_sensibility)
-		{
-			float move_percentage = (float)(rjoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.y += rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 		
-		if(TheInput.IsKeyDown("CONTROLLER_R3") && !TheInput.IsKeyDown("CONTROLLER_L3"))
+		vel_percent = 0.1f; //reset to min vel
+		if(right_trigger > trigger_sensibility)
 		{
-			switch(throttle)
-			{
-				case ThrottleState.TS_FORDWARD:
-					break;
-				case ThrottleState.TS_STATIC:
-					throttle = ThrottleState.TS_FORDWARD;
-					break;
-				case ThrottleState.TS_BACKWARD:
-					break;
-			}
+			vel_percent = (float)(right_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
+			if(vel_percent<0.1f) vel_percent = 0.1f;
 		}
 		
-		if(TheInput.IsKeyRepeat("CONTROLLER_R3") && !TheInput.IsKeyRepeat("CONTROLLER_L3"))
+		if(TheInput.GetControllerButton(0,"CONTROLLER_RB") == 2)
 		{
-			switch(throttle)
-			{
-				case ThrottleState.TS_FORDWARD:
-					if(vel_percent<1.0f)
-						vel_percent+=throttle_increment*Time.DeltaTime;
-					break;
-				case ThrottleState.TS_STATIC:
-					
-					break;
-				case ThrottleState.TS_BACKWARD:
-					if(vel_percent<0.0f)
-						vel_percent+=throttle_increment*Time.DeltaTime;
-					else
-					{
-						throttle = ThrottleState.TS_STATIC;
-						vel_percent = 0.0f;
-					}
-					break;
-			}
+			TheVector3 new_rot = trans.LocalRotation;
+			new_rot.z += rotate_speed*Time.DeltaTime;
+			trans.LocalRotation = new_rot;
 		}
 		
-		if(TheInput.IsKeyDown("CONTROLLER_L3") && !TheInput.IsKeyDown("CONTROLLER_R3"))
+		if(TheInput.GetControllerButton(0,"CONTROLLER_LB") == 2)
 		{
-			switch(throttle)
-			{
-				case ThrottleState.TS_FORDWARD:
-					
-					break;
-				case ThrottleState.TS_STATIC:
-					throttle = ThrottleState.TS_BACKWARD;
-					break;
-				case ThrottleState.TS_BACKWARD:
-					
-					break;
-			}
+			TheVector3 new_rot = trans.LocalRotation;
+			new_rot.z -= rotate_speed*Time.DeltaTime;
+			trans.LocalRotation = new_rot;
 		}
 		
-		if(TheInput.IsKeyRepeat("CONTROLLER_L3") && !TheInput.IsKeyRepeat("CONTROLLER_R3"))
+		slowing = false;
+		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
 		{
-			switch(throttle)
-			{
-				case ThrottleState.TS_FORDWARD:
-					if(vel_percent>0.0f)
-						vel_percent-=throttle_increment*Time.DeltaTime;
-					else
-					{
-						throttle = ThrottleState.TS_STATIC;
-						vel_percent = 0.0f;
-					}
-					break;
-				case ThrottleState.TS_STATIC:
-					
-					break;
-				case ThrottleState.TS_BACKWARD:
-					if(vel_percent>-1.0f)
-						vel_percent-=throttle_increment*Time.DeltaTime;
-					break;
-			}
+			vel_percent = 0.02f;
+			slowing = true;
 		}
-		
-		float target_vel = max_vel * vel_percent;
-		if(curr_vel<target_vel) curr_vel+=acceleration*Time.DeltaTime;
-		else if(curr_vel>target_vel) curr_vel-=acceleration*Time.DeltaTime;
-		
-		if(vel_percent == 0.0f) curr_vel = 0.0f;
+		TheConsole.Log("-------");
+		TheConsole.Log(vel_percent);
+		float target_vel = vel_percent*max_vel;
+		TheConsole.Log(curr_vel);
+		TheConsole.Log(target_vel);
+		if(curr_vel < target_vel) curr_vel += acceleration*Time.DeltaTime;
+		else if(curr_vel > target_vel)
+		{
+			if(!slowing)
+				curr_vel-=acceleration*Time.DeltaTime;
+			else
+				curr_vel-=slow_acceleration*Time.DeltaTime;
+		}
 		
 		TheVector3 new_vel_pos = trans.LocalPosition;
 		new_vel_pos += trans.ForwardDirection*curr_vel*Time.DeltaTime;
