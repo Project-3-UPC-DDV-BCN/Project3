@@ -172,7 +172,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		DrawSceneCameras(*it);
 	}
 
-	dynamic_mesh_to_draw.clear();
+	ResetRender();
 
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
@@ -372,8 +372,8 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
-
 	debug_draw->Clear();
+	debug_primitive_to_draw.clear();
 }
 
 // Called before quitting

@@ -44,7 +44,6 @@ public:
 	bool IsUsingSkybox()const;
 
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
-	void ResetRender();
 
 	void BindArrayBuffer(uint id) const;
 	void BindElementArrayBuffer(uint id) const;
@@ -56,6 +55,8 @@ public:
 	void RemoveLight(ComponentLight* light);
 
 	DebugDraw* GetDebugDraw() const;
+
+	void ResetRender();
 
 	//Shaders
 	uint GenVertexArrayObject() const;

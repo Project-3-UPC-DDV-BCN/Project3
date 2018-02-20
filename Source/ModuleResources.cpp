@@ -1311,6 +1311,8 @@ void ModuleResources::CreateDefaultShaders()
 	Shader* fragment = GetShader("default_fragment");
 	prog->SetFragmentShader(fragment);
 
+	prog->LinkShaderProgram();
+
 	AddResource(prog);
 
 	
