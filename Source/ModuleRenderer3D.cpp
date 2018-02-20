@@ -320,7 +320,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				SetUniformMatrix(program->GetProgramID(), "view", (float*)ide.Transposed().v);
 				SetUniformMatrix(program->GetProgramID(), "projection", &ortho_projection[0][0]);
 				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetOrtoTransform().Transposed().ptr());
-				SetUniformMatrix(program->GetProgramID(), "Model", float4x4::FromTRS(float3(300, 100, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(300, 300, 100)).Transposed().ptr());
+				//SetUniformMatrix(program->GetProgramID(), "Model", float4x4::FromTRS(float3(300, 100, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(300, 300, 100)).Transposed().ptr());
 			}
 
 			SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
