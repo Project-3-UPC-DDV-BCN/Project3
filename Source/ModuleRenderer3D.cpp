@@ -968,11 +968,11 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 		else
 		{
-			ComponentLight* light = nullptr;
-			light = (ComponentLight*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompLight);
+			ComponentTransform* trans = nullptr;
+			trans = (ComponentTransform*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
 
 			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light->GetLightDirection());
+			SetUniformVector3(program, tmp.c_str(), trans->GetMatrix().WorldZ());
 			tmp = plstr + "ambient";
 			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient()));
 			tmp = plstr + "diffuse";
