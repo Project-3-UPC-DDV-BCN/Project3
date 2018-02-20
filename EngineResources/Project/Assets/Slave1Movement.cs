@@ -7,9 +7,6 @@ public class Slave1Movement {
 	public int controller_sensibility = 100;
 	public int trigger_sensibility = 0;
 	public float rotate_speed = 1.0f;
-	public float vertical_thrust = 5.0f;
-	public float throttle_increment = 0.1f;
-	public float throttle_slow_increment = 0.3f;
 	public float max_vel = 10.0f;
 	public float acceleration = 1.0f;
 	public float slow_acceleration = 10.0f;

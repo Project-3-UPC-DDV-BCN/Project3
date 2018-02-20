@@ -63,6 +63,9 @@ private:
 	static void SetScale(MonoObject * object, MonoObject * vector);
 	static MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	static void LookAt(MonoObject * object, MonoObject * vector);
+	static MonoObject* GetForward(MonoObject* object);
+	static MonoObject* GetRight(MonoObject* object);
+	static MonoObject* GetUp(MonoObject* object);
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);

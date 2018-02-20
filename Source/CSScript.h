@@ -87,6 +87,9 @@ public:
 	void SetScale(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	void LookAt(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetForward(MonoObject* object);
+	MonoObject* GetRight(MonoObject* object);
+	MonoObject* GetUp(MonoObject* object);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);

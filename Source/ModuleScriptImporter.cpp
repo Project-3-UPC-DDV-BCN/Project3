@@ -253,6 +253,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::SetScale", (const void*)SetScale);
 	mono_add_internal_call("TheEngine.TheTransform::GetScale", (const void*)GetScale);
 	mono_add_internal_call("TheEngine.TheTransform::LookAt", (const void*)LookAt);
+	mono_add_internal_call("TheEngine.TheTransform::GetForward", (const void*)GetForward);
+	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
+	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
@@ -415,6 +418,21 @@ MonoObject * ModuleScriptImporter::GetScale(MonoObject * object, mono_bool is_gl
 void ModuleScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
 {
 	current_script->LookAt(object, vector);
+}
+
+MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
+{
+	return current_script->GetForward(object);
+}
+
+MonoObject * ModuleScriptImporter::GetRight(MonoObject * object)
+{
+	return current_script->GetRight(object);
+}
+
+MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
+{
+	return current_script->GetUp(object);
 }
 
 void ModuleScriptImporter::StartFactory(MonoObject * object)

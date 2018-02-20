@@ -1149,6 +1149,114 @@ void CSScript::LookAt(MonoObject * object, MonoObject * vector)
 {
 }
 
+MonoObject * CSScript::GetForward(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 forward = transform->GetForward();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &forward.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &forward.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &forward.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
+MonoObject * CSScript::GetRight(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 right = transform->GetRight();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &right.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &right.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &right.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
+MonoObject * CSScript::GetUp(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 up = transform->GetUp();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &up.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &up.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &up.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
 void CSScript::StartFactory(MonoObject * object)
 {
 	if (!MonoObjectIsValid(object))
