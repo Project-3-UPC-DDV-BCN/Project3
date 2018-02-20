@@ -9,7 +9,6 @@ class ComponentMeshRenderer;
 class ComponentLight;
 class Primitive;
 class ComponentCamera;
-class DebugDraw;
 
 #define MAX_LIGHTS 8
 
@@ -55,13 +54,10 @@ public:
 	void AddLight(ComponentLight* light);
 	void RemoveLight(ComponentLight* light);
 
-	DebugDraw* GetDebugDraw() const;
-
 	//Shaders
 	uint GenVertexArrayObject() const;
 	void BindVertexArrayObject(uint id) const;
 	void UnbindVertexArrayObject() const;
-	void DeleteVertexArrayObject(uint vao);
 
 	uint CreateVertexShader(const char* source);
 	uint CreateFragmentShader(const char* source);
@@ -108,7 +104,6 @@ public:
 	std::list<ComponentCamera*> rendering_cameras;
 	ComponentCamera* editor_camera;
 	ComponentCamera* game_camera;
-	DebugDraw* debug_draw = nullptr;
 
 private:
 	bool use_vsync;
