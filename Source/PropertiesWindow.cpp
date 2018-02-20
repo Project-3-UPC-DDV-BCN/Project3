@@ -593,6 +593,9 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 
 void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 {
+	if (ImGui::CollapsingHeader("Listener"))
+	{
+	}
 }
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)

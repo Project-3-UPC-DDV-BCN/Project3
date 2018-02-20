@@ -76,4 +76,7 @@ void ComponentListener::Load(Data & data)
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
 	
+	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	obj = App->audio->CreateListener(GetGameObject()->GetName().c_str(), trans->GetGlobalPosition());
+
 }
