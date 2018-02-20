@@ -321,12 +321,15 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			{
 				float2 win_size = App->editor->game_window->GetSize();
 
+				float far_p = -1000;
+				float near_p = 1000;
+
 				float ortho_projection[4][4] =
 				{
-				{ 2.0f / win_size.x,       0.0f,               0.0f, 0.0f },
-				{ 0.0f,                    2.0f / -win_size.y, 0.0f, 0.0f },
-				{ 0.0f,                    0.0f,              -1.0f, 0.0f },
-				{ -1.0f,                   1.0f,               0.0f, 1.0f },
+				{ 2.0f / win_size.x,       0.0f,               0.0f,			   0.0f },
+				{ 0.0f,                    2.0f / win_size.y, 0.0f,			   0.0f },
+				{ 0.0f,                    0.0f,              -2/(far_p - near_p), -((far_p + near_p)/(far_p - near_p)) },
+				{ -1.0f,                   1.0f,               0.0f,			   1.0f },
 				};
 
 				float4x4 ide = float4x4::identity;
