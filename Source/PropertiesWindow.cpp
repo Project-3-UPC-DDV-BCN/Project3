@@ -610,9 +610,15 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 			if (ImGui::TreeNode(soundbank_name.c_str()))
 			{
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) {
+					//	TODO: Use ImGui::Combo to separate
 					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
 					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
 				}
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Settings##Audio"))
+			{
+				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
 
 				ImGui::TreePop();
 			}

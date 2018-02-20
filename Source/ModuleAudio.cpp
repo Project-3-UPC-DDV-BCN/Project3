@@ -319,3 +319,8 @@ void ModuleAudio::SetListenerCreated(bool set)
 {
 	listener_created = set;
 }
+
+int * ModuleAudio::GetVolumePtr()
+{
+	return &volume;
+}

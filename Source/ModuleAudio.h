@@ -58,8 +58,10 @@ public:
 	void SetEmmiter(Wwise::SoundObject* emmiter);
 	SoundBank* GetSoundBank() const;
 	void SetSoundBank(SoundBank* soundbank);
-
 	void SetListenerCreated(bool set);
+	int* GetVolumePtr();
+
+
 
 private:
 
