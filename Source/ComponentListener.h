@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "ModuleAudio.h"
 
+#include <string>
+
 class ComponentListener 
 	: public Component 
 {
@@ -21,7 +23,7 @@ private:
 
 	Wwise::SoundObject* obj;
 	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));
-
+	int obj_to_load;
 
 };
 

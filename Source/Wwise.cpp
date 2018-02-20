@@ -263,6 +263,17 @@ Wwise::SoundObject::~SoundObject()
 	}
 }
 
+Wwise::SoundObject * Wwise::SoundObject::operator=(const SoundObject & so)
+{
+	SoundID = so.SoundID;
+	name = so.name;
+	position = so.position;
+	top = so.top;
+	front = so.front;
+
+	return this;
+}
+
 unsigned long Wwise::SoundObject::GetID()
 {
 	return SoundID;

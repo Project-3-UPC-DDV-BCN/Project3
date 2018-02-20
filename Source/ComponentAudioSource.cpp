@@ -1,11 +1,14 @@
 #include "ComponentAudioSource.h"
 #include "Application.h"
+#include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "AudioEvent.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
 
 #include "ComponentListener.h"
+
+#include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
 
 ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 {
@@ -17,6 +20,7 @@ ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 	ComponentTransform* trans = (ComponentTransform*) attached_gameobject->GetComponent(Component::CompTransform);
 
 	obj = App->audio->CreateSoundObject(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
+
 	if (App->audio->GetSoundBank() != nullptr) {
 		this->soundbank = App->audio->GetSoundBank();
 		GetEvents();
@@ -95,11 +99,22 @@ void ComponentAudioSource::StopEvent(uint id)
 {
 }
 
+void ComponentAudioSource::SendEvent(uint id)
+{
+	for (int i = 0; i < events.size(); i++) {
+		if (events[i]->id, id) {
+			events_to_play.push_back(events[i]);
+			break;
+		}
+	}
+}
+
 void ComponentAudioSource::SendEvent(const char * name)
 {
 	for (int i = 0; i < events.size(); i++) {
 		if (!strcmp(events[i]->name.c_str(),name)) {
 			events_to_play.push_back(events[i]);
+			break;
 		}
 	}
 }
@@ -128,6 +143,7 @@ void ComponentAudioSource::Save(Data & data) const
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
+	data.AddInt("Sound ID", obj->GetID());
 }
 
 void ComponentAudioSource::Load(Data & data)
@@ -135,7 +151,8 @@ void ComponentAudioSource::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
-	GetEvents();
+	obj_to_load = data.GetInt("Sound ID");
+	obj = App->audio->GetSoundObject(obj_to_load);
 }
 
 std::vector<AudioEvent*> ComponentAudioSource::GetEventsVector() const

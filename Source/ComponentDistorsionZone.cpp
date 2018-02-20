@@ -134,6 +134,9 @@ void ComponentDistorsionZone::Save(Data & data) const
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
+	data.AddString("Bus", bus);	
+	data.AddFloat("Distorsion Value", distorsion_value);
+	data.AddFloat("Radius", radius);
 }
 
 void ComponentDistorsionZone::Load(Data & data)
@@ -141,4 +144,7 @@ void ComponentDistorsionZone::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
+	bus = data.GetString("Bus");
+	distorsion_value = data.GetFloat("Distorsion Value");
+	radius = data.GetFloat("Radius");
 }

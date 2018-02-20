@@ -51,8 +51,6 @@ bool ModuleAudio::Start()
 	go->SetName("Audio");
 	ComponentAudioSource* as = (ComponentAudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
-	as->PlayEvent(AK::EVENTS::PLAY_LONG_SHATTER);
-
 	GameObject* go_ = App->scene->CreateGameObject();
 	go_->AddComponent(Component::ComponentType::CompAudioListener);
 
@@ -184,6 +182,30 @@ Wwise::SoundObject * ModuleAudio::CreateListener(const char * name, math::float3
 	return ret;
 }
 
+Wwise::SoundObject* ModuleAudio::GetSoundObject(std::string obj_name)
+{
+	for (std::list<Wwise::SoundObject*>::iterator it = sound_obj.begin(); it != sound_obj.end(); ++it)
+	{
+		if ((*it)->GetName() == obj_name)
+		{
+			return *it;
+		}
+	}
+	return nullptr;
+}
+
+Wwise::SoundObject* ModuleAudio::GetSoundObject(int obj_id)
+{
+	for (std::list<Wwise::SoundObject*>::iterator it = sound_obj.begin(); it != sound_obj.end(); ++it)
+	{
+		if ((*it)->GetID() == obj_id)
+		{
+			return *it;
+		}
+	}
+	return nullptr;
+}
+
 void ModuleAudio::SetRTPvalue(const char * rtpc, float value)
 {
 	AK::SoundEngine::SetRTPCValue(rtpc, value);
@@ -291,4 +313,9 @@ SoundBank * ModuleAudio::GetSoundBank() const
 void ModuleAudio::SetSoundBank(SoundBank * soundbank)
 {
 	this->soundbank = soundbank;
+}
+
+void ModuleAudio::SetListenerCreated(bool set)
+{
+	listener_created = set;
 }

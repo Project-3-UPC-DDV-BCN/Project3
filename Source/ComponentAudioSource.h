@@ -19,6 +19,7 @@ public :
 	void PlayEvent(uint id);
 	void PlayEvent(const char* event_name);
 	void StopEvent(uint id);
+	void SendEvent(uint id);
 	void SendEvent(const char* name);
 	AkGameObjectID GetID()const;
 	void GetEvents();
@@ -34,10 +35,10 @@ public :
 public:
 	SoundBank* soundbank = nullptr;
 private:
-
 	std::vector<AudioEvent*>events;
-
 	std::vector<AudioEvent*>events_to_play;
+	int obj_to_load = -1;
+
 public:
-	Wwise::SoundObject* obj;
+	Wwise::SoundObject* obj = nullptr;
 };

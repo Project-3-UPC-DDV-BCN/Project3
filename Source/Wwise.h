@@ -14,6 +14,7 @@ namespace Wwise
 
 		SoundObject(unsigned long id, const char* n);
 		~SoundObject();
+		SoundObject* operator =(const SoundObject& so);
 
 		unsigned long GetID();
 		const char* GetName();

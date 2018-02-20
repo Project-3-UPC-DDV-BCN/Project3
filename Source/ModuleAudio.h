@@ -31,13 +31,15 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-
 	SoundBank* LoadSoundBank(std::string path);
 	unsigned int GetBankInfo(std::string path, SoundBank* &bank);
 
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
 	Wwise::SoundObject* CreateListener(const char* name, math::float3 position);
+	Wwise::SoundObject * GetSoundObject(std::string obj_name);
+
+	Wwise::SoundObject * GetSoundObject(int obj_id);
 
 	void SetRTPvalue(const char* rtpc, float value);
 	void StopAllEvents();
@@ -56,6 +58,8 @@ public:
 	void SetEmmiter(Wwise::SoundObject* emmiter);
 	SoundBank* GetSoundBank() const;
 	void SetSoundBank(SoundBank* soundbank);
+
+	void SetListenerCreated(bool set);
 
 private:
 

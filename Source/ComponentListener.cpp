@@ -14,8 +14,22 @@ ComponentListener::ComponentListener(GameObject * attached_gameobject)
 
 	ComponentTransform* trans = (ComponentTransform*) attached_gameobject->GetComponent(Component::CompTransform);
 
-	obj = App->audio->CreateListener(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
-	App->audio->SetDefaultListener(this);
+	/*
+	if (App->audio->GetDefaultListener() != nullptr)
+	{
+		this->obj = App->audio->CreateListener(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
+		App->audio->SetDefaultListener(this);
+	}
+	else {
+		App->audio->SetListenerCreated(false);
+	
+	}
+	*/
+	if (App->audio->GetDefaultListener() == nullptr)
+	{
+		obj = App->audio->CreateListener(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
+		App->audio->SetDefaultListener(this);
+	}
 }
 
 ComponentListener::~ComponentListener()
@@ -68,6 +82,7 @@ void ComponentListener::Save(Data & data) const
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
+	data.AddInt("Object ID", obj->GetID());
 }
 
 void ComponentListener::Load(Data & data)
@@ -75,8 +90,6 @@ void ComponentListener::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
-	
-	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
-	obj = App->audio->CreateListener(GetGameObject()->GetName().c_str(), trans->GetGlobalPosition());
-
+	obj_to_load = data.GetInt("Object ID");
+	obj = App->audio->GetSoundObject(obj_to_load);
 }
