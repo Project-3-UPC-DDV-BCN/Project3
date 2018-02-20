@@ -527,6 +527,8 @@
     </ClInclude>
     <ClInclude Include="UsefulFunctions.h">
       <Filter>Sources\Tools</Filter>
+    <ClInclude Include="ComponentLight.h">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -880,6 +882,8 @@
     </ClCompile>
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
+    <ClCompile Include="ComponentLight.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
