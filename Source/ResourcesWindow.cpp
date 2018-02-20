@@ -243,6 +243,16 @@ void ResourcesWindow::SetShaderType(Shader::ShaderType type)
 	shader_type = type;
 }
 
+void ResourcesWindow::SetCurrentInputName(std::string name)
+{
+	current_input_name = name;
+}
+
+std::string ResourcesWindow::GetCurrentInputName() const
+{
+	return current_input_name;
+}
+
 void ResourcesWindow::Reset()
 {
 	texture_changed = false;

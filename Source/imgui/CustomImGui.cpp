@@ -71,11 +71,12 @@ namespace ImGui
 		{
 			App->editor->resources_window->SetResourceType(Resource::TextureResource);
 			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Texture* new_texture = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed)
+		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_texture = App->editor->resources_window->GetTexture();
 			if (new_texture != tmp_texture)
@@ -89,6 +90,7 @@ namespace ImGui
 
 		return false;
 	}
+
 
 	bool ImGui::InputResourceMesh(const char * label, Mesh ** mesh)
 	{
