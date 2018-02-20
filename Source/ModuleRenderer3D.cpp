@@ -309,8 +309,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 		{
 			// WORLD
-			//if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
-			if(0)
+			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 			{
 				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
 				SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
@@ -489,8 +488,6 @@ void ModuleRenderer3D::AddCanvasToDraw(ComponentCanvas * canvas)
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
-	debug_primitive_to_draw.clear();
-	rendering_cameras.clear();
 	debug_draw->Clear();
 
 	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
