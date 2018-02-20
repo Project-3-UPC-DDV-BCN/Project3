@@ -65,18 +65,16 @@ namespace ImGui
 			}
 		}
 		ImGui::SameLine();
-		std::string button_id("+##texture_");
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+
+		if (Button("+##texture", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::TextureResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Texture* new_texture = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed)
 		{
 			new_texture = App->editor->resources_window->GetTexture();
 			if (new_texture != tmp_texture)
@@ -143,18 +141,15 @@ namespace ImGui
 		}
 		ImGui::SameLine();
 
-		std::string button_id("+##mesh_");
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+		if (Button("+##mesh", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::MeshResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Mesh* new_mesh = nullptr;
 		
-		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed)
 		{
 			new_mesh = App->editor->resources_window->GetMesh();
 			if (new_mesh != tmp_mesh)
@@ -208,18 +203,15 @@ namespace ImGui
 			return false;
 		ImGui::SameLine();
 
-		std::string button_id("+##prefab_");
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+		if (Button("+##prefab", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::PrefabResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Prefab* new_prefab = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->prefab_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->prefab_changed)
 		{
 			new_prefab = App->editor->resources_window->GetPrefab();
 			if (new_prefab != tmp_prefab)
@@ -286,18 +278,15 @@ namespace ImGui
 		}
 		ImGui::SameLine();
 
-		std::string button_id("+##gameobject_");
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+		if (Button("+##gameobject", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::GameObjectResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		GameObject* new_gameoject = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->gameobject_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->gameobject_changed)
 		{
 			new_gameoject = App->editor->resources_window->GetGameobject();
 			if (new_gameoject != tmp_gameobject)
@@ -364,18 +353,15 @@ namespace ImGui
 		}
 		ImGui::SameLine();
 
-		std::string button_id("+##material_");
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+		if (Button("+## material", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::MaterialResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Material* new_material = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->material_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->material_changed)
 		{
 			new_material = App->editor->resources_window->GetMaterial();
 			if (new_material != tmp_material)
@@ -429,18 +415,15 @@ namespace ImGui
 			return false;
 		ImGui::SameLine();
 
-		std::string button_id("+##script_");
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+		if (Button("+##script", { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::ScriptResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Script* new_script = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->script_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->script_changed)
 		{
 			new_script = App->editor->resources_window->GetScript();
 			if (new_script != tmp_script)
@@ -494,21 +477,18 @@ namespace ImGui
 		ImGui::SameLine();
 
 		char name[15];
-		sprintf(name,"+##shader%d_", type);
+		sprintf(name,"+##shader%d", type);
 
-		std::string button_id(name);
-		button_id += label;
-		if (Button(button_id.c_str(), { 20, 20 }))
+		if (Button(name, { 20, 20 }))
 		{
 			App->editor->resources_window->SetShaderType(type);
 			App->editor->resources_window->SetResourceType(Resource::ShaderResource);
 			App->editor->resources_window->SetActive(true);
-			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
 		Shader* new_shader = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->script_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->script_changed)
 		{
 			new_shader = App->editor->resources_window->GetShader();
 			if (new_shader != tmp_script)

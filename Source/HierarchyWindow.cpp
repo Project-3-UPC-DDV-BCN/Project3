@@ -93,9 +93,6 @@ void HierarchyWindow::DrawWindow()
 			{
 				App->scene->CreateGameObject(nullptr);
 			}
-			if (ImGui::MenuItem("Create Light Object")) {
-				App->scene->CreateLightObject(nullptr);
-			}
 
 			if (ImGui::BeginMenu("UI"))
 			{
@@ -131,21 +128,13 @@ void HierarchyWindow::DrawWindow()
 				ImGuiWindowFlags_ShowBorders |
 				ImGuiWindowFlags_NoTitleBar);
 
-			bool confirmed = false;
 			ImGui::Text("Enter new name");
 			static char inputText[20];
-			if (ImGui::InputText("", inputText, 20, ImGuiInputTextFlags_EnterReturnsTrue))
-			{
-				confirmed = true;
-			}
+			ImGui::InputText("", inputText, 20);
 			if (show_rename_error) {
 				ImGui::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Name cannot be blank");
 			}
 			if (ImGui::Button("Confirm")) {
-				confirmed = true;
-			}
-			if (confirmed)
-			{
 				bool isBlankString = true;
 				for (int i = 0; inputText[i] != '\0'; i++) {
 					if (inputText[i] != ' ') {

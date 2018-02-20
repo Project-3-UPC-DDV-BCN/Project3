@@ -29,8 +29,6 @@ public:
 	Script* GetScript() const;
 	Shader* GetShader() const;
 	void SetShaderType(Shader::ShaderType type);
-	void SetCurrentInputName(std::string name);
-	std::string GetCurrentInputName() const;
 	void Reset();
 
 private:
@@ -60,7 +58,5 @@ public:
 	bool material_changed;
 	bool script_changed;
 	bool shader_changed;
-
-	std::string current_input_name;
 };
 

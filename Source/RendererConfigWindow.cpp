@@ -51,6 +51,7 @@ void RendererConfigWindow::DrawWindow()
 	if (!active)
 	{
 		SetDefaultValues();
+		App->renderer3D->DisableTestLight();
 	}
 
 	ImGui::End();

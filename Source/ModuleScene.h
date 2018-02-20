@@ -23,15 +23,14 @@ public:
 	~ModuleScene();
 
 	void CreateMainCamera();
-	void CreateMainLight();
 
 	bool Start();
 	update_status Update(float dt);
 	update_status PreUpdate(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	GameObject* CreateGameObject(GameObject* parent = nullptr);
-	GameObject* CreateLightObject(GameObject* parent = nullptr);
 	GameObject* DuplicateGameObject(GameObject* gameObject);
 	void RenameDuplicatedGameObject(GameObject * gameObject, bool justIncrease = false);
 	GameObject* FindGameObject(uint id) const;

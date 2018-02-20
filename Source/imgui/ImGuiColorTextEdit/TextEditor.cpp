@@ -725,8 +725,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 			{
 				is_method_auto_complete_open = false;
 				is_word_auto_complete_open = false;
+				MoveRight();
 			}
-			MoveRight();
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
@@ -735,8 +735,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 			{
 				is_method_auto_complete_open = false;
 				is_word_auto_complete_open = false;
+				MoveLeft();
 			}
-			MoveLeft();
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
