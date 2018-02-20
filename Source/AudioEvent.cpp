@@ -27,16 +27,20 @@ void AudioEvent::Load(JSON_File * file, SoundBank * p, int id)
 
 void AudioEvent::UIDraw(ComponentAudioSource* parent)
 {
-	if (ImGui::Button("Play", ImVec2(70, 25))) {
+	std::string play = "Play##"; play += name.c_str();
+	std::string stop = "Stop##"; stop += name.c_str();
+	std::string send = "Send##"; send += name.c_str();
+
+	if (ImGui::Button(play.c_str(), ImVec2(70, 25))) {
 		//play event
 		parent->obj->PlayEvent(name.c_str());
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Stop", ImVec2(70, 25))) {
+	if (ImGui::Button(stop.c_str(), ImVec2(70, 25))) {
 		AK::SoundEngine::ExecuteActionOnEvent(name.c_str(), AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Send", ImVec2(70, 25))) {
+	if (ImGui::Button(send.c_str(), ImVec2(70, 25))) {
 		parent->SendEvent(name.c_str());
 	}
 }

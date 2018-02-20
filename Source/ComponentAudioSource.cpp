@@ -37,6 +37,28 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
+	if (App->input->GetKey(SDL_SCANCODE_Q))
+	{
+		SendEvent("Play_long_shatter");
+	}
+	if (App->input->GetKey(SDL_SCANCODE_W))
+	{
+		SendEvent("Play_recharge");
+	}
+	if (App->input->GetKey(SDL_SCANCODE_E))
+	{
+		SendEvent("Play_short_chatter");
+	}
+	if (App->input->GetKey(SDL_SCANCODE_R))
+	{
+		SendEvent("Play_shot1");
+	}
+	if (App->input->GetKey(SDL_SCANCODE_T))
+	{
+		SendEvent("Play_shot2");
+	}
+
+
 	if (App->IsPlaying()) 
 	{
 		ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
@@ -99,20 +121,10 @@ void ComponentAudioSource::StopEvent(uint id)
 {
 }
 
-void ComponentAudioSource::SendEvent(uint id)
-{
-	for (int i = 0; i < events.size(); i++) {
-		if (events[i]->id, id) {
-			events_to_play.push_back(events[i]);
-			break;
-		}
-	}
-}
-
 void ComponentAudioSource::SendEvent(const char * name)
 {
 	for (int i = 0; i < events.size(); i++) {
-		if (!strcmp(events[i]->name.c_str(),name)) {
+		if (!strcmp(events[i]->name.c_str(), name)) {
 			events_to_play.push_back(events[i]);
 			break;
 		}

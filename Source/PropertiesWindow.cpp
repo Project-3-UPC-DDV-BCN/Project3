@@ -610,6 +610,7 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 			if (ImGui::TreeNode(soundbank_name.c_str()))
 			{
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) {
+					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
 					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
 				}
 
