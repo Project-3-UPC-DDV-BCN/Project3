@@ -54,12 +54,10 @@ public:
 	void UnbindArraybuffer() const;
 	void UnbindElementArrayBuffer() const;
 
-<<<<<<< HEAD
-	DebugDraw* GetDebugDraw();
-=======
 	void AddLight(ComponentLight* light);
 	void RemoveLight(ComponentLight* light);
->>>>>>> origin/development
+
+	DebugDraw* GetDebugDraw();
 
 	//Shaders
 	uint GenVertexArrayObject() const;
@@ -104,15 +102,13 @@ private:
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
-<<<<<<< HEAD
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
 public:
 	Light lights[MAX_LIGHTS];
-=======
+
 public:
 
->>>>>>> origin/development
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;

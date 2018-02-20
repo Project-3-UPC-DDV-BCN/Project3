@@ -56,7 +56,7 @@
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameObject\Components\UI">
-      <UniqueIdentifier>{f18dd8bf-afb5-4de2-b3fb-c509ebcaa83f}</UniqueIdentifier>
+      <UniqueIdentifier>{0bcff5f5-9b40-4c18-9fd0-5527b7c865e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -507,28 +507,32 @@
     <ClInclude Include="ModuleShaderImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentLight.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
     <ClInclude Include="ComponentCanvas.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
     <ClInclude Include="ComponentImage.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="DebugDraw.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleFontImporter.h">
-      <Filter>Sources\Modules\Importers</Filter>
+    <ClInclude Include="ComponentRectTransform.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
     <ClInclude Include="ComponentText.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
     <ClInclude Include="UsefulFunctions.h">
       <Filter>Sources\Tools</Filter>
-    <ClInclude Include="ComponentLight.h">
-      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFontImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Sources\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -859,31 +863,32 @@
     <ClCompile Include="ModuleShaderImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\GameObject\Components\UI</Filter>
+    <ClCompile Include="ComponentLight.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentRectTransform.cpp">
+    <ClCompile Include="ComponentCanvas.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
     <ClCompile Include="ComponentImage.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="DebugDraw.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleFontImporter.cpp">
-      <Filter>Sources\Modules\Importers</Filter>
+    <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
     <ClCompile Include="ComponentText.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
-    <ClCompile Include="ComponentLight.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleFontImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -898,9 +903,6 @@
     </None>
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>Sources\3d Party\MathGeolib</Filter>
-    </None>
-    <None Include="ComponentRectTransform.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
     </None>
   </ItemGroup>
 </Project>

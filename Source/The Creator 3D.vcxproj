@@ -43,7 +43,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(ProjectDir)\FreeType\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -98,6 +97,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ComponentImage.h" />
     <ClInclude Include="ComponentLight.h" />
+    <ClInclude Include="ComponentRectTransform.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="ComponentText.h" />
     <ClInclude Include="CSScript.h" />
@@ -256,8 +256,8 @@
     <ClCompile Include="ComponentCanvas.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentImage.cpp" />
-    <ClCompile Include="ComponentRectTransform.cpp" />
     <ClCompile Include="ComponentLight.cpp" />
+    <ClCompile Include="ComponentRectTransform.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="ComponentText.cpp" />
     <ClCompile Include="CSScript.cpp" />
@@ -369,7 +369,6 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ComponentRectTransform.h" />
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\Math\float2.inl" />

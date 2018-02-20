@@ -42,10 +42,8 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	editor_camera = nullptr;
 	game_camera = nullptr;
 	use_skybox = true;
-<<<<<<< HEAD
 	lights_count = 0;
 	debug_draw = new DebugDraw();
-=======
 
 	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
 		dir_lights[i] = nullptr;
@@ -59,7 +57,6 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	directional_light_count = 0;
 	point_light_count = 0;
 	spot_light_count = 0;
->>>>>>> origin/development
 }
 
 // Destructor
@@ -652,11 +649,10 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	}
 }
 
-<<<<<<< HEAD
 DebugDraw * ModuleRenderer3D::GetDebugDraw()
 {
 	return debug_draw;
-=======
+}
 
 void ModuleRenderer3D::AddLight(ComponentLight * light)
 {
@@ -742,7 +738,6 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 			break;
 		}
 	}
->>>>>>> origin/development
 }
 
 // ------------- Shaders -------------------------

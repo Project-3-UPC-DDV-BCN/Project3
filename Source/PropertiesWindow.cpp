@@ -141,7 +141,6 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
-<<<<<<< HEAD
 
 				if (ImGui::BeginMenu("UI"))
 				{
@@ -158,7 +157,6 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
-=======
 				if (ImGui::MenuItem("Light")) {
 					if (App->renderer3D->GetDirectionalLightCount() < 2 || App->renderer3D->GetSpotLightCount() < 8 || App->renderer3D->GetPointLightCount() < 8)
 					{
@@ -187,7 +185,7 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_ERROR("Max lights created. Can't add more lights");
 					}
 				}
->>>>>>> origin/development
+
 				if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
@@ -277,7 +275,6 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
 		break;
-<<<<<<< HEAD
 	case Component::CompRectTransform:
 		DrawRectTransformPanel((ComponentRectTransform*)component);
 		break;
@@ -289,10 +286,8 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompText:
 		DrawTextPanel((ComponentText*)component);
-=======
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
->>>>>>> origin/development
 		break;
 	default:
 		break;
@@ -876,8 +871,6 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	}
 }
 
-<<<<<<< HEAD
-=======
 void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 {
 	if (comp_light != nullptr)
@@ -979,4 +972,4 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 		}
 	}
 }
->>>>>>> origin/development
+
