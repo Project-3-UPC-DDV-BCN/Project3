@@ -9,6 +9,7 @@
 #include "ModuleEditor.h"
 #include "TagsAndLayersWindow.h"
 #include "ComponentBillboard.h"
+#include "ParticleData.h"
 #include "ModuleScene.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -612,7 +613,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 		{
 			ImGui::Separator();
 
-			vector<string> combo_strings = current_emmiter->GetTemplatesVector();
+			vector<string> combo_strings;
+			combo_strings.push_back("Default"); 
 
 			if(ImGui::TreeNodeEx("Templates"))
 			{
@@ -625,7 +627,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			}
 
 			ImGui::Text("Template Loaded:"); ImGui::SameLine(); 
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data.name.c_str()); 
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str()); 
 
 			ImGui::Separator(); 
 
@@ -664,9 +666,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			ImGui::Separator();
 
-			float prev_width = current_emmiter->data.emmit_width;
-			float prev_height = current_emmiter->data.emmit_height;
-			float prev_depth = current_emmiter->data.emmit_depth;
+			float prev_width = current_emmiter->data->emmit_width;
+			float prev_height = current_emmiter->data->emmit_height;
+			float prev_depth = current_emmiter->data->emmit_depth;
 
 			if (ImGui::TreeNode("Emit Area"))
 			{
@@ -674,16 +676,16 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::Checkbox("Show Emmiter Area", &show);
 				current_emmiter->SetShowEmmisionArea(show);
 
-				ImGui::DragFloat("Width (X)", &current_emmiter->data.emmit_width, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
-				ImGui::DragFloat("Height (X)", &current_emmiter->data.emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
-				ImGui::DragFloat("Depth (X)", &current_emmiter->data.emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 
 				ImGui::TreePop();
 			}
 
-			current_emmiter->data.width_increment = current_emmiter->data.emmit_width - prev_width;
-			current_emmiter->data.height_increment = current_emmiter->data.emmit_height - prev_height;
-			current_emmiter->data.depth_increment = current_emmiter->data.emmit_depth - prev_depth;
+			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
+			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
+			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
 
 			if (ImGui::TreeNode("Texture"))
 			{
@@ -718,7 +720,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				flags |= misc_flags;
 				flags |= ImGuiColorEditFlags_RGB;
 
-				ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data.color, flags);
+				ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
 
 				ImGui::TreePop();
 			}
@@ -726,29 +728,29 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::TreeNode("Motion"))
 			{
 				
-				ImGui::Checkbox("Relative Position", &current_emmiter->data.relative_pos);
+				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
 
-				ImGui::DragInt("Emmision Rate", &current_emmiter->data.emmision_rate, 1, 1, 1, 1000);
-				ImGui::DragFloat("Lifetime", &current_emmiter->data.max_lifetime, 1, 0.1f, 0.1f, 20);
-				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data.velocity, 0.1f, 30);
-				ImGui::SliderFloat3("Gravity", &current_emmiter->data.gravity[0], -1, 1);
-				ImGui::DragFloat("Angular Velocity", &current_emmiter->data.angular_v, 1, 5.0f, -1000, 1000);
-				ImGui::SliderFloat("Emision Angle", &current_emmiter->data.emision_angle, 0, 179);
+				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
+				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
+				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
+				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
+				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
+				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
 
 				if (ImGui::TreeNode("Billboard"))
 				{
-					ImGui::Checkbox("Billboarding", &current_emmiter->data.billboarding);
+					ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
 
 					static int billboard_type;
 					ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
 
 					if (billboard_type != 0)
 					{
-						current_emmiter->data.billboard_type = (BillboardingType)--billboard_type;
+						current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
 						++billboard_type;
 					}
 					else
-						current_emmiter->data.billboard_type = BILLBOARD_NONE;
+						current_emmiter->data->billboard_type = BILLBOARD_NONE;
 
 					ImGui::TreePop(); 
 				}
@@ -773,10 +775,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::Button("Apply Scale Interpolation"))
 					{
-						current_emmiter->data.change_size_interpolation = true;
+						current_emmiter->data->change_size_interpolation = true;
 
-						current_emmiter->data.initial_scale = init_scale;
-						current_emmiter->data.final_scale = fin_scale;
+						current_emmiter->data->initial_scale = init_scale;
+						current_emmiter->data->final_scale = fin_scale;
 
 						current_emmiter->UpdateRootParticle();
 					}
@@ -795,10 +797,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::Button("Apply Rotation Interpolation"))
 					{
-						current_emmiter->data.change_rotation_interpolation = true;
+						current_emmiter->data->change_rotation_interpolation = true;
 
-						current_emmiter->data.initial_angular_v = init_angular_v;
-						current_emmiter->data.final_angular_v = fin_angular_v;
+						current_emmiter->data->initial_angular_v = init_angular_v;
+						current_emmiter->data->final_angular_v = fin_angular_v;
 
 						current_emmiter->UpdateRootParticle();
 					}
@@ -818,10 +820,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
-						current_emmiter->data.change_rotation_interpolation = true;
+						current_emmiter->data->change_rotation_interpolation = true;
 
-						current_emmiter->data.initial_angular_v = init_angular_v;
-						current_emmiter->data.final_angular_v = fin_angular_v;
+						current_emmiter->data->initial_angular_v = init_angular_v;
+						current_emmiter->data->final_angular_v = fin_angular_v;
 
 						current_emmiter->UpdateRootParticle();
 					}
@@ -833,35 +835,35 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				{
 					current_emmiter->UpdateRootParticle();
 
-					ImGui::DragInt4("Initial Color", &current_emmiter->data.initial_color[0], 1, 0, 255);
+					ImGui::DragInt4("Initial Color", &current_emmiter->data->initial_color[0], 1, 0, 255);
 
 					if (ImGui::Button("Set Selected as Initial"))
 					{
-						current_emmiter->data.initial_color[0] = current_emmiter->data.color.r * 255;
-						current_emmiter->data.initial_color[1] = current_emmiter->data.color.g * 255;
-						current_emmiter->data.initial_color[2] = current_emmiter->data.color.b * 255;
-						current_emmiter->data.initial_color[3] = current_emmiter->data.color.a * 255;
+						current_emmiter->data->initial_color[0] = current_emmiter->data->color.r * 255;
+						current_emmiter->data->initial_color[1] = current_emmiter->data->color.g * 255;
+						current_emmiter->data->initial_color[2] = current_emmiter->data->color.b * 255;
+						current_emmiter->data->initial_color[3] = current_emmiter->data->color.a * 255;
 					}
 
-					ImGui::DragInt4("Final Color", &current_emmiter->data.final_color[0], 1, 0, 255);
+					ImGui::DragInt4("Final Color", &current_emmiter->data->final_color[0], 1, 0, 255);
 
 					if (ImGui::Button("Set Selected as Final"))
 					{
 
-						current_emmiter->data.final_color[0] = current_emmiter->data.color.r * 255;
-						current_emmiter->data.final_color[1] = current_emmiter->data.color.g * 255;
-						current_emmiter->data.final_color[2] = current_emmiter->data.color.b * 255;
-						current_emmiter->data.final_color[3] = current_emmiter->data.color.a * 255;
+						current_emmiter->data->final_color[0] = current_emmiter->data->color.r * 255;
+						current_emmiter->data->final_color[1] = current_emmiter->data->color.g * 255;
+						current_emmiter->data->final_color[2] = current_emmiter->data->color.b * 255;
+						current_emmiter->data->final_color[3] = current_emmiter->data->color.a * 255;
 					}
 
 					ImGui::Separator();
 
 					if (ImGui::Button("Apply"))
 					{
-						current_emmiter->data.change_color_interpolation = true;
+						current_emmiter->data->change_color_interpolation = true;
 
-						Color initial(current_emmiter->data.initial_color[0], current_emmiter->data.initial_color[1], current_emmiter->data.initial_color[2], current_emmiter->data.initial_color[3]);
-						Color final(current_emmiter->data.final_color[0], current_emmiter->data.final_color[1], current_emmiter->data.final_color[2], current_emmiter->data.final_color[3]);
+						Color initial(current_emmiter->data->initial_color[0], current_emmiter->data->initial_color[1], current_emmiter->data->initial_color[2], current_emmiter->data->initial_color[3]);
+						Color final(current_emmiter->data->final_color[0], current_emmiter->data->final_color[1], current_emmiter->data->final_color[2], current_emmiter->data->final_color[3]);
 
 						current_emmiter->GetRootParticle()->SetInitialColor(initial);
 						current_emmiter->GetRootParticle()->SetFinalColor(final);

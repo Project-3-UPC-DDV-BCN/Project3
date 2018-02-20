@@ -17,6 +17,7 @@
 #include "Data.h"
 #include "TagsAndLayers.h"
 #include "ModuleMaterialImporter.h"
+#include "ModuleParticleImporter.h"
 #include "ModuleScriptImporter.h"
 #include "ModuleShaderImporter.h"
 
@@ -43,6 +44,7 @@ Application::Application()
 	prefab_importer = new ModulePrefabImporter(this);
 	material_importer = new ModuleMaterialImporter(this);
 	script_importer = new ModuleScriptImporter(this);
+	particle_importer = new ModuleParticleImporter(this); 
 	shader_importer = new ModuleShaderImporter(this);
 
 	// The order of calls is very important!
@@ -61,6 +63,7 @@ Application::Application()
 	AddModule(material_importer);
 	AddModule(script_importer);
 	AddModule(shader_importer);
+	AddModule(particle_importer); 
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
@@ -93,6 +96,7 @@ Application::~Application()
 	texture_importer = nullptr;
 	prefab_importer = nullptr;
 	material_importer = nullptr;
+	particle_importer = nullptr; 
 	script_importer = nullptr;
 	shader_importer = nullptr;
 

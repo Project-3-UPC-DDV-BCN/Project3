@@ -90,6 +90,8 @@ enum update_status
 #define LIBRARY_SCRIPTS_FOLDER_PATH "./Project/Library/Scripts"
 #define LIBRARY_SHADERS_FOLDER "./Project/Library/Shaders/"
 #define LIBRARY_SHADERS_FOLDER_PATH "./Project/Library/Shaders"
+#define LIBRARY_PARTICLES_FOLDER "./Project/Library/Particles/"
+#define LIBRARY_PARTICLES_FOLDER_PATH "./Project/Library/Particles"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"
@@ -112,3 +114,5 @@ enum update_status
 #define SHADER_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Shaders"
 #define MATERIAL_DEFAULT_FOLDER "./Editor_Settings/Default_Materials/"
 #define MATERIAL_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Materials"
+#define DEFAULT_PARTICLE_TEMPLATE_FOLDER "./Editor_Settings/Default_Particle_Template/"
+#define DEFAULT_PARTICLE_TEMPLATE_PATH "./Editor_Settings/Default_Particle_Template"

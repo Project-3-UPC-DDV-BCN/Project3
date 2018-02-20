@@ -6,11 +6,13 @@
 #include "Material.h"
 #include "Resource.h"
 #include "Data.h"
+#include "ParticleData.h"
 #include "Resource.h"
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "ModuleMeshImporter.h"
 #include "ModuleTextureImporter.h"
+#include "ModuleParticleImporter.h"
 #include "ModulePrefabImporter.h"
 #include "ModuleMaterialImporter.h"
 #include "ComponentMeshRenderer.h"
@@ -159,6 +161,7 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::AudioResource:
 		break;
 	case Resource::ParticleFXResource:
+
 		break;
 	case Resource::FontResource:
 		break;
@@ -515,6 +518,44 @@ std::map<uint, Shader*> ModuleResources::GetShadersList() const
 	return shaders_list;
 }
 
+ParticleData * ModuleResources::GetParticleTemplate(std::string name) const
+{
+	for (std::map<uint, ParticleData*>::const_iterator it = particles_list.begin(); it != particles_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+
+}
+
+ParticleData * ModuleResources::GetParticleTemplate(UID uid) const
+{
+	if (particles_list.find(uid) != particles_list.end()) return particles_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddParticleTemplate(ParticleData * particle)
+{
+	if (particle != nullptr)
+	{
+		particles_list[particle->GetUID()] = particle;
+	}
+}
+
+void ModuleResources::RemoveParticleTemplate(ParticleData * particle)
+{
+	if (particle)
+	{
+		std::map<uint, ParticleData*>::iterator it = particles_list.find(particle->GetUID());
+		if (it != particles_list.end()) particles_list.erase(it);
+	}
+}
+
+std::map<uint, ParticleData*> ModuleResources::GetParticlesList() const
+{
+	return particles_list;
+}
+
 ShaderProgram * ModuleResources::GetShaderProgram(std::string name) const
 {
 	for (std::map<uint, ShaderProgram*>::const_iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); it++)
@@ -637,7 +678,7 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".prefab") return Resource::PrefabResource;
 	else if (str == ".mat") return Resource::MaterialResource;
 	else if (str == ".animation") return Resource::AnimationResource;
-	else if (str == ".particleFX") return Resource::ParticleFXResource;
+	else if (str == ".particle") return Resource::ParticleFXResource;
 	else if (str == ".scene") return Resource::SceneResource;
 	else if (str == ".ttf") return Resource::FontResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
@@ -652,6 +693,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".mesh") return Resource::MeshResource;
 	else if (str == ".scene") return Resource::SceneResource;
 	else if (str == ".mat") return Resource::MaterialResource;
+	else if (str == ".particle") return Resource::ParticleFXResource;
 	else if (str == ".dll") return Resource::ScriptResource;
 	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
@@ -665,6 +707,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 	if (type == Resource::TextureResource) return ".dds";
 	else if (type == Resource::MeshResource) return ".mesh";
 	else if (type == Resource::SceneResource) return ".scene";
+	else if (type == Resource::ParticleFXResource) return ".particle";
 	else if (type == Resource::PrefabResource) return ".prefab";
 	else if (type == Resource::MaterialResource) return ".mat";
 	else if (type == Resource::ScriptResource) return ".dll";
@@ -784,6 +827,8 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::AudioResource:
 		break;
 	case Resource::ParticleFXResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_PARTICLES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PARTICLES_FOLDER_PATH);
+		ret = App->particle_importer->ImportTemplate(file_path);
 		break;
 	case Resource::FontResource:
 		break;
@@ -852,6 +897,12 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 	case Resource::AudioResource:
 		break;
 	case Resource::ParticleFXResource:
+		if (GetParticleTemplate(name) != nullptr)
+		{
+			resource = (Resource*)GetParticleTemplate(name);
+			break;
+		}
+		resource = (Resource*)App->particle_importer->LoadTemplateFromLibrary(library_path);
 		break;
 	case Resource::FontResource:
 		break;

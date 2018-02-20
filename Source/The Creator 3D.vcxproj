@@ -199,6 +199,7 @@
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleMaterialImporter.h" />
     <ClInclude Include="ModuleMeshImporter.h" />
+    <ClInclude Include="ModuleParticleImporter.h" />
     <ClInclude Include="ModulePrefabImporter.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="ModuleResources.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="ParticleData.h" />
     <ClInclude Include="Particles.h" />
     <ClInclude Include="PerformanceWindow.h" />
     <ClInclude Include="PerfTimer.h" />
@@ -317,6 +319,7 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleMaterialImporter.cpp" />
     <ClCompile Include="ModuleMeshImporter.cpp" />
+    <ClCompile Include="ModuleParticleImporter.cpp" />
     <ClCompile Include="ModulePrefabImporter.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleResources.cpp" />
@@ -327,6 +330,7 @@
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="ParticleData.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PerformanceWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />

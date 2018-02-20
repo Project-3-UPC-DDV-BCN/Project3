@@ -21,6 +21,7 @@ class TagsAndLayers;
 class ModuleMeshImporter;
 class ModuleTextureImporter;
 class ModulePrefabImporter;
+class ModuleParticleImporter; 
 class ModuleMaterialImporter;
 class ModuleScriptImporter;
 class ModuleShaderImporter;
@@ -83,6 +84,7 @@ public:
 	ModulePrefabImporter* prefab_importer;
 	ModuleMaterialImporter* material_importer;
 	ModuleScriptImporter* script_importer;
+	ModuleParticleImporter* particle_importer; 
 	ModuleShaderImporter* shader_importer;
 
 private:

@@ -10,6 +10,7 @@ class GameObject;
 class Resources;
 class Material;
 class Script;
+class ParticleData; 
 class Shader;
 class ShaderProgram;
 
@@ -69,6 +70,12 @@ public:
 	void RemoveShader(Shader* shader);
 	std::map<uint, Shader*> GetShadersList() const;
 
+	ParticleData* GetParticleTemplate(std::string name) const;
+	ParticleData* GetParticleTemplate(UID uid) const;
+	void AddParticleTemplate(ParticleData* texture);
+	void RemoveParticleTemplate(ParticleData* texture);
+	std::map<uint, ParticleData*> GetParticlesList() const;
+
 	ShaderProgram* GetShaderProgram(std::string name) const;
 	ShaderProgram* GetShaderProgram(UID uid) const;
 	ShaderProgram* GetShaderProgram(Shader* vertex, Shader* fragment) const;
@@ -104,6 +111,7 @@ private:
 	std::map<uint, GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, ParticleData*> particles_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 };
