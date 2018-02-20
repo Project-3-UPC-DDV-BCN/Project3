@@ -18,6 +18,7 @@ public:
 	void SetTransform(float4x4 transform);
 	void SetColour(float4 colour);
 	void SetMode(int mode);
+	void SetStroke(uint stroke);
 
 	uint GetNumVertices();
 	float* GetVertices();
@@ -26,6 +27,7 @@ public:
 	float4 GetColour();
 	float4x4 GetTransform();
 	int GetMode();
+	uint GetStroke();
 
 private:
 	uint     num_vertices = 0;
@@ -37,6 +39,8 @@ private:
 
 	float4x4 transform = float4x4::identity;
 	int      mode = 0x0004;
+
+	uint     stroke = 1;
 };
 
 class DebugDraw

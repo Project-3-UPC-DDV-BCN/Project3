@@ -56,6 +56,11 @@ void DebugShape::SetMode(int _mode)
 	mode = _mode;
 }
 
+void DebugShape::SetStroke(uint _stroke)
+{
+	stroke = _stroke;
+}
+
 uint DebugShape::GetNumVertices()
 {
 	return num_vertices;
@@ -91,6 +96,11 @@ int DebugShape::GetMode()
 	return mode;
 }
 
+uint DebugShape::GetStroke()
+{
+	return stroke;
+}
+
 DebugDraw::DebugDraw()
 {
 	SetLineStroke(2);
@@ -118,6 +128,7 @@ void DebugDraw::Line(float3 start, float3 end, float4 colour)
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
 	shape.SetColour(colour);
+	shape.SetStroke(line_stroke);
 
 	AddShape(shape);
 
@@ -169,6 +180,7 @@ void DebugDraw::Quad(float3 center, float2 size, float4 colour)
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
 	shape.SetColour(colour);
+	shape.SetStroke(line_stroke);
 
 	AddShape(shape);
 
@@ -221,6 +233,7 @@ void DebugDraw::Quad(float4x4 transform, float2 size, float4 colour)
 	shape.SetMode(GL_LINES);
 	shape.SetTransform(transform);
 	shape.SetColour(colour);
+	shape.SetStroke(line_stroke);
 
 	AddShape(shape);
 
@@ -261,6 +274,7 @@ void DebugDraw::Circle(float4x4 transform, float rad, float4 colour, uint resolu
 	shape.SetMode(GL_LINES);
 	shape.SetTransform(transform);
 	shape.SetColour(colour);
+	shape.SetStroke(line_stroke);
 
 	AddShape(shape);
 
@@ -316,10 +330,10 @@ void DebugDraw::Render(ComponentCamera* camera)
 	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
 	glUseProgram(program->GetProgramID());
 
-	glLineWidth(line_stroke);
-
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
+		glLineWidth((*it).GetStroke());
+
 		uint id_vertices_data = 0;
 		uint id_indices = 0;
 
