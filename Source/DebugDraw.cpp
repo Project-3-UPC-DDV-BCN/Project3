@@ -93,6 +93,7 @@ int DebugShape::GetMode()
 
 DebugDraw::DebugDraw()
 {
+	SetLineStroke(2);
 }
 
 void DebugDraw::Line(float3 start, float3 end, float4 colour)
@@ -267,6 +268,16 @@ void DebugDraw::Circle(float4x4 transform, float rad, float4 colour, uint resolu
 	delete[] indices;
 }
 
+void DebugDraw::SetLineStroke(uint stroke)
+{
+	line_stroke = stroke;
+}
+
+uint DebugDraw::GetLineStroke() const
+{
+	return line_stroke;
+}
+
 void DebugDraw::Render(ComponentCamera* camera)
 {
 	// Activate
@@ -305,7 +316,7 @@ void DebugDraw::Render(ComponentCamera* camera)
 	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
 	glUseProgram(program->GetProgramID());
 
-	glLineWidth(2);
+	glLineWidth(line_stroke);
 
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{

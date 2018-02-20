@@ -49,6 +49,9 @@ public:
 	void Quad(float4x4 transform, float2 size, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
 	void Circle(float4x4 transform, float rad, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f), uint resolution = 13);
 
+	void SetLineStroke(uint stroke);
+	uint GetLineStroke() const;
+
 	void Render(ComponentCamera* cameras);
 	void Clear();
 
@@ -57,6 +60,7 @@ private:
 
 private:
 	std::vector<DebugShape> shapes;
+	uint line_stroke = 1;
 };
 
 #endif // !_H_DEBUG_DRAW__
