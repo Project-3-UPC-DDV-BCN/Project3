@@ -146,7 +146,11 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 		lightPos = TBN * light.position;
 		lightDir = normalize(lightPos - fragPos);
 	}
-	else lightDir = normalize(light.position - fragPos);
+	else 
+	{
+	lightPos = light.position;
+	lightDir = normalize(light.position - fragPos);
+	}
 	
 		float diff = max(dot(lightDir, normal), 0.0);
 
@@ -179,7 +183,11 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 		lightPos = TBN * light.position;
 		lightDir = normalize(lightPos - fragPos);
 	}
-	else lightDir = normalize(light.position - fragPos);
+	else 
+	{
+	lightPos = light.position;
+	lightDir = normalize(light.position - fragPos);
+	}
 
 		float diff = max(dot(lightDir, normal), 0.0);
 

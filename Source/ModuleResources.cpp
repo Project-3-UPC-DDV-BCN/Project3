@@ -1132,8 +1132,6 @@ void ModuleResources::CreateDefaultShaders()
 		"in vec3 FragPos;\n"
 		"in vec3 TangentFragPos;\n"
 		"in mat3 TBN;\n"
-		//"uniform vec3 TangentLightPos;\n"
-		//"uniform vec3 TangentViewPos;\n"
 		"out vec4 color;\n\n"
 		"uniform bool has_material_color;\n"
 		"uniform vec4 material_color;\n"
@@ -1273,7 +1271,10 @@ void ModuleResources::CreateDefaultShaders()
 			"		lightDir = normalize(lightPos - fragPos);"
 			"	}\n"
 			"	else\n"	
+			"{\n"
+			"		lightPos = light.position;\n"
 			"		lightDir = normalize(light.position - fragPos);\n\n"
+			"}\n"
 			"		float diff = max(dot(lightDir, normal), 0.0);\n\n"
 
 			"		vec3 reflectDir = reflect(-lightDir, normal);\n"
@@ -1305,8 +1306,11 @@ void ModuleResources::CreateDefaultShaders()
 		"		lightPos = TBN * light.position;\n"
 		"		lightDir = normalize(lightPos - fragPos);\n"
 		"	}\n"
-		"	else lightDir = normalize(light.position - fragPos);\n"
-
+		"	else\n"	
+		"	{\n"
+		"		lightPos = light.position;\n"
+		"		lightDir = normalize(light.position - fragPos);\n"
+		"	}\n"
 		"		float diff = max(dot(lightDir, normal), 0.0);\n\n"
 
 		"		vec3 reflectDir = reflect(-lightDir, normal);\n"
