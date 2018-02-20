@@ -135,6 +135,7 @@ void ComponentLight::SetTypeToPoint()
 	cutOff = 0;
 	outercutOff = 0;
 	type = POINT_LIGHT;
+
 	//SetDirectionOffset({ 0,0,0 });
 
 	App->renderer3D->AddLight(this);

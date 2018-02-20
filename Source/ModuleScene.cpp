@@ -24,6 +24,7 @@
 #include "ComponentScript.h";
 #include "GameWindow.h"
 #include "ComponentLight.h"
+#include "ComponentTransform.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -102,6 +103,8 @@ void ModuleScene::CreateMainLight()
 	scene_gameobjects.push_back(main_light);
 	root_gameobjects.push_back(main_light);
 	App->resources->AddGameObject(main_light);
+	ComponentTransform* trans = (ComponentTransform*)main_light->GetComponent(Component::CompTransform);
+	trans->SetRotation({ -100, -150, 0 });
 }
 
 // Load assets

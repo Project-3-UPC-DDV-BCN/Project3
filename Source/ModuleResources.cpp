@@ -1256,7 +1256,7 @@ void ModuleResources::CreateDefaultShaders()
 			"		vec3 ambient = light.ambient * vec3(color);\n"
 			"		vec3 diffuse = light.diffuse * diff * vec3(color);\n"
 			"		vec3 specular = light.specular * spec;\n"
-			"		return (ambient + diffuse + specular);\n"
+			"		return (ambient + diffuse + specular) * vec3(light.color);\n"
 			"	}\n"
 			"	else\n"
 			"		return vec3(0.0, 0.0, 0.0);\n"
