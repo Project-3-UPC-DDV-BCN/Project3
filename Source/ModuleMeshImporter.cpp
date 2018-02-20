@@ -279,9 +279,9 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			GameObject* go = new GameObject(parent);
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->AddComponent(Component::CompMeshRenderer);
 			mesh_renderer->SetMesh(mesh);
-			mesh->DecreaseUsedCount();
+			mesh->UnloadFromMemory();
 			mesh_renderer->SetMaterial(material);
-			material->DecreaseUsedCount();
+			material->UnloadFromMemory();
 			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 			aiVector3D position;
 			aiQuaternion rotation_quat;

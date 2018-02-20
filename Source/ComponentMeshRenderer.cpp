@@ -101,7 +101,7 @@ void ComponentMeshRenderer::Save(Data & data) const
 	data.CreateSection("Interior_Material");
 	if (interior_material)interior_material->Save(data);
 	data.CloseSection();
-	data.AddInt("Mesh_Type", mesh_type);
+	//data.AddInt("Mesh_Type", mesh_type);
 	data.AddInt("Mat_Indices_Number", material_indices_number);
 	data.AddInt("Mat_Indices_Start", material_indices_start);
 	data.AddInt("Int_Mat_Indices_Number", interior_material_indices_number);
@@ -149,7 +149,7 @@ void ComponentMeshRenderer::Load(Data & data)
 		}
 	}
 	data.LeaveSection();
-	mesh_type = (MeshType)data.GetInt("Mesh_Type");
+	//mesh_type = (MeshType)data.GetInt("Mesh_Type");
 	material_indices_number = data.GetInt("Mat_Indices_Number");
 	material_indices_start = data.GetInt("Mat_Indices_Start");
 	interior_material_indices_number = data.GetInt("Int_Mat_Indices_Number");

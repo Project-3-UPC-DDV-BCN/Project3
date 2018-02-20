@@ -20,6 +20,7 @@
 #include "ComponentMeshRenderer.h"
 #include "ModuleResources.h"
 #include "ModuleMeshImporter.h"
+#include "Material.h"
 
 //#if _DEBUG
 //#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
@@ -218,13 +219,16 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 					if (material)
 					{
 						mesh_renderer->SetMaterial(material);
+						material->UnloadFromMemory();
 					}
 					if (interior_material)
 					{
 						mesh_renderer->SetMaterial(interior_material);
+						interior_material->UnloadFromMemory();
 					}
 					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
 					mesh_renderer->SetMesh(mesh);
+					mesh->UnloadFromMemory();
 					model->chunks[bone_index] = go;
 					App->mesh_importer->SaveMeshToLibrary(*mesh);
 				}
@@ -234,7 +238,6 @@ std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
 				Data data;
 				model->Save(data);
 				data.SaveAsBinary(LIBRARY_BMODEL_FOLDER + name_without_extension + ".bmodel");
-				data.SaveAsJSON(LIBRARY_BMODEL_FOLDER + name_without_extension + ".bmodel");
 				RELEASE(model);
 				NVBLAST_FREE(infl);
 			}
