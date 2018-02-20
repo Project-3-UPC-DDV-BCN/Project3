@@ -65,7 +65,8 @@ public:
 	Particle* GetRootParticle() const;
 
 	//Particle Data Management
-	void SaveCurrentDataAsTemplate(const char* new_template_name);
+
+	ParticleData* GetParticleTemplate(const char* name);
 
 public:
 

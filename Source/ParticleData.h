@@ -1,12 +1,42 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "ComponentBillboard.h"
+#include "Texture.h"
 #include "Resource.h"
 #include "Color.h"
+#include "Timer.h"
 #include "MathGeoLib\MathGeoLib.h"
 
 using namespace std; 
+
+struct ParticleAnimation
+{
+
+public: 
+
+	ParticleAnimation();
+	~ParticleAnimation();
+
+	void Start();
+
+	int GetNumFrames();
+	void PaintStackUI();
+
+	void AddToFrameStack(Texture* new_texture);
+	vector<Texture*>::iterator DeleteFromFrameStack(int to_del);
+
+	Texture* GetCurrentTexture();
+
+public: 
+	string name;
+	vector<Texture*> frames_stack;
+	int rendering_frame;
+	float timeStep;
+
+	Timer switcher_timer;
+};
 
 class ParticleData : public Resource
 {
@@ -62,8 +92,8 @@ public:
 
 	///Color
 	bool change_color_interpolation;
-	int initial_color[4];
-	int final_color[4];
+	Color initial_color;
+	Color final_color;
 
 	//Animation system 
 	bool is_animated;
@@ -73,5 +103,6 @@ public:
 	bool billboarding;
 	bool relative_pos;
 
-
+	//Animations 
+	ParticleAnimation* animation_system; 
 };

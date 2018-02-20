@@ -92,10 +92,13 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	}
 
 	//Copy Animation
-	new_particle->components.particle_animation = root_particle->components.particle_animation; 
-	new_particle->components.texture = new_particle->GetAnimationController()->GetCurrentTexture();
-	new_particle->GetAnimationController()->Start(); 
-
+	if (data->is_animated)
+	{
+		new_particle->GetData()->animation_system = data->animation_system;
+		new_particle->components.texture = new_particle->GetData()->animation_system->GetCurrentTexture();
+		new_particle->GetData()->animation_system->Start();
+	}
+	 
 	return new_particle;
 }
 
@@ -105,11 +108,13 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	SetGameObject(parent);
 	SetActive(true); 
 	SetType(Component::CompParticleSystem); 
+
+	//Filling data with Default Emmiter
+	data = GetParticleTemplate("Default"); 
+
 	//Emmiter properties -------
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
-
-	// UI Data
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -236,7 +241,7 @@ void ComponentParticleEmmiter::UpdateRootParticle()
 	root_particle->SetEmmisionAngle(data->emision_angle);
 
 	//Interpolations
-	if (data->change_color_interpolation) root_particle->SetInterpolatingColor(data->change_color_interpolation, Color(data->initial_color[0], data->initial_color[1], data->initial_color[2], data->initial_color[3]), Color(data->final_color[0], data->final_color[1], data->final_color[2], data->final_color[3]));
+	if (data->change_color_interpolation) root_particle->SetInterpolatingColor(data->change_color_interpolation, data->initial_color, data->final_color);
 	if (data->change_size_interpolation) root_particle->SetInterpolationSize(data->change_size_interpolation, data->initial_scale, data->final_scale);
 	if (data->change_rotation_interpolation) root_particle->SetInterpolationRotation(data->initial_angular_v, data->final_angular_v);
 
@@ -268,14 +273,14 @@ void ComponentParticleEmmiter::Save(Data & _data) const
 
 	// Textures ----
 
-	if(root_particle->GetAnimationController()->GetNumFrames() == 0)
+	if(data->animation_system->GetNumFrames() == 0)
 		_data.AddBool("Has_Texture", false);
 	else
 	{
 		_data.AddBool("Has_Texture", true);
 
 		int frame_num = 1; 
-		for (vector<Texture*>::iterator it = root_particle->components.particle_animation.frames_stack.begin(); it != root_particle->components.particle_animation.frames_stack.end(); it++)
+		for (vector<Texture*>::iterator it = data->animation_system->frames_stack.begin(); it != data->animation_system->frames_stack.end(); it++)
 		{
 			string tex_name("Frame_");
 			tex_name += to_string(frame_num); 
@@ -344,173 +349,12 @@ void ComponentParticleEmmiter::Load(Data & _data)
 	SetUID(_data.GetUInt("UUID"));
 	_data.EnterSection("Particle");
 
-	// Emmit area -----
-	show_emit_area = _data.GetBool("Show_Emit_Area");
-
-	data->emmit_width = _data.GetFloat("Emit_Width");
-	data->emmit_height = _data.GetFloat("Emit_Height");
-	data->emmit_depth = _data.GetFloat("Emit_Depth");
-
-	// -----
-
-	// Textures ----
-
-	if (root_particle->GetAnimationController()->GetNumFrames() == 0)
-		_data.AddBool("Has_Texture", false);
-	else
-	{
-		_data.AddBool("Has_Texture", true);
-
-		int frame_num = 1;
-		for (vector<Texture*>::iterator it = root_particle->components.particle_animation.frames_stack.begin(); it != root_particle->components.particle_animation.frames_stack.end(); it++)
-		{
-			string tex_name("Frame_");
-			tex_name += to_string(frame_num);
-			frame_num++;
-
-			_data.AddInt(tex_name, (*it)->GetUID());
-		}
-	}
-
-	//------
-
-	// Colors -----
-
-	// ------
-
-	// Motion -----
-
-	data->relative_pos = _data.GetBool("Relative_Pos");
-	data->emmision_rate = _data.GetFloat("Emmision_Rate");
-	data->max_lifetime = _data.GetFloat("Lifetime");
-	data->velocity = _data.GetFloat("Initial_Velocity");
-	data->gravity = _data.GetVector3("Gravity");
-	data->angular_v = _data.GetFloat("Angular_Velocity");
-	data->emision_angle = _data.GetFloat("Emmision_Angle");
-
-	// ------
-
-	// Interpolation -----
-
-	data->change_color_interpolation = _data.GetBool("Color_Interpolation");
-
-	data->change_size_interpolation = _data.GetBool("Size_Interpolation");
-
-	if (data->change_size_interpolation)
-	{
-		data->initial_scale = _data.GetVector3("Initial_Size");
-		data->final_scale = _data.GetVector3("Final_Size");
-	}
-
-	data->change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
-
-	if (data->change_rotation_interpolation)
-	{
-		data->initial_angular_v = _data.GetFloat("Initial_Rotation");
-		data->final_angular_v = _data.GetFloat("Final_Rotation");
-	}
-
-	// ------
-
-	//Function calling ----
-	data->width_increment = data->emmit_width;
-	data->height_increment = data->emmit_height;
-	data->depth_increment = data->emmit_depth;
-
-//	AddaptEmmitAreaAABB(); 
 	
-
-
-	_data.LeaveSection();
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
 {
-	Data particles_data; 
-
-	particles_data.AddInt("Type", GetType());
-	particles_data.AddBool("Active", IsActive());
-	particles_data.AddUInt("UUID", GetUID());
-	particles_data.CreateSection("Particle");
-
-	// Emmit area -----
-	particles_data.AddBool("Show_Emit_Area", show_emit_area);
-
-	particles_data.AddFloat("Emit_Width", data->emmit_width);
-	particles_data.AddFloat("Emit_Height", data->emmit_height);
-	particles_data.AddFloat("Emit_Depth", data->emmit_depth);
-
-	// -----
-
-	// Textures ----
-
-	if (root_particle->GetAnimationController()->GetNumFrames() == 0)
-		particles_data.AddBool("Has_Texture", false);
-	else
-	{
-		particles_data.AddBool("Has_Texture", true);
-
-		int frame_num = 1;
-		for (vector<Texture*>::iterator it = root_particle->components.particle_animation.frames_stack.begin(); it != root_particle->components.particle_animation.frames_stack.end(); it++)
-		{
-			string tex_name("Frame_");
-			tex_name += to_string(frame_num);
-			frame_num++;
-
-			particles_data.AddInt(tex_name, (*it)->GetUID());
-		}
-	}
-
-	//------
-
-	// Colors -----
-
-	// ------
-
-	// Motion -----
-
-	particles_data.AddBool("Relative_Pos", data->relative_pos);
-	particles_data.AddInt("Emmision_Rate", data->emmision_rate);
-	particles_data.AddFloat("Lifetime", data->max_lifetime);
-	particles_data.AddFloat("Initial_Velocity", data->velocity);
-	particles_data.AddVector3("Gravity", data->gravity);
-	particles_data.AddFloat("Angular_Velocity", data->angular_v);
-	particles_data.AddFloat("Emmision_Angle", data->emision_angle);
-
-	// ------
-
-	// Interpolation -----
-
-	if (data->change_color_interpolation)
-	{
-		particles_data.AddBool("Color_Interpolation", true);
-	}
-	else
-		particles_data.AddBool("Color_Interpolation", false);
-
-	if (data->change_size_interpolation)
-	{
-		particles_data.AddBool("Size_Interpolation", true);
-
-		particles_data.AddVector3("Initial_Size", data->initial_scale);
-		particles_data.AddVector3("Final_Size", data->final_scale);
-	}
-	else
-		particles_data.AddBool("Size_Interpolation", false);
-
-	if (data->change_rotation_interpolation)
-	{
-		particles_data.AddBool("Rotation_Interpolation", true);
-
-		particles_data.AddFloat("Initial_Rotation", data->initial_angular_v);
-		particles_data.AddFloat("Final_Rotation", data->final_angular_v);
-	}
-	else
-		particles_data.AddBool("Rotation_Interpolation", false);
-
-	// ------
-
-	particles_data.CloseSection();
+	
 	
 }
 
@@ -581,48 +425,11 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 	return root_particle;
 }
 
-void ComponentParticleEmmiter::SaveCurrentDataAsTemplate(const char* new_template_name)
+
+ParticleData * ComponentParticleEmmiter::GetParticleTemplate(const char * name)
 {
-	/*ParticleData new_template; 
-
-	new_template.name = new_template_name;
-
-	new_template.emmision_rate = data->emmision_rate;
-	new_template.max_lifetime = data->max_lifetime;
-	new_template.velocity = data->velocity;
-	new_template.color = data->color;
-	new_template.billboarding = data->billboarding;
-	new_template.gravity = data->gravity;
-	new_template.angular_v = data->angular_v;
-	new_template.emision_angle = data->emision_angle;
-	new_template.is_animated = data->is_animated;
-	new_template.time_step = data->time_step;
-
-	new_template.emmit_width = data->emmit_width;
-	new_template.emmit_height = data->emmit_height;
-	new_template.emmit_depth = data->emmit_depth;
-
-	new_template.width_increment = data->velocity;
-	new_template.height_increment = data->velocity;
-	new_template.depth_increment = data->velocity;
-
-	new_template.relative_pos = data->relative_pos;
-	new_template.billboarding = data->billboard_type;
-
-	new_template.change_rotation_interpolation = data->change_rotation_interpolation;
-	new_template.change_size_interpolation = data->change_color_interpolation;
-	new_template.change_color_interpolation = data->change_color_interpolation;
-
-	new_template.initial_scale = data->initial_scale;
-	new_template.final_scale = data->final_scale;
-
-	new_template.initial_angular_v = data->initial_angular_v;
-	new_template.final_angular_v = data->final_angular_v;
-
-	new_template.initial_color[0] = new_template.initial_color[1] = new_template.initial_color[2] = new_template.initial_color[3] = 0;
-	new_template.final_color[0] = new_template.final_color[1] = new_template.final_color[2] = new_template.final_color[3] = 0;
-
-	AddNewTemplate(new_template); */
+	ParticleData* template_to_ret = App->resources->GetParticleTemplate(name); 
+	return template_to_ret; 
 }
 
 

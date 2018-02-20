@@ -602,7 +602,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 	{
 		bool active_bool = current_emmiter->IsActive();
 		bool keeper = active_bool;
-		static bool rename_template = false; 
+		static bool rename_template = false;
 
 		ImGui::Checkbox("Active", &active_bool);
 
@@ -614,22 +614,22 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::Separator();
 
 			vector<string> combo_strings;
-			combo_strings.push_back("Default"); 
+			combo_strings.push_back("Default");
 
-			if(ImGui::TreeNodeEx("Templates"))
+			if (ImGui::TreeNodeEx("Templates"))
 			{
 				for (vector<string>::iterator it = combo_strings.begin(); it != combo_strings.end(); it++)
 				{
-					ImGui::MenuItem((*it).c_str()); 
+					ImGui::MenuItem((*it).c_str());
 				}
 
-				ImGui::TreePop(); 
+				ImGui::TreePop();
 			}
 
-			ImGui::Text("Template Loaded:"); ImGui::SameLine(); 
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str()); 
+			ImGui::Text("Template Loaded:"); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
 
-			ImGui::Separator(); 
+			ImGui::Separator();
 
 			if (ImGui::Button("PLAY"))
 			{
@@ -644,7 +644,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->SetSystemState(PARTICLE_STATE_PAUSE);
 			}
 
-			ImGui::SameLine(); 
+			ImGui::SameLine();
 			ImGui::Text("Particle System State: "); ImGui::SameLine();
 
 			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
@@ -689,21 +689,21 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Texture"))
 			{
-				
+
 				static Texture* st_particle_texture = nullptr;
 				ImGui::InputResourceTexture("Texture To Add", &st_particle_texture);
 
-				if(ImGui::Button("Add To Stack"))
+				if (ImGui::Button("Add To Stack"))
 				{
-					current_emmiter->GetRootParticle()->GetAnimationController()->AddToFrameStack(st_particle_texture); 
+					current_emmiter->data->animation_system->AddToFrameStack(st_particle_texture);
 				}
 
-				ImGui::Text("Frame Stack Size:"); ImGui::SameLine(); 		
-				ImGui::Text(to_string(current_emmiter->GetRootParticle()->GetAnimationController()->GetNumFrames()).c_str());
+				ImGui::Text("Frame Stack Size:"); ImGui::SameLine();
+				ImGui::Text(to_string(current_emmiter->data->animation_system->GetNumFrames()).c_str());
 
-				current_emmiter->GetRootParticle()->GetAnimationController()->PaintStackUI(); 
+				current_emmiter->data->animation_system->PaintStackUI();
 
-				ImGui::DragFloat("Time Step", &current_emmiter->GetRootParticle()->GetAnimationController()->timeStep, true, 0.1f, 0, 2.0f); 
+				ImGui::DragFloat("Time Step", &current_emmiter->data->animation_system->timeStep, true, 0.1f, 0, 2.0f);
 
 				ImGui::TreePop();
 			}
@@ -727,7 +727,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Motion"))
 			{
-				
+
 				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
 
 				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
@@ -752,7 +752,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					else
 						current_emmiter->data->billboard_type = BILLBOARD_NONE;
 
-					ImGui::TreePop(); 
+					ImGui::TreePop();
 				}
 
 				current_emmiter->UpdateRootParticle();
@@ -835,25 +835,39 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				{
 					current_emmiter->UpdateRootParticle();
 
-					ImGui::DragInt4("Initial Color", &current_emmiter->data->initial_color[0], 1, 0, 255);
+					static int* temp_initial;
+
+					temp_initial[0] = current_emmiter->data->final_color.r;
+					temp_initial[1] = current_emmiter->data->final_color.g;
+					temp_initial[2] = current_emmiter->data->final_color.b;
+					temp_initial[3] = current_emmiter->data->final_color.a;
+
+					ImGui::DragInt4("Initial Color", temp_initial, 1, 0, 255);
 
 					if (ImGui::Button("Set Selected as Initial"))
 					{
-						current_emmiter->data->initial_color[0] = current_emmiter->data->color.r * 255;
-						current_emmiter->data->initial_color[1] = current_emmiter->data->color.g * 255;
-						current_emmiter->data->initial_color[2] = current_emmiter->data->color.b * 255;
-						current_emmiter->data->initial_color[3] = current_emmiter->data->color.a * 255;
+						current_emmiter->data->initial_color.r = current_emmiter->data->color.r * 255;
+						current_emmiter->data->initial_color.g = current_emmiter->data->color.g * 255;
+						current_emmiter->data->initial_color.b = current_emmiter->data->color.b * 255;
+						current_emmiter->data->initial_color.a = current_emmiter->data->color.a * 255;
 					}
 
-					ImGui::DragInt4("Final Color", &current_emmiter->data->final_color[0], 1, 0, 255);
+					static int* temp_color;
+
+					temp_color[0] = current_emmiter->data->final_color.r;
+					temp_color[1] = current_emmiter->data->final_color.g;
+					temp_color[2] = current_emmiter->data->final_color.b;
+					temp_color[3] = current_emmiter->data->final_color.a;
+
+					ImGui::DragInt4("Final Color", temp_color, 1, 0, 255);
 
 					if (ImGui::Button("Set Selected as Final"))
 					{
 
-						current_emmiter->data->final_color[0] = current_emmiter->data->color.r * 255;
-						current_emmiter->data->final_color[1] = current_emmiter->data->color.g * 255;
-						current_emmiter->data->final_color[2] = current_emmiter->data->color.b * 255;
-						current_emmiter->data->final_color[3] = current_emmiter->data->color.a * 255;
+						current_emmiter->data->final_color.r = current_emmiter->data->color.r * 255;
+						current_emmiter->data->final_color.g = current_emmiter->data->color.g * 255;
+						current_emmiter->data->final_color.b = current_emmiter->data->color.b * 255;
+						current_emmiter->data->final_color.a = current_emmiter->data->color.a * 255;
 					}
 
 					ImGui::Separator();
@@ -862,8 +876,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						current_emmiter->data->change_color_interpolation = true;
 
-						Color initial(current_emmiter->data->initial_color[0], current_emmiter->data->initial_color[1], current_emmiter->data->initial_color[2], current_emmiter->data->initial_color[3]);
-						Color final(current_emmiter->data->final_color[0], current_emmiter->data->final_color[1], current_emmiter->data->final_color[2], current_emmiter->data->final_color[3]);
+						Color initial(current_emmiter->data->initial_color.r, current_emmiter->data->initial_color.g, current_emmiter->data->initial_color.b, current_emmiter->data->initial_color.a);
+						Color final(current_emmiter->data->final_color.r, current_emmiter->data->final_color.g, current_emmiter->data->final_color.b, current_emmiter->data->final_color.a);
 
 						current_emmiter->GetRootParticle()->SetInitialColor(initial);
 						current_emmiter->GetRootParticle()->SetFinalColor(final);
@@ -883,7 +897,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 		if (ImGui::Button("Save Template"))
 		{
-			rename_template = true; 
+			rename_template = true;
 		}
 
 		if (rename_template)
@@ -901,20 +915,20 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			static char inputText[20];
 			ImGui::InputText("", inputText, 20);
 
-			if (ImGui::Button("Confirm")) 
+			if (ImGui::Button("Confirm"))
 			{
-				current_emmiter->SaveCurrentDataAsTemplate(inputText);
+
 				rename_template = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel")) {
 				inputText[0] = '\0';
-				rename_template = false; 
+				rename_template = false;
 			}
 			ImGui::End();
 		}
 
-		ImGui::SameLine(); 
+		ImGui::SameLine();
 
 
 		if (ImGui::Button("Update Current Template"))
@@ -924,6 +938,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 	}
 }
+
 
 void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 {

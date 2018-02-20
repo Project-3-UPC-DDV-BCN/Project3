@@ -33,5 +33,6 @@ public:
 private:
 	int scripts_count;
 	int factories_count;
+	bool rename_template; 
 };
 

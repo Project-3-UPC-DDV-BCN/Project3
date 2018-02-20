@@ -13,31 +13,8 @@
 using namespace std; 
 
 class ComponentParticleEmmiter; 
-class ComponentBillboard; 
-
-struct ParticleAnimation
-{
-	ParticleAnimation();
-	~ParticleAnimation();
-
-	void Start();
-
-	int GetNumFrames();
-	void PaintStackUI();
-
-	void AddToFrameStack(Texture* new_texture); 
-	vector<Texture*>::iterator DeleteFromFrameStack(int to_del);
-
-	Texture* GetCurrentTexture();
-	
-	string name;
-	vector<Texture*> frames_stack;
-	int rendering_frame;
-	float timeStep;
-
-	Timer switcher_timer; 
-
-};
+class ComponentBillboard;  
+class ParticleData; 
 
 struct ParticleComponents
 {
@@ -46,8 +23,6 @@ struct ParticleComponents
 
 	ComponentTransform* particle_transform;
 	ComponentBillboard* billboard; 
-
-	ParticleAnimation particle_animation;
 
 	void SetToNull()
 	{
@@ -133,11 +108,9 @@ public:
 	bool IsWorldSpace(); 
 	void ApplyWorldSpace(); 
 
-	//Animation
-	ParticleAnimation* GetAnimationController(); 
-
 	//Setters & Getters ----
 	ParticleComponents GetAtributes();
+	ParticleData* GetData(); 
 
 	// ----
 
@@ -155,38 +128,12 @@ private:
 	Timer interpolation_timer;
 	Timer animation_timer;
 
-	//Color
-	Color particle_color;
-
-	//Interpolations
-	///Color
-	bool interpolate_colors;
-	Color initial_particle_color;
-	Color final_particle_color;
+	//Extra data
+	float distance_to_camera;
+	float3 movement;
 	int color_difference[4];
 
-	///Size
-	bool interpolate_size;
-	float3 initial_particle_size;
-	float3 final_particle_size;
-
-	///Rotation
-	bool interpolate_rotation;
-	float initial_particle_angular_v;
-	float final_particle_angular_v;
-	float curr_rot;
-
-	//Managing movement
-	float particle_velocity;
-	float3 particle_gravity;
-	float particle_angular_v;
-	float max_particle_lifetime;
-	float3 movement;						//This vector will be added to the position every frame
-	float emmision_angle; 
-	bool is_relative;
-
-	float distance_to_camera;
-	bool billboarding;
+	ParticleData* particle_data; 
 
 	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 

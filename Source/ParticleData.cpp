@@ -1,4 +1,5 @@
 #include "ParticleData.h"
+#include "Texture.h"
 
 ParticleData::ParticleData()
 {
@@ -44,17 +45,172 @@ void ParticleData::LoadDefaultData()
 	initial_angular_v = 0;
 	final_angular_v = 0;
 
-	initial_color[0] = initial_color[1] = initial_color[2] = initial_color[3] = 0;
-	final_color[0] = final_color[1] = final_color[2] = final_color[3] = 0;
+	initial_color = { 0,0,0,0 }; 
+	final_color = { 0,0,0,0 };
+
 }
 
 void ParticleData::Save(Data & data) const
 {
+
+	//data.AddInt("Type", GetType());
+	//data.AddBool("Active", IsActive());
+	//data.AddUInt("UUID", GetUID());
+	//data.CreateSection("Particle");
+	//data.AddBool("Show_Emit_Area", show_emit_area);
+
+	// Emmit area -----
+
+	data.AddFloat("Emit_Width",emmit_width);
+	data.AddFloat("Emit_Height", emmit_height);
+	data.AddFloat("Emit_Depth", emmit_depth);
+
+	// -----
+
+	// Textures ----
+
+	if (animation_system->GetNumFrames() == 0)
+		data.AddBool("Has_Texture", false);
+	else
+	{
+		data.AddBool("Has_Texture", true);
+
+		int frame_num = 1;
+
+		for (vector<Texture*>::iterator it = animation_system->frames_stack.begin(); it != animation_system->frames_stack.end(); it++)
+		{
+			string tex_name("Frame_");
+			tex_name += to_string(frame_num);
+			frame_num++;
+
+			data.AddInt(tex_name, (*it)->GetUID());
+		}
+	}
+
+	//------
+
+	// Colors -----
+
+	// ------
+
+	// Motion -----
+
+	data.AddBool("Relative_Pos", relative_pos);
+	data.AddInt("Emmision_Rate", emmision_rate);
+	data.AddFloat("Lifetime", max_lifetime);
+	data.AddFloat("Initial_Velocity", velocity);
+	data.AddVector3("Gravity", gravity);
+	data.AddFloat("Angular_Velocity", angular_v);
+	data.AddFloat("Emmision_Angle", emision_angle);
+
+	// ------
+
+	// Interpolation -----
+
+	if (change_color_interpolation)
+	{
+		data.AddBool("Color_Interpolation", true);
+	}
+	else
+		data.AddBool("Color_Interpolation", false);
+
+	if (change_size_interpolation)
+	{
+		data.AddBool("Size_Interpolation", true);
+
+		data.AddVector3("Initial_Size", initial_scale);
+		data.AddVector3("Final_Size",final_scale);
+	}
+	else
+		data.AddBool("Size_Interpolation", false);
+
+	if (change_rotation_interpolation)
+	{
+		data.AddBool("Rotation_Interpolation", true);
+
+		data.AddFloat("Initial_Rotation", initial_angular_v);
+		data.AddFloat("Final_Rotation", final_angular_v);
+	}
+	else
+		data.AddBool("Rotation_Interpolation", false);
+
+	// ------
+
+	data.CloseSection();
 }
 
-bool ParticleData::Load(Data & data)
+bool ParticleData::Load(Data & _data)
 {
-	return false;
+	// Emmit area -----
+	emmit_width = _data.GetFloat("Emit_Width");
+	emmit_height = _data.GetFloat("Emit_Height");
+	emmit_depth = _data.GetFloat("Emit_Depth");
+
+	// Textures ----
+	if (animation_system->GetNumFrames() == 0)
+		_data.AddBool("Has_Texture", false);
+	else
+	{
+		_data.AddBool("Has_Texture", true);
+
+		int frame_num = 1;
+		for (vector<Texture*>::iterator it = animation_system->frames_stack.begin(); it != animation_system->frames_stack.end(); it++)
+		{
+			string tex_name("Frame_");
+			tex_name += to_string(frame_num);
+			frame_num++;
+
+			_data.AddInt(tex_name, (*it)->GetUID());
+		}
+	}
+
+	// Colors -----
+
+
+	// Motion -----
+
+	relative_pos = _data.GetBool("Relative_Pos");
+	emmision_rate = _data.GetFloat("Emmision_Rate");
+	max_lifetime = _data.GetFloat("Lifetime");
+	velocity = _data.GetFloat("Initial_Velocity");
+	gravity = _data.GetVector3("Gravity");
+	angular_v = _data.GetFloat("Angular_Velocity");
+	emision_angle = _data.GetFloat("Emmision_Angle");
+
+	// ------
+
+	// Interpolation -----
+
+	change_color_interpolation = _data.GetBool("Color_Interpolation");
+
+	change_size_interpolation = _data.GetBool("Size_Interpolation");
+
+	if (change_size_interpolation)
+	{
+		initial_scale = _data.GetVector3("Initial_Size");
+		final_scale = _data.GetVector3("Final_Size");
+	}
+
+	change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
+
+	if (change_rotation_interpolation)
+	{
+		initial_angular_v = _data.GetFloat("Initial_Rotation");
+		final_angular_v = _data.GetFloat("Final_Rotation");
+	}
+
+	// ------
+
+	//Function calling ----
+	width_increment = emmit_width;
+	height_increment = emmit_height;
+	depth_increment =emmit_depth;
+
+	//	AddaptEmmitAreaAABB(); 
+
+	_data.LeaveSection();
+
+	return true;
 }
 
 void ParticleData::CreateMeta() const
@@ -67,4 +223,97 @@ void ParticleData::LoadToMemory()
 
 void ParticleData::UnloadFromMemory()
 {
+}
+
+//Animation controller
+ParticleAnimation::ParticleAnimation()
+{
+	name = "";
+	timeStep = 0;
+	rendering_frame = 0;
+}
+
+int ParticleAnimation::GetNumFrames()
+{
+	return frames_stack.size();
+}
+
+void ParticleAnimation::PaintStackUI()
+{
+	int number = 1;
+	for (vector<Texture*>::iterator it = frames_stack.begin(); it != frames_stack.end();)
+	{
+		ImGui::Text(to_string(number).c_str()); ImGui::SameLine();
+
+		ImGui::Text(". "); ImGui::SameLine();
+		ImGui::Text((*it)->GetName().c_str()); ImGui::SameLine();
+
+		string button_name("X##");
+		button_name += to_string(number);
+
+		if (ImGui::Button(button_name.c_str()))
+		{
+			it = DeleteFromFrameStack(number);
+
+			if (frames_stack.empty())
+				break;
+		}
+		else
+			it++;
+
+		number++;
+	}
+}
+
+void ParticleAnimation::AddToFrameStack(Texture * new_texture)
+{
+	frames_stack.push_back(new_texture);
+}
+
+vector<Texture*>::iterator ParticleAnimation::DeleteFromFrameStack(int to_del)
+{
+	int counter = 0;
+	vector<Texture*>::iterator it;
+
+	for (it = frames_stack.begin(); it != frames_stack.end(); it++)
+	{
+		if (counter++ == to_del - 1)
+		{
+			it = frames_stack.erase(it);
+			return it;
+		}
+
+	}
+	return it;
+}
+
+Texture * ParticleAnimation::GetCurrentTexture()
+{
+	if (GetNumFrames() == 0)
+		return nullptr;
+
+	else if (GetNumFrames() == 1)
+		rendering_frame = 0;
+
+	if (switcher_timer.Read() > timeStep * 1000 && timeStep != 0)
+	{
+		if (rendering_frame >= frames_stack.size() - 1)
+			rendering_frame = 0;
+		else
+			rendering_frame++;
+
+		switcher_timer.Start();
+	}
+
+	return frames_stack[rendering_frame];
+}
+
+ParticleAnimation::~ParticleAnimation()
+{
+
+}
+
+void ParticleAnimation::Start()
+{
+	switcher_timer.Start();
 }
