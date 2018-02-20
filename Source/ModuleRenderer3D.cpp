@@ -295,7 +295,8 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 		{
 			// WORLD
-			if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			//if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			if(0)
 			{
 				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
 				SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
@@ -315,9 +316,11 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				{ -1.0f,                   1.0f,               0.0f, 1.0f },
 				};
 
-				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
+				float4x4 ide = float4x4::identity;
+				SetUniformMatrix(program->GetProgramID(), "view", (float*)ide.Transposed().v);
 				SetUniformMatrix(program->GetProgramID(), "projection", &ortho_projection[0][0]);
 				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetOrtoTransform().Transposed().ptr());
+				SetUniformMatrix(program->GetProgramID(), "Model", float4x4::FromTRS(float3(300, 100, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(300, 300, 100)).Transposed().ptr());
 			}
 
 			SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
