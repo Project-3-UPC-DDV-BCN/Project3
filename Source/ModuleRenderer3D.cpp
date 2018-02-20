@@ -24,6 +24,7 @@
 #include "ModulePhysics.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "DebugDraw.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -40,6 +41,7 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	editor_camera = nullptr;
 	game_camera = nullptr;
 	use_skybox = true;
+	debug_draw = new DebugDraw();
 
 	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
 		dir_lights[i] = nullptr;
@@ -170,7 +172,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		DrawSceneCameras(*it);
 	}
-	
+
 	dynamic_mesh_to_draw.clear();
 
 	//Assert polygon mode is fill before render gui
@@ -326,6 +328,9 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	{
 		//App->scene->octree.DebugDraw();
 	}
+
+	// Debug Draw render
+	debug_draw->Render(editor_camera);
 	
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
@@ -423,8 +428,8 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
-	debug_primitive_to_draw.clear();
-	rendering_cameras.clear();
+
+	debug_draw->Clear();
 }
 
 // Called before quitting
@@ -433,6 +438,11 @@ bool ModuleRenderer3D::CleanUp()
 	CONSOLE_DEBUG("Destroying 3D Renderer");
 	SDL_GL_DeleteContext(context);
 	rendering_cameras.clear();
+
+	// Clear debug draw
+	debug_draw->Clear();
+	RELEASE(debug_draw);
+
 	return true;
 }
 
@@ -660,6 +670,11 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 	}
 }
 
+DebugDraw * ModuleRenderer3D::GetDebugDraw() const
+{
+	return debug_draw;
+}
+
 // ------------- Shaders -------------------------
 
 uint ModuleRenderer3D::GenVertexArrayObject() const
@@ -686,6 +701,16 @@ void ModuleRenderer3D::UnbindVertexArrayObject() const
 	if (error != GL_NO_ERROR)
 	{
 		CONSOLE_ERROR("Error unbind array buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::DeleteVertexArrayObject(uint vao)
+{
+	glDeleteVertexArrays(1, &vao);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error delete array buffer: %s\n", gluErrorString(error));
 	}
 }
 

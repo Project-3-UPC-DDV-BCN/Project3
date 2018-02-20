@@ -570,6 +570,9 @@
     <ClInclude Include="ComponentLight.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -937,6 +940,9 @@
 	</ClCompile>
     <ClCompile Include="ComponentLight.cpp">
       <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
