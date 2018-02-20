@@ -1,12 +1,17 @@
 {
  "PluginInfo": {
-  "Project": "test",
+  "Project": "StarWars",
   "Platform": "Windows",
   "BasePlatform": "Windows",
   "Plugins": {
    "Plugin": {
     "Name": "System",
     "ID": "11403271",
+    "DLL": "DefaultSink"
+   },
+   "Plugin": {
+    "Name": "Communication",
+    "ID": "11534343",
     "DLL": "DefaultSink"
    },
    "Plugin": {

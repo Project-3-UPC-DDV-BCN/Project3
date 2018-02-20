@@ -18,6 +18,8 @@
 
 #include "ModuleScene.h"
 
+#include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
+
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 ModuleAudio::ModuleAudio(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -42,14 +44,14 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Test.bnk");
+	LoadSoundBank("Ship_Soundbank.bnk");
 	
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
 	go->SetName("Audio");
 	ComponentAudioSource* as = (ComponentAudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
-	as->SendEvent("Test_Event");
+	as->PlayEvent(AK::EVENTS::PLAY_LONG_SHATTER);
 
 	GameObject* go_ = App->scene->CreateGameObject();
 	go_->AddComponent(Component::ComponentType::CompAudioListener);

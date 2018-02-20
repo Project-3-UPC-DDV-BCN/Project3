@@ -5,44 +5,88 @@
   "SchemaVersion": "11",
   "SoundbankVersion": "128",
   "RootPaths": {
-   "ProjectRoot": "C:\\Users\\Simón Stoyanov\\Documents\\WwiseProjects\\test\\",
-   "SourceFilesRoot": "C:\\Users\\Simón Stoyanov\\Documents\\WwiseProjects\\test\\.cache\\Windows\\",
-   "SoundBanksRoot": "D:\\Project3\\EngineResources\\Project\\Assets\\SoundBanks\\",
+   "ProjectRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\StarWars\\",
+   "SourceFilesRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\StarWars\\.cache\\Windows\\",
+   "SoundBanksRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\StarWars\\..\\..\\..\\Desktop\\ShipBank\\",
    "ExternalSourcesInputFile": "",
-   "ExternalSourcesOutputRoot": "C:\\Users\\Simón Stoyanov\\Documents\\WwiseProjects\\test\\GeneratedSoundBanks\\Windows\\"
+   "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\StarWars\\GeneratedSoundBanks\\Windows\\"
   },
   "DialogueEvents": [],
   "StreamedFiles": [],
   "MediaFilesNotInAnyBank": [],
   "SoundBanks": [
    {
+    "Id": "547480325",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Ship_Soundbank",
+    "ShortName": "Ship_Soundbank",
+    "Path": "Ship_Soundbank.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "2233744274",
+      "Name": "Play_long_shatter",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_long_shatter"
+     },
+     {
+      "Id": "2529436265",
+      "Name": "Play_recharge",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_recharge"
+     },
+     {
+      "Id": "3957279042",
+      "Name": "Play_short_chatter",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_short_chatter"
+     },
+     {
+      "Id": "3061091135",
+      "Name": "Play_shot1",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_shot1"
+     },
+     {
+      "Id": "3061091132",
+      "Name": "Play_shot2",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_shot2"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "462969167",
+      "Language": "SFX",
+      "ShortName": "droid_r5_chatter_04.wav",
+      "Path": "SFX\\droid_r5_chatter_04_1C9C67B2.wem"
+     },
+     {
+      "Id": "466525598",
+      "Language": "SFX",
+      "ShortName": "wpn_geonFighter_blaster_fire.wav",
+      "Path": "SFX\\wpn_geonFighter_blaster_fire_1C9C67B2.wem"
+     },
+     {
+      "Id": "571222723",
+      "Language": "SFX",
+      "ShortName": "droid_fx7_recharge_01.wav",
+      "Path": "SFX\\droid_fx7_recharge_01_1C9C67B2.wem"
+     },
+     {
+      "Id": "762634605",
+      "Language": "SFX",
+      "ShortName": "droid_r5_chatter_01.wav",
+      "Path": "SFX\\droid_r5_chatter_01_1C9C67B2.wem"
+     },
+     {
+      "Id": "982564443",
+      "Language": "SFX",
+      "ShortName": "wpn_gunship_blaster_fire.wav",
+      "Path": "SFX\\wpn_gunship_blaster_fire_1C9C67B2.wem"
+     }
+    ]
+   },
+   {
     "Id": "1355168291",
     "Language": "SFX",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk"
-   },
-   {
-    "Id": "3157003241",
-    "Language": "SFX",
-    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Test",
-    "ShortName": "Test",
-    "Path": "Test.bnk",
-    "IncludedEvents": [
-     {
-      "Id": "4258653052",
-      "Name": "Test_Event",
-      "ObjectPath": "\\Events\\Default Work Unit\\Test_Event"
-     }
-    ],
-    "IncludedMemoryFiles": [
-     {
-      "Id": "650563162",
-      "Language": "SFX",
-      "ShortName": "cave_song.wav",
-      "Path": "SFX\\cave_song_1C9C67B2.wem"
-     }
-    ]
    }
   ]
  }
