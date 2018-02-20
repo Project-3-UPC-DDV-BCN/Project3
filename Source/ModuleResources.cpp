@@ -1467,7 +1467,68 @@ void ModuleResources::CreateDefaultShaders()
 
 	Shader* fragment = GetShader("default_fragment");
 	prog->SetFragmentShader(fragment);
+
+	AddResource(prog);
+
 	
+	//Default Debug Shaders
+	std::string deb_vert_default_path = SHADER_DEFAULT_FOLDER "default_debug_vertex.vshader";
+	if (!App->file_system->FileExist(deb_vert_default_path))
+	{
+		Shader* default_deb_vert = new Shader();
+		default_deb_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"uniform mat4 Model;\n"
+			"uniform mat4 view;\n"
+			"uniform mat4 projection;\n\n"
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"}";
+
+		default_deb_vert->SetContent(shader_text);
+		std::ofstream outfile(deb_vert_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(default_deb_vert);
+	}
+	CreateResource(deb_vert_default_path);
+
+	std::string deb_frag_default_path = SHADER_DEFAULT_FOLDER "default_debug_fragment.fshader";
+	if (!App->file_system->FileExist(deb_frag_default_path))
+	{
+		Shader* default_deb_frag = new Shader();
+		default_deb_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"out vec4 color;\n\n"
+			"uniform vec4 debug_color;\n"
+			"void main()\n"
+			"{\n"
+			"		color = debug_color;\n"
+			"}";
+
+		default_deb_frag->SetContent(shader_text);
+		std::ofstream outfile(deb_frag_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(default_deb_frag);
+	}
+	CreateResource(deb_frag_default_path);
+
+	prog = new ShaderProgram();
+	prog->SetName("default_debug_program");
+
+	vertex = GetShader("default_debug_vertex");
+	prog->SetVertexShader(vertex);
+
+	fragment = GetShader("default_debug_fragment");
+	prog->SetFragmentShader(fragment);
+
 	prog->LinkShaderProgram();
 
 	AddResource(prog);
