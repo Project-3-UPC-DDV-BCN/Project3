@@ -28,6 +28,8 @@ public :
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	int* GetPickedEventPtr();
+
 	std::vector<AudioEvent*> GetEventsVector() const;
 	std::vector<AudioEvent*> GetEventsToPlayVector() const;
 
@@ -37,6 +39,7 @@ private:
 	std::vector<AudioEvent*>events;
 	std::vector<AudioEvent*>events_to_play;
 	int obj_to_load = -1;
+	int picked_event = 0;
 
 public:
 	Wwise::SoundObject* obj = nullptr;

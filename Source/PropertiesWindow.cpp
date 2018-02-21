@@ -609,11 +609,18 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 			soundbank_name += audio_source->soundbank->name.c_str();
 			if (ImGui::TreeNode(soundbank_name.c_str()))
 			{
+				std::string combo_str = "";
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) {
 					//	TODO: Use ImGui::Combo to separate
-					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
-					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
+					combo_str += audio_source->GetEventsVector()[i]->name;
+					//combo_str += "\\\\";
+					combo_str += "\\0";
+					//ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
+					//audio_source->GetEventsVector()[i]->UIDraw(audio_source);
 				}
+				combo_str += '\0';
+				ImGui::Combo("Event##Audio Events", audio_source->GetPickedEventPtr(), combo_str.c_str(), audio_source->GetEventsVector().size());
+
 				ImGui::TreePop();
 			}
 			if (ImGui::TreeNode("Settings##Audio"))

@@ -37,6 +37,8 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
+
+
 	if (App->input->GetKey(SDL_SCANCODE_Q))
 	{
 		SendEvent("Play_long_shatter");
@@ -165,6 +167,11 @@ void ComponentAudioSource::Load(Data & data)
 	SetUID(data.GetUInt("UUID"));
 	obj_to_load = data.GetInt("Sound ID");
 	obj = App->audio->GetSoundObject(obj_to_load);
+}
+
+int * ComponentAudioSource::GetPickedEventPtr()
+{
+	return &picked_event;
 }
 
 std::vector<AudioEvent*> ComponentAudioSource::GetEventsVector() const
