@@ -40,7 +40,8 @@ private:
 	std::vector<AudioEvent*>events_to_play;
 	int obj_to_load = -1;
 	int picked_event = 0;
-
 public:
 	Wwise::SoundObject* obj = nullptr;
+	bool is_combo = false;
+
 };

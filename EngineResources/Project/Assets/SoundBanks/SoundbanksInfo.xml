@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="128">
+	<RootPaths>
+		<ProjectRoot>C:\Users\Simón Stoyanov\Documents\WwiseProjects\test\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\Simón Stoyanov\Documents\WwiseProjects\test\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\Project3\EngineResources\Project\Assets\SoundBanks\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\Users\Simón Stoyanov\Documents\WwiseProjects\test\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="3157003241" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Test</ObjectPath>
+			<ShortName>Test</ShortName>
+			<Path>Test.bnk</Path>
+			<IncludedEvents>
+				<Event Id="4258653052" Name="Test_Event" ObjectPath="\Events\Default Work Unit\Test_Event"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="650563162" Language="SFX">
+					<ShortName>cave_song.wav</ShortName>
+					<Path>SFX\cave_song_1C9C67B2.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

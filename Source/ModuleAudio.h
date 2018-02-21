@@ -61,7 +61,7 @@ public:
 	void SetListenerCreated(bool set);
 	int* GetVolumePtr();
 
-
+	bool* IsMutedPtr();
 
 private:
 

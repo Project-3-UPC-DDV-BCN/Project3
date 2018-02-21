@@ -44,7 +44,7 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Ship_Soundbank.bnk");
+	LoadSoundBank("Test.bnk");
 	
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
@@ -323,4 +323,9 @@ void ModuleAudio::SetListenerCreated(bool set)
 int * ModuleAudio::GetVolumePtr()
 {
 	return &volume;
+}
+
+bool * ModuleAudio::IsMutedPtr()
+{
+	return &muted;
 }
