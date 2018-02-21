@@ -10,11 +10,12 @@ class ComponentLight;
 class Primitive;
 class ComponentCamera;
 
-#define MAX_LIGHTS 8
-
 #define MAX_DIR_LIGHT 2
 #define MAX_SPO_LIGHT 8
 #define MAX_POI_LIGHT 8
+
+#define SHADOW_HEIGHT 1024
+#define SHADOW_WIDTH 1024
 
 class ModuleRenderer3D : public Module
 {
@@ -91,6 +92,8 @@ public:
 	int GetSpotLightCount() const;
 	int GetPointLightCount() const;
 
+	void SetDepthMap();
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
@@ -129,4 +132,6 @@ private:
 
 	std::list<Primitive*> debug_primitive_to_draw;
 
+	uint depth_map;
+	uint depth_mapFBO;
 };

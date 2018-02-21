@@ -143,6 +143,9 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
 		}
 	}
+
+	//Set Up Depth Map
+	SetDepthMap();
 	
 	return ret;
 }
@@ -1080,5 +1083,24 @@ int ModuleRenderer3D::GetSpotLightCount() const
 int ModuleRenderer3D::GetPointLightCount() const
 {
 	return point_light_count;
+}
+void ModuleRenderer3D::SetDepthMap()
+{
+	glGenFramebuffers(1, &depth_mapFBO);
+
+	glGenTextures(1, &depth_map);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
+	// Not rendering any color so:
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 // ------------------------------------------------
