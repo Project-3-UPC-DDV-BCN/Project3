@@ -10,6 +10,7 @@
 #define NUM_CONTROLLER_BUTTONS 15
 
 struct _SDL_GameController;
+struct _SDL_Haptic;
 
 enum JOYSTICK_MOVES
 {
@@ -41,6 +42,7 @@ struct GamePad
 	int						pad_num = -1;
 	int						id = -1;
 	_SDL_GameController*	pad = nullptr;
+	_SDL_Haptic*			haptic_system = nullptr;
 };
 
 class ModuleInput : public Module

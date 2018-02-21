@@ -41,7 +41,10 @@ bool ModuleInput::Init(Data* editor_config)
 	// GameController --------------
 	/// To use PS3 Controller install this driver https://github.com/nefarius/ScpToolkit/releases/tag/v1.6.238.16010
 	if (SDL_Init(SDL_INIT_GAMECONTROLLER) != 0)
-		CONSOLE_ERROR("Error on SDL_Init");
+		CONSOLE_ERROR("Error on SDL_Init: GameController");
+
+	if(SDL_Init(SDL_INIT_HAPTIC) < 0)
+		CONSOLE_ERROR("Error on SDL_Init: Haptic System");
 	// -----------------------------
 
 	StoreStringKeys();
@@ -529,6 +532,21 @@ void ModuleInput::AddController(int id)
 			new_pad->pad_num = connected_gamepads;
 			gamepads.push_back(new_pad);
 			connected_gamepads++;
+
+			//Start the haptic system
+			new_pad->haptic_system = SDL_HapticOpenFromJoystick(joy);
+			if (new_pad->haptic_system == nullptr)
+			{
+				CONSOLE_WARNING("Gamepad %d doesn't support haptics", id);
+			}
+			else
+			{
+				//Initialize Rumble
+				if (SDL_HapticRumbleInit(new_pad->haptic_system) < 0)
+				{
+					CONSOLE_WARNING("Gamepad %d doesn't support rumble", id);
+				}
+			}
 		}
 	}
 }
@@ -540,6 +558,7 @@ void ModuleInput::RemoveController(int id)
 		if ((*it)->id == id)
 		{
 			DisconectGamePad(id);
+			SDL_HapticClose((*it)->haptic_system);
 			SDL_GameControllerClose((*it)->pad);
 			RELEASE(*it);
 			gamepads.erase(it);
