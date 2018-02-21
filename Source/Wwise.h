@@ -17,6 +17,7 @@ namespace Wwise
 		SoundObject* operator =(const SoundObject& so);
 
 		unsigned long GetID();
+		AkGameObjectID GetSoundID() const;
 		const char* GetName();
 		void SetPosition(float x = 0, float y = 0, float z = 0, float x_front = 1, float y_front = 0, float z_front = 0, float x_top = 0, float y_top = 1, float z_top = 0);
 		AkVector GetPosition() const;

@@ -279,6 +279,11 @@ unsigned long Wwise::SoundObject::GetID()
 	return SoundID;
 }
 
+AkGameObjectID Wwise::SoundObject::GetSoundID() const
+{
+	return SoundID;
+}
+
 const char * Wwise::SoundObject::GetName()
 {
 	return name;
