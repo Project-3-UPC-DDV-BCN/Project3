@@ -92,9 +92,11 @@ void Material::Save(Data & data) const
 	
 	if (reflection_texture != nullptr)
 		data.AddString("reflection_texture", reflection_texture->GetLibraryPath());
-
-	data.AddInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
-	data.AddInt("fragment_shader", shader_program->GetFragmentShader()->GetUID());
+	if (shader_program != nullptr)
+	{
+		data.AddInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
+		data.AddInt("fragment_shader", shader_program->GetFragmentShader()->GetUID());
+	}
 }
 
 bool Material::Load(Data & data)

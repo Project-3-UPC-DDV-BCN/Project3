@@ -1119,6 +1119,8 @@ void ModuleResources::CreateDefaultShaders()
 	}
 	CreateResource(vert_default_path);
 
+	//Default Shader
+
 	std::string frag_default_path = SHADER_DEFAULT_FOLDER "default_fragment.fshader";
 	if (!App->file_system->FileExist(frag_default_path))
 	{
@@ -1355,7 +1357,53 @@ void ModuleResources::CreateDefaultShaders()
 	
 	prog->LinkShaderProgram();
 
-	AddResource(prog);
+	//Depth Shader
+	std::string vert_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_vertex.vshader";
+	if (!App->file_system->FileExist(vert_depth_path))
+	{
+		Shader* depth_vert = new Shader();
+		depth_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			;
+
+		depth_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_depth_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(depth_vert);
+	}
+	CreateResource(vert_depth_path);
+
+
+	std::string frag_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_fragment.fshader";
+	if (!App->file_system->FileExist(frag_depth_path))
+	{
+		Shader* depth_frag = new Shader();
+		depth_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n\n";
+
+		depth_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_depth_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(depth_frag);
+	}
+	CreateResource(frag_depth_path);
+
+	ShaderProgram* depthprog = new ShaderProgram();
+	depthprog->SetName("depth_shader_program");
+
+	Shader* depthvertex = GetShader("depth_shader_vertex");
+	depthprog->SetVertexShader(vertex);
+
+	Shader* depthfragment = GetShader("depth_shader_fragment");
+	depthprog->SetFragmentShader(fragment);
+
+	depthprog->LinkShaderProgram();
 }
 
 void ModuleResources::CreateDefaultMaterial()

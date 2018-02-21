@@ -1136,7 +1136,8 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh)
 	uint program = 0;
 	if (material != nullptr)
 	{
-		program = material->GetShaderProgramID();
+		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
+		program = shader->GetProgramID();
 		UseShaderProgram(program);
 	}
 
@@ -1144,9 +1145,8 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh)
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());*/
 
-
-	BindVertexArrayObject(mesh->GetMesh()->id_vao);
+/*	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
-	UnbindVertexArrayObject();
+	UnbindVertexArrayObject();*/
 }
 // ------------------------------------------------
