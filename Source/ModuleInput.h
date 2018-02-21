@@ -43,6 +43,10 @@ struct GamePad
 	int						id = -1;
 	_SDL_GameController*	pad = nullptr;
 	_SDL_Haptic*			haptic_system = nullptr;
+	int n_effect = -1;
+	int s_effect = -1;
+	int w_effect = -1;
+	int e_effect = -1;
 };
 
 class ModuleInput : public Module
@@ -71,6 +75,9 @@ public:
 
 	// Return the motion value (form 0 to 32767) for a joystick direction
 	uint GetControllerJoystickMove(int pad, int id) const;
+
+	// Makes the gamepad rumble with the force and time requested
+	void RumbleController(int pad, float strength, int ms) const;
 
 	int GetMouseX() const
 	{

@@ -1591,6 +1591,11 @@ int CSScript::GetControllerButton(int pad, MonoString * button)
 	return App->input->GetControllerButton(pad,code);
 }
 
+void CSScript::RumbleController(int pad, float strength, int ms)
+{
+	App->input->RumbleController(pad, strength, ms);
+}
+
 void CSScript::CreateGameObject(MonoObject * object)
 {
 	if (!inside_function)

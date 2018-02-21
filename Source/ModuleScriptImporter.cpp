@@ -283,6 +283,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheInput::GetMouseYMotion", (const void*)GetMouseYMotion);
 	mono_add_internal_call("TheEngine.TheInput::GetControllerButton", (const void*)GetControllerButton);
 	mono_add_internal_call("TheEngine.TheInput::GetControllerJoystickMove", (const void*)GetControllerJoystickMove);
+	mono_add_internal_call("TheEngine.TheInput::RumbleController", (const void*)RumbleController);
 
 	//CONSOLE
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Log", (const void*)Log);
@@ -533,6 +534,11 @@ int ModuleScriptImporter::GetControllerJoystickMove(int pad, MonoString * axis)
 int ModuleScriptImporter::GetControllerButton(int pad, MonoString * button)
 {
 	return current_script->GetControllerButton(pad, button);
+}
+
+void ModuleScriptImporter::RumbleController(int pad, float strength, int ms)
+{
+	current_script->RumbleController(pad, strength, ms);
 }
 
 void ModuleScriptImporter::Log(MonoObject * object)

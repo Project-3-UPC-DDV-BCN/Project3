@@ -48,6 +48,7 @@ bool ModuleInput::Init(Data* editor_config)
 	// -----------------------------
 
 	StoreStringKeys();
+
 	return ret;
 }
 
@@ -208,6 +209,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
+
 	return UPDATE_CONTINUE;
 }
 
@@ -241,6 +243,16 @@ uint ModuleInput::GetControllerJoystickMove(int pad, int id) const
 	}
 	CONSOLE_WARNING("Controller %d is not connected", pad);
 	return 0;
+}
+
+void ModuleInput::RumbleController(int pad, float strength, int ms) const
+{
+	for (std::vector<GamePad*>::const_iterator it = gamepads.begin(); it != gamepads.end(); it++)
+	{
+		if ((*it)->id == gamepad_connected[pad]) {
+			SDL_HapticRumblePlay((*it)->haptic_system, strength, ms);
+		}
+	}
 }
 
 void ModuleInput::StoreStringKeys()

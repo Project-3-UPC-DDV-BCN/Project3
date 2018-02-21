@@ -10,6 +10,11 @@ public class Slave1Movement {
 	public float max_vel = 10.0f;
 	public float acceleration = 1.0f;
 	public float slow_acceleration = 10.0f;
+
+	public float rotate_rumble_strength = 0.1f;
+	public float accel_max_rumble_strength = 1.0f;
+	public int rotate_rumble_ms = 5;
+	public int accel_rumble_ms = 5;
 	
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
@@ -79,6 +84,7 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.z += rotate_speed*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
+			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
 		
 		if(TheInput.GetControllerButton(0,"CONTROLLER_LB") == 2)
@@ -86,6 +92,7 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.z -= rotate_speed*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
+			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
 		
 		slowing = false;
@@ -94,18 +101,25 @@ public class Slave1Movement {
 			vel_percent = 0.02f;
 			slowing = true;
 		}
-		TheConsole.Log("-------");
-		TheConsole.Log(vel_percent);
+
 		float target_vel = vel_percent*max_vel;
-		TheConsole.Log(curr_vel);
-		TheConsole.Log(target_vel);
-		if(curr_vel < target_vel) curr_vel += acceleration*Time.DeltaTime;
+
+		if(curr_vel < target_vel) 
+		{
+			curr_vel += acceleration*Time.DeltaTime;
+			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
+			TheInput.RumbleController(0,rumble,accel_rumble_ms);
+		}
 		else if(curr_vel > target_vel)
 		{
 			if(!slowing)
 				curr_vel-=acceleration*Time.DeltaTime;
 			else
+			{
 				curr_vel-=slow_acceleration*Time.DeltaTime;
+				float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
+				TheInput.RumbleController(0,rumble,accel_rumble_ms);
+			}
 		}
 		
 		TheVector3 new_vel_pos = trans.LocalPosition;

@@ -117,6 +117,7 @@ public:
 	int GetMouseYMotion();
 	int GetControllerJoystickMove(int pad, MonoString* axis);
 	int GetControllerButton(int pad, MonoString* button);
+	void RumbleController(int pad, float strength, int ms);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);

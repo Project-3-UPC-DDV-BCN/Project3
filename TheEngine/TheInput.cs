@@ -38,5 +38,8 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetControllerJoystickMove(int pad, string axis);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int RumbleController(int pad, float strength, int ms);
     }
 }
