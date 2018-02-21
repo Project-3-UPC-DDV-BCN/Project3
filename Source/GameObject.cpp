@@ -11,6 +11,7 @@
 #include "ComponentAudioSource.h"
 #include "ComponentListener.h"
 #include "ComponentDistorsionZone.h"
+#include "ComponentLight.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -88,6 +89,9 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompAudioDistZone:
 		components_list.push_back(component = new ComponentDistorsionZone(this));
+		break;
+	case Component::CompLight:
+		components_list.push_back(component = new ComponentLight(this));
 		break;
 	default:
 		break;

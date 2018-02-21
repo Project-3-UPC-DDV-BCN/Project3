@@ -2,7 +2,7 @@
 
 AudioWindow::AudioWindow()
 {
-	active = true;
+	active = false;
 	window_name = "Audio";
 }
 

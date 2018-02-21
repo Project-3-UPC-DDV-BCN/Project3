@@ -12,6 +12,7 @@
 #include "ComponentTransform.h"
 #include "Component.h"
 #include "ComponentCamera.h"
+#include "ComponentLight.h"
 #include "RenderTexture.h"
 #include "ModuleCamera3D.h"
 #include "Mesh.h"
@@ -22,6 +23,7 @@
 #include "SceneWindow.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "DebugDraw.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -38,7 +40,20 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	editor_camera = nullptr;
 	game_camera = nullptr;
 	use_skybox = true;
-	lights_count = 0;
+	debug_draw = new DebugDraw();
+
+	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+		dir_lights[i] = nullptr;
+
+	for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+		spo_lights[i] = nullptr;
+
+	for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+		poi_lights[i] = nullptr;
+
+	directional_light_count = 0;
+	point_light_count = 0;
+	spot_light_count = 0;
 }
 
 // Destructor
@@ -137,7 +152,6 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-	ms_timer.Start();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	return UPDATE_CONTINUE;
@@ -146,6 +160,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	ms_timer.Start();
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
@@ -156,8 +171,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		DrawSceneCameras(*it);
 	}
-	
-	dynamic_mesh_to_draw.clear();
+
+	ResetRender();
 
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
@@ -311,6 +326,9 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	{
 		//App->scene->octree.DebugDraw();
 	}
+
+	// Debug Draw render
+	debug_draw->Render(editor_camera);
 	
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
@@ -335,6 +353,11 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+	//TODO: Calculate Normal Matrix here and send it as uniform.
+	// We need this because transitioning to World Space gives a non accurate Normal.
+	// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
+
+	SendLight(program);
 
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
@@ -349,8 +372,8 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
+	debug_draw->Clear();
 	debug_primitive_to_draw.clear();
-	rendering_cameras.clear();
 }
 
 // Called before quitting
@@ -359,6 +382,11 @@ bool ModuleRenderer3D::CleanUp()
 	CONSOLE_DEBUG("Destroying 3D Renderer");
 	SDL_GL_DeleteContext(context);
 	rendering_cameras.clear();
+
+	// Clear debug draw
+	debug_draw->Clear();
+	RELEASE(debug_draw);
+
 	return true;
 }
 
@@ -449,24 +477,6 @@ bool ModuleRenderer3D::GetActiveFog() const
 	return is_using_fog;
 }
 
-void ModuleRenderer3D::EnableTestLight()
-{
-	lights[7].ref = GL_LIGHT7;
-	lights[7].Active(true);
-	for (uint i = 1; i < lights_count - 1; ++i)
-		lights[i].Active(false);
-	testing_light = true;
-}
-
-void ModuleRenderer3D::DisableTestLight()
-{
-	lights[7].Active(false);
-	for (uint i = 1; i < lights_count - 1; ++i)
-		lights[i].Active(true);
-	lights[7].ref = 0;
-	testing_light = false;
-}
-
 void ModuleRenderer3D::ActiveSkybox(bool active)
 {
 	use_skybox = active;
@@ -517,6 +527,98 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	}
 }
 
+
+void ModuleRenderer3D::AddLight(ComponentLight * light)
+{
+	if (light != nullptr)
+	{
+		switch (light->GetLightType())
+		{
+		case DIRECTIONAL_LIGHT:
+
+			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+			{
+				if (dir_lights[i] == nullptr)
+				{
+					dir_lights[i] = light;
+					directional_light_count++;
+					return;
+				}
+			}
+			break;
+		case SPOT_LIGHT:
+			for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+			{
+				if (spo_lights[i] == nullptr)
+				{
+					spo_lights[i] = light;
+					spot_light_count++;
+					return;
+				}
+			}
+			break;
+		case POINT_LIGHT:
+			for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+			{
+				if (poi_lights[i] == nullptr)
+				{
+					poi_lights[i] = light;
+					point_light_count++;
+					return;
+				}
+			}
+			break;
+		}
+	}
+}
+void ModuleRenderer3D::RemoveLight(ComponentLight * light)
+{
+	if (light != nullptr)
+	{
+		switch (light->GetLightType())
+		{
+		case DIRECTIONAL_LIGHT:
+			for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+			{
+				if (dir_lights[i] == light)
+				{
+					dir_lights[i] = nullptr;
+					directional_light_count--;
+					return;
+				}
+			}
+			break;
+		case SPOT_LIGHT:
+			for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+			{
+				if (spo_lights[i] == light)
+				{
+					spo_lights[i] = nullptr;
+					spot_light_count--;
+					return;
+				}
+			}
+			break;
+		case POINT_LIGHT:
+			for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+			{
+				if (poi_lights[i] == light)
+				{
+					poi_lights[i] = nullptr;
+					point_light_count--;
+					return;
+				}
+			}
+			break;
+		}
+	}
+}
+
+DebugDraw * ModuleRenderer3D::GetDebugDraw() const
+{
+	return debug_draw;
+}
+
 // ------------- Shaders -------------------------
 
 uint ModuleRenderer3D::GenVertexArrayObject() const
@@ -543,6 +645,16 @@ void ModuleRenderer3D::UnbindVertexArrayObject() const
 	if (error != GL_NO_ERROR)
 	{
 		CONSOLE_ERROR("Error unbind array buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::DeleteVertexArrayObject(uint vao)
+{
+	glDeleteVertexArrays(1, &vao);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error delete array buffer: %s\n", gluErrorString(error));
 	}
 }
 
@@ -710,6 +822,20 @@ void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float *
 	}
 }
 
+void ModuleRenderer3D::SetUniformUInt(uint program, const char * name, uint data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1ui(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform matrix %s: %s\n", name, gluErrorString(error));
+	}
+}
+
 void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
@@ -729,6 +855,20 @@ void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float da
 	GLint modelLoc = glGetUniformLocation(program, name);
 	if (modelLoc != -1)
 		glUniform1f(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformVector3(uint program, const char * name, float3 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform3f(modelLoc, data.x, data.y, data.z);
 	GLenum error = glGetError();
 
 	//Check for error
@@ -812,5 +952,141 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 			CONSOLE_ERROR("Error deleting shader program %s\n", gluErrorString(error));
 		}
 	}
+}
+void ModuleRenderer3D::SendLight(uint program)
+{
+	// ----------------------------------------
+	// ---------- SEND LIGHTING ---------------
+	// ----------------------------------------
+	// First send Camera Position, just once.
+
+	SetUniformVector3(program, "viewPos", App->camera->GetPosition());
+
+
+	std::string plstr, tmp;
+
+	// Directional Lights
+	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
+	{
+		plstr = "dirLights[" + std::to_string(i) + "].";
+		if (dir_lights[i] == nullptr || dir_lights[i]->IsActive() == false)
+		{
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), false);
+		}
+		else
+		{
+			ComponentLight* light = nullptr;
+			light = (ComponentLight*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompLight);
+
+			tmp = plstr + "direction";
+			SetUniformVector3(program, tmp.c_str(), light->GetLightDirection());
+			tmp = plstr + "ambient";
+			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient(), dir_lights[i]->GetAmbient()));
+			tmp = plstr + "diffuse";
+			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetDiffuse(), dir_lights[i]->GetDiffuse(), dir_lights[i]->GetDiffuse()));
+			tmp = plstr + "specular";
+			SetUniformVector3(program, tmp.c_str(), float3(dir_lights[i]->GetSpecular(), dir_lights[i]->GetSpecular(), dir_lights[i]->GetSpecular()));
+			tmp = plstr + "color";
+			SetUniformVector4(program, tmp.c_str(), dir_lights[i]->GetColorAsFloat4());
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), true);
+
+		}
+	}
+
+	// Spot Lights
+	for (uint i = 0; i < MAX_SPO_LIGHT; ++i)
+	{
+		plstr = "spotLights[" + std::to_string(i) + "].";
+		if (spo_lights[i] == nullptr || spo_lights[i]->IsActive() == false)
+		{
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), false);
+		}
+		else
+		{
+			/*ComponentLight* light = nullptr;
+			light = (ComponentLight*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompLight);*/
+			ComponentTransform* light = nullptr;
+			light = (ComponentTransform*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+
+
+			tmp = plstr + "position";
+			SetUniformVector3(program, tmp.c_str(), light->GetGlobalPosition()); //light->GetLightPosition());
+			tmp = plstr + "direction";
+			SetUniformVector3(program, tmp.c_str(), light->GetMatrix().WorldZ()); //light->GetLightDirection());
+			tmp = plstr + "constant";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "linear";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "quadratic";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "ambient";
+			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetAmbient(), spo_lights[i]->GetAmbient(), spo_lights[i]->GetAmbient()));
+			tmp = plstr + "diffuse";
+			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetDiffuse(), spo_lights[i]->GetDiffuse(), spo_lights[i]->GetDiffuse()));
+			tmp = plstr + "specular";
+			SetUniformVector3(program, tmp.c_str(), float3(spo_lights[i]->GetSpecular(), spo_lights[i]->GetSpecular(), spo_lights[i]->GetSpecular()));
+			tmp = plstr + "color";
+			SetUniformVector4(program, tmp.c_str(), spo_lights[i]->GetColorAsFloat4());
+			tmp = plstr + "cutOff";
+			SetUniformFloat(program, tmp.c_str(), cos(spo_lights[i]->GetCutOff()*DEGTORAD));
+			tmp = plstr + "outercutOff";
+			SetUniformFloat(program, tmp.c_str(), cos(spo_lights[i]->GetOuterCutOff()*DEGTORAD));
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), true);
+		}
+	}
+
+	//Point Lights
+	for (uint i = 0; i < MAX_POI_LIGHT; ++i)
+	{
+		plstr = "pointLights[" + std::to_string(i) + "].";
+		if (poi_lights[i] == nullptr || poi_lights[i]->IsActive() == false)
+		{
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), false);
+		}
+		else
+		{
+			/*ComponentLight* light = nullptr;
+			light = (ComponentLight*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompLight);*/
+			ComponentTransform* light = nullptr;
+			light = (ComponentTransform*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+
+			tmp = plstr + "position";
+			SetUniformVector3(program, tmp.c_str(), light->GetGlobalPosition()); //light->GetLightPosition());
+			tmp = plstr + "constant";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "linear";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "quadratic";
+			SetUniformFloat(program, tmp.c_str(), 1.0f);
+			tmp = plstr + "ambient";
+			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetAmbient(), poi_lights[i]->GetAmbient(), poi_lights[i]->GetAmbient()));
+			tmp = plstr + "diffuse";
+			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetDiffuse(), poi_lights[i]->GetDiffuse(), poi_lights[i]->GetDiffuse()));
+			tmp = plstr + "specular";
+			SetUniformVector3(program, tmp.c_str(), float3(poi_lights[i]->GetSpecular(), poi_lights[i]->GetSpecular(), poi_lights[i]->GetSpecular()));
+			tmp = plstr + "color";
+			SetUniformVector4(program, tmp.c_str(), poi_lights[i]->GetColorAsFloat4());
+			tmp = plstr + "active";
+			SetUniformBool(program, tmp.c_str(), true);
+		}
+	}
+
+}
+int ModuleRenderer3D::GetDirectionalLightCount() const
+{
+	return directional_light_count;
+}
+int ModuleRenderer3D::GetSpotLightCount() const
+{
+	return spot_light_count;
+}
+int ModuleRenderer3D::GetPointLightCount() const
+{
+	return point_light_count;
 }
 // ------------------------------------------------
