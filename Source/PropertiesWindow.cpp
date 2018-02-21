@@ -608,19 +608,18 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 			std::string soundbank_name = "SoundBank: ";
 			soundbank_name += audio_source->soundbank->name.c_str();
 			if (ImGui::TreeNode(soundbank_name.c_str()))
-			{
-				
+			{		
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
 				{
 					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
 					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
-				}
-				
+				}	
 				ImGui::TreePop();
 			}
-			if (ImGui::TreeNode("Settings##Audio"))
+			if (ImGui::TreeNode("Settings##Event"))
 			{
 				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
 				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
 
 				ImGui::TreePop();

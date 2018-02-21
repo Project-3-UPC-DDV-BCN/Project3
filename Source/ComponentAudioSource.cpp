@@ -37,8 +37,6 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-
-
 	if (App->input->GetKey(SDL_SCANCODE_Q))
 	{
 		SendEvent("Play_long_shatter");
@@ -59,7 +57,6 @@ bool ComponentAudioSource::Update()
 	{
 		SendEvent("Play_shot2");
 	}
-
 
 	if (App->IsPlaying()) 
 	{

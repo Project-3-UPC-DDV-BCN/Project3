@@ -11,6 +11,7 @@
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define DEFAULT_VOLUME 50
+#define DEFAULT_PITCH 50
 
 class ComponentListener;
 class GameObject;
@@ -42,6 +43,7 @@ public:
 	Wwise::SoundObject * GetSoundObject(int obj_id);
 
 	void SetRTPvalue(const char* rtpc, float value);
+	void SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_id);
 	void StopAllEvents();
 	void ImGuiDraw();
 
@@ -60,7 +62,9 @@ public:
 	void SetSoundBank(SoundBank* soundbank);
 	void SetListenerCreated(bool set);
 	int* GetVolumePtr();
+	int* GetPitchPtr();
 
+	bool IsMuted();
 	bool* IsMutedPtr();
 
 private:
@@ -78,6 +82,7 @@ private:
 	SoundBank* soundbank = nullptr;
 	bool listener_created = false;
 	int volume = DEFAULT_VOLUME;
+	int pitch = DEFAULT_PITCH;
 	bool muted = false;
 
 	JSONTool* json = nullptr;

@@ -61,6 +61,7 @@ update_status ModuleAudio::PreUpdate(float dt)
 {
 	if (!muted) {
 		SetRTPvalue("Volume", volume);
+		SetRTPvalue("Pitch", pitch);
 	}
 	else {
 		SetRTPvalue("Volume", 0);
@@ -211,6 +212,11 @@ void ModuleAudio::SetRTPvalue(const char * rtpc, float value)
 	AK::SoundEngine::SetRTPCValue(rtpc, value);
 }
 
+void ModuleAudio::SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_id)
+{
+	AK::SoundEngine::SetRTPCValue(rtpc, value, go_id);
+}
+
 void ModuleAudio::StopAllEvents()
 {
 	for (int i = 0; i < soundbank->events.size(); i++) {
@@ -323,6 +329,16 @@ void ModuleAudio::SetListenerCreated(bool set)
 int * ModuleAudio::GetVolumePtr()
 {
 	return &volume;
+}
+
+int * ModuleAudio::GetPitchPtr()
+{
+	return &pitch;
+}
+
+bool ModuleAudio::IsMuted()
+{
+	return muted;
 }
 
 bool * ModuleAudio::IsMutedPtr()
