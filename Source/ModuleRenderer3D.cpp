@@ -162,6 +162,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	ms_timer.Start();
+
+	// Render from light's point of view
+	DrawFromLightForShadows();
+
+
+	// Regular rendering
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
@@ -172,7 +178,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		DrawSceneCameras(*it);
 	}
-	
+
 	dynamic_mesh_to_draw.clear();
 
 	//Assert polygon mode is fill before render gui
@@ -195,9 +201,9 @@ void ModuleRenderer3D::DrawEditorScene()
 {
 	if (use_skybox)
 	{
-		glDisable(GL_DEPTH_TEST);
+		//glDisable(GL_DEPTH_TEST);
 		//App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 	}
 
 	pPlane pl(0, 1, 0, 0);
@@ -1102,5 +1108,45 @@ void ModuleRenderer3D::SetDepthMap()
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+void ModuleRenderer3D::DrawFromLightForShadows()
+{
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
+	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
+	{
+		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*) (*it)->GetComponent(Component::CompMeshRenderer);
+		if (mesh != nullptr)
+			SendObjectToDepthShader(mesh);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh)
+{
+	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
+	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+
+	Material* material = mesh->GetMaterial();
+
+	uint program = 0;
+	if (material != nullptr)
+	{
+		program = material->GetShaderProgramID();
+		UseShaderProgram(program);
+	}
+
+	/*SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());*/
+
+
+	BindVertexArrayObject(mesh->GetMesh()->id_vao);
+	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+	UnbindVertexArrayObject();
 }
 // ------------------------------------------------
