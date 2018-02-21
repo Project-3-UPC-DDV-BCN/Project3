@@ -695,15 +695,15 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::Button("Add To Stack"))
 				{
-					current_emmiter->data->animation_system->AddToFrameStack(st_particle_texture);
+					current_emmiter->data->animation_system.AddToFrameStack(st_particle_texture);
 				}
 
 				ImGui::Text("Frame Stack Size:"); ImGui::SameLine();
-				ImGui::Text(to_string(current_emmiter->data->animation_system->GetNumFrames()).c_str());
+				ImGui::Text(to_string(current_emmiter->data->animation_system.GetNumFrames()).c_str());
 
-				current_emmiter->data->animation_system->PaintStackUI();
+				current_emmiter->data->animation_system.PaintStackUI();
 
-				ImGui::DragFloat("Time Step", &current_emmiter->data->animation_system->timeStep, true, 0.1f, 0, 2.0f);
+				ImGui::DragFloat("Time Step", &current_emmiter->data->animation_system.timeStep, true, 0.1f, 0, 2.0f);
 
 				ImGui::TreePop();
 			}
@@ -755,7 +755,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
-				current_emmiter->UpdateRootParticle();
+				//current_emmiter->UpdateRootParticle();
 
 				ImGui::TreePop();
 			}
@@ -780,7 +780,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						current_emmiter->data->initial_scale = init_scale;
 						current_emmiter->data->final_scale = fin_scale;
 
-						current_emmiter->UpdateRootParticle();
+						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -802,7 +802,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						current_emmiter->data->initial_angular_v = init_angular_v;
 						current_emmiter->data->final_angular_v = fin_angular_v;
 
-						current_emmiter->UpdateRootParticle();
+						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -825,7 +825,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						current_emmiter->data->initial_angular_v = init_angular_v;
 						current_emmiter->data->final_angular_v = fin_angular_v;
 
-						current_emmiter->UpdateRootParticle();
+						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -833,7 +833,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::TreeNode("Color"))
 				{
-					current_emmiter->UpdateRootParticle();
+					//current_emmiter->UpdateRootParticle();
 
 					static int* temp_initial;
 
@@ -879,10 +879,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						Color initial(current_emmiter->data->initial_color.r, current_emmiter->data->initial_color.g, current_emmiter->data->initial_color.b, current_emmiter->data->initial_color.a);
 						Color final(current_emmiter->data->final_color.r, current_emmiter->data->final_color.g, current_emmiter->data->final_color.b, current_emmiter->data->final_color.a);
 
-						current_emmiter->GetRootParticle()->SetInitialColor(initial);
-						current_emmiter->GetRootParticle()->SetFinalColor(final);
+						current_emmiter->data->initial_color = initial;
+						current_emmiter->data->final_color = final;
 
-						current_emmiter->UpdateRootParticle();
+						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -890,6 +890,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				ImGui::TreePop();
 			}
+
+			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
 
 		}
 

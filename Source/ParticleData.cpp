@@ -21,8 +21,8 @@ void ParticleData::LoadDefaultData()
 	gravity = { 0,0,0 };
 	angular_v = 0;
 	emision_angle = 0;
-	is_animated = false;
 	time_step = 0.2;
+
 
 	emmit_width = 1;
 	emmit_height = 1;
@@ -48,6 +48,8 @@ void ParticleData::LoadDefaultData()
 	initial_color = { 0,0,0,0 }; 
 	final_color = { 0,0,0,0 };
 
+	animation_system.Init(); 
+	
 }
 
 void ParticleData::Save(Data & data) const
@@ -65,27 +67,8 @@ void ParticleData::Save(Data & data) const
 	data.AddFloat("Emit_Height", emmit_height);
 	data.AddFloat("Emit_Depth", emmit_depth);
 
-	// -----
-
 	// Textures ----
-
-	if (animation_system->GetNumFrames() == 0)
-		data.AddBool("Has_Texture", false);
-	else
-	{
-		data.AddBool("Has_Texture", true);
-
-		int frame_num = 1;
-
-		for (vector<Texture*>::iterator it = animation_system->frames_stack.begin(); it != animation_system->frames_stack.end(); it++)
-		{
-			string tex_name("Frame_");
-			tex_name += to_string(frame_num);
-			frame_num++;
-
-			data.AddInt(tex_name, (*it)->GetUID());
-		}
-	}
+	
 
 	//------
 
@@ -139,6 +122,27 @@ void ParticleData::Save(Data & data) const
 	data.CloseSection();
 }
 
+void ParticleData::SaveTextures(Data& data)
+{
+	if (animation_system.GetNumFrames() == 0)
+		data.AddBool("Has_Texture", false);
+	else
+	{
+		data.AddBool("Has_Texture", true);
+
+		int frame_num = 1;
+
+		for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
+		{
+			string tex_name("Frame_");
+			tex_name += to_string(frame_num);
+			frame_num++;
+
+			data.AddInt(tex_name, (*it)->GetUID());
+		}
+	}
+}
+
 bool ParticleData::Load(Data & _data)
 {
 	// Emmit area -----
@@ -147,14 +151,14 @@ bool ParticleData::Load(Data & _data)
 	emmit_depth = _data.GetFloat("Emit_Depth");
 
 	// Textures ----
-	if (animation_system->GetNumFrames() == 0)
+	if (animation_system.GetNumFrames() == 0)
 		_data.AddBool("Has_Texture", false);
 	else
 	{
 		_data.AddBool("Has_Texture", true);
 
 		int frame_num = 1;
-		for (vector<Texture*>::iterator it = animation_system->frames_stack.begin(); it != animation_system->frames_stack.end(); it++)
+		for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
 		{
 			string tex_name("Frame_");
 			tex_name += to_string(frame_num);
@@ -223,14 +227,6 @@ void ParticleData::LoadToMemory()
 
 void ParticleData::UnloadFromMemory()
 {
-}
-
-//Animation controller
-ParticleAnimation::ParticleAnimation()
-{
-	name = "";
-	timeStep = 0;
-	rendering_frame = 0;
 }
 
 int ParticleAnimation::GetNumFrames()
@@ -308,9 +304,12 @@ Texture * ParticleAnimation::GetCurrentTexture()
 	return frames_stack[rendering_frame];
 }
 
-ParticleAnimation::~ParticleAnimation()
-{
 
+void ParticleAnimation::Init()
+{
+	frames_stack.clear(); 
+	rendering_frame = 0; 
+	timeStep = 0; 
 }
 
 void ParticleAnimation::Start()

@@ -13,12 +13,9 @@ using namespace std;
 
 struct ParticleAnimation
 {
-
 public: 
 
-	ParticleAnimation();
-	~ParticleAnimation();
-
+	void Init(); 
 	void Start();
 
 	int GetNumFrames();
@@ -30,7 +27,7 @@ public:
 	Texture* GetCurrentTexture();
 
 public: 
-	string name;
+
 	vector<Texture*> frames_stack;
 	int rendering_frame;
 	float timeStep;
@@ -50,12 +47,17 @@ public:
 	void LoadDefaultData();
 
 	void Save(Data& data) const;
+	void SaveTextures(Data& data);
+
 	bool Load(Data& data);
 	void CreateMeta() const;
 	void LoadToMemory();
 	void UnloadFromMemory();
 
 public: 
+
+	//Animations 
+	ParticleAnimation animation_system;
 
 	//UI Data -------	
 	float max_lifetime;						//Time that particules will be rendering
@@ -96,13 +98,11 @@ public:
 	Color final_color;
 
 	//Animation system 
-	bool is_animated;
 	float time_step;
 
 	//Booleans
 	bool billboarding;
 	bool relative_pos;
 
-	//Animations 
-	ParticleAnimation* animation_system; 
+
 };

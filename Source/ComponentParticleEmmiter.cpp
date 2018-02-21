@@ -62,17 +62,17 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetMaxLifetime(data->max_lifetime);
 	new_particle->SetVelocity(data->velocity);
 	new_particle->SetAngular(data->angular_v);
-	new_particle->SetParticleTexture(root_particle->components.texture);
+	new_particle->SetParticleTexture(data->animation_system.GetCurrentTexture());
 	new_particle->SetColor(data->color);
 	new_particle->SetGravity(data->gravity);
-	new_particle->SetEmmisionAngle(root_particle->GetEmmisionAngle());
+	new_particle->SetEmmisionAngle(data->emision_angle);
 	new_particle->SetMovement();
 
 	new_particle->SetWorldSpace(data->relative_pos);
 	
 	//Copy Interpolations
 	///Color
-	new_particle->SetInterpolatingColor(data->change_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
+	//new_particle->SetInterpolatingColor(data->change_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
 
 	///Size
 	if (data->change_size_interpolation)
@@ -92,13 +92,9 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	}
 
 	//Copy Animation
-	if (data->is_animated)
-	{
-		new_particle->GetData()->animation_system = data->animation_system;
-		new_particle->components.texture = new_particle->GetData()->animation_system->GetCurrentTexture();
-		new_particle->GetData()->animation_system->Start();
-	}
-	 
+	new_particle->GetData()->animation_system = data->animation_system;
+	new_particle->GetData()->animation_system.Start();
+
 	return new_particle;
 }
 
@@ -124,9 +120,6 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 	emmit_area_obb.SetFrom(emit_area); 
 
-	//Create the root particle
-	CreateRootParticle();
-
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
 }
@@ -136,17 +129,6 @@ bool ComponentParticleEmmiter::Start()
 	spawn_timer.Start();
 
 	return true;
-}
-
-void ComponentParticleEmmiter::CreateRootParticle()
-{
-	root_particle = new Particle(this);
-	root_particle->components.SetToNull();
-
-	root_particle->SetMaxLifetime(data->max_lifetime);
-	SetEmmisionRate(data->emmision_rate);
-	root_particle->SetVelocity(data->velocity);
-	root_particle->SetParticleTexture(nullptr);
 }
 
 int ComponentParticleEmmiter::GetParticlesNum()
@@ -228,26 +210,27 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 	emmit_area_obb.Transform(transform_to_apply);
 }
 
-void ComponentParticleEmmiter::UpdateRootParticle()
+void ComponentParticleEmmiter::UpdateCurrentData()
 {
-	SetEmmisionRate(data->emmision_rate);
+	//SetEmmisionRate(data->emmision_rate);
 
-	//Stats
-	root_particle->SetMaxLifetime(data->max_lifetime);
-	root_particle->SetVelocity(data->velocity);
-	root_particle->SetAngular(data->angular_v);
-	root_particle->SetColor(data->color);
-	root_particle->SetGravity(data->gravity);
-	root_particle->SetEmmisionAngle(data->emision_angle);
+	////Stats
+	//data->emision_angle 
+	//root_particle->SetMaxLifetime(data->max_lifetime);
+	//root_particle->SetVelocity(data->velocity);
+	//root_particle->SetAngular(data->angular_v);
+	//root_particle->SetColor(data->color);
+	//root_particle->SetGravity(data->gravity);
+	//root_particle->SetEmmisionAngle(data->emision_angle);
 
-	//Interpolations
-	if (data->change_color_interpolation) root_particle->SetInterpolatingColor(data->change_color_interpolation, data->initial_color, data->final_color);
-	if (data->change_size_interpolation) root_particle->SetInterpolationSize(data->change_size_interpolation, data->initial_scale, data->final_scale);
-	if (data->change_rotation_interpolation) root_particle->SetInterpolationRotation(data->initial_angular_v, data->final_angular_v);
+	////Interpolations
+	//if (data->change_color_interpolation) root_particle->SetInterpolatingColor(data->change_color_interpolation, data->initial_color, data->final_color);
+	//if (data->change_size_interpolation) root_particle->SetInterpolationSize(data->change_size_interpolation, data->initial_scale, data->final_scale);
+	//if (data->change_rotation_interpolation) root_particle->SetInterpolationRotation(data->initial_angular_v, data->final_angular_v);
 
-	//Billboard & relative pos
-	root_particle->SetBillboarding(data->billboarding);
-	root_particle->SetWorldSpace(data->relative_pos);
+	////Billboard & relative pos
+	//root_particle->SetBillboarding(data->billboarding);
+	//root_particle->SetWorldSpace(data->relative_pos);
 
 }
 
@@ -273,14 +256,14 @@ void ComponentParticleEmmiter::Save(Data & _data) const
 
 	// Textures ----
 
-	if(data->animation_system->GetNumFrames() == 0)
+	if(data->animation_system.GetNumFrames() == 0)
 		_data.AddBool("Has_Texture", false);
 	else
 	{
 		_data.AddBool("Has_Texture", true);
 
 		int frame_num = 1; 
-		for (vector<Texture*>::iterator it = data->animation_system->frames_stack.begin(); it != data->animation_system->frames_stack.end(); it++)
+		for (vector<Texture*>::iterator it = data->animation_system.frames_stack.begin(); it != data->animation_system.frames_stack.end(); it++)
 		{
 			string tex_name("Frame_");
 			tex_name += to_string(frame_num); 
@@ -422,7 +405,7 @@ void Particle::ApplyWorldSpace()
 
 Particle * ComponentParticleEmmiter::GetRootParticle() const
 {
-	return root_particle;
+	return nullptr;
 }
 
 

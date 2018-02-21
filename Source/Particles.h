@@ -119,6 +119,7 @@ public:
 public:
 
 	ParticleComponents components;			//Components of the particle
+	ParticleData* particle_data;
 
 private:
 
@@ -132,8 +133,6 @@ private:
 	float distance_to_camera;
 	float3 movement;
 	int color_difference[4];
-
-	ParticleData* particle_data; 
 
 	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 

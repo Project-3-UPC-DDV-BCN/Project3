@@ -21,7 +21,7 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	//Interpolations
 	///Size
 	emmiter = parent;
-	particle_data = parent->data; 
+	particle_data = new ParticleData(); 
 
 	/////Color
 	//interpolate_colors = false;
@@ -363,16 +363,13 @@ void Particle::Update()
 	ApplyAngularVelocity();
 
 	//Animations
-	if (particle_data->is_animated)
-	{
-		if (particle_data->animation_system->GetNumFrames() != 0)
-			components.texture = particle_data->animation_system->GetCurrentTexture();
-	}
+	if (particle_data->animation_system.GetNumFrames() != 0)
+		components.texture = particle_data->animation_system.GetCurrentTexture();
+	
 }
 
 void Particle::DeleteNow()
 {
-	//GetAtributes().particle_billboarding->Delete();
 	GetAtributes().SetToNull();
 }
 

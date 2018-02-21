@@ -33,7 +33,7 @@ public:
 
 	//Root particle
 	void CreateRootParticle();
-	void UpdateRootParticle();
+	void UpdateCurrentData();
 
 	//Draws
 	void DrawParticles(ComponentCamera* active_camera); 
@@ -80,7 +80,6 @@ private:
 private:
 
 	//Lists
-	Particle* root_particle;							//This will be the particle that will be cloned over time
 	multimap<float, Particle*> active_particles;		//Particles that are currently beeing rendered
 
 	//Timers
