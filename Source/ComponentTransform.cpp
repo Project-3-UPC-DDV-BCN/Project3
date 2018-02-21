@@ -10,7 +10,7 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_
 
 	position = float3(0.f, 0.f, 0.f);
 	shown_rotation = float3(0.f, 0.f, 0.f);
-	rotation = Quat(0.f, 0.f, 0.f, 0.f);
+	rotation = Quat(0.f, 0.f, 0.f, 1.f);
 	scale = float3(1.f, 1.f, 1.f);
 	global_pos = float3(0.f, 0.f, 0.f);
 	global_rot = float3(0.f, 0.f, 0.f);
@@ -53,11 +53,6 @@ void ComponentTransform::SetRotation(float3 rotation)
 	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
 
-
-	// abans --
-	//this->shown_rotation = rotation;
-	//this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
-	//UpdateGlobalMatrix();
 }
 
 float3 ComponentTransform::GetGlobalRotation() const

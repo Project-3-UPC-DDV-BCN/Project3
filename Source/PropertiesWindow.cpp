@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "MathGeoLib\MathGeoLib.h"
+#include "ModuleParticleImporter.h"
 #include "ComponentCamera.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentTransform.h"
@@ -919,7 +920,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::Button("Confirm"))
 			{
-
+				App->resources->AddParticleTemplate(current_emmiter->data);
+				
 				rename_template = false;
 			}
 			ImGui::SameLine();

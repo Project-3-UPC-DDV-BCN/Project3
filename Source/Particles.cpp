@@ -18,25 +18,9 @@
 
 Particle::Particle(ComponentParticleEmmiter * parent)
 {
-	//Interpolations
-	///Size
+	//General
 	emmiter = parent;
 	particle_data = new ParticleData(); 
-
-	/////Color
-	//interpolate_colors = false;
-	//particle_color = initial_particle_color;
-
-	/////Rotation
-	//interpolate_rotation = false;
-	//curr_rot = 0;
-
-	////Stats
-	//particle_angular_v = 0;
-	//
-	//particle_gravity = { 0,0,0 }; 
-	//emmiter = parent;
-	//emmision_angle = 0; 
 	
 	//Timers
 	particle_timer.Start();
@@ -109,7 +93,7 @@ float Particle::GetAngular() const
 void Particle::ApplyAngularVelocity()
 {
 	float rads_to_spin = particle_data->angular_v * (2 * pi) / 360;
-	GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
+	//GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
 }
 
 void Particle::SetColor(Color new_color)
@@ -356,8 +340,8 @@ void Particle::Update()
 	//	UpdateSize();
 
 	//Update rotation
-	if (particle_data->change_rotation_interpolation)
-		UpdateRotation(); 
+	//if (particle_data->change_rotation_interpolation)
+	//	UpdateRotation(); 
 
 	//Apply angular velocity
 	ApplyAngularVelocity();
