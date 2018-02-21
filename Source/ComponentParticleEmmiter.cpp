@@ -106,7 +106,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	SetType(Component::CompParticleSystem); 
 
 	//Filling data with Default Emmiter
-	data = GetParticleTemplate("Default"); 
+	data = App->resources->GetParticleTemplate("Default"); 
 
 	//Emmiter properties -------
 	emmision_frequency = 1000;
@@ -120,6 +120,11 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 	emmit_area_obb.SetFrom(emit_area); 
 
+	//Automatic turnoff
+	automatic_turnoff = false; 
+	seconds_to_turn_off = 0; 
+
+
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
 }
@@ -127,6 +132,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 bool ComponentParticleEmmiter::Start()
 {
 	spawn_timer.Start();
+	global_timer.Start();
 
 	return true;
 }
@@ -166,6 +172,16 @@ bool ComponentParticleEmmiter::Update()
 			}
 			else
 				it++; 
+
+			//Automatic turnoff
+			if (automatic_turnoff)
+			{
+				if (global_timer.Read() > seconds_to_turn_off * 1000)
+				{
+					system_state = PARTICLE_STATE_PAUSE; 
+					automatic_turnoff = false; 
+				}
+			}
 
 			// ---
 				
@@ -408,12 +424,21 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 	return nullptr;
 }
 
-
-ParticleData * ComponentParticleEmmiter::GetParticleTemplate(const char * name)
+void ComponentParticleEmmiter::SetTurnOffLimit()
 {
-	ParticleData* template_to_ret = App->resources->GetParticleTemplate(name); 
-	return template_to_ret; 
+	if (seconds_to_turn_off == 0)
+	{
+		automatic_turnoff = false; 
+		return; 
+	}
+	else
+	{
+		automatic_turnoff = true; 
+	}
 }
+
+
+
 
 
 

@@ -64,9 +64,9 @@ public:
 	///Root particle
 	Particle* GetRootParticle() const;
 
-	//Particle Data Management
+	//Automatic turnoff
+	void SetTurnOffLimit(); 
 
-	ParticleData* GetParticleTemplate(const char* name);
 
 public:
 
@@ -74,6 +74,10 @@ public:
 		
 	//Emmit area AABB
 	OBB emmit_area_obb; 
+
+	//Automatic turnoff
+	bool automatic_turnoff;
+	float seconds_to_turn_off;
 
 private:
 
@@ -84,6 +88,7 @@ private:
 
 	//Timers
 	Timer spawn_timer;									//Timer to control the emmision rate 
+	Timer global_timer;									//Global emmiter timer
 
 	//Data
 	particle_system_state system_state;					//Inner play & pause 
@@ -91,5 +96,6 @@ private:
 	//Spawn Management
 	float emmision_frequency;							//Difference between spawn
 	bool show_emit_area; 
-	
+
+
 };

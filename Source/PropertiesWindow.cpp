@@ -7,6 +7,7 @@
 #include "ComponentMeshRenderer.h"
 #include "ComponentTransform.h"
 #include "TagsAndLayers.h"
+#include "tinyfiledialogs.h"
 #include "ModuleEditor.h"
 #include "TagsAndLayersWindow.h"
 #include "ComponentBillboard.h"
@@ -614,15 +615,22 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 		{
 			ImGui::Separator();
 
-			vector<string> combo_strings;
-			combo_strings.push_back("Default");
 
 			if (ImGui::TreeNodeEx("Templates"))
 			{
-				for (vector<string>::iterator it = combo_strings.begin(); it != combo_strings.end(); it++)
+				if (!App->resources->GetParticlesList().empty())
 				{
-					ImGui::MenuItem((*it).c_str());
+					map<uint, ParticleData*> tmp_map = App->resources->GetParticlesList(); 
+
+					for (map<uint, ParticleData*>::const_iterator it = tmp_map.begin(); it != tmp_map.end(); it++)
+					{
+						if (ImGui::MenuItem(it->second->GetName().c_str()))
+						{
+							current_emmiter->data = it->second; 
+						}
+					}
 				}
+			
 
 				ImGui::TreePop();
 			}
@@ -653,19 +661,26 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
+
+			if(current_emmiter->automatic_turnoff)
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "TURN OFF IN (%.2f sec)", current_emmiter->seconds_to_turn_off);
+
+			ImGui::Separator();
+
 			if (ImGui::TreeNode("Automatic Turn-Off System"))
 			{
-				static float turn_off_limit = 0.0f;
-				static bool automatic_turnoff_active = false;
-
-				ImGui::Checkbox("Active", &automatic_turnoff_active);
-
-				ImGui::DragFloat("Turn off timer", &turn_off_limit, 1, 0.0f);
+			
+				static float turnoff_time = 0; 
+				ImGui::DragFloat("Turn off timer", &turnoff_time, 1, .1f, 0, 1000.0f);
+			
+				if (ImGui::Button("Apply"))
+				{
+					current_emmiter->automatic_turnoff = true; 
+					current_emmiter->seconds_to_turn_off = turnoff_time; 
+				}
 
 				ImGui::TreePop();
 			}
-
-			ImGui::Separator();
 
 			float prev_width = current_emmiter->data->emmit_width;
 			float prev_height = current_emmiter->data->emmit_height;
@@ -921,10 +936,45 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::Button("Confirm"))
 			{
 				App->resources->AddParticleTemplate(current_emmiter->data);
+
+				Data template_to_save; 
+
+				ParticleData* new_template = new ParticleData(); 
+				new_template->Copy(current_emmiter->data); 
+				new_template->SetName(inputText);
+
+				new_template->Save(template_to_save);
+				
+				string new_path_name(EDITOR_PARTICLE_FOLDER); 
+				new_path_name += inputText; 
+				new_path_name += ".particle"; 
+
+				template_to_save.SaveAsBinary(new_path_name);
+				App->resources->CreateResource(new_path_name);
 				
 				rename_template = false;
 			}
+
 			ImGui::SameLine();
+			if (ImGui::Button("Update Template"))
+			{
+				Data template_to_save;
+
+				ParticleData* new_template = current_emmiter->data;
+				new_template->SetName(inputText);
+				new_template->Save(template_to_save);
+
+				/*string new_path_name(EDITOR_PARTICLE_FOLDER);
+				new_path_name += inputText;
+				new_path_name += ".particle";
+
+				template_to_save.SaveAsBinary(new_path_name);
+				App->resources->CreateResource(new_path_name);*/
+
+				rename_template = false;
+			}
+
+			
 			if (ImGui::Button("Cancel")) {
 				inputText[0] = '\0';
 				rename_template = false;
@@ -935,10 +985,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 		ImGui::SameLine();
 
 
-		if (ImGui::Button("Update Current Template"))
-		{
-
-		}
+		
 
 	}
 }

@@ -49,6 +49,8 @@ public:
 	void Save(Data& data) const;
 	void SaveTextures(Data& data);
 
+	void Copy(ParticleData* other); 
+
 	bool Load(Data& data);
 	void CreateMeta() const;
 	void LoadToMemory();

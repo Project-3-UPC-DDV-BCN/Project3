@@ -98,6 +98,8 @@ public:
 	//Checks if name is valid (not contain invalid characters) and change it for a valid name if necessary
 	bool CheckResourceName(std::string& name);
 
+	
+
 private:
 	void DeleteFBXMeshes(GameObject* gameobject);
 

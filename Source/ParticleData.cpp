@@ -58,10 +58,12 @@ void ParticleData::Save(Data & data) const
 	//data.AddInt("Type", GetType());
 	//data.AddBool("Active", IsActive());
 	//data.AddUInt("UUID", GetUID());
-	//data.CreateSection("Particle");
+	data.CreateSection("Particle");
 	//data.AddBool("Show_Emit_Area", show_emit_area);
 
 	// Emmit area -----
+
+	data.AddString("Name", GetName()); 
 
 	data.AddFloat("Emit_Width",emmit_width);
 	data.AddFloat("Emit_Height", emmit_height);
@@ -143,13 +145,59 @@ void ParticleData::SaveTextures(Data& data)
 	}
 }
 
+void ParticleData::Copy(ParticleData * other)
+{
+	animation_system = other->animation_system;
+									
+	max_lifetime = other->max_lifetime;
+	emmision_rate = other->emmision_rate;
+	velocity = other->velocity;
+									
+	gravity	= other->gravity;
+	emision_angle = other->emision_angle;
+									
+	color = other->color;
+	angular_v	= other->angular_v;
+	billboard_type	= other->billboard_type;
+									
+	emmit_width	= other->emmit_width;
+	emmit_height = other->emmit_height;
+	emmit_depth	= other->emmit_depth;
+									
+	width_increment	= other->width_increment;
+	height_increment = other->height_increment;
+	depth_increment = other->depth_increment;
+									
+	change_size_interpolation = other->change_size_interpolation;
+	initial_scale = other->initial_scale;
+	final_scale = other->final_scale;
+									
+	change_rotation_interpolation = other->change_rotation_interpolation;
+	initial_angular_v = other->initial_angular_v;
+	final_angular_v = other->final_angular_v;
+																	
+	change_color_interpolation = other->change_color_interpolation;
+	initial_color = other->initial_color;
+	final_color = other->final_color;
+									
+	time_step = other->time_step;
+							
+	billboarding = other->billboarding;
+	relative_pos = other->relative_pos;
+}
+
 bool ParticleData::Load(Data & _data)
 {
 	// Emmit area -----
+	_data.EnterSection("Particle");
+
+	string name = _data.GetString("Name");
+	SetName(name.c_str());
+
 	emmit_width = _data.GetFloat("Emit_Width");
 	emmit_height = _data.GetFloat("Emit_Height");
 	emmit_depth = _data.GetFloat("Emit_Depth");
-
+	
 	// Textures ----
 	if (animation_system.GetNumFrames() == 0)
 		_data.AddBool("Has_Texture", false);

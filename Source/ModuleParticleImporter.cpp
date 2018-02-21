@@ -16,15 +16,27 @@ ModuleParticleImporter::~ModuleParticleImporter()
 
 bool ModuleParticleImporter::Init(Data * editor_config)
 {
-
+	//Load Default Template
 	ParticleData* default_template = new ParticleData();
 	default_template->LoadDefaultData(); 
 
 	loaded_templates.push_back(default_template); 
-
 	App->resources->AddParticleTemplate(default_template); 
 
+	//Load extra templates
+	vector<string> templates = App->file_system->GetFilesInDirectory(EDITOR_PARTICLE_FOLDER);
+
+	if (!templates.empty())
+	{
+		for (vector<string>::iterator it = templates.begin(); it != templates.end(); it++)
+		{
+			App->resources->CreateResource(*it);
+			ParticleData* new_data = App->particle_importer->LoadTemplateFromLibrary(*it); 
+			App->resources->AddParticleTemplate(new_data);
+		}
+	}
 	
+
 	return true;
 }
 
