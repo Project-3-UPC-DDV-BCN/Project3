@@ -75,6 +75,7 @@ enum update_status
 #define ASSETS_FBX_FOLDER_PATH "./Project/Assets/FBX"
 #define ASSETS_SHADERS_FOLDER "./Project/Assets/Shaders/"
 #define ASSETS_SHADERS_FOLDER_PATH "./Project/Assets/Shaders"
+#define ASSETS_FONTS_FOLDER_PATH "./Project/Assets/Fonts"
 
 #define LIBRARY_FOLDER "./Project/Library/"
 #define LIBRARY_FOLDER_PATH "./Project/Library"

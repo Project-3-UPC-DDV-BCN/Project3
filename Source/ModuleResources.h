@@ -12,6 +12,7 @@ class Material;
 class Script;
 class Shader;
 class ShaderProgram;
+class Font;
 
 class ModuleResources :
 	public Module
@@ -69,6 +70,11 @@ public:
 	void RemoveShader(Shader* shader);
 	std::map<uint, Shader*> GetShadersList() const;
 
+	Font* GetFont(UID uid) const;
+	void AddFont(Font* font);
+	void RemoveFont(Font* font);
+	std::map<uint, Font*> GetFontsList() const;
+
 	ShaderProgram* GetShaderProgram(std::string name) const;
 	ShaderProgram* GetShaderProgram(UID uid) const;
 	ShaderProgram* GetShaderProgram(Shader* vertex, Shader* fragment) const;
@@ -106,5 +112,6 @@ private:
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
+	std::map<uint, Font*> fonts_list;
 };
 

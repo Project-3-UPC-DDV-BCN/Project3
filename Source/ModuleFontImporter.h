@@ -28,9 +28,6 @@ public:
 	void UnloadText(uint id);
 
 	float2 CalcTextSize(const char * text, Font* font, bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
-
-private:
-	std::vector<Font*> fonts;
 };
 
 #endif // !_H_FONT_IMPORTER_

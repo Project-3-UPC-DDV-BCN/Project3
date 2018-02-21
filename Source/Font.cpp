@@ -3,6 +3,7 @@
 
 Font::Font(const char * _filepath) : Resource()
 {
+	SetType(Resource::FontResource);
 	SetAssetsPath(_filepath);
 	SetFontSize(24);
 }

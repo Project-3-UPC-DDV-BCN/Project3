@@ -58,7 +58,7 @@ Font* ModuleFontImporter::LoadFontInstance(const char * filepath)
 	
 	if (font->GetValid())
 	{
-		fonts.push_back(font);
+	/*	fonts.push_back(font);*/
 	}
 	else
 	{
@@ -74,27 +74,27 @@ Font* ModuleFontImporter::LoadFontInstance(const char * filepath)
 
 void ModuleFontImporter::UnloadFont(Font * font)
 {
-	for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
-	{
-		if (font == (*it))
-		{
-			font->CleanUp();
-			RELEASE(font);
-			fonts.erase(it);
-			break;
-		}
-	}
+	//for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
+	//{
+	//	if (font == (*it))
+	//	{
+	//		font->CleanUp();
+	//		RELEASE(font);
+	//		fonts.erase(it);
+	//		break;
+	//	}
+	//}
 }
 
 void ModuleFontImporter::ClearFonts()
 {
-	for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
-	{
-		(*it)->CleanUp();
-		delete (*it);
-	}
+	//for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
+	//{
+	//	(*it)->CleanUp();
+	//	delete (*it);
+	//}
 
-	fonts.clear();
+	//fonts.clear();
 }
 
 uint ModuleFontImporter::LoadText(const char * text, Font * font, float4 colour, bool bold, bool italic, bool underline, bool strikethrough)

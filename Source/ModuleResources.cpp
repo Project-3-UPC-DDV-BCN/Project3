@@ -19,7 +19,7 @@
 #include "Shader.h"
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
-
+#include "Font.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -161,6 +161,7 @@ void ModuleResources::AddResource(Resource * resource)
 	case Resource::ParticleFXResource:
 		break;
 	case Resource::FontResource:
+		AddFont((Font*)resource);
 		break;
 	case Resource::MaterialResource:
 		AddMaterial((Material*)resource);
@@ -230,6 +231,12 @@ void ModuleResources::ImportFile(std::string path)
 	case Resource::ParticleFXResource:
 		break;
 	case Resource::FontResource:
+		if (!App->file_system->DirectoryExist(ASSETS_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_FONTS_FOLDER_PATH);
+		if (App->file_system->FileExist(ASSETS_FONTS_FOLDER_PATH + file_name))
+		{
+			exist = true;
+			break;
+		}
 		break;
 	case Resource::RenderTextureResource:
 		break;
@@ -513,6 +520,34 @@ void ModuleResources::RemoveShader(Shader * shader)
 std::map<uint, Shader*> ModuleResources::GetShadersList() const
 {
 	return shaders_list;
+}
+
+Font * ModuleResources::GetFont(UID uid) const
+{
+	if (fonts_list.find(uid) != fonts_list.end()) return fonts_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddFont(Font * font)
+{
+	if (font != nullptr)
+	{
+		fonts_list[font->GetUID()] = font;
+	}
+}
+
+void ModuleResources::RemoveFont(Font * font)
+{
+	if (font)
+	{
+		std::map<uint, Font*>::iterator it = fonts_list.find(font->GetUID());
+		if (it != fonts_list.end()) fonts_list.erase(it);
+	}
+}
+
+std::map<uint, Font*> ModuleResources::GetFontsList() const
+{
+	return fonts_list;
 }
 
 ShaderProgram * ModuleResources::GetShaderProgram(std::string name) const

@@ -23,6 +23,9 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	void SetFont(Font* font);
+
+
 	void SetText(const char* text);
 	std::string GetText();
 

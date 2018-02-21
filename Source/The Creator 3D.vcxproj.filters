@@ -528,11 +528,11 @@
     <ClInclude Include="UsefulFunctions.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleFontImporter.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFontImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -884,11 +884,11 @@
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleFontImporter.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleFontImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
