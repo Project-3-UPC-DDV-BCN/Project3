@@ -1129,18 +1129,20 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+
 	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
 	{
 		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*) (*it)->GetComponent(Component::CompMeshRenderer);
 		if (mesh != nullptr)
-			SendObjectToDepthShader(mesh);
+			SendObjectToDepthShader(mesh, light_space_mat);
 	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
 
-void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh)
+void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
@@ -1155,12 +1157,7 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh)
 		UseShaderProgram(program);
 	}
 
-	/*SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
-	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
-	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());*/
-
-/*	BindVertexArrayObject(mesh->GetMesh()->id_vao);
-	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
-	UnbindVertexArrayObject();*/
+	SetUniformMatrix(program, "model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+	SetUniformMatrix(program, "lightSpaceMatrix", lightSpaceMat.ptr());
 }
 // ------------------------------------------------

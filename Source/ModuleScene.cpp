@@ -104,6 +104,7 @@ void ModuleScene::CreateMainLight()
 	root_gameobjects.push_back(main_light);
 	App->resources->AddGameObject(main_light);
 	ComponentTransform* trans = (ComponentTransform*)main_light->GetComponent(Component::CompTransform);
+	trans->SetPosition({ 0, 100, 0 });
 	trans->SetRotation({ -100, -150, 0 });
 }
 

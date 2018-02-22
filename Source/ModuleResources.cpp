@@ -1369,6 +1369,15 @@ void ModuleResources::CreateDefaultShaders()
 
 		std::string shader_text =
 			"#version 330 core\n"
+			"layout(location = 0) in vec3 aPos;\n"
+
+			"uniform mat4 lightSpaceMatrix;\n"
+			"uniform mat4 model;\n"
+
+			"void main()\n"
+			"{\n"
+			"	gl_Position = lightSpaceMatrix * model * vec4(aPos, 1.0);\n"
+			"}\n"
 			;
 
 		depth_vert->SetContent(shader_text);
@@ -1387,8 +1396,11 @@ void ModuleResources::CreateDefaultShaders()
 		depth_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
 
 		std::string shader_text =
-			"#version 330 core\n\n";
-
+			"	#version 330 core\n"
+			"	void main()\n"
+			"{\n"
+			"}\n"
+			;
 		depth_frag->SetContent(shader_text);
 		std::ofstream outfile(frag_depth_path.c_str(), std::ofstream::out);
 		outfile << shader_text;

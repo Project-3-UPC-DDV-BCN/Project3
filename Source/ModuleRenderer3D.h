@@ -94,7 +94,7 @@ public:
 
 	void SetDepthMap();
 	void DrawFromLightForShadows();
-	void SendObjectToDepthShader(ComponentMeshRenderer* mesh);
+	void SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat);
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
