@@ -1074,6 +1074,8 @@ void ModuleResources::CreateDefaultShaders()
 	CONSOLE_DEBUG("-------------- Creating Default Shaders -------------");
 	if (!App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(SHADER_DEFAULT_FOLDER_PATH);
 
+	//Default Shader
+
 	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
 	if (!App->file_system->FileExist(vert_default_path))
 	{
@@ -1119,8 +1121,6 @@ void ModuleResources::CreateDefaultShaders()
 	}
 	CreateResource(vert_default_path);
 
-	//Default Shader
-
 	std::string frag_default_path = SHADER_DEFAULT_FOLDER "default_fragment.fshader";
 	if (!App->file_system->FileExist(frag_default_path))
 	{
@@ -1131,6 +1131,7 @@ void ModuleResources::CreateDefaultShaders()
 		"#version 330 core\n\n"
 		"in vec4 ourColor;\n"
 		"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n"
 		"in vec3 FragPos;\n"
 		"in vec3 TangentFragPos;\n"
 		"in mat3 TBN;\n"
@@ -1352,10 +1353,12 @@ void ModuleResources::CreateDefaultShaders()
 	Shader* vertex = GetShader("default_vertex");
 	prog->SetVertexShader(vertex);
 
-	Shader* fragment = GetShader("default_fragment");
+	Shader* fragment = GetShader("default_fragment");	
 	prog->SetFragmentShader(fragment);
 	
 	prog->LinkShaderProgram();
+
+	AddResource(prog);
 
 	//Depth Shader
 	std::string vert_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_vertex.vshader";
@@ -1404,6 +1407,8 @@ void ModuleResources::CreateDefaultShaders()
 	depthprog->SetFragmentShader(fragment);
 
 	depthprog->LinkShaderProgram();
+
+	AddResource(depthprog);
 }
 
 void ModuleResources::CreateDefaultMaterial()
