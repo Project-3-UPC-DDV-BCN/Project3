@@ -1,5 +1,4 @@
-#version 330 core
-
-void main()
-{             
-} 
+	#version 330 core
+	void main()
+{
+}

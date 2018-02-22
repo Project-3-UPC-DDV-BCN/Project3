@@ -1075,7 +1075,6 @@ void ModuleResources::CreateDefaultShaders()
 	if (!App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(SHADER_DEFAULT_FOLDER_PATH);
 
 	//Default Shader
-
 	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
 	if (!App->file_system->FileExist(vert_default_path))
 	{
@@ -1413,14 +1412,96 @@ void ModuleResources::CreateDefaultShaders()
 	depthprog->SetName("depth_shader_program");
 
 	Shader* depthvertex = GetShader("depth_shader_vertex");
-	depthprog->SetVertexShader(vertex);
+	depthprog->SetVertexShader(depthvertex);
 
 	Shader* depthfragment = GetShader("depth_shader_fragment");
-	depthprog->SetFragmentShader(fragment);
+	depthprog->SetFragmentShader(depthfragment);
 
 	depthprog->LinkShaderProgram();
 
 	AddResource(depthprog);
+
+
+	//Depth Debug Shader
+	std::string vert_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_vertex.vshader";
+	if (!App->file_system->FileExist(vert_depthdebug_path))
+	{
+		Shader* depthdebug_vert = new Shader();
+		depthdebug_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"layout(location = 0) in vec3 aPos;\n"
+		"layout(location = 1) in vec2 aTexCoords;\n"
+
+		"out vec2 TexCoords;\n"
+
+		"void main()\n"
+		"{\n"
+		"	TexCoords = aTexCoords;\n"
+		"	gl_Position = vec4(aPos, 1.0);\n"
+		"}\n"
+			;
+
+		depthdebug_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_depthdebug_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(depthdebug_vert);
+	}
+	CreateResource(vert_depthdebug_path);
+
+
+	std::string frag_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_fragment.fshader";
+	if (!App->file_system->FileExist(frag_depthdebug_path))
+	{
+		Shader* depthdebug_frag = new Shader();
+		depthdebug_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"out vec4 FragColor;\n"
+
+		"in vec2 TexCoords;\n"
+
+	"	uniform sampler2D depthMap;\n"
+		"uniform float near_plane;\n"
+		"uniform float far_plane;\n"
+
+
+		"float LinearizeDepth(float depth)\n"
+		"{\n"
+		"	float z = depth * 2.0 - 1.0; // Back to NDC \n"
+		"	return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));\n"
+		"}\n"
+	
+		"void main()\n"
+		{\n"
+		"	float depthValue = texture(depthMap, TexCoords).r;\n"
+		
+		"	FragColor = vec4(vec3(depthValue), 1.0); // orthographic\n"
+		"}\n"
+			;
+		depthdebug_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_depthdebug_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(depthdebug_frag);
+	}
+	CreateResource(frag_depthdebug_path);
+
+	ShaderProgram* depthdebugprog = new ShaderProgram();
+	depthdebugprog->SetName("depthdebug_shader_program");
+
+	Shader* depthdebugvertex = GetShader("depthdebug_shader_vertex");
+	depthdebugprog->SetVertexShader(depthdebugvertex);
+
+	Shader* depthdebugfragment = GetShader("depthdebug_shader_fragment");
+	depthdebugprog->SetFragmentShader(depthdebugfragment);
+
+	depthdebugprog->LinkShaderProgram();
+
+	AddResource(depthdebugprog);
 }
 
 void ModuleResources::CreateDefaultMaterial()
