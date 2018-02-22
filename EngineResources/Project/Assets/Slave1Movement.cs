@@ -10,11 +10,12 @@ public class Slave1Movement {
 	public float max_vel = 10.0f;
 	public float acceleration = 1.0f;
 	public float slow_acceleration = 10.0f;
-
+	public float slow_vel_percent = 0.02f;
 	public float rotate_rumble_strength = 0.1f;
 	public float accel_max_rumble_strength = 1.0f;
 	public int rotate_rumble_ms = 5;
 	public int accel_rumble_ms = 5;
+	public float yaw_rotate_speed = 10.0f;
 	
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
@@ -57,26 +58,35 @@ public class Slave1Movement {
 	{
 		if(TheInput.IsKeyDown("UP_ARROW"))
 		{
-			shield_energy += 2;
-			weapon_energy -= 1;
-			engine_energy -= 1;
+			if(shield_energy < max_energy_on_system-1)
+			{
+				shield_energy += 2;
+				weapon_energy -= 1;
+				engine_energy -= 1;
+			}
 		}
 		
 		if(TheInput.IsKeyDown("LEFT_ARROW"))
 		{
-			shield_energy -= 1;
-			weapon_energy += 2;
-			engine_energy -= 1;
+			if(weapon_energy < max_energy_on_system-1)
+			{
+				shield_energy -= 1;
+				weapon_energy += 2;
+				engine_energy -= 1;
+			}
 		}
 
 		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{
-			shield_energy -= 1;
-			weapon_energy -= 1;
-			engine_energy += 2;
+			if(weapon_energy < max_energy_on_system-1)
+			{
+				shield_energy -= 1;
+				weapon_energy -= 1;
+				engine_energy += 2;
+			}
 		}
 
-		if(TheInput.IsKeyDown("UP_ARROW"))
+		if(TheInput.IsKeyDown("DOWN_ARROW"))
 		{
 			shield_energy = 4;
 			weapon_energy = 4;
@@ -121,7 +131,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y -= rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y -= yaw_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -129,7 +139,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y += rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y += yaw_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 		
@@ -159,7 +169,7 @@ public class Slave1Movement {
 		slowing = false;
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
 		{
-			vel_percent = 0.02f;
+			vel_percent = slow_vel_percent;
 			slowing = true;
 		}
 
