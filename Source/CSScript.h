@@ -87,6 +87,9 @@ public:
 	void SetScale(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	void LookAt(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetForward(MonoObject* object);
+	MonoObject* GetRight(MonoObject* object);
+	MonoObject* GetUp(MonoObject* object);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);
@@ -112,6 +115,9 @@ public:
 	MonoObject* GetMousePosition();
 	int GetMouseXMotion();
 	int GetMouseYMotion();
+	int GetControllerJoystickMove(int pad, MonoString* axis);
+	int GetControllerButton(int pad, MonoString* button);
+	void RumbleController(int pad, float strength, int ms);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);

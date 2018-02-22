@@ -61,6 +61,7 @@ public:
 	void LoadBlastModel(BlastModel* model);
 
 	void DrawSkyBox(float3 pos);
+	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);
 
 	void InitScripts();
 

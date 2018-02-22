@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 in vec4 ourColor;
 in vec3 Normal;

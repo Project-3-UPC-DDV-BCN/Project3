@@ -25,6 +25,9 @@
 #include "BlastModel.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
@@ -140,7 +143,7 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
 					}
 				}
-				if (ImGui::MenuItem("Blast Mesh Renderer")) {
+				/*if (ImGui::MenuItem("Blast Mesh Renderer")) {
 					if (selected_gameobject->GetComponent(Component::CompBlastMeshRenderer) == nullptr && selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompBlastMeshRenderer);
 					}
@@ -148,7 +151,7 @@ void PropertiesWindow::DrawWindow()
 					{
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
 					}
-				}
+				}*/
 				if (ImGui::MenuItem("Camera")) {
 					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompCamera);
@@ -220,6 +223,22 @@ void PropertiesWindow::DrawWindow()
 							script->SetAttachedGameObject(selected_gameobject);
 							comp_script->SetScript(script);
 						}
+					}
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::BeginMenu("Audio")) {
+					if (ImGui::MenuItem("Audio Listener"))
+					{
+						ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+					}
+					if (ImGui::MenuItem("Audio Source"))
+					{
+						ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
+					}
+					if (ImGui::MenuItem("Distorsion Zone"))
+					{
+						ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
 					}
 					ImGui::EndMenu();
 				}
@@ -360,8 +379,6 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompMeshCollider:
 		DrawColliderPanel((ComponentCollider*)component);
 		break;
-	case Component::CompAudioSource:
-		break;
 	case Component::CompAnimaton:
 		break;
 	case Component::CompScript:
@@ -374,6 +391,15 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompDistanceJoint:
 		DrawJointDistancePanel((ComponentJointDistance*)component);
+	case Component::CompAudioListener:
+		DrawAudioListener((ComponentListener*)component);
+		break;
+	case Component::CompAudioSource:
+		DrawAudioSource((ComponentAudioSource*)component);
+		break;
+	case Component::CompAudioDistZone:
+		DrawAudioDistZone((ComponentDistorsionZone*)component);
+		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
 		break;
@@ -827,7 +853,7 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		{
 			comp_collider->SetTrigger(is_trigger);
 		}
-		
+
 		//material
 
 		float3 center = comp_collider->GetColliderCenter();
@@ -890,6 +916,43 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 	}
 }
 
+void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
+{
+	if (ImGui::CollapsingHeader("Listener"))
+	{
+	}
+}
+
+void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
+{
+	if (audio_source->GetEventsVector().empty())
+		audio_source->GetEvents();
+
+	if (ImGui::CollapsingHeader("Audio Source")) {
+		if (audio_source->soundbank != nullptr) {
+			std::string soundbank_name = "SoundBank: ";
+			soundbank_name += audio_source->soundbank->name.c_str();
+			if (ImGui::TreeNode(soundbank_name.c_str()))
+			{		
+				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
+				{
+					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
+					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
+				}	
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Settings##Event"))
+			{
+				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
+				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
+
+				ImGui::TreePop();
+			}
+		}
+	}
+}
+
 void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
 {
 	distance_joints_count++;
@@ -899,6 +962,23 @@ void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
 		if (ImGui::InputResourceGameObject("Connected Body", &gameobject, ResourcesWindow::GameObjectFilter::GoFilterRigidBody)) {
 			joint->SetConnectedBody(gameobject);
 		}
+	}
+}
+
+void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
+{
+	if (ImGui::CollapsingHeader("Distorsion Zone")) {
+		char* bus_name = new char[41];
+
+		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
+		bus_name[dist_zone->bus.length()] = '\0';
+
+		ImGui::InputText("Target bus", bus_name, 40);
+		dist_zone->bus = bus_name;
+
+		ImGui::DragFloat("Value", &dist_zone->distorsion_value, true, 0.1, 0.0, 12.0, "%.1f");
+
+		delete[] bus_name;
 	}
 }
 

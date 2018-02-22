@@ -63,6 +63,15 @@
     </Filter>
     <Filter Include="Sources\3d Party\Nvidia\Blast">
       <UniqueIdentifier>{b2008ffc-7f13-45a0-86a9-7c51583e6dbf}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="Sources\3d Party\Wwise">
+      <UniqueIdentifier>{b05dcfb5-f765-4cb6-9757-4ff2e955f8f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Audio">
+      <UniqueIdentifier>{83797d29-0e87-494a-b978-5cadc8bb65c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Parson">
+      <UniqueIdentifier>{1dbfddcf-d4e4-458f-9a0b-1f1ce259303c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -567,6 +576,42 @@
     <ClInclude Include="ModuleBlast.h">
       <Filter>Sources\Modules</Filter>
 	</ClInclude>
+    <ClInclude Include="Include_Wwise.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Geomath.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioEvent.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBank.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioWindow.h">
+      <Filter>Sources\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Parson\parson.h">
+      <Filter>Sources\3d Party\Parson</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonTool.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentDistorsionZone.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentAudioSource.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentListener.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EngineResources\Project\Assets\SoundBanks\Wwise_IDs.h">
+      <Filter>Sources\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="ComponentLight.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
@@ -938,6 +983,57 @@
     <ClCompile Include="ModuleBlast.cpp">
       <Filter>Sources\Modules</Filter>
 	</ClCompile>
+    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookDeferred.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Win32\stdafx.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Common\AkDefaultLowLevelIODispatcher.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Common\AkFileLocationBase.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Common\AkFilePackageLUT.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Common\AkFilePackage.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Include_Wwise.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioEvent.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundBank.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioWindow.cpp">
+      <Filter>Sources\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Parson\parson.c">
+      <Filter>Sources\3d Party\Parson</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonTool.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentDistorsionZone.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentAudioSource.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentListener.cpp">
+      <Filter>Sources\Audio</Filter>
+    </ClCompile>
     <ClCompile Include="ComponentLight.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>

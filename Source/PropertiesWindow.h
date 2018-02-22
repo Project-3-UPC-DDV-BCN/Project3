@@ -9,11 +9,15 @@ class ComponentCamera;
 class Component;
 class ComponentScript;
 class ComponentFactory;
+class ComponentListener;
+class ComponentAudioSource;
+class ComponentDistorsionZone;
 class ComponentLight;
 class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
+
 
 class PropertiesWindow :
 	public Window
@@ -32,6 +36,9 @@ public:
 	void DrawRigidBodyPanel(ComponentRigidBody* rigidbody);
 	void DrawColliderPanel(ComponentCollider* collider);
 	void DrawJointDistancePanel(ComponentJointDistance* joint);
+	void DrawAudioListener(ComponentListener* listener);
+	void DrawAudioSource(ComponentAudioSource* audio_source);
+	void DrawAudioDistZone(ComponentDistorsionZone* dist_zone);
 	void DrawLightPanel(ComponentLight* light);
 
 private:

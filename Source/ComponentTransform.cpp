@@ -158,6 +158,21 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 	}
 }
 
+float3 ComponentTransform::GetForward() const
+{
+	return transform_matrix.WorldZ();
+}
+
+float3 ComponentTransform::GetUp() const
+{
+	return transform_matrix.WorldY();
+}
+
+float3 ComponentTransform::GetRight() const
+{
+	return transform_matrix.WorldX();
+}
+
 void ComponentTransform::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());

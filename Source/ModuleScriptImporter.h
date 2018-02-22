@@ -63,6 +63,9 @@ private:
 	static void SetScale(MonoObject * object, MonoObject * vector);
 	static MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	static void LookAt(MonoObject * object, MonoObject * vector);
+	static MonoObject* GetForward(MonoObject* object);
+	static MonoObject* GetRight(MonoObject* object);
+	static MonoObject* GetUp(MonoObject* object);
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);
@@ -88,6 +91,9 @@ private:
 	static MonoObject* GetMousePosition();
 	static int GetMouseXMotion();
 	static int GetMouseYMotion();
+	static int GetControllerJoystickMove(int pad, MonoString* axis);
+	static int GetControllerButton(int pad, MonoString* button);
+	static void RumbleController(int pad, float strength, int ms);
 
 	//CONSOLE
 	static void Log(MonoObject* object);

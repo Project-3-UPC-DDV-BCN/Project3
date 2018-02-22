@@ -23,6 +23,10 @@ public:
 	float4x4 GetOpenGLMatrix() const;
 	void SetMatrix(const float4x4 &matrix);
 
+	float3 GetForward()const;
+	float3 GetUp()const;
+	float3 GetRight()const;
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 

@@ -28,6 +28,7 @@
 #include "CSScript.h"
 #include "LuaScript.h"
 #include "TextEditorWindow.h"
+#include "AudioWindow.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, false)
 {
@@ -72,6 +73,7 @@ bool ModuleEditor::Init(Data* editor_config)
 	editor_windows.push_back(game_window = new GameWindow());
 	editor_windows.push_back(resources_config_window = new ResourcesConfigWindow());
 	editor_windows.push_back(text_editor_window = new TextEditorWindow());
+	editor_windows.push_back(audio_window = new AudioWindow());
 
 	//editor_panels.push_back(animator_panel = new PanelAnimator());
 	//editor_panels.push_back(particle_editor_panel = new PanelParticleEditor());
@@ -178,6 +180,11 @@ update_status ModuleEditor::Update(float deltaTime)
 			{
 				style_editor_window->active = !style_editor_window->active;
 			}
+			if (ImGui::MenuItem("Audio Engine"))
+			{
+				audio_window->active = !audio_window->active;
+			}
+
 			ImGui::EndMenu();
 			style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 		}
