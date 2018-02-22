@@ -286,6 +286,7 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompText:
 		DrawTextPanel((ComponentText*)component);
+		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
 		break;
@@ -506,7 +507,7 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 
 void PropertiesWindow::DrawTextPanel(ComponentText * text)
 {
-	if (ImGui::CollapsingHeader("Text", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Label", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Font* font = text->GetFont();
 		if (ImGui::InputResourceFont("Font", &font))
@@ -548,17 +549,17 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 			{
 				text->SetStyleBold(bold);
 			}
-
+			ImGui::SameLine();
 			if (ImGui::Checkbox("Italic", &italic))
 			{
 				text->SetStyleItalic(italic);
 			}
-
+	
 			if (ImGui::Checkbox("Underline", &underline))
 			{
 				text->SetStyleUnderline(underline);
 			}
-
+			ImGui::SameLine();
 			if (ImGui::Checkbox("Strikethrough", &strikethrough))
 			{
 				text->SetStyelStrikethrough(strikethrough);

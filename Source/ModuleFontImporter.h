@@ -26,6 +26,8 @@ public:
 	Font* CreateFontInstance(Font* font);
 	void  UnloadFontInstance(Font*& font);
 
+	Font* GetDefaultFont();
+
 	uint LoadText(const char * text, Font* font, float4 colour = float4(255, 255, 255, 255), bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
 	void UnloadText(uint id);
 
@@ -33,6 +35,7 @@ public:
 
 private:
 	Font* LoadFontInstance(const char* filepath);
+	Font* default_font = nullptr;
 };
 
 #endif // !_H_FONT_IMPORTER_

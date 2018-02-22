@@ -29,6 +29,10 @@ bool ModuleFontImporter::Init(Data * editor_config)
 {
 	bool ret = true;
 
+	std::string default_font_name = EDITOR_FONTS_FOLDER "arial.ttf";
+	default_font_name.erase(default_font_name.begin(), default_font_name.begin() + 2);
+	default_font = LoadFontInstance(App->file_system->GetFullPath(default_font_name).c_str());
+
 	return ret;
 }
 
@@ -43,6 +47,7 @@ bool ModuleFontImporter::CleanUp()
 {
 	bool ret = true;
 
+	UnloadFontInstance(default_font);
 	TTF_Quit();
 
 	return ret;
@@ -111,6 +116,11 @@ void ModuleFontImporter::UnloadFontInstance(Font*& font)
 		RELEASE(font);
 		font = nullptr;
 	}
+}
+
+Font * ModuleFontImporter::GetDefaultFont()
+{
+	return default_font;
 }
 
 uint ModuleFontImporter::LoadText(const char * text, Font * font, float4 colour, bool bold, bool italic, bool underline, bool strikethrough)

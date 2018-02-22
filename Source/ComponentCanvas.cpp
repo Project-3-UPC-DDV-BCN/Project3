@@ -189,7 +189,8 @@ CanvasDrawElement::CanvasDrawElement()
 	transform = float4x4::identity;
 	size = float2::zero;
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	flip = false;
+	vertical_flip = false;
+	horizontal_flip = false;
 }
 
 void CanvasDrawElement::SetSize(const float2& _size)
@@ -217,9 +218,10 @@ void CanvasDrawElement::SetColour(const float4 & _colour)
 	colour = _colour;
 }
 
-void CanvasDrawElement::SetFlip(const bool & _flip)
+void CanvasDrawElement::SetFlip(const bool& _vertical_flip, const bool& _horizontal_flip)
 {
-	flip = _flip;
+	vertical_flip = _vertical_flip;
+	horizontal_flip = _horizontal_flip;
 }
 
 float4x4 CanvasDrawElement::GetTransform()
@@ -234,10 +236,15 @@ float4x4 CanvasDrawElement::GetTransform()
 	if (size.y == 0)
 		size.y = 1;
 
-	if(!flip)
-		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
-	else
-		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, -1, -size.y));
+	float2 flip_multiplicator = float2(1, 1);
+
+	if (horizontal_flip)
+		flip_multiplicator.x = -1;
+
+	if (vertical_flip)
+		flip_multiplicator.y = -1;
+
+	size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
 
 	ret = transform * size_trans;
 
@@ -250,10 +257,15 @@ float4x4 CanvasDrawElement::GetOrtoTransform() const
 
 	float4x4 size_trans = float4x4::identity;
 
-	if (!flip)
-		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
-	else
-		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, -1, -size.y));
+	float2 flip_multiplicator = float2(1, 1);
+
+	if (horizontal_flip)
+		flip_multiplicator.x = -1;
+
+	if (vertical_flip)
+		flip_multiplicator.y = -1;
+
+	size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
 
 	ret = orto_transform * size_trans;
 

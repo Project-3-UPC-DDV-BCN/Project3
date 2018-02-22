@@ -37,7 +37,7 @@ bool ComponentImage::Update()
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		de.SetSize(c_rect_trans->GetScaledSize());
 		de.SetColour(colour);
-		de.SetFlip(flip);
+		de.SetFlip(false, flip);
 
 		if(texture != nullptr)
 		{

@@ -103,6 +103,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		SetIsUI(true);
 		components_list.push_back(component = new ComponentText(this));
 		SetName("Text");
+		break;
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));
 		break;

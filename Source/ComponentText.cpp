@@ -26,7 +26,9 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 
 	c_rect_trans->SetSize(float2(100, 40));
 
-	de_scaler = 0.1f;
+	SetFont(App->font_importer->GetDefaultFont());
+
+	SetText("Text");
 }
 
 ComponentText::~ComponentText()
@@ -55,7 +57,7 @@ bool ComponentText::Update()
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		de.SetSize(c_rect_trans->GetScaledSize());
 		de.SetColour(colour);
-		de.SetFlip(true);
+		de.SetFlip(true, false);
 
 		de.SetTextureId(texture);
 		
@@ -88,6 +90,7 @@ void ComponentText::SetFont(Font * _font)
 	{
 		App->font_importer->UnloadFontInstance(font);
 		font = App->font_importer->CreateFontInstance(_font);
+		update_text = true;
 	}
 }
 

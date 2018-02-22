@@ -549,7 +549,7 @@ namespace ImGui
 		Font* tmp_font = *font;
 		if (tmp_font != nullptr)
 		{
-			buf_display = tmp_font->GetName();
+			buf_display = tmp_font->GetFamilyName();
 		}
 		else
 		{

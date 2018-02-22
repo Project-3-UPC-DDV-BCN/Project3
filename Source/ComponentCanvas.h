@@ -21,7 +21,7 @@ public:
 	void SetOrtoTransform(const float4x4& trans);
 	void SetTextureId(const uint& id);
 	void SetColour(const float4& colour);
-	void SetFlip(const bool& flip);
+	void SetFlip(const bool& vertical_flip, const bool& horizontal_flip);
 
 	float4x4 GetTransform();
 	float4x4 GetOrtoTransform() const;
@@ -36,7 +36,8 @@ private:
 	float4x4 transform;
 	float4x4 orto_transform;
 	uint	 texture_id;
-	bool	 flip;
+	bool	 vertical_flip;
+	bool	 horizontal_flip;
 	float4   colour;
 };
 
