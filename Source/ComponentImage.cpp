@@ -3,6 +3,8 @@
 #include "ComponentCanvas.h"
 #include "ComponentRectTransform.h"
 #include "Texture.h"
+#include "Application.h"
+#include "ModuleResources.h"
 
 ComponentImage::ComponentImage(GameObject * attached_gameobject)
 {
@@ -87,10 +89,24 @@ bool ComponentImage::GetFlip() const
 
 void ComponentImage::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddVector4("colour", colour);
+	data.AddBool("flip", flip);
+	if (texture != nullptr)
+		data.AddUInt("texture_uid", texture->GetUID());
+	
 }
 
 void ComponentImage::Load(Data & data)
 {
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	SetColour(data.GetVector4("colour"));
+	SetFlip(data.GetBool("flip"));
+	uint uid = data.GetUInt("texture_uid");
+	texture = App->resources->GetTexture(uid);
 }
 
 ComponentCanvas * ComponentImage::GetCanvas()

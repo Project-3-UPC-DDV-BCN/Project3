@@ -323,19 +323,28 @@ bool Data::EnterSection(std::string sectionName)
 	return ret;
 }
 
-void Data::LeaveSection() {
+void Data::LeaveSection() 
+{
 	in_section_values.clear();
 	in_section_names.clear();
+
+
 	sections_open--;
-	if (sections_open == 0) {
+
+	if (sections_open <= 0) 
+	{
 		getting_from_section = false;
+		sections_open = 0;
 	}
-	else {
-		if (!last_index.empty() && !last_index_name.empty()) {
+	else 
+	{
+		if (!last_index.empty() && !last_index_name.empty()) 
+		{
 			last_index.pop_back();
 			last_index_name.pop_back();
 			current_index = last_index.back();
 			EnterSection(last_index_name.back());
+
 			//remove again because we are adding those during "EnterSection"
 			last_index.pop_back();
 			last_index_name.pop_back();

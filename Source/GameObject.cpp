@@ -86,22 +86,26 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentFactory(this));
 		break;
 	case Component::CompRectTransform:
-		components_list.push_front(component = new ComponentRectTransform(this));
+		if (GetComponent(Component::CompRectTransform) == nullptr)
+			components_list.push_front(component = new ComponentRectTransform(this));
 		break;
 	case Component::CompCanvas:
 		SetIsUI(true);
-		components_list.push_back(component = new ComponentCanvas(this));
+		if(GetComponent(Component::CompCanvas) == nullptr)
+			components_list.push_back(component = new ComponentCanvas(this));
 		is_canvas = true;
 		SetName("Canvas");
 		break;
 	case Component::CompImage:
 		SetIsUI(true);
-		components_list.push_back(component = new ComponentImage(this));
+		if (GetComponent(Component::CompImage) == nullptr)
+			components_list.push_back(component = new ComponentImage(this));
 		SetName("Image");
 		break;
 	case Component::CompText:
 		SetIsUI(true);
-		components_list.push_back(component = new ComponentText(this));
+		if (GetComponent(Component::CompText) == nullptr)
+			components_list.push_back(component = new ComponentText(this));
 		SetName("Text");
 		break;
 	case Component::CompLight:
@@ -568,59 +572,82 @@ void GameObject::Load(Data & data, bool is_prefab)
 	{
 		data.EnterSection("Component_" + std::to_string(i));
 		Component* component = GetComponent((Component::ComponentType)data.GetInt("Type"));
-		if (component != nullptr) {
+
+		if (component != nullptr) 
+		{
 			component->Load(data);
 		}
-		else {
-			AddComponent((Component::ComponentType)data.GetInt("Type"));
-			GetComponent((Component::ComponentType)data.GetInt("Type"))->Load(data);
+		else 
+		{
+			int type = data.GetInt("Type");
+			if (type != -1)
+			{
+				AddComponent((Component::ComponentType)data.GetInt("Type"));
+				GetComponent((Component::ComponentType)data.GetInt("Type"))->Load(data);
+			}
+			else
+			{
+				CONSOLE_ERROR("Could not load component from gameobject: %s (Wrong component id?)", name.c_str());
+			}
 		}
 		data.LeaveSection();
 	}
 	data.LeaveSection();
 
 	UID parent_id = data.GetUInt("ParentID");
-	if (parent_id != 0) {
+	if (parent_id != 0) 
+	{
 		SetParentByID(parent_id);
 	}
 
 	is_root = data.GetBool("IsRoot");
 
-	if (!is_prefab) {
+	if (!is_prefab) 
+	{
 		//Store gameObject name to know the existing gameObjects when loading scene
 		int gameObjectCount = 1;
 		bool inParenthesis = false;
 		std::string str;
 		std::string tempName = name;
-		for (int i = 0; i < name.size(); i++) {
-			if (name[i] == ')') {
+		for (int i = 0; i < name.size(); i++) 
+		{
+			if (name[i] == ')') 
+			{
 				inParenthesis = false;
-				if (name[i + 1] == '\0') {
+				if (name[i + 1] == '\0') 
+				{
 					break;
 				}
-				else {
+				else 
+				{
 					str.clear();
 				}
 			}
-			if (inParenthesis) {
+			if (inParenthesis) 
+			{
 				str.push_back(name[i]);
 			}
-			if (name[i] == '(') {
+			if (name[i] == '(') 
+			{
 				inParenthesis = true;
 			}
 		}
-		if (atoi(str.c_str()) != 0) {
+		if (atoi(str.c_str()) != 0) 
+		{
 			name.erase(name.end() - (str.length() + 2), name.end());
 			gameObjectCount = stoi(str);
 		}
 
 		std::map<std::string, int>::iterator it = App->scene->scene_gameobjects_name_counter.find(name);
-		if (it != App->scene->scene_gameobjects_name_counter.end()) {
-			if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount) {
+		if (it != App->scene->scene_gameobjects_name_counter.end()) 
+		{
+			if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount) 
+			{
 				App->scene->scene_gameobjects_name_counter[name] = gameObjectCount;
 			}
 		}
-		else {
+		else 
+		{
 			App->scene->scene_gameobjects_name_counter[name] = 1;
 		}
 		name = tempName;

@@ -615,10 +615,31 @@ float3 ComponentRectTransform::GetPreferedPos()
 
 void ComponentRectTransform::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddVector2("pos", pos);
+	data.AddVector2("size", size);
+	data.AddVector2("anchor", anchor);
+	data.AddBool("snap_up", snap_up);
+	data.AddBool("snap_down", snap_down);
+	data.AddBool("snap_left", snap_left);
+	data.AddBool("snap_right", snap_right);
+	data.AddFloat("scale", scale);
 }
 
 void ComponentRectTransform::Load(Data & data)
 {
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	SetPos(data.GetVector2("pos"));
+	SetSize(data.GetVector2("size"));
+	SetAnchor(data.GetVector2("anchor"));
+	SetSnapUp(data.GetBool("snap_up"));
+	SetSnapDown(data.GetBool("snap_down"));
+	SetSnapLeft(data.GetBool("snap_left"));
+	SetSnapRight(data.GetBool("snap_right"));
+	SetScale(data.GetFloat("scale"));
 }
 
 bool ComponentRectTransform::GetHasParent() const

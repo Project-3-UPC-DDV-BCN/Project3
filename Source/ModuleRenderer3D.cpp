@@ -497,6 +497,18 @@ void ModuleRenderer3D::AddCanvasToDraw(ComponentCanvas * canvas)
 	canvas_to_draw.push_back(canvas);
 }
 
+void ModuleRenderer3D::RemoveCanvasToDraw(ComponentCanvas * canvas)
+{
+	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+	{
+		if ((*cv == canvas))
+		{
+			canvas_to_draw.erase(cv);
+			break;
+		}
+	}
+}
+
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();

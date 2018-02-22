@@ -46,6 +46,7 @@ public:
 
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
 	void AddCanvasToDraw(ComponentCanvas* canvas);
+	void RemoveCanvasToDraw(ComponentCanvas* canvas);
 	void ResetRender();
 
 	void BindArrayBuffer(uint id) const;

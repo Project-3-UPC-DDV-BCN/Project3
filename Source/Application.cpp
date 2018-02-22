@@ -372,7 +372,7 @@ void Application::Stop()
 {
 	if (state == OnPlay || state == OnPause) {
 		state = OnStop;
-		App->scene->LoadScene(TMP_FOLDER"tmp_scene");
+		App->scene->LoadScene(TMP_FOLDER"tmp_scene.json");
 		App->scene->is_game = false;
 	}
 }

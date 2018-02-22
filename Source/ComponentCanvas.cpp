@@ -46,6 +46,7 @@ bool ComponentCanvas::CleanUp()
 {
 	bool ret = true;
 
+	App->renderer3D->RemoveCanvasToDraw(this);
 
 	return ret;
 }
@@ -127,6 +128,12 @@ float2 ComponentCanvas::GetReferenceSize() const
 void ComponentCanvas::SetScale(const float & _scale)
 {
 	scale = _scale;
+
+	if (scale < 0)
+	{
+		scale = 0;
+	}
+
 }
 
 float ComponentCanvas::GetScale() const
@@ -176,10 +183,25 @@ std::vector<CanvasDrawElement> ComponentCanvas::GetDrawElements()
 
 void ComponentCanvas::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddVector2("size", size);
+	data.AddVector2("reference_size", reference_size);
+	data.AddInt("render_mode", render_mode);
+	data.AddInt("scale_mode", scale_mode);
+	data.AddFloat("scale", scale);
 }
 
 void ComponentCanvas::Load(Data & data)
 {
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	SetSize(data.GetVector2("size"));
+	SetReferenceSize(data.GetVector2("reference_size"));
+	SetRenderMode(static_cast<CanvasRenderMode>(data.GetInt("render_mode")));
+	SetScaleMode(static_cast<CanvasScaleMode>(data.GetInt("scale_mode")));
+	SetScale(data.GetFloat("scale"));
 }
 
 CanvasDrawElement::CanvasDrawElement()
