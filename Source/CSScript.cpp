@@ -1899,3 +1899,29 @@ void CSScript::SetMute(bool set)
 {
 	App->audio->SetMute(set);
 }
+
+int CSScript::GetVolume()
+{
+	return App->audio->GetVolume();
+}
+
+void CSScript::SetVolume(int volume)
+{
+	App->audio->SetVolume(volume);
+}
+
+int CSScript::GetPitch()
+{
+	return App->audio->GetPitch();
+}
+
+void CSScript::SetPitch(int pitch)
+{
+	App->audio->SetPitch(pitch);
+}
+
+void CSScript::SetRTPvalue(MonoString* name, int value)
+{
+	const char* new_name = mono_string_to_utf8(name);
+	App->audio->SetRTPvalue(new_name, value);
+}

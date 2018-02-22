@@ -326,16 +326,6 @@ void ModuleAudio::SetListenerCreated(bool set)
 	listener_created = set;
 }
 
-int * ModuleAudio::GetVolumePtr()
-{
-	return &volume;
-}
-
-int * ModuleAudio::GetPitchPtr()
-{
-	return &pitch;
-}
-
 bool ModuleAudio::IsMuted()
 {
 	return muted;
@@ -346,7 +336,47 @@ void ModuleAudio::SetMute(const bool set)
 	muted = set;
 }
 
+int ModuleAudio::GetVolume()
+{
+	return volume;
+}
+
+void ModuleAudio::SetVolume(const int volume)
+{
+	if (volume > 100)
+		this->volume = 100;
+	else if (volume < 0)
+		this->volume = 0;
+	else
+		this->volume = volume;
+}
+
+int ModuleAudio::GetPitch()
+{
+	return pitch;
+}
+
+void ModuleAudio::SetPitch(const int pitch)
+{
+	if (pitch > 100)
+		this->pitch = 100;
+	else if (pitch < 0)
+		this->pitch = 0;
+	else
+		this->pitch = pitch;
+}
+
 bool * ModuleAudio::IsMutedPtr()
 {
 	return &muted;
+}
+
+int * ModuleAudio::GetVolumePtr()
+{
+	return &volume;
+}
+
+int * ModuleAudio::GetPitchPtr()
+{
+	return &pitch;
 }

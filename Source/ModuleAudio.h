@@ -61,12 +61,17 @@ public:
 	SoundBank* GetSoundBank() const;
 	void SetSoundBank(SoundBank* soundbank);
 	void SetListenerCreated(bool set);
-	int* GetVolumePtr();
-	int* GetPitchPtr();
-
+	
 	bool IsMuted();
 	void SetMute(const bool set);
+	int GetVolume();
+	void SetVolume(const int volume);
+	int GetPitch();
+	void SetPitch(const int pitch);
+
 	bool* IsMutedPtr();
+	int* GetVolumePtr();
+	int* GetPitchPtr();
 
 private:
 

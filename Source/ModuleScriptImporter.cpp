@@ -286,6 +286,12 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//Audio
 	mono_add_internal_call("TheEngine.TheAudio::IsMuted", (const void*)IsMuted);
+	mono_add_internal_call("TheEngine.TheAudio::SetMute", (const void*)SetMute);
+	mono_add_internal_call("TheEngine.TheAudio::GetVolume", (const void*)GetVolume);
+	mono_add_internal_call("TheEngine.TheAudio::SetVolume", (const void*)SetVolume);
+	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
+	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
+	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -561,4 +567,29 @@ bool ModuleScriptImporter::IsMuted()
 void ModuleScriptImporter::SetMute(bool set)
 {
 	current_script->SetMute(set);
+}
+
+int ModuleScriptImporter::GetVolume() 
+{
+	return current_script->GetVolume();
+}
+
+void ModuleScriptImporter::SetVolume(int volume)
+{
+	current_script->SetVolume(volume);
+}
+
+int ModuleScriptImporter::GetPitch()
+{
+	return current_script->GetPitch();
+}
+
+void ModuleScriptImporter::SetPitch(int pitch)
+{
+	current_script->SetPitch(pitch);
+}
+
+void ModuleScriptImporter::SetRTPvalue(MonoString* name, int value)
+{
+	current_script->SetRTPvalue(name, value);
 }

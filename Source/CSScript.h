@@ -116,6 +116,11 @@ public:
 	//AUDIO
 	bool IsMuted();
 	void SetMute(bool set);
+	int GetVolume();
+	void SetVolume(int volume);
+	int GetPitch();
+	void SetPitch(int pitch);
+	void SetRTPvalue(MonoString* name, int value);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);

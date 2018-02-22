@@ -2803,7 +2803,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.class_static_auto_complete["TheVector3"] = "AngleBetween()_BackWard_CrossProduct()_Distance()_DotProduct()_Down_Forward_Left_Lerp()_Magnitude()_MoveTowards()_NLerp()_Normalize()_Project()_Reflect()_Right_Scale()_SLerp()_Up_Zero";
 		langDef.class_non_static_auto_complete["TheVector3"] = "Length_LengthSquared_Normalized_Scale()_Set()_ToQuaternion()_ToString()_x_y_z";
 		langDef.class_static_auto_complete["Time"] = "TimeScale_DeltaTime";
-		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()";
+		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()_GetVolume()_SetVolume()_GetPitch()_SetPitch()_SetRTPvalue()";
 
 		langDef.functions_info["Abs()"] = "Returns the absolute value of value. \n1. float Abs(float value) \n2. int Abs(int value)";
 		langDef.functions_info["Acos()"] = "Returns the arc-cosine of value. \nfloat Acos(float value)";
@@ -2923,6 +2923,11 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.functions_info["DeltaTime"] = "The time in seconds it took to complete the last frame. \nfloat DeltaTime";
 		langDef.functions_info["IsMuted()"] = "Returns true if the global audio is muted, if not it will return false. \nbool IsMuted()";
 		langDef.functions_info["SetMute()"] = "Set the global audio to mute if set to true or unmuted if set to false. \nvoid SetMute(bool set)";
+		langDef.functions_info["GetVolume()"] = "Returns the global volume as an integer from 0 to 100. \nint GetVolume()";
+		langDef.functions_info["SetVolume()"] = "Set the volume to the specified value. (Recomended:  0 to 100). \nvoid SetVolume(int volume)";
+		langDef.functions_info["GetPitch()"] = "Get the global pitch as an integer from 0 to 100. \nint GetPitch()";
+		langDef.functions_info["SetPitch()"] = "Set the pitch to the specified value. (Recomended:  0 to 100). \nvoid SetPitch(int pitch)";
+		langDef.functions_info["SetRTPvalue()"] = "Set a value to the property with the specified name. \nvoid SetRTPvalue(string name, int value)";
 
 		variables["Duplicate()"] = "TheGameObject";
 		variables["GetChild()"] = "TheGameObject";

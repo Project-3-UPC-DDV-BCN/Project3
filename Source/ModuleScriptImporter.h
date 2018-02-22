@@ -97,7 +97,11 @@ private:
 	//AUDIO
 	static bool IsMuted();
 	static void SetMute(bool set);
-
+	static int GetVolume();
+	static void SetVolume(int volume);
+	static int GetPitch();
+	static void SetPitch(int pitch);
+	static void SetRTPvalue(MonoString* name, int value);
 private:
 	std::string mono_path;
 	MonoDomain* mono_domain;
