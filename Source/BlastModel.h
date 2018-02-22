@@ -2,6 +2,7 @@
 
 #include "Resource.h"
 #include <vector>
+#include <set>
 
 class GameObject;
 class Material;
@@ -22,6 +23,7 @@ class BlastModel :
 {
 public:
 	BlastModel();
+	BlastModel(const BlastModel& model);
 	~BlastModel();
 
 	void Save(Data& data) const;
@@ -30,9 +32,12 @@ public:
 	void LoadToMemory();
 	void UnloadFromMemory();
 
+	void AddActor(Nv::Blast::ExtPxActor*);
+	void DestroyActor(Nv::Blast::ExtPxActor*);
+
 public:
 	std::vector<GameObject*> chunks;
-	std::vector<Nv::Blast::ExtPxActor*> actors;
+	std::set<Nv::Blast::ExtPxActor*> actors;
 	Material* interior_material;
 
 	Nv::Blast::ExtPxAsset* m_pxAsset;

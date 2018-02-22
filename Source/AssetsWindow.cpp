@@ -17,6 +17,7 @@
 #include "PhysicsMaterial.h"
 #include "BlastModel.h"
 #include "ModuleBlast.h"
+#include "ModuleBlastMeshImporter.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -390,9 +391,10 @@ void AssetsWindow::DrawWindow()
 				{
 					if (ImGui::MenuItem("Load to scene##bmesh")) {
 						std::string file_name = App->file_system->GetFileNameWithoutExtension(selected_file_path);
-						BlastModel* model = App->resources->GetBlastModel(file_name);
+						BlastModel* model = App->blast_mesh_importer->LoadModelFromLibrary(selected_file_path);
 						if (model)
 						{
+							App->blast->CreateFamily(model);
 							App->blast->SpawnFamily(model);
 						}
 						else

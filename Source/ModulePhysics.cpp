@@ -10,6 +10,8 @@
 #include "ModuleTime.h"
 #include "Primitive.h"
 #include "ModuleBlast.h"
+#include "DebugDraw.h"
+#include "ModuleRenderer3D.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3DEBUG_x86.lib")
@@ -156,6 +158,8 @@ update_status ModulePhysics::Update(float dt)
 			}
 		}
 	}
+
+	DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -174,7 +178,7 @@ bool ModulePhysics::CleanUp()
 	dispatcher->release();
 	cuda_context_manager->release();
 	cooking->release();
-	pvd->release();
+	//pvd->release();
 	physx_physics->release();
 
 	//foundation is last
@@ -369,12 +373,12 @@ void ModulePhysics::CreateMainScene()
 	cuda_context_manager = PxCreateCudaContextManager(*physx_foundation, cudaContextManagerDesc);
 	
 	physx::PxSceneDesc sceneDesc(physx_physics->getTolerancesScale());
-	sceneDesc.gravity = physx::PxVec3(0.0f, 0.0f, 0.0f);
+	//sceneDesc.gravity = physx::PxVec3(0.0f, 0.0f, 0.0f);
 	dispatcher = physx::PxDefaultCpuDispatcherCreate(4);
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = Nv::Blast::ExtImpactDamageManager::FilterShader; //CCDShader;
 	sceneDesc.simulationEventCallback = this;
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM | physx::PxSceneFlag::eENABLE_STABILIZATION;
+	sceneDesc.flags |= /*physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | */physx::PxSceneFlag::eENABLE_PCM | physx::PxSceneFlag::eENABLE_STABILIZATION;
 
 	if (cuda_context_manager)
 	{
@@ -405,7 +409,7 @@ void ModulePhysics::CreateMainScene()
 void ModulePhysics::CreateScene()
 {
 	physx::PxSceneDesc sceneDesc(physx_physics->getTolerancesScale());
-	sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+	//sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = CCDShader;
 	//sceneDesc.gpuDispatcher = cuda_context_manager->getGpuDispatcher();
@@ -544,18 +548,13 @@ void ModulePhysics::DrawColliders()
 
 			const physx::PxRenderBuffer& rb = scene->getRenderBuffer();
 
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glLineWidth(2.0f);
-			glBegin(GL_LINES);
 			for (uint i = 0; i < rb.getNbLines(); i++)
 			{
 				const physx::PxDebugLine& line = rb.getLines()[i];
-
-				glVertex3f(line.pos0.x, line.pos0.y, line.pos0.z);
-				glVertex3f(line.pos1.x, line.pos1.y, line.pos1.z);
+				App->renderer3D->debug_draw->Line({ line.pos0.x, line.pos0.y, line.pos0.z }, { line.pos1.x, line.pos1.y, line.pos1.z });
 			}
-			glEnd();
-			glBegin(GL_TRIANGLES);
+			
+			/*glBegin(GL_TRIANGLES);
 			for (uint i = 0; i < rb.getNbTriangles(); i++)
 			{
 				const physx::PxDebugTriangle& triangles = rb.getTriangles()[i];
@@ -574,7 +573,7 @@ void ModulePhysics::DrawColliders()
 			}
 			glEnd();
 			glLineWidth(1.0f);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);*/
 		}
 	}
 }

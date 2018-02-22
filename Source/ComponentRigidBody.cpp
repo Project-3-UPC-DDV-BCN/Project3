@@ -5,6 +5,8 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "ComponentCollider.h"
+#include "Nvidia/PhysX/Include/PxRigidDynamic.h"
+#include "Nvidia/PhysX/Include/PxShape.h"
 
 ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 {
@@ -15,32 +17,29 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	rigidbody = App->physics->CreateDynamicRigidBody();
 	//rigidbody->userData = attached_gameobject;
 
-	//ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
 	float* matrix = attached_gameobject->GetOpenGLMatrix().ptr();
 	physx::PxMat44 mat(matrix);
 	physx::PxTransform phys_transform(mat);
-	//float3 rot = transform->GetGlobalRotation();
-	//float3 pos = transform->GetGlobalPosition();
-	//math::Quat q = Quat::FromEulerXYZ(rot.z * DEGTORAD, rot.y * DEGTORAD, rot.x * DEGTORAD);
-	//physx::PxQuat pq(q.x, q.y, q.z, q.w);
-	//physx::PxVec3 ppos(pos.x, pos.y, pos.z);
-	//physx::PxTransform phys_transform(ppos, pq);
-	/*math::Quat q = Quat::FromEulerXYZ(rot.x, rot.y, rot.z);
-	phys_transform.q = physx::PxQuat(q.x * RADTODEG, q.y * RADTODEG, q.z * RADTODEG, q.w * RADTODEG);*/
 	rigidbody->setGlobalPose(phys_transform);
 
-	SetMass(10000000);
-	SetUseGravity(true);
-	SetKinematic(false);
-	SetLinearDamping(0);
-	SetAngularDamping(0.05f);
-	SetLinearVelocity(float3(0, -100, 0));
-	SetLinearDamping(0);
+	SetInitValues();
 }
 
 ComponentRigidBody::~ComponentRigidBody()
 {
 	rigidbody->release();
+	rigidbody = nullptr;
+}
+
+void ComponentRigidBody::SetInitValues()
+{
+	SetMass(1);
+	SetUseGravity(false);
+	SetKinematic(false);
+	SetLinearDamping(0);
+	SetAngularDamping(0.05f);
+	SetLinearVelocity(float3(0, 0, 0));
+	SetLinearDamping(0);
 }
 
 void ComponentRigidBody::SetMass(float new_mass)
@@ -472,6 +471,13 @@ bool ComponentRigidBody::GetCollisionMode() const
 {
 	physx::PxRigidBodyFlags flag = rigidbody->getRigidBodyFlags();
 	return flag.isSet(physx::PxRigidBodyFlag::eENABLE_CCD);
+}
+
+void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
+{
+	rigidbody->release();
+	rigidbody = new_rigid;
+	//SetInitValues();
 }
 
 void ComponentRigidBody::Save(Data & data) const

@@ -908,7 +908,7 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 		break;
 	case Resource::BlastMeshResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
-		ret = App->blast_mesh_importer->ImportMesh(file_path);
+		ret = App->blast_mesh_importer->ImportModel(file_path);
 		break;
 	case Resource::ShaderResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
@@ -1467,6 +1467,8 @@ void ModuleResources::CreateDefaultShaders()
 
 	Shader* fragment = GetShader("default_fragment");
 	prog->SetFragmentShader(fragment);
+
+	prog->LinkShaderProgram();
 
 	AddResource(prog);
 

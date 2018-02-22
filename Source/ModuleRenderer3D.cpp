@@ -173,7 +173,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		DrawSceneCameras(*it);
 	}
 
-	dynamic_mesh_to_draw.clear();
+	ResetRender();
 
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
@@ -200,10 +200,8 @@ void ModuleRenderer3D::DrawEditorScene()
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	pPlane pl(0, 1, 0, 0);
-	pl.SetPos(editor_camera->camera_frustum.pos);
-	pl.color = { 1,1,1,1 };
-	//pl.Render();
+	// Debug Draw render
+	debug_draw->Render(editor_camera);
 
 	DrawSceneGameObjects(editor_camera, true);
 }
@@ -328,9 +326,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	{
 		//App->scene->octree.DebugDraw();
 	}
-
-	// Debug Draw render
-	debug_draw->Render(editor_camera);
 	
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
@@ -428,8 +423,8 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
-
 	debug_draw->Clear();
+	debug_primitive_to_draw.clear();
 }
 
 // Called before quitting

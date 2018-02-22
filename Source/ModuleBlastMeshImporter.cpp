@@ -21,6 +21,7 @@
 #include "ModuleResources.h"
 #include "ModuleMeshImporter.h"
 #include "Material.h"
+#include "ModuleScene.h"
 
 //#if _DEBUG
 //#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
@@ -74,7 +75,7 @@ bool ModuleBlastMeshImporter::CleanUp()
 	return true;
 }
 
-std::string ModuleBlastMeshImporter::ImportMesh(std::string path)
+std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 {
 	std::string name_without_extension = App->file_system->GetFileNameWithoutExtension(path);
 	std::string file_directory = App->file_system->GetFileDirectory(path);
@@ -320,7 +321,6 @@ BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path)
 				}
 
 				model->dmg_accel = NvBlastExtDamageAcceleratorCreate(model->m_pxAsset->getTkAsset().getAssetLL(), 3);
-				App->blast->CreateFamily(model);
 			}
 		}
 		model->Load(data);

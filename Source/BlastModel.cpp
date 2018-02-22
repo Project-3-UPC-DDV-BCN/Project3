@@ -10,6 +10,17 @@ BlastModel::BlastModel()
 	SetType(Resource::BlastMeshResource);
 }
 
+BlastModel::BlastModel(const BlastModel & model)
+{
+	chunks = model.chunks;
+	actors = model.actors;
+	interior_material = model.interior_material;
+
+	m_pxAsset = model.m_pxAsset;
+	family = model.family;
+	dmg_accel = model.dmg_accel;
+}
+
 BlastModel::~BlastModel()
 {
 	for (GameObject* go : chunks)
@@ -43,7 +54,7 @@ bool BlastModel::Load(Data & data)
 		data.EnterSection("GameObject_" + std::to_string(i));
 		go->Load(data, true);
 		data.LeaveSection();
-		chunks[i]= go;
+		chunks[i] = go;
 		//App->resources->AddGameObject(go);
 		go->SetIsUsedInPrefab(true);
 	}
@@ -73,6 +84,16 @@ void BlastModel::LoadToMemory()
 
 void BlastModel::UnloadFromMemory()
 {
+}
+
+void BlastModel::AddActor(Nv::Blast::ExtPxActor * actor)
+{
+	actors.emplace(actor);
+}
+
+void BlastModel::DestroyActor(Nv::Blast::ExtPxActor * actor)
+{
+	actors.erase(actors.find(actor));
 }
 
 

@@ -1,7 +1,12 @@
 #pragma once
 #include "Component.h"
-#include "Nvidia/PhysX/Include/PxRigidDynamic.h"
-#include "Nvidia/PhysX/Include/PxShape.h"
+
+namespace physx
+{
+	class PxRigidDynamic;
+	class PxShape;
+	class PxTransform;
+}
 
 class ComponentRigidBody :
 	public Component
@@ -15,6 +20,8 @@ public:
 
 	ComponentRigidBody(GameObject* attached_gameobject);
 	~ComponentRigidBody();
+
+	void SetInitValues();
 
 	void SetMass(float new_mass);
 	float GetMass() const;
@@ -64,6 +71,8 @@ public:
 	bool GetDynamicLocks(DynamicLocks lock_type);
 	void SetCollisionMode(bool ccd);
 	bool GetCollisionMode() const;
+
+	void SetNewRigidBody(physx::PxRigidDynamic* new_rigid);
 
 	void Save(Data& data) const;
 	void Load(Data& data);

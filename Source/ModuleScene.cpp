@@ -150,11 +150,10 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 			data.EnterSection("GameObject_" + std::to_string(i));
 			go->Load(data, true);
 			data.LeaveSection();
-			scene_gameobjects.push_back(go);
-			if (go->IsRoot()) root_gameobjects.push_back(go);
 			if (i == 0) { //return the first object (parent)
 				ret = go;
 			}
+			AddGameObjectToScene(go);
 			App->resources->AddGameObject(go);
 			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 			if (transform) transform->UpdateGlobalMatrix();
@@ -172,8 +171,6 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 					if (mesh->box.maxPoint.z > camera_pos.maxPoint.z) camera_pos.maxPoint.z = mesh->box.maxPoint.z;
 				}
 				mesh_renderer->LoadToMemory();
-				triangles_count += mesh->num_indices / 3;
-				CONSOLE_LOG("Faces: %d", triangles_count);
 			}
 		}
 		data.ClearData();
@@ -280,9 +277,10 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 	if (gameobject != nullptr)
 	{
 		scene_gameobjects.push_back(gameobject);
-
 		if (gameobject->GetParent() == nullptr)
 			root_gameobjects.push_back(gameobject);
+
+		RenameDuplicatedGameObject(gameobject);
 
 		CONSOLE_DEBUG("GameObject Created: %s", gameobject->GetName().c_str());
 	}

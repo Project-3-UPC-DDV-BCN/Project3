@@ -462,9 +462,9 @@ UID GameObject::GetUID() const
 void GameObject::Save(Data & data, bool is_duplicated)
 {
 	std::string tempName = name;  //<- needed if is a duplicated game_object
-	if (is_duplicated) {
+	/*if (is_duplicated) {
 		App->scene->RenameDuplicatedGameObject(this);
-	}
+	}*/
 
 	data.CreateSection("GameObject_" + std::to_string(App->scene->saving_index++));
 	uint new_uuid = uuid;

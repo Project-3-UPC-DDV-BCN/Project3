@@ -15,6 +15,8 @@
 #include "ModuleInput.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "ComponentTransform.h"
+#include "ComponentRigidBody.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastDEBUG_x86.lib")
@@ -50,8 +52,8 @@ ModuleBlast::ModuleBlast(Application* app, bool start_enabled, bool is_game) : M
 	name = "Blast_Module";
 	framework = nullptr;
 	px_manager = nullptr;
-	damage_desc_buffer = new FixedBuffer(64 * 1024);
-	damage_params_buffer = new FixedBuffer(1024);
+	/*damage_desc_buffer = new FixedBuffer(64 * 1024);
+	damage_params_buffer = new FixedBuffer(1024);*/
 }
 
 ModuleBlast::~ModuleBlast()
@@ -88,47 +90,70 @@ bool ModuleBlast::Init(Data * editor_config)
 
 update_status ModuleBlast::Update(float dt)
 {
-	BlastModel* model = families.begin()->second;
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	if (App->IsPlaying())
 	{
+
 		BlastModel* model = families.begin()->second;
-		//NvBlastDamageProgram program;
-		//program.graphShaderFunction = NvBlastExtFalloffGraphShader;
-		//program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		{
+			BlastModel* model = families.begin()->second;
+			//NvBlastDamageProgram program;
+			//program.graphShaderFunction = NvBlastExtFalloffGraphShader;
+			//program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
 
-		//NvBlastExtRadialDamageDesc desc =
-		//{
-		//	1000, { 0.2, 5, 0 }, 1.0, 2.0
-		//};
+			//NvBlastExtRadialDamageDesc desc =
+			//{
+			//	1000, { 0.2, 5, 0 }, 1.0, 2.0
+			//};
 
-		//const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
-		//NvBlastExtProgramParams params =
-		//{
-		//	buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
-		//};
+			//const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
+			//NvBlastExtProgramParams params =
+			//{
+			//	buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
+			//};
 
-		//const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
-		//for (Nv::Blast::ExtPxActor* actor : model->actors)
-		//{
-		//	actor->getTkActor().damage(program, buffered_program_params);
-		//}
+			//const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
+			//for (Nv::Blast::ExtPxActor* actor : model->actors)
+			//{
+			//	actor->getTkActor().damage(program, buffered_program_params);
+			//}
 
-		//if (model->actors[0]->getTkActor().isPending())
-		//{
-		//	//model->actors[0]->getTkActor().
-		//}
+			//if (model->actors[0]->getTkActor().isPending())
+			//{
+			//	//model->actors[0]->getTkActor().
+			//}
 
+		}
+
+		for (std::map<Nv::Blast::ExtPxFamily*, BlastModel*>::iterator it = families.begin(); it != families.end(); it++)
+		{
+			for (Nv::Blast::ExtPxActor* actor : it->second->actors)
+			{
+				const Nv::Blast::ExtPxChunk* chunks = it->first->getPxAsset().getChunks();
+				const Nv::Blast::ExtPxSubchunk* subChunks = it->first->getPxAsset().getSubchunks();
+				const uint32_t* chunkIndices = actor->getChunkIndices();
+				uint32_t chunkCount = actor->getChunkCount();
+				for (uint32_t i = 0; i < chunkCount; i++)
+				{
+					uint32_t chunkIndex = chunkIndices[i];
+					GameObject* go = it->second->chunks[chunkIndex];
+					ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+					physx::PxTransform phys_transform = actor->getPhysXActor().getGlobalPose() * subChunks[chunks[chunkIndex].firstSubchunkIndex].transform;
+					float3 pos(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+					Quat quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
+					float3 rot = quat.ToEulerXYZ();
+					transform->SetPosition(pos);
+					transform->SetRotation(rot);
+				}
+			}
+
+		}
+
+		task_manager->process();
+		task_manager->wait();
+
+		model->family->postSplitUpdate();
 	}
-
-	for (Nv::Blast::ExtPxActor* actor : actors)
-	{
-
-	}
-
-	task_manager->process();
-	task_manager->wait();
-
-	model->family->postSplitUpdate();
 
 	return UPDATE_CONTINUE;
 }
@@ -189,10 +214,11 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(true);
-		App->scene->DuplicateGameObject(go);
+		ComponentRigidBody* rb = (ComponentRigidBody*)go->AddComponent(Component::CompRigidBody);
+		rb->SetNewRigidBody(&actor.getPhysXActor());
+		App->scene->AddGameObjectToScene(go);
 	}
-	//actor.getPhysXActor().userData = model->chunks[0];
-	actors.emplace(&actor);
+	model->AddActor(&actor);
 }
 
 void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
@@ -207,12 +233,10 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 		go->SetActive(false);
 		App->scene->AddGameObjectToDestroy(go);
 	}
-	actors.erase(actors.find(&actor));
+	model->DestroyActor(&actor);
 }
 
 void ModuleBlast::ApplyDamage()
 {
-	//BlastModel* model = families.begin()->second;
 	impact_damage_manager->applyDamage();
-	//model->family->postSplitUpdate();
 }
