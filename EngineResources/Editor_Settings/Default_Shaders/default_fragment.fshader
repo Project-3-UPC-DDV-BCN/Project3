@@ -63,6 +63,7 @@ struct SpotLight {
 #define NR_POINT_LIGHTS 8
 #define NR_DIREC_LIGHTS 2
 #define NR_SPOT_LIGHTS 8
+#define AMBIENT_LIGHT 0.35
 
 uniform vec3 viewPos;
 uniform DirLight dirLights[NR_DIREC_LIGHTS];
@@ -88,13 +89,15 @@ else
 vec3 norm = normalize(Normal);
 vec3 viewDir = normalize(viewPos - FragPos);
 
+
 vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
 result += CalcDirLight(dirLights[i], norm, viewDir);
 for (int k = 0; k < NR_POINT_LIGHTS; k++)
 result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);
 for (int j = 0; j < NR_SPOT_LIGHTS; j++)
 result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
-color = vec4(result, 1.0);
+
+color = vec4(result, 1.0) + color * AMBIENT_LIGHT;
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
