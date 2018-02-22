@@ -20,7 +20,9 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	Font* LoadFontInstance(const char* filepath);
+	std::string ImportFont(std::string path);
+	Font* LoadFontFromLibrary(std::string path);
+
 	void  UnloadFont(Font* font);
 	void ClearFonts();
 
@@ -28,6 +30,9 @@ public:
 	void UnloadText(uint id);
 
 	float2 CalcTextSize(const char * text, Font* font, bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
+
+private:
+	Font* LoadFontInstance(const char* filepath);
 };
 
 #endif // !_H_FONT_IMPORTER_

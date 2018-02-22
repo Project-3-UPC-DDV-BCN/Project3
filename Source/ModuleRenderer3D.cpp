@@ -311,6 +311,11 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			// WORLD
 			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 			{
+				if((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+					SetUniformBool(program->GetProgramID(), "is_ui", false);
+				else
+					SetUniformBool(program->GetProgramID(), "is_ui", true);
+
 				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
 				SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
 				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
@@ -319,6 +324,8 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			// ORTHO
 			else
 			{
+				SetUniformBool(program->GetProgramID(), "is_ui", true);
+
 				float2 win_size = App->editor->game_window->GetSize();
 
 				float far_p = -1000;
@@ -346,6 +353,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 			BindVertexArrayObject((*it).GetPlane()->id_vao);
 
+			App->renderer3D->SendLight(program->GetProgramID());
 
 			glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
 
@@ -464,6 +472,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		material->LoadToMemory();
 	}
 
+	SetUniformBool(program, "is_ui", false);
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());

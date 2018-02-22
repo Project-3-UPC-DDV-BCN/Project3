@@ -11,6 +11,7 @@ class Prefab;
 class GameObject;
 class Material;
 class Script;
+class Font;
 
 class ResourcesWindow :
 	public Window
@@ -28,6 +29,7 @@ public:
 	Material* GetMaterial() const;
 	Script* GetScript() const;
 	Shader* GetShader() const;
+	Font* GetFont() const;
 	void SetShaderType(Shader::ShaderType type);
 	void SetCurrentInputName(std::string name);
 	std::string GetCurrentInputName() const;
@@ -42,6 +44,7 @@ private:
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, Shader*> shaders_list;
+	std::map<uint, Font*> fonts_list;
 
 	Texture* texture_to_return;
 	Mesh* mesh_to_return;
@@ -51,6 +54,7 @@ private:
 	Script* script_to_return;
 	Shader* shader_to_return;
 	Shader::ShaderType shader_type;
+	Font* font_to_return;
 
 public:
 	bool texture_changed;
@@ -60,6 +64,7 @@ public:
 	bool material_changed;
 	bool script_changed;
 	bool shader_changed;
+	bool font_changed;
 
 	std::string current_input_name;
 };

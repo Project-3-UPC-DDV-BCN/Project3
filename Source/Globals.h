@@ -75,6 +75,7 @@ enum update_status
 #define ASSETS_FBX_FOLDER_PATH "./Project/Assets/FBX"
 #define ASSETS_SHADERS_FOLDER "./Project/Assets/Shaders/"
 #define ASSETS_SHADERS_FOLDER_PATH "./Project/Assets/Shaders"
+#define ASSETS_FONTS_FOLDER "./Project/Assets/Fonts/"
 #define ASSETS_FONTS_FOLDER_PATH "./Project/Assets/Fonts"
 
 #define LIBRARY_FOLDER "./Project/Library/"
@@ -91,6 +92,8 @@ enum update_status
 #define LIBRARY_SCRIPTS_FOLDER_PATH "./Project/Library/Scripts"
 #define LIBRARY_SHADERS_FOLDER "./Project/Library/Shaders/"
 #define LIBRARY_SHADERS_FOLDER_PATH "./Project/Library/Shaders"
+#define LIBRARY_FONTS_FOLDER "./Project/Library/Fonts/"
+#define LIBRARY_FONTS_FOLDER_PATH "./Project/Library/Fonts"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"

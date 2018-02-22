@@ -10,6 +10,7 @@ uniform bool has_material_color;
 uniform vec4 material_color;
 uniform bool has_texture;
 uniform sampler2D ourTexture;
+uniform bool is_ui;
 
 struct Material {
 	sampler2D diffuse;
@@ -85,16 +86,19 @@ else if (has_material_color)
 else
 	color = ourColor;
 
-vec3 norm = normalize(Normal);
-vec3 viewDir = normalize(viewPos - FragPos);
-
-vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
-result += CalcDirLight(dirLights[i], norm, viewDir);
-for (int k = 0; k < NR_POINT_LIGHTS; k++)
-result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);
-for (int j = 0; j < NR_SPOT_LIGHTS; j++)
-result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
-color = vec4(result, 1.0);
+	if(is_ui == false)
+	{
+		vec3 norm = normalize(Normal);
+		vec3 viewDir = normalize(viewPos - FragPos);
+		
+		vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
+		result += CalcDirLight(dirLights[i], norm, viewDir);
+		for (int k = 0; k < NR_POINT_LIGHTS; k++)
+		result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);
+		for (int j = 0; j < NR_SPOT_LIGHTS; j++)
+		result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
+		color = vec4(result, 1.0);
+	}
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

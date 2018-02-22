@@ -70,6 +70,7 @@ public:
 	void RemoveShader(Shader* shader);
 	std::map<uint, Shader*> GetShadersList() const;
 
+	Font* GetFont(std::string name) const;
 	Font* GetFont(UID uid) const;
 	void AddFont(Font* font);
 	void RemoveFont(Font* font);

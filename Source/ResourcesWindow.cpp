@@ -9,6 +9,7 @@
 #include "ModuleScene.h"
 #include "Script.h"
 #include "Shader.h"
+#include "Font.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -156,6 +157,26 @@ void ResourcesWindow::DrawWindow()
 	case Resource::ParticleFXResource:
 		break;
 	case Resource::FontResource:
+		fonts_list = App->resources->GetFontsList();
+		if (ImGui::Selectable("None##fonts"))
+		{
+			font_to_return = nullptr;
+			font_changed = true;
+			break;
+		}
+		for (std::map<uint, Font*>::const_iterator it = fonts_list.begin(); it != fonts_list.end(); it++)
+		{
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
+			{
+				if (ImGui::Selectable(name.c_str()))
+				{
+					font_to_return = it->second;
+					font_changed = true;
+					break;
+				}
+			}
+		}
 		break;
 	case Resource::RenderTextureResource:
 		break;
@@ -275,6 +296,11 @@ Shader * ResourcesWindow::GetShader() const
 	return shader_to_return;
 }
 
+Font * ResourcesWindow::GetFont() const
+{
+	return font_to_return;
+}
+
 void ResourcesWindow::SetShaderType(Shader::ShaderType type)
 {
 	shader_type = type;
@@ -298,6 +324,7 @@ void ResourcesWindow::Reset()
 	gameobject_changed = false;
 	material_changed = false;
 	script_changed = false;
+	font_changed = false;
 
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
@@ -305,6 +332,7 @@ void ResourcesWindow::Reset()
 	gameobject_to_return = nullptr;
 	material_to_return = nullptr;
 	script_to_return = nullptr;
+	font_to_return = nullptr;
 
 	shader_type = Shader::ShaderType::ST_NULL;
 	current_input_name = "";

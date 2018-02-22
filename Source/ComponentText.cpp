@@ -25,8 +25,8 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 
 	c_rect_trans->SetSize(float2(100, 40));
 
-	font = App->font_importer->LoadFontInstance("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
-	SetText("Text Component");
+	//font = App->font_importer->LoadFontInstance("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
+	//SetText("Text Component");
 
 	de_scaler = 0.1f;
 }

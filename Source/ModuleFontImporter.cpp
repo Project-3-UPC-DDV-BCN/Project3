@@ -7,6 +7,7 @@
 #include "ModuleRenderer3D.h"
 #include "OpenGL.h"
 #include "SDL_FontCache.h"
+#include "ModuleFileSystem.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_ttf/include/SDL_ttf.h"
@@ -52,10 +53,27 @@ bool ModuleFontImporter::CleanUp()
 	return ret;
 }
 
+std::string ModuleFontImporter::ImportFont(std::string path)
+{
+	std::string file_name = App->file_system->GetFileName(path);
+	std::string library_path = LIBRARY_FONTS_FOLDER + file_name;
+	App->file_system->Copy(path, library_path);
+
+	return library_path;
+}
+
+Font* ModuleFontImporter::LoadFontFromLibrary(std::string path)
+{
+	return LoadFontInstance(path.c_str());;
+}
+
 Font* ModuleFontImporter::LoadFontInstance(const char * filepath)
 {
 	Font* font = new Font(filepath);
-	
+
+	std::string file_name = App->file_system->GetFileNameWithoutExtension(filepath);
+	font->SetName(file_name);
+
 	if (font->GetValid())
 	{
 	/*	fonts.push_back(font);*/

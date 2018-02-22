@@ -237,6 +237,8 @@ void ModuleResources::ImportFile(std::string path)
 			exist = true;
 			break;
 		}
+		App->file_system->Copy(path, ASSETS_FONTS_FOLDER + file_name);
+		path = ASSETS_FONTS_FOLDER + file_name;
 		break;
 	case Resource::RenderTextureResource:
 		break;
@@ -522,6 +524,15 @@ std::map<uint, Shader*> ModuleResources::GetShadersList() const
 	return shaders_list;
 }
 
+Font * ModuleResources::GetFont(std::string name) const
+{
+	for (std::map<uint, Font*>::const_iterator it = fonts_list.begin(); it != fonts_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
 Font * ModuleResources::GetFont(UID uid) const
 {
 	if (fonts_list.find(uid) != fonts_list.end()) return fonts_list.at(uid);
@@ -691,6 +702,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
+	else if (str == ".ttf") return Resource::FontResource;
 
 	return Resource::Unknown;
 }
@@ -704,6 +716,7 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 	else if (type == Resource::MaterialResource) return ".mat";
 	else if (type == Resource::ScriptResource) return ".dll";
 	else if (type == Resource::ShaderResource) return ".shader";
+	else if (type == Resource::FontResource) return ".ttf";
 	
 	return "";
 }
@@ -821,6 +834,8 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	case Resource::ParticleFXResource:
 		break;
 	case Resource::FontResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
+		ret = App->font_importer->ImportFont(file_path);
 		break;
 	case Resource::MaterialResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
@@ -885,10 +900,16 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		resource = (Resource*)App->script_importer->LoadScriptFromLibrary(library_path);
 		break;
 	case Resource::AudioResource:
+
 		break;
 	case Resource::ParticleFXResource:
 		break;
 	case Resource::FontResource:
+		resource = (Resource*)GetFont(name);
+
+		if (resource == nullptr)
+			resource = (Resource*)App->font_importer->LoadFontFromLibrary(library_path);
+
 		break;
 	case Resource::MaterialResource:
 		if (GetMaterial(name) != nullptr)
@@ -1163,6 +1184,7 @@ void ModuleResources::CreateDefaultShaders()
 		"uniform vec4 material_color;\n"
 		"uniform bool has_texture;\n"
 		"uniform sampler2D ourTexture;\n\n"
+		"uniform bool is_ui;\n"
 
 		"struct Material {\n"
 		"	sampler2D diffuse;\n"
@@ -1238,6 +1260,8 @@ void ModuleResources::CreateDefaultShaders()
 			"else\n"
 			"	color = ourColor;\n\n"
 
+			"if(is_ui == false){\n"
+
 			"vec3 norm = normalize(Normal);\n"
 			"vec3 viewDir = normalize(viewPos - FragPos);\n\n"
 			"vec3 result = vec3(0.0, 0.0, 0.0);"
@@ -1252,6 +1276,7 @@ void ModuleResources::CreateDefaultShaders()
 				"result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);\n"
 
 			"color = vec4(result, 1.0);\n"
+			"}\n"
 		"}\n\n"
 
 		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
