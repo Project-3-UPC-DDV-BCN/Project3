@@ -15,6 +15,7 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
+#include "ModuleAudio.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -1887,4 +1888,14 @@ bool CSScript::GameObjectIsValid()
 		return false;
 	}
 	return true;
+}
+
+bool CSScript::IsMuted()
+{
+	return App->audio->IsMuted();
+}
+
+void CSScript::SetMute(bool set)
+{
+	App->audio->SetMute(set);
 }

@@ -113,6 +113,10 @@ public:
 	int GetMouseXMotion();
 	int GetMouseYMotion();
 
+	//AUDIO
+	bool IsMuted();
+	void SetMute(bool set);
+
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);

@@ -283,6 +283,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Log", (const void*)Log);
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Warning", (const void*)Warning);
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Error", (const void*)Error);
+
+	//Audio
+	mono_add_internal_call("TheEngine.TheAudio::IsMuted", (const void*)IsMuted);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -548,4 +551,14 @@ void ModuleScriptImporter::Error(MonoObject * object)
 		const char* message = mono_string_to_utf8(str2);
 		CONSOLE_ERROR("%s", message);
 	}
+}
+
+bool ModuleScriptImporter::IsMuted()
+{
+	return current_script->IsMuted();
+}
+
+void ModuleScriptImporter::SetMute(bool set)
+{
+	current_script->SetMute(set);
 }

@@ -94,6 +94,10 @@ private:
 	static void Warning(MonoObject* object);
 	static void Error(MonoObject* object);
 
+	//AUDIO
+	static bool IsMuted();
+	static void SetMute(bool set);
+
 private:
 	std::string mono_path;
 	MonoDomain* mono_domain;

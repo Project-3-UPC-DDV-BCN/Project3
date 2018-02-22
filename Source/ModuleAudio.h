@@ -65,6 +65,7 @@ public:
 	int* GetPitchPtr();
 
 	bool IsMuted();
+	void SetMute(const bool set);
 	bool* IsMutedPtr();
 
 private:

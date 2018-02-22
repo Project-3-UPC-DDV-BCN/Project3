@@ -2762,7 +2762,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		};
 
 		static const char* const csharpClasses[] = {
-			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time",
+			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio",
 		};
 		for (auto& k : csharpClasses)
 			langDef.mClasses.insert(k);
@@ -2803,6 +2803,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.class_static_auto_complete["TheVector3"] = "AngleBetween()_BackWard_CrossProduct()_Distance()_DotProduct()_Down_Forward_Left_Lerp()_Magnitude()_MoveTowards()_NLerp()_Normalize()_Project()_Reflect()_Right_Scale()_SLerp()_Up_Zero";
 		langDef.class_non_static_auto_complete["TheVector3"] = "Length_LengthSquared_Normalized_Scale()_Set()_ToQuaternion()_ToString()_x_y_z";
 		langDef.class_static_auto_complete["Time"] = "TimeScale_DeltaTime";
+		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()";
 
 		langDef.functions_info["Abs()"] = "Returns the absolute value of value. \n1. float Abs(float value) \n2. int Abs(int value)";
 		langDef.functions_info["Acos()"] = "Returns the arc-cosine of value. \nfloat Acos(float value)";
@@ -2920,7 +2921,9 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.functions_info["ToQuaternion()"] = "Converts the vector to a quaternion. \nTheQuaternion ToQuaternion()";
 		langDef.functions_info["TimeScale"] = "The scale at which the time is passing. \nfloat Scale";
 		langDef.functions_info["DeltaTime"] = "The time in seconds it took to complete the last frame. \nfloat DeltaTime";
-		
+		langDef.functions_info["IsMuted()"] = "Returns true if the global audio is muted, if not it will return false. \nbool IsMuted()";
+		langDef.functions_info["SetMute()"] = "Set the global audio to mute if set to true or unmuted if set to false. \nvoid SetMute(bool set)";
+
 		variables["Duplicate()"] = "TheGameObject";
 		variables["GetChild()"] = "TheGameObject";
 		variables["GetComponent<TheTransform>()"] = "TheTransform";
