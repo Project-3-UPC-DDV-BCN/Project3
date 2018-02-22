@@ -19,13 +19,72 @@ public class Slave1Movement {
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
 	bool slowing = false;
+	public bool invert_axis = false;
+
+	//Energy management
+	public int max_energy = 6;
+	public int shield_energy = 2;
+	public int weapon_energy = 2;
+	public int engine_energy = 2;
+	public int max_energy_on_system = 4;
 	
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
+
+		if(shield_energy+weapon_energy+engine_energy > max_energy)
+			TheConsole.Warning("Energy is not properly set up!");
+		
+		//for halves, consider a point each 2 
+		max_energy *= 2;
+		shield_energy *= 2;
+		weapon_energy *= 2;
+		engine_energy *= 2;
+		max_energy_on_system *= 2;
 	}
 	
 	void Update () 
+	{
+		Movement();
+		EnergyManagement();
+		SetValuesWithEnergy();
+	}
+
+	void SetValuesWithEnergy()
+	{}
+
+	void EnergyManagement()
+	{
+		if(TheInput.IsKeyDown("UP_ARROW"))
+		{
+			shield_energy += 2;
+			weapon_energy -= 1;
+			engine_energy -= 1;
+		}
+		
+		if(TheInput.IsKeyDown("LEFT_ARROW"))
+		{
+			shield_energy -= 1;
+			weapon_energy += 2;
+			engine_energy -= 1;
+		}
+
+		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		{
+			shield_energy -= 1;
+			weapon_energy -= 1;
+			engine_energy += 2;
+		}
+
+		if(TheInput.IsKeyDown("UP_ARROW"))
+		{
+			shield_energy = 4;
+			weapon_energy = 4;
+			engine_energy = 4;
+		}
+	}
+
+	void Movement()
 	{
 		//int rjoy_up = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_UP");
 		//int rjoy_down = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_DOWN");
@@ -44,7 +103,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
+			else new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -52,7 +112,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_down - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
+			else new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
