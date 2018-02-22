@@ -243,7 +243,6 @@ update_status ModuleScene::Update(float dt)
 			{
 				(*it)->UpdateScripts();
 				(*it)->UpdateFactory();
-					return update_status::UPDATE_ERROR;
 			}
 		}
 	}
