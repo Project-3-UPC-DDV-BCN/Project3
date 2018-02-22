@@ -6,7 +6,9 @@ public class Slave1Movement {
 	TheTransform trans;
 	public int controller_sensibility = 100;
 	public int trigger_sensibility = 0;
-	public float rotate_speed = 1.0f;
+	public float roll_rotate_speed = 1.0f;
+	public float pitch_rotate_speed = 10.0f;
+	public float yaw_rotate_speed = 10.0f;
 	public float max_vel = 10.0f;
 	public float acceleration = 1.0f;
 	public float slow_acceleration = 10.0f;
@@ -15,10 +17,10 @@ public class Slave1Movement {
 	public float accel_max_rumble_strength = 1.0f;
 	public int rotate_rumble_ms = 5;
 	public int accel_rumble_ms = 5;
-	public float yaw_rotate_speed = 10.0f;
 	
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
+	private float curr_max_vel = 10.0f;
 	bool slowing = false;
 	public bool invert_axis = false;
 
@@ -42,6 +44,8 @@ public class Slave1Movement {
 		weapon_energy *= 2;
 		engine_energy *= 2;
 		max_energy_on_system *= 2;
+		
+		curr_max_vel = max_vel;
 	}
 	
 	void Update () 
@@ -53,7 +57,7 @@ public class Slave1Movement {
 
 	void SetValuesWithEnergy()
 	{
-		
+		curr_max_vel = 0.5f*max_vel + ((12.5f*(float)engine_energy)/100)*max_vel;
 	}
 
 	void EnergyManagement()
@@ -133,8 +137,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			if(invert_axis) new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
-			else new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x += pitch_rotate_speed*move_percentage*Time.DeltaTime;
+			else new_rot.x -= pitch_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -142,8 +146,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_down - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			if(invert_axis) new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
-			else new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x -= pitch_rotate_speed*move_percentage*Time.DeltaTime;
+			else new_rot.x += pitch_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -173,7 +177,7 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_RB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z += rotate_speed*Time.DeltaTime;
+			new_rot.z += roll_rotate_speed*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
@@ -181,7 +185,7 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_LB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z -= rotate_speed*Time.DeltaTime;
+			new_rot.z -= roll_rotate_speed*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
@@ -193,7 +197,7 @@ public class Slave1Movement {
 			slowing = true;
 		}
 
-		float target_vel = vel_percent*max_vel;
+		float target_vel = vel_percent*curr_max_vel;
 
 		if(curr_vel < target_vel) 
 		{
