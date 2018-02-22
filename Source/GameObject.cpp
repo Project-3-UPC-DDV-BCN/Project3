@@ -8,6 +8,9 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
 
 GameObject::GameObject(GameObject* parent)
@@ -68,8 +71,6 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompCircleCollider:
 		break;
-	case Component::CompAudioSource:
-		break;
 	case Component::CompAnimaton:
 		break;
 	case Component::CompScript:
@@ -79,6 +80,15 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
+		break;
+	case Component::CompAudioSource:
+		components_list.push_back(component = new ComponentAudioSource(this));
+		break;
+	case Component::CompAudioListener:
+		components_list.push_back(component = new ComponentListener(this));
+		break;
+	case Component::CompAudioDistZone:
+		components_list.push_back(component = new ComponentDistorsionZone(this));
 		break;
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));

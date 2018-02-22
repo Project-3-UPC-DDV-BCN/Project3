@@ -20,6 +20,9 @@
 #include "ComponentFactory.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
 
 PropertiesWindow::PropertiesWindow()
@@ -203,6 +206,22 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Audio")) {
+					if (ImGui::MenuItem("Audio Listener"))
+					{
+						ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+					}
+					if (ImGui::MenuItem("Audio Source"))
+					{
+						ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
+					}
+					if (ImGui::MenuItem("Distorsion Zone"))
+					{
+						ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("New Factory")) {
 					static char input_text[30];
 					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
@@ -242,8 +261,6 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompCircleCollider:
 		break;
-	case Component::CompAudioSource:
-		break;
 	case Component::CompAnimaton:
 		break;
 	case Component::CompScript:
@@ -253,6 +270,15 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
+		break;
+	case Component::CompAudioListener:
+		DrawAudioListener((ComponentListener*)component);
+		break;
+	case Component::CompAudioSource:
+		DrawAudioSource((ComponentAudioSource*)component);
+		break;
+	case Component::CompAudioDistZone:
+		DrawAudioDistZone((ComponentDistorsionZone*)component);
 		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
@@ -599,6 +625,60 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		{
 			factory->SetLifeTime(life_time);
 		}
+	}
+}
+
+void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
+{
+	if (ImGui::CollapsingHeader("Listener"))
+	{
+	}
+}
+
+void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
+{
+	if (audio_source->GetEventsVector().empty())
+		audio_source->GetEvents();
+
+	if (ImGui::CollapsingHeader("Audio Source")) {
+		if (audio_source->soundbank != nullptr) {
+			std::string soundbank_name = "SoundBank: ";
+			soundbank_name += audio_source->soundbank->name.c_str();
+			if (ImGui::TreeNode(soundbank_name.c_str()))
+			{		
+				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
+				{
+					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
+					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
+				}	
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Settings##Event"))
+			{
+				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
+				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
+
+				ImGui::TreePop();
+			}
+		}
+	}
+}
+
+void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
+{
+	if (ImGui::CollapsingHeader("Distorsion Zone")) {
+		char* bus_name = new char[41];
+
+		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
+		bus_name[dist_zone->bus.length()] = '\0';
+
+		ImGui::InputText("Target bus", bus_name, 40);
+		dist_zone->bus = bus_name;
+
+		ImGui::DragFloat("Value", &dist_zone->distorsion_value, true, 0.1, 0.0, 12.0, "%.1f");
+
+		delete[] bus_name;
 	}
 }
 

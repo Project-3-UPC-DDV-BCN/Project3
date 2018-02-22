@@ -43,6 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetExt>.exe</TargetExt>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\**;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -89,20 +90,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\EngineResources\Project\Assets\SoundBanks\Wwise_IDs.h" />
     <ClInclude Include="AboutWindow.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AppWindowConfigWindow.h" />
+    <ClInclude Include="AudioEvent.h" />
+    <ClInclude Include="ComponentAudioSource.h" />
+    <ClInclude Include="AudioWindow.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ComponentLight.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="CSScript.h" />
     <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="ComponentDistorsionZone.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="Geomath.h" />
     <ClInclude Include="imgui\CustomImGui.h" />
     <ClInclude Include="imgui\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="imgui\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="ImportWindow.h" />
+    <ClInclude Include="Include_Wwise.h" />
     <ClInclude Include="InputConfigWindow.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -124,7 +133,9 @@
     <ClInclude Include="imgui\stb_textedit.h" />
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_impl_sdl.h" />
+    <ClInclude Include="JsonTool.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="ComponentListener.h" />
     <ClInclude Include="LuaScript.h" />
     <ClInclude Include="lua\include\lauxlib.h" />
     <ClInclude Include="lua\include\lua.h" />
@@ -212,6 +223,7 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="Parson\parson.h" />
     <ClInclude Include="PerformanceWindow.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Prefab.h" />
@@ -224,6 +236,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDome.h" />
+    <ClInclude Include="SoundBank.h" />
     <ClInclude Include="TagsAndLayers.h" />
     <ClInclude Include="TagsAndLayersWindow.h" />
     <ClInclude Include="TextEditorWindow.h" />
@@ -239,22 +252,29 @@
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Wwise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutWindow.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AppWindowConfigWindow.cpp" />
+    <ClCompile Include="AudioEvent.cpp" />
+    <ClCompile Include="ComponentAudioSource.cpp" />
+    <ClCompile Include="AudioWindow.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentLight.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="CSScript.cpp" />
     <ClCompile Include="CubeMap.cpp" />
+    <ClCompile Include="ComponentDistorsionZone.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="imgui\CustomImGui.cpp" />
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp" />
     <ClCompile Include="imgui\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="ImportWindow.cpp" />
+    <ClCompile Include="Include_Wwise.cpp" />
     <ClCompile Include="InputConfigWindow.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -271,7 +291,9 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="imgui_impl_sdl.cpp" />
+    <ClCompile Include="JsonTool.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="ComponentListener.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="LuaScript.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -324,6 +346,7 @@
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="Parson\parson.c" />
     <ClCompile Include="PerformanceWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Prefab.cpp" />
@@ -336,6 +359,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SkyDome.cpp" />
+    <ClCompile Include="SoundBank.cpp" />
     <ClCompile Include="TagsAndLayers.cpp" />
     <ClCompile Include="TagsAndLayersWindow.cpp" />
     <ClCompile Include="TextEditorWindow.cpp" />
@@ -351,6 +375,14 @@
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Wwise.cpp" />
+    <ClCompile Include="Wwise\IO\Common\AkDefaultLowLevelIODispatcher.cpp" />
+    <ClCompile Include="Wwise\IO\Common\AkFileLocationBase.cpp" />
+    <ClCompile Include="Wwise\IO\Common\AkFilePackage.cpp" />
+    <ClCompile Include="Wwise\IO\Common\AkFilePackageLUT.cpp" />
+    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp" />
+    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookDeferred.cpp" />
+    <ClCompile Include="Wwise\IO\Win32\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
