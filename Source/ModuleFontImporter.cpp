@@ -83,6 +83,8 @@ Font * ModuleFontImporter::CreateFontInstance(Font * font)
 	if (font != nullptr)
 	{
 		ret = new Font(font->GetAssetsPath().c_str());
+		ret->SetName(font->GetName());
+		ret->SetLibraryPath(font->GetLibraryPath());
 
 		if (!ret->GetValid())
 		{

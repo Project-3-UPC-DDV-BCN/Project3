@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "UsefulFunctions.h"
 #include "MathGeoLib\Math\Quat.h"
+#include "ModuleResources.h"
 
 ComponentText::ComponentText(GameObject * attached_gameobject)
 {
@@ -21,6 +22,7 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	italic = false;
 	underline = false;
 	strikethrough = false;
+	font_size = 24.0f;
 
 	c_rect_trans = GetRectTrans();
 
@@ -81,12 +83,30 @@ void ComponentText::Save(Data & data) const
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
+	data.AddVector4("colour", colour);
+	data.AddBool("bold", bold);
+	data.AddBool("italic", italic);
+	data.AddBool("underline", underline);
+	data.AddBool("strikethrough", strikethrough);
+	data.AddString("text", text);
+	data.AddInt("font_size", font_size);
+	if (font != nullptr)
+		data.AddString("font", font->GetName());
 }
 
 void ComponentText::Load(Data & data)
 {
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
+	SetColour(data.GetVector4("colour"));
+	SetStyleBold(data.GetBool("bold"));
+	SetStyleItalic(data.GetBool("italic"));
+	SetStyleUnderline(data.GetBool("underline"));
+	SetStyelStrikethrough(data.GetBool("strikethrough"));
+	SetFontSize(data.GetInt("font_size"));
+
+	std::string font_name = data.GetString("font");
+	SetFont(App->resources->GetFont(font_name));
 }
 
 void ComponentText::SetFont(Font * _font)
@@ -126,14 +146,16 @@ std::string ComponentText::GetText()
 
 void ComponentText::SetFontSize(uint size)
 {
+	if (size < 0)
+		size = 0;
+
+	if (size > 1000)
+		size = 1000;
+
+	font_size = size;
+
 	if (font != nullptr)
 	{
-		if (size < 0)
-			size = 0;
-
-		if (size > 1000)
-			size = 1000;
-
 		font->SetFontSize(size);
 
 		update_text = true;
@@ -142,14 +164,7 @@ void ComponentText::SetFontSize(uint size)
 
 uint ComponentText::GetFontSize() const
 {
-	uint ret = 0;
-
-	if (font != nullptr)
-	{
-		ret = font->GetFontSize();
-	}
-
-	return ret;
+	return font_size;
 }
 
 const char * ComponentText::GetFontName()
@@ -284,6 +299,9 @@ void ComponentText::UpdateText()
 {
 	if (font != nullptr)
 	{
+		if (font_size != font->GetFontSize())
+			font->SetFontSize(font_size);
+		
 		if (texture != 0)
 			App->font_importer->UnloadText(texture);
 

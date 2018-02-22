@@ -61,14 +61,12 @@ private:
 	float2 text_size;
 
 	std::string text;
+	float font_size;
 	float4 colour;
 	bool bold;
 	bool italic;
 	bool underline;
 	bool strikethrough;
-
-	float de_scaler;
-
 };
 
 #endif // !_H_COMPONENT_TEXT__
