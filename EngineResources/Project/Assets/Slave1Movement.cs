@@ -52,7 +52,9 @@ public class Slave1Movement {
 	}
 
 	void SetValuesWithEnergy()
-	{}
+	{
+		
+	}
 
 	void EnergyManagement()
 	{
@@ -61,8 +63,14 @@ public class Slave1Movement {
 			if(shield_energy < max_energy_on_system-1)
 			{
 				shield_energy += 2;
-				weapon_energy -= 1;
-				engine_energy -= 1;
+				if(weapon_energy > 0 && engine_energy > 0)
+				{
+					weapon_energy -= 1;
+					engine_energy -= 1;
+				}
+				else if(weapon_energy > 2)
+					weapon_energy -= 2;
+				else engine_energy -=2;
 			}
 		}
 		
@@ -70,19 +78,31 @@ public class Slave1Movement {
 		{
 			if(weapon_energy < max_energy_on_system-1)
 			{
-				shield_energy -= 1;
 				weapon_energy += 2;
-				engine_energy -= 1;
+				if(shield_energy > 0 && engine_energy > 0)
+				{
+					shield_energy -= 1;
+					engine_energy -= 1;
+				}
+				else if(shield_energy > 2)
+					shield_energy -= 2;
+				else engine_energy -=2;
 			}
 		}
 
 		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{
-			if(weapon_energy < max_energy_on_system-1)
+			if(engine_energy < max_energy_on_system-1)
 			{
-				shield_energy -= 1;
-				weapon_energy -= 1;
 				engine_energy += 2;
+				if(shield_energy > 0 && weapon_energy > 0)
+				{
+					shield_energy -= 1;
+					weapon_energy -= 1;
+				}
+				else if(shield_energy > 2)
+					shield_energy -= 2;
+				else weapon_energy -=2;
 			}
 		}
 
