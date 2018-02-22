@@ -16,8 +16,20 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	light_offset_direction = float3::zero;
 	position = float3::zero;
 	SetTypeToSpot();
-	/*SetDirectionOffset({ 0,0,0 });*/
-	//SetPositionOffset({ 0,0,0 });
+
+	(attached_gameobject) ? view.pos = attached_gameobject->GetGlobalTransfomMatrix().TranslatePart() : view.pos = float3::zero;
+	(attached_gameobject) ? view.front = attached_gameobject->GetGlobalTransfomMatrix().WorldZ() : view.front = float3::unitZ;
+	(attached_gameobject) ? view.up = attached_gameobject->GetGlobalTransfomMatrix().WorldY() : view.up = float3::unitY;
+
+	view.type = FrustumType::PerspectiveFrustum;
+	view.nearPlaneDistance = 0.3f;
+	view.farPlaneDistance = 1000;
+
+	aspect_ratio = SHADOW_WIDTH / SHADOW_HEIGHT;
+
+	view.horizontalFov = math::Atan(aspect_ratio * math::Tan(view.verticalFov / 2)) * 2;
+
+
 }
 
 ComponentLight::~ComponentLight()
@@ -285,4 +297,30 @@ void ComponentLight::SetDirectionFromGO(float3 pre_direction)
 void ComponentLight::SetPositionFromGO(float3 pre_position)
 {
 	position = pre_position + light_offset_pos;
+}
+
+void ComponentLight::UpdateViewPosition()
+{
+	view.pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
+	view.front = GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized();
+	view.up = GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized();
+}
+
+float * ComponentLight::GetProjectionMatrix() const
+{
+	static float4x4 matrix;
+
+	matrix = view.ProjectionMatrix();
+	matrix.Transpose();
+
+	return (float*)matrix.v;
+}
+
+float * ComponentLight::GetViewMatrix()
+{
+	static float4x4 matrix;
+	matrix = view.ViewMatrix();
+	matrix.Transpose();
+
+	return (float*)matrix.v;
 }

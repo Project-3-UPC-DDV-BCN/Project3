@@ -24,6 +24,7 @@
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
 
+
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "Glew/libx86/glew32.lib")
@@ -1111,6 +1112,12 @@ void ModuleRenderer3D::SetDepthMap()
 }
 void ModuleRenderer3D::DrawFromLightForShadows()
 {
+	float near_plane = 1.0f, far_plane = 7.5f;
+	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+
+
+
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
