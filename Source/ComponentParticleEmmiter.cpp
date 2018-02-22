@@ -3,6 +3,8 @@
 #include "ComponentBillboard.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "Shader.h"
+#include "ShaderProgram.h"
 #include "ParticleData.h"
 #include "ComponentCamera.h"
 #include "Application.h"
@@ -183,13 +185,20 @@ bool ComponentParticleEmmiter::Update()
 				}
 			}
 
-			// ---
+			// Shock Wave
+
 				
 				
 		}
 	}
 
 	GenerateParticles();
+
+	if (data->shock_wave.active && data->shock_wave.done == false && system_state == PARTICLE_STATE_PLAY)
+	{
+		UpdateShockWave();
+		DrawShockWave(App->renderer3D->editor_camera);
+	}
 
 	return true;
 }
@@ -435,6 +444,73 @@ void ComponentParticleEmmiter::SetTurnOffLimit()
 	{
 		automatic_turnoff = true; 
 	}
+}
+
+void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
+{
+	data->shock_wave.active = true; 
+	data->shock_wave.wave_mesh = App->resources->GetMesh("PrimitivePlane"); 
+	data->shock_wave.wave_transform = new ComponentTransform(nullptr, true); 
+	data->shock_wave.wave_texture = texture; 
+	data->shock_wave.duration = duration; 
+	data->shock_wave.final_scale = final_scale; 
+	data->shock_wave.wave_timer.Start(); 
+}
+
+void ComponentParticleEmmiter::UpdateShockWave()
+{
+	//We get the number that we have to increment 
+	float time_ex = data->shock_wave.wave_timer.Read() / 1000;
+	float time_dec = data->shock_wave.wave_timer.Read() % 1000;
+	float time = time_ex + time_dec / 1000;
+
+	float percentage = (time / (data->shock_wave.duration));
+
+	//We get the current scale 
+	float current_scale = data->shock_wave.final_scale * percentage; 
+
+	data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
+	data->shock_wave.wave_transform->SetScale({ 1, 1,1 });
+
+	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration)
+	{
+		data->shock_wave.active = false;
+		data->shock_wave.done = true; 
+	}
+		
+}
+
+void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
+{
+	//Activate shader program
+	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+	App->renderer3D->UseShaderProgram(id);
+
+	App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
+	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
+	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
+
+	if (data->shock_wave.wave_texture != nullptr)
+	{	
+		if (data->shock_wave.wave_texture->GetID() == 0)
+			data->shock_wave.wave_texture->LoadToMemory();
+
+		App->renderer3D->SetUniformBool(id, "has_texture", true);
+		App->renderer3D->SetUniformBool(id, "has_material_color", false);
+
+		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+
+		glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
+	}
+
+	if (data->shock_wave.wave_mesh->id_indices == 0)
+		data->shock_wave.wave_mesh->LoadToMemory();
+
+	App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
+
+	glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+	App->renderer3D->UnbindVertexArrayObject();
 }
 
 

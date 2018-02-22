@@ -119,7 +119,7 @@ float Particle::GetAlphaInterpolationPercentage()
 void Particle::ApplyAngularVelocity()
 {
 	float rads_to_spin = particle_data->angular_v * (2 * pi) / 360;
-	//GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
+	GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
 }
 
 void Particle::SetColor(Color new_color)
@@ -286,7 +286,7 @@ void Particle::UpdateSize()
 	float increment_z = 1;
 
 	//Apply the increment
-	float3 new_scale = { particle_data->initial_scale.x + increment_x, 0,  particle_data->initial_scale.x + increment_x };
+	float3 new_scale = { particle_data->initial_scale.x + increment_x, particle_data->initial_scale.x + increment_x,  1 };
 	GetAtributes().particle_transform->SetScale(new_scale);
 
 }
@@ -324,8 +324,6 @@ void Particle::UpdateRotation()
 
 void Particle::SetInterpolationRotation(float initial_v, float final_v)
 {
-	particle_data->change_size_interpolation = true;
-
 	particle_data->initial_angular_v = initial_v;
 	particle_data->final_angular_v = final_v;
 }
@@ -365,12 +363,12 @@ void Particle::Update()
 		GetAlphaInterpolationPercentage(); 
 
 	//Update scale
-	//if (particle_data->change_size_interpolation)
-	//	UpdateSize();
+	if (particle_data->change_size_interpolation)
+		UpdateSize();
 
 	//Update rotation
-	//if (particle_data->change_rotation_interpolation)
-	//	UpdateRotation(); 
+	if (particle_data->change_rotation_interpolation)
+		UpdateRotation(); 
 
 	//Apply angular velocity
 	ApplyAngularVelocity();

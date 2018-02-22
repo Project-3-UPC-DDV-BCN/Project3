@@ -5,11 +5,37 @@
 #include "ComponentBillboard.h"
 #include "Texture.h"
 #include "Resource.h"
+#include "Mesh.h"
 #include "Color.h"
 #include "Timer.h"
 #include "MathGeoLib\MathGeoLib.h"
 
 using namespace std; 
+
+struct ShockWave
+{
+	Mesh* wave_mesh;
+	float duration;
+	float final_scale;
+
+	Timer wave_timer; 
+	ComponentTransform* wave_transform;
+	Texture* wave_texture; 
+
+	bool active;
+	bool done; 
+
+	void ToNull()
+	{
+		wave_mesh = nullptr; 
+		duration = 0; 
+		final_scale = 0;
+		active = false; 
+		done = false; 
+		wave_transform = nullptr; 
+		wave_texture = nullptr; 
+	}
+};
 
 struct ParticleAnimation
 {
@@ -60,6 +86,7 @@ public:
 
 	//Animations 
 	ParticleAnimation animation_system;
+	ShockWave shock_wave; 
 
 	//UI Data -------	
 	float max_lifetime;						//Time that particules will be rendering
@@ -108,6 +135,4 @@ public:
 	//Booleans
 	bool billboarding;
 	bool relative_pos;
-
-
 };

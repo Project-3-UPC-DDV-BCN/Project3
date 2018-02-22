@@ -1,4 +1,6 @@
 #include "ParticleData.h"
+#include "Application.h"
+#include "ModuleResources.h"
 #include "Texture.h"
 
 ParticleData::ParticleData()
@@ -17,12 +19,14 @@ void ParticleData::LoadDefaultData()
 	max_lifetime = 1;
 	velocity = 5.0f;
 	color = Color(255, 255, 255, 0);
+	billboard_type = BILLBOARD_NONE; 
 	billboarding = false;
 	gravity = { 0,0,0 };
 	angular_v = 0;
 	emision_angle = 0;
 	time_step = 0.2;
 
+	shock_wave.ToNull(); 
 
 	emmit_width = 1;
 	emmit_height = 1;
@@ -72,14 +76,19 @@ void ParticleData::Save(Data & data) const
 	data.AddFloat("Emit_Height", emmit_height);
 	data.AddFloat("Emit_Depth", emmit_depth);
 
-	// Textures ----
-	
+	//billboarding 
+	data.AddBool("Billboard", billboarding); 
 
-	//------
+	if (billboard_type == BILLBOARD_X)
+		data.AddString("Billboard_Axis", "X"); 
+
+	else if (billboard_type == BILLBOARD_Y)
+		data.AddString("Billboard_Axis", "Y");
+
+	else if (billboard_type == BILLBOARD_ALL)
+		data.AddString("Billboard_Axis", "ALL");
 
 	// Colors -----
-
-	// ------
 
 	// Motion -----
 
@@ -128,24 +137,27 @@ void ParticleData::Save(Data & data) const
 }
 
 void ParticleData::SaveTextures(Data& data)
-{
-	if (animation_system.GetNumFrames() == 0)
-		data.AddBool("Has_Texture", false);
-	else
+{	
+	/*int frame_num = 1;
+
+	for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
 	{
-		data.AddBool("Has_Texture", true);
+		string tex_name("Frame_");
+		tex_name += to_string(frame_num);
+		frame_num++;
 
-		int frame_num = 1;
-
-		for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
-		{
-			string tex_name("Frame_");
-			tex_name += to_string(frame_num);
-			frame_num++;
-
-			data.AddInt(tex_name, (*it)->GetUID());
-		}
+		data.AddInt(tex_name, (*it)->GetUID());
 	}
+
+	if (animation_system.GetCurrentTexture() != 0)
+	{
+		data.AddFloat("TimeStep", animation_system.timeStep);
+		data.AddInt("Frames_Num", animation_system.GetNumFrames()); 
+	}
+	else
+		data.AddInt("Frames_Num", 0);*/
+		
+	
 }
 
 void ParticleData::Copy(ParticleData * other)
@@ -202,25 +214,38 @@ bool ParticleData::Load(Data & _data)
 	emmit_depth = _data.GetFloat("Emit_Depth");
 	
 	// Textures ----
-	if (animation_system.GetNumFrames() == 0)
-		_data.AddBool("Has_Texture", false);
-	else
-	{
-		_data.AddBool("Has_Texture", true);
+	//
+	//int frames_num = _data.GetInt("Frames_Num");
+	//for (int i = 0; i < frames_num;i++)
+	//{
+	//	string tex_name("Frame_");
+	//	tex_name += to_string(i + 1);
 
-		int frame_num = 1;
-		for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
-		{
-			string tex_name("Frame_");
-			tex_name += to_string(frame_num);
-			frame_num++;
+	//	UID uid = _data.GetInt(tex_name); 
+	//	Texture* new_texture = App->resources->GetTexture(uid); 
+	//	animation_system.AddToFrameStack(new_texture);
+	//}
 
-			_data.AddInt(tex_name, (*it)->GetUID());
-		}
-	}
-
+	//if (frames_num != 0)
+	//{
+	//	animation_system.timeStep = _data.GetFloat("TimeStep"); 
+	//}
+	
 	// Colors -----
 
+	//Billboard
+	billboarding = _data.GetBool("Billboard");
+
+	string billboard_axis = _data.GetString("Billboard_Axis"); 
+
+	if (billboard_axis == "X")
+		billboard_type = BILLBOARD_X; 
+		
+	else if (billboard_axis == "Y")
+		billboard_type = BILLBOARD_Y;
+
+	else if (billboard_axis == "ALL")
+		billboard_type = BILLBOARD_ALL;
 
 	// Motion -----
 

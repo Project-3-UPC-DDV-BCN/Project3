@@ -32,7 +32,6 @@ public:
 	void SaveSystemToBinary(); 
 
 	//Root particle
-	void CreateRootParticle();
 	void UpdateCurrentData();
 
 	//Draws
@@ -66,6 +65,11 @@ public:
 
 	//Automatic turnoff
 	void SetTurnOffLimit(); 
+
+	//ShockWave
+	void CreateShockWave(Texture*, float duration, float final_scale); 
+	void UpdateShockWave(); 
+	void DrawShockWave(ComponentCamera* active_camera);
 
 
 public:

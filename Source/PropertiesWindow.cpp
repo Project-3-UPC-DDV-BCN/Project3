@@ -667,6 +667,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			ImGui::Separator();
 
+			ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+
 			if (ImGui::TreeNode("Automatic Turn-Off System"))
 			{
 			
@@ -680,6 +682,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				}
 
 				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Shock Wave"))
+			{
+				static Texture* st_particle_texture = nullptr;
+				ImGui::InputResourceTexture("Wave Texture", &st_particle_texture);
+
+				static float wave_duration; 
+				static float final_wave_scale; 
+
+				ImGui::SliderFloat("Duration", &wave_duration, 0.1f, 5.0f);
+				ImGui::SliderFloat("Final Scale", &final_wave_scale, 1.0f, 10.0f); 
+
+				if(ImGui::Button("Apply"))
+				{
+					current_emmiter->CreateShockWave(st_particle_texture, wave_duration, final_wave_scale);
+				}
+
+				ImGui::TreePop(); 
 			}
 
 			float prev_width = current_emmiter->data->emmit_width;
@@ -744,7 +765,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::TreeNode("Motion"))
 			{
 
-				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+				
 
 				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
 				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
@@ -753,25 +774,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
 
-				if (ImGui::TreeNode("Billboard"))
-				{
-					ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
-
-					static int billboard_type;
-					ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
-
-					if (billboard_type != 0)
-					{
-						current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
-						++billboard_type;
-					}
-					else
-						current_emmiter->data->billboard_type = BILLBOARD_NONE;
-
-					ImGui::TreePop();
-				}
-
 				//current_emmiter->UpdateRootParticle();
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Billboard"))
+			{
+				ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
+
+				static int billboard_type;
+				ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+
+				if (billboard_type != 0)
+				{
+					current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
+					++billboard_type;
+				}
+				else
+					current_emmiter->data->billboard_type = BILLBOARD_NONE;
 
 				ImGui::TreePop();
 			}
@@ -793,10 +814,11 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						current_emmiter->data->change_size_interpolation = true;
 
+						if (init_scale.x == fin_scale.x)
+							current_emmiter->data->change_size_interpolation = false; 
+
 						current_emmiter->data->initial_scale = init_scale;
 						current_emmiter->data->final_scale = fin_scale;
-
-						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -817,8 +839,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 						current_emmiter->data->initial_angular_v = init_angular_v;
 						current_emmiter->data->final_angular_v = fin_angular_v;
-
-						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -853,8 +873,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::TreeNode("Color"))
 				{
-					
-
 					static int* temp_initial;
 
 					temp_initial[0] = current_emmiter->data->final_color.r;
@@ -947,6 +965,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				new_template->SetName(inputText);
 
 				new_template->Save(template_to_save);
+				new_template->SaveTextures(template_to_save); 
 				
 				string new_path_name(EDITOR_PARTICLE_FOLDER); 
 				new_path_name += inputText; 
@@ -958,6 +977,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				rename_template = false;
 			}
 
+			ImGui::SameLine();
 			
 			if (ImGui::Button("Cancel")) {
 				inputText[0] = '\0';
