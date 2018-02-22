@@ -1112,11 +1112,18 @@ void ModuleRenderer3D::SetDepthMap()
 }
 void ModuleRenderer3D::DrawFromLightForShadows()
 {
+	if (dir_lights[0] != nullptr)
+	{
+	
 	float near_plane = 1.0f, far_plane = 7.5f;
-	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 
+	float4x4 light_projection = float4x4::OpenGLPerspProjRH(near_plane, far_plane, SHADOW_WIDTH, SHADOW_HEIGHT);
 
+	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
+
+	float4x4 light_view = float4x4::LookAt(dir_lights[0]->view.front, trans->GetMatrix().WorldZ(), dir_lights[0]->view.up, trans->GetMatrix().WorldY());
+
+	float4x4 light_space_mat = light_projection * light_view;
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
@@ -1130,7 +1137,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 			SendObjectToDepthShader(mesh);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	}
 }
 
 void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh)
