@@ -80,6 +80,7 @@ private:
 	static void SetTimeScale(MonoObject* object, float scale);
 	static float GetTimeScale();
 	static float GetDeltaTime();
+	static float GetTime();
 
 	//INPUT
 	static mono_bool IsKeyDown(MonoString * key_name);

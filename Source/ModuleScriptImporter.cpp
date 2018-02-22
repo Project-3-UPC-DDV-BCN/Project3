@@ -270,6 +270,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.Time::SetTimeScale", (const void*)SetTimeScale);
 	mono_add_internal_call("TheEngine.Time::GetTimeScale", (const void*)GetTimeScale);
 	mono_add_internal_call("TheEngine.Time::GetDeltaTime", (const void*)GetDeltaTime);
+	mono_add_internal_call("TheEngine.Time::GetTime", (const void*)GetTime);
 
 	//INPUT
 	mono_add_internal_call("TheEngine.TheInput::IsKeyDown", (const void*)IsKeyDown);
@@ -479,6 +480,11 @@ float ModuleScriptImporter::GetTimeScale()
 float ModuleScriptImporter::GetDeltaTime()
 {
 	return current_script->GetDeltaTime();
+}
+
+float ModuleScriptImporter::GetTime()
+{
+	return current_script->GetTime();
 }
 
 mono_bool ModuleScriptImporter::IsKeyDown(MonoString * key_name)

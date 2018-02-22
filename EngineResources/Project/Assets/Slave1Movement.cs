@@ -23,7 +23,8 @@ public class Slave1Movement {
 	private float curr_max_vel = 10.0f;
 	bool slowing = false;
 	public bool invert_axis = false;
-
+	
+	public float slow_time = 2.0f;
 	//Energy management
 	public int max_energy = 6;
 	public int shield_energy = 2;
@@ -31,6 +32,8 @@ public class Slave1Movement {
 	public int engine_energy = 2;
 	public int max_energy_on_system = 4;
 	
+	private float slow_timer = 0;
+
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
@@ -190,11 +193,18 @@ public class Slave1Movement {
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
 		
+		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
+			slow_timer = Time.time;
+
 		slowing = false;
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
 		{
-			vel_percent = slow_vel_percent;
-			slowing = true;
+			TheConsole.Log(Time.time);
+			if(Time.time - slow_timer < slow_time)
+			{
+				vel_percent = slow_vel_percent;
+				slowing = true;
+			}
 		}
 
 		float target_vel = vel_percent*curr_max_vel;

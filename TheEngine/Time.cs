@@ -28,6 +28,14 @@ namespace TheEngine
             }
         }
 
+        public static float time
+        {
+            get
+            {
+                return GetTime();
+            }
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetScale();
 
@@ -36,6 +44,9 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetDeltaTime();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float GetTime();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float SetDeltaTime(float delta_time);

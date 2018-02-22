@@ -1446,6 +1446,11 @@ float CSScript::GetDeltaTime()
 	return App->time->GetGameDt();
 }
 
+float CSScript::GetTime()
+{
+	return App->time->GetTimeSec();
+}
+
 mono_bool CSScript::IsKeyDown(MonoString * key_name)
 {
 	bool ret = false;

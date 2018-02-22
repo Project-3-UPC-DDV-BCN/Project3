@@ -104,6 +104,7 @@ public:
 	void SetTimeScale(MonoObject* object, float scale);
 	float GetTimeScale();
 	float GetDeltaTime();
+	float GetTime();
 
 	//INPUT
 	mono_bool IsKeyDown(MonoString * key_name);

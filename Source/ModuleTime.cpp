@@ -38,3 +38,8 @@ Uint32 ModuleTime::GetTime()
 {
 	return time.Read();
 }
+
+float ModuleTime::GetTimeSec()
+{
+	return (float)time.Read()/1000;
+}
