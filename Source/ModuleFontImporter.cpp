@@ -8,6 +8,7 @@
 #include "OpenGL.h"
 #include "SDL_FontCache.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResources.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_ttf/include/SDL_ttf.h"
@@ -46,6 +47,13 @@ bool ModuleFontImporter::Start()
 bool ModuleFontImporter::CleanUp()
 {
 	bool ret = true;
+
+	std::map<uint, Font*> fonts_list = App->resources->GetFontsList();
+
+	for (std::map<uint, Font*>::iterator it = fonts_list.begin(); it != fonts_list.end(); ++it)
+	{
+		it->second->CleanUp();
+	}
 
 	UnloadFontInstance(default_font);
 	TTF_Quit();

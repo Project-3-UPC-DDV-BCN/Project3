@@ -52,6 +52,12 @@ ModuleResources::~ModuleResources()
 	}
 	materials_list.clear();
 
+	for (std::map<uint, Font*>::iterator it = fonts_list.begin(); it != fonts_list.end(); ++it)
+	{
+		RELEASE(it->second);
+	}
+	fonts_list.clear();
+
 	Data shprograms;
 	uint i = 0;
 	for (std::map<uint, ShaderProgram*>::iterator it = shader_programs_list.begin(); it != shader_programs_list.end(); ++it) 
