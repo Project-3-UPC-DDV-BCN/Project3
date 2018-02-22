@@ -23,8 +23,8 @@ public:
 	std::string ImportFont(std::string path);
 	Font* LoadFontFromLibrary(std::string path);
 
-	void  UnloadFont(Font* font);
-	void ClearFonts();
+	Font* CreateFontInstance(Font* font);
+	void  UnloadFontInstance(Font*& font);
 
 	uint LoadText(const char * text, Font* font, float4 colour = float4(255, 255, 255, 255), bool bold = false, bool italic = false, bool underline = false, bool strikethrough = false);
 	void UnloadText(uint id);

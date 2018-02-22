@@ -56,7 +56,7 @@
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameObject\Components\UI">
-      <UniqueIdentifier>{d6cf6946-7f0a-4462-a581-397c3e3e54ac}</UniqueIdentifier>
+      <UniqueIdentifier>{0bcff5f5-9b40-4c18-9fd0-5527b7c865e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -498,11 +498,17 @@
     <ClInclude Include="ComponentFactory.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
+    <ClInclude Include="Shader.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleFontImporter.h">
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleShaderImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentLight.h">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentCanvas.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
@@ -516,23 +522,17 @@
     <ClInclude Include="ComponentText.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentLight.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleShaderImporter.h">
-      <Filter>Sources\Modules\Importers</Filter>
-    </ClInclude>
     <ClInclude Include="DebugDraw.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="UsefulFunctions.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderProgram.h">
+    <ClInclude Include="Font.h">
       <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFontImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -854,11 +854,17 @@
     <ClCompile Include="ComponentFactory.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp">
+    <ClCompile Include="Shader.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleFontImporter.cpp">
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleShaderImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentLight.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCanvas.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
@@ -872,23 +878,17 @@
     <ClCompile Include="ComponentText.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentLight.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleShaderImporter.cpp">
-      <Filter>Sources\Modules\Importers</Filter>
-    </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderProgram.cpp">
+    <ClCompile Include="Font.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleFontImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -69,7 +69,7 @@ bool ComponentText::CleanUp()
 {
 	bool ret = true;
 
-	App->font_importer->UnloadFont(font);
+	App->font_importer->UnloadFontInstance(font);
 
 	return ret;
 }
@@ -84,7 +84,11 @@ void ComponentText::Load(Data & data)
 
 void ComponentText::SetFont(Font * _font)
 {
-	font = _font;
+	if (font != _font && _font != nullptr)
+	{
+		App->font_importer->UnloadFontInstance(font);
+		font = App->font_importer->CreateFontInstance(_font);
+	}
 }
 
 Font * ComponentText::GetFont()

@@ -237,7 +237,7 @@ float4x4 CanvasDrawElement::GetTransform()
 	if(!flip)
 		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
 	else
-		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, 1, size.y));
+		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, -1, -size.y));
 
 	ret = transform * size_trans;
 
@@ -253,7 +253,7 @@ float4x4 CanvasDrawElement::GetOrtoTransform() const
 	if (!flip)
 		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(-size.x, -1, -size.y));
 	else
-		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, 1, size.y));
+		size_trans = ret.FromTRS(float3::zero, Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x, -1, -size.y));
 
 	ret = orto_transform * size_trans;
 

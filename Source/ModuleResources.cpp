@@ -96,8 +96,9 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
 	{
-		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH); 
 	}
+	if(!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
 
 	CreateDefaultShaders();
 	CreateDefaultMaterial();
@@ -131,7 +132,6 @@ void ModuleResources::FillResourcesLists()
 
 	if (exist_shprog_meta)
 		LoadShaderProgramMeta(shprog_meta_file);
-
 }
 
 void ModuleResources::AddResource(Resource * resource)

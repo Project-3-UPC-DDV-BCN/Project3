@@ -15,6 +15,10 @@
 
 ModuleFontImporter::ModuleFontImporter(Application * app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
+	if (TTF_Init() == -1)
+	{
+		CONSOLE_LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+	}
 }
 
 ModuleFontImporter::~ModuleFontImporter()
@@ -24,14 +28,6 @@ ModuleFontImporter::~ModuleFontImporter()
 bool ModuleFontImporter::Init(Data * editor_config)
 {
 	bool ret = true;
-
-	CONSOLE_LOG("Init True Type Font library");
-
-	if (TTF_Init() == -1)
-	{
-		CONSOLE_LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-		ret = false;
-	}
 
 	return ret;
 }
@@ -47,7 +43,6 @@ bool ModuleFontImporter::CleanUp()
 {
 	bool ret = true;
 
-	ClearFonts();
 	TTF_Quit();
 
 	return ret;
@@ -64,7 +59,25 @@ std::string ModuleFontImporter::ImportFont(std::string path)
 
 Font* ModuleFontImporter::LoadFontFromLibrary(std::string path)
 {
-	return LoadFontInstance(path.c_str());;
+	path.erase(path.begin(), path.begin() + 2);
+	return LoadFontInstance(App->file_system->GetFullPath(path).c_str());;
+}
+
+Font * ModuleFontImporter::CreateFontInstance(Font * font)
+{
+	Font* ret = nullptr;
+
+	if (font != nullptr)
+	{
+		ret = new Font(font->GetAssetsPath().c_str());
+
+		if (!ret->GetValid())
+		{
+			RELEASE(ret);
+		}
+	}
+
+	return ret;
 }
 
 Font* ModuleFontImporter::LoadFontInstance(const char * filepath)
@@ -90,29 +103,14 @@ Font* ModuleFontImporter::LoadFontInstance(const char * filepath)
 	return font;
 }
 
-void ModuleFontImporter::UnloadFont(Font * font)
+void ModuleFontImporter::UnloadFontInstance(Font*& font)
 {
-	//for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
-	//{
-	//	if (font == (*it))
-	//	{
-	//		font->CleanUp();
-	//		RELEASE(font);
-	//		fonts.erase(it);
-	//		break;
-	//	}
-	//}
-}
-
-void ModuleFontImporter::ClearFonts()
-{
-	//for (std::vector<Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
-	//{
-	//	(*it)->CleanUp();
-	//	delete (*it);
-	//}
-
-	//fonts.clear();
+	if (font != nullptr)
+	{
+		font->CleanUp();
+		RELEASE(font);
+		font = nullptr;
+	}
 }
 
 uint ModuleFontImporter::LoadText(const char * text, Font * font, float4 colour, bool bold, bool italic, bool underline, bool strikethrough)
