@@ -38,6 +38,9 @@ void ParticleData::LoadDefaultData()
 	change_rotation_interpolation = false;
 	change_size_interpolation = false;
 	change_color_interpolation = false;
+	change_alpha_interpolation = false; 
+
+	init_alpha_interpolation_time = 0; 
 
 	initial_scale = { 1,1,1 };
 	final_scale = { 1,1,1 };

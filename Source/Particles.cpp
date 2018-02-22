@@ -90,6 +90,32 @@ float Particle::GetAngular() const
 	return particle_data->angular_v;
 }
 
+float Particle::GetAlphaInterpolationPercentage()
+{
+	float alpha_percentage = 0.0f; 
+	static bool started = false; 
+
+	if (particle_data->init_alpha_interpolation_time == 0)
+		alpha_percentage = (particle_timer.Read() /particle_data->max_lifetime * 1000); 
+	else
+	{
+		float time_to_interpolate = particle_data->max_lifetime - particle_data->init_alpha_interpolation_time; 
+
+		if (particle_timer.Read() > particle_data->init_alpha_interpolation_time && !started)
+		{
+			interpolation_timer.Start(); 
+			started = true; 
+		}
+
+		if (started)
+		{
+			alpha_percentage = (interpolation_timer.Read() / (time_to_interpolate * 1000)); 
+		}
+	}
+
+	return alpha_percentage; 
+}
+
 void Particle::ApplyAngularVelocity()
 {
 	float rads_to_spin = particle_data->angular_v * (2 * pi) / 360;
@@ -335,6 +361,9 @@ void Particle::Update()
 	if (particle_data->change_color_interpolation)
 		UpdateColor();
 
+	if (particle_data->change_alpha_interpolation)
+		GetAlphaInterpolationPercentage(); 
+
 	//Update scale
 	//if (particle_data->change_size_interpolation)
 	//	UpdateSize();
@@ -382,6 +411,14 @@ void Particle::Draw(ComponentCamera* active_camera)
 	App->renderer3D->SetUniformMatrix(id, "Model", GetAtributes().particle_transform->GetMatrix().Transposed().ptr());
 	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
 	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
+
+	if (particle_data->change_alpha_interpolation)
+	{
+		App->renderer3D->SetUniformBool(id, "alpha_interpolation", true); 
+		CONSOLE_LOG("%f", GetAlphaInterpolationPercentage()); 
+
+		//App->renderer3D->SetUniformFloat(id, "alpha_percentage", GetAlphaInterpolationPercentage()); 
+	}
 
 	if (GetAtributes().texture == nullptr)
 	{

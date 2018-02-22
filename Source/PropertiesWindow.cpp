@@ -827,21 +827,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::TreeNode("Alpha"))
 				{
-					static float init_angular_v = 0;
-					static float fin_angular_v = 0;
+					static int current_interpolation_type; 
+					ImGui::Combo("Interpolation Type", &current_interpolation_type, "Alpha Interpolation\0Match Lifetime\0Manual Start\0");
 
-					ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
+					switch (current_interpolation_type)
+					{
+					case 1:
+						break; 
 
-					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+					case 2:
+						ImGui::DragFloat("Start at", &current_emmiter->data->init_alpha_interpolation_time, 1, 0.1f, 0, current_emmiter->data->max_lifetime); 
+						break; 
+					}
 
 					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
 						current_emmiter->data->change_rotation_interpolation = true;
 
-						current_emmiter->data->initial_angular_v = init_angular_v;
-						current_emmiter->data->final_angular_v = fin_angular_v;
-
-						//current_emmiter->UpdateRootParticle();
+						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
+							current_emmiter->data->alpha_interpolation_delayed = true;
 					}
 
 					ImGui::TreePop();
@@ -849,7 +853,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::TreeNode("Color"))
 				{
-					//current_emmiter->UpdateRootParticle();
+					
 
 					static int* temp_initial;
 
@@ -911,7 +915,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 		}
 
-		ImGui::Separator();
 
 		if (ImGui::Button("Save Template"))
 		{
@@ -952,25 +955,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				template_to_save.SaveAsBinary(new_path_name);
 				App->resources->CreateResource(new_path_name);
 				
-				rename_template = false;
-			}
-
-			ImGui::SameLine();
-			if (ImGui::Button("Update Template"))
-			{
-				Data template_to_save;
-
-				ParticleData* new_template = current_emmiter->data;
-				new_template->SetName(inputText);
-				new_template->Save(template_to_save);
-
-				/*string new_path_name(EDITOR_PARTICLE_FOLDER);
-				new_path_name += inputText;
-				new_path_name += ".particle";
-
-				template_to_save.SaveAsBinary(new_path_name);
-				App->resources->CreateResource(new_path_name);*/
-
 				rename_template = false;
 			}
 

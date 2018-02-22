@@ -68,6 +68,9 @@ public:
 	void SetVelocity(const float& new_velocity);
 	float GetVelocity() const;
 
+	//Alpha
+	float GetAlphaInterpolationPercentage();
+
 	//Rotation
 	void SetAngular(const float& new_velocity);
 	float GetAngular() const;
@@ -133,6 +136,9 @@ private:
 	float distance_to_camera;
 	float3 movement;
 	int color_difference[4];
+
+	//Alpha
+	bool alpha_delayed; 
 
 	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 

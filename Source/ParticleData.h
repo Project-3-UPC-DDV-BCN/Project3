@@ -89,10 +89,13 @@ public:
 
 	///Rotation
 	bool change_rotation_interpolation;
-	float initial_angular_v;
-	float final_angular_v;
+	float init_alpha_interpolation_time; 
+	bool alpha_interpolation_delayed; 
 
 	///Alpha
+	bool change_alpha_interpolation;
+	float initial_angular_v;
+	float final_angular_v;
 
 	///Color
 	bool change_color_interpolation;
