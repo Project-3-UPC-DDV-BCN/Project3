@@ -24,7 +24,8 @@ public:
 	void Load(Data& data);
 
 	void SetFont(Font* font);
-
+	Font* GetFont();
+	bool HasFont() const;
 
 	void SetText(const char* text);
 	std::string GetText();

@@ -23,6 +23,7 @@ ResourcesWindow::ResourcesWindow()
 	material_to_return = nullptr;
 	script_to_return = nullptr;
 	shader_to_return = nullptr;
+	font_to_return = nullptr;
 
 	texture_changed = false;
 	mesh_changed = false;
@@ -31,6 +32,7 @@ ResourcesWindow::ResourcesWindow()
 	material_changed = false;
 	script_changed = false;
 	shader_changed = false;
+	font_changed = false;
 
 	shader_type = Shader::ShaderType::ST_NULL;
 

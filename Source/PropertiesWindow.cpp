@@ -508,54 +508,61 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 {
 	if (ImGui::CollapsingHeader("Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		float colour[4] = { text->GetColour().x, text->GetColour().y, text->GetColour().w, text->GetColour().z };
-
-		int size = text->GetFontSize();
-
-		bool bold = text->GetStyleBold();
-		bool italic = text->GetStyleItalic();
-		bool underline = text->GetStyleUnderline();
-		bool strikethrough = text->GetStyelStrikethrough();
-
-		char buffer[255];
-		strcpy(buffer, text->GetText().c_str());
-		if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
+		Font* font = text->GetFont();
+		if (ImGui::InputResourceFont("Font", &font))
 		{
-			text->SetText(buffer);
+			text->SetFont(font);
 		}
 
-		ImGui::Text("Font: %s", text->GetFontName());
-
-		if (ImGui::DragInt("Font Size", &size, true))
+		if (text->HasFont())
 		{
-			text->SetFontSize(size);
-		}
+			float colour[4] = { text->GetColour().x, text->GetColour().y, text->GetColour().w, text->GetColour().z };
 
-		ImGui::Text("Colour");
-		if (ImGui::ColorEdit4("", colour, ImGuiColorEditFlags_AlphaBar))
-		{
-			text->SetColour(float4(colour[0], colour[1], colour[3], colour[2]));
-		}
+			int size = text->GetFontSize();
 
-		ImGui::Text("Character");
-		if(ImGui::Checkbox("Bold", &bold))
-		{
-			text->SetStyleBold(bold);
-		}
+			bool bold = text->GetStyleBold();
+			bool italic = text->GetStyleItalic();
+			bool underline = text->GetStyleUnderline();
+			bool strikethrough = text->GetStyelStrikethrough();
 
-		if (ImGui::Checkbox("Italic", &italic))
-		{
-			text->SetStyleItalic(italic);
-		}
+			char buffer[255];
+			strcpy(buffer, text->GetText().c_str());
+			if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
+			{
+				text->SetText(buffer);
+			}
 
-		if (ImGui::Checkbox("Underline", &underline))
-		{
-			text->SetStyleUnderline(underline);
-		}
+			if (ImGui::DragInt("Font Size", &size, true))
+			{
+				text->SetFontSize(size);
+			}
 
-		if (ImGui::Checkbox("Strikethrough", &strikethrough))
-		{
-			text->SetStyelStrikethrough(strikethrough);
+			ImGui::Text("Colour");
+			if (ImGui::ColorEdit4("", colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				text->SetColour(float4(colour[0], colour[1], colour[3], colour[2]));
+			}
+
+			ImGui::Text("Character");
+			if (ImGui::Checkbox("Bold", &bold))
+			{
+				text->SetStyleBold(bold);
+			}
+
+			if (ImGui::Checkbox("Italic", &italic))
+			{
+				text->SetStyleItalic(italic);
+			}
+
+			if (ImGui::Checkbox("Underline", &underline))
+			{
+				text->SetStyleUnderline(underline);
+			}
+
+			if (ImGui::Checkbox("Strikethrough", &strikethrough))
+			{
+				text->SetStyelStrikethrough(strikethrough);
+			}
 		}
 	}
 }

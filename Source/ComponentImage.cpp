@@ -50,6 +50,11 @@ bool ComponentImage::Update()
 	return ret;
 }
 
+bool ComponentImage::HasImage()
+{
+	return texture != nullptr;
+}
+
 void ComponentImage::SetTexture(Texture* _texture)
 {
 	texture = _texture;

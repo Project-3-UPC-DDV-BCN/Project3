@@ -14,6 +14,7 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	SetType(ComponentType::CompText);
 	SetGameObject(attached_gameobject);
 
+	font = nullptr;
 	texture = 0;
 	colour = float4(1, 1, 1, 1);
 	bold = false;
@@ -24,9 +25,6 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	c_rect_trans = GetRectTrans();
 
 	c_rect_trans->SetSize(float2(100, 40));
-
-	//font = App->font_importer->LoadFontInstance("C:/Users/Guillem/Documents/GitHub/Project3/EngineResources/arial.ttf");
-	//SetText("Text Component");
 
 	de_scaler = 0.1f;
 }
@@ -84,6 +82,21 @@ void ComponentText::Load(Data & data)
 {
 }
 
+void ComponentText::SetFont(Font * _font)
+{
+	font = _font;
+}
+
+Font * ComponentText::GetFont()
+{
+	return font;
+}
+
+bool ComponentText::HasFont() const
+{
+	return font != nullptr;
+}
+
 void ComponentText::SetText(const char * _text)
 {
 	if (!TextCmp(_text, text.c_str()))
@@ -117,7 +130,14 @@ void ComponentText::SetFontSize(uint size)
 
 uint ComponentText::GetFontSize() const
 {
-	return font->GetFontSize();
+	uint ret = 0;
+
+	if (font != nullptr)
+	{
+		ret = font->GetFontSize();
+	}
+
+	return ret;
 }
 
 const char * ComponentText::GetFontName()
@@ -250,12 +270,15 @@ ComponentRectTransform * ComponentText::GetRectTrans()
 
 void ComponentText::UpdateText()
 {
-	if(texture != 0)
-		App->font_importer->UnloadText(texture);
+	if (font != nullptr)
+	{
+		if (texture != 0)
+			App->font_importer->UnloadText(texture);
 
-	float4 colour255 = float4(colour.x * 255, colour.y * 255 , colour.z * 255 , colour.w * 255 );
+		float4 colour255 = float4(colour.x * 255, colour.y * 255, colour.z * 255, colour.w * 255);
 
-	text_size = App->font_importer->CalcTextSize(text.c_str(), font, bold, italic, underline, strikethrough);
+		text_size = App->font_importer->CalcTextSize(text.c_str(), font, bold, italic, underline, strikethrough);
 
-	texture = App->font_importer->LoadText(text.c_str(), font, colour255, bold, italic, underline, strikethrough);
+		texture = App->font_importer->LoadText(text.c_str(), font, colour255, bold, italic, underline, strikethrough);
+	}
 }

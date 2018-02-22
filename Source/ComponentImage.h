@@ -17,6 +17,8 @@ public:
 
 	bool Update();
 
+	bool HasImage();
+
 	void SetTexture(Texture* text);
 	Texture* GetTexture() const;
 

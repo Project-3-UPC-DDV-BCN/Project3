@@ -553,7 +553,7 @@ namespace ImGui
 		}
 		else
 		{
-			buf_display = "None(Texture)";
+			buf_display = "None(Font)";
 		}
 		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
 
@@ -585,7 +585,7 @@ namespace ImGui
 
 		Font* new_font = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->texture_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->font_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_font = App->editor->resources_window->GetFont();
 			if (new_font != tmp_font)
