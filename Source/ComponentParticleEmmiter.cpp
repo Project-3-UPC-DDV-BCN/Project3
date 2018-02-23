@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "Shader.h"
+
 #include "ShaderProgram.h"
 #include "ParticleData.h"
 #include "ComponentCamera.h"
@@ -126,6 +127,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
 	runtime_behaviour = "null"; 
+	show_shockwave = false; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -193,7 +195,16 @@ bool ComponentParticleEmmiter::Update()
 			}
 
 			// Shock Wave
+			if (data->shock_wave.active == true)
+			{
+				UpdateShockWave(); 
+				DrawShockWave(App->renderer3D->editor_camera); 
 
+				if (data->shock_wave.done == true)
+				{
+					data->shock_wave.active = false; 
+				}
+			}
 				
 				
 		}
@@ -244,25 +255,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 void ComponentParticleEmmiter::UpdateCurrentData()
 {
-	//SetEmmisionRate(data->emmision_rate);
 
-	////Stats
-	//data->emision_angle 
-	//root_particle->SetMaxLifetime(data->max_lifetime);
-	//root_particle->SetVelocity(data->velocity);
-	//root_particle->SetAngular(data->angular_v);
-	//root_particle->SetColor(data->color);
-	//root_particle->SetGravity(data->gravity);
-	//root_particle->SetEmmisionAngle(data->emision_angle);
-
-	////Interpolations
-	//if (data->change_color_interpolation) root_particle->SetInterpolatingColor(data->change_color_interpolation, data->initial_color, data->final_color);
-	//if (data->change_size_interpolation) root_particle->SetInterpolationSize(data->change_size_interpolation, data->initial_scale, data->final_scale);
-	//if (data->change_rotation_interpolation) root_particle->SetInterpolationRotation(data->initial_angular_v, data->final_angular_v);
-
-	////Billboard & relative pos
-	//root_particle->SetBillboarding(data->billboarding);
-	//root_particle->SetWorldSpace(data->relative_pos);
 
 }
 
@@ -372,10 +365,15 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 
 void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
 {
+	data->shock_wave.object = new GameObject(); 
+
 	data->shock_wave.active = true; 
-	data->shock_wave.wave_mesh = App->resources->GetMesh("PrimitivePlane"); 
-	data->shock_wave.wave_transform = new ComponentTransform(nullptr, true); 
+	data->shock_wave.done = false; 
+
+	data->shock_wave.wave_mesh = App->resources->GetMesh("PrimitivePlane");
+	data->shock_wave.wave_transform = new ComponentTransform(data->shock_wave.object);
 	data->shock_wave.wave_texture = texture; 
+
 	data->shock_wave.duration = duration; 
 	data->shock_wave.final_scale = final_scale; 
 	data->shock_wave.wave_timer.Start(); 
@@ -394,19 +392,19 @@ void ComponentParticleEmmiter::UpdateShockWave()
 	float current_scale = data->shock_wave.final_scale * percentage; 
 
 	data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
-	data->shock_wave.wave_transform->SetScale({ 1, 1,1 });
+	data->shock_wave.wave_transform->SetScale({ 1, 1, 1 });
 
-	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration)
+	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
 	{
 		data->shock_wave.active = false;
 		data->shock_wave.done = true; 
+		show_shockwave = false; 
 	}
 		
 }
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
-	//Activate shader program
 	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
 	App->renderer3D->UseShaderProgram(id);
 

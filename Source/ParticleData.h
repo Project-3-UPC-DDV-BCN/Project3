@@ -14,11 +14,14 @@ using namespace std;
 
 struct ShockWave
 {
-	Mesh* wave_mesh;
 	float duration;
 	float final_scale;
 
-	Timer wave_timer; 
+	Timer wave_timer;
+
+	GameObject* object;
+
+	Mesh* wave_mesh;
 	ComponentTransform* wave_transform;
 	Texture* wave_texture; 
 
@@ -27,6 +30,7 @@ struct ShockWave
 
 	void ToNull()
 	{
+		object = nullptr;
 		wave_mesh = nullptr; 
 		duration = 0; 
 		final_scale = 0;
