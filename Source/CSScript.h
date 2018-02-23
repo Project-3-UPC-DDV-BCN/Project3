@@ -88,6 +88,16 @@ public:
 	MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	void LookAt(MonoObject * object, MonoObject * vector3);
 
+	//RECTTRANSFORM
+	void SetPosition(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetPosition(MonoObject * object);
+	void SetRotation(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRotation(MonoObject * object);
+	void SetSize(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetSize(MonoObject * object);
+	void SetAnchor(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetAnchor(MonoObject * object);
+
 	//FACTORY
 	void StartFactory(MonoObject * object);
 	MonoObject* Spawn(MonoObject* object);

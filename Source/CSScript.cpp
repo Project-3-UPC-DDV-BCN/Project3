@@ -15,6 +15,7 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
+#include "ComponentRectTransform.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -1147,6 +1148,65 @@ MonoObject * CSScript::GetScale(MonoObject * object, mono_bool is_global)
 
 void CSScript::LookAt(MonoObject * object, MonoObject * vector)
 {
+}
+
+void CSScript::SetPosition(MonoObject * object, MonoObject * vector3)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(vector3);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 new_pos;
+
+	if (x_field) mono_field_get_value(vector3, x_field, &new_pos.x);
+	if (y_field) mono_field_get_value(vector3, y_field, &new_pos.y);
+	if (z_field) mono_field_get_value(vector3, z_field, &new_pos.z);
+
+	ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+	rect_transform->SetPos(float2(new_pos.x, new_pos.y));
+}
+
+MonoObject * CSScript::GetPosition(MonoObject * object)
+{
+	return nullptr;
+}
+
+void CSScript::SetRotation(MonoObject * object, MonoObject * vector3)
+{
+}
+
+MonoObject * CSScript::GetRotation(MonoObject * object)
+{
+	return nullptr;
+}
+
+void CSScript::SetSize(MonoObject * object, MonoObject * vector3)
+{
+}
+
+MonoObject * CSScript::GetSize(MonoObject * object)
+{
+	return nullptr;
+}
+
+void CSScript::SetAnchor(MonoObject * object, MonoObject * vector3)
+{
+}
+
+MonoObject * CSScript::GetAnchor(MonoObject * object)
+{
+	return nullptr;
 }
 
 void CSScript::StartFactory(MonoObject * object)
