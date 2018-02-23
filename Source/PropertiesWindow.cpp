@@ -615,12 +615,11 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 		{
 			ImGui::Separator();
 
-
-			if (ImGui::TreeNodeEx("Templates"))
+			if (ImGui::TreeNode("Templates"))
 			{
 				if (!App->resources->GetParticlesList().empty())
 				{
-					map<uint, ParticleData*> tmp_map = App->resources->GetParticlesList(); 
+					map<uint, ParticleData*> tmp_map = App->resources->GetParticlesList();
 
 					for (map<uint, ParticleData*>::const_iterator it = tmp_map.begin(); it != tmp_map.end(); it++)
 					{
@@ -630,15 +629,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						}
 					}
 				}
-			
+
 
 				ImGui::TreePop();
 			}
 
-			ImGui::Text("Template Loaded:"); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
-
-			ImGui::Separator();
+			ImGui::Separator();	
 
 			if (ImGui::Button("PLAY"))
 			{
@@ -653,7 +649,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->SetSystemState(PARTICLE_STATE_PAUSE);
 			}
 
-			ImGui::SameLine();
+			ImGui::SameLine(); 
 			ImGui::Text("Particle System State: "); ImGui::SameLine();
 
 			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
@@ -661,6 +657,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
+			ImGui::Separator();
+
+			ImGui::Text("Template Loaded:"); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());	
+	
+			ImGui::Text("Auto Pause:"); ImGui::SameLine(); 
 
 			if (current_emmiter->data->autopause)
 			{
@@ -669,37 +671,47 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
 				{
 					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "TURN OFF IN (%.2f sec)", time_left / 1000);
-				}	
+					ImGui::TextColored(ImVec4(0, 0, 1, 1), "%.2f sec", time_left / 1000);
+				}
 				else
-					ImGui::TextColored(ImVec4(1, 1, 0, 1), "TURN OFF IN (%.2f sec)", time_left);
-
-				
+					ImGui::TextColored(ImVec4(0, 0, 1, 1), "%.2f sec", time_left);
 			}
-				
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
 
-			ImGui::Separator();
+			ImGui::Text("Shock Wave: "); ImGui::SameLine();
 
-			ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
-
+			if (current_emmiter->data->shock_wave.active)						
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+			
 			ImGui::Separator(); 
 
-			if (ImGui::TreeNode("Automatic Turn-Off System"))
+			if (ImGui::TreeNode("Relative Position"))
 			{
-			
+				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+				ImGui::TreePop(); 
+			}
+
+			if (ImGui::TreeNode("Auto-Pause"))
+			{		
 				static float turnoff_time = 0; 
 
 				ImGui::DragFloat("Turn off timer", &turnoff_time, 1, .1f, 0, 1000.0f);
 			
 				if (ImGui::Button("Apply"))
 				{
-					if (turnoff_time == 0)
-						current_emmiter->data->autopause = false;
-					else
+					if (turnoff_time != 0)
+					{
 						current_emmiter->data->autopause = true;
-					
-					current_emmiter->data->time_to_stop = turnoff_time;
+						current_emmiter->data->time_to_stop = turnoff_time;
+					}
 				}
+
+				ImGui::SameLine(); 
+				if (ImGui::Button("Delete"))
+					current_emmiter->data->autopause = false;
 
 				ImGui::TreePop();
 			}
@@ -916,12 +928,20 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
 
+			if (ImGui::Button("Save Template"))
+			{
+				rename_template = true;
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Update Template"))
+			{
+
+			}
+
 		}
 
-		if (ImGui::Button("Save Template"))
-		{
-			rename_template = true;
-		}
+	
 
 		if (rename_template)
 		{
@@ -972,10 +992,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 		}
 
 		ImGui::SameLine();
-
-
-		
-
 	}
 }
 

@@ -194,6 +194,9 @@ void ParticleData::Copy(ParticleData * other)
 	width_increment	= other->width_increment;
 	height_increment = other->height_increment;
 	depth_increment = other->depth_increment;
+
+	autopause = other->autopause; 
+	time_to_stop = other->time_to_stop; 
 									
 	change_size_interpolation = other->change_size_interpolation;
 	initial_scale = other->initial_scale;
