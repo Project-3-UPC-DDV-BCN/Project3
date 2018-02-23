@@ -101,10 +101,21 @@ float ComponentProgressBar::GetProgressPercentage() const
 
 void ComponentProgressBar::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddFloat("progress_percentage", progress_percentage);
+	data.AddVector4("base_colour", base_colour);
+	data.AddVector4("progress_colour", progress_colour);
 }
 
 void ComponentProgressBar::Load(Data & data)
 {
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	SetProgressPercentage(data.GetFloat("progress_percentage"));
+	SetBaseColour(data.GetVector4("base_colour"));
+	SetProgressColour(data.GetVector4("progress_colour"));
 }
 
 ComponentCanvas * ComponentProgressBar::GetCanvas()
