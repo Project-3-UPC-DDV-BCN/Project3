@@ -421,7 +421,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		float percentage = GetAlphaInterpolationPercentage(); 
 		percentage /= 1000000; 
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
-		CONSOLE_LOG("Alpha: %f", percentage); 
+		//CONSOLE_LOG("Alpha: %f", percentage); 
 	}
 
 	if (GetAtributes().texture == nullptr)
