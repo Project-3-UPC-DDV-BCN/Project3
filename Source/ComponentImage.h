@@ -25,6 +25,8 @@ public:
 	void SetColour(const float4& colour);
 	float4 GetColour() const;
 
+	void SetNativeSize();
+
 	void SetFlip(const bool& flip);
 	bool GetFlip() const;
 

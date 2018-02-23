@@ -488,9 +488,10 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 		{
 			image->SetTexture(tex);
 
-			uint width; uint height;
-			tex->GetSize(width, height);
-			ImGui::Text("Texture original size: x:%d y:%d", width, height);
+			if(ImGui::Button("Set native size"))
+			{
+				image->SetNativeSize();
+			}
 		}
 
 		bool flip = image->GetFlip();

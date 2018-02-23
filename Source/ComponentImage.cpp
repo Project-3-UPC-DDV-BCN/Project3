@@ -77,6 +77,16 @@ float4 ComponentImage::GetColour() const
 	return colour;
 }
 
+void ComponentImage::SetNativeSize()
+{
+	if (HasImage())
+	{
+		uint size_w, size_h = 0;
+		texture->GetSize(size_w, size_h);
+		c_rect_trans->SetSize(float2(size_w, size_h));
+	}
+}
+
 void ComponentImage::SetFlip(const bool & _flip)
 {
 	flip = _flip;
