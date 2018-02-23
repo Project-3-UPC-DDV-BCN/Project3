@@ -561,6 +561,17 @@ GameObject * ModuleScene::CreateText(GameObject * parent)
 	return ret;
 }
 
+GameObject * ModuleScene::CreateProgressBar(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompProgressBar);
+
+	return ret;
+}
+
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
 	bool ret = true;

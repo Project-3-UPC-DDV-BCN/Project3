@@ -16,6 +16,7 @@ class CanvasDrawElement
 public:
 	CanvasDrawElement();
 
+	void SetPosition(const float2& pos);
 	void SetSize(const float2& size);
 	void SetTransform(const float4x4& trans);
 	void SetOrtoTransform(const float4x4& trans);
@@ -32,6 +33,7 @@ public:
 
 private:
 	Mesh*    plane = nullptr;
+	float2   pos;
 	float2   size;
 	float4x4 transform;
 	float4x4 orto_transform;

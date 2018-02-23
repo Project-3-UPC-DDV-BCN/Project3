@@ -80,6 +80,12 @@ void HierarchyWindow::DrawWindow()
 							App->scene->CreateText(parent);
 						}
 
+						if (ImGui::MenuItem("Progress Bar"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateProgressBar(parent);
+						}
+
 						ImGui::EndMenu();
 					}
 
@@ -114,6 +120,10 @@ void HierarchyWindow::DrawWindow()
 					App->scene->CreateText(nullptr);
 				}
 
+				if (ImGui::MenuItem("Progress Bar"))
+				{
+					App->scene->CreateProgressBar(nullptr);
+				}
 
 				ImGui::EndMenu();
 			}

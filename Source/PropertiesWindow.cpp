@@ -25,6 +25,7 @@
 #include "ShaderProgram.h"
 #include "Shader.h"
 #include "ComponentLight.h"
+#include "ComponentProgressBar.h"
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -286,6 +287,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompText:
 		DrawTextPanel((ComponentText*)component);
+		break;
+	case Component::CompProgressBar:
+		DrawProgressBarPanel((ComponentProgressBar*)component);
 		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
@@ -564,6 +568,33 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 			{
 				text->SetStyelStrikethrough(strikethrough);
 			}
+		}
+	}
+}
+
+void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
+{
+	if (ImGui::CollapsingHeader("Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float progress = bar->GetProgressPercentage();
+		if (ImGui::DragFloat("Progress %", &progress))
+		{
+			bar->SetProgressPercentage(progress);
+		}
+
+		float base_colour[4] = { bar->GetBaseColour().x, bar->GetBaseColour().y,bar->GetBaseColour().z, bar->GetBaseColour().w };
+		float progress_colour[4] = { bar->GetProgressColour().x,bar->GetProgressColour().y,bar->GetProgressColour().z, bar->GetProgressColour().w };
+
+		ImGui::Text("Base Colour");
+		if (ImGui::ColorEdit4("Base", base_colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			bar->SetBaseColour(float4(base_colour[0], base_colour[1], base_colour[2], base_colour[3]));
+		}
+
+		ImGui::Text("Progress Colour");
+		if (ImGui::ColorEdit4("Progress", progress_colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			bar->SetProgressColour(float4(progress_colour[0], progress_colour[1], progress_colour[2], progress_colour[3]));
 		}
 	}
 }

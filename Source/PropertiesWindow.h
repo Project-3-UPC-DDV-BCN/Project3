@@ -13,6 +13,7 @@ class ComponentRectTransform;
 class ComponentCanvas;
 class ComponentImage;
 class ComponentText;
+class ComponentProgressBar;
 class ComponentLight;
 class GameObject;
 class Texture;
@@ -35,6 +36,7 @@ public:
 	void DrawCanvasPanel(ComponentCanvas* canvas);
 	void DrawImagePanel(ComponentImage* image);
 	void DrawTextPanel(ComponentText* text);
+	void DrawProgressBarPanel(ComponentProgressBar* text);
 	void DrawLightPanel(ComponentLight* light);
 
 private:

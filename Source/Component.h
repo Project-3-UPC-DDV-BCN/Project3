@@ -11,7 +11,7 @@ public:
 	enum ComponentType 
 	{
 		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompCircleCollider, CompAudioSource, CompAnimaton, 
-		CompScript, CompParticleSystem, CompFactory, CompCanvas, CompRectTransform, CompImage, CompText, CompLight, CompUnknown
+		CompScript, CompParticleSystem, CompFactory, CompCanvas, CompRectTransform, CompImage, CompText, CompProgressBar, CompLight, CompUnknown
 	};
 
 	Component();

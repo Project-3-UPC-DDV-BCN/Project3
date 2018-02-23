@@ -13,6 +13,7 @@
 #include "ComponentImage.h"
 #include "ComponentText.h"
 #include "ComponentLight.h"
+#include "ComponentProgressBar.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -91,22 +92,36 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompCanvas:
 		SetIsUI(true);
-		if(GetComponent(Component::CompCanvas) == nullptr)
+		if (GetComponent(Component::CompCanvas) == nullptr)
+		{
 			components_list.push_back(component = new ComponentCanvas(this));
-		is_canvas = true;
-		SetName("Canvas");
+			is_canvas = true;
+			SetName("Canvas");
+		}
 		break;
 	case Component::CompImage:
 		SetIsUI(true);
 		if (GetComponent(Component::CompImage) == nullptr)
+		{
 			components_list.push_back(component = new ComponentImage(this));
-		SetName("Image");
+			SetName("Image");
+		}
 		break;
 	case Component::CompText:
 		SetIsUI(true);
 		if (GetComponent(Component::CompText) == nullptr)
+		{
 			components_list.push_back(component = new ComponentText(this));
-		SetName("Text");
+			SetName("Text");
+		}
+		break;
+	case Component::CompProgressBar:
+		SetIsUI(true);
+		if (GetComponent(Component::CompProgressBar) == nullptr)
+		{
+			components_list.push_back(component = new ComponentProgressBar(this));
+			SetName("ProgressBar");
+		}
 		break;
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));
