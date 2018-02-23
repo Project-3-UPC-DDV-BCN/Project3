@@ -347,11 +347,12 @@ void Application::Play()
 		{
 			App->file_system->Create_Directory(TMP_FOLDER_PATH);
 		}
+
 		App->scene->SaveScene(TMP_FOLDER"tmp_scene");
 		App->scene->saving_index = 0;
 		App->scene->is_game = true;
 		App->scene->InitScripts();
-		App->scene->SetParticleSystemsState(PARTICLE_STATE_PLAY); 
+		App->scene->SetParticleSystemsState(); 
 	}
 }
 

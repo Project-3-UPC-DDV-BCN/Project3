@@ -16,6 +16,13 @@ class ComponentParticleEmmiter;
 class ComponentBillboard;  
 class ParticleData; 
 
+enum RuntimeBehaviour
+{
+	RUNTIME_ALWAYS_EMMIT,
+	RUNTIME_MANUAL,
+	RUNTIME_NONE, 
+};
+
 struct ParticleComponents
 {
 	Mesh* particle_mesh;
@@ -59,8 +66,7 @@ public:
 	void UpdateRotation();
 	void SetInterpolationRotation(float initial_v, float final_v);
 
-	/////Force calculations
-	//void SetMovement(float3 mov);
+	//Force calculations
 	void SetGravity(float3 grav);
 
 	//Velocity
@@ -114,8 +120,8 @@ public:
 	ParticleComponents GetAtributes();
 	ParticleData* GetData(); 
 
-	// ----
-
+	//Runtime 
+	void SetRuntimeBehaviour(const char* string); 
 
 
 public:
@@ -134,8 +140,10 @@ private:
 	//Extra data
 	float distance_to_camera;
 	float3 movement;
-
 	Color current_color_in_interpolation;
+
+	//Runtime Behaviour
+	RuntimeBehaviour runtime_behaviour; 
 
 	//Alpha
 	bool alpha_delayed; 

@@ -62,7 +62,7 @@ public:
 
 	void InitScripts();
 
-	void SetParticleSystemsState(particle_system_state new_state);
+	void SetParticleSystemsState();
 
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);

@@ -20,6 +20,7 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 {
 	//General
 	emmiter = parent;
+	runtime_behaviour = RUNTIME_NONE; 
 	particle_data = new ParticleData(); 
 	
 	//Timers
@@ -48,6 +49,18 @@ ParticleComponents Particle::GetAtributes()
 ParticleData * Particle::GetData()
 {
 	return particle_data;
+}
+
+void Particle::SetRuntimeBehaviour(const char * string)
+{
+	if (string == "Auto")
+		runtime_behaviour = RUNTIME_ALWAYS_EMMIT;
+
+	else if (string == "Auto")
+		runtime_behaviour = RUNTIME_MANUAL;
+
+	else
+		runtime_behaviour = RUNTIME_NONE; 
 }
 
 void Particle::SetMaxLifetime(const float& new_lifetime)

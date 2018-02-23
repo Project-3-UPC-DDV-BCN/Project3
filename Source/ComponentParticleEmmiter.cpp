@@ -125,6 +125,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	//Emmiter properties -------
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
+	runtime_behaviour = "null"; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -269,101 +270,29 @@ ComponentParticleEmmiter::~ComponentParticleEmmiter()
 {
 }
 
-void ComponentParticleEmmiter::Save(Data & _data) const
+void ComponentParticleEmmiter::Save(Data & data) const
 {
-	_data.AddInt("Type", GetType());
-	_data.AddBool("Active", IsActive());
-	_data.AddUInt("UUID", GetUID());
-	_data.CreateSection("Particle");
-
-	// Emmit area -----
-	_data.AddBool("Show_Emit_Area", show_emit_area);
-
-	_data.AddFloat("Emit_Width", data->emmit_width); 
-	_data.AddFloat("Emit_Height", data->emmit_height);
-	_data.AddFloat("Emit_Depth", data->emmit_depth);
-
-	// -----
-
-	// Textures ----
-
-	if(data->animation_system.GetNumFrames() == 0)
-		_data.AddBool("Has_Texture", false);
-	else
-	{
-		_data.AddBool("Has_Texture", true);
-
-		int frame_num = 1; 
-		for (vector<Texture*>::iterator it = data->animation_system.frames_stack.begin(); it != data->animation_system.frames_stack.end(); it++)
-		{
-			string tex_name("Frame_");
-			tex_name += to_string(frame_num); 
-			frame_num++; 
-
-			_data.AddInt(tex_name, (*it)->GetUID());
-		}
-	}
-
-	//------
-
-	// Colors -----
-
-	// ------
-
-	// Motion -----
-
-	_data.AddBool("Relative_Pos", data->relative_pos);
-	_data.AddInt("Emmision_Rate", data->emmision_rate);
-	_data.AddFloat("Lifetime", data->max_lifetime);
-	_data.AddFloat("Initial_Velocity", data->velocity);
-	_data.AddVector3("Gravity", data->gravity);
-	_data.AddFloat("Angular_Velocity", data->angular_v);
-	_data.AddFloat("Emmision_Angle", data->emision_angle);
-
-	// ------
-
-	// Interpolation -----
-
-	if (data->change_color_interpolation)
-	{
-		_data.AddBool("Color_Interpolation", true);
-	}
-	else
-		_data.AddBool("Color_Interpolation", false);
+	data.AddInt("Type", (int)GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	//Save Transform 
+	ComponentTransform* go_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform); 
 	
-	if (data->change_size_interpolation)
-	{
-		_data.AddBool("Size_Interpolation", true);
-
-		_data.AddVector3("Initial_Size", data->initial_scale);
-		_data.AddVector3("Final_Size", data->final_scale);
-	}
-	else
-		_data.AddBool("Size_Interpolation", false);
-
-	if (data->change_rotation_interpolation)
-	{
-		_data.AddBool("Rotation_Interpolation", true);
-
-		_data.AddFloat("Initial_Rotation", data->initial_angular_v);
-		_data.AddFloat("Final_Rotation", data->final_angular_v);
-	}
-	else
-		_data.AddBool("Rotation_Interpolation", false);
-
-	// ------
-
-	_data.CloseSection();
+	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
+	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
 }
 
-void ComponentParticleEmmiter::Load(Data & _data)
+void ComponentParticleEmmiter::Load(Data & data)
 {
-	SetType((Component::ComponentType)_data.GetInt("Type"));
-	SetActive(_data.GetBool("Active"));
-	SetUID(_data.GetUInt("UUID"));
-	_data.EnterSection("Particle");
+	SetType((Component::ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
 
-	
+	uint particle_uid = data.GetUInt("UUID");
+
+	float3 pos = data.GetVector3("Position"); 
+	float3 rot = data.GetVector3("Rotation");
+	float3 scale = { 1,1,1 }; 
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()

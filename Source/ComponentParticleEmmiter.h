@@ -55,16 +55,12 @@ public:
 	bool ShowEmmisionArea() const;
 	void SetShowEmmisionArea(bool new_show);
 
-
 	///System state
 	particle_system_state GetSystemState() const;
 	void SetSystemState(particle_system_state new_state);
 
 	///Root particle
 	Particle* GetRootParticle() const;
-
-	//Automatic turnoff
-	void SetTurnOffLimit(); 
 
 	//ShockWave
 	void CreateShockWave(Texture*, float duration, float final_scale); 
@@ -79,6 +75,7 @@ public:
 		
 	//Emmit area AABB
 	OBB emmit_area_obb; 
+	string runtime_behaviour; 
 
 private:
 

@@ -657,6 +657,15 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
+			static int runtime_behaviour_combo; 
+			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
+
+			if (runtime_behaviour_combo == 0)
+				current_emmiter->runtime_behaviour = "Auto"; 
+			
+			else if (runtime_behaviour_combo == 1)
+				current_emmiter->runtime_behaviour = "Manual";
+			
 			ImGui::Separator();
 
 			ImGui::Text("Template Loaded:"); ImGui::SameLine();
