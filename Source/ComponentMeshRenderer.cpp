@@ -62,8 +62,7 @@ void ComponentMeshRenderer::UpdateBoundingBox()
 	{
 		GetMesh()->box.SetNegativeInfinity();
 		GetMesh()->box.Enclose((float3*)GetMesh()->vertices, GetMesh()->num_vertices);
-		math::OBB obb = GetMesh()->box.Transform(GetGameObject()->GetGlobalTransfomMatrix());
-		GetMesh()->box = obb.MinimalEnclosingAABB();
+		GetMesh()->box.TransformAsAABB(GetGameObject()->GetGlobalTransfomMatrix());
 	}
 }
 
