@@ -1,5 +1,6 @@
 #include "ParticleData.h"
 #include "Application.h"
+#include "ModuleTextureImporter.h"
 #include "ModuleResources.h"
 #include "Texture.h"
 
@@ -138,25 +139,31 @@ void ParticleData::Save(Data & data) const
 
 void ParticleData::SaveTextures(Data& data)
 {	
-	/*int frame_num = 1;
 
-	for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
+	data.CreateSection("Particle_Anim");
+
+	//Texture
+	if (animation_system.GetNumFrames() > 0)
 	{
-		string tex_name("Frame_");
-		tex_name += to_string(frame_num);
-		frame_num++;
+		int counter = 0; 
+		for (vector<Texture*>::iterator it = animation_system.frames_stack.begin(); it != animation_system.frames_stack.end(); it++)
+		{
+			string tex_name("Frame_");
+			tex_name += to_string(counter + 1);
+			counter++; 
 
-		data.AddInt(tex_name, (*it)->GetUID());
+			data.AddString(tex_name, (*it)->GetLibraryPath()); 
+		}		
 	}
 
-	if (animation_system.GetCurrentTexture() != 0)
+	if (animation_system.GetNumFrames() > 1)
 	{
 		data.AddFloat("TimeStep", animation_system.timeStep);
-		data.AddInt("Frames_Num", animation_system.GetNumFrames()); 
 	}
-	else
-		data.AddInt("Frames_Num", 0);*/
-		
+
+	data.AddInt("Frames_Num", animation_system.GetNumFrames()); 
+
+	data.CloseSection(); 
 	
 }
 
@@ -214,22 +221,30 @@ bool ParticleData::Load(Data & _data)
 	emmit_depth = _data.GetFloat("Emit_Depth");
 	
 	// Textures ----
-	//
-	//int frames_num = _data.GetInt("Frames_Num");
-	//for (int i = 0; i < frames_num;i++)
-	//{
-	//	string tex_name("Frame_");
-	//	tex_name += to_string(i + 1);
 
-	//	UID uid = _data.GetInt(tex_name); 
-	//	Texture* new_texture = App->resources->GetTexture(uid); 
-	//	animation_system.AddToFrameStack(new_texture);
-	//}
+	_data.EnterSection("Particle_Anim"); 
 
-	//if (frames_num != 0)
-	//{
-	//	animation_system.timeStep = _data.GetFloat("TimeStep"); 
-	//}
+	int frames_num = _data.GetInt("Frames_Num");
+
+	for (int i = 0; i < frames_num; i++)
+	{
+		string tex_name("Frame_");
+		tex_name += to_string(i + 1);
+
+		string path = _data.GetString(tex_name); 
+
+		Texture* texture = App->texture_importer->LoadTextureFromLibrary(path);
+		animation_system.AddToFrameStack(texture); 
+	}
+
+	if (frames_num > 1)
+	{
+		animation_system.timeStep = _data.GetFloat("TimeStep"); 
+	}
+
+	animation_system.rendering_frame = 0; 
+
+	_data.LeaveSection(); 
 	
 	// Colors -----
 
@@ -285,8 +300,6 @@ bool ParticleData::Load(Data & _data)
 	width_increment = emmit_width;
 	height_increment = emmit_height;
 	depth_increment =emmit_depth;
-
-	//	AddaptEmmitAreaAABB(); 
 
 	_data.LeaveSection();
 

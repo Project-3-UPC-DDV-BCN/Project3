@@ -32,6 +32,7 @@ bool ModuleParticleImporter::Init(Data * editor_config)
 		{
 			App->resources->CreateResource(*it);
 			ParticleData* new_data = App->particle_importer->LoadTemplateFromLibrary(*it); 
+
 			App->resources->AddParticleTemplate(new_data);
 		}
 	}

@@ -626,7 +626,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						if (ImGui::MenuItem(it->second->GetName().c_str()))
 						{
-							current_emmiter->data = it->second; 
+							current_emmiter->data = it->second;
 						}
 					}
 				}
@@ -726,7 +726,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Texture"))
 			{
-
 				static Texture* st_particle_texture = nullptr;
 				ImGui::InputResourceTexture("Texture To Add", &st_particle_texture);
 
@@ -747,7 +746,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Color"))
 			{
-
 				static bool alpha_preview = true;
 				ImGui::Checkbox("Alpha", &alpha_preview);
 
@@ -764,17 +762,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Motion"))
 			{
-
-				
-
 				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
 				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
 				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
 				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
 				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
-
-				//current_emmiter->UpdateRootParticle();
 
 				ImGui::TreePop();
 			}
@@ -973,6 +966,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				template_to_save.SaveAsBinary(new_path_name);
 				App->resources->CreateResource(new_path_name);
+				App->resources->AddParticleTemplate(new_template);
 				
 				rename_template = false;
 			}
