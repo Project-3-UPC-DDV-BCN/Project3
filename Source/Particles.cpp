@@ -225,6 +225,13 @@ void Particle::UpdateColor()
 	if (!particle_data->change_color_interpolation)
 		return;
 
+	static int color_difference[3] =
+	{
+		particle_data->final_color.r - particle_data->initial_color.r,
+		particle_data->final_color.g - particle_data->initial_color.g,
+		particle_data->final_color.b - particle_data->initial_color.b,
+	}; 
+
 	//We get the number that we have to increment 
 	float time_ex = interpolation_timer.Read() / 1000;
 	float time_dec = interpolation_timer.Read() % 1000;
@@ -236,35 +243,20 @@ void Particle::UpdateColor()
 	float increment_r = color_difference[0] * percentage;
 	float increment_g = color_difference[1] * percentage;
 	float increment_b = color_difference[2] * percentage;
-	float increment_a = color_difference[3] * percentage;
 
 	//Applying the increment
-	particle_data->color.r = (particle_data->initial_color.r + increment_r) / 255;
-	particle_data->color.g = (particle_data->initial_color.g + increment_g) / 255;
-	particle_data->color.b = (particle_data->initial_color.b + increment_b) / 255;
-	particle_data->color.a = (particle_data->initial_color.a  + increment_a) / 255;
+	particle_data->color.r = (particle_data->initial_color.r + increment_r);
+	particle_data->color.g = (particle_data->initial_color.g + increment_g);
+	particle_data->color.b = (particle_data->initial_color.b + increment_b);
+	particle_data->color.a = 1;
+
+	//CONSOLE_LOG("R:%f G:%f B:%f", particle_data->color.r , particle_data->color.g, particle_data->color.b)
 
 }
 
 bool Particle::IsInterpolatingColor() const
 {
 	return particle_data->change_color_interpolation;
-}
-
-void Particle::SetInterpolatingColor(bool interpolate, Color initial_color, Color final_color)
-{
-	particle_data->change_color_interpolation = interpolate;
-
-	if (!interpolate)
-		return;
-
-	particle_data->initial_color = initial_color;
-	particle_data->final_color = final_color;
-
-	color_difference[0] = (particle_data->final_color.r - particle_data->initial_color.r);
-	color_difference[1] = (particle_data->final_color.g - particle_data->initial_color.g);
-	color_difference[2] = (particle_data->final_color.b - particle_data->initial_color.b);
-	color_difference[3] = (particle_data->final_color.a - particle_data->initial_color.a);
 }
 
 void Particle::UpdateSize()
@@ -413,9 +405,10 @@ void Particle::Draw(ComponentCamera* active_camera)
 	if (particle_data->change_alpha_interpolation)
 	{
 		App->renderer3D->SetUniformBool(id, "alpha_interpolation", true); 
-		CONSOLE_LOG("%f", GetAlphaInterpolationPercentage()); 
-
-		//App->renderer3D->SetUniformFloat(id, "alpha_percentage", GetAlphaInterpolationPercentage()); 
+		float percentage = GetAlphaInterpolationPercentage(); 
+		percentage /= 1000000; 
+		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
+		CONSOLE_LOG("Alpha: %f", percentage); 
 	}
 
 	if (GetAtributes().texture == nullptr)
@@ -423,7 +416,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f , 1.0f, 1.0f));
 	}
 	else
 	{
@@ -433,9 +426,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		//glEnable(GL_BLEND); 
-		//glEnable(GL_ALPHA_TEST);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 

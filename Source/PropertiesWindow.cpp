@@ -662,23 +662,43 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
 
-			if(current_emmiter->automatic_turnoff)
-				ImGui::TextColored(ImVec4(1, 1, 0, 1), "TURN OFF IN (%.2f sec)", current_emmiter->seconds_to_turn_off);
+			if (current_emmiter->data->autopause)
+			{
+				float time_left = current_emmiter->data->time_to_stop;
+
+				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+				{
+					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "TURN OFF IN (%.2f sec)", time_left / 1000);
+				}	
+				else
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "TURN OFF IN (%.2f sec)", time_left);
+
+				
+			}
+				
 
 			ImGui::Separator();
 
 			ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
 
+			ImGui::Separator(); 
+
 			if (ImGui::TreeNode("Automatic Turn-Off System"))
 			{
 			
 				static float turnoff_time = 0; 
+
 				ImGui::DragFloat("Turn off timer", &turnoff_time, 1, .1f, 0, 1000.0f);
 			
 				if (ImGui::Button("Apply"))
 				{
-					current_emmiter->automatic_turnoff = true; 
-					current_emmiter->seconds_to_turn_off = turnoff_time; 
+					if (turnoff_time == 0)
+						current_emmiter->data->autopause = false;
+					else
+						current_emmiter->data->autopause = true;
+					
+					current_emmiter->data->time_to_stop = turnoff_time;
 				}
 
 				ImGui::TreePop();
@@ -846,6 +866,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					switch (current_interpolation_type)
 					{
 					case 1:
+						current_emmiter->data->init_alpha_interpolation_time = 0;
 						break; 
 
 					case 2:
@@ -856,7 +877,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
 						current_emmiter->data->change_rotation_interpolation = true;
-
+			
 						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
 							current_emmiter->data->alpha_interpolation_delayed = true;
 					}
@@ -864,56 +885,27 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
-				if (ImGui::TreeNode("Color"))
+				if (ImGui::TreeNodeEx("Color"))
 				{
-					static int* temp_initial;
 
-					temp_initial[0] = current_emmiter->data->final_color.r;
-					temp_initial[1] = current_emmiter->data->final_color.g;
-					temp_initial[2] = current_emmiter->data->final_color.b;
-					temp_initial[3] = current_emmiter->data->final_color.a;
+					static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b};
 
-					ImGui::DragInt4("Initial Color", temp_initial, 1, 0, 255);
+					ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
+					
+					static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b};
 
-					if (ImGui::Button("Set Selected as Initial"))
-					{
-						current_emmiter->data->initial_color.r = current_emmiter->data->color.r * 255;
-						current_emmiter->data->initial_color.g = current_emmiter->data->color.g * 255;
-						current_emmiter->data->initial_color.b = current_emmiter->data->color.b * 255;
-						current_emmiter->data->initial_color.a = current_emmiter->data->color.a * 255;
-					}
+					ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
 
-					static int* temp_color;
-
-					temp_color[0] = current_emmiter->data->final_color.r;
-					temp_color[1] = current_emmiter->data->final_color.g;
-					temp_color[2] = current_emmiter->data->final_color.b;
-					temp_color[3] = current_emmiter->data->final_color.a;
-
-					ImGui::DragInt4("Final Color", temp_color, 1, 0, 255);
-
-					if (ImGui::Button("Set Selected as Final"))
-					{
-
-						current_emmiter->data->final_color.r = current_emmiter->data->color.r * 255;
-						current_emmiter->data->final_color.g = current_emmiter->data->color.g * 255;
-						current_emmiter->data->final_color.b = current_emmiter->data->color.b * 255;
-						current_emmiter->data->final_color.a = current_emmiter->data->color.a * 255;
-					}
-
-					ImGui::Separator();
-
-					if (ImGui::Button("Apply"))
+					if (ImGui::Button("Apply Color Interpolation"))
 					{
 						current_emmiter->data->change_color_interpolation = true;
 
-						Color initial(current_emmiter->data->initial_color.r, current_emmiter->data->initial_color.g, current_emmiter->data->initial_color.b, current_emmiter->data->initial_color.a);
-						Color final(current_emmiter->data->final_color.r, current_emmiter->data->final_color.g, current_emmiter->data->final_color.b, current_emmiter->data->final_color.a);
+						Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
+						Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
 
 						current_emmiter->data->initial_color = initial;
 						current_emmiter->data->final_color = final;
 
-						//current_emmiter->UpdateRootParticle();
 					}
 
 					ImGui::TreePop();
@@ -925,7 +917,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
 
 		}
-
 
 		if (ImGui::Button("Save Template"))
 		{

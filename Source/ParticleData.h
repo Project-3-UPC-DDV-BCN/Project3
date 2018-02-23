@@ -116,13 +116,13 @@ public:
 
 	///Rotation
 	bool change_rotation_interpolation;
-	float init_alpha_interpolation_time; 
-	bool alpha_interpolation_delayed; 
+	float initial_angular_v;
+	float final_angular_v;
 
 	///Alpha
 	bool change_alpha_interpolation;
-	float initial_angular_v;
-	float final_angular_v;
+	float init_alpha_interpolation_time;
+	bool alpha_interpolation_delayed;
 
 	///Color
 	bool change_color_interpolation;
@@ -135,4 +135,8 @@ public:
 	//Booleans
 	bool billboarding;
 	bool relative_pos;
+
+	//AutoPause
+	bool autopause; 
+	float time_to_stop;
 };

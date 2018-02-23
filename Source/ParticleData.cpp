@@ -27,6 +27,9 @@ void ParticleData::LoadDefaultData()
 	emision_angle = 0;
 	time_step = 0.2;
 
+	autopause = false; 
+	time_to_stop = 0; 
+
 	shock_wave.ToNull(); 
 
 	emmit_width = 1;
@@ -63,11 +66,7 @@ void ParticleData::LoadDefaultData()
 void ParticleData::Save(Data & data) const
 {
 
-	//data.AddInt("Type", GetType());
-	//data.AddBool("Active", IsActive());
-	//data.AddUInt("UUID", GetUID());
 	data.CreateSection("Particle");
-	//data.AddBool("Show_Emit_Area", show_emit_area);
 
 	// Emmit area -----
 
@@ -88,6 +87,12 @@ void ParticleData::Save(Data & data) const
 
 	else if (billboard_type == BILLBOARD_ALL)
 		data.AddString("Billboard_Axis", "ALL");
+
+	//AutoPause
+	data.AddBool("AutoPause", autopause); 
+
+	if(autopause)
+		data.AddFloat("Time_To_Stop", time_to_stop); 
 
 	// Colors -----
 
@@ -245,6 +250,12 @@ bool ParticleData::Load(Data & _data)
 	animation_system.rendering_frame = 0; 
 
 	_data.LeaveSection(); 
+
+	//AutoPause
+	autopause = _data.GetBool("AutoPause"); 
+
+	if(autopause)
+		time_to_stop = _data.GetFloat("Time_To_Stop"); 
 	
 	// Colors -----
 

@@ -50,7 +50,6 @@ public:
 	///Color
 	void UpdateColor();
 	bool IsInterpolatingColor() const;
-	void SetInterpolatingColor(bool interpolate, Color initial_color, Color final_color);
 
 	//Scale
 	void UpdateSize();
@@ -135,7 +134,8 @@ private:
 	//Extra data
 	float distance_to_camera;
 	float3 movement;
-	int color_difference[4];
+
+	Color current_color_in_interpolation;
 
 	//Alpha
 	bool alpha_delayed; 

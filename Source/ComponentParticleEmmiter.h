@@ -75,13 +75,10 @@ public:
 public:
 
 	ParticleData* data; 
+	Timer global_timer;									//Global emmiter timer
 		
 	//Emmit area AABB
 	OBB emmit_area_obb; 
-
-	//Automatic turnoff
-	bool automatic_turnoff;
-	float seconds_to_turn_off;
 
 private:
 
@@ -92,7 +89,7 @@ private:
 
 	//Timers
 	Timer spawn_timer;									//Timer to control the emmision rate 
-	Timer global_timer;									//Global emmiter timer
+	
 
 	//Data
 	particle_system_state system_state;					//Inner play & pause 

@@ -1173,7 +1173,9 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
 			"uniform bool alpha_interpolation;\n"
-			"uniform int alpha_percentage;\n"
+			"uniform bool color_interpolation;\n"
+			"uniform bool color_percentage;\n"
+			"uniform float alpha_percentage;\n"
 			"uniform bool has_texture;\n"
 			"uniform sampler2D ourTexture;\n\n"
 			"void main()\n"
@@ -1183,13 +1185,12 @@ void ModuleResources::CreateDefaultShaders()
 			"	else if(has_material_color)\n"
 			"		color = material_color;\n"
 			"	else\n"
-			"		color = ourColor;\n"		
-			"	if (alpha_interpolation)\n"
-			"	{\n"
+			"		color = ourColor;\n"	
+
+			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"
-			"	}\n"
-			"	if (color.a < 0.1f)\n"
-			"		discard;\n"
+			"	if(color_interpolation)\n"
+			"		color.a = alpha_percentage;\n"
 			"}";
 
 		default_frag->SetContent(shader_text);

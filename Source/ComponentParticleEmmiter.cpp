@@ -74,8 +74,12 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	
 	//Copy Interpolations
 	///Color
-	//new_particle->SetInterpolatingColor(data->change_color_interpolation, root_particle->GetInitialColor(), root_particle->GetFinalColor());
-
+	if (data->change_color_interpolation)
+	{
+		new_particle->particle_data->initial_color = data->initial_color; 
+		new_particle->particle_data->final_color = data->final_color;
+	}
+	
 	///Size
 	if (data->change_size_interpolation)
 	{
@@ -93,6 +97,14 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 		new_particle->SetAngular(data->angular_v);
 	}
 
+	///Alpha 
+	if (data->change_alpha_interpolation)
+	{
+		new_particle->particle_data->change_alpha_interpolation = true;
+		new_particle->particle_data->init_alpha_interpolation_time = data->init_alpha_interpolation_time; 
+		new_particle->particle_data->alpha_interpolation_delayed = data->alpha_interpolation_delayed; 
+	}
+		
 	//Copy Animation
 	new_particle->GetData()->animation_system = data->animation_system;
 	new_particle->GetData()->animation_system.Start();
@@ -121,11 +133,6 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
 	emmit_area_obb.SetFrom(emit_area); 
-
-	//Automatic turnoff
-	automatic_turnoff = false; 
-	seconds_to_turn_off = 0; 
-
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -176,12 +183,11 @@ bool ComponentParticleEmmiter::Update()
 				it++; 
 
 			//Automatic turnoff
-			if (automatic_turnoff)
+			if (data->autopause)
 			{
-				if (global_timer.Read() > seconds_to_turn_off * 1000)
+				if (global_timer.Read() > data->time_to_stop * 1000)
 				{
 					system_state = PARTICLE_STATE_PAUSE; 
-					automatic_turnoff = false; 
 				}
 			}
 
@@ -433,18 +439,7 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 	return nullptr;
 }
 
-void ComponentParticleEmmiter::SetTurnOffLimit()
-{
-	if (seconds_to_turn_off == 0)
-	{
-		automatic_turnoff = false; 
-		return; 
-	}
-	else
-	{
-		automatic_turnoff = true; 
-	}
-}
+
 
 void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
 {
