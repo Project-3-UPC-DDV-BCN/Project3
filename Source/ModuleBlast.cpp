@@ -152,7 +152,10 @@ update_status ModuleBlast::Update(float dt)
 		task_manager->process();
 		task_manager->wait();
 
-		model->family->postSplitUpdate();
+		if (model)
+		{
+			model->family->postSplitUpdate();
+		}
 	}
 
 	return UPDATE_CONTINUE;

@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "MathGeoLib/Math/Quat.h"
 #include "PhysicsMaterial.h"
+#include "ModuleResources.h"
 
 ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderType type)
 {
@@ -393,10 +394,44 @@ bool ComponentCollider::IsConvex() const
 
 void ComponentCollider::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddBool("IsTrigger", is_trigger);
+	data.AddBool("IsConvex", is_convex);
+	data.AddInt("CapsuleDir", capsule_direction);
+	if (phys_material)
+	{
+		data.AddBool("HaveMaterial", true);
+		data.CreateSection("PhysMaterial");
+		phys_material->Save(data);
+		data.CloseSection();
+	}
+	else
+	{
+		data.AddBool("HaveMaterial", false);
+	}
 }
 
 void ComponentCollider::Load(Data & data)
 {
+	SetType((ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	is_trigger = data.GetInt("IsTrigger");
+	is_convex = data.GetInt("IsConvex");
+	capsule_direction = (CapsuleDirection)data.GetInt("CapsuleDir");
+	if (data.GetBool("HaveMaterial"))
+	{
+		data.EnterSection("PhysMaterial");
+		uint mat_id = data.GetUInt("UUID");
+		phys_material = App->resources->GetPhysMaterial(mat_id);
+		if (phys_material)
+		{
+			phys_material->Load(data);
+		}
+		data.LeaveSection();
+	}
 }
 
 

@@ -68,9 +68,9 @@ public:
 	void SetTransform(float* transform);
 	void SetColliderScale(float3 scale);
 	void SetDynamicLocks(DynamicLocks lock_type, bool active);
-	bool GetDynamicLocks(DynamicLocks lock_type);
-	void SetCollisionMode(bool ccd);
-	bool GetCollisionMode() const;
+	bool GetDynamicLocks(DynamicLocks lock_type) const;
+	void SetCCDMode(bool ccd);
+	bool IsCCDMode() const;
 
 	void SetNewRigidBody(physx::PxRigidDynamic* new_rigid);
 

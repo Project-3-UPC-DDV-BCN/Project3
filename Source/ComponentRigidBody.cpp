@@ -430,7 +430,7 @@ void ComponentRigidBody::SetDynamicLocks(DynamicLocks lock_type, bool active)
 	}
 }
 
-bool ComponentRigidBody::GetDynamicLocks(DynamicLocks lock_type)
+bool ComponentRigidBody::GetDynamicLocks(DynamicLocks lock_type) const
 {
 	bool ret = false;
 	physx::PxRigidDynamicLockFlags flags = rigidbody->getRigidDynamicLockFlags();
@@ -462,12 +462,12 @@ bool ComponentRigidBody::GetDynamicLocks(DynamicLocks lock_type)
 	return ret;
 }
 
-void ComponentRigidBody::SetCollisionMode(bool ccd)
+void ComponentRigidBody::SetCCDMode(bool ccd)
 {
 	rigidbody->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, ccd);
 }
 
-bool ComponentRigidBody::GetCollisionMode() const
+bool ComponentRigidBody::IsCCDMode() const
 {
 	physx::PxRigidBodyFlags flag = rigidbody->getRigidBodyFlags();
 	return flag.isSet(physx::PxRigidBodyFlag::eENABLE_CCD);
@@ -482,10 +482,104 @@ void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
 
 void ComponentRigidBody::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddFloat("Mass", GetMass());
+	data.AddBool("IsUsingGravity", IsUsingGravity());
+	data.AddBool("IsKinematic", IsKinematic());
+	data.AddVector3("LinearVelocity", GetLinearVelocity());
+	data.AddVector3("AngularVelocity", GetAngularVelocity());
+	data.AddFloat("MaxAngularVelocity", GetMaxAngularVelocity());
+	data.AddFloat("LinearDamping", GetLinearDamping());
+	data.AddFloat("AngularDamping", GetAngularDamping());
+	data.AddVector3("Position", GetPosition());
+	data.AddVector3("Rotation", GetRotation());
+	data.AddVector3("CenterMass", GetCenterOfMass());
+	data.AddVector3("InertiaTensor", GetInertiaTensor());
+	data.AddFloat("SleepThreshold", GetSleepThreshold());
+	data.AddUInt("SolverIterations", GetSolverIterations());
+	data.AddUInt("VelocitySolverIterations", GetVelocitySolverIterations());
+	data.AddBool("LinearXLock", GetDynamicLocks(LinearX));
+	data.AddBool("LinearYLock", GetDynamicLocks(LinearY));
+	data.AddBool("LinearZLock", GetDynamicLocks(LinearZ));
+	data.AddBool("AngularXLock", GetDynamicLocks(AngularX));
+	data.AddBool("AngularYLock", GetDynamicLocks(AngularY));
+	data.AddBool("AngularZLock", GetDynamicLocks(AngularZ));
+	data.AddBool("IsCCDMode", IsCCDMode());
+	/*std::vector<physx::PxShape*> shapes = GetShapes();
+	data.AddInt("ShapesCount", shapes.size());
+	for (std::vector<physx::PxShape*>::iterator it = shapes.begin(), int i = 0; it != shapes.end(); it++, i++)
+	{
+		data.CreateSection("Shape_" + std::to_string(i));
+		physx::PxGeometryType::Enum type = (*it)->getGeometryType();
+		data.AddInt("ShapeType", type);
+		data.CloseSection();
+	}*/
 }
 
 void ComponentRigidBody::Load(Data & data)
 {
+	SetType((ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	SetMass(data.GetFloat("Mass"));
+	SetUseGravity(data.GetBool("IsUsingGravity"));
+	SetKinematic(data.GetBool("IsKinematic"));
+	SetLinearVelocity(data.GetVector3("LinearVelocity"));
+	SetAngularVelocity(data.GetVector3("AngularVelocity"));
+	SetMaxAngularVelocity(data.GetFloat("MaxAngularVelocity"));
+	SetLinearDamping(data.GetFloat("LinearDamping"));
+	SetAngularDamping(data.GetFloat("AngularDamping"));
+	SetPosition(data.GetVector3("Position"));
+	SetRotation(data.GetVector3("Rotation"));
+	SetCenterOfMass(data.GetVector3("CenterMass"));
+	SetInertiaTensor(data.GetVector3("InertiaTensor"));
+	SetSleepThreshold(data.GetFloat("SleepThreshold"));
+	SetSolverIterations(data.GetUInt("SolverIterations"));
+	SetVelocitySolverIterations(data.GetUInt("VelocitySolverIterations"));
+	SetDynamicLocks(LinearX, data.GetBool("LinearXLock"));
+	SetDynamicLocks(LinearY, data.GetBool("LinearYLock"));
+	SetDynamicLocks(LinearZ, data.GetBool("LinearZLock"));
+	SetDynamicLocks(AngularX, data.GetBool("AngularXLock"));
+	SetDynamicLocks(AngularY, data.GetBool("AngularYLock"));
+	SetDynamicLocks(AngularZ, data.GetBool("AngularZLock"));
+	SetCCDMode(data.GetBool("IsCCDMode"));
+	/*int shapes_count = data.GetInt("ShapesCount");
+	for (int i = 0; i < shapes_count; i++)
+	{
+		data.EnterSection("Shape_" + std::to_string(i));
+		int type = data.GetInt("ShapeType");
+		switch (type)
+		{
+		case physx::PxGeometryType::eSPHERE:
+			GetGameObject()->AddComponent(Component::CompSphereCollider);
+			break;
+		case physx::PxGeometryType::ePLANE:
+			break;
+		case physx::PxGeometryType::eCAPSULE:
+			GetGameObject()->AddComponent(Component::CompCapsuleCollider);
+			break;
+		case physx::PxGeometryType::eBOX:
+			GetGameObject()->AddComponent(Component::CompBoxCollider);
+			break;
+		case physx::PxGeometryType::eCONVEXMESH:
+			ComponentCollider* col = (ComponentCollider*)GetGameObject()->AddComponent(Component::CompMeshCollider);
+			col->ChangeMeshToConvex(true);
+			break;
+		case physx::PxGeometryType::eTRIANGLEMESH:
+			GetGameObject()->AddComponent(Component::CompMeshCollider);
+			break;
+		case physx::PxGeometryType::eHEIGHTFIELD:
+			break;
+		case physx::PxGeometryType::eGEOMETRY_COUNT:
+			break;
+		case physx::PxGeometryType::eINVALID:
+			break;
+		default:
+			break;
+		}
+	}*/
 }
 
 

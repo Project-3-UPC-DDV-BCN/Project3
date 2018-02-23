@@ -777,10 +777,10 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		{
 			rigidbody->SetKinematic(is_kinematic);
 		}
-		bool is_ccd = rigidbody->GetCollisionMode();
+		bool is_ccd = rigidbody->IsCCDMode();
 		if (ImGui::Checkbox("CCD", &is_ccd))
 		{
-			rigidbody->SetCollisionMode(is_ccd);
+			rigidbody->SetCCDMode(is_ccd);
 		}
 
 		ImGui::Text("Axis Lock");
