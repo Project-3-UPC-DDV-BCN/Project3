@@ -23,6 +23,7 @@
 #include "SceneWindow.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "ModuleMeshImporter.h"
 
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -147,7 +148,8 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 
 	//Set Up Depth Map
 	SetDepthMap();
-	
+
+
 	return ret;
 }
 
@@ -168,6 +170,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	DrawFromLightForShadows();
 
 
+
 	// Regular rendering
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
@@ -179,8 +182,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		DrawSceneCameras(*it);
 	}
-
+	
 	dynamic_mesh_to_draw.clear();
+
+
+
+
+
+
+
+
+
 
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
@@ -1137,8 +1149,30 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		if (mesh != nullptr)
 			SendObjectToDepthShader(mesh, light_space_mat);
 	}
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
+	{
+		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
+		if (mesh != nullptr)
+			SendObjectToDepthShader(mesh, light_space_mat);
+	}
+
+	uint program = 0;
+	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
+	program = shader->GetProgramID();
+	UseShaderProgram(program);
+
+	SetUniformFloat(program, "near_plane", near_plane);
+	SetUniformFloat(program, "far_plane", far_plane);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+
 	}
 }
 
@@ -1159,5 +1193,9 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, floa
 
 	SetUniformMatrix(program, "model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	SetUniformMatrix(program, "lightSpaceMatrix", lightSpaceMat.ptr());
+}
+
+void ModuleRenderer3D::SendObjectToRenderDepth(ComponentMeshRenderer* mesh)
+{
 }
 // ------------------------------------------------

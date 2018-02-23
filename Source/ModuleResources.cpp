@@ -1476,7 +1476,7 @@ void ModuleResources::CreateDefaultShaders()
 		"}\n"
 	
 		"void main()\n"
-		{\n"
+		"{\n"
 		"	float depthValue = texture(depthMap, TexCoords).r;\n"
 		
 		"	FragColor = vec4(vec3(depthValue), 1.0); // orthographic\n"
