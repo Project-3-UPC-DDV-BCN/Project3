@@ -281,13 +281,14 @@ void ModuleRenderer3D::DrawZBuffer()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, depth_map);
-	
+
 	Mesh* plane = App->resources->GetMesh("Plane001");
 	plane->LoadToMemory();
 
 	SetUniformMatrix(program, "view", App->camera->GetCamera()->GetViewMatrix());
 	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", trans.Transposed().ptr());
+}
 
 void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 {
