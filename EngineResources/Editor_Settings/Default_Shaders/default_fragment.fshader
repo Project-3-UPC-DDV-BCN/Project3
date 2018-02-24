@@ -8,6 +8,8 @@ out vec4 color;
 uniform bool has_material_color;
 uniform vec4 material_color;
 uniform bool alpha_interpolation;
+uniform bool color_interpolation;
+uniform bool color_percentage;
 uniform float alpha_percentage;
 uniform bool has_texture;
 uniform sampler2D ourTexture;
@@ -20,5 +22,4 @@ void main()
 		color = material_color;
 	else
 		color = ourColor;
-   color.a = alpha_percentage;
 }
