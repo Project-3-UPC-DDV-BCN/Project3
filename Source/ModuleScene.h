@@ -57,7 +57,7 @@ public:
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject);
 
-	void DrawSkyBox(float3 pos);
+	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);
 
 	void InitScripts();
 

@@ -34,6 +34,8 @@ ResourcesWindow::ResourcesWindow()
 	shader_type = Shader::ShaderType::ST_NULL;
 
 	type = Resource::Unknown;
+
+	current_input_name = "";
 }
 
 ResourcesWindow::~ResourcesWindow()
@@ -48,6 +50,13 @@ void ResourcesWindow::DrawWindow()
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_ShowBorders);
 
+	static char input_text[256];
+	ImGui::Text("Resource Filter: ");
+	ImGui::SameLine();
+	ImGui::TextColored({ 0,1,1,1 }, "*case sensitive!");
+	ImGui::InputText("", input_text, 256);
+	ImGui::Spacing();
+
 	switch (type)
 	{
 	case Resource::TextureResource:
@@ -60,11 +69,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::map<uint, Texture*>::const_iterator it = textures_list.begin(); it != textures_list.end(); it++)
 		{
-			if (ImGui::Selectable(it->second->GetName().c_str()))
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				texture_to_return = it->second;
-				texture_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					texture_to_return = it->second;
+					texture_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -78,11 +91,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::map<uint, Mesh*>::const_iterator it = meshes_list.begin(); it != meshes_list.end(); it++)
 		{
-			if (ImGui::Selectable(it->second->GetName().c_str()))
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				mesh_to_return = it->second;
-				mesh_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					mesh_to_return = it->second;
+					mesh_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -100,11 +117,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::map<uint, Prefab*>::const_iterator it = prefabs_list.begin(); it != prefabs_list.end(); it++)
 		{
-			if (ImGui::Selectable(it->second->GetName().c_str()))
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				prefab_to_return = it->second;
-				prefab_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					prefab_to_return = it->second;
+					prefab_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -118,11 +139,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::map<uint, Script*>::const_iterator it = scripts_list.begin(); it != scripts_list.end(); it++)
 		{
-			if (ImGui::Selectable(it->second->GetName().c_str()))
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				script_to_return = it->second;
-				script_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					script_to_return = it->second;
+					script_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -144,11 +169,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::list<GameObject*>::const_iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); it++)
 		{
-			if (ImGui::Selectable((*it)->GetName().c_str()))
+			std::string name = (*it)->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				gameobject_to_return = *it;
-				gameobject_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					gameobject_to_return = *it;
+					gameobject_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -162,11 +191,15 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::map<uint, Material*>::const_iterator it = materials_list.begin(); it != materials_list.end(); it++)
 		{
-			if (ImGui::Selectable(it->second->GetName().c_str()))
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				material_to_return = it->second;
-				material_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					material_to_return = it->second;
+					material_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -181,11 +214,15 @@ void ResourcesWindow::DrawWindow()
 		for (std::map<uint, Shader*>::const_iterator it = shaders_list.begin(); it != shaders_list.end(); it++)
 		{
 			if (it->second->GetShaderType() != shader_type) continue;
-			if (ImGui::Selectable(it->second->GetName().c_str()))
+			std::string name = it->second->GetName();
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
-				shader_to_return = it->second;
-				shader_changed = true;
-				break;
+				if (ImGui::Selectable(name.c_str()))
+				{
+					shader_to_return = it->second;
+					shader_changed = true;
+					break;
+				}
 			}
 		}
 		break;
@@ -270,4 +307,5 @@ void ResourcesWindow::Reset()
 	script_to_return = nullptr;
 
 	shader_type = Shader::ShaderType::ST_NULL;
+	current_input_name = "";
 }

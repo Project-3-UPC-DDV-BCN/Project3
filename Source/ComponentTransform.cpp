@@ -11,7 +11,7 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
 
 	position = float3(0.f, 0.f, 0.f);
 	shown_rotation = float3(0.f, 0.f, 0.f);
-	rotation = Quat(0.f, 0.f, 0.f, 0.f);
+	rotation = Quat(0.f, 0.f, 0.f, 1.f);
 	scale = float3(1.f, 1.f, 1.f);
 	global_pos = float3(0.f, 0.f, 0.f);
 	global_rot = float3(0.f, 0.f, 0.f);
@@ -46,8 +46,10 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
-	this->shown_rotation = rotation;
-	this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
+	float3 diff = rotation - shown_rotation;
+	shown_rotation = rotation;
+	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
 }
 
@@ -94,7 +96,7 @@ void ComponentTransform::UpdateGlobalMatrix()
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
+		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
 
 		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
@@ -157,6 +159,21 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 			child_transform->UpdateGlobalMatrix();
 		}
 	}
+}
+
+float3 ComponentTransform::GetForward() const
+{
+	return transform_matrix.WorldZ();
+}
+
+float3 ComponentTransform::GetUp() const
+{
+	return transform_matrix.WorldY();
+}
+
+float3 ComponentTransform::GetRight() const
+{
+	return transform_matrix.WorldX();
 }
 
 void ComponentTransform::Save(Data & data) const

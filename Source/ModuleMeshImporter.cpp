@@ -129,6 +129,7 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			root->SetName(root_go_name);
 			ComponentTransform* transform = (ComponentTransform*)root->GetComponent(Component::CompTransform);
 			math::Quat math_quat(quat.x, quat.y, quat.z, quat.w);
+			if (math_quat.x == 0.f && math_quat.y == 0.f && math_quat.z == 0.f)	math_quat.w = 1.f;
 			float3 rotation = math::RadToDeg(math_quat.ToEulerXYZ());
 			transform->SetPosition({ pos.x, pos.y, pos.z });
 			transform->SetRotation(rotation);
@@ -595,7 +596,7 @@ void ModuleMeshImporter::CreatePlane() const
 	int resZ = 2;
 
 	//vertices
-	uint num_vert = resX * resZ;
+	plane->num_vertices = resX * resZ;
 	float3 ver[4];
 	for (int z = 0; z < resZ; z++)
 	{
@@ -609,17 +610,17 @@ void ModuleMeshImporter::CreatePlane() const
 		}
 	}
 
-	float* vertices = new float[num_vert * 3];
-	for (int i = 0; i < num_vert; ++i)
+	float* vertices = new float[plane->num_vertices * 3];
+	for (int i = 0; i < plane->num_vertices; ++i)
 	{
 		memcpy(vertices + i * 3, ver[i].ptr(), sizeof(float) * 3);
 	}
 
 	//indices
-	uint num_indices = (resX - 1) * (resZ - 1) * 6;
+	plane->num_indices = (resX - 1) * (resZ - 1) * 6;
 	uint ind[6];
 	int t = 0;
-	for (int face = 0; face < num_indices / 6; ++face)
+	for (int face = 0; face < plane->num_indices / 6; ++face)
 	{
 		int i = face % (resX - 1) + (face / (resZ - 1) * resX);
 
@@ -631,8 +632,8 @@ void ModuleMeshImporter::CreatePlane() const
 		ind[t++] = i + resX + 1;
 		ind[t++] = i + 1;
 	}
-	plane->indices = new uint[num_indices];
-	memcpy(plane->indices, ind, sizeof(uint)*num_indices);
+	plane->indices = new uint[plane->num_indices];
+	memcpy(plane->indices, ind, sizeof(uint)*plane->num_indices);
 
 	//uv
 	float3 uvs[4];
@@ -644,8 +645,8 @@ void ModuleMeshImporter::CreatePlane() const
 		}
 	}
 
-	float* uv = new float[num_vert * 3];
-	for (int i = 0; i < num_vert; ++i)
+	float* uv = new float[plane->num_vertices * 3];
+	for (int i = 0; i < plane->num_vertices; ++i)
 	{
 		memcpy(uv + i * 3, uvs[i].ptr(), sizeof(float) * 3);
 	}
@@ -657,7 +658,7 @@ void ModuleMeshImporter::CreatePlane() const
 	float null[3] = { 0.f,0.f,0.f };
 	float null_normal[3] = { 0.f,1.f,0.f };
 	float null_color[4] = { 1.f,1.f,1.f,1.f };
-	for (int v = 0; v < num_vert; ++v)
+	for (int v = 0; v < plane->num_vertices; ++v)
 	{
 		//copy vertex pos
 		memcpy(plane->vertices_data + v * 19, vertices + v * 3, sizeof(float) * 3);

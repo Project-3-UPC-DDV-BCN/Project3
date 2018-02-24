@@ -253,6 +253,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::SetScale", (const void*)SetScale);
 	mono_add_internal_call("TheEngine.TheTransform::GetScale", (const void*)GetScale);
 	mono_add_internal_call("TheEngine.TheTransform::LookAt", (const void*)LookAt);
+	mono_add_internal_call("TheEngine.TheTransform::GetForward", (const void*)GetForward);
+	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
+	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
@@ -278,6 +281,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheInput::GetMousePosition", (const void*)GetMousePosition);
 	mono_add_internal_call("TheEngine.TheInput::GetMouseXMotion", (const void*)GetMouseXMotion);
 	mono_add_internal_call("TheEngine.TheInput::GetMouseYMotion", (const void*)GetMouseYMotion);
+	mono_add_internal_call("TheEngine.TheInput::GetControllerButton", (const void*)GetControllerButton);
+	mono_add_internal_call("TheEngine.TheInput::GetControllerJoystickMove", (const void*)GetControllerJoystickMove);
+	mono_add_internal_call("TheEngine.TheInput::RumbleController", (const void*)RumbleController);
 
 	//CONSOLE
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Log", (const void*)Log);
@@ -415,6 +421,21 @@ void ModuleScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
 	current_script->LookAt(object, vector);
 }
 
+MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
+{
+	return current_script->GetForward(object);
+}
+
+MonoObject * ModuleScriptImporter::GetRight(MonoObject * object)
+{
+	return current_script->GetRight(object);
+}
+
+MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
+{
+	return current_script->GetUp(object);
+}
+
 void ModuleScriptImporter::StartFactory(MonoObject * object)
 {
 	current_script->StartFactory(object);
@@ -503,6 +524,21 @@ int ModuleScriptImporter::GetMouseXMotion()
 int ModuleScriptImporter::GetMouseYMotion()
 {
 	return current_script->GetMouseYMotion();
+}
+
+int ModuleScriptImporter::GetControllerJoystickMove(int pad, MonoString * axis)
+{
+	return current_script->GetControllerJoystickMove(pad, axis);
+}
+
+int ModuleScriptImporter::GetControllerButton(int pad, MonoString * button)
+{
+	return current_script->GetControllerButton(pad, button);
+}
+
+void ModuleScriptImporter::RumbleController(int pad, float strength, int ms)
+{
+	current_script->RumbleController(pad, strength, ms);
 }
 
 void ModuleScriptImporter::Log(MonoObject * object)

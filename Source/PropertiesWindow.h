@@ -9,8 +9,13 @@ class ComponentCamera;
 class Component;
 class ComponentScript;
 class ComponentFactory;
+class ComponentListener;
+class ComponentAudioSource;
+class ComponentDistorsionZone;
 class ComponentLight;
 class GameObject;
+class Texture;
+
 
 class PropertiesWindow :
 	public Window
@@ -26,11 +31,17 @@ public:
 	void DrawCameraPanel(ComponentCamera* camera);
 	void DrawScriptPanel(ComponentScript* script);
 	void DrawFactoryPanel(ComponentFactory* factory);
+	void DrawAudioListener(ComponentListener* listener);
+	void DrawAudioSource(ComponentAudioSource* audio_source);
+	void DrawAudioDistZone(ComponentDistorsionZone* dist_zone);
 	void DrawLightPanel(ComponentLight* light);
 
 private:
 	int scripts_count;
 	int factories_count;
 	int lights_count;
+
+	Texture* texture1_ = nullptr;
+	Texture* texture2_ = nullptr;
 };
 

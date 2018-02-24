@@ -24,7 +24,7 @@
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
 #include "ModuleMeshImporter.h"
-
+#include "DebugDraw.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -41,6 +41,7 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	editor_camera = nullptr;
 	game_camera = nullptr;
 	use_skybox = true;
+	debug_draw = new DebugDraw();
 
 	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
 		dir_lights[i] = nullptr;
@@ -176,8 +177,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		DrawSceneCameras(*it);
 	}
-	
-	dynamic_mesh_to_draw.clear();
+
+	ResetRender();
 
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
@@ -199,14 +200,13 @@ void ModuleRenderer3D::DrawEditorScene()
 {
 	if (use_skybox)
 	{
-		//glDisable(GL_DEPTH_TEST);
-		//App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
-		//glEnable(GL_DEPTH_TEST);
+		glDisable(GL_DEPTH_TEST);
+		App->scene->DrawSkyBox(editor_camera->camera_frustum.pos, editor_camera);
+		glEnable(GL_DEPTH_TEST);
 	}
-	pPlane pl(0, 1, 0, 0);
-	pl.SetPos(editor_camera->camera_frustum.pos);
-	pl.color = { 1,1,1,1 };
-	//pl.Render();
+
+	DrawGrid(editor_camera);
+
 	DrawSceneGameObjects(editor_camera, true);
 }
 
@@ -218,7 +218,7 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		//App->scene->DrawSkyBox(camera->camera_frustum.pos);
+		App->scene->DrawSkyBox(camera->camera_frustum.pos, camera);
 		glEnable(GL_DEPTH_TEST);
 	}
 	*/
@@ -264,6 +264,7 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
+
 void ModuleRenderer3D::DrawZBuffer()
 {
 	uint program = 0;
@@ -288,10 +289,27 @@ void ModuleRenderer3D::DrawZBuffer()
 	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", trans.Transposed().ptr());
 
+void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
+{
+	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(10, 1, 10));
+
+	ShaderProgram* program = App->resources->GetShaderProgram("grid_shader_program");
+	UseShaderProgram(program->GetProgramID());
+
+	SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
+	SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
+	SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+
+	SetUniformVector4(program->GetProgramID(), "line_color", float4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	Mesh* plane = App->resources->GetMesh("PrimitivePlane");
+	if (plane->id_indices == 0)plane->LoadToMemory();
+
 	BindVertexArrayObject(plane->id_vao);
 	glDrawElements(GL_TRIANGLES, plane->num_indices, GL_UNSIGNED_INT, NULL);
 	UnbindVertexArrayObject();
 }
+
 
 float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane)
 {
@@ -311,6 +329,8 @@ float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float botto
 
 	return n_projection;
 }
+
+
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
@@ -372,8 +392,12 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	{
 		//App->scene->octree.DebugDraw();
 	}
-		active_camera->GetViewportTexture()->Render();
-		active_camera->GetViewportTexture()->Unbind();
+
+	// Debug Draw render
+	debug_draw->Render(editor_camera);
+	
+	active_camera->GetViewportTexture()->Render();
+	active_camera->GetViewportTexture()->Unbind();
 }
 
 void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
@@ -412,8 +436,8 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
+	debug_draw->Clear();
 	debug_primitive_to_draw.clear();
-	rendering_cameras.clear();
 }
 
 // Called before quitting
@@ -422,6 +446,11 @@ bool ModuleRenderer3D::CleanUp()
 	CONSOLE_DEBUG("Destroying 3D Renderer");
 	SDL_GL_DeleteContext(context);
 	rendering_cameras.clear();
+
+	// Clear debug draw
+	debug_draw->Clear();
+	RELEASE(debug_draw);
+
 	return true;
 }
 
@@ -649,6 +678,11 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 	}
 }
 
+DebugDraw * ModuleRenderer3D::GetDebugDraw() const
+{
+	return debug_draw;
+}
+
 // ------------- Shaders -------------------------
 
 uint ModuleRenderer3D::GenVertexArrayObject() const
@@ -675,6 +709,16 @@ void ModuleRenderer3D::UnbindVertexArrayObject() const
 	if (error != GL_NO_ERROR)
 	{
 		CONSOLE_ERROR("Error unbind array buffer: %s\n", gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::DeleteVertexArrayObject(uint vao)
+{
+	glDeleteVertexArrays(1, &vao);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error delete array buffer: %s\n", gluErrorString(error));
 	}
 }
 
@@ -1043,16 +1087,15 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 		else
 		{
-			/*ComponentLight* light = nullptr;
-			light = (ComponentLight*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompLight);*/
-			ComponentTransform* light = nullptr;
-			light = (ComponentTransform*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+
+			ComponentTransform* trans = nullptr;
+			trans = (ComponentTransform*)spo_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
 
 
 			tmp = plstr + "position";
-			SetUniformVector3(program, tmp.c_str(), light->GetGlobalPosition()); //light->GetLightPosition());
+			SetUniformVector3(program, tmp.c_str(), trans->GetGlobalPosition()); 
 			tmp = plstr + "direction";
-			SetUniformVector3(program, tmp.c_str(), light->GetMatrix().WorldZ()); //light->GetLightDirection());
+			SetUniformVector3(program, tmp.c_str(), trans->GetMatrix().WorldZ()); 
 			tmp = plstr + "constant";
 			SetUniformFloat(program, tmp.c_str(), 1.0f);
 			tmp = plstr + "linear";
@@ -1087,13 +1130,12 @@ void ModuleRenderer3D::SendLight(uint program)
 		}
 		else
 		{
-			/*ComponentLight* light = nullptr;
-			light = (ComponentLight*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompLight);*/
-			ComponentTransform* light = nullptr;
-			light = (ComponentTransform*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
+
+			ComponentTransform* trans = nullptr;
+			trans = (ComponentTransform*)poi_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
 
 			tmp = plstr + "position";
-			SetUniformVector3(program, tmp.c_str(), light->GetGlobalPosition()); //light->GetLightPosition());
+			SetUniformVector3(program, tmp.c_str(), trans->GetGlobalPosition()); //light->GetLightPosition());
 			tmp = plstr + "constant";
 			SetUniformFloat(program, tmp.c_str(), 1.0f);
 			tmp = plstr + "linear";

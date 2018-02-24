@@ -1,5 +1,9 @@
 #pragma once
+<<<<<<< HEAD
+//
+=======
 
+>>>>>>> development
 //namespace std
 //{
 //	class thread;

@@ -14,6 +14,8 @@ ModuleInput::ModuleInput(Application* app, bool start_enabled, bool is_game) : M
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
 	memset(mouse_buttons, KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
+
+	memset(gamepad_connected, -1, sizeof(int)*MAX_GAMECONTROLLERS);
 	name = "Input";
 }
 
@@ -35,7 +37,18 @@ bool ModuleInput::Init(Data* editor_config)
 		CONSOLE_DEBUG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
+
+	// GameController --------------
+	/// To use PS3 Controller install this driver https://github.com/nefarius/ScpToolkit/releases/tag/v1.6.238.16010
+	if (SDL_Init(SDL_INIT_GAMECONTROLLER) != 0)
+		CONSOLE_ERROR("Error on SDL_Init: GameController");
+
+	if(SDL_Init(SDL_INIT_HAPTIC) < 0)
+		CONSOLE_ERROR("Error on SDL_Init: Haptic System");
+	// -----------------------------
+
 	StoreStringKeys();
+
 	return ret;
 }
 
@@ -70,6 +83,18 @@ update_status ModuleInput::PreUpdate(float dt)
 	mouse_x;
 	mouse_y;
 	mouse_z = 0;
+
+	for (std::vector<GamePad*>::iterator it = gamepads.begin(); it != gamepads.end(); it++)
+	{
+		for (int i = 0; i < NUM_CONTROLLER_BUTTONS; ++i)
+		{
+			if ((*it)->gamecontroller_buttons[i] == KEY_DOWN)
+				(*it)->gamecontroller_buttons[i] = KEY_REPEAT;
+
+			if ((*it)->gamecontroller_buttons[i] == KEY_UP)
+				(*it)->gamecontroller_buttons[i] = KEY_IDLE;
+		}
+	}
 
 	for(int i = 0; i < 5; ++i)
 	{
@@ -134,12 +159,57 @@ update_status ModuleInput::PreUpdate(float dt)
 				App->resources->ImportFile(e.drop.file);
 				SDL_free(e.drop.file);
 				break;
+
+				// GamePads Events --------
+			case SDL_CONTROLLERDEVICEADDED:
+				AddController(e.cdevice.which);
+				CONSOLE_LOG("Gamepad %d Connected", e.cdevice.which);
+				break;
+
+			case SDL_CONTROLLERDEVICEREMOVED:
+				RemoveController(e.cdevice.which);
+				CONSOLE_LOG("Gamepad %d Disconnected", e.cdevice.which);
+				break;
+
+			case SDL_CONTROLLERBUTTONDOWN:
+			{
+				for (std::vector<GamePad*>::iterator it = gamepads.begin(); it != gamepads.end(); it++)
+				{
+					if ((*it)->id == e.cbutton.which)
+					{
+						(*it)->gamecontroller_buttons[e.cbutton.button] = KEY_DOWN;
+						break;
+					}
+				}
+			}
+			break;
+
+			case SDL_CONTROLLERBUTTONUP:
+			{
+				for (std::vector<GamePad*>::iterator it = gamepads.begin(); it != gamepads.end(); it++)
+				{
+					if ((*it)->id == e.cbutton.which)
+					{
+						(*it)->gamecontroller_buttons[e.cbutton.button] = KEY_UP;
+						break;
+					}
+				}
+			}
+			break;
+
+			case SDL_CONTROLLERAXISMOTION:
+			{
+				AxisReaction(e.caxis.which, e.caxis.axis, e.caxis.value);
+			}
+			break;
+			// ------------------------
 		}
 	}
 
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
+
 	return UPDATE_CONTINUE;
 }
 
@@ -149,6 +219,40 @@ bool ModuleInput::CleanUp()
 	CONSOLE_DEBUG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+KEY_STATE ModuleInput::GetControllerButton(int pad, int id) const
+{
+	for (std::vector<GamePad*>::const_iterator it = gamepads.begin(); it != gamepads.end(); it++)
+	{
+		if ((*it)->id == gamepad_connected[pad]) {
+			return (*it)->gamecontroller_buttons[id];
+		}
+	}
+	CONSOLE_WARNING("Controller %d is not connected", pad);
+	return KEY_STATE::KEY_IDLE;
+}
+
+uint ModuleInput::GetControllerJoystickMove(int pad, int id) const
+{
+	for (std::vector<GamePad*>::const_iterator it = gamepads.begin(); it != gamepads.end(); it++)
+	{
+		if ((*it)->id == gamepad_connected[pad]) {
+			return (*it)->joystick_moves[id];
+		}
+	}
+	CONSOLE_WARNING("Controller %d is not connected", pad);
+	return 0;
+}
+
+void ModuleInput::RumbleController(int pad, float strength, int ms) const
+{
+	for (std::vector<GamePad*>::const_iterator it = gamepads.begin(); it != gamepads.end(); it++)
+	{
+		if ((*it)->id == gamepad_connected[pad]) {
+			SDL_HapticRumblePlay((*it)->haptic_system, strength, ms);
+		}
+	}
 }
 
 void ModuleInput::StoreStringKeys()
@@ -278,6 +382,33 @@ void ModuleInput::StoreStringKeys()
 	stringKeys["F14"] = SDL_SCANCODE_F14;
 	stringKeys["F15"] = SDL_SCANCODE_F15;
 	stringKeys["PAUSE"] = SDL_SCANCODE_PAUSE;
+	stringKeys["CONTROLLER_A"] = SDL_CONTROLLER_BUTTON_A;
+	stringKeys["CONTROLLER_B"] = SDL_CONTROLLER_BUTTON_B;
+	stringKeys["CONTROLLER_X"] = SDL_CONTROLLER_BUTTON_X;
+	stringKeys["CONTROLLER_Y"] = SDL_CONTROLLER_BUTTON_Y;
+	stringKeys["CONTROLLER_RB"] = SDL_CONTROLLER_BUTTON_RIGHTSHOULDER;
+	stringKeys["CONTROLLER_LB"] = SDL_CONTROLLER_BUTTON_LEFTSHOULDER;
+	stringKeys["CONTROLLER_DOWN_ARROW"] = SDL_CONTROLLER_BUTTON_DPAD_DOWN;
+	stringKeys["CONTROLLER_UP_ARROW"] = SDL_CONTROLLER_BUTTON_DPAD_UP;
+	stringKeys["CONTROLLER_RIGHT_ARROW"] = SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
+	stringKeys["CONTROLLER_LEFT_ARROW"] = SDL_CONTROLLER_BUTTON_DPAD_LEFT;
+	stringKeys["CONTROLLER_START"] = SDL_CONTROLLER_BUTTON_START;
+	stringKeys["CONTROLLER_BACK"] = SDL_CONTROLLER_BUTTON_BACK;
+	stringKeys["CONTROLLER_HOME"] = SDL_CONTROLLER_BUTTON_GUIDE;
+	stringKeys["CONTROLLER_R3"] = SDL_CONTROLLER_BUTTON_RIGHTSTICK;
+	stringKeys["CONTROLLER_L3"] = SDL_CONTROLLER_BUTTON_LEFTSTICK;
+
+	//Controller Axis
+	stringControllerAxis["LEFTJOY_UP"] = LEFTJOY_UP;
+	stringControllerAxis["LEFTJOY_DOWN"] = LEFTJOY_DOWN;
+	stringControllerAxis["LEFTJOY_RIGHT"] = LEFTJOY_RIGHT;
+	stringControllerAxis["LEFTJOY_LEFT"] = LEFTJOY_LEFT;
+	stringControllerAxis["RIGHTJOY_UP"] = RIGHTJOY_UP;
+	stringControllerAxis["RIGHTJOY_DOWN"] = RIGHTJOY_DOWN;
+	stringControllerAxis["RIGHTJOY_RIGHT"] = RIGHTJOY_RIGHT;
+	stringControllerAxis["RIGHTJOY_LEFT"] = RIGHTJOY_LEFT;
+	stringControllerAxis["RIGHT_TRIGGER"] = RIGHT_TRIGGER;
+	stringControllerAxis["LEFT_TRIGGER"] = LEFT_TRIGGER;
 }
 
 SDL_Keycode ModuleInput::StringToKey(std::string key)
@@ -300,8 +431,173 @@ std::string ModuleInput::KeyToString(SDL_Keycode key)
 			return it->first;
 }
 
+JOYSTICK_MOVES ModuleInput::StringToJoyMove(std::string axis)
+{
+	JOYSTICK_MOVES ret;
+	if (stringControllerAxis.find(axis) != stringControllerAxis.end()) {
+		ret = stringControllerAxis[axis];
+	}
+	else {
+		ret = JOYSTICK_MOVES::JOY_MOVES_NULL;
+	}
+	return ret;
+}
+
+std::string ModuleInput::JoyMoveToString(JOYSTICK_MOVES move)
+{
+	std::string ret;
+	for (std::map<std::string, JOYSTICK_MOVES>::iterator it = stringControllerAxis.begin(); it != stringControllerAxis.end(); ++it)
+		if (it->second == move)
+			return it->first;
+	return "";
+}
+
 bool ModuleInput::IsMouseDragging(int mouse_button)
 {
 	if (App->input->GetMouseButton(mouse_button) == KEY_REPEAT && (App->input->GetMouseXMotion() != 0 || App->input->GetMouseYMotion() != 0)) return true;
 	return false;
+}
+
+void ModuleInput::AxisReaction(int pad, int axis, int value)
+{
+	for (std::vector<GamePad*>::iterator it = gamepads.begin(); it != gamepads.end(); it++)
+	{
+		if ((*it)->id == pad) {
+			switch (axis)
+			{
+			case 0:
+				if (value > 0)
+				{
+					(*it)->joystick_moves[LEFTJOY_RIGHT] = value;
+					(*it)->joystick_moves[LEFTJOY_LEFT] = 0;
+				}
+				else
+				{
+					(*it)->joystick_moves[LEFTJOY_LEFT] = -value;
+					(*it)->joystick_moves[LEFTJOY_RIGHT] = 0;
+				}
+				break;
+			case 1:
+				if (value > 0)
+				{
+					(*it)->joystick_moves[LEFTJOY_DOWN] = value;
+					(*it)->joystick_moves[LEFTJOY_UP] = 0;
+				}
+				else
+				{
+					(*it)->joystick_moves[LEFTJOY_UP] = -value;
+					(*it)->joystick_moves[LEFTJOY_DOWN] = 0;
+				}
+				break;
+			case 2:
+				if (value > 0)
+				{
+					(*it)->joystick_moves[RIGHTJOY_RIGHT] = value;
+					(*it)->joystick_moves[RIGHTJOY_LEFT] = 0;
+				}
+				else
+				{
+					(*it)->joystick_moves[RIGHTJOY_LEFT] = -value;
+					(*it)->joystick_moves[RIGHTJOY_RIGHT] = 0;
+				}
+				break;
+			case 3:
+				if (value > 0)
+				{
+					(*it)->joystick_moves[RIGHTJOY_DOWN] = value;
+					(*it)->joystick_moves[RIGHTJOY_UP] = 0;
+				}
+				else
+				{
+					(*it)->joystick_moves[RIGHTJOY_UP] = -value;
+					(*it)->joystick_moves[RIGHTJOY_DOWN] = 0;
+				}
+				break;
+			case 4:
+				(*it)->joystick_moves[LEFT_TRIGGER] = value;
+				break;
+			case 5:
+				(*it)->joystick_moves[RIGHT_TRIGGER] = value;
+				break;
+			}
+			break;
+		}
+	}
+}
+
+void ModuleInput::AddController(int id)
+{
+	if (SDL_IsGameController(id) && connected_gamepads < MAX_GAMECONTROLLERS)
+	{
+		SDL_GameController *pad = SDL_GameControllerOpen(id);
+
+		if (pad)
+		{
+			SDL_Joystick *joy = SDL_GameControllerGetJoystick(pad);
+			int instanceID = SDL_JoystickInstanceID(joy);
+			GamePad* new_pad = new GamePad();
+			new_pad->id = instanceID;
+			ConnectGamePad(instanceID);
+			memset(new_pad->gamecontroller_buttons, KEY_IDLE, sizeof(KEY_STATE)*NUM_CONTROLLER_BUTTONS);
+			memset(new_pad->joystick_moves, 0, sizeof(uint)*JOY_MOVES_NULL);
+			new_pad->pad = pad;
+			new_pad->pad_num = connected_gamepads;
+			gamepads.push_back(new_pad);
+			connected_gamepads++;
+
+			//Start the haptic system
+			new_pad->haptic_system = SDL_HapticOpenFromJoystick(joy);
+			if (new_pad->haptic_system == nullptr)
+			{
+				CONSOLE_WARNING("Gamepad %d doesn't support haptics", id);
+			}
+			else
+			{
+				//Initialize Rumble
+				if (SDL_HapticRumbleInit(new_pad->haptic_system) < 0)
+				{
+					CONSOLE_WARNING("Gamepad %d doesn't support rumble", id);
+				}
+			}
+		}
+	}
+}
+
+void ModuleInput::RemoveController(int id)
+{
+	for (std::vector<GamePad*>::iterator it = gamepads.begin(); it != gamepads.end() && gamepads.size()>0; it++)
+	{
+		if ((*it)->id == id)
+		{
+			DisconectGamePad(id);
+			SDL_HapticClose((*it)->haptic_system);
+			SDL_GameControllerClose((*it)->pad);
+			RELEASE(*it);
+			gamepads.erase(it);
+			connected_gamepads--;
+			break;
+		}
+	}
+}
+
+void ModuleInput::ConnectGamePad(int instanceID)
+{
+	for (int i = 0; i < MAX_GAMECONTROLLERS; i++) {
+		if (gamepad_connected[i] == -1)
+		{
+			gamepad_connected[i] = instanceID;
+			break;
+		}
+	}
+}
+
+void ModuleInput::DisconectGamePad(int instanceID)
+{
+	for (int i = 0; i < MAX_GAMECONTROLLERS; i++) {
+		if (gamepad_connected[i] == instanceID)
+		{
+			gamepad_connected[i] = -1;
+			break;
+		}
+	}
 }
