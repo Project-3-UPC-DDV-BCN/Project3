@@ -126,7 +126,12 @@ public:
 	void SetVolume(int volume);
 	int GetPitch();
 	void SetPitch(int pitch);
-	void SetRTPvalue(MonoString* name, int value);
+	void SetRTPvalue(MonoString* name, float value);
+
+	//AUDIOSOURCE
+	bool Play(MonoObject * object, MonoString* name);
+	bool Stop(MonoObject * object, MonoString* name);
+	bool Send(MonoObject * object, MonoString* name);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);

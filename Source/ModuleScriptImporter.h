@@ -107,7 +107,12 @@ private:
 	static void SetVolume(int volume);
 	static int GetPitch();
 	static void SetPitch(int pitch);
-	static void SetRTPvalue(MonoString* name, int value);
+	static void SetRTPvalue(MonoString* name, float value);
+
+	static bool Play(MonoObject * object, MonoString * name);
+	static bool Stop(MonoObject * object, MonoString * name);
+	static bool Send(MonoObject * object, MonoString * name);
+
 private:
 	std::string mono_path;
 	MonoDomain* mono_domain;

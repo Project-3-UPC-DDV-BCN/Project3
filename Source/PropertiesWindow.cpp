@@ -209,7 +209,12 @@ void PropertiesWindow::DrawWindow()
 				if (ImGui::BeginMenu("Audio")) {
 					if (ImGui::MenuItem("Audio Listener"))
 					{
-						ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+						if (App->audio->GetDefaultListener() != nullptr)
+						{
+
+						}
+						else
+							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
 					}
 					if (ImGui::MenuItem("Audio Source"))
 					{

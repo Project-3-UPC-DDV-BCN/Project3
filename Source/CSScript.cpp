@@ -16,6 +16,8 @@
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
 #include "ModuleAudio.h"
+#include "ComponentAudioSource.h"
+#include "AudioEvent.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -923,6 +925,10 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	else if (name == "TheEngine.TheFactory")
 	{
 		comp_name = "TheFactory";
+	}
+	else if (name == "TheEngine.TheAudioSource")
+	{
+		comp_name = "TheAudioSource";
 	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
@@ -2047,8 +2053,37 @@ void CSScript::SetPitch(int pitch)
 	App->audio->SetPitch(pitch);
 }
 
-void CSScript::SetRTPvalue(MonoString* name, int value)
+void CSScript::SetRTPvalue(MonoString* name, float value)
 {
 	const char* new_name = mono_string_to_utf8(name);
 	App->audio->SetRTPvalue(new_name, value);
+}
+
+bool CSScript::Play(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	as->PlayEvent(event_name);
+
+	return true;
+}
+
+bool CSScript::Stop(MonoObject * object, MonoString* name)
+{
+	return true;
+}
+
+bool CSScript::Send(MonoObject * object, MonoString* name)
+{
+	return true;
 }

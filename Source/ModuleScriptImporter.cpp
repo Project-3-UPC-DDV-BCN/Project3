@@ -298,6 +298,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
+	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -625,7 +626,22 @@ void ModuleScriptImporter::SetPitch(int pitch)
 	current_script->SetPitch(pitch);
 }
 
-void ModuleScriptImporter::SetRTPvalue(MonoString* name, int value)
+void ModuleScriptImporter::SetRTPvalue(MonoString* name, float value)
 {
 	current_script->SetRTPvalue(name, value);
+}
+
+bool ModuleScriptImporter::Play(MonoObject * object, MonoString * name)
+{
+	return current_script->Play(object, name);
+}
+
+bool ModuleScriptImporter::Stop(MonoObject * object, MonoString * name)
+{
+	return current_script->Stop(object, name);
+}
+
+bool ModuleScriptImporter::Send(MonoObject * object, MonoString * name)
+{
+	return current_script->Send(object, name);
 }
