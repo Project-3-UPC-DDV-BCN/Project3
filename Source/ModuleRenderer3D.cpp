@@ -183,9 +183,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	dynamic_mesh_to_draw.clear();
 
-
-
-
 	//Assert polygon mode is fill before render gui
 	GLint polygonMode;
 	glGetIntegerv(GL_POLYGON_MODE, &polygonMode);
@@ -211,6 +208,34 @@ void ModuleRenderer3D::DrawEditorScene()
 		//glEnable(GL_DEPTH_TEST);
 	}
 
+	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
+
+	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+	UseShaderProgram(program->GetProgramID());
+
+	SetUniformMatrix(program->GetProgramID(), "view", editor_camera->GetViewMatrix());
+	SetUniformMatrix(program->GetProgramID(), "projection", editor_camera->GetProjectionMatrix());
+	SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+
+	SetUniformVector4(program->GetProgramID(), "line_color", float4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	Mesh* plane = App->resources->GetMesh("Plane001");
+	if (plane->id_indices == 0)
+		plane->LoadToMemory();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+
+	SendLight(program->GetProgramID());
+
+
+	BindVertexArrayObject(plane->id_vao);
+	glDrawElements(GL_TRIANGLES, plane->num_indices, GL_UNSIGNED_INT, NULL);
+	UnbindVertexArrayObject();
+
+	// ---------------------------------------
+
+
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
 	pl.color = { 1,1,1,1 };
@@ -221,13 +246,7 @@ void ModuleRenderer3D::DrawEditorScene()
 void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 {
 	if (camera == nullptr || camera->GetViewportTexture() == nullptr) return;
-	
-	// DISABLED THIS FOR NOW
-	//camera->GetViewportTexture()->Bind();
-
-	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	camera->GetViewportTexture()->Bind();
 /*
 	if (use_skybox)
 	{
@@ -278,7 +297,7 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
-void ModuleRenderer3D::DrawZBuffer(ComponentCamera * cam)
+void ModuleRenderer3D::DrawZBuffer()
 {
 	uint program = 0;
 	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
@@ -288,8 +307,8 @@ void ModuleRenderer3D::DrawZBuffer(ComponentCamera * cam)
 	SetUniformFloat(program, "near_plane", near_plane);
 	SetUniformFloat(program, "far_plane", far_plane);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, depth_map);
 }
 
 float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane)
@@ -333,7 +352,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		}
 		DrawMesh(*it, active_camera);
 	}
-
 	for (std::list<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
 	{
 		if (!is_editor_camera)
@@ -343,10 +361,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
 					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-					//DrawMesh(*it, active_camera);
-					{
-						DrawZBuffer(active_camera);
-					}
+						DrawMesh(*it, active_camera);
 				}
 			}
 		}
@@ -359,7 +374,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			}
 		}
 	}
-
 	if (is_editor_camera)
 	{
 		for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
@@ -372,15 +386,12 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			}
 		}
 	}
-
 	if (App->scene->draw_octree)
 	{
 		//App->scene->octree.DebugDraw();
 	}
-	
-	active_camera->GetViewportTexture()->Render();
-	active_camera->GetViewportTexture()->Unbind();
-
+		active_camera->GetViewportTexture()->Render();
+		active_camera->GetViewportTexture()->Unbind();
 }
 
 void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
@@ -1180,16 +1191,9 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	// NECESITO LA OTRA CAMARA 
-
-	/*glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
+	DrawZBuffer();
 
 	}
 }
@@ -1213,7 +1217,31 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, floa
 	SetUniformMatrix(program, "lightSpaceMatrix", lightSpaceMat.ptr());
 }
 
-void ModuleRenderer3D::SendObjectToRenderDepth(ComponentMeshRenderer* mesh)
+void ModuleRenderer3D::renderQuad()
 {
+	if (quadVAO == 0)
+	{
+		float quadVertices[] = {
+			// positions        // texture Coords
+			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+			1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		};
+		// setup plane VAO
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	}
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
 }
-// ------------------------------------------------
+
+// -----------------------------------------------

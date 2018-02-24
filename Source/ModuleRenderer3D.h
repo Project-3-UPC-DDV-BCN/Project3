@@ -95,14 +95,14 @@ public:
 	void SetDepthMap();
 	void DrawFromLightForShadows();
 	void SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat);
-	void SendObjectToRenderDepth(ComponentMeshRenderer* mesh);
+	void renderQuad();
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
-	void DrawZBuffer(ComponentCamera* cam);
+	void DrawZBuffer();
 	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
 public:
 
@@ -139,4 +139,7 @@ private:
 	uint depth_map;
 	uint depth_mapFBO;
 	float near_plane, far_plane;
+
+	unsigned int quadVAO = 0;
+	unsigned int quadVBO;
 };
