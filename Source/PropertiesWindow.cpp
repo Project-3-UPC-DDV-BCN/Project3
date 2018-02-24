@@ -697,6 +697,34 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
 			else
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_alpha_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Size Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_size_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_rotation_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Color Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_color_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
 			
 			ImGui::Separator(); 
 
@@ -904,7 +932,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
-						current_emmiter->data->change_rotation_interpolation = true;
+						current_emmiter->data->change_alpha_interpolation = true;
 			
 						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
 							current_emmiter->data->alpha_interpolation_delayed = true;

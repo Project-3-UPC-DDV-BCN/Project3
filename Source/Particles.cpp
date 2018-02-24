@@ -105,28 +105,29 @@ float Particle::GetAngular() const
 
 float Particle::GetAlphaInterpolationPercentage()
 {
-	float alpha_percentage = 0.0f; 
-	static bool started = false; 
+	float alpha_percentage = 1.0f; 
+
+	alpha_started = false;
 
 	if (particle_data->init_alpha_interpolation_time == 0)
-		alpha_percentage = (particle_timer.Read() /particle_data->max_lifetime * 1000); 
+		alpha_percentage = (particle_timer.Read() / (particle_data->max_lifetime * 1000)); 
 	else
 	{
 		float time_to_interpolate = particle_data->max_lifetime - particle_data->init_alpha_interpolation_time; 
 
-		if (particle_timer.Read() > particle_data->init_alpha_interpolation_time && !started)
+		if (particle_timer.Read() > particle_data->init_alpha_interpolation_time && !alpha_started)
 		{
 			interpolation_timer.Start(); 
-			started = true; 
+			alpha_started = true;
 		}
 
-		if (started)
+		if (alpha_started)
 		{
 			alpha_percentage = (interpolation_timer.Read() / (time_to_interpolate * 1000)); 
 		}
 	}
 
-	return alpha_percentage; 
+	return (1.0f - alpha_percentage); 
 }
 
 void Particle::ApplyAngularVelocity()
@@ -267,10 +268,7 @@ void Particle::UpdateColor()
 
 }
 
-bool Particle::IsInterpolatingColor() const
-{
-	return particle_data->change_color_interpolation;
-}
+
 
 void Particle::UpdateSize()
 {
@@ -296,13 +294,7 @@ void Particle::UpdateSize()
 
 }
 
-void Particle::SetInterpolationSize(bool interpolate, float3 initial_scale, float3 final_scale)
-{
-	particle_data->change_size_interpolation = interpolate;
 
-	particle_data->initial_scale = initial_scale;
-	particle_data->final_scale = final_scale;
-}
 
 void Particle::UpdateRotation()
 {
@@ -327,11 +319,6 @@ void Particle::UpdateRotation()
 
 }
 
-void Particle::SetInterpolationRotation(float initial_v, float final_v)
-{
-	particle_data->initial_angular_v = initial_v;
-	particle_data->final_angular_v = final_v;
-}
 
 void Particle::SetMovementFromStats()
 {
@@ -363,9 +350,6 @@ void Particle::Update()
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
 		UpdateColor();
-
-	if (particle_data->change_alpha_interpolation)
-		GetAlphaInterpolationPercentage(); 
 
 	//Update scale
 	if (particle_data->change_size_interpolation)
@@ -408,7 +392,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 	}
 		
 	//Activate shader program
-	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+	uint id = App->resources->GetShaderProgram("default_particle_program")->GetProgramID();
 	App->renderer3D->UseShaderProgram(id); 
 
 	App->renderer3D->SetUniformMatrix(id, "Model", GetAtributes().particle_transform->GetMatrix().Transposed().ptr());
@@ -419,17 +403,20 @@ void Particle::Draw(ComponentCamera* active_camera)
 	{
 		App->renderer3D->SetUniformBool(id, "alpha_interpolation", true); 
 		float percentage = GetAlphaInterpolationPercentage(); 
-		percentage /= 1000000; 
+
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
-		//CONSOLE_LOG("Alpha: %f", percentage); 
+		CONSOLE_LOG("Alpha: %f", percentage);
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f , 1.0f, 1.0f));
+		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f , 0.0f, 1.0f));
 	}
 	else
 	{
@@ -438,9 +425,6 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 

@@ -80,23 +80,26 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 		new_particle->particle_data->initial_color = data->initial_color; 
 		new_particle->particle_data->final_color = data->final_color;
 	}
+	else
+		new_particle->particle_data->change_color_interpolation = false;
 	
 	///Size
 	if (data->change_size_interpolation)
 	{
-		new_particle->SetInterpolationSize(data->change_size_interpolation, data->initial_scale, data->final_scale);
+		new_particle->particle_data->initial_scale = data->initial_scale;
+		new_particle->particle_data->final_scale = data->final_scale; 
 	}
 	else
-		new_particle->SetInterpolationSize(data->change_size_interpolation, { 1,1,1 }, { 1,1,1 });
+		new_particle->particle_data->change_size_interpolation = false;
 
 	///Rotation
 	if (data->change_rotation_interpolation)
-		new_particle->SetInterpolationRotation(data->initial_angular_v, data->final_angular_v);
-	else
 	{
-		new_particle->SetInterpolationRotation(0, 0);
-		new_particle->SetAngular(data->angular_v);
+		new_particle->particle_data->initial_angular_v = data->initial_angular_v;
+		new_particle->particle_data->final_angular_v = data->final_angular_v;
 	}
+	else
+		new_particle->particle_data->change_rotation_interpolation = false;
 
 	///Alpha 
 	if (data->change_alpha_interpolation)
@@ -105,6 +108,8 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 		new_particle->particle_data->init_alpha_interpolation_time = data->init_alpha_interpolation_time; 
 		new_particle->particle_data->alpha_interpolation_delayed = data->alpha_interpolation_delayed; 
 	}
+	else
+		new_particle->particle_data->change_alpha_interpolation = false;
 		
 	//Copy Animation
 	new_particle->GetData()->animation_system = data->animation_system;
@@ -405,34 +410,34 @@ void ComponentParticleEmmiter::UpdateShockWave()
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
-	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
-	App->renderer3D->UseShaderProgram(id);
+	//uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+	//App->renderer3D->UseShaderProgram(id);
 
-	App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
-	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
-	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
+	//App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
+	//App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
+	//App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
-	if (data->shock_wave.wave_texture != nullptr)
-	{	
-		if (data->shock_wave.wave_texture->GetID() == 0)
-			data->shock_wave.wave_texture->LoadToMemory();
+	//if (data->shock_wave.wave_texture != nullptr)
+	//{	
+	//	if (data->shock_wave.wave_texture->GetID() == 0)
+	//		data->shock_wave.wave_texture->LoadToMemory();
 
-		App->renderer3D->SetUniformBool(id, "has_texture", true);
-		App->renderer3D->SetUniformBool(id, "has_material_color", false);
+	//	App->renderer3D->SetUniformBool(id, "has_texture", true);
+	//	App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+	//	App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 
-		glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
-	}
+	//	glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
+	//}
 
-	if (data->shock_wave.wave_mesh->id_indices == 0)
-		data->shock_wave.wave_mesh->LoadToMemory();
+	//if (data->shock_wave.wave_mesh->id_indices == 0)
+	//	data->shock_wave.wave_mesh->LoadToMemory();
 
-	App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
+	//App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
 
-	glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	//glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
-	App->renderer3D->UnbindVertexArrayObject();
+	//App->renderer3D->UnbindVertexArrayObject();
 }
 
 

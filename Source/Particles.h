@@ -56,15 +56,12 @@ public:
 
 	///Color
 	void UpdateColor();
-	bool IsInterpolatingColor() const;
 
 	//Scale
 	void UpdateSize();
-	void SetInterpolationSize(bool interpolate, float3 initial_scale, float3 final_scale);
 
 	//Rotation
 	void UpdateRotation();
-	void SetInterpolationRotation(float initial_v, float final_v);
 
 	//Force calculations
 	void SetGravity(float3 grav);
@@ -146,7 +143,7 @@ private:
 	RuntimeBehaviour runtime_behaviour; 
 
 	//Alpha
-	bool alpha_delayed; 
+	bool alpha_started; 
 
 	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 

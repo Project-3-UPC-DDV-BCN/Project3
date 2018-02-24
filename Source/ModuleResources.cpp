@@ -1186,6 +1186,8 @@ void ModuleResources::CreateDefaultShaders()
 			"		color = material_color;\n"
 			"	else\n"
 			"		color = ourColor;\n"	
+
+			"	color.a = 0.5f;\n"	
 			"}";
 
 		default_frag->SetContent(shader_text);
@@ -1196,6 +1198,79 @@ void ModuleResources::CreateDefaultShaders()
 	}
 	CreateResource(frag_default_path);
 
+	std::string vert_particle_default_path = SHADER_DEFAULT_FOLDER "default_particle_vertex.vshader";
+	if (!App->file_system->FileExist(vert_particle_default_path))
+	{
+		Shader* default_particle_vert = new Shader();
+		default_particle_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n"
+			"layout(location = 2) in vec3 normals;\n"
+			"layout(location = 3) in vec4 color;\n\n"
+			"out vec4 ourColor;\n"
+			"out vec3 Normal;\n"
+			"out vec2 TexCoord;\n\n"
+			"uniform mat4 Model;\n"
+			"uniform mat4 view;\n"
+			"uniform mat4 projection;\n\n"
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	ourColor = color;\n"
+			"	TexCoord = texCoord.xy;\n"
+			"}";
+
+		default_particle_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_particle_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(default_particle_vert);
+	}
+	CreateResource(vert_particle_default_path);
+
+	std::string frag_particle_default_path = SHADER_DEFAULT_FOLDER "default_particle_fragment.fshader";
+	if (!App->file_system->FileExist(frag_particle_default_path))
+	{
+		Shader* default_particle_frag = new Shader();
+		default_particle_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 330 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform bool has_material_color;\n"
+			"uniform vec4 material_color;\n"
+			"uniform bool alpha_interpolation;\n"
+			"uniform bool color_interpolation;\n"
+			"uniform vec3 color_to_show;\n"
+			"uniform float alpha_percentage;\n"
+			"uniform bool has_texture;\n"
+			"uniform sampler2D ourTexture;\n\n"
+			"void main()\n"
+			"{\n"
+			"	if(has_texture)\n"
+			"		color = texture(ourTexture, TexCoord);\n"
+			"	else if(has_material_color)\n"
+			"		color = material_color;\n"
+			"	else\n"
+			"		color = ourColor;\n"
+			"	if(alpha_interpolation)\n"
+			"		color.a = alpha_percentage;\n"
+			"}";
+
+		default_particle_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_particle_default_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(default_particle_frag);
+	}
+	CreateResource(frag_particle_default_path);
+
 	ShaderProgram* prog = new ShaderProgram();
 	prog->SetName("default_shader_program");
 
@@ -1204,10 +1279,21 @@ void ModuleResources::CreateDefaultShaders()
 
 	Shader* fragment = GetShader("default_fragment");
 	prog->SetFragmentShader(fragment);
+
+	ShaderProgram* part_prog = new ShaderProgram();
+	part_prog->SetName("default_particle_program");
+
+	Shader* part_vertex = GetShader("default_particle_vertex");
+	part_prog->SetVertexShader(part_vertex);
+
+	Shader* part_fragment = GetShader("default_particle_fragment");
+	part_prog->SetFragmentShader(part_fragment);
 	
+	part_prog->LinkShaderProgram(); 
 	prog->LinkShaderProgram();
 
 	AddResource(prog);
+	AddResource(part_prog); 
 }
 
 void ModuleResources::CreateDefaultMaterial()
