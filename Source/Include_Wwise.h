@@ -11,30 +11,29 @@
 #include <AK/Tools/Common/AkPlatformFuncs.h>
 
 
-
 // Input libraries
 #ifndef _DEBUG  // Profile build configuration must be loaded instead of Debug
 #define AK_OPTIMIZED
-#pragma comment( lib, "Wwise/Release(StaticCRT)/lib/AkSoundEngine.lib")
-#pragma comment( lib, "Wwise/Release(StaticCRT)/lib/AkMusicEngine.lib")
-#pragma comment( lib, "Wwise/Release(StaticCRT)/lib/AkMemoryMgr.lib")
-#pragma comment( lib, "Wwise/Release(StaticCRT)/lib/AkStreamMgr.lib")
-#pragma comment( lib, "Wwise/Release(StaticCRT)/lib/AkRoomVerbFX.lib")
+#pragma comment( lib, "Wwise/lib/Release/lib/AkSoundEngine.lib")
+#pragma comment( lib, "Wwise/lib/Release/lib/AkMusicEngine.lib")
+#pragma comment( lib, "Wwise/lib/Release/lib/AkMemoryMgr.lib")
+#pragma comment( lib, "Wwise/lib/Release/lib/AkStreamMgr.lib")
+#pragma comment( lib, "Wwise/lib/Release/lib/AkRoomVerbFX.lib")
 #else
 #include <AK/Comm/AkCommunication.h>
-#pragma comment( lib, "Wwise/Debug(StaticCRT)/lib/CommunicationCentral.lib")
-#pragma comment( lib, "Wwise/ws2_32.lib") 
-#pragma comment( lib, "Wwise/Debug(StaticCRT)/lib/AkSoundEngine.lib")
-#pragma comment( lib, "Wwise/Debug(StaticCRT)/lib/AkMusicEngine.lib")
-#pragma comment( lib, "Wwise/Debug(StaticCRT)/lib/AkMemoryMgr.lib")
-#pragma comment( lib, "Wwise/Debug(StaticCRT)/lib/AkStreamMgr.lib")
-#pragma comment( lib, "Wwise/Debug(StaticCRT)/lib/AkRoomVerbFX.lib")
+#pragma comment( lib, "Wwise/lib/Debug/lib/CommunicationCentral.lib")
+#pragma comment( lib, "Wwise/lib/ws2_32.lib") 
+#pragma comment( lib, "Wwise/lib/Debug/lib/AkSoundEngine.lib")
+#pragma comment( lib, "Wwise/lib/Debug/lib/AkMusicEngine.lib")
+#pragma comment( lib, "Wwise/lib/Debug/lib/AkMemoryMgr.lib")
+#pragma comment( lib, "Wwise/lib/Debug/lib/AkStreamMgr.lib")
+#pragma comment( lib, "Wwise/lib/Debug/lib/AkRoomVerbFX.lib")
 #endif
 
 // Microsoft DirectX external libs
-#pragma comment( lib, "Wwise/dinput8.lib")
-#pragma comment( lib, "Wwise/dsound.lib") 
-#pragma comment( lib, "Wwise/dxguid.lib")  
+#pragma comment( lib, "Wwise/lib/dinput8.lib")
+#pragma comment( lib, "Wwise/lib/dsound.lib") 
+#pragma comment( lib, "Wwise/lib/dxguid.lib") 
 
 
 // Custom alloc/free functions. These are declared as "extern" in AkMemoryMgr.h
