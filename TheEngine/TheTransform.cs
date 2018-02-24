@@ -80,7 +80,23 @@ namespace TheEngine
         {
             get
             {
-                return GlobalRotation.ToQuaternion() * TheVector3.Forward;
+                return GetForward();
+            }
+        }
+
+        public TheVector3 UpDirection
+        {
+            get
+            {
+                return GetUp();
+            }
+        }
+
+        public TheVector3 RightDirection
+        {
+            get
+            {
+                return GetRight();
             }
         }
 
@@ -104,6 +120,15 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void LookAt(TheVector3 value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern TheVector3 GetForward();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern TheVector3 GetRight();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern TheVector3 GetUp();
 
     }
 }

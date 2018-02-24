@@ -4,6 +4,8 @@ namespace TheEngine
 {
     public class TheInput
     {
+        public const int MaxJoystickMove = 32767;
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsKeyDown(string key_name);
 
@@ -30,5 +32,14 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetMouseYMotion();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetControllerButton(int pad, string button);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetControllerJoystickMove(int pad, string axis);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int RumbleController(int pad, float strength, int ms);
     }
 }

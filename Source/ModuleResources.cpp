@@ -1081,7 +1081,7 @@ void ModuleResources::CreateDefaultShaders()
 		default_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
 		
 		std::string shader_text = 
-		"#version 330 core\n"
+		"#version 400 core\n"
 		"layout(location = 0) in vec3 position;\n"
 		"layout(location = 1) in vec3 texCoord;\n"
 		"layout(location = 2) in vec3 normals;\n"
@@ -1117,82 +1117,83 @@ void ModuleResources::CreateDefaultShaders()
 		default_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
 
 		std::string shader_text =
-		"#version 330 core\n\n"
-		"in vec4 ourColor;\n"
-		"in vec3 Normal;\n"
-		"in vec3 FragPos;\n"
-		"in vec2 TexCoord;\n"
-		"out vec4 color;\n\n"
-		"uniform bool has_material_color;\n"
-		"uniform vec4 material_color;\n"
-		"uniform bool has_texture;\n"
-		"uniform sampler2D ourTexture;\n\n"
+			"#version 400 core\n\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec3 FragPos;\n"
+			"in vec2 TexCoord;\n"
+			"out vec4 color;\n\n"
+			"uniform bool has_material_color;\n"
+			"uniform vec4 material_color;\n"
+			"uniform bool has_texture;\n"
+			"uniform sampler2D ourTexture;\n\n"
 
-		"struct Material {\n"
-		"	sampler2D diffuse;\n"
-		"	sampler2D specular;\n"
-		"	float shininess;\n"
-		"};\n\n"
+			"struct Material {\n"
+			"	sampler2D diffuse;\n"
+			"	sampler2D specular;\n"
+			"	float shininess;\n"
+			"};\n\n"
 
-		"struct DirLight {\n"
-		"	vec3 direction;\n\n"
+			"struct DirLight {\n"
+			"	vec3 direction;\n\n"
 
-		"	vec3 ambient;\n"
-		"	vec3 diffuse;\n"
-		"	vec3 specular;\n\n"
+			"	vec3 ambient;\n"
+			"	vec3 diffuse;\n"
+			"	vec3 specular;\n\n"
 
-		"	vec4 color;\n"
-		"	bool active;\n"
-		"};\n\n"
+			"	vec4 color;\n"
+			"	bool active;\n"
+			"};\n\n"
 
-		"struct PointLight {\n"
-		"	vec3 position;\n\n"
+			"struct PointLight {\n"
+			"	vec3 position;\n\n"
 
-		"	float constant;\n"
-		"	float linear;\n"
-		"	float quadratic;\n\n"
+			"	float constant;\n"
+			"	float linear;\n"
+			"	float quadratic;\n\n"
 
-		"	vec3 ambient;\n"
-		"	vec3 diffuse;\n"
-		"	vec3 specular;\n\n"
-			
-		"	vec4 color;\n"
-		"	bool active;\n"
-		"};\n"
+			"	vec3 ambient;\n"
+			"	vec3 diffuse;\n"
+			"	vec3 specular;\n\n"
 
-		"struct SpotLight {\n"
-		"	vec3 position;\n"
-		"	vec3 direction;\n\n"
-		"	float cutOff;\n"
-		"	float outerCutOff;\n\n"
+			"	vec4 color;\n"
+			"	bool active;\n"
+			"};\n"
 
-		"	float constant;\n"
-		"	float linear;\n"
-		"	float quadratic;\n\n"
+			"struct SpotLight {\n"
+			"	vec3 position;\n"
+			"	vec3 direction;\n\n"
+			"	float cutOff;\n"
+			"	float outerCutOff;\n\n"
 
-		"	vec3 ambient;\n"
-		"	vec3 diffuse;\n"
-		"	vec3 specular;\n"
-		"	vec4 color;\n"
-		"	bool active;\n"
-		"};\n\n"
+			"	float constant;\n"
+			"	float linear;\n"
+			"	float quadratic;\n\n"
 
-		"#define NR_POINT_LIGHTS 8\n"
-		"#define NR_DIREC_LIGHTS 2\n"
-		"#define NR_SPOT_LIGHTS 8\n\n"
+			"	vec3 ambient;\n"
+			"	vec3 diffuse;\n"
+			"	vec3 specular;\n"
+			"	vec4 color;\n"
+			"	bool active;\n"
+			"};\n\n"
 
-		"uniform vec3 viewPos;\n"
-		"uniform DirLight dirLights[NR_DIREC_LIGHTS];\n"
-		"uniform PointLight pointLights[NR_POINT_LIGHTS];\n"
-		"uniform SpotLight spotLights[NR_SPOT_LIGHTS];\n"
-		"uniform Material material;\n\n"
+			"#define NR_POINT_LIGHTS 8\n"
+			"#define NR_DIREC_LIGHTS 2\n"
+			"#define NR_SPOT_LIGHTS 8\n\n"
+			"#define AMBIENT_LIGHT 0.35\n"
 
-		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);\n"
-		"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n"
-		"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n\n"
+			"uniform vec3 viewPos;\n"
+			"uniform DirLight dirLights[NR_DIREC_LIGHTS];\n"
+			"uniform PointLight pointLights[NR_POINT_LIGHTS];\n"
+			"uniform SpotLight spotLights[NR_SPOT_LIGHTS];\n"
+			"uniform Material material;\n\n"
 
-		"void main()\n"
-		"{\n"
+			"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);\n"
+			"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n"
+			"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n\n"
+
+			"void main()\n"
+			"{\n"
 			"if (has_texture)\n"
 			"{\n"
 			"	color = texture(ourTexture, TexCoord);\n"
@@ -1207,15 +1208,15 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 result = vec3(0.0, 0.0, 0.0);"
 
 			"for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
-				"result += CalcDirLight(dirLights[i], norm, viewDir);\n"
+			"result += CalcDirLight(dirLights[i], norm, viewDir);\n"
 
 			"for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
-				"result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);\n"
+			"result += CalcPointLight(pointLights[k], norm, FragPos, viewDir);\n"
 
 			"for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
-				"result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);\n"
-
-			"color = vec4(result, 1.0);\n"
+			"result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);\n"
+	
+			"color = vec4(result, 1.0) + color * AMBIENT_LIGHT;\n"
 		"}\n\n"
 
 		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
@@ -1315,7 +1316,123 @@ void ModuleResources::CreateDefaultShaders()
 
 	AddResource(prog);
 
-	
+	//Create a grid fragment shader
+	std::string frag_grid_path = SHADER_DEFAULT_FOLDER "grid_fragment.fshader";
+	if (!App->file_system->FileExist(frag_grid_path))
+	{
+		Shader* grid_frag = new Shader();
+		grid_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec2 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform vec4 line_color;\n\n"
+			"void main()\n"
+			"{\n"
+			"	float x,y;\n"
+			"	x = fract(TexCoord.x*25.0);\n"
+			"	y = fract(TexCoord.y*25.0);\n\n"
+			"	// Draw a black and white grid.\n"
+			"	if (x > 0.93 || y > 0.93) \n	{\n"
+			"	color = line_color;\n	}\n"
+			"	else\n{\n"
+			"	discard;\n	}\n"
+			"}";
+
+		grid_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_grid_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(grid_frag);
+	}
+	CreateResource(frag_grid_path);
+
+	prog = new ShaderProgram();
+	prog->SetName("grid_shader_program");
+
+	vertex = GetShader("default_vertex");
+	prog->SetVertexShader(vertex);
+
+	fragment = GetShader("grid_fragment");
+	prog->SetFragmentShader(fragment);
+
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
+
+	// cubemap shader
+	std::string vert_cubemap_path = SHADER_DEFAULT_FOLDER "cubemap_vertex.vshader";
+	if (!App->file_system->FileExist(vert_cubemap_path))
+	{
+		Shader* cubemap_vert = new Shader();
+		cubemap_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n"
+			"layout(location = 2) in vec3 normals;\n"
+			"layout(location = 3) in vec4 color;\n\n"
+			"out vec4 ourColor;\n"
+			"out vec3 Normal;\n"
+			"out vec3 TexCoord;\n\n"
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	ourColor = color;\n"
+			"	TexCoord = -position;\n"
+			"}";
+
+		cubemap_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_cubemap_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(cubemap_vert);
+	}
+	CreateResource(vert_cubemap_path);
+
+	std::string frag_cubemap_path = SHADER_DEFAULT_FOLDER "cubemap_fragment.fshader";
+	if (!App->file_system->FileExist(frag_cubemap_path))
+	{
+		Shader* cubemap_frag = new Shader();
+		cubemap_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"in vec4 ourColor;\n"
+			"in vec3 Normal;\n"
+			"in vec3 TexCoord;\n\n"
+			"out vec4 color;\n\n"
+			"uniform samplerCube ourTexture;\n\n"
+			"void main()\n"
+			"{\n"
+			"	color = texture(ourTexture, TexCoord);\n"
+			"}";
+
+		cubemap_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_cubemap_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(cubemap_frag);
+	}
+	CreateResource(frag_cubemap_path);
+
+	prog = new ShaderProgram();
+	prog->SetName("cubemap_shader_program");
+
+	vertex = GetShader("cubemap_vertex");
+	prog->SetVertexShader(vertex);
+
+	fragment = GetShader("cubemap_fragment");
+	prog->SetFragmentShader(fragment);
+
+	prog->LinkShaderProgram();
+
+	AddResource(prog);
+
 	//Default Debug Shaders
 	std::string deb_vert_default_path = SHADER_DEFAULT_FOLDER "default_debug_vertex.vshader";
 	if (!App->file_system->FileExist(deb_vert_default_path))
@@ -1324,15 +1441,18 @@ void ModuleResources::CreateDefaultShaders()
 		default_deb_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
 
 		std::string shader_text =
-			"#version 330 core\n"
-			"layout(location = 0) in vec3 position;\n"
-			"uniform mat4 Model;\n"
-			"uniform mat4 view;\n"
-			"uniform mat4 projection;\n\n"
-			"void main()\n"
-			"{ \n"
-			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
-			"}";
+		"#version 330 core\n"
+		"layout(location = 0) in vec3 position;\n"
+		"uniform mat4 Model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n\n"
+		"void main()\n"
+		"{ \n"
+		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+		"	ourColor = color;\n"
+		"	TexCoord = -position;\n"
+		"}";
+			
 
 		default_deb_vert->SetContent(shader_text);
 		std::ofstream outfile(deb_vert_default_path.c_str(), std::ofstream::out);
@@ -1372,6 +1492,7 @@ void ModuleResources::CreateDefaultShaders()
 	prog->SetVertexShader(vertex);
 
 	fragment = GetShader("default_debug_fragment");
+
 	prog->SetFragmentShader(fragment);
 
 	prog->LinkShaderProgram();
