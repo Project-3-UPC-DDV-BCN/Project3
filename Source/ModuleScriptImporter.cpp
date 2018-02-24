@@ -266,7 +266,7 @@ void ModuleScriptImporter::RegisterAPI()
 
 	// PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
-	mono_add_internal_call("TheEngine.TheRectTransform::GetPercentageProgress", (const void*)GetPercentageProgress);
+	mono_add_internal_call("TheEngine.TheProgressBar::GetPercentageProgress", (const void*)GetPercentageProgress);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);

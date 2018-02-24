@@ -925,6 +925,14 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheFactory";
 	}
+	else if (name == "TheEngine.TheRectTransform")
+	{
+		comp_name = "TheRectTransform";
+	}
+	else if (name == "TheEngine.TheProgressBar")
+	{
+		comp_name = "TheProgressBar";
+	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
 	if (c)

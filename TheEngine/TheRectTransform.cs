@@ -24,7 +24,7 @@ namespace TheEngine
             }
             set
             {
-                SetRectRotation();
+                SetRectRotation(value);
             }
         }
 
@@ -63,7 +63,7 @@ namespace TheEngine
         private extern TheVector3 GetRectRotation();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 SetRectRotation();
+        private extern TheVector3 SetRectRotation(TheVector3 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetRectSize();
