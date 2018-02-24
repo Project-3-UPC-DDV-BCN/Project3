@@ -640,6 +640,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			{
 				current_emmiter->SetSystemState(PARTICLE_STATE_PLAY);
 				current_emmiter->Start();
+
+				if(current_emmiter->show_shockwave)
+					current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
 			}
 
 			ImGui::SameLine();
@@ -680,17 +683,17 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
 				{
 					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
-					ImGui::TextColored(ImVec4(0, 0, 1, 1), "%.2f sec", time_left / 1000);
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
 				}
 				else
-					ImGui::TextColored(ImVec4(0, 0, 1, 1), "%.2f sec", time_left);
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
 			}
 			else
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
 
 			ImGui::Text("Shock Wave: "); ImGui::SameLine();
 
-			if (current_emmiter->data->shock_wave.active)						
+			if (current_emmiter->show_shockwave)
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
 			else
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
@@ -738,7 +741,11 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if(ImGui::Button("Apply"))
 				{
-					current_emmiter->CreateShockWave(st_particle_texture, wave_duration, final_wave_scale);
+					current_emmiter->show_shockwave = true; 
+
+					current_emmiter->data->shock_wave.wave_texture = st_particle_texture; 
+					current_emmiter->data->shock_wave.duration = wave_duration; 
+					current_emmiter->data->shock_wave.final_scale = final_wave_scale;
 				}
 
 				ImGui::TreePop(); 

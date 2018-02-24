@@ -77,6 +77,8 @@ public:
 	OBB emmit_area_obb; 
 	string runtime_behaviour; 
 
+	bool show_shockwave;
+
 private:
 
 private:
@@ -94,6 +96,7 @@ private:
 	//Spawn Management
 	float emmision_frequency;							//Difference between spawn
 	bool show_emit_area; 
+
 
 
 };
