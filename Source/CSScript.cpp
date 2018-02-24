@@ -455,22 +455,25 @@ Texture * CSScript::GetTextureProperty(const char * propertyName)
 std::vector<ScriptField*> CSScript::GetScriptFields()
 {
 	void* iter = nullptr;
-	MonoClassField* field = mono_class_get_fields(mono_class, &iter);
-
-	script_fields.clear();
-	
-	while (field != nullptr)
+	if (mono_class)
 	{
-		uint32_t flags = mono_field_get_flags(field);
-		if ((flags & MONO_FIELD_ATTR_PUBLIC) && (flags & MONO_FIELD_ATTR_STATIC) == 0)
+		MonoClassField* field = mono_class_get_fields(mono_class, &iter);
+
+		script_fields.clear();
+
+		while (field != nullptr)
 		{
-			ScriptField* property_field = new ScriptField();
-			property_field->fieldName = mono_field_get_name(field);
-			MonoType* type = mono_field_get_type(field);
-			ConvertMonoType(type, *property_field);
-			script_fields.push_back(property_field);
+			uint32_t flags = mono_field_get_flags(field);
+			if ((flags & MONO_FIELD_ATTR_PUBLIC) && (flags & MONO_FIELD_ATTR_STATIC) == 0)
+			{
+				ScriptField* property_field = new ScriptField();
+				property_field->fieldName = mono_field_get_name(field);
+				MonoType* type = mono_field_get_type(field);
+				ConvertMonoType(type, *property_field);
+				script_fields.push_back(property_field);
+			}
+			field = mono_class_get_fields(mono_class, &iter);
 		}
-		field = mono_class_get_fields(mono_class, &iter);
 	}
 
 	return script_fields;

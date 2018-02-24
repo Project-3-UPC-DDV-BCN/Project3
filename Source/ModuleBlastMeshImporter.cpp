@@ -14,7 +14,7 @@
 #include <fstream>
 #include "ModuleFileSystem.h"
 #include "ModuleBlast.h"
-#include "BlastModel.h"
+#include "ComponentBlast.h"
 #include "Mesh.h"
 #include "GameObject.h"
 #include "ComponentMeshRenderer.h"
@@ -22,24 +22,7 @@
 #include "ModuleMeshImporter.h"
 #include "Material.h"
 #include "ModuleScene.h"
-
-//#if _DEBUG
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtSerializationDEBUG_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtAssetUtilsDEBUG_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtPxSerializationDEBUG_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtTkSerializationDEBUG_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastTkDEBUG_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtShadersDEBUG_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_debug/NvBlastExtExporterDEBUG_x86.lib")
-//#else
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtSerialization_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtAssetUtils_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtPxSerialization_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtTkSerialization_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastTk_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtShaders_x86.lib")
-//#pragma comment (lib, "Nvidia/Blast/lib/lib_release/NvBlastExtExporter_x86.lib")
-//#endif
+#include "BlastModel.h"
 
 ModuleBlastMeshImporter::ModuleBlastMeshImporter(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -96,6 +79,9 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 				library_path = LIBRARY_BMODEL_FOLDER + file_name;
 
 				BlastModel* model = new BlastModel();
+				model->root = new GameObject();
+				model->root->SetName(name_without_extension);
+				ComponentBlast* blast = (ComponentBlast*)model->root->AddComponent(Component::CompBlast);
 				model->chunks.resize(reader->getBoneCount());
 				uint32_t* infl;
 				reader->getBoneInfluences(infl);
@@ -110,16 +96,9 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 				for (uint bone_index = 0; bone_index < reader->getBoneCount(); ++bone_index)
 				{
 					std::fill(indRemap.begin(), indRemap.end(), -1);
-					GameObject* go = new GameObject();
-					if (bone_index == 0)
-					{
-						go->SetName(name_without_extension);
-					}
-					else
-					{
-						go->SetName(name_without_extension + "_chunk_" + std::to_string(bone_index));
-						go->SetActive(false);
-					}
+					GameObject* go = new GameObject(model->root);
+					go->SetName(name_without_extension + "_chunk_" + std::to_string(bone_index));
+					go->SetActive(false);
 					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->AddComponent(Component::CompMeshRenderer);
 					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
 					mesh_renderer->SetName("Blast_Mesh_Renderer");
@@ -230,12 +209,10 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
 					mesh_renderer->SetMesh(mesh);
 					mesh->UnloadFromMemory();
-					model->chunks[bone_index] = go;
 					App->mesh_importer->SaveMeshToLibrary(*mesh);
 				}
 				model->SetAssetsPath(path);
 				model->SetLibraryPath(library_path);
-				model->SetName(name_without_extension);
 				Data data;
 				model->Save(data);
 				data.SaveAsBinary(LIBRARY_BMODEL_FOLDER + name_without_extension + ".bmodel");
@@ -261,6 +238,8 @@ BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path)
 	if (data.LoadBinary(LIBRARY_BMODEL_FOLDER + model_name + ".bmodel"))
 	{
 		model = new BlastModel();
+		model->Load(data);
+		ComponentBlast* blast = (ComponentBlast*)model->root->GetComponent(Component::CompBlast);
 
 		std::ifstream stream(path.c_str(), std::ios::binary);
 		std::streampos size = stream.tellg();
@@ -323,7 +302,6 @@ BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path)
 				model->dmg_accel = NvBlastExtDamageAcceleratorCreate(model->m_pxAsset->getTkAsset().getAssetLL(), 3);
 			}
 		}
-		model->Load(data);
 	}
 
 	return model;

@@ -99,7 +99,6 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 
 ComponentCollider::~ComponentCollider()
 {
-	collider_material->release();
 	if (triangle_mesh)
 	{
 		triangle_mesh->release();
@@ -411,6 +410,29 @@ void ComponentCollider::Save(Data & data) const
 	{
 		data.AddBool("HaveMaterial", false);
 	}
+	data.AddVector3("ColliderCenter", GetColliderCenter());
+	switch (collider_type)
+	{
+	case ComponentCollider::BoxCollider:
+		data.CreateSection("Box");
+		data.AddVector3("BoxSize", GetBoxSize());
+		data.CloseSection();
+		break;
+	case ComponentCollider::SphereCollider:
+		data.CreateSection("Sphere");
+		data.AddFloat("SphereRadius", GetSphereRadius());
+		data.CloseSection();
+		break;
+	case ComponentCollider::CapsuleCollider:
+		data.CreateSection("Capsule");
+		data.AddFloat("CapsuleRadius", GetCapsuleRadius());
+		data.AddFloat("CapsuleHeight", GetCapsuleHeight());
+		data.CloseSection();
+		break;
+	default:
+		break;
+	}
+	
 }
 
 void ComponentCollider::Load(Data & data)
@@ -430,6 +452,23 @@ void ComponentCollider::Load(Data & data)
 		{
 			phys_material->Load(data);
 		}
+		data.LeaveSection();
+	}
+	SetColliderCenter(data.GetVector3("ColliderCenter"));
+	if (data.EnterSection("Box"))
+	{
+		SetBoxSize(data.GetVector3("BoxSize"));
+		data.LeaveSection();
+	}
+	if (data.EnterSection("Sphere"))
+	{
+		SetSphereRadius(data.GetFloat("SphereRadius"));
+		data.LeaveSection();
+	}
+	if (data.EnterSection("Capsule"))
+	{
+		SetCapsuleRadius(data.GetFloat("CapsuleRadius"));
+		SetCapsuleHeight(data.GetFloat("CapsuleHeight"));
 		data.LeaveSection();
 	}
 }

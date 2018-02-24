@@ -4,36 +4,37 @@
 #include <NvBlastExtPxListener.h>
 #include <NvBlastExtImpactDamageManager.h>
 #include <map>
+#include <vector>
 
-//class FixedBuffer
-//{
-//public:
-//	FixedBuffer(const uint32_t size)
-//	{
-//		m_buffer.resize(size);
-//		m_index = 0;
-//	}
-//
-//	void* push(const void* data, uint32_t size)
-//	{
-//		if (m_index + size > m_buffer.size())
-//			return nullptr;
-//
-//		void* dst = &m_buffer[m_index];
-//		memcpy(dst, data, size);
-//		m_index += size;
-//		return dst;
-//	}
-//
-//	void clear()
-//	{
-//		m_index = 0;
-//	}
-//
-//private:
-//	std::vector<char> m_buffer;
-//	uint32_t		  m_index;
-//};
+class FixedBuffer
+{
+public:
+	FixedBuffer(const uint32_t size)
+	{
+		m_buffer.resize(size);
+		m_index = 0;
+	}
+
+	void* push(const void* data, uint32_t size)
+	{
+		if (m_index + size > m_buffer.size())
+			return nullptr;
+
+		void* dst = &m_buffer[m_index];
+		memcpy(dst, data, size);
+		m_index += size;
+		return dst;
+	}
+
+	void clear()
+	{
+		m_index = 0;
+	}
+
+private:
+	std::vector<char> m_buffer;
+	uint32_t		  m_index;
+};
 
 namespace Nv
 {
@@ -82,8 +83,8 @@ private:
 	Nv::Blast::ExtPxManager* px_manager;
 	std::map<Nv::Blast::ExtPxFamily*, BlastModel*> families;
 	physx::PxMaterial* default_material;
-	/*FixedBuffer* damage_desc_buffer;
-	FixedBuffer* damage_params_buffer;*/
+	FixedBuffer* damage_desc_buffer;
+	FixedBuffer* damage_params_buffer;
 	physx::PxTaskManager* phys_task_manager;
 	Nv::Blast::TkGroup* group;
 	Nv::Blast::ExtGroupTaskManager* task_manager;

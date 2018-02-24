@@ -15,6 +15,8 @@
 #include "ComponentListener.h"
 #include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
+#include "ComponentBlast.h"
+#include "ModulePhysics.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -107,6 +109,8 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));
 		break;
+	case Component::CompBlast:
+		components_list.push_back(component = new ComponentBlast(this));
 	default:
 		break;
 	}
@@ -173,6 +177,21 @@ void GameObject::SetActive(bool active)
 			{
 				App->scene->EraseGoInOctree(mesh_renderer);
 			}
+		}
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)GetComponent(Component::CompRigidBody);
+	if (rb)
+	{
+		if (!active)
+		{
+			rb->SetToSleep();
+			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), 0);
+		}
+		else
+		{
+			rb->WakeUp();
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), 0);
 		}
 	}
 }

@@ -7,6 +7,7 @@
 struct NvFlowContext;
 struct NvFlowGrid;
 class Mesh;
+class GameObject;
 
 class ModulePhysics :
 	public Module, public physx::PxSimulationEventCallback
@@ -26,6 +27,7 @@ public:
 	physx::PxRigidDynamic* CreateDynamicRigidBody(physx::PxScene* scene = nullptr);
 	physx::PxRigidStatic* CreateStaticRigidBody(physx::PxScene* scene = nullptr);
 	void AddRigidBodyToScene(physx::PxRigidActor* body, physx::PxScene* scene);
+	void RemoveRigidBodyFromScene(physx::PxRigidActor* body, physx::PxScene* scene);
 	physx::PxMaterial* CreateMaterial(float static_friction, float dynamic_friction, float restitution);
 	physx::PxShape* CreateShape(physx::PxRigidActor& body, physx::PxGeometry& geometry, physx::PxMaterial& mat);
 	physx::PxTriangleMesh* CreateTriangleMesh(Mesh* mesh);
@@ -43,6 +45,9 @@ public:
 	physx::PxDefaultCpuDispatcher* GetPhysXCpuDispatcher() const;
 	physx::PxFoundation* GetPhysXFoundation() const;
 	void DrawColliders();
+
+	void AddActorToList(physx::PxRigidActor* body, GameObject* gameobject);
+	void RemoveActorFromList(physx::PxRigidActor* body, GameObject* gameobject);
 
 private:
 	void CreateMainScene();
@@ -68,6 +73,8 @@ private:
 	physx::PxDefaultAllocator gDefaultAllocatorCallback;
 
 	std::map<physx::PxTriggerPair*, bool> trigger_stay_pairs;
+
+	std::map<physx::PxRigidActor*, GameObject*> physics_objects;
 
 	NvFlowContext* flow_context;
 	NvFlowGrid* flow_grid;

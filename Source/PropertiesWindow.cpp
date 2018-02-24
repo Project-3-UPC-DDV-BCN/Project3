@@ -29,6 +29,7 @@
 #include "ComponentListener.h"
 #include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
+#include "ModulePhysics.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -135,7 +136,7 @@ void PropertiesWindow::DrawWindow()
 			if (ImGui::BeginPopup("Components"))
 			{
 				if (ImGui::MenuItem("Mesh Renderer")) {
-					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlastMeshRenderer) == nullptr) {
+					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
 					}
 					else
@@ -251,13 +252,17 @@ void PropertiesWindow::DrawWindow()
 					{
 						ComponentFactory* factory = (ComponentFactory*)selected_gameobject->AddComponent(Component::CompFactory);
 						if (factory) factory->SetName(input_text);
+						input_text[0] = 0;
+						ImGui::CloseCurrentPopup();
 					}
 					ImGui::EndMenu();
 				}
 
 				if (ImGui::MenuItem("RigidBody")) {
 					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-						selected_gameobject->AddComponent(Component::CompRigidBody);
+						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+						App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 					}
 					else
 					{
@@ -269,21 +274,27 @@ void PropertiesWindow::DrawWindow()
 					if (ImGui::MenuItem("Box"))
 					{
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompBoxCollider);
 					}
 					if (ImGui::MenuItem("Sphere"))
 					{
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompSphereCollider);
 					}
 					if (ImGui::MenuItem("Capsule"))
 					{
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
 					}
@@ -292,7 +303,9 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompMeshRenderer))
 						{
 							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-								selected_gameobject->AddComponent(Component::CompRigidBody);
+								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 							}
 							selected_gameobject->AddComponent(Component::CompMeshCollider);
 						}
@@ -304,7 +317,7 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::BeginMenu("Joints")) {
+				/*if (ImGui::BeginMenu("Joints")) {
 					if (ImGui::MenuItem("Fixed"))
 					{
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
@@ -341,7 +354,7 @@ void PropertiesWindow::DrawWindow()
 						selected_gameobject->AddComponent(Component::CompPrismaticJoint);
 					}
 					ImGui::EndMenu();
-				}
+				}*/
 
 				ImGui::EndPopup();
 			}
@@ -609,7 +622,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 		}
 
 		Script* script = comp_script->GetScript();
-		if (ImGui::InputResourceScript(("Script##Script_" + script_name).c_str(), &script))
+		if (ImGui::InputResourceScript("Script", &script))
 		{
 			comp_script->SetScript(script);
 		}
@@ -677,7 +690,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			case ScriptField::GameObject:
 			{
 				GameObject* gameobject = comp_script->GetScript()->GetGameObjectProperty((*it)->fieldName.c_str());
-				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName + script_name).c_str(), &gameobject)) {
+				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName).c_str(), &gameobject)) {
 					comp_script->GetScript()->SetGameObjectProperty((*it)->fieldName.c_str(), gameobject);
 				}
 			}
@@ -729,7 +742,7 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Prefab* prefab = factory->GetFactoryObject();
-		if(ImGui::InputResourcePrefab(("Factory Object##" + std::to_string(factories_count)).c_str(), &prefab))
+		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
 		{
 			factory->SetFactoryObject(prefab);
 		}

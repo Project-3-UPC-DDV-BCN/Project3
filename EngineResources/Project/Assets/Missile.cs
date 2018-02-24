@@ -1,18 +1,20 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class Missile {
 
-	int speed = 30;
+	int speed = 10;
+	//TheTransform laser_transform;
 	
 	void Start () {
-		TheGameObject go = null;
-		go.SetActive(true);
+		//laser_transform = TheGameObject.Self.GetComponent<TheTransform>();
 	}
 	
 	void Update () {
 		if(TheGameObject.Self.IsActive())
         {
-            TheGameObject.Self.GetComponent<TheTransform>().GlobalPosition += TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection * Time.DeltaTime * speed;
-        }
+            TheGameObject.Self.GetComponent<TheTransform>().GlobalPosition += -TheGameObject.Self.GetComponent<TheTransform>().RightDirection * Time.DeltaTime * speed;
+        	TheConsole.Log(TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection);
+		}
 	}
 }

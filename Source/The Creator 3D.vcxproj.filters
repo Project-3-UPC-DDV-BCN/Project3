@@ -63,7 +63,7 @@
     </Filter>
     <Filter Include="Sources\3d Party\Nvidia\Blast">
       <UniqueIdentifier>{b2008ffc-7f13-45a0-86a9-7c51583e6dbf}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Sources\3d Party\Wwise">
       <UniqueIdentifier>{b05dcfb5-f765-4cb6-9757-4ff2e955f8f7}</UniqueIdentifier>
     </Filter>
@@ -553,7 +553,7 @@
       <Filter>Sources\3d Party\Nvidia\Flow</Filter>
     </ClInclude>
     <ClInclude Include="Nvidia\Flow\include\NvFlowTypes.h">
-	  <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
     </ClInclude>
     <ClInclude Include="ModuleBlastMeshImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -575,7 +575,7 @@
     </ClInclude>
     <ClInclude Include="ModuleBlast.h">
       <Filter>Sources\Modules</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Include_Wwise.h">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClInclude>
@@ -617,6 +617,9 @@
     </ClInclude>
     <ClInclude Include="DebugDraw.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBlast.h">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -982,7 +985,7 @@
     </ClCompile>
     <ClCompile Include="ModuleBlast.cpp">
       <Filter>Sources\Modules</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -1039,6 +1042,9 @@
     </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBlast.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

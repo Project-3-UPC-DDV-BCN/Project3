@@ -3,39 +3,27 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "ModuleScene.h"
+#include "ModuleResources.h"
 #include <ctime>
 
 BlastModel::BlastModel()
 {
 	SetType(Resource::BlastMeshResource);
-}
-
-BlastModel::BlastModel(const BlastModel & model)
-{
-	chunks = model.chunks;
-	actors = model.actors;
-	interior_material = model.interior_material;
-
-	m_pxAsset = model.m_pxAsset;
-	family = model.family;
-	dmg_accel = model.dmg_accel;
+	root = nullptr;
 }
 
 BlastModel::~BlastModel()
 {
-	for (GameObject* go : chunks)
+	/*for (GameObject* go : chunks)
 	{
 		RELEASE(go);
-	}
+	}*/
 	chunks.clear();
 }
 
 void BlastModel::Save(Data & data) const
 {
-	for (GameObject* go : chunks)
-	{
-		go->Save(data);
-	}
+	root->Save(data);
 	data.AddInt("GameObjectsCount", App->scene->saving_index);
 	data.AddString("library_path", GetLibraryPath());
 	data.AddString("assets_path", GetAssetsPath());
@@ -48,15 +36,23 @@ bool BlastModel::Load(Data & data)
 {
 	int gameObjectsCount = data.GetInt("GameObjectsCount");
 	chunks.clear();
-	chunks.resize(gameObjectsCount);
+	chunks.resize(gameObjectsCount - 1);
 	for (int i = 0; i < gameObjectsCount; i++) {
 		GameObject* go = new GameObject();
 		data.EnterSection("GameObject_" + std::to_string(i));
 		go->Load(data, true);
 		data.LeaveSection();
-		chunks[i] = go;
-		//App->resources->AddGameObject(go);
 		go->SetIsUsedInPrefab(true);
+		if (i == 0)
+		{
+			root = go;
+		}
+		else
+		{
+			chunks[i - 1] = go;
+			go->SetParent(root);
+		}
+		
 	}
 	SetUID(data.GetUInt("UUID"));
 	SetAssetsPath(data.GetString("assets_path"));

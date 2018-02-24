@@ -52,14 +52,12 @@ ModuleBlast::ModuleBlast(Application* app, bool start_enabled, bool is_game) : M
 	name = "Blast_Module";
 	framework = nullptr;
 	px_manager = nullptr;
-	/*damage_desc_buffer = new FixedBuffer(64 * 1024);
-	damage_params_buffer = new FixedBuffer(1024);*/
+	damage_desc_buffer = new FixedBuffer(64 * 1024);
+	damage_params_buffer = new FixedBuffer(1024);
 }
 
 ModuleBlast::~ModuleBlast()
 {
-	framework->release();
-	px_manager->release();
 }
 
 bool ModuleBlast::Init(Data * editor_config)
@@ -90,44 +88,47 @@ bool ModuleBlast::Init(Data * editor_config)
 
 update_status ModuleBlast::Update(float dt)
 {
+	task_manager->process();
+	task_manager->wait();
+
 	if (App->IsPlaying())
 	{
 
-		BlastModel* model = families.begin()->second;
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		{
-			BlastModel* model = families.begin()->second;
-			//NvBlastDamageProgram program;
-			//program.graphShaderFunction = NvBlastExtFalloffGraphShader;
-			//program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
+		//if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		//{
+		//	BlastModel* model = families.begin()->second;
+		//	NvBlastDamageProgram program;
+		//	program.graphShaderFunction = NvBlastExtFalloffGraphShader;
+		//	program.subgraphShaderFunction = NvBlastExtFalloffSubgraphShader;
 
-			//NvBlastExtRadialDamageDesc desc =
-			//{
-			//	1000, { 0.2, 5, 0 }, 1.0, 2.0
-			//};
+		//	NvBlastExtRadialDamageDesc desc =
+		//	{
+		//		1, { 0.2, 0, 0 }, 1.0, 2.0
+		//	};
 
-			//const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
-			//NvBlastExtProgramParams params =
-			//{
-			//	buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
-			//};
+		//	const void* buffered_damage_desc = damage_desc_buffer->push(&desc, sizeof(desc));
+		//	NvBlastExtProgramParams params =
+		//	{
+		//		buffered_damage_desc, model->family->getMaterial(), model->m_pxAsset->getAccelerator()
+		//	};
 
-			//const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
-			//for (Nv::Blast::ExtPxActor* actor : model->actors)
-			//{
-			//	actor->getTkActor().damage(program, buffered_program_params);
-			//}
+		//	const void* buffered_program_params = damage_params_buffer->push(&params, sizeof(NvBlastExtProgramParams));
+		//	for (Nv::Blast::ExtPxActor* actor : model->actors)
+		//	{
+		//		actor->getTkActor().damage(program, buffered_program_params);
+		//	}
 
-			//if (model->actors[0]->getTkActor().isPending())
-			//{
-			//	//model->actors[0]->getTkActor().
-			//}
+		//	//if (model->actors.begin()->getTkActor().isPending())
+		//	//{
+		//	//	//model->actors[0]->getTkActor().
+		//	//}
 
-		}
+		//	
+		//}
 
 		for (std::map<Nv::Blast::ExtPxFamily*, BlastModel*>::iterator it = families.begin(); it != families.end(); it++)
 		{
-			for (Nv::Blast::ExtPxActor* actor : it->second->actors)
+			/*for (Nv::Blast::ExtPxActor* actor : it->second->actors)
 			{
 				const Nv::Blast::ExtPxChunk* chunks = it->first->getPxAsset().getChunks();
 				const Nv::Blast::ExtPxSubchunk* subChunks = it->first->getPxAsset().getSubchunks();
@@ -145,18 +146,13 @@ update_status ModuleBlast::Update(float dt)
 					transform->SetPosition(pos);
 					transform->SetRotation(rot);
 				}
-			}
-
-		}
-
-		task_manager->process();
-		task_manager->wait();
-
-		if (model)
-		{
-			model->family->postSplitUpdate();
+			}*/
+			it->first->postSplitUpdate();
 		}
 	}
+
+	task_manager->process();
+	task_manager->wait();
 
 	return UPDATE_CONTINUE;
 }
@@ -205,6 +201,11 @@ void ModuleBlast::SpawnFamily(BlastModel* model)
 		2000.f
 	};
 	model->family->spawn(physx::PxTransform(physx::PxVec3(0, 0, 0)), physx::PxVec3(1, 1, 1), spawn_settings);
+	App->scene->AddGameObjectToScene(model->root);
+	for (GameObject* go : model->root->childs)
+	{
+		App->scene->AddGameObjectToScene(go);
+	}
 }
 
 void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
@@ -217,9 +218,31 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(true);
-		ComponentRigidBody* rb = (ComponentRigidBody*)go->AddComponent(Component::CompRigidBody);
-		rb->SetNewRigidBody(&actor.getPhysXActor());
-		App->scene->AddGameObjectToScene(go);
+		ComponentRigidBody* rb = nullptr;
+		if (go->GetComponent(Component::CompRigidBody) == nullptr)
+		{
+			rb = (ComponentRigidBody*)go->AddComponent(Component::CompRigidBody);
+		}
+		physx::PxRigidDynamic* rigid_body = &actor.getPhysXActor();
+		if (chunkIndex != 0)
+		{
+			//const Nv::Blast::ExtPxChunk* chunks = family.getPxAsset().getChunks();
+			//const Nv::Blast::ExtPxSubchunk* subChunks = family.getPxAsset().getSubchunks();
+			//physx::PxTransform phys_transform = actor.getPhysXActor().getGlobalPose() * subChunks[chunks[chunkIndex].firstSubchunkIndex].transform;
+			//ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+			//float3 pos = transform->GetGlobalPosition();
+			//physx::PxVec3 dr = phys_transform.transform(rigid_body->getCMassLocalPose()).p; //rigid_body->getGlobalPose().transform(rigid_body->getCMassLocalPose()).p/* - m_worldPos*/;
+			//float distance = dr.magnitude();
+			//float factor = physx::PxClamp(1.0f - (distance * distance) / (1 * 1), 0.0f, 1.0f);
+			//float impulse = factor * 100/* * 1000.0f*/;
+			//physx::PxVec3 vel = dr.getNormalized() * impulse / rigid_body->getMass();
+			//rigid_body->setLinearVelocity(rigid_body->getLinearVelocity() + vel);
+		}
+		App->physics->AddActorToList(rigid_body, go);
+		if (rb)
+		{
+			rb->SetNewRigidBody(rigid_body);
+		}
 	}
 	model->AddActor(&actor);
 }
@@ -234,7 +257,7 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(false);
-		App->scene->AddGameObjectToDestroy(go);
+		App->physics->RemoveActorFromList(&actor.getPhysXActor(), go);
 	}
 	model->DestroyActor(&actor);
 }

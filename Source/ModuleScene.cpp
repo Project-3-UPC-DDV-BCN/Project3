@@ -27,6 +27,7 @@
 #include "BlastModel.h"
 #include "ModuleBlast.h"
 #include "ComponentLight.h"
+#include "ComponentRigidBody.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -279,6 +280,12 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 		scene_gameobjects.push_back(gameobject);
 		if (gameobject->GetParent() == nullptr)
 			root_gameobjects.push_back(gameobject);
+
+		ComponentRigidBody* rb = (ComponentRigidBody*)gameobject->GetComponent(Component::CompRigidBody);
+		if (rb)
+		{
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), 0);
+		}
 
 		RenameDuplicatedGameObject(gameobject);
 

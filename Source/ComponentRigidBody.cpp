@@ -27,7 +27,6 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 
 ComponentRigidBody::~ComponentRigidBody()
 {
-	rigidbody->release();
 	rigidbody = nullptr;
 }
 

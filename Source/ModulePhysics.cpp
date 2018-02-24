@@ -113,7 +113,7 @@ bool ModulePhysics::Init(Data * editor_config)
 
 update_status ModulePhysics::Update(float dt)
 {
-	if (App->IsPlaying() || App->IsPaused())
+	if (App->IsPlaying()/* || App->IsPaused()*/)
 	{
 		if (physx_physics && physx_physics->getNbScenes() > 0) {
 			int scene_mum = physx_physics->getNbScenes();
@@ -158,7 +158,7 @@ update_status ModulePhysics::Update(float dt)
 			}
 		}
 	}
-
+	
 	DrawColliders();
 	
 	return UPDATE_CONTINUE;
@@ -205,14 +205,6 @@ physx::PxRigidDynamic* ModulePhysics::CreateDynamicRigidBody(physx::PxScene * sc
 	//Default rigidbody values
 	physx::PxTransform transform = physx::PxTransform(physx::PxIDENTITY());
 	ret = physx_physics->createRigidDynamic(transform);
-	if (scene != nullptr)
-	{
-		scene->addActor(*ret);
-	}
-	else
-	{
-		main_scene->addActor(*ret);
-	}
 
 	return ret;
 }
@@ -224,23 +216,51 @@ physx::PxRigidStatic* ModulePhysics::CreateStaticRigidBody(physx::PxScene * scen
 	//Default rigidbody values
 	physx::PxTransform transform = physx::PxTransform(physx::PxIDENTITY());
 	ret = physx_physics->createRigidStatic(transform);
-	if (scene != nullptr)
+	/*if (scene != nullptr)
 	{
 		scene->addActor(*ret);
 	}
 	else
 	{
 		main_scene->addActor(*ret);
-	}
+	}*/
 	
 	return ret;
 }
 
 void ModulePhysics::AddRigidBodyToScene(physx::PxRigidActor* body, physx::PxScene* scene)
 {
-	if (scene)
+	if (body)
 	{
-		scene->addActor(*body);
+		if (scene)
+		{
+			if (body->getScene() != scene)
+			{
+				scene->addActor(*body);
+			}
+		}
+		else
+		{
+			if (body->getScene() != main_scene)
+			{
+				main_scene->addActor(*body);
+			}
+		}
+	}
+}
+
+void ModulePhysics::RemoveRigidBodyFromScene(physx::PxRigidActor * body, physx::PxScene * scene)
+{
+	if (body)
+	{
+		if (scene)
+		{
+			scene->removeActor(*body);
+		}
+		else
+		{
+			main_scene->removeActor(*body);
+		}
 	}
 }
 
@@ -378,7 +398,7 @@ void ModulePhysics::CreateMainScene()
 	sceneDesc.cpuDispatcher = dispatcher;
 	sceneDesc.filterShader = Nv::Blast::ExtImpactDamageManager::FilterShader; //CCDShader;
 	sceneDesc.simulationEventCallback = this;
-	sceneDesc.flags |= /*physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | */physx::PxSceneFlag::eENABLE_PCM | physx::PxSceneFlag::eENABLE_STABILIZATION;
+	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_ACTIVE_ACTORS | physx::PxSceneFlag::eENABLE_PCM | physx::PxSceneFlag::eENABLE_STABILIZATION;
 
 	if (cuda_context_manager)
 	{
@@ -424,16 +444,17 @@ void ModulePhysics::CreateScene()
 
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
-	/*physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
+	physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
 	physx::PxTransform phys_transform = dynamic->getGlobalPose();
-	GameObject* go = (GameObject*)actor->userData;
-	if (go->GetName() == "wall") return;
+	//GameObject* go = (GameObject*)actor->userData;
+	GameObject* go = physics_objects[dynamic];
+	//if (go->GetName() == "wall") return;
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
 	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
 	float3 rotation = rot_quat.ToEulerXYZ();
 	transform->SetPosition(position);
-	transform->SetRotation(rotation);*/
+	transform->SetRotation(rotation);
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
@@ -576,4 +597,14 @@ void ModulePhysics::DrawColliders()
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);*/
 		}
 	}
+}
+
+void ModulePhysics::AddActorToList(physx::PxRigidActor * body, GameObject * gameobject)
+{
+	physics_objects.insert(std::pair<physx::PxRigidActor*, GameObject*>(body, gameobject));
+}
+
+void ModulePhysics::RemoveActorFromList(physx::PxRigidActor * body, GameObject * gameobject)
+{
+	physics_objects.erase(body);
 }

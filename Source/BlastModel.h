@@ -36,9 +36,9 @@ public:
 	void DestroyActor(Nv::Blast::ExtPxActor*);
 
 public:
+	GameObject* root;
 	std::vector<GameObject*> chunks;
 	std::set<Nv::Blast::ExtPxActor*> actors;
-	Material* interior_material;
 
 	Nv::Blast::ExtPxAsset* m_pxAsset;
 	Nv::Blast::ExtPxFamily* family;

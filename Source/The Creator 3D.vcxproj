@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -98,6 +98,7 @@
     <ClInclude Include="AudioEvent.h" />
     <ClInclude Include="ComponentAudioSource.h" />
     <ClInclude Include="AudioWindow.h" />
+    <ClInclude Include="ComponentBlast.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentCollider.h" />
     <ClInclude Include="ComponentJointDistance.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="AudioEvent.cpp" />
     <ClCompile Include="ComponentAudioSource.cpp" />
     <ClCompile Include="AudioWindow.cpp" />
+    <ClCompile Include="ComponentBlast.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentCollider.cpp" />
     <ClCompile Include="ComponentJointDistance.cpp" />
