@@ -16,6 +16,7 @@
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
 #include "ComponentRectTransform.h"
+#include "ComponentProgressBar.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -1150,7 +1151,7 @@ void CSScript::LookAt(MonoObject * object, MonoObject * vector)
 {
 }
 
-void CSScript::SetPosition(MonoObject * object, MonoObject * vector3)
+void CSScript::SetRectPosition(MonoObject * object, MonoObject * vector3)
 {
 	if (!MonoObjectIsValid(object))
 	{
@@ -1177,36 +1178,270 @@ void CSScript::SetPosition(MonoObject * object, MonoObject * vector3)
 	rect_transform->SetPos(float2(new_pos.x, new_pos.y));
 }
 
-MonoObject * CSScript::GetPosition(MonoObject * object)
+MonoObject * CSScript::GetRectPosition(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+			float3 new_pos;
+			new_pos.x = rect_transform->GetPos().x;
+			new_pos.y = rect_transform->GetPos().y;
+			new_pos.z = 0;
+
+			if (x_field) mono_field_set_value(new_object, x_field, &new_pos.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &new_pos.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &new_pos.z);
+
+			return new_object;
+		}
+	}
 	return nullptr;
 }
 
-void CSScript::SetRotation(MonoObject * object, MonoObject * vector3)
+void CSScript::SetRectRotation(MonoObject * object, MonoObject * vector3)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(vector3);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 new_rot;
+
+	if (x_field) mono_field_get_value(vector3, x_field, &new_rot.x);
+	if (y_field) mono_field_get_value(vector3, y_field, &new_rot.y);
+	if (z_field) mono_field_get_value(vector3, z_field, &new_rot.z);
+
+	ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+	rect_transform->SetRotation(new_rot);
 }
 
-MonoObject * CSScript::GetRotation(MonoObject * object)
+MonoObject * CSScript::GetRectRotation(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+			float3 new_rot;
+			new_rot.x = rect_transform->GetLocalRotation().x;
+			new_rot.y = rect_transform->GetLocalRotation().y;
+			new_rot.z = rect_transform->GetLocalRotation().z;
+
+			if (x_field) mono_field_set_value(new_object, x_field, &new_rot.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &new_rot.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &new_rot.z);
+
+			return new_object;
+		}
+	}
 	return nullptr;
 }
 
-void CSScript::SetSize(MonoObject * object, MonoObject * vector3)
+void CSScript::SetRectSize(MonoObject * object, MonoObject * vector3)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(vector3);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 new_size;
+
+	if (x_field) mono_field_get_value(vector3, x_field, &new_size.x);
+	if (y_field) mono_field_get_value(vector3, y_field, &new_size.y);
+	if (z_field) mono_field_get_value(vector3, z_field, &new_size.z);
+
+	ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+	rect_transform->SetSize(float2(new_size.x, new_size.y));
 }
 
-MonoObject * CSScript::GetSize(MonoObject * object)
+MonoObject * CSScript::GetRectSize(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+			float3 new_size;
+			new_size.x = rect_transform->GetSize().x;
+			new_size.y = rect_transform->GetSize().y;
+			new_size.z = 0;
+
+			if (x_field) mono_field_set_value(new_object, x_field, &new_size.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &new_size.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &new_size.z);
+
+			return new_object;
+		}
+	}
 	return nullptr;
 }
 
-void CSScript::SetAnchor(MonoObject * object, MonoObject * vector3)
+void CSScript::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(vector3);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 new_anchor;
+
+	if (x_field) mono_field_get_value(vector3, x_field, &new_anchor.x);
+	if (y_field) mono_field_get_value(vector3, y_field, &new_anchor.y);
+	if (z_field) mono_field_get_value(vector3, z_field, &new_anchor.z);
+
+	ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+	rect_transform->SetAnchor(float2(new_anchor.x, new_anchor.y));
 }
 
-MonoObject * CSScript::GetAnchor(MonoObject * object)
+MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+			float3 new_anchor;
+			new_anchor.x = rect_transform->GetAnchor().x;
+			new_anchor.y = rect_transform->GetAnchor().y;
+			new_anchor.z = 0;
+
+			if (x_field) mono_field_set_value(new_object, x_field, &new_anchor.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &new_anchor.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &new_anchor.z);
+
+			return new_object;
+		}
+	}
 	return nullptr;
+}
+
+void CSScript::SetPercentageProgress(MonoObject * object, float progress)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentProgressBar* progres_barr = (ComponentProgressBar*)active_gameobject->GetComponent(Component::CompProgressBar);
+
+	progres_barr->SetProgressPercentage(progress);
+}
+
+float CSScript::GetPercentageProgress(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return 0;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return 0;
+	}
+
+	ComponentProgressBar* progres_barr = (ComponentProgressBar*)active_gameobject->GetComponent(Component::CompProgressBar);
+	return progres_barr->GetProgressPercentage();
 }
 
 void CSScript::StartFactory(MonoObject * object)

@@ -254,6 +254,20 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::GetScale", (const void*)GetScale);
 	mono_add_internal_call("TheEngine.TheTransform::LookAt", (const void*)LookAt);
 
+	//RECTTRANSFORM
+	mono_add_internal_call("TheEngine.TheRectTransform::SetRectPosition", (const void*)SetRectPosition);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetRectPosition", (const void*)GetRectPosition);
+	mono_add_internal_call("TheEngine.TheRectTransform::SetRectRotation", (const void*)SetRectRotation);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetRectRotation", (const void*)GetRectRotation);
+	mono_add_internal_call("TheEngine.TheRectTransform::SetRectSize", (const void*)SetRectSize);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetRectSize", (const void*)GetRectSize);
+	mono_add_internal_call("TheEngine.TheRectTransform::SetRectAnchor", (const void*)SetRectAnchor);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetRectAnchor", (const void*)GetRectAnchor);
+
+	// PROGRESSBAR
+	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetPercentageProgress", (const void*)GetPercentageProgress);
+
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
 	mono_add_internal_call("TheEngine.TheFactory::Spawn", (const void*)Spawn);
@@ -413,6 +427,56 @@ MonoObject * ModuleScriptImporter::GetScale(MonoObject * object, mono_bool is_gl
 void ModuleScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
 {
 	current_script->LookAt(object, vector);
+}
+
+void ModuleScriptImporter::SetRectPosition(MonoObject * object, MonoObject * vector3)
+{
+	current_script->SetRectPosition(object, vector3);
+}
+
+MonoObject * ModuleScriptImporter::GetRectPosition(MonoObject * object)
+{
+	return current_script->GetRectPosition(object);
+}
+
+void ModuleScriptImporter::SetRectRotation(MonoObject * object, MonoObject * vector3)
+{
+	current_script->SetRectRotation(object, vector3);
+}
+
+MonoObject * ModuleScriptImporter::GetRectRotation(MonoObject * object)
+{
+	return current_script->GetRectRotation(object);
+}
+
+void ModuleScriptImporter::SetRectSize(MonoObject * object, MonoObject * vector3)
+{
+	current_script->SetRectSize(object, vector3);
+}
+
+MonoObject * ModuleScriptImporter::GetRectSize(MonoObject * object)
+{
+	return current_script->GetRectSize(object);
+}
+
+void ModuleScriptImporter::SetRectAnchor(MonoObject * object, MonoObject * vector3)
+{
+	current_script->SetRectAnchor(object, vector3);
+}
+
+MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
+{
+	return current_script->GetRectAnchor(object);
+}
+
+void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float progress)
+{
+	current_script->SetPercentageProgress(object, progress);
+}
+
+float ModuleScriptImporter::GetPercentageProgress(MonoObject * object)
+{
+	return current_script->GetPercentageProgress(object);
 }
 
 void ModuleScriptImporter::StartFactory(MonoObject * object)

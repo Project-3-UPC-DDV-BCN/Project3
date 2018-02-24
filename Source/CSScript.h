@@ -89,14 +89,18 @@ public:
 	void LookAt(MonoObject * object, MonoObject * vector3);
 
 	//RECTTRANSFORM
-	void SetPosition(MonoObject * object, MonoObject * vector3);
-	MonoObject* GetPosition(MonoObject * object);
-	void SetRotation(MonoObject * object, MonoObject * vector3);
-	MonoObject* GetRotation(MonoObject * object);
-	void SetSize(MonoObject * object, MonoObject * vector3);
-	MonoObject* GetSize(MonoObject * object);
-	void SetAnchor(MonoObject * object, MonoObject * vector3);
-	MonoObject* GetAnchor(MonoObject * object);
+	void SetRectPosition(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectPosition(MonoObject * object);
+	void SetRectRotation(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectRotation(MonoObject * object);
+	void SetRectSize(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectSize(MonoObject * object);
+	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectAnchor(MonoObject * object);
+
+	//PROGRESSBAR
+	void SetPercentageProgress(MonoObject * object, float progress);
+	float GetPercentageProgress(MonoObject * object);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);

@@ -8,11 +8,11 @@ namespace TheEngine
         {
             get
             {
-                return GetPosition();
+                return GetRectPosition();
             }
             set
             {
-                SetPosition(value);
+                SetRectPosition(value);
             }
         }
 
@@ -20,11 +20,11 @@ namespace TheEngine
         {
             get
             {
-                return GetRotation();
+                return GetRectRotation();
             }
             set
             {
-                SetRotation();
+                SetRectRotation();
             }
         }
 
@@ -32,11 +32,11 @@ namespace TheEngine
         {
             get
             {
-                return GetSize();
+                return GetRectSize();
             }
             set
             {
-                SetSize(value);
+                SetRectSize(value);
             }
         }
 
@@ -44,37 +44,37 @@ namespace TheEngine
         {
             get
             {
-                return GetAnchor();
+                return GetRectAnchor();
             }
             set
             {
-                SetAnchor(value);
+                SetRectAnchor(value);
             }
         }
 
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 GetPosition();
+        private extern TheVector3 GetRectPosition();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void SetPosition(TheVector3 value);
+        private extern void SetRectPosition(TheVector3 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 GetRotation();
+        private extern TheVector3 GetRectRotation();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 SetRotation();
+        private extern TheVector3 SetRectRotation();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 GetSize();
+        private extern TheVector3 GetRectSize();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void SetSize(TheVector3 value);
+        private extern void SetRectSize(TheVector3 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 GetAnchor();
+        private extern TheVector3 GetRectAnchor();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void SetAnchor(TheVector3 value);
+        private extern void SetRectAnchor(TheVector3 value);
     }
 }

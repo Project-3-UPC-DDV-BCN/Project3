@@ -64,6 +64,20 @@ private:
 	static MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	static void LookAt(MonoObject * object, MonoObject * vector);
 
+	//RECTTRANSFORM
+	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectPosition(MonoObject * object);
+	static void SetRectRotation(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectRotation(MonoObject * object);
+	static void SetRectSize(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectSize(MonoObject * object);
+	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectAnchor(MonoObject * object);
+
+	//PROGRESSBAR
+	static void SetPercentageProgress(MonoObject * object, float progress);
+	static float GetPercentageProgress(MonoObject * object);
+
 	//FACTORY
 	static void StartFactory(MonoObject * object);
 	static MonoObject* Spawn(MonoObject* object);
