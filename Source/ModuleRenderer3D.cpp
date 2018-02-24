@@ -147,7 +147,6 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 	}
 
 	//Set Up Depth Map
-	SetDepthMap();
 
 
 	return ret;
@@ -172,9 +171,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		editor_camera->GetViewportTexture()->Bind();
 		DrawEditorScene();
 	}
-
-	// Render from light's point of view
-	DrawFromLightForShadows();
 
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
@@ -207,35 +203,6 @@ void ModuleRenderer3D::DrawEditorScene()
 		//App->scene->DrawSkyBox(editor_camera->camera_frustum.pos);
 		//glEnable(GL_DEPTH_TEST);
 	}
-
-	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
-
-	ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
-	UseShaderProgram(program->GetProgramID());
-
-	SetUniformMatrix(program->GetProgramID(), "view", editor_camera->GetViewMatrix());
-	SetUniformMatrix(program->GetProgramID(), "projection", editor_camera->GetProjectionMatrix());
-	SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
-
-	SetUniformVector4(program->GetProgramID(), "line_color", float4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	Mesh* plane = App->resources->GetMesh("Plane001");
-	if (plane->id_indices == 0)
-		plane->LoadToMemory();
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-
-	SendLight(program->GetProgramID());
-
-
-	BindVertexArrayObject(plane->id_vao);
-	glDrawElements(GL_TRIANGLES, plane->num_indices, GL_UNSIGNED_INT, NULL);
-	UnbindVertexArrayObject();
-
-	// ---------------------------------------
-
-
 	pPlane pl(0, 1, 0, 0);
 	pl.SetPos(editor_camera->camera_frustum.pos);
 	pl.color = { 1,1,1,1 };
@@ -307,8 +274,23 @@ void ModuleRenderer3D::DrawZBuffer()
 	SetUniformFloat(program, "near_plane", near_plane);
 	SetUniformFloat(program, "far_plane", far_plane);
 
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, depth_map);
+	SetUniformInt(program, "depthMap", 0);
+
+	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+	
+	Mesh* plane = App->resources->GetMesh("Plane001");
+	plane->LoadToMemory();
+
+	SetUniformMatrix(program, "view", App->camera->GetCamera()->GetViewMatrix());
+	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
+	SetUniformMatrix(program, "Model", trans.Transposed().ptr());
+
+	BindVertexArrayObject(plane->id_vao);
+	glDrawElements(GL_TRIANGLES, plane->num_indices, GL_UNSIGNED_INT, NULL);
+	UnbindVertexArrayObject();
 }
 
 float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane)
@@ -1171,16 +1153,13 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	
 	near_plane = 1.0f, far_plane = 750.0f;
 
-	float4x4 light_projection = OrthoProjection(-100.0f, 100.0f, -100.0f, 100.0f, near_plane, far_plane);
+	float4x4 light_projection = OrthoProjection(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 
 	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 
 	float4x4 light_view = float4x4::LookAt(float3(0,0,1), trans->GetMatrix().WorldZ(), float3(0,1,0), trans->GetMatrix().WorldY());
 
 	float4x4 light_space_mat = light_projection * light_view;
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 
 	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
@@ -1191,7 +1170,8 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawZBuffer();
 
@@ -1203,45 +1183,16 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, floa
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
-	Material* material = mesh->GetMaterial();
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	uint program = 0;
-	if (material != nullptr)
-	{
-		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
-		program = shader->GetProgramID();
-		UseShaderProgram(program);
-	}
+	ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
+	program = shader->GetProgramID();
+	UseShaderProgram(program);
 
 	SetUniformMatrix(program, "model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	SetUniformMatrix(program, "lightSpaceMatrix", lightSpaceMat.ptr());
 }
-
-void ModuleRenderer3D::renderQuad()
-{
-	if (quadVAO == 0)
-	{
-		float quadVertices[] = {
-			// positions        // texture Coords
-			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-			1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-			1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		};
-		// setup plane VAO
-		glGenVertexArrays(1, &quadVAO);
-		glGenBuffers(1, &quadVBO);
-		glBindVertexArray(quadVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	}
-	glBindVertexArray(quadVAO);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glBindVertexArray(0);
-}
-
 // -----------------------------------------------

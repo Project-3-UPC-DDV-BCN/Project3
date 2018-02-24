@@ -1436,11 +1436,13 @@ void ModuleResources::CreateDefaultShaders()
 		"layout(location = 1) in vec2 aTexCoords;\n"
 
 		"out vec2 TexCoords;\n"
-
+		"uniform mat4 Model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n"
 		"void main()\n"
 		"{\n"
-		"	TexCoords = aTexCoords;\n"
-		"	gl_Position = vec4(aPos, 1.0);\n"
+		"	TexCoords = aTexCoords.xy;\n"
+		"	gl_Position = projection * view * Model * vec4(aPos, 1.0f);\n"
 		"}\n"
 			;
 

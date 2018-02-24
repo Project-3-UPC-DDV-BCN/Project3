@@ -95,7 +95,7 @@ public:
 	void SetDepthMap();
 	void DrawFromLightForShadows();
 	void SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat);
-	void renderQuad();
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
@@ -104,6 +104,7 @@ private:
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawZBuffer();
 	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
+
 public:
 
 	SDL_GLContext context;
@@ -135,6 +136,9 @@ private:
 	int spot_light_count;
 
 	std::list<Primitive*> debug_primitive_to_draw;
+
+
+	// SHADOW MAPPING DON'T TOUCH
 
 	uint depth_map;
 	uint depth_mapFBO;
