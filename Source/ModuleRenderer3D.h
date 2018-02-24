@@ -102,6 +102,8 @@ private:
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+	void DrawZBuffer(ComponentCamera* cam);
+	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
 public:
 
 	SDL_GLContext context;
@@ -136,4 +138,5 @@ private:
 
 	uint depth_map;
 	uint depth_mapFBO;
+	float near_plane, far_plane;
 };

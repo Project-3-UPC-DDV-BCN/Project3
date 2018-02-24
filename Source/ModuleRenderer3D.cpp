@@ -166,11 +166,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	ms_timer.Start();
 
-	// Render from light's point of view
-	DrawFromLightForShadows();
-
-
-
 	// Regular rendering
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
@@ -178,18 +173,15 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		DrawEditorScene();
 	}
 
+	// Render from light's point of view
+	DrawFromLightForShadows();
+
 	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
 	{
 		DrawSceneCameras(*it);
 	}
 	
 	dynamic_mesh_to_draw.clear();
-
-
-
-
-
-
 
 
 
@@ -229,18 +221,21 @@ void ModuleRenderer3D::DrawEditorScene()
 void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 {
 	if (camera == nullptr || camera->GetViewportTexture() == nullptr) return;
+	
+	// DISABLED THIS FOR NOW
+	//camera->GetViewportTexture()->Bind();
 
-	camera->GetViewportTexture()->Bind();
-
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+/*
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
 		//App->scene->DrawSkyBox(camera->camera_frustum.pos);
 		glEnable(GL_DEPTH_TEST);
 	}
-
+	*/
 	DrawSceneGameObjects(camera, false);
 }
 
@@ -283,6 +278,39 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
+void ModuleRenderer3D::DrawZBuffer(ComponentCamera * cam)
+{
+	uint program = 0;
+	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
+	program = shader->GetProgramID();
+	UseShaderProgram(program);
+
+	SetUniformFloat(program, "near_plane", near_plane);
+	SetUniformFloat(program, "far_plane", far_plane);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+}
+
+float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane)
+{
+	float a = 2.0f / (right - left);
+	float b = 2.0f / (top - bottom);
+	float c = -2.0f / (far_plane - near_plane);
+
+	float tx = -(right + left) / (right - left);
+	float ty = -(top + bottom) / (top - bottom);
+	float tz = -(far_plane + near_plane) / (far_plane - near_plane);
+
+	float4x4 n_projection(
+		a, 0.0f, 0.0f, tx,
+		0.0f, b, 0.0f, ty,
+		0.0f, 0.0f, c, tz,
+		0.0f, 0.0f, 0.0f, 1.0f);
+
+	return n_projection;
+}
+
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
@@ -315,7 +343,10 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
 					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-					DrawMesh(*it, active_camera);
+					//DrawMesh(*it, active_camera);
+					{
+						DrawZBuffer(active_camera);
+					}
 				}
 			}
 		}
@@ -371,7 +402,6 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	//TODO: Calculate Normal Matrix here and send it as uniform.
-	// We need this because transitioning to World Space gives a non accurate Normal.
 	// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
 	SendLight(program);
@@ -1091,6 +1121,7 @@ void ModuleRenderer3D::SendLight(uint program)
 	}
 
 }
+
 int ModuleRenderer3D::GetDirectionalLightCount() const
 {
 	return directional_light_count;
@@ -1127,20 +1158,18 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	if (dir_lights[0] != nullptr)
 	{
 	
-	float near_plane = 1.0f, far_plane = 7.5f;
+	near_plane = 1.0f, far_plane = 750.0f;
 
-	float4x4 light_projection = float4x4::OpenGLPerspProjRH(near_plane, far_plane, SHADOW_WIDTH, SHADOW_HEIGHT);
+	float4x4 light_projection = OrthoProjection(-100.0f, 100.0f, -100.0f, 100.0f, near_plane, far_plane);
 
 	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 
-	float4x4 light_view = float4x4::LookAt(dir_lights[0]->view.front, trans->GetMatrix().WorldZ(), dir_lights[0]->view.up, trans->GetMatrix().WorldY());
+	float4x4 light_view = float4x4::LookAt(float3(0,0,1), trans->GetMatrix().WorldZ(), float3(0,1,0), trans->GetMatrix().WorldY());
 
 	float4x4 light_space_mat = light_projection * light_view;
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
 
 	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
@@ -1149,29 +1178,18 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		if (mesh != nullptr)
 			SendObjectToDepthShader(mesh, light_space_mat);
 	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
-	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
-	{
-		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
-		if (mesh != nullptr)
-			SendObjectToDepthShader(mesh, light_space_mat);
-	}
 
-	uint program = 0;
-	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
-	program = shader->GetProgramID();
-	UseShaderProgram(program);
+	// NECESITO LA OTRA CAMARA 
 
-	SetUniformFloat(program, "near_plane", near_plane);
-	SetUniformFloat(program, "far_plane", far_plane);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
+	/*glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
 
 	}
 }

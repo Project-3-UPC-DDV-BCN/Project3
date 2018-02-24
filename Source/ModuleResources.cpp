@@ -1398,6 +1398,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	#version 330 core\n"
 			"	void main()\n"
 			"{\n"
+			"	gl_FragDepth = gl_FragCoord.z;\n"
 			"}\n"
 			;
 		depth_frag->SetContent(shader_text);
