@@ -33,8 +33,7 @@
 // Microsoft DirectX external libs
 #pragma comment( lib, "Wwise/lib/dinput8.lib")
 #pragma comment( lib, "Wwise/lib/dsound.lib") 
-#pragma comment( lib, "Wwise/lib/dxguid.lib")
-
+#pragma comment( lib, "Wwise/lib/dxguid.lib") 
 
 // Custom alloc/free functions. These are declared as "extern" in AkMemoryMgr.h
 // and MUST be defined by the game developer.
