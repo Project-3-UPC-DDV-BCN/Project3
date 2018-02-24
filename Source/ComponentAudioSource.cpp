@@ -37,27 +37,6 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	if (App->input->GetKey(SDL_SCANCODE_Q))
-	{
-		SendEvent("Play_long_shatter");
-	}
-	if (App->input->GetKey(SDL_SCANCODE_W))
-	{
-		SendEvent("Play_recharge");
-	}
-	if (App->input->GetKey(SDL_SCANCODE_E))
-	{
-		SendEvent("Play_short_chatter");
-	}
-	if (App->input->GetKey(SDL_SCANCODE_R))
-	{
-		SendEvent("Play_shot1");
-	}
-	if (App->input->GetKey(SDL_SCANCODE_T))
-	{
-		SendEvent("Play_shot2");
-	}
-
 	if (App->IsPlaying()) 
 	{
 		ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
