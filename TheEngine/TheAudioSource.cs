@@ -5,12 +5,12 @@ namespace TheEngine
     public class TheAudioSource : TheComponent
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        static private extern bool Play(string name);
+        public extern bool Play(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        static private extern bool Stop(string name);
+        public extern bool Stop(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        static private extern bool Send(string name);
+        public extern bool Send(string name);
     }
 }
