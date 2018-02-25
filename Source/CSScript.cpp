@@ -883,6 +883,7 @@ MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * typ
 		CONSOLE_ERROR("Can't add Transform component to %s. GameObjects cannot have more than 1 transform.", active_gameobject->GetName().c_str());
 	}
 	else if (name == "TheEngine.TheFactory") comp_type = Component::CompTransform;
+	else if (name == "TheEngine.TheProgressBar") comp_type = Component::CompProgressBar;
 
 	if (comp_type != Component::CompUnknown)
 	{
