@@ -382,6 +382,41 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 					}
 				}
 
+				ImGui::Separator();
+
+				ImGui::Text("Material name: "); ImGui::SameLine();
+				ImGui::Text(mesh_renderer->GetMaterial()->GetName().c_str());
+
+
+				// NORMAL MAP
+				ImGui::Text("Normal: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetNormalMapTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetNormalMapTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* normalmap = material->GetNormalMapTexture();
+				if (ImGui::InputResourceTexture("Change Normal Map", &normalmap))
+				{
+					material->SetNormalMapTexture(normalmap);
+				}
+
+				// DIFFUSE
+				ImGui::Text("Diffuse: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetDiffuseTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetDiffuseTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* diffuse = material->GetDiffuseTexture();
+				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
+				{
+					material->SetDiffuseTexture(diffuse);
+				}
+				
+
 			}
 		ImGui::TreePop();
 		}
