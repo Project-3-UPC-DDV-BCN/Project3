@@ -105,7 +105,7 @@ float Particle::GetAngular() const
 
 float Particle::GetAlphaInterpolationPercentage()
 {
-	float alpha_percentage = 1.0f; 
+	float alpha_percentage = 0.0f; 
 
 	alpha_started = false;
 
@@ -115,7 +115,7 @@ float Particle::GetAlphaInterpolationPercentage()
 	{
 		float time_to_interpolate = particle_data->max_lifetime - particle_data->init_alpha_interpolation_time; 
 
-		if (particle_timer.Read() > particle_data->init_alpha_interpolation_time && !alpha_started)
+		if (particle_timer.Read() > particle_data->init_alpha_interpolation_time * 1000 && !alpha_started)
 		{
 			interpolation_timer.Start(); 
 			alpha_started = true;
@@ -124,7 +124,9 @@ float Particle::GetAlphaInterpolationPercentage()
 		if (alpha_started)
 		{
 			alpha_percentage = (interpolation_timer.Read() / (time_to_interpolate * 1000)); 
+			CONSOLE_LOG("iNTERPOL: %f", alpha_percentage); 
 		}
+
 	}
 
 	return (1.0f - alpha_percentage); 

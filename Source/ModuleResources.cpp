@@ -1259,8 +1259,13 @@ void ModuleResources::CreateDefaultShaders()
 			"		color = material_color;\n"
 			"	else\n"
 			"		color = ourColor;\n"
+			"   if(color.a < 0.1f)\n"
+			"		discard;\n"
+
 			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"
+
+	
 			"}";
 
 		default_particle_frag->SetContent(shader_text);

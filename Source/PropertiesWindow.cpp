@@ -906,6 +906,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						current_emmiter->data->change_rotation_interpolation = true;
 
+						if(init_angular_v == fin_angular_v)
+							current_emmiter->data->change_rotation_interpolation = false;
+
 						current_emmiter->data->initial_angular_v = init_angular_v;
 						current_emmiter->data->final_angular_v = fin_angular_v;
 					}

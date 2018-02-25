@@ -127,6 +127,13 @@ void ParticleData::Save(Data & data) const
 	else
 		data.AddBool("Size_Interpolation", false);
 
+	if (change_alpha_interpolation)
+	{
+		data.AddBool("Alpha_Interpolation", true);		
+	}
+	else
+		data.AddBool("Size_Interpolation", false);
+
 	if (change_rotation_interpolation)
 	{
 		data.AddBool("Rotation_Interpolation", true);
@@ -307,6 +314,8 @@ bool ParticleData::Load(Data & _data)
 		initial_angular_v = _data.GetFloat("Initial_Rotation");
 		final_angular_v = _data.GetFloat("Final_Rotation");
 	}
+
+	change_alpha_interpolation = _data.GetBool("Alpha_Interpolation"); 
 
 	// ------
 
