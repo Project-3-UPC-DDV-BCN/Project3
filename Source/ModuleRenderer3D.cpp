@@ -214,14 +214,14 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 {
 	if (camera == nullptr || camera->GetViewportTexture() == nullptr) return;
 	camera->GetViewportTexture()->Bind();
-/*
+
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
 		App->scene->DrawSkyBox(camera->camera_frustum.pos, camera);
 		glEnable(GL_DEPTH_TEST);
 	}
-	*/
+	
 	DrawSceneGameObjects(camera, false);
 }
 
