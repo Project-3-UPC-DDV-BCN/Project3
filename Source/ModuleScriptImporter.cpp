@@ -253,6 +253,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::SetScale", (const void*)SetScale);
 	mono_add_internal_call("TheEngine.TheTransform::GetScale", (const void*)GetScale);
 	mono_add_internal_call("TheEngine.TheTransform::LookAt", (const void*)LookAt);
+	mono_add_internal_call("TheEngine.TheTransform::GetForward", (const void*)GetForward);
+	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
+	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
@@ -278,11 +281,32 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheInput::GetMousePosition", (const void*)GetMousePosition);
 	mono_add_internal_call("TheEngine.TheInput::GetMouseXMotion", (const void*)GetMouseXMotion);
 	mono_add_internal_call("TheEngine.TheInput::GetMouseYMotion", (const void*)GetMouseYMotion);
+	mono_add_internal_call("TheEngine.TheInput::GetControllerButton", (const void*)GetControllerButton);
+	mono_add_internal_call("TheEngine.TheInput::GetControllerJoystickMove", (const void*)GetControllerJoystickMove);
+	mono_add_internal_call("TheEngine.TheInput::RumbleController", (const void*)RumbleController);
 
 	//CONSOLE
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Log", (const void*)Log);
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Warning", (const void*)Warning);
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Error", (const void*)Error);
+
+	//Audio
+	mono_add_internal_call("TheEngine.TheAudio::IsMuted", (const void*)IsMuted);
+	mono_add_internal_call("TheEngine.TheAudio::SetMute", (const void*)SetMute);
+	mono_add_internal_call("TheEngine.TheAudio::GetVolume", (const void*)GetVolume);
+	mono_add_internal_call("TheEngine.TheAudio::SetVolume", (const void*)SetVolume);
+	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
+	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
+	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
+	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
+
+	mono_add_internal_call("TheEngine.TheAudioSource::Play", (const void*)Play);
+	mono_add_internal_call("TheEngine.TheAudioSource::Stop", (const void*)Stop);
+	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
+
+	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
+	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
+
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -415,6 +439,21 @@ void ModuleScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
 	current_script->LookAt(object, vector);
 }
 
+MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
+{
+	return current_script->GetForward(object);
+}
+
+MonoObject * ModuleScriptImporter::GetRight(MonoObject * object)
+{
+	return current_script->GetRight(object);
+}
+
+MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
+{
+	return current_script->GetUp(object);
+}
+
 void ModuleScriptImporter::StartFactory(MonoObject * object)
 {
 	current_script->StartFactory(object);
@@ -505,6 +544,21 @@ int ModuleScriptImporter::GetMouseYMotion()
 	return current_script->GetMouseYMotion();
 }
 
+int ModuleScriptImporter::GetControllerJoystickMove(int pad, MonoString * axis)
+{
+	return current_script->GetControllerJoystickMove(pad, axis);
+}
+
+int ModuleScriptImporter::GetControllerButton(int pad, MonoString * button)
+{
+	return current_script->GetControllerButton(pad, button);
+}
+
+void ModuleScriptImporter::RumbleController(int pad, float strength, int ms)
+{
+	current_script->RumbleController(pad, strength, ms);
+}
+
 void ModuleScriptImporter::Log(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
@@ -548,4 +602,63 @@ void ModuleScriptImporter::Error(MonoObject * object)
 		const char* message = mono_string_to_utf8(str2);
 		CONSOLE_ERROR("%s", message);
 	}
+}
+
+bool ModuleScriptImporter::IsMuted()
+{
+	return current_script->IsMuted();
+}
+
+void ModuleScriptImporter::SetMute(bool set)
+{
+	current_script->SetMute(set);
+}
+
+int ModuleScriptImporter::GetVolume() 
+{
+	return current_script->GetVolume();
+}
+
+void ModuleScriptImporter::SetVolume(int volume)
+{
+	current_script->SetVolume(volume);
+}
+
+int ModuleScriptImporter::GetPitch()
+{
+	return current_script->GetPitch();
+}
+
+void ModuleScriptImporter::SetPitch(int pitch)
+{
+	current_script->SetPitch(pitch);
+}
+
+void ModuleScriptImporter::SetRTPvalue(MonoString* name, float value)
+{
+	current_script->SetRTPvalue(name, value);
+}
+
+bool ModuleScriptImporter::Play(MonoObject * object, MonoString * name)
+{
+	return current_script->Play(object, name);
+}
+
+bool ModuleScriptImporter::Stop(MonoObject * object, MonoString * name)
+{
+	return current_script->Stop(object, name);
+}
+
+bool ModuleScriptImporter::Send(MonoObject * object, MonoString * name)
+{
+	return current_script->Send(object, name);
+}
+
+void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
+{
+	current_script->PlayEmmiter(object); 
+}
+void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
+{
+	current_script->StopEmmiter(object);
 }

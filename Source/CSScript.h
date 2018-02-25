@@ -87,6 +87,9 @@ public:
 	void SetScale(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	void LookAt(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetForward(MonoObject* object);
+	MonoObject* GetRight(MonoObject* object);
+	MonoObject* GetUp(MonoObject* object);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);
@@ -112,6 +115,27 @@ public:
 	MonoObject* GetMousePosition();
 	int GetMouseXMotion();
 	int GetMouseYMotion();
+	int GetControllerJoystickMove(int pad, MonoString* axis);
+	int GetControllerButton(int pad, MonoString* button);
+	void RumbleController(int pad, float strength, int ms);
+
+	//AUDIO
+	bool IsMuted();
+	void SetMute(bool set);
+	int GetVolume();
+	void SetVolume(int volume);
+	int GetPitch();
+	void SetPitch(int pitch);
+	void SetRTPvalue(MonoString* name, float value);
+
+	//AUDIOSOURCE
+	bool Play(MonoObject * object, MonoString* name);
+	bool Stop(MonoObject * object, MonoString* name);
+	bool Send(MonoObject * object, MonoString* name);
+
+	//PARTICLE EMMITER
+	void PlayEmmiter(MonoObject * object);
+	void StopEmmiter(MonoObject * object);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);

@@ -15,6 +15,10 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
+#include "ModuleAudio.h"
+#include "ComponentParticleEmmiter.h"
+#include "ComponentAudioSource.h"
+#include "AudioEvent.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -923,6 +927,14 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheFactory";
 	}
+	else if (name == "TheEngine.TheAudioSource")
+	{
+		comp_name = "TheAudioSource";
+	}
+	else if (name == "TheEngine.TheParticleEmmiter")
+	{
+		comp_name = "TheParticleEmmiter";
+	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
 	if (c)
@@ -1147,6 +1159,114 @@ MonoObject * CSScript::GetScale(MonoObject * object, mono_bool is_global)
 
 void CSScript::LookAt(MonoObject * object, MonoObject * vector)
 {
+}
+
+MonoObject * CSScript::GetForward(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 forward = transform->GetForward();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &forward.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &forward.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &forward.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
+MonoObject * CSScript::GetRight(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 right = transform->GetRight();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &right.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &right.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &right.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
+MonoObject * CSScript::GetUp(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 up = transform->GetUp();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &up.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &up.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &up.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
 }
 
 void CSScript::StartFactory(MonoObject * object)
@@ -1467,6 +1587,25 @@ int CSScript::GetMouseXMotion()
 int CSScript::GetMouseYMotion()
 {
 	return App->input->GetMouseYMotion();
+}
+
+int CSScript::GetControllerJoystickMove(int pad, MonoString * axis)
+{
+	const char* key = mono_string_to_utf8(axis);
+	JOYSTICK_MOVES code = App->input->StringToJoyMove(key);
+	return App->input->GetControllerJoystickMove(pad,code);
+}
+
+int CSScript::GetControllerButton(int pad, MonoString * button)
+{
+	const char* key = mono_string_to_utf8(button);
+	SDL_Keycode code = App->input->StringToKey(key);
+	return App->input->GetControllerButton(pad,code);
+}
+
+void CSScript::RumbleController(int pad, float strength, int ms)
+{
+	App->input->RumbleController(pad, strength, ms);
 }
 
 void CSScript::CreateGameObject(MonoObject * object)
@@ -1887,4 +2026,129 @@ bool CSScript::GameObjectIsValid()
 		return false;
 	}
 	return true;
+}
+
+bool CSScript::IsMuted()
+{
+	return App->audio->IsMuted();
+}
+
+void CSScript::SetMute(bool set)
+{
+	App->audio->SetMute(set);
+}
+
+int CSScript::GetVolume()
+{
+	return App->audio->GetVolume();
+}
+
+void CSScript::SetVolume(int volume)
+{
+	App->audio->SetVolume(volume);
+}
+
+int CSScript::GetPitch()
+{
+	return App->audio->GetPitch();
+}
+
+void CSScript::SetPitch(int pitch)
+{
+	App->audio->SetPitch(pitch);
+}
+
+void CSScript::SetRTPvalue(MonoString* name, float value)
+{
+	const char* new_name = mono_string_to_utf8(name);
+	App->audio->SetRTPvalue(new_name, value);
+}
+
+bool CSScript::Play(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	return as->PlayEvent(event_name);
+}
+
+bool CSScript::Stop(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->StopEvent(event_name);
+}
+
+bool CSScript::Send(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->SendEvent(event_name);
+}
+
+void CSScript::PlayEmmiter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)active_gameobject->GetComponent(Component::CompParticleSystem);
+
+	if(emmiter != nullptr)
+		emmiter->PlayEmmiter(); 
+}
+
+void CSScript::StopEmmiter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)active_gameobject->GetComponent(Component::CompParticleSystem);
+
+	if (emmiter != nullptr)
+		emmiter->StopEmmiter();
 }

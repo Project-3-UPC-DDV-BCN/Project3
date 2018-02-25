@@ -5,6 +5,7 @@
 
 class pTexturedCube;
 class Texture;
+class ComponentCamera;
 
 class CubeMap
 {
@@ -13,7 +14,7 @@ public:
 	~CubeMap();
 
 	void CreateCubeMap();
-	void RenderCubeMap(float3 position);
+	void RenderCubeMap(float3 position, ComponentCamera* active_camera);
 	void DeleteCubeMap();
 
 	void SetCubeMapTopTexture(std::string texture_path);
@@ -27,6 +28,6 @@ private:
 	Texture* textures[6];
 	std::string textures_path[6];
 	unsigned int cube_map_id;
-	pTexturedCube* cube;
+	float size = 1.0f;
 };
 

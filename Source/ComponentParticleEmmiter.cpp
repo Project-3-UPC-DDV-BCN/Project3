@@ -408,6 +408,17 @@ void ComponentParticleEmmiter::UpdateShockWave()
 		
 }
 
+void ComponentParticleEmmiter::PlayEmmiter()
+{
+	SetSystemState(PARTICLE_STATE_PLAY);
+	Start();
+}
+
+void ComponentParticleEmmiter::StopEmmiter()
+{
+	SetSystemState(PARTICLE_STATE_PAUSE);
+}
+
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
 	//uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();

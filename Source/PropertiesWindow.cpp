@@ -26,6 +26,10 @@
 #include "ComponentFactory.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
+#include "ComponentLight.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -35,6 +39,7 @@ PropertiesWindow::PropertiesWindow()
 	window_name = "Properties";
 	scripts_count = 0;
 	factories_count = 0;
+	lights_count = 0;
 }
 
 PropertiesWindow::~PropertiesWindow()
@@ -109,6 +114,10 @@ void PropertiesWindow::DrawWindow()
 			ImGui::Separator();
 			ImGui::Spacing();
 
+			scripts_count = 0;
+			factories_count = 0;
+			lights_count = 0;
+
 			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++) {
 				DrawComponent((*it));
 				ImGui::Separator();
@@ -139,7 +148,6 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
-
 				if (ImGui::MenuItem("Particle Emmiter")) {
 					if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompParticleSystem);
@@ -157,6 +165,35 @@ void PropertiesWindow::DrawWindow()
 					else
 					{
 						CONSOLE_WARNING("GameObject can't have more than 1 Billboard!");
+					}
+				}
+
+				if (ImGui::MenuItem("Light")) {
+					if (App->renderer3D->GetDirectionalLightCount() < 2 || App->renderer3D->GetSpotLightCount() < 8 || App->renderer3D->GetPointLightCount() < 8)
+					{
+						if (selected_gameobject->GetComponent(Component::CompLight) == nullptr)
+						{
+							ComponentLight* light = (ComponentLight*)selected_gameobject->AddComponent(Component::CompLight);
+							if (App->renderer3D->GetSpotLightCount() == 8)
+							{
+								if (App->renderer3D->GetDirectionalLightCount() == 2)
+								{
+									light->SetTypeToDirectional();
+								}
+								else
+								{
+									light->SetTypeToPoint();
+								}
+							}
+						}
+						else
+						{
+							CONSOLE_ERROR("GameObject can't have more than 1 Light for now...");
+						}
+					}
+					else
+					{
+						CONSOLE_ERROR("Max lights created. Can't add more lights");
 					}
 				}
 
@@ -198,9 +235,30 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Audio")) {
+					if (ImGui::MenuItem("Audio Listener"))
+					{
+						if (App->audio->GetDefaultListener() != nullptr)
+						{
+
+						}
+						else
+							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+					}
+					if (ImGui::MenuItem("Audio Source"))
+					{
+						ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
+					}
+					if (ImGui::MenuItem("Distorsion Zone"))
+					{
+						ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("New Factory")) {
 					static char input_text[30];
-					ImGui::InputText("Factory Name", input_text, 30);
+					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
 					ImGui::Spacing();
 					if (ImGui::Button("Create"))
 					{
@@ -237,8 +295,6 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompCircleCollider:
 		break;
-	case Component::CompAudioSource:
-		break;
 	case Component::CompAnimaton:
 		break;
 	case Component::CompScript:
@@ -252,6 +308,18 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
+		break;
+	case Component::CompAudioListener:
+		DrawAudioListener((ComponentListener*)component);
+		break;
+	case Component::CompAudioSource:
+		DrawAudioSource((ComponentAudioSource*)component);
+		break;
+	case Component::CompAudioDistZone:
+		DrawAudioDistZone((ComponentDistorsionZone*)component);
+		break;
+	case Component::CompLight:
+		DrawLightPanel((ComponentLight*)component);
 		break;
 	default:
 		break;
@@ -351,6 +419,41 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 						mesh_renderer->GetMaterial()->SetFragmentShader(frag);
 					}
 				}
+
+				ImGui::Separator();
+
+				ImGui::Text("Material name: "); ImGui::SameLine();
+				ImGui::Text(mesh_renderer->GetMaterial()->GetName().c_str());
+
+
+				// NORMAL MAP
+				ImGui::Text("Normal: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetNormalMapTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetNormalMapTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* normalmap = material->GetNormalMapTexture();
+				if (ImGui::InputResourceTexture("Change Normal Map", &normalmap))
+				{
+					material->SetNormalMapTexture(normalmap);
+				}
+
+				// DIFFUSE
+				ImGui::Text("Diffuse: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetDiffuseTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetDiffuseTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* diffuse = material->GetDiffuseTexture();
+				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
+				{
+					material->SetDiffuseTexture(diffuse);
+				}
+				
 
 			}
 		ImGui::TreePop();
@@ -453,13 +556,13 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			comp_script->SetActive(is_active);
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Delete Component##script"))
+		if (ImGui::Button(("Delete Component##Script_" + script_name).c_str()))
 		{
 			App->scene->selected_gameobjects.front()->DestroyComponent(comp_script);
 		}
 
 		Script* script = comp_script->GetScript();
-		if (ImGui::InputResourceScript("Script", &script))
+		if (ImGui::InputResourceScript(("Script##Script_" + script_name).c_str(), &script))
 		{
 			comp_script->SetScript(script);
 		}
@@ -476,7 +579,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				int i = comp_script->GetScript()->GetIntProperty((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::InputInt(("##" + (*it)->fieldName).c_str(), &i)) {
+				if (ImGui::InputInt(("##" + (*it)->fieldName + script_name).c_str(), &i)) {
 					comp_script->GetScript()->SetIntProperty((*it)->fieldName.c_str(), i);
 				}
 			}
@@ -486,7 +589,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				double d = comp_script->GetScript()->GetDoubleProperty((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::InputFloat(("##" + (*it)->fieldName).c_str(), (float*)&d, 0.001f, 0.01f, 3)) {
+				if (ImGui::InputFloat(("##" + (*it)->fieldName + script_name).c_str(), (float*)&d, 0.001f, 0.01f, 3)) {
 					comp_script->GetScript()->SetDoubleProperty((*it)->fieldName.c_str(), d);
 				}
 			}
@@ -496,7 +599,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				float f = comp_script->GetScript()->GetFloatProperty((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::InputFloat(("##" + (*it)->fieldName).c_str(), &f, 0.01f, 0.1f, 3)) {
+				if (ImGui::InputFloat(("##" + (*it)->fieldName + script_name).c_str(), &f, 0.01f, 0.1f, 3)) {
 					comp_script->GetScript()->SetFloatProperty((*it)->fieldName.c_str(), f);
 				}
 			}
@@ -506,7 +609,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				bool b = comp_script->GetScript()->GetBoolProperty((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::Checkbox(("##" + (*it)->fieldName).c_str(), &b)) {
+				if (ImGui::Checkbox(("##" + (*it)->fieldName + script_name).c_str(), &b)) {
 					comp_script->GetScript()->SetBoolProperty((*it)->fieldName.c_str(), b);
 				}
 			}
@@ -518,7 +621,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				strncpy(textToRender, str.data(), str.size());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::InputText(("##" + (*it)->fieldName).c_str(), textToRender, 256)) {
+				if (ImGui::InputText(("##" + (*it)->fieldName + script_name).c_str(), textToRender, 256, ImGuiInputTextFlags_EnterReturnsTrue)) {
 					comp_script->GetScript()->SetStringProperty((*it)->fieldName.c_str(), textToRender);
 				}
 				memset(textToRender, 0, sizeof textToRender);
@@ -527,7 +630,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			case ScriptField::GameObject:
 			{
 				GameObject* gameobject = comp_script->GetScript()->GetGameObjectProperty((*it)->fieldName.c_str());
-				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName).c_str(), &gameobject)) {
+				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName + script_name).c_str(), &gameobject)) {
 					comp_script->GetScript()->SetGameObjectProperty((*it)->fieldName.c_str(), gameobject);
 				}
 			}
@@ -539,7 +642,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				float2 v2 = comp_script->GetScript()->GetVec2Property((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::DragFloat2(("##" + (*it)->fieldName).c_str(), &v2[0], !App->IsPlaying(), 0.25f)) {
+				if (ImGui::DragFloat2(("##" + (*it)->fieldName + script_name).c_str(), &v2[0], !App->IsPlaying(), 0.25f)) {
 					comp_script->GetScript()->SetVec2Property((*it)->fieldName.c_str(), v2);
 				}
 			}
@@ -549,7 +652,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				float3 v3 = comp_script->GetScript()->GetVec3Property((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::DragFloat3(("##" + (*it)->fieldName).c_str(), &v3[0], !App->IsPlaying(), 0.25f)) {
+				if (ImGui::DragFloat3(("##" + (*it)->fieldName + script_name).c_str(), &v3[0], !App->IsPlaying(), 0.25f)) {
 					comp_script->GetScript()->SetVec3Property((*it)->fieldName.c_str(), v3);
 				}
 			}
@@ -559,7 +662,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				float4 v4 = comp_script->GetScript()->GetVec4Property((*it)->fieldName.c_str());
 				ImGui::Text(" %s", (*it)->fieldName.c_str());
 				ImGui::SameLine();
-				if (ImGui::DragFloat4(("##" + (*it)->fieldName).c_str(), &v4[0], !App->IsPlaying(), 0.25f)) {
+				if (ImGui::DragFloat4(("##" + (*it)->fieldName + script_name).c_str(), &v4[0], !App->IsPlaying(), 0.25f)) {
 					comp_script->GetScript()->SetVec4Property((*it)->fieldName.c_str(), v4);
 				}
 			}
@@ -579,19 +682,19 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Prefab* prefab = factory->GetFactoryObject();
-		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
+		if(ImGui::InputResourcePrefab(("Factory Object##" + std::to_string(factories_count)).c_str(), &prefab))
 		{
 			factory->SetFactoryObject(prefab);
 		}
 
 		int count = factory->GetObjectCount();
-		if (ImGui::InputInt("Object Count", &count))
+		if (ImGui::InputInt(("Object Count##" + std::to_string(factories_count)).c_str(), &count))
 		{
 			factory->SetObjectCount(count);
 		}
 
 		float life_time = factory->GetLifeTime();
-		if (ImGui::DragFloat("Life Time", &life_time, true, 0.025f, 0))
+		if (ImGui::DragFloat(("Life Time##" + std::to_string(factories_count)).c_str(), &life_time, true, 0.025f, 0))
 		{
 			factory->SetLifeTime(life_time);
 		}
@@ -638,18 +741,17 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::Button("PLAY"))
 			{
-				current_emmiter->SetSystemState(PARTICLE_STATE_PLAY);
-				current_emmiter->Start();
+				current_emmiter->PlayEmmiter(); 
 
-				if(current_emmiter->show_shockwave)
-					current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
+				//if(current_emmiter->show_shockwave)
+				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
 			}
 
 			ImGui::SameLine();
 
 			if (ImGui::Button("STOP"))
 			{
-				current_emmiter->SetSystemState(PARTICLE_STATE_PAUSE);
+				current_emmiter->StopEmmiter();
 			}
 
 			ImGui::SameLine(); 
@@ -1047,17 +1149,172 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 {
 	if (ImGui::CollapsingHeader("Component Billboard"))
 	{
-		static int billboard_type; 
+		static int billboard_type;
 		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
-		
+
 		if (billboard_type != 0)
 		{
 			billboard->SetBillboardType((BillboardingType)--billboard_type);
 			++billboard_type;
 		}
 		else
-			billboard->SetBillboardType(BILLBOARD_NONE); 
+			billboard->SetBillboardType(BILLBOARD_NONE);
 
-			
+	}
+}
+
+void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
+{
+	if (ImGui::CollapsingHeader("Listener"))
+	{
+	}
+}
+
+void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
+{
+	if (audio_source->GetEventsVector().empty())
+		audio_source->GetEvents();
+
+	if (ImGui::CollapsingHeader("Audio Source")) {
+		if (audio_source->soundbank != nullptr) {
+			std::string soundbank_name = "SoundBank: ";
+			soundbank_name += audio_source->soundbank->name.c_str();
+			if (ImGui::TreeNode(soundbank_name.c_str()))
+			{		
+				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
+				{
+					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
+					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
+				}	
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Settings##Event"))
+			{
+				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
+				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
+
+				ImGui::TreePop();
+			}
+		}
+	}
+}
+
+void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
+{
+	if (ImGui::CollapsingHeader("Distorsion Zone")) {
+		char* bus_name = new char[41];
+
+		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
+		bus_name[dist_zone->bus.length()] = '\0';
+
+		ImGui::InputText("Target bus", bus_name, 40);
+		dist_zone->bus = bus_name;
+
+		ImGui::DragFloat("Value", &dist_zone->distorsion_value, true, 0.1, 0.0, 12.0, "%.1f");
+
+		delete[] bus_name;
+	}
+}
+
+void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
+{
+	if (comp_light != nullptr)
+	{
+		lights_count++;
+		if (ImGui::CollapsingHeader((comp_light->GetName() + "##" + std::to_string(lights_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			bool is_active = comp_light->IsActive();
+			if (ImGui::Checkbox(("Active##Light" + std::to_string(lights_count)).c_str(), &is_active))
+			{
+				comp_light->SetActive(is_active);
+			}
+
+			ImGui::Text("Type:");
+			ImGui::SameLine();
+			if (ImGui::SmallButton((comp_light->GetTypeString() + "##types" + std::to_string(lights_count)).c_str())) {
+				ImGui::OpenPopup(("Types##light" + std::to_string(lights_count)).c_str());
+			}
+			if (ImGui::BeginPopup(("Types##light" + std::to_string(lights_count)).c_str())) {
+				if (comp_light->GetLightType() != DIRECTIONAL_LIGHT && ImGui::MenuItem(("Directional##" + std::to_string(lights_count)).c_str()))
+				{
+					if (App->renderer3D->GetDirectionalLightCount() < 2)
+					{
+						comp_light->SetTypeToDirectional();
+					}
+					else
+					{
+						CONSOLE_WARNING("Exceeded limit of directional lights.");
+					}
+				}
+				if (comp_light->GetLightType() != POINT_LIGHT && ImGui::MenuItem(("Point##" + std::to_string(lights_count)).c_str()))
+				{
+					if (App->renderer3D->GetPointLightCount() < 8)
+					{
+						comp_light->SetTypeToPoint();
+					}
+					else
+					{
+						CONSOLE_WARNING("Exceeded limit of point lights.");
+					}
+				}
+				if (comp_light->GetLightType() != SPOT_LIGHT && ImGui::MenuItem(("Spot##" + std::to_string(lights_count)).c_str()))
+				{
+					if (App->renderer3D->GetPointLightCount() < 8)
+					{
+						comp_light->SetTypeToSpot();
+					}
+					else
+					{
+						CONSOLE_WARNING("Exceeded limit of spot lights.");
+					}
+				}
+				ImGui::EndPopup();
+			}
+
+			float3 light_pos = comp_light->GetPositionOffset();
+			float3 light_rot = comp_light->GetDirectionOffset();
+
+			switch (comp_light->GetLightType())
+			{
+			case DIRECTIONAL_LIGHT:
+				/*if (ImGui::DragFloat3(("Direction##directional_light_rotation" + std::to_string(lights_count)).c_str(), (float*)&light_rot, is_active, 0.25f, 0.0f)) {
+					comp_light->SetDirectionOffset(light_rot);
+				}*/
+				if (ImGui::DragFloat(("Diffuse##directional_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				break;
+			case SPOT_LIGHT:
+				/*if (ImGui::DragFloat3(("Position##spot_light_pos" + std::to_string(lights_count)).c_str(), (float*)&light_pos, is_active, 0.25f, 0.0f)) {
+					comp_light->SetPositionOffset(light_pos);
+				}
+				if (ImGui::DragFloat3(("Direction##spot_light_rotation" + std::to_string(lights_count)).c_str(), (float*)&light_rot, is_active, 0.25f, 0.0f)) {
+					comp_light->SetDirectionOffset(light_rot);
+				}*/
+				if (ImGui::DragFloat(("Diffuse##spot_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat(("Specular##spot_" + std::to_string(lights_count)).c_str(), comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat(("CutOff##spot_" + std::to_string(lights_count)).c_str(), comp_light->GetCutOffToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat(("OuterCutOff##spot_" + std::to_string(lights_count)).c_str(), comp_light->GetOuterCutOffToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				break;
+			case POINT_LIGHT:
+				/*if (ImGui::DragFloat3(("Position##point_light_pos" + std::to_string(lights_count)).c_str(), (float*)&light_pos, is_active, 0.25f, 0.0f)) {
+					comp_light->SetPositionOffset(light_pos);
+				}*/
+				if (ImGui::DragFloat(("Diffuse##point_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat(("Specular##point_" + std::to_string(lights_count)).c_str(), comp_light->GetSpecularToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				if (ImGui::DragFloat(("Ambient##point_" + std::to_string(lights_count)).c_str(), comp_light->GetAmbientToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+			}
+			ImGui::Text(("Light Color" + std::to_string(lights_count)).c_str());
+			ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+			flags |= ImGuiColorEditFlags_RGB;
+			ImGui::ColorPicker4(("Current Color##" + std::to_string(lights_count)).c_str(), comp_light->GetColorToEdit(), flags);
+		}
 	}
 }

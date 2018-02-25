@@ -67,6 +67,9 @@ public:
 	void UpdateShockWave(); 
 	void DrawShockWave(ComponentCamera* active_camera);
 
+	void PlayEmmiter();
+	void StopEmmiter(); 
+
 
 public:
 

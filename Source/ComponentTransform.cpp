@@ -1,5 +1,6 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "ComponentLight.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
@@ -47,8 +48,10 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
-	float3 diff = rotation - this->shown_rotation;
-	this->shown_rotation = rotation;
+
+	float3 diff = rotation - shown_rotation;
+	shown_rotation = rotation;
+
 	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
 	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
@@ -98,7 +101,7 @@ void ComponentTransform::UpdateGlobalMatrix()
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
+		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
 
 		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
@@ -132,6 +135,7 @@ void ComponentTransform::UpdateGlobalMatrix()
 		global_scale = scale;
 	}
 
+
 	if (!is_particle)
 	{
 		GetGameObject()->UpdateBoundingBox();
@@ -140,6 +144,15 @@ void ComponentTransform::UpdateGlobalMatrix()
 		GetGameObject()->UpdateCamera();
 	}
 		
+//POSSIBLEEE
+
+	//ComponentLight* light = (ComponentLight*)GetGameObject()->GetComponent(Component::CompLight);
+	//if (light)
+	//{
+	//	//light->SetPositionFromGO(global_pos);
+	//	light->SetDirectionFromGO(global_rot);
+	//}
+
 }
 
 const float4x4 ComponentTransform::GetMatrix() const
@@ -170,6 +183,21 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 			child_transform->UpdateGlobalMatrix();
 		}
 	}
+}
+
+float3 ComponentTransform::GetForward() const
+{
+	return transform_matrix.WorldZ();
+}
+
+float3 ComponentTransform::GetUp() const
+{
+	return transform_matrix.WorldY();
+}
+
+float3 ComponentTransform::GetRight() const
+{
+	return transform_matrix.WorldX();
 }
 
 void ComponentTransform::Save(Data & data) const
