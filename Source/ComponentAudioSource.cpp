@@ -82,31 +82,40 @@ void ComponentAudioSource::PlayEvent(uint id)
 	AK::SoundEngine::PostEvent(id, obj->GetID());
 }
 
-void ComponentAudioSource::PlayEvent(const char * event_name)
+bool ComponentAudioSource::PlayEvent(const char * event_name)
 {
 	if (obj != nullptr) 
 	{
 		obj->PlayEvent(event_name);
+		return true;
 		CONSOLE_DEBUG("Event played: %s", event_name);
 	}
 	else
 	{
 		CONSOLE_DEBUG("Nullptr");
+		return false;
 	}
 }
 
-void ComponentAudioSource::StopEvent(uint id)
+bool ComponentAudioSource::StopEvent(const char * event_name)
 {
+	if (AK::SoundEngine::ExecuteActionOnEvent(event_name, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause) == AKRESULT::AK_Success)
+	{
+		return true;
+	}
+
+	return false;
 }
 
-void ComponentAudioSource::SendEvent(const char * name)
+bool ComponentAudioSource::SendEvent(const char * name)
 {
 	for (int i = 0; i < events.size(); i++) {
 		if (!strcmp(events[i]->name.c_str(), name)) {
 			events_to_play.push_back(events[i]);
-			break;
+			return true;
 		}
 	}
+	return false;
 }
 
 AkGameObjectID ComponentAudioSource::GetID() const

@@ -2073,17 +2073,41 @@ bool CSScript::Play(MonoObject * object, MonoString* name)
 
 	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
 	const char* event_name = mono_string_to_utf8(name);
-	as->PlayEvent(event_name);
-
-	return true;
+	return as->PlayEvent(event_name);
 }
 
 bool CSScript::Stop(MonoObject * object, MonoString* name)
 {
-	return true;
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->StopEvent(event_name);
 }
 
 bool CSScript::Send(MonoObject * object, MonoString* name)
 {
-	return true;
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->SendEvent(event_name);
 }

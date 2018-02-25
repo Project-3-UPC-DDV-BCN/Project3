@@ -17,9 +17,9 @@ public :
 	void PlayMusic(double audio_id);
 	void PlayMusic(const char* name);
 	void PlayEvent(uint id);
-	void PlayEvent(const char* event_name);
-	void StopEvent(uint id);
-	void SendEvent(const char* name);
+	bool PlayEvent(const char* event_name);
+	bool StopEvent(const char * event_name);
+	bool SendEvent(const char* name);
 	AkGameObjectID GetID()const;
 	void GetEvents();
 	//void Serialize(JSON_File* doc);
