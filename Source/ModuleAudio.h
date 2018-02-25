@@ -92,6 +92,8 @@ private:
 	bool muted = false;
 
 	JSONTool* json = nullptr;
+
+	bool stop_all = false;
 };
 
 #endif // __ModuleAudio_H__

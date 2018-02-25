@@ -59,6 +59,16 @@ bool ModuleAudio::Start()
 
 update_status ModuleAudio::PreUpdate(float dt)
 {
+	if ((App->IsStopped() || App->IsPaused()) && !stop_all)
+	{
+		AK::SoundEngine::StopAll();
+		stop_all = true;
+	}
+	else if (App->IsPlaying() && stop_all)
+	{
+		stop_all = false;
+	}
+
 	if (!muted) {
 		SetRTPvalue("Volume", volume);
 		SetRTPvalue("Pitch", pitch);
