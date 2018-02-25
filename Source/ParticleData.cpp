@@ -59,6 +59,9 @@ void ParticleData::LoadDefaultData()
 	initial_color = { 0,0,0,0 }; 
 	final_color = { 0,0,0,0 };
 
+	amount_to_emmit = 0;
+	time_step_sim = 0;
+
 	animation_system.Init(); 
 	
 }

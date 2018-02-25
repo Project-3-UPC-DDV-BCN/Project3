@@ -834,13 +834,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::Combo("Emision Behaviour", &emmision_behaviour_combo, "Continuous Emmision\0Simultaneous Emmision\0");
 
 			if (emmision_behaviour_combo == 0)
-				current_emmiter->emmision_type = EMMISION_CONTINUOUS;
+				current_emmiter->data->emmision_type = EMMISION_CONTINUOUS;
 
 			else if (emmision_behaviour_combo == 1)
 			{
-				current_emmiter->emmision_type = EMMISION_SIMULTANEOUS;
-				ImGui::DragFloat("Particle Amount", &current_emmiter->amount_to_emmit, 1, 1.0f, 1, 500.0f);
-				ImGui::DragFloat("Emision TimeStep", &current_emmiter->time_step_sim, 1, 1.0f, 1, 10.0f);
+				current_emmiter->data->emmision_type = EMMISION_SIMULTANEOUS;
+				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
+				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 1, 10.0f);
 			}
 								
 			ImGui::Separator(); 

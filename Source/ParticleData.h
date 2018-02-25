@@ -12,6 +12,12 @@
 
 using namespace std; 
 
+enum emmision_behaviour
+{
+	EMMISION_CONTINUOUS,
+	EMMISION_SIMULTANEOUS,
+};
+
 struct ShockWave
 {
 	float duration;
@@ -143,4 +149,10 @@ public:
 	//AutoPause
 	bool autopause; 
 	float time_to_stop;
+
+	//Simultaneous shot 
+	emmision_behaviour emmision_type;
+	float amount_to_emmit;
+	float time_step_sim;
+
 };

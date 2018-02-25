@@ -132,11 +132,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
 	runtime_behaviour = "null"; 
-	emmision_type = EMMISION_CONTINUOUS; 
 	show_shockwave = false; 
-
-	amount_to_emmit = 0; 
-	time_step_sim = 0; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -172,6 +168,18 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
+
+	if (data->emmision_type == EMMISION_CONTINUOUS)
+		GenerateParticles();
+
+	else if (data->emmision_type == EMMISION_SIMULTANEOUS && system_state == PARTICLE_STATE_PLAY)
+	{
+		if (LaunchingAllowed())
+		{
+			LaunchParticlesWave();
+		}
+	}
+
 	if (active_particles.empty() == false)
 	{
 		for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();)
@@ -218,8 +226,6 @@ bool ComponentParticleEmmiter::Update()
 				
 		}
 	}
-
-	GenerateParticles();
 
 	if (data->shock_wave.active && data->shock_wave.done == false && system_state == PARTICLE_STATE_PLAY)
 	{
@@ -421,6 +427,24 @@ void ComponentParticleEmmiter::PlayEmmiter()
 void ComponentParticleEmmiter::StopEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PAUSE);
+}
+
+bool ComponentParticleEmmiter::LaunchingAllowed()
+{
+	if (spawn_timer.Read() > data->time_step_sim)
+		return true;  
+
+	return false;
+}
+
+void ComponentParticleEmmiter::LaunchParticlesWave()
+{
+	for (int i = 0; i < data->amount_to_emmit; i++)
+	{
+		Particle* new_particle = CreateParticle();
+		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
+		spawn_timer.Start();
+	}
 }
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
