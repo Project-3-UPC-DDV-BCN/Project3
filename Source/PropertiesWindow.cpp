@@ -741,7 +741,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::Button("PLAY"))
 			{
-				current_emmiter->PlayEmmiter(); 
+				current_emmiter->PlayEmmiter();
 
 				//if(current_emmiter->show_shockwave)
 				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
@@ -754,7 +754,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->StopEmmiter();
 			}
 
-			ImGui::SameLine(); 
+			ImGui::SameLine();
 			ImGui::Text("Particle System State: "); ImGui::SameLine();
 
 			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
@@ -762,21 +762,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
-			static int runtime_behaviour_combo; 
-			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
-
-			if (runtime_behaviour_combo == 0)
-				current_emmiter->runtime_behaviour = "Auto"; 
-			
-			else if (runtime_behaviour_combo == 1)
-				current_emmiter->runtime_behaviour = "Manual";
-			
-			ImGui::Separator();
+			ImGui::Separator(); 
 
 			ImGui::Text("Template Loaded:"); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());	
-	
-			ImGui::Text("Auto Pause:"); ImGui::SameLine(); 
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
+
+			ImGui::Text("Auto Pause:"); ImGui::SameLine();
 
 			if (current_emmiter->data->autopause)
 			{
@@ -827,7 +818,31 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
 			else
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Separator();
+
+			static int runtime_behaviour_combo; 
+			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
+
+			if (runtime_behaviour_combo == 0)
+				current_emmiter->runtime_behaviour = "Auto"; 
 			
+			else if (runtime_behaviour_combo == 1)
+				current_emmiter->runtime_behaviour = "Manual";
+
+			static int emmision_behaviour_combo;
+			ImGui::Combo("Emision Behaviour", &emmision_behaviour_combo, "Continuous Emmision\0Simultaneous Emmision\0");
+
+			if (emmision_behaviour_combo == 0)
+				current_emmiter->emmision_type = EMMISION_CONTINUOUS;
+
+			else if (emmision_behaviour_combo == 1)
+			{
+				current_emmiter->emmision_type = EMMISION_SIMULTANEOUS;
+				ImGui::DragFloat("Particle Amount", &current_emmiter->amount_to_emmit, 1, 1.0f, 1, 500.0f);
+				ImGui::DragFloat("Emision TimeStep", &current_emmiter->time_step_sim, 1, 1.0f, 1, 10.0f);
+			}
+								
 			ImGui::Separator(); 
 
 			if (ImGui::TreeNode("Relative Position"))

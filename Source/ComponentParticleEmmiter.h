@@ -15,6 +15,12 @@ enum particle_system_state
 	PARTICLE_STATE_PAUSE,
 };
 
+enum emmision_behaviour
+{
+	EMMISION_CONTINUOUS,
+	EMMISION_SIMULTANEOUS,
+};
+
 class ComponentParticleEmmiter : public Component
 {
 
@@ -80,7 +86,13 @@ public:
 	OBB emmit_area_obb; 
 	string runtime_behaviour; 
 
+	emmision_behaviour emmision_type; 
+
 	bool show_shockwave;
+
+	//Simultaneous shot 
+	float amount_to_emmit;
+	float time_step_sim;
 
 private:
 
@@ -99,7 +111,5 @@ private:
 	//Spawn Management
 	float emmision_frequency;							//Difference between spawn
 	bool show_emit_area; 
-
-
 
 };

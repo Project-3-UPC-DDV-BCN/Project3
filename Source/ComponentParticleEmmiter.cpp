@@ -132,7 +132,11 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
 	runtime_behaviour = "null"; 
+	emmision_type = EMMISION_CONTINUOUS; 
 	show_shockwave = false; 
+
+	amount_to_emmit = 0; 
+	time_step_sim = 0; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
