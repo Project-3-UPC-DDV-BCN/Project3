@@ -23,6 +23,7 @@
 #include "SceneWindow.h"
 #include "ModuleResources.h"
 #include "ShaderProgram.h"
+#include "ModuleMeshImporter.h"
 #include "DebugDraw.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -145,7 +146,10 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 			CONSOLE_DEBUG("Error initializing OpenGL! %s\n", gluErrorString(error));
 		}
 	}
-	
+
+	//Set Up Depth Map
+
+
 	return ret;
 }
 
@@ -161,6 +165,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	ms_timer.Start();
+
+	// Regular rendering
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
@@ -207,10 +213,7 @@ void ModuleRenderer3D::DrawEditorScene()
 void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 {
 	if (camera == nullptr || camera->GetViewportTexture() == nullptr) return;
-
 	camera->GetViewportTexture()->Bind();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (use_skybox)
 	{
@@ -218,7 +221,7 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 		App->scene->DrawSkyBox(camera->camera_frustum.pos, camera);
 		glEnable(GL_DEPTH_TEST);
 	}
-
+	
 	DrawSceneGameObjects(camera, false);
 }
 
@@ -261,6 +264,32 @@ void ModuleRenderer3D::DrawDebugCube(ComponentMeshRenderer * mesh, ComponentCame
 	}
 }
 
+
+void ModuleRenderer3D::DrawZBuffer()
+{
+	uint program = 0;
+	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
+	program = shader->GetProgramID();
+	UseShaderProgram(program);
+
+	SetUniformFloat(program, "near_plane", near_plane);
+	SetUniformFloat(program, "far_plane", far_plane);
+
+	SetUniformInt(program, "depthMap", 0);
+
+	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+
+	Mesh* plane = App->resources->GetMesh("Plane001");
+	plane->LoadToMemory();
+
+	SetUniformMatrix(program, "view", App->camera->GetCamera()->GetViewMatrix());
+	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
+	SetUniformMatrix(program, "Model", trans.Transposed().ptr());
+}
+
 void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 {
 	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(10, 1, 10));
@@ -281,6 +310,28 @@ void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 	glDrawElements(GL_TRIANGLES, plane->num_indices, GL_UNSIGNED_INT, NULL);
 	UnbindVertexArrayObject();
 }
+
+
+float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane)
+{
+	float a = 2.0f / (right - left);
+	float b = 2.0f / (top - bottom);
+	float c = -2.0f / (far_plane - near_plane);
+
+	float tx = -(right + left) / (right - left);
+	float ty = -(top + bottom) / (top - bottom);
+	float tz = -(far_plane + near_plane) / (far_plane - near_plane);
+
+	float4x4 n_projection(
+		a, 0.0f, 0.0f, tx,
+		0.0f, b, 0.0f, ty,
+		0.0f, 0.0f, c, tz,
+		0.0f, 0.0f, 0.0f, 1.0f);
+
+	return n_projection;
+}
+
+
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
@@ -304,7 +355,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		}
 		DrawMesh(*it, active_camera);
 	}
-
 	for (std::list<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
 	{
 		if (!is_editor_camera)
@@ -314,7 +364,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
 					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-					DrawMesh(*it, active_camera);
+						DrawMesh(*it, active_camera);
 				}
 			}
 		}
@@ -327,7 +377,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			}
 		}
 	}
-
 	if (is_editor_camera)
 	{
 		for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
@@ -340,7 +389,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			}
 		}
 	}
-
 	if (App->scene->draw_octree)
 	{
 		//App->scene->octree.DebugDraw();
@@ -351,7 +399,6 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
-
 }
 
 void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
@@ -373,7 +420,6 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	//TODO: Calculate Normal Matrix here and send it as uniform.
-	// We need this because transitioning to World Space gives a non accurate Normal.
 	// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
 	SendLight(program);
@@ -855,6 +901,23 @@ void ModuleRenderer3D::SetUniformUInt(uint program, const char * name, uint data
 	}
 }
 
+
+void ModuleRenderer3D::SetUniformInt(uint program, const char * name, int data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform1i(modelLoc, data);
+
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform matrix %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+
 void ModuleRenderer3D::SetUniformBool(uint program, const char * name, bool data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);
@@ -1094,6 +1157,7 @@ void ModuleRenderer3D::SendLight(uint program)
 	}
 
 }
+
 int ModuleRenderer3D::GetDirectionalLightCount() const
 {
 	return directional_light_count;
@@ -1106,4 +1170,72 @@ int ModuleRenderer3D::GetPointLightCount() const
 {
 	return point_light_count;
 }
-// ------------------------------------------------
+void ModuleRenderer3D::SetDepthMap()
+{
+	glGenFramebuffers(1, &depth_mapFBO);
+
+	glGenTextures(1, &depth_map);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
+	// Not rendering any color so:
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+void ModuleRenderer3D::DrawFromLightForShadows()
+{
+	if (dir_lights[0] != nullptr)
+	{
+	
+	near_plane = 1.0f, far_plane = 750.0f;
+
+	float4x4 light_projection = OrthoProjection(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+
+	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
+
+	float4x4 light_view = float4x4::LookAt(float3(0,0,1), trans->GetMatrix().WorldZ(), float3(0,1,0), trans->GetMatrix().WorldY());
+
+	float4x4 light_space_mat = light_projection * light_view;
+
+	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
+	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
+	{
+		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*) (*it)->GetComponent(Component::CompMeshRenderer);
+		if (mesh != nullptr)
+			SendObjectToDepthShader(mesh, light_space_mat);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawZBuffer();
+
+	}
+}
+
+void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat)
+{
+	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
+	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	uint program = 0;
+	ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
+	program = shader->GetProgramID();
+	UseShaderProgram(program);
+
+	SetUniformMatrix(program, "model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+	SetUniformMatrix(program, "lightSpaceMatrix", lightSpaceMat.ptr());
+}
+// -----------------------------------------------
