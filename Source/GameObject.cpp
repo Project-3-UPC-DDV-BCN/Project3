@@ -144,6 +144,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 			components_list.push_back(component = new ComponentProgressBar(this));
 			SetName("ProgressBar");
 		}
+		break;
 	case Component::CompDistanceJoint:
 		components_list.push_back(component = new ComponentJointDistance(this));
 	case Component::CompAudioSource:

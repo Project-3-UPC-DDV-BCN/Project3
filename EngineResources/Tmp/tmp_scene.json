@@ -1,8 +1,8 @@
 {
     "Scene_Name": "Untitled Scene",
-    "GameObjects_Count": "5",
+    "GameObjects_Count": "6",
     "GameObject_0": {
-        "UUID": "1432324667",
+        "UUID": "44157875",
         "Name": "Audio",
         "Tag": "Default",
         "Layer": "Default",
@@ -12,7 +12,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "449591452",
+                "UUID": "7434362",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -33,7 +33,7 @@
             "Component_1": {
                 "Type": "8",
                 "Active": "1",
-                "UUID": "1472492762",
+                "UUID": "1266316518",
                 "Sound_ID": "100"
             }
         },
@@ -42,7 +42,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "814547986",
+        "UUID": "280867921",
         "Name": "New GameObject(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -52,7 +52,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1991726363",
+                "UUID": "1576139387",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -73,7 +73,7 @@
             "Component_1": {
                 "Type": "21",
                 "Active": "1",
-                "UUID": "1044666977",
+                "UUID": "1466922006",
                 "Object_ID": "0"
             }
         },
@@ -82,7 +82,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1220254166",
+        "UUID": "1466632216",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -92,7 +92,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1654870196",
+                "UUID": "1601788899",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "1.000000",
@@ -113,7 +113,7 @@
             "Component_1": {
                 "Type": "1",
                 "Active": "1",
-                "UUID": "862215766",
+                "UUID": "1996546227",
                 "RenderTexture_Target": "",
                 "background_color": {
                     "value_X": "0.000000",
@@ -135,7 +135,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "162023366",
+        "UUID": "887134718",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -145,7 +145,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "928354625",
+                "UUID": "1521243384",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "100.000000",
@@ -166,7 +166,7 @@
             "Component_1": {
                 "Type": "20",
                 "Active": "1",
-                "UUID": "1644650242",
+                "UUID": "1576514158",
                 "color": {
                     "value_X": "1.000000",
                     "value_Y": "1.000000",
@@ -186,24 +186,24 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "2076423026",
+        "UUID": "1188805075",
         "Name": "Canvas",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "4",
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
-                "UUID": "490828047",
+                "UUID": "1778371195",
                 "pos": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000"
                 },
                 "size": {
-                    "value_X": "919.000000",
-                    "value_Y": "217.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -218,7 +218,7 @@
             "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1399760659",
+                "UUID": "1415047200",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -239,7 +239,7 @@
             "Component_2": {
                 "Type": "24",
                 "Active": "1",
-                "UUID": "1179669123",
+                "UUID": "958782957",
                 "size": {
                     "value_X": "1280.000000",
                     "value_Y": "720.000000"
@@ -251,16 +251,90 @@
                 "render_mode": "0",
                 "scale_mode": "0",
                 "scale": "1.000000"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "657037807",
+        "Name": "ProgressBar",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "79996400",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "size": {
+                    "value_X": "100.000000",
+                    "value_Y": "30.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "snap_up": "1",
+                "snap_down": "1",
+                "snap_left": "1",
+                "snap_right": "1",
+                "scale": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1770470453",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "1004267729",
+                "progress_percentage": "50.000000",
+                "base_colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000",
+                    "value_Z": "0.500000",
+                    "value_W": "1.000000"
+                }
             },
             "Component_3": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1379416515",
+                "UUID": "1652046047",
                 "Script": {
                     "library_path": ".\\Project\\Library\\Scripts\\progressbar.dll",
                     "assets_path": ".\\Project\\Assets\\progressbar.cs",
                     "script_name": "progressbar",
-                    "UUID": "530905391",
+                    "UUID": "1399873825",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
@@ -282,8 +356,8 @@
                 }
             }
         },
-        "ParentID": "0",
-        "IsRoot": "1",
+        "ParentID": "1188805075",
+        "IsRoot": "0",
         "IsStatic": "0"
     }
 }
