@@ -237,6 +237,21 @@ float3 ComponentRectTransform::GetGlobalPos() const
 	return c_transform->GetGlobalPosition();
 }
 
+void ComponentRectTransform::SetZPos(float set)
+{
+	if (z_pos != set)
+	{
+		z_pos = set;
+
+		UpdateTransform();
+	}
+}
+
+float ComponentRectTransform::GetZPos() const
+{
+	return z_pos;
+}
+
 void ComponentRectTransform::SetRotation(const float3 & _rotation)
 {
 	c_transform->SetRotation(_rotation);
@@ -609,6 +624,7 @@ float3 ComponentRectTransform::GetPreferedPos()
 
 	ret.x = anchor_pos.x + GetScaledPos().x;
 	ret.y = anchor_pos.y + GetScaledPos().y;
+	ret.z = z_pos;
 
 	return ret;
 }
