@@ -2,7 +2,7 @@
 
 namespace TheEngine
 {
-    class TheProgressBar : TheComponent
+    public class TheProgressBar : TheComponent
     {
         public float PercentageProgress
         {

@@ -86,19 +86,16 @@ void main()
 {
 if (has_texture)
 {
-	color = texture(Tex_Diffuse, TexCoord);
+color = texture(Tex_Diffuse, TexCoord);
 }
 else if (has_material_color)
-	color = material_color;
+color = material_color;
 else
-	color = ourColor;
-
-if(is_ui == false){
-vec3 norm = normalize(Normal);
+color = ourColor;
+if (is_ui == false)
+{
+vec3 normal = normalize(Normal);
 vec3 viewDir = normalize(viewPos - FragPos);
-
-vec3 normal;
-vec3 viewDir;
 vec3 fragPosarg;
 if (has_normalmap)
 {
@@ -113,16 +110,15 @@ normal = normalize(Normal);
 viewDir = normalize(viewPos - FragPos);
 fragPosarg = FragPos;
 }
-vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
+vec3 result = vec3(0.0, 0.0, 0.0); 
+for (int i = 0; i < NR_DIREC_LIGHTS; i++)
 result += CalcDirLight(dirLights[i], normal, viewDir);
 for (int k = 0; k < NR_POINT_LIGHTS; k++)
 result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);
 for (int j = 0; j < NR_SPOT_LIGHTS; j++)
-result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
-color = vec4(result, 1.0);
-}
 result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
-color = vec4(result, 1.0) + color * AMBIENT_LIGHT;
+color = vec4(result, 1.0) + color * AMBIENT_LIGHT; 
+}
 }
 
 	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
