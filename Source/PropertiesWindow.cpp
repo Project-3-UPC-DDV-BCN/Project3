@@ -2,16 +2,22 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "MathGeoLib\MathGeoLib.h"
+#include "ModuleParticleImporter.h"
 #include "ComponentCamera.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentTransform.h"
 #include "TagsAndLayers.h"
+#include "tinyfiledialogs.h"
 #include "ModuleEditor.h"
 #include "TagsAndLayersWindow.h"
+#include "ComponentBillboard.h"
+#include "ParticleData.h"
 #include "ModuleScene.h"
 #include "Mesh.h"
 #include "Material.h"
+#include <algorithm>
 #include "imgui/CustomImGui.h"
+#include "ComponentParticleEmmiter.h"
 #include "ModuleRenderer3D.h"
 #include "ComponentScript.h"
 #include "Script.h"
@@ -33,6 +39,8 @@
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
+
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -162,6 +170,26 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
+				if (ImGui::MenuItem("Particle Emmiter")) {
+					if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompParticleSystem);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Particle Emmiter!");
+					}
+				}
+
+				if (ImGui::MenuItem("Billboard")) {
+					if (selected_gameobject->GetComponent(Component::CompBillboard) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompBillboard);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Billboard!");
+					}
+				}
+
 				if (ImGui::MenuItem("Light")) {
 					if (App->renderer3D->GetDirectionalLightCount() < 2 || App->renderer3D->GetSpotLightCount() < 8 || App->renderer3D->GetPointLightCount() < 8)
 					{
@@ -190,6 +218,7 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_ERROR("Max lights created. Can't add more lights");
 					}
 				}
+
 				if (ImGui::BeginMenu("Script")) {
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
@@ -231,7 +260,12 @@ void PropertiesWindow::DrawWindow()
 				if (ImGui::BeginMenu("Audio")) {
 					if (ImGui::MenuItem("Audio Listener"))
 					{
-						ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+						if (App->audio->GetDefaultListener() != nullptr)
+						{
+
+						}
+						else
+							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
 					}
 					if (ImGui::MenuItem("Audio Source"))
 					{
@@ -398,6 +432,10 @@ void PropertiesWindow::DrawComponent(Component * component)
 		DrawScriptPanel((ComponentScript*)component);
 		break;
 	case Component::CompParticleSystem:
+		DrawParticleEmmiterPanel((ComponentParticleEmmiter*)component); 
+		break;
+	case Component::CompBillboard:
+		DrawBillboardPanel((ComponentBillboard*)component);
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
@@ -441,7 +479,7 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 		if (ImGui::DragFloat3("Position", (float*)&position, is_static, 0.25f)) {
 			transform->SetPosition(position);
 		}
-		if (ImGui::DragFloat3("Rotation", (float*)&rotation, is_static, 0.25f)) {
+		if (ImGui::DragFloat3("Rotation", (float*)&rotation, is_static, 0.25f)) {		
 			transform->SetRotation(rotation);
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f)) {
@@ -514,6 +552,41 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 						mesh_renderer->GetMaterial()->SetFragmentShader(frag);
 					}
 				}
+
+				ImGui::Separator();
+
+				ImGui::Text("Material name: "); ImGui::SameLine();
+				ImGui::Text(mesh_renderer->GetMaterial()->GetName().c_str());
+
+
+				// NORMAL MAP
+				ImGui::Text("Normal: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetNormalMapTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetNormalMapTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* normalmap = material->GetNormalMapTexture();
+				if (ImGui::InputResourceTexture("Change Normal Map", &normalmap))
+				{
+					material->SetNormalMapTexture(normalmap);
+				}
+
+				// DIFFUSE
+				ImGui::Text("Diffuse: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetDiffuseTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetDiffuseTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* diffuse = material->GetDiffuseTexture();
+				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
+				{
+					material->SetDiffuseTexture(diffuse);
+				}
+				
 
 			}
 		ImGui::TreePop();
@@ -931,6 +1004,467 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		default:
 			break;
 		}
+	}
+}
+
+void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * current_emmiter)
+{
+	if (ImGui::CollapsingHeader("Component Particle Emmiter"))
+	{
+		bool active_bool = current_emmiter->IsActive();
+		bool keeper = active_bool;
+		static bool rename_template = false;
+
+		ImGui::Checkbox("Active", &active_bool);
+
+		if (keeper != active_bool)
+			current_emmiter->SetActive(keeper);
+
+		if (current_emmiter->IsActive())
+		{
+			ImGui::Separator();
+
+			if (ImGui::TreeNode("Templates"))
+			{
+				if (!App->resources->GetParticlesList().empty())
+				{
+					map<uint, ParticleData*> tmp_map = App->resources->GetParticlesList();
+
+					for (map<uint, ParticleData*>::const_iterator it = tmp_map.begin(); it != tmp_map.end(); it++)
+					{
+						if (ImGui::MenuItem(it->second->GetName().c_str()))
+						{
+							current_emmiter->data = it->second;
+						}
+					}
+				}
+
+
+				ImGui::TreePop();
+			}
+
+			ImGui::Separator();	
+
+			if (ImGui::Button("PLAY"))
+			{
+				current_emmiter->PlayEmmiter(); 
+
+				//if(current_emmiter->show_shockwave)
+				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("STOP"))
+			{
+				current_emmiter->StopEmmiter();
+			}
+
+			ImGui::SameLine(); 
+			ImGui::Text("Particle System State: "); ImGui::SameLine();
+
+			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+				ImGui::TextColored({ 0,255,0,1 }, "PLAY");
+			else
+				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
+
+			static int runtime_behaviour_combo; 
+			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
+
+			if (runtime_behaviour_combo == 0)
+				current_emmiter->runtime_behaviour = "Auto"; 
+			
+			else if (runtime_behaviour_combo == 1)
+				current_emmiter->runtime_behaviour = "Manual";
+			
+			ImGui::Separator();
+
+			ImGui::Text("Template Loaded:"); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());	
+	
+			ImGui::Text("Auto Pause:"); ImGui::SameLine(); 
+
+			if (current_emmiter->data->autopause)
+			{
+				float time_left = current_emmiter->data->time_to_stop;
+
+				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+				{
+					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
+				}
+				else
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
+			}
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Shock Wave: "); ImGui::SameLine();
+
+			if (current_emmiter->show_shockwave)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_alpha_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Size Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_size_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_rotation_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Color Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_color_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+			
+			ImGui::Separator(); 
+
+			if (ImGui::TreeNode("Relative Position"))
+			{
+				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+				ImGui::TreePop(); 
+			}
+
+			if (ImGui::TreeNode("Auto-Pause"))
+			{		
+				static float turnoff_time = 0; 
+
+				ImGui::DragFloat("Turn off timer", &turnoff_time, 1, .1f, 0, 1000.0f);
+			
+				if (ImGui::Button("Apply"))
+				{
+					if (turnoff_time != 0)
+					{
+						current_emmiter->data->autopause = true;
+						current_emmiter->data->time_to_stop = turnoff_time;
+					}
+				}
+
+				ImGui::SameLine(); 
+				if (ImGui::Button("Delete"))
+					current_emmiter->data->autopause = false;
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Shock Wave"))
+			{
+				static Texture* st_particle_texture = nullptr;
+				ImGui::InputResourceTexture("Wave Texture", &st_particle_texture);
+
+				static float wave_duration; 
+				static float final_wave_scale; 
+
+				ImGui::SliderFloat("Duration", &wave_duration, 0.1f, 5.0f);
+				ImGui::SliderFloat("Final Scale", &final_wave_scale, 1.0f, 10.0f); 
+
+				if(ImGui::Button("Apply"))
+				{
+					current_emmiter->show_shockwave = true; 
+
+					current_emmiter->data->shock_wave.wave_texture = st_particle_texture; 
+					current_emmiter->data->shock_wave.duration = wave_duration; 
+					current_emmiter->data->shock_wave.final_scale = final_wave_scale;
+				}
+
+				ImGui::TreePop(); 
+			}
+
+			float prev_width = current_emmiter->data->emmit_width;
+			float prev_height = current_emmiter->data->emmit_height;
+			float prev_depth = current_emmiter->data->emmit_depth;
+
+			if (ImGui::TreeNode("Emit Area"))
+			{
+				static bool show = current_emmiter->ShowEmmisionArea();
+				ImGui::Checkbox("Show Emmiter Area", &show);
+				current_emmiter->SetShowEmmisionArea(show);
+
+				ImGui::DragFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+
+				ImGui::TreePop();
+			}
+
+			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
+			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
+			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
+
+			if (ImGui::TreeNode("Texture"))
+			{
+				static Texture* st_particle_texture = nullptr;
+				ImGui::InputResourceTexture("Texture To Add", &st_particle_texture);
+
+				if (ImGui::Button("Add To Stack"))
+				{
+					current_emmiter->data->animation_system.AddToFrameStack(st_particle_texture);
+				}
+
+				ImGui::Text("Frame Stack Size:"); ImGui::SameLine();
+				ImGui::Text(to_string(current_emmiter->data->animation_system.GetNumFrames()).c_str());
+
+				current_emmiter->data->animation_system.PaintStackUI();
+
+				ImGui::DragFloat("Time Step", &current_emmiter->data->animation_system.timeStep, true, 0.1f, 0, 2.0f);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Color"))
+			{
+				static bool alpha_preview = true;
+				ImGui::Checkbox("Alpha", &alpha_preview);
+
+				int misc_flags = (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0);
+
+				ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+				flags |= misc_flags;
+				flags |= ImGuiColorEditFlags_RGB;
+
+				ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Motion"))
+			{
+				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
+				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
+				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
+				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
+				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
+				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Billboard"))
+			{
+				ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
+
+				static int billboard_type;
+				ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+
+				if (billboard_type != 0)
+				{
+					current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
+					++billboard_type;
+				}
+				else
+					current_emmiter->data->billboard_type = BILLBOARD_NONE;
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Interpolation"))
+			{
+				if (ImGui::TreeNode("Size"))
+				{
+					static float3 init_scale = { 1,1,1 };
+					static float3 fin_scale = { 1,1,1 };
+
+					ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 1, 10000);
+					init_scale.y = init_scale.x;
+
+					ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 1, 10000);
+					fin_scale.y = fin_scale.x;
+
+					if (ImGui::Button("Apply Scale Interpolation"))
+					{
+						current_emmiter->data->change_size_interpolation = true;
+
+						if (init_scale.x == fin_scale.x)
+							current_emmiter->data->change_size_interpolation = false; 
+
+						current_emmiter->data->initial_scale = init_scale;
+						current_emmiter->data->final_scale = fin_scale;
+					}
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Rotation"))
+				{
+					static float init_angular_v = 0;
+					static float fin_angular_v = 0;
+
+					ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
+
+					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+
+					if (ImGui::Button("Apply Rotation Interpolation"))
+					{
+						current_emmiter->data->change_rotation_interpolation = true;
+
+						if(init_angular_v == fin_angular_v)
+							current_emmiter->data->change_rotation_interpolation = false;
+
+						current_emmiter->data->initial_angular_v = init_angular_v;
+						current_emmiter->data->final_angular_v = fin_angular_v;
+					}
+
+					ImGui::TreePop();
+				}
+
+
+				if (ImGui::TreeNode("Alpha"))
+				{
+					static int current_interpolation_type; 
+					ImGui::Combo("Interpolation Type", &current_interpolation_type, "Alpha Interpolation\0Match Lifetime\0Manual Start\0");
+
+					switch (current_interpolation_type)
+					{
+					case 1:
+						current_emmiter->data->init_alpha_interpolation_time = 0;
+						break; 
+
+					case 2:
+						ImGui::DragFloat("Start at", &current_emmiter->data->init_alpha_interpolation_time, 1, 0.1f, 0, current_emmiter->data->max_lifetime); 
+						break; 
+					}
+
+					if (ImGui::Button("Apply Alpha Interpolation"))
+					{
+						current_emmiter->data->change_alpha_interpolation = true;
+			
+						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
+							current_emmiter->data->alpha_interpolation_delayed = true;
+					}
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNodeEx("Color"))
+				{
+
+					static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b};
+
+					ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
+					
+					static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b};
+
+					ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+
+					if (ImGui::Button("Apply Color Interpolation"))
+					{
+						current_emmiter->data->change_color_interpolation = true;
+
+						Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
+						Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+
+						current_emmiter->data->initial_color = initial;
+						current_emmiter->data->final_color = final;
+
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::TreePop();
+			}
+
+			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
+
+			if (ImGui::Button("Save Template"))
+			{
+				rename_template = true;
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Update Template"))
+			{
+
+			}
+
+		}
+
+	
+
+		if (rename_template)
+		{
+			ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x + 20, 150));
+			bool windowActive = true;
+			ImGui::Begin("Rename Game Object", &windowActive,
+				ImGuiWindowFlags_NoFocusOnAppearing |
+				ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_ShowBorders |
+				ImGuiWindowFlags_NoTitleBar);
+
+			ImGui::Text("Enter new name");
+			static char inputText[20];
+			ImGui::InputText("", inputText, 20);
+
+			if (ImGui::Button("Confirm"))
+			{
+				App->resources->AddParticleTemplate(current_emmiter->data);
+
+				Data template_to_save; 
+
+				ParticleData* new_template = new ParticleData(); 
+				new_template->Copy(current_emmiter->data); 
+				new_template->SetName(inputText);
+
+				new_template->Save(template_to_save);
+				new_template->SaveTextures(template_to_save); 
+				
+				string new_path_name(EDITOR_PARTICLE_FOLDER); 
+				new_path_name += inputText; 
+				new_path_name += ".particle"; 
+
+				template_to_save.SaveAsBinary(new_path_name);
+				App->resources->CreateResource(new_path_name);
+				App->resources->AddParticleTemplate(new_template);
+				
+				rename_template = false;
+			}
+
+			ImGui::SameLine();
+			
+			if (ImGui::Button("Cancel")) {
+				inputText[0] = '\0';
+				rename_template = false;
+			}
+			ImGui::End();
+		}
+
+		ImGui::SameLine();
+	}
+}
+
+
+void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
+{
+	if (ImGui::CollapsingHeader("Component Billboard"))
+	{
+		static int billboard_type;
+		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+
+		if (billboard_type != 0)
+		{
+			billboard->SetBillboardType((BillboardingType)--billboard_type);
+			++billboard_type;
+		}
+		else
+			billboard->SetBillboardType(BILLBOARD_NONE);
 	}
 }
 

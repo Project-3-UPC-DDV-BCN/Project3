@@ -48,6 +48,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetExt>.exe</TargetExt>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\**;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\**;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,6 +63,7 @@
       </LanguageStandard>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -80,6 +83,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -95,6 +99,10 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="AppWindowConfigWindow.h" />
     <ClInclude Include="BlastModel.h" />
+    <ClInclude Include="ComponentBillboard.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentParticleEmmiter.h" />
     <ClInclude Include="AudioEvent.h" />
     <ClInclude Include="ComponentAudioSource.h" />
     <ClInclude Include="AudioWindow.h" />
@@ -228,6 +236,7 @@
     <ClInclude Include="ModuleMeshImporter.h" />
     <ClInclude Include="ModulePhysics.h" />
     <ClInclude Include="ModulePhysMatImporter.h" />
+    <ClInclude Include="ModuleParticleImporter.h" />
     <ClInclude Include="ModulePrefabImporter.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="ModuleResources.h" />
@@ -249,6 +258,8 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="ParticleData.h" />
+    <ClInclude Include="Particles.h" />
     <ClInclude Include="Parson\parson.h" />
     <ClInclude Include="PerformanceWindow.h" />
     <ClInclude Include="PerfTimer.h" />
@@ -443,6 +454,10 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AppWindowConfigWindow.cpp" />
     <ClCompile Include="BlastModel.cpp" />
+    <ClCompile Include="ComponentBillboard.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentParticleEmmiter.cpp" />
     <ClCompile Include="AudioEvent.cpp" />
     <ClCompile Include="ComponentAudioSource.cpp" />
     <ClCompile Include="AudioWindow.cpp" />
@@ -572,6 +587,7 @@
     <ClCompile Include="ModuleMeshImporter.cpp" />
     <ClCompile Include="ModulePhysics.cpp" />
     <ClCompile Include="ModulePhysMatImporter.cpp" />
+    <ClCompile Include="ModuleParticleImporter.cpp" />
     <ClCompile Include="ModulePrefabImporter.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleResources.cpp" />
@@ -582,6 +598,8 @@
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="ParticleData.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Parson\parson.c" />
     <ClCompile Include="PerformanceWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />

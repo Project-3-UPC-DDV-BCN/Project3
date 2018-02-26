@@ -140,17 +140,13 @@ update_status ModuleBlast::Update(float dt)
 					GameObject* go = it->second->chunks[chunkIndex];
 					ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 					physx::PxTransform phys_transform = actor->getPhysXActor().getGlobalPose() * subChunks[chunks[chunkIndex].firstSubchunkIndex].transform;
-					//phys_transform = phys_transform.transform(actor->getPhysXActor().getCMassLocalPose());
 					float3 pos(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
-					CONSOLE_LOG("Chunk %d pos: %.3f, %.3f, %.3f", chunkIndex, pos.x, pos.y, pos.z);
 					Quat quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
 					float3 rot = quat.ToEulerXYZ() * RADTODEG;
 					ComponentTransform* parent_transform = (ComponentTransform*)it->second->root->GetComponent(Component::CompTransform);
 					pos -= parent_transform->GetGlobalPosition();
 					transform->SetPosition(pos);
 					transform->SetRotation(rot);
-					float3 global_pos = transform->GetGlobalPosition();
-					CONSOLE_LOG("object pos: %.3f, %.3f, %.3f", global_pos.x, global_pos.y, global_pos.z);
 				}
 			}
 			it->first->postSplitUpdate();
@@ -292,4 +288,15 @@ void ModuleBlast::CleanFamilies()
 		RELEASE(it->second);
 	}
 	families.clear();
+}
+
+void ModuleBlast::CleanFamily(Nv::Blast::ExtPxFamily* family)
+{
+	if (families.find(family) != families.end())
+	{
+		family->unsubscribe(*this);
+		family->despawn();
+		family->release();
+		families.erase(family);
+	}
 }

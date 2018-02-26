@@ -119,6 +119,24 @@ public:
 	int GetControllerButton(int pad, MonoString* button);
 	void RumbleController(int pad, float strength, int ms);
 
+	//AUDIO
+	bool IsMuted();
+	void SetMute(bool set);
+	int GetVolume();
+	void SetVolume(int volume);
+	int GetPitch();
+	void SetPitch(int pitch);
+	void SetRTPvalue(MonoString* name, float value);
+
+	//AUDIOSOURCE
+	bool Play(MonoObject * object, MonoString* name);
+	bool Stop(MonoObject * object, MonoString* name);
+	bool Send(MonoObject * object, MonoString* name);
+
+	//PARTICLE EMMITER
+	void PlayEmmiter(MonoObject * object);
+	void StopEmmiter(MonoObject * object);
+
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);

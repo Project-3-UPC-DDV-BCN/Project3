@@ -28,6 +28,9 @@
 #include "ModuleBlast.h"
 #include "ComponentLight.h"
 #include "ComponentRigidBody.h"
+#include "ComponentParticleEmmiter.h"
+#include "ComponentLight.h"
+#include "ComponentTransform.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -105,6 +108,9 @@ void ModuleScene::CreateMainLight()
 	light->SetTypeToDirectional();
 	AddGameObjectToScene(main_light);
 	App->resources->AddGameObject(main_light);
+	ComponentTransform* trans = (ComponentTransform*)main_light->GetComponent(Component::CompTransform);
+	trans->SetPosition({ 0, 100, 0 });
+	trans->SetRotation({ -100, -150, 0 });
 }
 
 // Load assets
@@ -222,6 +228,8 @@ update_status ModuleScene::Update(float dt)
 	{
 		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
 		ComponentCamera* camera = (ComponentCamera*)(*it)->GetComponent(Component::CompCamera);
+		ComponentParticleEmmiter* p_emmiter = (ComponentParticleEmmiter*)(*it)->GetComponent(Component::CompParticleSystem);
+
 		bool active_parents = RecursiveCheckActiveParents((*it));
 		if (active_parents && (*it)->IsActive())
 		{
@@ -237,12 +245,20 @@ update_status ModuleScene::Update(float dt)
 					App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
 				}
 			}
+			if (p_emmiter != nullptr)
+			{
+				App->renderer3D->AddParticleToDraw(p_emmiter);
+			}
 			if (App->IsPlaying())
 			{
 				(*it)->UpdateScripts();
 				(*it)->UpdateFactory();
 				if (!(*it)->Update())
 					return update_status::UPDATE_ERROR;
+			}
+			else if(p_emmiter != nullptr)
+			{
+				p_emmiter->Update(); 
 			}
 		}
 	}
@@ -533,6 +549,19 @@ void ModuleScene::InitScripts()
 		{
 			(*it)->StartScripts();
 		}
+	}
+}
+
+void ModuleScene::SetParticleSystemsState()
+{
+	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+	{
+		if ((*it)->runtime_behaviour == "Auto")
+		{
+			(*it)->SetSystemState(PARTICLE_STATE_PLAY);
+			(*it)->Start(); 
+		}
+			
 	}
 }
 

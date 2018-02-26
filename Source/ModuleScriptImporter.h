@@ -100,6 +100,23 @@ private:
 	static void Warning(MonoObject* object);
 	static void Error(MonoObject* object);
 
+	//AUDIO
+	static bool IsMuted();
+	static void SetMute(bool set);
+	static int GetVolume();
+	static void SetVolume(int volume);
+	static int GetPitch();
+	static void SetPitch(int pitch);
+	static void SetRTPvalue(MonoString* name, float value);
+
+	static bool Play(MonoObject * object, MonoString * name);
+	static bool Stop(MonoObject * object, MonoString * name);
+	static bool Send(MonoObject * object, MonoString * name);
+
+	//PARTICLE EMMITER
+	static void PlayEmmiter(MonoObject * object);
+	static void StopEmmiter(MonoObject * object);
+
 private:
 	std::string mono_path;
 	MonoDomain* mono_domain;

@@ -25,11 +25,18 @@ ComponentListener::ComponentListener(GameObject * attached_gameobject)
 	
 	}
 	*/
+	
 	if (App->audio->GetDefaultListener() == nullptr)
 	{
 		obj = App->audio->CreateListener(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
-		App->audio->SetDefaultListener(this);
 	}
+	else 
+	{
+		App->audio->SetListenerCreated(false);
+		obj = App->audio->CreateListener(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
+	}
+	
+	App->audio->SetDefaultListener(this);
 }
 
 ComponentListener::~ComponentListener()
@@ -91,5 +98,6 @@ void ComponentListener::Load(Data & data)
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
 	obj_to_load = data.GetInt("Object ID");
-	obj = App->audio->GetSoundObject(obj_to_load);
+	if (obj_to_load != -1)
+		obj = App->audio->GetSoundObject(obj_to_load);
 }

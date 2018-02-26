@@ -396,6 +396,21 @@
     <ClInclude Include="ModuleBlast.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentParticleEmmiter.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBillboard.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleData.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleParticleImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+	</ClInclude>
     <ClInclude Include="Include_Wwise.h">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClInclude>
@@ -1391,6 +1406,21 @@
     <ClCompile Include="ModuleBlast.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentParticleEmmiter.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBillboard.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleData.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleParticleImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+	</ClCompile>
     <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>

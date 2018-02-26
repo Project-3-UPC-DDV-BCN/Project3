@@ -15,6 +15,10 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
+#include "ModuleAudio.h"
+#include "ComponentParticleEmmiter.h"
+#include "ComponentAudioSource.h"
+#include "AudioEvent.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -925,6 +929,14 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	else if (name == "TheEngine.TheFactory")
 	{
 		comp_name = "TheFactory";
+	}
+	else if (name == "TheEngine.TheAudioSource")
+	{
+		comp_name = "TheAudioSource";
+	}
+	else if (name == "TheEngine.TheParticleEmmiter")
+	{
+		comp_name = "TheParticleEmmiter";
 	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
@@ -2017,4 +2029,129 @@ bool CSScript::GameObjectIsValid()
 		return false;
 	}
 	return true;
+}
+
+bool CSScript::IsMuted()
+{
+	return App->audio->IsMuted();
+}
+
+void CSScript::SetMute(bool set)
+{
+	App->audio->SetMute(set);
+}
+
+int CSScript::GetVolume()
+{
+	return App->audio->GetVolume();
+}
+
+void CSScript::SetVolume(int volume)
+{
+	App->audio->SetVolume(volume);
+}
+
+int CSScript::GetPitch()
+{
+	return App->audio->GetPitch();
+}
+
+void CSScript::SetPitch(int pitch)
+{
+	App->audio->SetPitch(pitch);
+}
+
+void CSScript::SetRTPvalue(MonoString* name, float value)
+{
+	const char* new_name = mono_string_to_utf8(name);
+	App->audio->SetRTPvalue(new_name, value);
+}
+
+bool CSScript::Play(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	return as->PlayEvent(event_name);
+}
+
+bool CSScript::Stop(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->StopEvent(event_name);
+}
+
+bool CSScript::Send(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->SendEvent(event_name);
+}
+
+void CSScript::PlayEmmiter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)active_gameobject->GetComponent(Component::CompParticleSystem);
+
+	if(emmiter != nullptr)
+		emmiter->PlayEmmiter(); 
+}
+
+void CSScript::StopEmmiter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)active_gameobject->GetComponent(Component::CompParticleSystem);
+
+	if (emmiter != nullptr)
+		emmiter->StopEmmiter();
 }

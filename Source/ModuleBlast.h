@@ -79,6 +79,7 @@ public:
 	void ApplyDamage();
 
 	void CleanFamilies();
+	void CleanFamily(Nv::Blast::ExtPxFamily* family);
 
 private:
 	Nv::Blast::TkFramework* framework;

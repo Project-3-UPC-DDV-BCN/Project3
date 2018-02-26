@@ -11,7 +11,7 @@ public:
 	enum ComponentType {
 		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompSphereCollider, CompCapsuleCollider, CompMeshCollider, CompAudioSource, 
 		CompAnimaton, CompScript, CompParticleSystem, CompFactory, CompFixedJoint, CompDistanceJoint, CompSphericalJoint, CompRevoluteJoint, CompPrismaticJoint, 
-		CompD6Joint, CompBlast, CompLight, CompAudioListener, CompAudioDistZone, CompUnknown
+		CompD6Joint, CompBlast, CompLight, CompAudioListener, CompAudioDistZone, CompBillboard, CompUnknown
 	};
 
 	Component();

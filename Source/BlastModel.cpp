@@ -71,7 +71,6 @@ bool BlastModel::Load(Data & data)
 		data.EnterSection("GameObject_" + std::to_string(i));
 		go->Load(data, true);
 		data.LeaveSection();
-		go->SetIsUsedInPrefab(true);
 		if (i == 0)
 		{
 			root = go;

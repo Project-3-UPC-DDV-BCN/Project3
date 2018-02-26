@@ -21,6 +21,7 @@ class TagsAndLayers;
 class ModuleMeshImporter;
 class ModuleTextureImporter;
 class ModulePrefabImporter;
+class ModuleParticleImporter; 
 class ModuleMaterialImporter;
 class ModuleScriptImporter;
 class ModuleShaderImporter;
@@ -90,6 +91,7 @@ public:
 	ModulePhysics* physics;
 	ModulePhysMatImporter* phys_mats_importer;
 	ModuleBlastMeshImporter* blast_mesh_importer;
+	ModuleParticleImporter* particle_importer; 
 	ModuleShaderImporter* shader_importer;
 	ModuleBlast* blast;
 

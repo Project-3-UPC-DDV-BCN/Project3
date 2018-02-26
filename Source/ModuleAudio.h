@@ -61,11 +61,17 @@ public:
 	SoundBank* GetSoundBank() const;
 	void SetSoundBank(SoundBank* soundbank);
 	void SetListenerCreated(bool set);
+	
+	bool IsMuted();
+	void SetMute(const bool set);
+	int GetVolume();
+	void SetVolume(const int volume);
+	int GetPitch();
+	void SetPitch(const int pitch);
+
+	bool* IsMutedPtr();
 	int* GetVolumePtr();
 	int* GetPitchPtr();
-
-	bool IsMuted();
-	bool* IsMutedPtr();
 
 private:
 
@@ -86,6 +92,8 @@ private:
 	bool muted = false;
 
 	JSONTool* json = nullptr;
+
+	bool stop_all = false;
 };
 
 #endif // __ModuleAudio_H__

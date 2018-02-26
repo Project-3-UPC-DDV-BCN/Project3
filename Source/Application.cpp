@@ -17,6 +17,7 @@
 #include "Data.h"
 #include "TagsAndLayers.h"
 #include "ModuleMaterialImporter.h"
+#include "ModuleParticleImporter.h"
 #include "ModuleScriptImporter.h"
 #include "ModulePhysics.h"
 #include "ModulePhysMatImporter.h"
@@ -50,6 +51,7 @@ Application::Application()
 	physics = new ModulePhysics(this);
 	phys_mats_importer = new ModulePhysMatImporter(this);
 	blast_mesh_importer = new ModuleBlastMeshImporter(this);
+	particle_importer = new ModuleParticleImporter(this); 
 	shader_importer = new ModuleShaderImporter(this);
 	blast = new ModuleBlast(this);
 
@@ -70,6 +72,7 @@ Application::Application()
 	AddModule(script_importer);
 	AddModule(phys_mats_importer);
 	AddModule(shader_importer);
+	AddModule(particle_importer); 
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
@@ -104,6 +107,7 @@ Application::~Application()
 	texture_importer = nullptr;
 	prefab_importer = nullptr;
 	material_importer = nullptr;
+	particle_importer = nullptr; 
 	script_importer = nullptr;
 	phys_mats_importer = nullptr;
 	physics = nullptr;
@@ -358,10 +362,12 @@ void Application::Play()
 		{
 			App->file_system->Create_Directory(TMP_FOLDER_PATH);
 		}
+
 		App->scene->SaveScene(TMP_FOLDER"tmp_scene");
 		App->scene->saving_index = 0;
 		App->scene->is_game = true;
 		App->scene->InitScripts();
+		App->scene->SetParticleSystemsState(); 
 	}
 }
 

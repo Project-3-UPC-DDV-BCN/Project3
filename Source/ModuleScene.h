@@ -3,10 +3,12 @@
 #include "MathGeoLib\MathBuildConfig.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include "Primitive.h"
+#include "ComponentParticleEmmiter.h"
 #include <map>
 #include <string>
 #include "Octree.h"
 #include "imgui\ImGuizmo\ImGuizmo.h"
+
 
 class GameObject;
 class Texture;
@@ -65,6 +67,8 @@ public:
 
 	void InitScripts();
 
+	void SetParticleSystemsState();
+
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
 	void HandleInput();
@@ -75,6 +79,7 @@ public:
 	std::list<GameObject*> scene_gameobjects;
 	std::map<std::string, int> scene_gameobjects_name_counter;
 	std::list<ComponentCamera*> scene_cameras;
+	std::list<ComponentParticleEmmiter*> scene_emmiters; 
 	std::list<ComponentMeshRenderer*> static_meshes;
 	std::list<ComponentMeshRenderer*> dynamic_meshes;
 	Octree octree;
@@ -94,5 +99,4 @@ public:
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;
-	
 };

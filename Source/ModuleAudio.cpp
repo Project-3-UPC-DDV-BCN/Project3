@@ -44,7 +44,7 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Test.bnk");
+	LoadSoundBank("Ship_Soundbank.bnk");
 	
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
@@ -59,6 +59,16 @@ bool ModuleAudio::Start()
 
 update_status ModuleAudio::PreUpdate(float dt)
 {
+	if ((App->IsStopped() || App->IsPaused()) && !stop_all)
+	{
+		AK::SoundEngine::StopAll();
+		stop_all = true;
+	}
+	else if (App->IsPlaying() && stop_all)
+	{
+		stop_all = false;
+	}
+
 	if (!muted) {
 		SetRTPvalue("Volume", volume);
 		SetRTPvalue("Pitch", pitch);
@@ -326,6 +336,51 @@ void ModuleAudio::SetListenerCreated(bool set)
 	listener_created = set;
 }
 
+bool ModuleAudio::IsMuted()
+{
+	return muted;
+}
+
+void ModuleAudio::SetMute(const bool set)
+{
+	muted = set;
+}
+
+int ModuleAudio::GetVolume()
+{
+	return volume;
+}
+
+void ModuleAudio::SetVolume(const int volume)
+{
+	if (volume > 100)
+		this->volume = 100;
+	else if (volume < 0)
+		this->volume = 0;
+	else
+		this->volume = volume;
+}
+
+int ModuleAudio::GetPitch()
+{
+	return pitch;
+}
+
+void ModuleAudio::SetPitch(const int pitch)
+{
+	if (pitch > 100)
+		this->pitch = 100;
+	else if (pitch < 0)
+		this->pitch = 0;
+	else
+		this->pitch = pitch;
+}
+
+bool * ModuleAudio::IsMutedPtr()
+{
+	return &muted;
+}
+
 int * ModuleAudio::GetVolumePtr()
 {
 	return &volume;
@@ -334,14 +389,4 @@ int * ModuleAudio::GetVolumePtr()
 int * ModuleAudio::GetPitchPtr()
 {
 	return &pitch;
-}
-
-bool ModuleAudio::IsMuted()
-{
-	return muted;
-}
-
-bool * ModuleAudio::IsMutedPtr()
-{
-	return &muted;
 }

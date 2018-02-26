@@ -25,8 +25,10 @@ public class Slave1Movement {
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
 	}
 	
-	void Update () 
+	void Update ()
 	{
+		TheAudio.SetRTPvalue("Speed", curr_vel);
+
 		//int rjoy_up = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_UP");
 		//int rjoy_down = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_DOWN");
 		//int rjoy_right = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_RIGHT");

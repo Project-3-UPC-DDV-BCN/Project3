@@ -289,6 +289,24 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Log", (const void*)Log);
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Warning", (const void*)Warning);
 	mono_add_internal_call("TheEngine.TheConsole.TheConsole::Error", (const void*)Error);
+
+	//Audio
+	mono_add_internal_call("TheEngine.TheAudio::IsMuted", (const void*)IsMuted);
+	mono_add_internal_call("TheEngine.TheAudio::SetMute", (const void*)SetMute);
+	mono_add_internal_call("TheEngine.TheAudio::GetVolume", (const void*)GetVolume);
+	mono_add_internal_call("TheEngine.TheAudio::SetVolume", (const void*)SetVolume);
+	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
+	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
+	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
+	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
+
+	mono_add_internal_call("TheEngine.TheAudioSource::Play", (const void*)Play);
+	mono_add_internal_call("TheEngine.TheAudioSource::Stop", (const void*)Stop);
+	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
+
+	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
+	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
+
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -584,4 +602,63 @@ void ModuleScriptImporter::Error(MonoObject * object)
 		const char* message = mono_string_to_utf8(str2);
 		CONSOLE_ERROR("%s", message);
 	}
+}
+
+bool ModuleScriptImporter::IsMuted()
+{
+	return current_script->IsMuted();
+}
+
+void ModuleScriptImporter::SetMute(bool set)
+{
+	current_script->SetMute(set);
+}
+
+int ModuleScriptImporter::GetVolume() 
+{
+	return current_script->GetVolume();
+}
+
+void ModuleScriptImporter::SetVolume(int volume)
+{
+	current_script->SetVolume(volume);
+}
+
+int ModuleScriptImporter::GetPitch()
+{
+	return current_script->GetPitch();
+}
+
+void ModuleScriptImporter::SetPitch(int pitch)
+{
+	current_script->SetPitch(pitch);
+}
+
+void ModuleScriptImporter::SetRTPvalue(MonoString* name, float value)
+{
+	current_script->SetRTPvalue(name, value);
+}
+
+bool ModuleScriptImporter::Play(MonoObject * object, MonoString * name)
+{
+	return current_script->Play(object, name);
+}
+
+bool ModuleScriptImporter::Stop(MonoObject * object, MonoString * name)
+{
+	return current_script->Stop(object, name);
+}
+
+bool ModuleScriptImporter::Send(MonoObject * object, MonoString * name)
+{
+	return current_script->Send(object, name);
+}
+
+void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
+{
+	current_script->PlayEmmiter(object); 
+}
+void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
+{
+	current_script->StopEmmiter(object);
 }

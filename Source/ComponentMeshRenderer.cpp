@@ -89,6 +89,8 @@ void ComponentMeshRenderer::UnloadFromMemory()
 
 void ComponentMeshRenderer::Save(Data & data) const
 {
+
+
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());

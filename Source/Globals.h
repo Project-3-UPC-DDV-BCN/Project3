@@ -96,12 +96,15 @@ enum update_status
 #define LIBRARY_SHADERS_FOLDER_PATH "./Project/Library/Shaders"
 #define LIBRARY_BMODEL_FOLDER "./Project/Library/B_Models/"
 #define LIBRARY_BMODEL_FOLDER_PATH "./Project/Library/B_Models"
+#define LIBRARY_PARTICLES_FOLDER "./Project/Library/Particles/"
+#define LIBRARY_PARTICLES_FOLDER_PATH "./Project/Library/Particles"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"
 #define EDITOR_STYLE_FILE "./Editor_Settings/Editor_Style.json"
 #define EDITOR_IMAGES_FOLDER "./Editor_Settings/Images/"
 #define EDITOR_FONTS_FOLDER "./Editor_Settings/Fonts/"
+#define EDITOR_PARTICLE_FOLDER "./Editor_Settings/Particle_Templates/"
 #define EDITOR_SKYBOX_FOLDER "./Editor_Settings/Images/Sky_Box/"
 
 #define LOGS_FOLDER "./Logs/"
@@ -118,3 +121,5 @@ enum update_status
 #define SHADER_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Shaders"
 #define MATERIAL_DEFAULT_FOLDER "./Editor_Settings/Default_Materials/"
 #define MATERIAL_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Materials"
+#define DEFAULT_PARTICLE_TEMPLATE_FOLDER "./Editor_Settings/Default_Particle_Template/"
+#define DEFAULT_PARTICLE_TEMPLATE_PATH "./Editor_Settings/Default_Particle_Template"

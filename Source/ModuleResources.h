@@ -12,6 +12,7 @@ class Material;
 class Script;
 class PhysicsMaterial;
 class BlastModel;
+class ParticleData; 
 class Shader;
 class ShaderProgram;
 
@@ -83,6 +84,12 @@ public:
 	void RemoveShader(Shader* shader);
 	std::map<uint, Shader*> GetShadersList() const;
 
+	ParticleData* GetParticleTemplate(std::string name) const;
+	ParticleData* GetParticleTemplate(UID uid) const;
+	void AddParticleTemplate(ParticleData* texture);
+	void RemoveParticleTemplate(ParticleData* texture);
+	std::map<uint, ParticleData*> GetParticlesList() const;
+
 	ShaderProgram* GetShaderProgram(std::string name) const;
 	ShaderProgram* GetShaderProgram(UID uid) const;
 	ShaderProgram* GetShaderProgram(Shader* vertex, Shader* fragment) const;
@@ -105,6 +112,8 @@ public:
 	//Checks if name is valid (not contain invalid characters) and change it for a valid name if necessary
 	bool CheckResourceName(std::string& name);
 
+	
+
 private:
 	void DeleteFBXMeshes(GameObject* gameobject);
 
@@ -120,6 +129,7 @@ private:
 	std::map<uint, Script*> scripts_list;
 	std::map<uint, PhysicsMaterial*> phys_materials_list;
 	std::map<uint, BlastModel*> blast_models_list;
+	std::map<uint, ParticleData*> particles_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 };

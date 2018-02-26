@@ -16,8 +16,19 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	light_offset_direction = float3::zero;
 	position = float3::zero;
 	SetTypeToSpot();
-	/*SetDirectionOffset({ 0,0,0 });*/
-	//SetPositionOffset({ 0,0,0 });
+
+	(attached_gameobject) ? view.SetPos(attached_gameobject->GetGlobalTransfomMatrix().TranslatePart()) : view.SetPos(float3::zero);
+	(attached_gameobject) ? view.SetFront(attached_gameobject->GetGlobalTransfomMatrix().WorldZ()) : view.SetFront(float3::unitZ);
+	(attached_gameobject) ? view.SetUp(attached_gameobject->GetGlobalTransfomMatrix().WorldY()) : view.SetUp(float3::unitY);
+
+	view.SetKind(math::FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	view.SetViewPlaneDistances(0.3f, 1000.0f);
+
+	aspect_ratio = SHADOW_WIDTH / SHADOW_HEIGHT;
+
+	view.SetHorizontalFovAndAspectRatio(view.VerticalFov() * DEGTORAD, aspect_ratio);
+
+
 }
 
 ComponentLight::~ComponentLight()
@@ -135,6 +146,7 @@ void ComponentLight::SetTypeToPoint()
 	cutOff = 0;
 	outercutOff = 0;
 	type = POINT_LIGHT;
+
 	//SetDirectionOffset({ 0,0,0 });
 
 	App->renderer3D->AddLight(this);
@@ -284,4 +296,30 @@ void ComponentLight::SetDirectionFromGO(float3 pre_direction)
 void ComponentLight::SetPositionFromGO(float3 pre_position)
 {
 	position = pre_position + light_offset_pos;
+}
+
+void ComponentLight::UpdateViewPosition()
+{
+	view.SetPos(GetGameObject()->GetGlobalTransfomMatrix().TranslatePart());
+	view.SetFront(GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized());
+	view.SetUp(GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized());
+}
+
+float * ComponentLight::GetProjectionMatrix() const
+{
+	static float4x4 matrix;
+
+	matrix = view.ProjectionMatrix();
+	matrix.Transpose();
+
+	return (float*)matrix.v;
+}
+
+float * ComponentLight::GetViewMatrix()
+{
+	static float4x4 matrix;
+	matrix = view.ViewMatrix();
+	matrix.Transpose();
+
+	return (float*)matrix.v;
 }

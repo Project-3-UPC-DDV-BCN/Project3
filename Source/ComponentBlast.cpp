@@ -24,7 +24,10 @@ ComponentBlast::ComponentBlast(GameObject* attached_gameobject)
 
 ComponentBlast::~ComponentBlast()
 {
-
+	if (blast_model)
+	{
+		App->blast->CleanFamily(blast_model->family);
+	}
 }
 
 void ComponentBlast::SetTransform(float* transform)

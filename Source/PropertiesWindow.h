@@ -6,6 +6,8 @@
 class ComponentMeshRenderer;
 class ComponentTransform;
 class ComponentCamera;
+class ComponentParticleEmmiter; 
+class ComponentBillboard;
 class Component;
 class ComponentScript;
 class ComponentFactory;
@@ -36,6 +38,8 @@ public:
 	void DrawRigidBodyPanel(ComponentRigidBody* rigidbody);
 	void DrawColliderPanel(ComponentCollider* collider);
 	void DrawJointDistancePanel(ComponentJointDistance* joint);
+	void DrawParticleEmmiterPanel(ComponentParticleEmmiter* camera);
+	void DrawBillboardPanel(ComponentBillboard* camera);
 	void DrawAudioListener(ComponentListener* listener);
 	void DrawAudioSource(ComponentAudioSource* audio_source);
 	void DrawAudioDistZone(ComponentDistorsionZone* dist_zone);
@@ -46,6 +50,7 @@ private:
 	int factories_count;
 	int colliders_count;
 	int distance_joints_count;
+	bool rename_template; 
 	int lights_count;
 };
 

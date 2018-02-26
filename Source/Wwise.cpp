@@ -3,6 +3,7 @@
 #include <string>
 #include "Globals.h"
 #include "include_wwise.h"
+
 #include "Wwise/IO/Win32/AkFilePackageLowLevelIOBlocking.h"
 #include <AK/Plugin/AkRoomVerbFXFactory.h>
 #include <AK\SoundEngine\Common\AkSoundEngine.h>

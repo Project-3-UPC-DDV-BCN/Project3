@@ -5,7 +5,7 @@
 #include "Application.h"
 #include "ComponentBlast.h"
 
-ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
+ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
 	SetActive(true);
 	SetName("Transform");
@@ -20,6 +20,8 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
 	global_rot = float3(0.f, 0.f, 0.f);
 	global_scale = float3(1.f, 1.f, 1.f);
 	transform_matrix.SetIdentity();
+
+	this->is_particle = is_particle; 
 }
 
 ComponentTransform::~ComponentTransform()
@@ -44,11 +46,14 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
+
 	float3 diff = rotation - shown_rotation;
 	shown_rotation = rotation;
+
 	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
 	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
+
 }
 
 float3 ComponentTransform::GetGlobalRotation() const
@@ -84,8 +89,8 @@ float3 ComponentTransform::GetLocalScale() const
 
 void ComponentTransform::UpdateGlobalMatrix()
 {
-
-	if (!this->GetGameObject()->IsRoot())
+	
+	if (!is_particle && !this->GetGameObject()->IsRoot())
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
@@ -108,10 +113,14 @@ void ComponentTransform::UpdateGlobalMatrix()
 	else
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+
+		if (!is_particle)
 		{
-			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-			child_transform->UpdateGlobalMatrix();
+			for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+			{
+				ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+				child_transform->UpdateGlobalMatrix();
+			}
 		}
 
 		global_pos = position;
@@ -119,33 +128,39 @@ void ComponentTransform::UpdateGlobalMatrix()
 		global_scale = scale;
 	}
 
-	GetGameObject()->UpdateBoundingBox();
-	//If gameobject has a camera component
-	GetGameObject()->UpdateCamera();
-
-	if (!App->IsPlaying())
+	if (!is_particle)
 	{
-		ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-		if (rb)
+		GetGameObject()->UpdateBoundingBox();
+		//If gameobject has a camera component
+		GetGameObject()->UpdateCamera();
+
+		if (!App->IsPlaying())
 		{
-			rb->SetTransform(transform_matrix.Transposed().ptr());
-		}
-		else
-		{
-			ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
-			if (blast)
+			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+			if (rb)
 			{
-				blast->SetTransform(transform_matrix.Transposed().ptr());
+				rb->SetTransform(transform_matrix.Transposed().ptr());
+			}
+			else
+			{
+				ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
+				if (blast)
+				{
+					blast->SetTransform(transform_matrix.Transposed().ptr());
+				}
 			}
 		}
 	}
-	
+		
+//POSSIBLEEE
+
 	//ComponentLight* light = (ComponentLight*)GetGameObject()->GetComponent(Component::CompLight);
 	//if (light)
 	//{
 	//	//light->SetPositionFromGO(global_pos);
 	//	light->SetDirectionFromGO(global_rot);
 	//}
+
 }
 
 float4x4 ComponentTransform::GetMatrix() const
@@ -162,6 +177,12 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 {
 	transform_matrix = matrix;
 
+	if (GetGameObject() == nullptr)
+	{
+		transform_matrix = matrix;
+		return; 
+	}
+		
 	if (this->GetGameObject()->IsRoot())
 	{
 		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)

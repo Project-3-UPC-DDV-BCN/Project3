@@ -6,7 +6,7 @@ class ComponentTransform :
 	public Component
 {
 public:
-	ComponentTransform(GameObject* attached_gameobject);
+	ComponentTransform(GameObject* attached_gameobject, bool is_particle = false);
 	virtual ~ComponentTransform();
 
 	void SetPosition(float3 position);
@@ -41,5 +41,7 @@ private:
 	float3 global_scale;
 
 	float4x4 transform_matrix;
+
+	bool is_particle; 
 };
 
