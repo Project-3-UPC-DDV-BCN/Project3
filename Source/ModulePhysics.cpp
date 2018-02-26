@@ -156,7 +156,7 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 	
-	DrawColliders();
+	//DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -506,7 +506,7 @@ void ModulePhysics::CreateScene()
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
 	physx::PxRigidActor* rigid_actor = static_cast<physx::PxRigidActor*>(actor);
-	if (rigid_actor->userData != nullptr)
+	if (rigid_actor->userData == nullptr)
 	{
 		if (physics_objects.find(rigid_actor) != physics_objects.end())
 		{
