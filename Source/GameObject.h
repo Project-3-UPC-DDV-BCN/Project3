@@ -53,6 +53,9 @@ public:
 	void InitScripts();
 	void StartScripts();
 	void UpdateScripts();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 
 	void UpdateFactory();
 

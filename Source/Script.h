@@ -34,9 +34,9 @@ public:
 	virtual void InitScript() = 0;
 	virtual void StartScript() = 0;
 	virtual void UpdateScript() = 0;
-	virtual void OnCollisionEnter() = 0;
-	virtual void OnCollisionStay() = 0;
-	virtual void OnCollisionExit() = 0;
+	virtual void OnCollisionEnter(GameObject* gameobject) = 0;
+	virtual void OnCollisionStay(GameObject* gameobject) = 0;
+	virtual void OnCollisionExit(GameObject* gameobject) = 0;
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;
 

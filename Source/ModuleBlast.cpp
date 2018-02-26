@@ -247,8 +247,8 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 			//physx::PxVec3 vel = dr.getNormalized() * impulse / actor.getPhysXActor().getMass();
 			//actor.getPhysXActor().setLinearVelocity(actor.getPhysXActor().getLinearVelocity() + vel);
 		}
-		/*App->physics->AddActorToList(rigid_body, go);
-		if (rb)
+		//App->physics->AddActorToList(, go);
+		/*if (rb)
 		{
 			rb->SetNewRigidBody(rigid_body);
 		}*/

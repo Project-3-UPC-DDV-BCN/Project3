@@ -444,7 +444,7 @@ void ModuleScene::NewScene(bool loading_scene)
 void ModuleScene::LoadScene(std::string path)
 {
 	Data data;
-	if (data.LoadJSON(path)) 
+	if (data.LoadBinary(path)) 
 	{
 		NewScene(true);
 		scene_name = data.GetString("Scene Name");
@@ -472,7 +472,7 @@ void ModuleScene::LoadScene(std::string path)
 			}
 		}
 		data.ClearData();
-		if (data.LoadJSON(path)) {
+		if (data.LoadBinary(path)) {
 			std::list<GameObject*>::iterator it = scene_gameobjects.begin();
 			for (int i = 0; i < gameObjectsCount; i++) {
 				data.EnterSection("GameObject_" + std::to_string(i));
@@ -498,7 +498,7 @@ void ModuleScene::SaveScene(std::string path) const
 	for (std::list<GameObject*>::const_iterator it = root_gameobjects.begin(); it != root_gameobjects.end(); it++) {
 		(*it)->Save(data);
 	}
-	data.SaveAsJSON(path);
+	data.SaveAsBinary(path);
 }
 
 void ModuleScene::LoadPrefab(Prefab* prefab)
@@ -521,8 +521,8 @@ void ModuleScene::CreatePrefab(GameObject * gameobject)
 	prefab->SetLibraryPath(library_path);
 	prefab->SetName(gameobject->GetName());
 	prefab->Save(data);
-	data.SaveAsJSON(assets_path);
-	data.SaveAsJSON(library_path);
+	data.SaveAsBinary(assets_path);
+	data.SaveAsBinary(library_path);
 	
 	//Won't use this prefab, instead create a new resource from this prefab
 	delete prefab;

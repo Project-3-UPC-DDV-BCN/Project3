@@ -44,6 +44,33 @@ void ComponentScript::UpdateScript()
 	}
 }
 
+void ComponentScript::OnCollisionEnter(GameObject* other_collider)
+{
+	if (script)
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		//script->OnCollisionEnter(other_collider);
+	}
+}
+
+void ComponentScript::OnCollisionStay(GameObject* other_collider)
+{
+	if (script)
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		//script->OnCollisionStay(other_collider);
+	}
+}
+
+void ComponentScript::OnCollisionExit(GameObject* other_collider)
+{
+	if (script)
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		//script->OnCollisionExit(other_collider);
+	}
+}
+
 void ComponentScript::SetScript(Script * script)
 {
 	this->script = script;

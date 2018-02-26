@@ -107,7 +107,7 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 					{
 						if (bone_index == infl[i])
 						{
-							indRemap[i] = (int32_t)vertex_data.size() / 13;
+							indRemap[i] = (int32_t)vertex_data.size() / 19;
 							vertex_data.push_back(vertice_pos[i].x);
 							vertex_data.push_back(vertice_pos[i].y);
 							vertex_data.push_back(vertice_pos[i].z);
@@ -121,16 +121,22 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 							vertex_data.push_back(1);
 							vertex_data.push_back(1);
 							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
+							vertex_data.push_back(1);
 						}
 					}
 
 					int vertex_data_size = vertex_data.size();
 					Mesh* mesh = new Mesh();
 					mesh->SetName(name_without_extension + "_chunk_" + std::to_string(bone_index));
-					mesh->num_vertices = vertex_data.size() / 13;
+					mesh->num_vertices = vertex_data.size() / 19;
 					mesh->vertices_data = new float[vertex_data_size];
 					
-					for (int i = 0; i < vertex_data_size; i += 13)
+					for (int i = 0; i < vertex_data_size; i += 19)
 					{
 						mesh->vertices_data[i] = vertex_data[i];
 						mesh->vertices_data[i + 1] = vertex_data[i + 1];
@@ -145,6 +151,12 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 						mesh->vertices_data[i + 10] = vertex_data[i + 10];
 						mesh->vertices_data[i + 11] = vertex_data[i + 11];
 						mesh->vertices_data[i + 12] = vertex_data[i + 12];
+						mesh->vertices_data[i + 13] = vertex_data[i + 13];
+						mesh->vertices_data[i + 14] = vertex_data[i + 14];
+						mesh->vertices_data[i + 15] = vertex_data[i + 15];
+						mesh->vertices_data[i + 16] = vertex_data[i + 16];
+						mesh->vertices_data[i + 17] = vertex_data[i + 17];
+						mesh->vertices_data[i + 18] = vertex_data[i + 18];
 					}
 
 					std::vector<int> indices_data;

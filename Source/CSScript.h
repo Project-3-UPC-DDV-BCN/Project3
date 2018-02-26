@@ -20,9 +20,9 @@ public:
 	void InitScript();
 	void StartScript();
 	void UpdateScript();
-	void OnCollisionEnter();
-	void OnCollisionStay();
-	void OnCollisionExit();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
 
