@@ -63,7 +63,6 @@
       </LanguageStandard>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -83,7 +82,6 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-	  
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -117,17 +115,17 @@
     <ClInclude Include="ComponentJointRevolute.h" />
     <ClInclude Include="ComponentJointSpherical.h" />
     <ClInclude Include="ComponentJointPrismatic.h" />
-    <ClInclude Include="ComponentRigidBody.h" />
-    <ClInclude Include="ComponentLight.h" />
     <ClInclude Include="ComponentProgressBar.h" />
     <ClInclude Include="ComponentRectTransform.h" />
+    <ClInclude Include="ComponentRigidBody.h" />
+    <ClInclude Include="ComponentLight.h" />
     <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="ComponentText.h" />
     <ClInclude Include="CSScript.h" />
     <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="ComponentDistorsionZone.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Font.h" />
-    <ClInclude Include="ComponentDistorsionZone.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="imgui\CustomImGui.h" />
     <ClInclude Include="imgui\ImGuiColorTextEdit\TextEditor.h" />
@@ -464,16 +462,15 @@
     <ClCompile Include="BlastModel.cpp" />
     <ClCompile Include="ComponentBillboard.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentCanvas.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentImage.cpp" />
     <ClCompile Include="ComponentParticleEmmiter.cpp" />
     <ClCompile Include="AudioEvent.cpp" />
     <ClCompile Include="ComponentAudioSource.cpp" />
     <ClCompile Include="AudioWindow.cpp" />
     <ClCompile Include="ComponentBlast.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
-    <ClCompile Include="ComponentCanvas.cpp" />
-    <ClCompile Include="ComponentFactory.cpp" />
-    <ClCompile Include="ComponentImage.cpp" />
     <ClCompile Include="ComponentCollider.cpp" />
     <ClCompile Include="ComponentJointDistance.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
@@ -481,17 +478,17 @@
     <ClCompile Include="ComponentJointRevolute.cpp" />
     <ClCompile Include="ComponentJointSpherical.cpp" />
     <ClCompile Include="ComponentJointPrismatic.cpp" />
-    <ClCompile Include="ComponentRigidBody.cpp" />
-    <ClCompile Include="ComponentLight.cpp" />
     <ClCompile Include="ComponentProgressBar.cpp" />
     <ClCompile Include="ComponentRectTransform.cpp" />
+    <ClCompile Include="ComponentRigidBody.cpp" />
+    <ClCompile Include="ComponentLight.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="ComponentText.cpp" />
     <ClCompile Include="CSScript.cpp" />
     <ClCompile Include="CubeMap.cpp" />
-    <ClCompile Include="Font.cpp" />
     <ClCompile Include="ComponentDistorsionZone.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="imgui\CustomImGui.cpp" />
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp" />

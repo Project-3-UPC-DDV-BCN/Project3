@@ -11,7 +11,7 @@ out vec4 color;
 uniform bool has_material_color;
 uniform vec4 material_color;
 uniform bool has_texture;
-uniform bool has_normalmap;
+uniform sampler2D ourTexture;
 
 uniform bool is_ui;
 struct Material {
@@ -19,6 +19,8 @@ struct Material {
 	sampler2D specular;
 	float shininess;
 };
+
+uniform bool has_normalmap;
 
 uniform sampler2D Tex_Diffuse;
 
@@ -82,45 +84,45 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
-	if (has_texture)
-	{
-		color = texture(Tex_Diffuse, TexCoord);
-	}
-	else if (has_material_color)
-		color = material_color;
-	else
-		color = ourColor;
-	
-	if(is_ui == false)
-	{
-		vec3 norm = normalize(Normal);
-		vec3 viewDir = normalize(viewPos - FragPos);
-		
-		vec3 normal;
-		vec3 viewDir;
-		vec3 fragPosarg;
-			if (has_normalmap)
-			{
-				normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);
-				vec3 TangentViewPos = TBN * viewPos;
-				viewDir = normalize(TangentViewPos - TangentFragPos);
-				fragPosarg = TangentFragPos;
-			}
-			else
-			{
-				normal = normalize(Normal);
-				viewDir = normalize(viewPos - FragPos);
-				fragPosarg = FragPos;
-			}
-	
-		vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
-		result += CalcDirLight(dirLights[i], normal, viewDir);
-		for (int k = 0; k < NR_POINT_LIGHTS; k++)
-		result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);
-		for (int j = 0; j < NR_SPOT_LIGHTS; j++)
-		result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
-		color = vec4(result, 1.0) + color * AMBIENT_LIGHT;
-	}
+if (has_texture)
+{
+	color = texture(Tex_Diffuse, TexCoord);
+}
+else if (has_material_color)
+	color = material_color;
+else
+	color = ourColor;
+
+if(is_ui == false){
+vec3 norm = normalize(Normal);
+vec3 viewDir = normalize(viewPos - FragPos);
+
+vec3 normal;
+vec3 viewDir;
+vec3 fragPosarg;
+if (has_normalmap)
+{
+normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);
+vec3 TangentViewPos = TBN * viewPos;
+viewDir = normalize(TangentViewPos - TangentFragPos);
+fragPosarg = TangentFragPos;
+}
+else
+{
+normal = normalize(Normal);
+viewDir = normalize(viewPos - FragPos);
+fragPosarg = FragPos;
+}
+vec3 result = vec3(0.0, 0.0, 0.0);for (int i = 0; i < NR_DIREC_LIGHTS; i++)
+result += CalcDirLight(dirLights[i], normal, viewDir);
+for (int k = 0; k < NR_POINT_LIGHTS; k++)
+result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);
+for (int j = 0; j < NR_SPOT_LIGHTS; j++)
+result += CalcSpotLight(spotLights[j], norm, FragPos, viewDir);
+color = vec4(result, 1.0);
+}
+result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
+color = vec4(result, 1.0) + color * AMBIENT_LIGHT;
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

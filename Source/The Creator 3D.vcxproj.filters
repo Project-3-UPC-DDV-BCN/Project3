@@ -52,9 +52,6 @@
     <Filter Include="Sources\3d Party\imGui\ImGuiTextEditor">
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\GameObject\Components\UI">
-      <UniqueIdentifier>{0bcff5f5-9b40-4c18-9fd0-5527b7c865e0}</UniqueIdentifier>
-	</Filter>
     <Filter Include="Sources\3d Party\Nvidia">
       <UniqueIdentifier>{0bad3b47-c021-4477-8e36-4c6dd026b74d}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,9 @@
     </Filter>
     <Filter Include="Sources\3d Party\Parson">
       <UniqueIdentifier>{1dbfddcf-d4e4-458f-9a0b-1f1ce259303c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameObject\Components\UI">
+      <UniqueIdentifier>{a89151dd-93f3-4407-8d21-204a484a11f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -413,7 +413,7 @@
     </ClInclude>
     <ClInclude Include="ModuleParticleImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Include_Wwise.h">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClInclude>
@@ -522,33 +522,6 @@
     <ClInclude Include="Wwise\include\AK\MusicEngine\Common\AkMusicEngine.h">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCanvas.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentImage.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentRectTransform.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentText.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugDraw.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="UsefulFunctions.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleFontImporter.h">
-      <Filter>Sources\Modules\Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentProgressBar.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-	</ClInclude>
     <ClInclude Include="Wwise\include\AK\Plugin\AkAudioInputPlugin.h">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClInclude>
@@ -1161,6 +1134,32 @@
     <ClInclude Include="MathGeoLib\TriangleMesh.h">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRectTransform.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentText.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentImage.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentProgressBar.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UsefulFunctions.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFontImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1200,9 +1199,6 @@
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysBody3D.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
@@ -1453,7 +1449,7 @@
     </ClCompile>
     <ClCompile Include="ModuleParticleImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -1733,10 +1729,9 @@
     <ClCompile Include="MathGeoLib\VectorTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentImage.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
     <ClCompile Include="ComponentRectTransform.cpp">
@@ -1745,20 +1740,20 @@
     <ClCompile Include="ComponentText.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="DebugDraw.cpp">
-      <Filter>Sources\Tools</Filter>
+    <ClCompile Include="ComponentImage.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentProgressBar.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleFontImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentProgressBar.cpp">
-      <Filter>Sources\GameObject\Components\UI</Filter>
+    <ClCompile Include="Font.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
