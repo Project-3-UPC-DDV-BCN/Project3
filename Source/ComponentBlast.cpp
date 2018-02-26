@@ -24,7 +24,7 @@ ComponentBlast::ComponentBlast(GameObject* attached_gameobject)
 
 ComponentBlast::~ComponentBlast()
 {
-	if (blast_model)
+	if (blast_model && App->blast)
 	{
 		App->blast->CleanFamily(blast_model->family);
 	}

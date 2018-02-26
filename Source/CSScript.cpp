@@ -1714,6 +1714,20 @@ float CSScript::GetDeltaTime()
 	return App->time->GetGameDt();
 }
 
+void CSScript::CreateTimer(MonoObject * object, float time)
+{
+	
+}
+
+float CSScript::ReadTime(MonoObject * object)
+{
+	return 0.0f;
+}
+
+void CSScript::ResetTime(MonoObject * object)
+{
+}
+
 mono_bool CSScript::IsKeyDown(MonoString * key_name)
 {
 	bool ret = false;

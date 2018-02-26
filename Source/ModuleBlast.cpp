@@ -147,6 +147,17 @@ update_status ModuleBlast::Update(float dt)
 					pos -= parent_transform->GetGlobalPosition();
 					transform->SetPosition(pos);
 					transform->SetRotation(rot);
+
+					if (it->second->actors.size() > 1)
+					{
+						physx::PxTransform phys_transform = actor->getPhysXActor().getGlobalPose() * subChunks[chunks[chunkIndex].firstSubchunkIndex].transform;
+						physx::PxVec3 dr = phys_transform.transform(actor->getPhysXActor().getCMassLocalPose()).p; //rigid_body->getGlobalPose().transform(rigid_body->getCMassLocalPose()).p/* - m_worldPos*/;
+						float distance = dr.magnitude();
+						float factor = physx::PxClamp(1.0f - (distance * distance) / (1 * 1), 0.0f, 1.0f);
+						float impulse = factor * 100/* * 1000.0f*/;
+						physx::PxVec3 vel = dr.getNormalized() * impulse / actor->getPhysXActor().getMass();
+						actor->getPhysXActor().setLinearVelocity(actor->getPhysXActor().getLinearVelocity() + vel);
+					}
 				}
 			}
 			it->first->postSplitUpdate();

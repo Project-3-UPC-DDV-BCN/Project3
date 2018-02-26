@@ -549,7 +549,7 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 		if (ImGui::DragFloat3("Rotation", (float*)&rotation, is_static, 0.25f)) {		
 			transform->SetRotation(rotation);
 		}
-		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f)) {
+		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f, 0.01f)) {
 			transform->SetScale(scale);
 		}
 	}

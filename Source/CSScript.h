@@ -123,6 +123,11 @@ public:
 	float GetTimeScale();
 	float GetDeltaTime();
 
+	//TIMER
+	void CreateTimer(MonoObject* object, float time);
+	float ReadTime(MonoObject* object);
+	void ResetTime(MonoObject* object);
+
 	//INPUT
 	mono_bool IsKeyDown(MonoString * key_name);
 	mono_bool IsKeyUp(MonoString* key_name);
@@ -196,6 +201,7 @@ private:
 	std::vector<ScriptField*> script_fields;
 	bool modifying_self;
 	std::map<MonoObject*, GameObject*> created_gameobjects;
+	//std::map<MonoObject*, PerfTimer*> created_timers;
 	GameObject* active_gameobject;
 	bool inside_function;
 

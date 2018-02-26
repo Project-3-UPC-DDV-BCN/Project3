@@ -2,7 +2,7 @@
 
 namespace TheEngine.Math
 {
-    public class Math
+    public class TheMath
     {
         public const float PI = 3.14159265358979323846f;
         public const float Infinity = float.PositiveInfinity;

@@ -74,6 +74,7 @@ bool BlastModel::Load(Data & data)
 		if (i == 0)
 		{
 			root = go;
+			root->SetNewUID();
 		}
 		else
 		{

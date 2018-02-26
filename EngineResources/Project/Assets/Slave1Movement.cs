@@ -6,11 +6,13 @@ public class Slave1Movement {
 	TheTransform trans;
 	public int controller_sensibility = 100;
 	public int trigger_sensibility = 0;
-	public float rotate_speed = 1.0f;
+	public float roll_rotate_speed = 1.0f;
+	public float pitch_rotate_speed = 10.0f;
+	public float yaw_rotate_speed = 10.0f;
 	public float max_vel = 10.0f;
 	public float acceleration = 1.0f;
 	public float slow_acceleration = 10.0f;
-
+	public float slow_vel_percent = 0.02f;
 	public float rotate_rumble_strength = 0.1f;
 	public float accel_max_rumble_strength = 1.0f;
 	public int rotate_rumble_ms = 5;
@@ -18,17 +20,109 @@ public class Slave1Movement {
 	
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
+	private float curr_max_vel = 10.0f;
 	bool slowing = false;
+	public bool invert_axis = false;
 	
+	public float slow_time = 2.0f;
+	//Energy management
+	public int max_energy = 6;
+	public int shield_energy = 2;
+	public int weapon_energy = 2;
+	public int engine_energy = 2;
+	public int max_energy_on_system = 4;
+	
+	private float slow_timer = 0;
+
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
+
+		if(shield_energy+weapon_energy+engine_energy > max_energy)
+			TheConsole.Warning("Energy is not properly set up!");
+		
+		//for halves, consider a point each 2 
+		max_energy *= 2;
+		shield_energy *= 2;
+		weapon_energy *= 2;
+		engine_energy *= 2;
+		max_energy_on_system *= 2;
+		
+		curr_max_vel = max_vel;
 	}
 	
-	void Update ()
+	void Update () 
 	{
-		TheAudio.SetRTPvalue("Speed", curr_vel);
+		Movement();
+		EnergyManagement();
+		SetValuesWithEnergy();
+	}
 
+	void SetValuesWithEnergy()
+	{
+		curr_max_vel = 0.5f*max_vel + ((12.5f*(float)engine_energy)/100)*max_vel;
+	}
+
+	void EnergyManagement()
+	{
+		if(TheInput.IsKeyDown("UP_ARROW"))
+		{
+			if(shield_energy < max_energy_on_system-1)
+			{
+				shield_energy += 2;
+				if(weapon_energy > 0 && engine_energy > 0)
+				{
+					weapon_energy -= 1;
+					engine_energy -= 1;
+				}
+				else if(weapon_energy > 2)
+					weapon_energy -= 2;
+				else engine_energy -=2;
+			}
+		}
+		
+		if(TheInput.IsKeyDown("LEFT_ARROW"))
+		{
+			if(weapon_energy < max_energy_on_system-1)
+			{
+				weapon_energy += 2;
+				if(shield_energy > 0 && engine_energy > 0)
+				{
+					shield_energy -= 1;
+					engine_energy -= 1;
+				}
+				else if(shield_energy > 2)
+					shield_energy -= 2;
+				else engine_energy -=2;
+			}
+		}
+
+		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		{
+			if(engine_energy < max_energy_on_system-1)
+			{
+				engine_energy += 2;
+				if(shield_energy > 0 && weapon_energy > 0)
+				{
+					shield_energy -= 1;
+					weapon_energy -= 1;
+				}
+				else if(shield_energy > 2)
+					shield_energy -= 2;
+				else weapon_energy -=2;
+			}
+		}
+
+		if(TheInput.IsKeyDown("DOWN_ARROW"))
+		{
+			shield_energy = 4;
+			weapon_energy = 4;
+			engine_energy = 4;
+		}
+	}
+
+	void Movement()
+	{
 		//int rjoy_up = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_UP");
 		//int rjoy_down = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_DOWN");
 		//int rjoy_right = TheInput.GetControllerJoystickMove(0,"RIGHTJOY_RIGHT");
@@ -46,7 +140,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.x -= rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x += pitch_rotate_speed*move_percentage*Time.DeltaTime;
+			else new_rot.x -= pitch_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -54,7 +149,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_down - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.x += rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x -= pitch_rotate_speed*move_percentage*Time.DeltaTime;
+			else new_rot.x += pitch_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -62,7 +158,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y -= rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y -= yaw_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -70,7 +166,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y += rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y += yaw_rotate_speed*move_percentage*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 		
@@ -84,7 +180,7 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_RB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z += rotate_speed*Time.DeltaTime;
+			new_rot.z += roll_rotate_speed*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
@@ -92,19 +188,26 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_LB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z -= rotate_speed*Time.DeltaTime;
+			new_rot.z -= roll_rotate_speed*Time.DeltaTime;
 			trans.LocalRotation = new_rot;
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
 		
+		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
+			//slow_timer = Time.time;
+
 		slowing = false;
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
 		{
-			vel_percent = 0.02f;
-			slowing = true;
+			//TheConsole.Log(Time.time);
+			//if(Time.time - slow_timer < slow_time)
+			//{
+				//vel_percent = slow_vel_percent;
+				//slowing = true;
+			//}
 		}
 
-		float target_vel = vel_percent*max_vel;
+		float target_vel = vel_percent*curr_max_vel;
 
 		if(curr_vel < target_vel) 
 		{

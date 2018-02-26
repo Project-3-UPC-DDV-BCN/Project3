@@ -2,7 +2,7 @@
 
 namespace TheEngine
 {
-    public class Time
+    public class TheTime
     {
         public static float TimeScale
         {

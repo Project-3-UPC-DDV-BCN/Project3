@@ -377,6 +377,11 @@ bool GameObject::GetIsUsedInPrefab() const
 	return is_used_in_prefab;
 }
 
+void GameObject::SetNewUID()
+{
+	uuid = App->RandomNumber().Int();
+}
+
 int GameObject::GetAllChildsCount() const
 {
 	int count = childs.size();
