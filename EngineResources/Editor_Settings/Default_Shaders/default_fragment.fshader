@@ -125,16 +125,18 @@ result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
 color = vec4(result, 1.0) + color * AMBIENT_LIGHT;
 }
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
+	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
 	if (light.active == true)
-	{
-vec3 lightDir;
+{
+	vec3 lightDir;
 	if (has_normalmap)
 	{
-	lightDir = normalize(-TBN * light.direction);
+		lightDir = normalize(-TBN * light.direction);
 	}
-	else lightDir = (-light.direction);
+	else
+	{
+		lightDir = (-light.direction);
 		float diff = max(dot(lightDir, normal), 0.0);
 		vec3 reflectDir = reflect(-lightDir, normal);
 		vec3 halfwayDir = normalize(lightDir + viewDir);
@@ -144,6 +146,81 @@ vec3 lightDir;
 		vec3 specular = light.specular * spec;
 		return (ambient + diffuse + specular) * vec3(light.color);
 	}
+}
+else
+	return vec3(0.0, 0.0, 0.0);
+}
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+	if (light.active == true)
+	{
+	vec3 lightPos; vec3 lightDir;
+	if (has_normalmap)
+	{
+		lightPos = TBN * light.position;
+		lightDir = normalize(lightPos - fragPos);	}
 	else
-		color = ourColor;
+{
+		lightPos = light.position;
+		lightDir = normalize(light.position - fragPos);
+
+}
+		float diff = max(dot(lightDir, normal), 0.0);
+
+		vec3 reflectDir = reflect(-lightDir, normal);
+		vec3 halfwayDir = normalize(lightDir + viewDir);	
+		float spec = pow(max(dot(normal, halfwayDir), 0.0), 32);
+		float distance = length(lightPos - fragPos);
+		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+		vec3 ambient = light.ambient * vec3(color);
+		vec3 diffuse = light.diffuse * diff * vec3(color);
+		vec3 specular = light.specular * spec;
+		ambient *= attenuation;
+		diffuse *= attenuation;
+		specular *= attenuation;
+		return (ambient + diffuse + specular) * vec3(light.color);
+	}
+	else
+		return vec3(0.0, 0.0, 0.0);
+}
+
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+	if (light.active == true)
+	{
+	vec3 lightPos; vec3 lightDir;
+	if (has_normalmap)
+	{
+		lightPos = TBN * light.position;
+		lightDir = normalize(lightPos - fragPos);
+	}
+	else
+	{
+		lightPos = light.position;
+		lightDir = normalize(light.position - fragPos);
+	}
+		float diff = max(dot(lightDir, normal), 0.0);
+
+		vec3 reflectDir = reflect(-lightDir, normal);
+		vec3 halfwayDir = normalize(lightDir + viewDir);
+		float spec = pow(max(dot(normal, halfwayDir), 0.0), 32);
+
+		float distance = length(lightPos - fragPos);
+		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+		float theta = dot(lightDir, normalize(-light.direction));
+		float epsilon = light.cutOff - light.outerCutOff;
+		float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+
+		vec3 ambient = light.ambient * vec3(color);
+		vec3 diffuse = light.diffuse * diff * vec3(color);
+		vec3 specular = light.specular * spec;
+		ambient *= attenuation * intensity;
+		diffuse *= attenuation * intensity;
+		specular *= attenuation * intensity;
+		return (ambient + diffuse + specular) * vec3(light.color);
+	}
+	else
+		return vec3(0.0, 0.0, 0.0);
 }
