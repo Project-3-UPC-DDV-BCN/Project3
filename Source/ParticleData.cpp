@@ -26,6 +26,7 @@ void ParticleData::LoadDefaultData()
 	angular_v = 0;
 	emision_angle = 0;
 	time_step = 0.2;
+	global_scale = 1; 
 
 	autopause = false; 
 	time_to_stop = 0; 
@@ -58,6 +59,9 @@ void ParticleData::LoadDefaultData()
 
 	initial_color = { 0,0,0,0 }; 
 	final_color = { 0,0,0,0 };
+
+	amount_to_emmit = 0;
+	time_step_sim = 0;
 
 	animation_system.Init(); 
 	
@@ -95,6 +99,9 @@ void ParticleData::Save(Data & data) const
 		data.AddFloat("Time_To_Stop", time_to_stop); 
 
 	// Colors -----
+
+	float4 new_col = {color.r, color.g, color.b, color.a};
+	data.AddVector4("Color", new_col);
 
 	// Motion -----
 
@@ -268,6 +275,12 @@ bool ParticleData::Load(Data & _data)
 		time_to_stop = _data.GetFloat("Time_To_Stop"); 
 	
 	// Colors -----
+	float4 col = _data.GetVector4("Color");
+
+	color.r = col.x; 
+	color.g = col.y;
+	color.b = col.z;
+	color.a = col.w;
 
 	//Billboard
 	billboarding = _data.GetBool("Billboard");

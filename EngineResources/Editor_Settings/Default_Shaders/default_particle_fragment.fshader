@@ -26,4 +26,5 @@ void main()
 		discard;
 	if(alpha_interpolation)
 		color.a = alpha_percentage;
+	color = color + material_color;
 }
