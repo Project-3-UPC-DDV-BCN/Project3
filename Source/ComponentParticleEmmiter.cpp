@@ -45,6 +45,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
 	new_particle->components.particle_transform->SetPosition(particle_pos);
+	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
 
 	//We generate the always squared surface for the particle 
 	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitiveParticlePlane");
@@ -180,6 +181,15 @@ bool ComponentParticleEmmiter::Update()
 		{
 			LaunchParticlesWave(); 
 			wave_launched = true; 
+		}
+		else
+		{
+			if (LaunchingAllowed())
+			{
+				LaunchParticlesWave();
+				spawn_timer.Start(); 
+			}
+				
 		}
 	}
 
@@ -435,7 +445,7 @@ void ComponentParticleEmmiter::StopEmmiter()
 
 bool ComponentParticleEmmiter::LaunchingAllowed()
 {
-	if (spawn_timer.Read() > data->time_step_sim)
+	if (spawn_timer.Read() > data->time_step_sim * 1000)
 		return true;  
 
 	return false;

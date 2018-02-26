@@ -26,6 +26,7 @@ void ParticleData::LoadDefaultData()
 	angular_v = 0;
 	emision_angle = 0;
 	time_step = 0.2;
+	global_scale = 1; 
 
 	autopause = false; 
 	time_to_stop = 0; 

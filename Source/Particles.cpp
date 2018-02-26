@@ -182,6 +182,8 @@ void Particle::SetEmmisionAngle(float new_angle)
 
 float3 Particle::GetEmmisionVector()
 {
+	LCG random;
+
 	float3 direction;
 	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
 
@@ -189,8 +191,6 @@ float3 Particle::GetEmmisionVector()
 	direction = emmiter_transform->GetMatrix().WorldY();
 
 	//We apply the rotation angle to the vector 
-	LCG random; 
-
 	int angle_z = random.Int(0, particle_data->emision_angle);
 
 	float3x3 z_rotation;

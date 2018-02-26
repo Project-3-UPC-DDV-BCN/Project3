@@ -970,7 +970,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
 				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
 				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
-				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
 
 				ImGui::TreePop();
@@ -994,35 +993,41 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Interpolation"))
-			{
+			
 				if (ImGui::TreeNode("Size"))
 				{
-					static float3 init_scale = { 1,1,1 };
-					static float3 fin_scale = { 1,1,1 };
+					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
 
-					ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 1, 10000);
-					init_scale.y = init_scale.x;
-
-					ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 1, 10000);
-					fin_scale.y = fin_scale.x;
-
-					if (ImGui::Button("Apply Scale Interpolation"))
+					if (ImGui::TreeNode("Interpolation"))
 					{
-						current_emmiter->data->change_size_interpolation = true;
+						static float3 init_scale = { 1,1,1 };
+						static float3 fin_scale = { 1,1,1 };
 
-						if (init_scale.x == fin_scale.x)
-							current_emmiter->data->change_size_interpolation = false; 
+						ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 0.1f, 1000.0f);
+						init_scale.y = init_scale.x;
 
-						current_emmiter->data->initial_scale = init_scale;
-						current_emmiter->data->final_scale = fin_scale;
-					}
+						ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 0.1f, 1000.0f);
+						fin_scale.y = fin_scale.x;
 
-					ImGui::SameLine(); 
+						if (ImGui::Button("Apply Scale Interpolation"))
+						{
+							current_emmiter->data->change_size_interpolation = true;
 
-					if (ImGui::Button("Delete"))
-					{
-						current_emmiter->data->change_size_interpolation = false;
+							if (init_scale.x == fin_scale.x)
+								current_emmiter->data->change_size_interpolation = false;
+
+							current_emmiter->data->initial_scale = init_scale;
+							current_emmiter->data->final_scale = fin_scale;
+						}
+
+						ImGui::SameLine();
+
+						if (ImGui::Button("Delete"))
+						{
+							current_emmiter->data->change_size_interpolation = false;
+						}
+
+						ImGui::TreePop(); 
 					}
 
 					ImGui::TreePop();
@@ -1033,26 +1038,33 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					static float init_angular_v = 0;
 					static float fin_angular_v = 0;
 
-					ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
-
-					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
-
-					if (ImGui::Button("Apply Rotation Interpolation"))
+					ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 1.0f, -1000.0f, 1000.0f);
+				
+					if (ImGui::TreeNode("Interpolation"))
 					{
-						current_emmiter->data->change_rotation_interpolation = true;
+						ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
 
-						if(init_angular_v == fin_angular_v)
+						ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+
+						if (ImGui::Button("Apply Rotation Interpolation"))
+						{
+							current_emmiter->data->change_rotation_interpolation = true;
+
+							if (init_angular_v == fin_angular_v)
+								current_emmiter->data->change_rotation_interpolation = false;
+
+							current_emmiter->data->initial_angular_v = init_angular_v;
+							current_emmiter->data->final_angular_v = fin_angular_v;
+						}
+
+						ImGui::SameLine();
+
+						if (ImGui::Button("Delete"))
+						{
 							current_emmiter->data->change_rotation_interpolation = false;
+						}
 
-						current_emmiter->data->initial_angular_v = init_angular_v;
-						current_emmiter->data->final_angular_v = fin_angular_v;
-					}
-
-					ImGui::SameLine();
-
-					if (ImGui::Button("Delete"))
-					{
-						current_emmiter->data->change_rotation_interpolation = false;
+						ImGui::TreePop();
 					}
 
 					ImGui::TreePop();
@@ -1118,9 +1130,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					ImGui::TreePop();
 				}
-
-				ImGui::TreePop();
-			}
 
 			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
 

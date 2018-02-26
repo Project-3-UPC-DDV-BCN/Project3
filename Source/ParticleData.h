@@ -121,6 +121,7 @@ public:
 	//Interpolations
 	///Size
 	bool change_size_interpolation;
+	float global_scale; 
 	float3 initial_scale;
 	float3 final_scale;
 
