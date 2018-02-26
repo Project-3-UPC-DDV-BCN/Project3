@@ -71,12 +71,14 @@ public:
 	Nv::Blast::ExtImpactDamageManager* GetImpactManager() const;
 
 	void CreateFamily(BlastModel* model);
-	void SpawnFamily(BlastModel* model);
+	void SpawnFamily(BlastModel* model, bool loaded_from_scene);
 
 	void onActorCreated(Nv::Blast::ExtPxFamily& family, Nv::Blast::ExtPxActor& actor);
 	void onActorDestroyed(Nv::Blast::ExtPxFamily& family, Nv::Blast::ExtPxActor& actor);
 
 	void ApplyDamage();
+
+	void CleanFamilies();
 
 private:
 	Nv::Blast::TkFramework* framework;

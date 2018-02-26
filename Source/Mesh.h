@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "MathGeoLib\Geometry\GeometryAll.h"
+#include "MathGeoLib/GeometryAll.h"
 #include "Resource.h"
 
 class Data;

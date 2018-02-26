@@ -5,8 +5,8 @@
 #include "ModuleRenderer3D.h"
 #include "ComponentCamera.h"
 #include "Mesh.h"
-#include "MathGeoLib\Math\float4x4.h"
-#include "MathGeoLib\Math\Quat.h"
+#include "MathGeoLib/float4x4.h"
+#include "MathGeoLib/Quat.h"
 #include "ComponentCamera.h"
 
 DebugShape::DebugShape(uint _num_vertices, float * _vertices, uint _num_indices, uint * _indices)

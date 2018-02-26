@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "MathGeoLib\Algorithm\Random\LCG.h"
+#include "MathGeoLib/LCG.h"
 #include <list>
 #include "Timer.h"
 

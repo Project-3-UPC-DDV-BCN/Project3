@@ -196,7 +196,7 @@ void ModuleRenderer3D::DrawEditorScene()
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		App->scene->DrawSkyBox(editor_camera->camera_frustum.pos, editor_camera);
+		App->scene->DrawSkyBox(editor_camera->camera_frustum.Pos(), editor_camera);
 		glEnable(GL_DEPTH_TEST);
 	}
 
@@ -219,7 +219,7 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		App->scene->DrawSkyBox(camera->camera_frustum.pos, camera);
+		App->scene->DrawSkyBox(camera->camera_frustum.Pos(), camera);
 		glEnable(GL_DEPTH_TEST);
 	}
 

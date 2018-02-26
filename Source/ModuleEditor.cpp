@@ -303,7 +303,7 @@ void ModuleEditor::HandleInput(SDL_Event * event)
 
 void ModuleEditor::OpenBrowserPage(const char * url)
 {
-	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+	//ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void ModuleEditor::AddData_Editor(float ms, float fps)

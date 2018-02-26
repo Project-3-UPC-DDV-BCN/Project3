@@ -8,9 +8,9 @@
 #include "cereal-1.2.2\include\cereal\archives\binary.hpp"
 #include "cereal-1.2.2\include\cereal\types\string.hpp"
 #include "cereal-1.2.2\include\cereal\types\vector.hpp"
-#include "MathGeoLib\Math\float2.h"
-#include "MathGeoLib\Math\float3.h"
-#include "MathGeoLib\Math\float4.h"
+#include "MathGeoLib/float2.h"
+#include "MathGeoLib/float3.h"
+#include "MathGeoLib/float4.h"
 #include "imgui\imgui.h"
 
 class Data

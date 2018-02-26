@@ -5,20 +5,49 @@
 #include "ModuleScene.h"
 #include "ModuleResources.h"
 #include <ctime>
+#include <NvBlastExtPxActor.h>
+#include <NvBlastTkActor.h>
+#include <NvBlastExtPxAsset.h>
+#include <NvBlastExtPxFamily.h>
+#include <NvBlastExtDamageShaders.h>
 
 BlastModel::BlastModel()
 {
 	SetType(Resource::BlastMeshResource);
 	root = nullptr;
+
+	Nv::Blast::ExtPxAsset* m_pxAsset = nullptr;
+	Nv::Blast::ExtPxFamily* family = nullptr;
+	NvBlastExtDamageAccelerator* dmg_accel = nullptr;
+	family_created = false;
 }
 
 BlastModel::~BlastModel()
 {
-	/*for (GameObject* go : chunks)
+	CleanUp();
+}
+
+void BlastModel::CleanUp()
+{
+	for (GameObject* go : chunks)
 	{
-		RELEASE(go);
-	}*/
+		go = nullptr;
+	}
 	chunks.clear();
+	for (Nv::Blast::ExtPxActor* actor : actors)
+	{
+		actor = nullptr;
+	}
+	actors.clear();
+	if (family)
+	{
+		family = nullptr;
+	}
+	if (dmg_accel)
+	{
+		dmg_accel = nullptr;
+	}
+	family_created = false;
 }
 
 void BlastModel::Save(Data & data) const

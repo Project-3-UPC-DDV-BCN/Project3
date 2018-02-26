@@ -186,12 +186,14 @@ void GameObject::SetActive(bool active)
 		if (!active)
 		{
 			rb->SetToSleep();
-			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), 0);
+			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
+			App->physics->RemoveActorFromList(rb->GetRigidBody());
 		}
 		else
 		{
 			rb->WakeUp();
-			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), 0);
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+			App->physics->AddActorToList(rb->GetRigidBody(), this);
 		}
 	}
 }

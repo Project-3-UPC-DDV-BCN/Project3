@@ -128,7 +128,7 @@ update_status ModuleBlast::Update(float dt)
 
 		for (std::map<Nv::Blast::ExtPxFamily*, BlastModel*>::iterator it = families.begin(); it != families.end(); it++)
 		{
-			/*for (Nv::Blast::ExtPxActor* actor : it->second->actors)
+			for (Nv::Blast::ExtPxActor* actor : it->second->actors)
 			{
 				const Nv::Blast::ExtPxChunk* chunks = it->first->getPxAsset().getChunks();
 				const Nv::Blast::ExtPxSubchunk* subChunks = it->first->getPxAsset().getSubchunks();
@@ -140,13 +140,19 @@ update_status ModuleBlast::Update(float dt)
 					GameObject* go = it->second->chunks[chunkIndex];
 					ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 					physx::PxTransform phys_transform = actor->getPhysXActor().getGlobalPose() * subChunks[chunks[chunkIndex].firstSubchunkIndex].transform;
+					//phys_transform = phys_transform.transform(actor->getPhysXActor().getCMassLocalPose());
 					float3 pos(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+					CONSOLE_LOG("Chunk %d pos: %.3f, %.3f, %.3f", chunkIndex, pos.x, pos.y, pos.z);
 					Quat quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
-					float3 rot = quat.ToEulerXYZ();
+					float3 rot = quat.ToEulerXYZ() * RADTODEG;
+					ComponentTransform* parent_transform = (ComponentTransform*)it->second->root->GetComponent(Component::CompTransform);
+					pos -= parent_transform->GetGlobalPosition();
 					transform->SetPosition(pos);
 					transform->SetRotation(rot);
+					float3 global_pos = transform->GetGlobalPosition();
+					CONSOLE_LOG("object pos: %.3f, %.3f, %.3f", global_pos.x, global_pos.y, global_pos.z);
 				}
-			}*/
+			}
 			it->first->postSplitUpdate();
 		}
 	}
@@ -189,9 +195,10 @@ void ModuleBlast::CreateFamily(BlastModel* model)
 	family->subscribe(*this);
 	families[family] = model;
 	model->family = family;
+	model->family_created = true;
 }
 
-void ModuleBlast::SpawnFamily(BlastModel* model)
+void ModuleBlast::SpawnFamily(BlastModel* model, bool loaded_from_scene)
 {
 	physx::PxScene* scene = App->physics->GetScene(0);
 
@@ -200,12 +207,18 @@ void ModuleBlast::SpawnFamily(BlastModel* model)
 		default_material,
 		2000.f
 	};
-	model->family->spawn(physx::PxTransform(physx::PxVec3(0, 0, 0)), physx::PxVec3(1, 1, 1), spawn_settings);
-	App->scene->AddGameObjectToScene(model->root);
-	for (GameObject* go : model->root->childs)
+	ComponentTransform* transform = (ComponentTransform*)model->root->GetComponent(Component::CompTransform);
+	float3 pos = transform->GetGlobalPosition();
+	model->family->spawn(physx::PxTransform(physx::PxVec3(pos.x, pos.y, pos.z)), physx::PxVec3(1, 1, 1), spawn_settings);
+	if (!loaded_from_scene)
 	{
-		App->scene->AddGameObjectToScene(go);
+		App->scene->AddGameObjectToScene(model->root);
+		for (GameObject* go : model->root->childs)
+		{
+			App->scene->AddGameObjectToScene(go);
+		}
 	}
+	
 }
 
 void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::ExtPxActor & actor)
@@ -218,31 +231,31 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(true);
-		ComponentRigidBody* rb = nullptr;
+		/*ComponentRigidBody* rb = nullptr;
 		if (go->GetComponent(Component::CompRigidBody) == nullptr)
 		{
 			rb = (ComponentRigidBody*)go->AddComponent(Component::CompRigidBody);
 		}
-		physx::PxRigidDynamic* rigid_body = &actor.getPhysXActor();
+		physx::PxRigidDynamic* rigid_body = &actor.getPhysXActor();*/
 		if (chunkIndex != 0)
 		{
 			//const Nv::Blast::ExtPxChunk* chunks = family.getPxAsset().getChunks();
 			//const Nv::Blast::ExtPxSubchunk* subChunks = family.getPxAsset().getSubchunks();
 			//physx::PxTransform phys_transform = actor.getPhysXActor().getGlobalPose() * subChunks[chunks[chunkIndex].firstSubchunkIndex].transform;
-			//ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-			//float3 pos = transform->GetGlobalPosition();
-			//physx::PxVec3 dr = phys_transform.transform(rigid_body->getCMassLocalPose()).p; //rigid_body->getGlobalPose().transform(rigid_body->getCMassLocalPose()).p/* - m_worldPos*/;
+			///*ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+			//float3 pos = transform->GetGlobalPosition();*/
+			//physx::PxVec3 dr = phys_transform.transform(actor.getPhysXActor().getCMassLocalPose()).p; //rigid_body->getGlobalPose().transform(rigid_body->getCMassLocalPose()).p/* - m_worldPos*/;
 			//float distance = dr.magnitude();
 			//float factor = physx::PxClamp(1.0f - (distance * distance) / (1 * 1), 0.0f, 1.0f);
 			//float impulse = factor * 100/* * 1000.0f*/;
-			//physx::PxVec3 vel = dr.getNormalized() * impulse / rigid_body->getMass();
-			//rigid_body->setLinearVelocity(rigid_body->getLinearVelocity() + vel);
+			//physx::PxVec3 vel = dr.getNormalized() * impulse / actor.getPhysXActor().getMass();
+			//actor.getPhysXActor().setLinearVelocity(actor.getPhysXActor().getLinearVelocity() + vel);
 		}
-		App->physics->AddActorToList(rigid_body, go);
+		/*App->physics->AddActorToList(rigid_body, go);
 		if (rb)
 		{
 			rb->SetNewRigidBody(rigid_body);
-		}
+		}*/
 	}
 	model->AddActor(&actor);
 }
@@ -257,7 +270,7 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(false);
-		App->physics->RemoveActorFromList(&actor.getPhysXActor(), go);
+		//App->physics->RemoveActorFromList(&actor.getPhysXActor(), go);
 	}
 	model->DestroyActor(&actor);
 }
@@ -265,4 +278,18 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 void ModuleBlast::ApplyDamage()
 {
 	impact_damage_manager->applyDamage();
+}
+
+void ModuleBlast::CleanFamilies()
+{
+	for (std::map<Nv::Blast::ExtPxFamily*, BlastModel*>::iterator it = families.begin(); it != families.end(); it++)
+	{
+		it->first->unsubscribe(*this);
+		it->first->despawn();
+		it->first->release();
+		it->second->dmg_accel->release();
+		it->second->family_created = false;
+		RELEASE(it->second);
+	}
+	families.clear();
 }

@@ -23,8 +23,9 @@ class BlastModel :
 {
 public:
 	BlastModel();
-	BlastModel(const BlastModel& model);
 	~BlastModel();
+
+	void CleanUp();
 
 	void Save(Data& data) const;
 	bool Load(Data& data);
@@ -32,8 +33,8 @@ public:
 	void LoadToMemory();
 	void UnloadFromMemory();
 
-	void AddActor(Nv::Blast::ExtPxActor*);
-	void DestroyActor(Nv::Blast::ExtPxActor*);
+	void AddActor(Nv::Blast::ExtPxActor* actor);
+	void DestroyActor(Nv::Blast::ExtPxActor* actor);
 
 public:
 	GameObject* root;
@@ -43,5 +44,6 @@ public:
 	Nv::Blast::ExtPxAsset* m_pxAsset;
 	Nv::Blast::ExtPxFamily* family;
 	NvBlastExtDamageAccelerator* dmg_accel;
+	bool family_created;
 };
 

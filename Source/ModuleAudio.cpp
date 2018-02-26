@@ -22,12 +22,6 @@
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-#if _DEBUG
-#pragma comment( lib, 
-#else
-
-#endif
-
 ModuleAudio::ModuleAudio(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 	name = "Audio";
@@ -170,9 +164,9 @@ Wwise::SoundObject * ModuleAudio::CreateListener(const char * name, math::float3
 
 	if (!listener_created) {
 
-		float3 cam_up = App->camera->GetCamera()->camera_frustum.up;
-		float3 cam_front = App->camera->GetCamera()->camera_frustum.front;
-		float3 cam_pos = App->camera->GetCamera()->camera_frustum.pos;
+		float3 cam_up = App->camera->GetCamera()->camera_frustum.Up();
+		float3 cam_front = App->camera->GetCamera()->camera_frustum.Front();
+		float3 cam_pos = App->camera->GetCamera()->camera_frustum.Pos();
 
 		ret = Wwise::CreateSoundObj(0, "Listener", cam_pos.x, cam_pos.y, cam_pos.z, true);
 		ret->SetPosition(cam_pos.x, cam_pos.y, cam_pos.z, cam_front.x, cam_front.y, cam_front.z, cam_up.x, cam_up.y, cam_up.z);

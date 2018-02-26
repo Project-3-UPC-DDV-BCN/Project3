@@ -4,7 +4,7 @@
 #include "Component.h"
 #include <list>
 #include <string>
-#include "MathGeoLib\Math\float4x4.h"
+#include "MathGeoLib/float4x4.h"
 
 class GameObject
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "MathGeoLib\Math\float3.h"
+#include "MathGeoLib/float3.h"
 
 class pTexturedCube;
 class Texture;

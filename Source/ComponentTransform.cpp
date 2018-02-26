@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "componentRigidBody.h"
 #include "ComponentLight.h"
+#include "Application.h"
+#include "ComponentBlast.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject)
 {
@@ -63,11 +65,11 @@ void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
-	ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-	if (rb)
-	{
-		rb->SetColliderScale(scale);
-	}
+	//ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+	//if (rb)
+	//{
+	//	rb->SetColliderScale(scale);
+	//}
 }
 
 float3 ComponentTransform::GetGlobalScale() const
@@ -121,11 +123,23 @@ void ComponentTransform::UpdateGlobalMatrix()
 	//If gameobject has a camera component
 	GetGameObject()->UpdateCamera();
 
-	ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-	if (rb)
+	if (!App->IsPlaying())
 	{
-		rb->SetTransform(transform_matrix.Transposed().ptr());
+		ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+		if (rb)
+		{
+			rb->SetTransform(transform_matrix.Transposed().ptr());
+		}
+		else
+		{
+			ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
+			if (blast)
+			{
+				blast->SetTransform(transform_matrix.Transposed().ptr());
+			}
+		}
 	}
+	
 	//ComponentLight* light = (ComponentLight*)GetGameObject()->GetComponent(Component::CompLight);
 	//if (light)
 	//{
@@ -193,7 +207,8 @@ void ComponentTransform::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
-	position = data.GetVector3("position"); 
+	position = data.GetVector3("position");
+	SetPosition(position);
 	float4 float_to_quat = data.GetVector4("rotation");
 	rotation.x = float_to_quat.x;
 	rotation.y = float_to_quat.y;
@@ -201,5 +216,7 @@ void ComponentTransform::Load(Data & data)
 	rotation.w = float_to_quat.w;
 	shown_rotation = rotation.ToEulerXYZ();
 	shown_rotation *= RADTODEG;
+	SetRotation(shown_rotation);
 	scale = data.GetVector3("scale");
+	SetScale(scale);
 }

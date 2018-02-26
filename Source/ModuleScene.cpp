@@ -51,7 +51,7 @@ bool ModuleScene::Start()
 	CONSOLE_DEBUG("Loading Scene");
 	bool ret = true;
 
-	math::float3 initial_pos(0.f, 5.f, -10.f);
+	math::float3 initial_pos(0.f, 5.f, -20.f);
 	App->camera->SetPosition(initial_pos);
 	math::float3 initial_look_at(0, 0, 0);
 	App->camera->LookAt(initial_look_at);
@@ -84,11 +84,10 @@ void ModuleScene::CreateMainCamera()
 	main_camera = new GameObject();
 	main_camera->SetName("Main Camera");
 	ComponentTransform* transform = (ComponentTransform*)main_camera->GetComponent(Component::CompTransform);
-	transform->SetPosition({ 0,1,-10 });
+	transform->SetPosition({ 0,1,-20 });
 	ComponentCamera* camera = (ComponentCamera*)main_camera->AddComponent(Component::CompCamera);
 	main_camera->SetTag("Main Camera");
-	scene_gameobjects.push_back(main_camera);
-	root_gameobjects.push_back(main_camera);
+	AddGameObjectToScene(main_camera);
 	scene_cameras.push_back(camera);
 	App->resources->AddGameObject(main_camera);
 	App->renderer3D->game_camera = camera;
@@ -104,8 +103,7 @@ void ModuleScene::CreateMainLight()
 	main_light->SetName("Directional Light");
 	ComponentLight* light = (ComponentLight*)main_light->AddComponent(Component::CompLight);
 	light->SetTypeToDirectional();
-	scene_gameobjects.push_back(main_light);
-	root_gameobjects.push_back(main_light);
+	AddGameObjectToScene(main_light);
 	App->resources->AddGameObject(main_light);
 }
 
@@ -284,7 +282,8 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 		ComponentRigidBody* rb = (ComponentRigidBody*)gameobject->GetComponent(Component::CompRigidBody);
 		if (rb)
 		{
-			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), 0);
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+			App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
 		}
 
 		RenameDuplicatedGameObject(gameobject);
@@ -415,6 +414,8 @@ void ModuleScene::NewScene(bool loading_scene)
 	octree.Clear();
 	octree.Create(float3::zero, float3::zero);
 	octree.update_tree = true;
+	App->blast->CleanFamilies();
+	App->physics->CleanPhysScene();
 	if (!loading_scene)
 	{
 		CreateMainCamera();
@@ -435,8 +436,7 @@ void ModuleScene::LoadScene(std::string path)
 			GameObject* game_object = new GameObject();
 			game_object->Load(data);
 			data.LeaveSection();
-			scene_gameobjects.push_back(game_object);
-			if (game_object->IsRoot()) root_gameobjects.push_back(game_object);
+			AddGameObjectToScene(game_object);
 			App->resources->AddGameObject(game_object);
 			ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
 			if (transform) transform->UpdateGlobalMatrix();

@@ -24,7 +24,7 @@ public:
 	bool CleanUp();
 
 	std::string ImportModel(std::string path);
-	BlastModel* LoadModelFromLibrary(std::string path);
+	BlastModel* LoadModelFromLibrary(std::string path, bool loaded_from_scene);
 
 private:
 	Nv::Blast::ExtSerialization* serialization;

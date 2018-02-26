@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MathGeoLib\Math\float3.h"
+#include "MathGeoLib/float3.h"
 
 class pTexturedSphere;
 class Texture;

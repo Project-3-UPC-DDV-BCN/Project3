@@ -103,6 +103,36 @@
 //#define KNET_LOGGING_SUPPORT_ENABLED
 #endif
 
+// If MATH_USE_DIRECT3D is defined, the Frustum class defaults to creating Frustums with projectiveSpace = FrustumSpaceD3D.
+#ifndef MATH_USE_DIRECT3D
+//#define MATH_USE_DIRECT3D
+#endif
+// If MATH_USE_OPENGL is defined, the Frustum class defaults to creating Frustums with projectiveSpace = FrustumSpaceGL.
+#ifndef MATH_USE_OPENGL
+//#define MATH_USE_OPENGL
+#endif
+
+// If MATH_LEFTHANDED_CAMERA is defined, the Frustum class defaults to creating Frustums with handedness = FrustumLeftHanded.
+#ifndef MATH_LEFTHANDED_CAMERA
+//#define MATH_LEFTHANDED_CAMERA
+#endif
+// If MATH_RIGHTHANDED_CAMERA is defined, the Frustum class defaults to creating Frustums with handedness = FrustumRightHanded.
+#ifndef MATH_RIGHTHANDED_CAMERA
+//#define MATH_RIGHTHANDED_CAMERA
+#endif
+
+#if defined(MATH_USE_DIRECT3D) && defined(MATH_USE_OPENGL)
+#error Defines MATH_USE_DIRECT3D and MATH_USE_OPENGL are mutually exclusive!
+#endif
+
+#if defined(MATH_LEFTHANDED_CAMERA) && defined(MATH_RIGHTHANDED_CAMERA)
+#error Defines MATH_LEFTHANDED_CAMERA and MATH_RIGHTHANDED_CAMERA are mutually exclusive!
+#endif
+
+// Choose which internally provided features to build MathGeoLib with.
+// Comment these out to configure what to build.
+#define MATH_WITH_GRISU3
+
 // Uncomment to specify the SIMD instruction set level in use.
 //#define MATH_AVX
 //#define MATH_SSE41
@@ -118,7 +148,13 @@
 #include <arm_neon.h>
 #endif
 
-// MATH_AVX implies MATH_SSE41, which implies MATH_SSE3, which implies MATH_SSE2, which implies MATH_SSE.
+// MATH_FMA implies MATH_AVX, which implies MATH_SSE41, which implies MATH_SSE3, which implies MATH_SSE2, which implies MATH_SSE.
+#ifdef MATH_FMA
+#ifndef MATH_AVX
+#define MATH_AVX
+#endif
+#endif
+
 #ifdef MATH_AVX
 #if defined(__GNUC__) || defined(__clang__)
 #include <immintrin.h>
@@ -126,15 +162,12 @@
 #ifndef MATH_SSE41
 #define MATH_SSE41
 #endif
-#define MATH_SSE3
-#define MATH_SSE2
-#define MATH_SSE
 #endif
 
 #ifdef MATH_SSE41
+#ifndef MATH_SSE3
 #define MATH_SSE3
-#define MATH_SSE2
-#define MATH_SSE
+#endif
 #endif
 
 #ifdef MATH_SSE3
@@ -143,12 +176,15 @@
 #else
 #include <pmmintrin.h>
 #endif
+#ifndef MATH_SSE2
 #define MATH_SSE2
-#define MATH_SSE
+#endif
 #endif
 
 #ifdef MATH_SSE2
+#ifndef MATH_SSE
 #define MATH_SSE
+#endif
 #include <emmintrin.h>
 #endif
 
@@ -173,4 +209,14 @@ typedef __m128 simd4f;
 #define MATH_AUTOMATIC_SSE
 #endif
 
-#include "Math/MathTypes.h"
+#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
+// If true, SIMD optimizations are also applied to the float3 class.
+// It is slightly questionable whether this is a great idea, since if one
+// wants to use SIMD, one should always use the float4 class (or the vec type),
+// but benchmarking shows this to also be a slight win, even though the
+// unaligned loads and stores and shuffling that is involved. You might want to
+// try benchmarking the effect of this being enabled vs disabled.
+#define MATH_AUTOMATIC_SIMD_FLOAT3
+#endif
+
+#include "MathTypes.h"

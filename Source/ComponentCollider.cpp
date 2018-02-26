@@ -4,9 +4,9 @@
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "ComponentMeshRenderer.h"
-#include "MathGeoLib/Geometry/AABB.h"
+#include "MathGeoLib/AABB.h"
 #include "Mesh.h"
-#include "MathGeoLib/Math/Quat.h"
+#include "MathGeoLib/Quat.h"
 #include "PhysicsMaterial.h"
 #include "ModuleResources.h"
 

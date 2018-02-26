@@ -1006,7 +1006,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			resource = (Resource*)GetBlastModel(name);
 			break;
 		}
-		resource = (Resource*)App->blast_mesh_importer->LoadModelFromLibrary(library_path);
+		resource = (Resource*)App->blast_mesh_importer->LoadModelFromLibrary(library_path, false);
 		break;
 	default:
 		break;

@@ -2,8 +2,8 @@
 #define _H_DEBUG_DRAW__
 
 #include "Component.h"
-#include "MathGeoLib\Math\float3.h"
-#include "MathGeoLib\Math\float4x4.h"
+#include "MathGeoLib/float3.h"
+#include "MathGeoLib/float4x4.h"
 #include "Glew\include\glew.h"
 
 class ComponentCamera;

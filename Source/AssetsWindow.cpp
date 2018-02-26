@@ -391,11 +391,11 @@ void AssetsWindow::DrawWindow()
 				{
 					if (ImGui::MenuItem("Load to scene##bmesh")) {
 						std::string file_name = App->file_system->GetFileNameWithoutExtension(selected_file_path);
-						BlastModel* model = App->blast_mesh_importer->LoadModelFromLibrary(selected_file_path);
+						BlastModel* model = App->blast_mesh_importer->LoadModelFromLibrary(selected_file_path, false);
 						if (model)
 						{
 							App->blast->CreateFamily(model);
-							App->blast->SpawnFamily(model);
+							App->blast->SpawnFamily(model, false);
 						}
 						else
 						{

@@ -1,7 +1,7 @@
 #include "ComponentRigidBody.h"
 #include "Application.h"
 #include "ModulePhysics.h"
-#include "MathGeoLib/Math/Quat.h"
+#include "MathGeoLib/Quat.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "ComponentCollider.h"
@@ -27,6 +27,10 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 
 ComponentRigidBody::~ComponentRigidBody()
 {
+	if (App->physics)
+	{
+		App->physics->RemoveRigidBodyFromScene(rigidbody, nullptr);
+	}
 	rigidbody = nullptr;
 }
 
@@ -530,8 +534,8 @@ void ComponentRigidBody::Load(Data & data)
 	SetMaxAngularVelocity(data.GetFloat("MaxAngularVelocity"));
 	SetLinearDamping(data.GetFloat("LinearDamping"));
 	SetAngularDamping(data.GetFloat("AngularDamping"));
-	SetPosition(data.GetVector3("Position"));
-	SetRotation(data.GetVector3("Rotation"));
+	//SetPosition(data.GetVector3("Position"));
+	//SetRotation(data.GetVector3("Rotation"));
 	SetCenterOfMass(data.GetVector3("CenterMass"));
 	SetInertiaTensor(data.GetVector3("InertiaTensor"));
 	SetSleepThreshold(data.GetFloat("SleepThreshold"));

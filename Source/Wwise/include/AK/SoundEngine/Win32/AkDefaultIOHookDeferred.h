@@ -89,7 +89,7 @@ written agreement between you and Audiokinetic Inc.
 #define _AK_DEFAULT_IO_HOOK_DEFERRED_H_
 
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>
-#include "../Common/AkFileLocationBase.h"
+#include "../IO/Common/AkFileLocationBase.h"
 #include <AK/Tools/Common/AkAssert.h>
 
 //-----------------------------------------------------------------------------

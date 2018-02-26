@@ -81,7 +81,6 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 				BlastModel* model = new BlastModel();
 				model->root = new GameObject();
 				model->root->SetName(name_without_extension);
-				ComponentBlast* blast = (ComponentBlast*)model->root->AddComponent(Component::CompBlast);
 				model->chunks.resize(reader->getBoneCount());
 				uint32_t* infl;
 				reader->getBoneInfluences(infl);
@@ -100,8 +99,8 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 					go->SetName(name_without_extension + "_chunk_" + std::to_string(bone_index));
 					go->SetActive(false);
 					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->AddComponent(Component::CompMeshRenderer);
-					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
-					mesh_renderer->SetName("Blast_Mesh_Renderer");
+					//mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
+					//mesh_renderer->SetName("Blast_Mesh_Renderer");
 
 					std::vector<float> vertex_data;
 					for (int i = 0; i < vertices_count; i++)
@@ -206,7 +205,7 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 						mesh_renderer->SetMaterial(interior_material);
 						interior_material->UnloadFromMemory();
 					}
-					mesh_renderer->SetMeshType(ComponentMeshRenderer::BlastMesh);
+					mesh_renderer->SetMeshType(ComponentMeshRenderer::NormalMesh);
 					mesh_renderer->SetMesh(mesh);
 					mesh->UnloadFromMemory();
 					App->mesh_importer->SaveMeshToLibrary(*mesh);
@@ -229,7 +228,7 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 	return library_path;
 }
 
-BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path)
+BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path, bool loaded_from_scene)
 {
 	BlastModel* model = nullptr;
 
@@ -238,8 +237,12 @@ BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path)
 	if (data.LoadBinary(LIBRARY_BMODEL_FOLDER + model_name + ".bmodel"))
 	{
 		model = new BlastModel();
-		model->Load(data);
-		ComponentBlast* blast = (ComponentBlast*)model->root->GetComponent(Component::CompBlast);
+		if (!loaded_from_scene)
+		{
+			model->Load(data);
+			ComponentBlast* blast = (ComponentBlast*)model->root->AddComponent(Component::CompBlast);
+			blast->blast_model = model;
+		}
 
 		std::ifstream stream(path.c_str(), std::ios::binary);
 		std::streampos size = stream.tellg();
@@ -303,6 +306,6 @@ BlastModel * ModuleBlastMeshImporter::LoadModelFromLibrary(std::string path)
 			}
 		}
 	}
-
+	
 	return model;
 }

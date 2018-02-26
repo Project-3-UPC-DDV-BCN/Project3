@@ -780,6 +780,11 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		{
 			rigidbody->SetAngularDamping(a_damping);
 		}
+		float3 linear_velocity = rigidbody->GetLinearVelocity();
+		if (ImGui::DragFloat3("Linear Velo", (float*)&linear_velocity))
+		{
+			rigidbody->SetLinearVelocity(linear_velocity);
+		}
 		bool use_gravity = rigidbody->IsUsingGravity();
 		if (ImGui::Checkbox("Gravity", &use_gravity))
 		{

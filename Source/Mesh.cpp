@@ -16,6 +16,9 @@ Mesh::Mesh()
 	id_indices = 0;
 	num_vertices = 0;
 
+	box.minPoint = { 0,0,0 };
+	box.maxPoint = { 0,0,0 };
+
 	SetType(Resource::MeshResource);
 
 }

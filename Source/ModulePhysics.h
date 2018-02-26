@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include <PxPhysicsAPI.h>
-#include "MathGeoLib/Geometry/AABB.h"
+#include "MathGeoLib/AABB.h"
 #include <map>
 
 struct NvFlowContext;
@@ -47,7 +47,9 @@ public:
 	void DrawColliders();
 
 	void AddActorToList(physx::PxRigidActor* body, GameObject* gameobject);
-	void RemoveActorFromList(physx::PxRigidActor* body, GameObject* gameobject);
+	void RemoveActorFromList(physx::PxRigidActor* body);
+
+	void CleanPhysScene();
 
 private:
 	void CreateMainScene();

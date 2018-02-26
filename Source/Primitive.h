@@ -3,8 +3,8 @@
 #include "glmath.h"
 #include "Color.h"
 #include <vector>
-#include "MathGeoLib\Geometry\Frustum.h"
-#include "MathGeoLib\Geometry\AABB.h"
+#include "MathGeoLib/Frustum.h"
+#include "MathGeoLib/AABB.h"
 #include "Texture.h"
 
 enum PrimitiveTypes

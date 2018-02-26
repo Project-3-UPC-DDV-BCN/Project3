@@ -2,8 +2,8 @@
 #include "Mesh.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
-#include "MathGeoLib/Math/Quat.h"
-#include "MathGeoLib/Math/float3.h"
+#include "MathGeoLib/Quat.h"
+#include "MathGeoLib/float3.h"
 #include "ComponentCollider.h"
 #include "OpenGL.h"
 #include "Application.h"
@@ -246,6 +246,7 @@ void ModulePhysics::AddRigidBodyToScene(physx::PxRigidActor* body, physx::PxScen
 				main_scene->addActor(*body);
 			}
 		}
+		
 	}
 }
 
@@ -255,12 +256,75 @@ void ModulePhysics::RemoveRigidBodyFromScene(physx::PxRigidActor * body, physx::
 	{
 		if (scene)
 		{
+			/*physx::PxU32 dynamic_actors_num = scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC);
+			physx::PxActor** dynamic_actors;
+			scene->getActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC, dynamic_actors, dynamic_actors_num);
+			physx::PxActor* actor = nullptr;
+
+			if (!actor)
+			{
+				for (physx::PxU32 i = 0; i < dynamic_actors_num; ++i)
+				{
+					if (dynamic_actors[i] == body)
+					{
+						actor == body;
+						break;
+					}
+				}
+			}
+
+			if (!actor)
+			{
+				physx::PxU32 static_actors_num = scene->getNbActors(physx::PxActorTypeFlag::eRIGID_STATIC);
+				physx::PxActor** static_actors;
+				for (physx::PxU32 i = 0; i < static_actors_num; ++i)
+				{
+					if (static_actors[i] == body)
+					{
+						actor == body;
+						break;
+					}
+				}
+			}*/
+
 			scene->removeActor(*body);
 		}
 		else
 		{
+			/*physx::PxU32 dynamic_actors_num = main_scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC);
+			physx::PxActor** dynamic_actors = new physx::PxActor*[dynamic_actors_num];
+			main_scene->getActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC, dynamic_actors, dynamic_actors_num);
+			physx::PxActor* actor = nullptr;
+
+			if (!actor)
+			{
+				for (physx::PxU32 i = 0; i < dynamic_actors_num; ++i)
+				{
+					if (dynamic_actors[i] == body)
+					{
+						actor == body;
+						break;
+					}
+				}
+			}
+
+			if (!actor)
+			{
+				physx::PxU32 static_actors_num = main_scene->getNbActors(physx::PxActorTypeFlag::eRIGID_STATIC);
+				physx::PxActor** static_actors;
+				for (physx::PxU32 i = 0; i < static_actors_num; ++i)
+				{
+					if (static_actors[i] == body)
+					{
+						actor == body;
+						break;
+					}
+				}
+			}*/
+
 			main_scene->removeActor(*body);
 		}
+		RemoveActorFromList(body);
 	}
 }
 
@@ -444,17 +508,19 @@ void ModulePhysics::CreateScene()
 
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
-	physx::PxRigidDynamic* dynamic = static_cast<physx::PxRigidDynamic*>(actor);
-	physx::PxTransform phys_transform = dynamic->getGlobalPose();
-	//GameObject* go = (GameObject*)actor->userData;
-	GameObject* go = physics_objects[dynamic];
-	//if (go->GetName() == "wall") return;
-	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
-	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
-	float3 rotation = rot_quat.ToEulerXYZ();
-	transform->SetPosition(position);
-	transform->SetRotation(rotation);
+	physx::PxRigidActor* rigid_actor = static_cast<physx::PxRigidActor*>(actor);
+	if (physics_objects.find(rigid_actor) != physics_objects.end()) 
+	{
+		GameObject* go = physics_objects[rigid_actor];
+		if (go == nullptr) return;
+		physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
+		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+		float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+		Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
+		float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
+		transform->SetPosition(position);
+		transform->SetRotation(rotation);
+	}
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
@@ -601,10 +667,21 @@ void ModulePhysics::DrawColliders()
 
 void ModulePhysics::AddActorToList(physx::PxRigidActor * body, GameObject * gameobject)
 {
+	if (gameobject == nullptr || body == nullptr) return;
 	physics_objects.insert(std::pair<physx::PxRigidActor*, GameObject*>(body, gameobject));
 }
 
-void ModulePhysics::RemoveActorFromList(physx::PxRigidActor * body, GameObject * gameobject)
+void ModulePhysics::RemoveActorFromList(physx::PxRigidActor * body)
 {
+	if (body == nullptr) return;
 	physics_objects.erase(body);
+}
+
+void ModulePhysics::CleanPhysScene()
+{
+	for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+	{
+		main_scene->removeActor(*it->first);
+	}
+	physics_objects.clear();
 }
