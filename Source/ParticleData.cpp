@@ -21,6 +21,7 @@ void ParticleData::LoadDefaultData()
 	velocity = 5.0f;
 	color = Color(255, 255, 255, 0);
 	billboard_type = BILLBOARD_NONE; 
+	emmision_type = EMMISION_CONTINUOUS; 
 	billboarding = false;
 	gravity = { 0,0,0 };
 	angular_v = 0;
@@ -117,6 +118,8 @@ void ParticleData::Save(Data & data) const
 
 	// Interpolation -----
 
+	data.AddFloat("Global_Scale", global_scale); 
+
 	if (change_color_interpolation)
 	{
 		data.AddBool("Color_Interpolation", true);
@@ -193,6 +196,8 @@ void ParticleData::Copy(ParticleData * other)
 	max_lifetime = other->max_lifetime;
 	emmision_rate = other->emmision_rate;
 	velocity = other->velocity;
+
+	global_scale = other->global_scale; 
 									
 	gravity	= other->gravity;
 	emision_angle = other->emision_angle;
@@ -311,8 +316,11 @@ bool ParticleData::Load(Data & _data)
 	// Interpolation -----
 
 	change_color_interpolation = _data.GetBool("Color_Interpolation");
-
 	change_size_interpolation = _data.GetBool("Size_Interpolation");
+	change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
+	change_alpha_interpolation = _data.GetBool("Alpha_Interpolation");
+
+	global_scale = _data.GetFloat("Global_Scale");
 
 	if (change_size_interpolation)
 	{
@@ -320,7 +328,7 @@ bool ParticleData::Load(Data & _data)
 		final_scale = _data.GetVector3("Final_Size");
 	}
 
-	change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
+
 
 	if (change_rotation_interpolation)
 	{
@@ -328,7 +336,7 @@ bool ParticleData::Load(Data & _data)
 		final_angular_v = _data.GetFloat("Final_Rotation");
 	}
 
-	change_alpha_interpolation = _data.GetBool("Alpha_Interpolation"); 
+
 
 	// ------
 
