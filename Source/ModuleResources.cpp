@@ -1521,7 +1521,7 @@ void ModuleResources::CreateDefaultShaders()
 				"result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);\n"
 			"for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
 				"result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);\n"
-			"color = vec4((color.rgb * AMBIENT_LIGHT, 1.0) + result, color.a);  \n"
+			"color = vec4((color.rgb * AMBIENT_LIGHT + result), color.a);  \n"
 		"}\n"
 
 		"}\n\n"

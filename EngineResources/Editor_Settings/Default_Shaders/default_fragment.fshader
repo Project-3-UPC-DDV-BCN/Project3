@@ -117,7 +117,7 @@ for (int k = 0; k < NR_POINT_LIGHTS; k++)
 result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);
 for (int j = 0; j < NR_SPOT_LIGHTS; j++)
 result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);
-color = vec4((color.rgb * AMBIENT_LIGHT, 1.0) + result, color.a);  
+color = vec4((color.rgb * AMBIENT_LIGHT + result), color.a);  
 }
 }
 
