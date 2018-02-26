@@ -39,7 +39,6 @@ private:
 	void CreateBox() const;
 	void CreatePlane() const;
 	void CreateParticlePlane() const; 
-
 };
 
 void Callback(const char* message, char* c);

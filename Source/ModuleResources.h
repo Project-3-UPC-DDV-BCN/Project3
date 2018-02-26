@@ -10,9 +10,12 @@ class GameObject;
 class Resources;
 class Material;
 class Script;
+class PhysicsMaterial;
+class BlastModel;
 class ParticleData; 
 class Shader;
 class ShaderProgram;
+class Font;
 
 class ModuleResources :
 	public Module
@@ -64,11 +67,29 @@ public:
 	void RemoveScript(Script* script);
 	std::map<uint, Script*> GetScriptsList() const;
 
+	PhysicsMaterial* GetPhysMaterial(std::string name) const;
+	PhysicsMaterial* GetPhysMaterial(UID uid) const;
+	void AddPhysMaterial(PhysicsMaterial* material);
+	void RemovePhysMaterial(PhysicsMaterial* material);
+	std::map<uint, PhysicsMaterial*> GetPhysMaterialsList() const;
+
+	BlastModel* GetBlastModel(std::string name) const;
+	BlastModel* GetBlastModel(UID uid) const;
+	void AddBlastModel(BlastModel* mesh);
+	void RemoveBlastModel(BlastModel* mesh);
+	std::map<uint, BlastModel*> GetBlastModelsList() const;
+
 	Shader* GetShader(std::string name) const;
 	Shader* GetShader(UID uid) const;
 	void AddShader(Shader* shader);
 	void RemoveShader(Shader* shader);
 	std::map<uint, Shader*> GetShadersList() const;
+
+	Font* GetFont(std::string name) const;
+	Font* GetFont(UID uid) const;
+	void AddFont(Font* font);
+	void RemoveFont(Font* font);
+	std::map<uint, Font*> GetFontsList() const;
 
 	ParticleData* GetParticleTemplate(std::string name) const;
 	ParticleData* GetParticleTemplate(UID uid) const;
@@ -113,8 +134,11 @@ private:
 	std::map<uint, GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, PhysicsMaterial*> phys_materials_list;
+	std::map<uint, BlastModel*> blast_models_list;
 	std::map<uint, ParticleData*> particles_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
+	std::map<uint, Font*> fonts_list;
 };
 

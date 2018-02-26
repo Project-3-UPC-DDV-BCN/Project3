@@ -17,17 +17,16 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 	position = float3::zero;
 	SetTypeToSpot();
 
-	(attached_gameobject) ? view.pos = attached_gameobject->GetGlobalTransfomMatrix().TranslatePart() : view.pos = float3::zero;
-	(attached_gameobject) ? view.front = attached_gameobject->GetGlobalTransfomMatrix().WorldZ() : view.front = float3::unitZ;
-	(attached_gameobject) ? view.up = attached_gameobject->GetGlobalTransfomMatrix().WorldY() : view.up = float3::unitY;
+	(attached_gameobject) ? view.SetPos(attached_gameobject->GetGlobalTransfomMatrix().TranslatePart()) : view.SetPos(float3::zero);
+	(attached_gameobject) ? view.SetFront(attached_gameobject->GetGlobalTransfomMatrix().WorldZ()) : view.SetFront(float3::unitZ);
+	(attached_gameobject) ? view.SetUp(attached_gameobject->GetGlobalTransfomMatrix().WorldY()) : view.SetUp(float3::unitY);
 
-	view.type = FrustumType::PerspectiveFrustum;
-	view.nearPlaneDistance = 0.3f;
-	view.farPlaneDistance = 1000;
+	view.SetKind(math::FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	view.SetViewPlaneDistances(0.3f, 1000.0f);
 
 	aspect_ratio = SHADOW_WIDTH / SHADOW_HEIGHT;
 
-	view.horizontalFov = math::Atan(aspect_ratio * math::Tan(view.verticalFov / 2)) * 2;
+	view.SetHorizontalFovAndAspectRatio(view.VerticalFov() * DEGTORAD, aspect_ratio);
 
 
 }
@@ -301,9 +300,9 @@ void ComponentLight::SetPositionFromGO(float3 pre_position)
 
 void ComponentLight::UpdateViewPosition()
 {
-	view.pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
-	view.front = GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized();
-	view.up = GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized();
+	view.SetPos(GetGameObject()->GetGlobalTransfomMatrix().TranslatePart());
+	view.SetFront(GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized());
+	view.SetUp(GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized());
 }
 
 float * ComponentLight::GetProjectionMatrix() const

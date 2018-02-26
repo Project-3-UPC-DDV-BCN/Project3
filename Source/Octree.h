@@ -1,7 +1,7 @@
 #pragma once
 
 #include <list>
-#include "MathGeoLib/Geometry/AABB.h"
+#include "MathGeoLib/AABB.h"
 
 #define MAX_DIVISIONS 3
 

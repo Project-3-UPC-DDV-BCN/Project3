@@ -19,17 +19,31 @@
 #include "imgui/CustomImGui.h"
 #include "ComponentParticleEmmiter.h"
 #include "ModuleRenderer3D.h"
+#include "ComponentRectTransform.h"
+#include "ComponentCanvas.h"
 #include "ComponentScript.h"
+#include "ComponentImage.h"
+#include "ComponentText.h"
 #include "Script.h"
 #include "CSScript.h"
 #include "ModuleResources.h"
 #include "ComponentFactory.h"
+#include "ComponentRigidBody.h"
+#include "ComponentCollider.h"
+#include "PhysicsMaterial.h"
+#include "ComponentJointDistance.h"
+#include "BlastModel.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
 #include "ComponentAudioSource.h"
 #include "ComponentListener.h"
 #include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
+#include "ComponentProgressBar.h"
+#include "ModulePhysics.h"
+
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -39,6 +53,8 @@ PropertiesWindow::PropertiesWindow()
 	window_name = "Properties";
 	scripts_count = 0;
 	factories_count = 0;
+	colliders_count = 0;
+	distance_joints_count = 0;
 	lights_count = 0;
 }
 
@@ -48,20 +64,25 @@ PropertiesWindow::~PropertiesWindow()
 
 void PropertiesWindow::DrawWindow()
 {
-	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) {
+	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar))
+	{
 		GameObject* selected_gameobject = nullptr;
-		if (App->scene->selected_gameobjects.size() == 1) {
+		if (App->scene->selected_gameobjects.size() == 1)
+		{
 			selected_gameobject = App->scene->selected_gameobjects.front();
 		}
-		else if (App->scene->selected_gameobjects.size() > 1) {
+		else if (App->scene->selected_gameobjects.size() > 1)
+		{
 			ImGui::Text("More than 1 GameObject selected!");
 		}
 
-		if (selected_gameobject != nullptr && !selected_gameobject->is_on_destroy) {
+		if (selected_gameobject != nullptr && !selected_gameobject->is_on_destroy)
+		{
 			ImGui::Text("Name: %s", selected_gameobject->GetName().c_str());
 			bool is_gameobject_active = selected_gameobject->IsActive();
 
-			if (ImGui::Checkbox("Active", &is_gameobject_active)) {
+			if (ImGui::Checkbox("Active", &is_gameobject_active))
+			{
 				selected_gameobject->SetActive(is_gameobject_active);
 			}
 			ImGui::SameLine();
@@ -72,13 +93,17 @@ void PropertiesWindow::DrawWindow()
 			}
 			ImGui::Text("Tag:");
 			ImGui::SameLine();
-			if (ImGui::SmallButton((selected_gameobject->GetTag() + "##tags").c_str())) {
+			if (ImGui::SmallButton((selected_gameobject->GetTag() + "##tags").c_str()))
+			{
 				ImGui::OpenPopup("Tags##gameobject");
 			}
-			if (ImGui::BeginPopup("Tags##gameobject")) {
-				for (int i = 0; i < App->tags_and_layers->tags_list.size(); i++) {
+			if (ImGui::BeginPopup("Tags##gameobject"))
+			{
+				for (int i = 0; i < App->tags_and_layers->tags_list.size(); i++)
+				{
 					std::string name = App->tags_and_layers->tags_list[i];
-					if (ImGui::MenuItem(name.c_str())) {
+					if (ImGui::MenuItem(name.c_str()))
+					{
 						if (name == "Main Camera" && App->renderer3D->game_camera == nullptr)
 						{
 							selected_gameobject->SetTag(name);
@@ -86,7 +111,8 @@ void PropertiesWindow::DrawWindow()
 					}
 				}
 				ImGui::Separator();
-				if (ImGui::MenuItem("Add Tag##gameobject")) {
+				if (ImGui::MenuItem("Add Tag##gameobject"))
+				{
 					App->editor->tags_and_layers_window->active = true;
 				}
 				ImGui::EndPopup();
@@ -94,18 +120,22 @@ void PropertiesWindow::DrawWindow()
 			ImGui::SameLine();
 			ImGui::Text("Layer:");
 			ImGui::SameLine();
-			if (ImGui::SmallButton((selected_gameobject->GetLayer() + "##layers").c_str())) {
+			if (ImGui::SmallButton((selected_gameobject->GetLayer() + "##layers").c_str()))
+			{
 				ImGui::OpenPopup("Layers##gameobject");
 			}
-			if (ImGui::BeginPopup("Layers##gameobject")) {
-				for (int i = 0; i < App->tags_and_layers->layers_list.size(); i++) {
+			if (ImGui::BeginPopup("Layers##gameobject"))
+			{
+				for (int i = 0; i < App->tags_and_layers->layers_list.size(); i++)
+				{
 					std::string name = App->tags_and_layers->layers_list[i];
 					if (ImGui::MenuItem(name.c_str())) {
 						selected_gameobject->SetLayer(name);
 					}
 				}
 				ImGui::Separator();
-				if (ImGui::MenuItem("Add Layer##gameobject")) {
+				if (ImGui::MenuItem("Add Layer##gameobject"))
+				{
 					App->editor->tags_and_layers_window->active = true;
 				}
 				ImGui::EndPopup();
@@ -116,22 +146,27 @@ void PropertiesWindow::DrawWindow()
 
 			scripts_count = 0;
 			factories_count = 0;
+			colliders_count = 0;
+			distance_joints_count = 0;
 			lights_count = 0;
 
-			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++) {
+			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++)
+			{
 				DrawComponent((*it));
 				ImGui::Separator();
 				ImGui::Spacing();
 			}
 
-			if (ImGui::Button("Add Component")) {
+			if (ImGui::Button("Add Component"))
+			{
 				ImGui::OpenPopup("Components");
 			}
 
 			if (ImGui::BeginPopup("Components"))
 			{
-				if (ImGui::MenuItem("Mesh Renderer")) {
-					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
+				if (ImGui::MenuItem("Mesh Renderer"))
+				{
+					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
 					}
 					else
@@ -139,8 +174,19 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
 					}
 				}
-				if (ImGui::MenuItem("Camera")) {
-					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr) {
+				/*if (ImGui::MenuItem("Blast Mesh Renderer")) {
+					if (selected_gameobject->GetComponent(Component::CompBlastMeshRenderer) == nullptr && selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompBlastMeshRenderer);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
+					}
+				}*/
+				if (ImGui::MenuItem("Camera"))
+				{
+					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr)
+					{
 						selected_gameobject->AddComponent(Component::CompCamera);
 					}
 					else
@@ -148,6 +194,22 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Camera!");
 					}
 				}
+
+				if (ImGui::BeginMenu("UI"))
+				{
+					if (ImGui::MenuItem("Canvas"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompCanvas) == nullptr)
+						{
+							selected_gameobject->AddComponent(Component::CompCanvas);
+						}
+						else
+							CONSOLE_WARNING("GameObject can't have more than 1 Canvas!");
+					}
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::MenuItem("Particle Emmiter")) {
 					if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompParticleSystem);
@@ -197,7 +259,8 @@ void PropertiesWindow::DrawWindow()
 					}
 				}
 
-				if (ImGui::BeginMenu("Script")) {
+				if (ImGui::BeginMenu("Script"))
+				{
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
 
@@ -235,7 +298,8 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::BeginMenu("Audio")) {
+				if (ImGui::BeginMenu("Audio"))
+				{
 					if (ImGui::MenuItem("Audio Listener"))
 					{
 						if (App->audio->GetDefaultListener() != nullptr)
@@ -256,7 +320,8 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::BeginMenu("New Factory")) {
+				if (ImGui::BeginMenu("New Factory"))
+				{
 					static char input_text[30];
 					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
 					ImGui::Spacing();
@@ -264,15 +329,120 @@ void PropertiesWindow::DrawWindow()
 					{
 						ComponentFactory* factory = (ComponentFactory*)selected_gameobject->AddComponent(Component::CompFactory);
 						if (factory) factory->SetName(input_text);
+						input_text[0] = 0;
+						ImGui::CloseCurrentPopup();
 					}
 					ImGui::EndMenu();
 				}
+
+				if (ImGui::MenuItem("RigidBody"))
+				{
+					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+						App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 RigidBody!");
+					}
+				}
+
+				if (ImGui::BeginMenu("Colliders"))
+				{
+					if (ImGui::MenuItem("Box"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+						{
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						}
+						selected_gameobject->AddComponent(Component::CompBoxCollider);
+					}
+					if (ImGui::MenuItem("Sphere"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+						{
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						}
+						selected_gameobject->AddComponent(Component::CompSphereCollider);
+					}
+					if (ImGui::MenuItem("Capsule"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+						{
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						}
+						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
+					}
+					if (ImGui::MenuItem("Mesh"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompMeshRenderer))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+							{
+								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							}
+							selected_gameobject->AddComponent(Component::CompMeshCollider);
+						}
+						else
+						{
+							CONSOLE_ERROR("Can't have Mesh Collider without a mesh in the GameObject");
+						}
+					}
+					ImGui::EndMenu();
+				}
+
+				/*if (ImGui::BeginMenu("Joints")) {
+					if (ImGui::MenuItem("Fixed"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompFixedJoint);
+					}
+					if (ImGui::MenuItem("Distance"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompDistanceJoint);
+					}
+					if (ImGui::MenuItem("Revolute"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompRevoluteJoint);
+					}
+					if (ImGui::MenuItem("Spherical"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompSphericalJoint);
+					}
+					if (ImGui::MenuItem("Prismatic"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompPrismaticJoint);
+					}
+					ImGui::EndMenu();
+				}*/
 
 				ImGui::EndPopup();
 			}
 		}
 	}
-
 	ImGui::EndDock();
 }
 
@@ -287,13 +457,22 @@ void PropertiesWindow::DrawComponent(Component * component)
 		DrawCameraPanel((ComponentCamera*)component);
 		break;
 	case Component::CompRigidBody:
+		DrawRigidBodyPanel((ComponentRigidBody*)component);
 		break;
 	case Component::CompMeshRenderer:
 		DrawMeshRendererPanel((ComponentMeshRenderer*)component);
 		break;
 	case Component::CompBoxCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
-	case Component::CompCircleCollider:
+	case Component::CompSphereCollider:
+		DrawColliderPanel((ComponentCollider*)component);
+		break;
+	case Component::CompCapsuleCollider:
+		DrawColliderPanel((ComponentCollider*)component);
+		break;
+	case Component::CompMeshCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
 	case Component::CompAnimaton:
 		break;
@@ -308,6 +487,24 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
+		break;
+	case Component::CompRectTransform:
+		DrawRectTransformPanel((ComponentRectTransform*)component);
+		break;
+	case Component::CompCanvas:
+		DrawCanvasPanel((ComponentCanvas*)component);
+		break;
+	case Component::CompImage:
+		DrawImagePanel((ComponentImage*)component);
+		break;
+	case Component::CompText:
+		DrawTextPanel((ComponentText*)component);
+		break;
+	case Component::CompProgressBar:
+		DrawProgressBarPanel((ComponentProgressBar*)component);
+		break;
+	case Component::CompDistanceJoint:
+		DrawJointDistancePanel((ComponentJointDistance*)component);
 		break;
 	case Component::CompAudioListener:
 		DrawAudioListener((ComponentListener*)component);
@@ -328,6 +525,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 
 void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 {
+	if (transform->GetGameObject()->GetIsUI())
+		return;
+
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 		float3 position;
 		float3 rotation;
@@ -351,6 +551,275 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f)) {
 			transform->SetScale(scale);
+		}
+	}
+}
+
+void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_transform)
+{
+	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
+		bool is_canvas = false;
+		ComponentCanvas* c_canvas = rect_transform->GetCanvas(is_canvas);
+
+		if (c_canvas != nullptr)
+		{
+			if (c_canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE || !is_canvas)
+			{
+				float2 position = rect_transform->GetPos();
+				float3 rotation = rect_transform->GetLocalRotation();
+				float2 anchor = rect_transform->GetAnchor();
+				float2 size = rect_transform->GetSize();
+				float scale = rect_transform->GetScale();
+
+				bool snap_up = rect_transform->GetSnapUp();
+				bool snap_down = rect_transform->GetSnapDown();
+				bool snap_left = rect_transform->GetSnapLeft();
+				bool snap_right = rect_transform->GetSnapRight();
+
+				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
+				{
+					rect_transform->SetPos(position);
+				}
+
+				if (ImGui::DragFloat3("Rotation", (float*)&rotation, true, 0.25f))
+				{
+					rect_transform->SetRotation(rotation);
+				}
+
+				if (!is_canvas)
+				{
+					if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))
+					{
+						rect_transform->SetSize(size);
+					}
+
+					if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
+					{
+						rect_transform->SetAnchor(anchor);
+					}
+
+					if (ImGui::Checkbox("Snap Up", &snap_up))
+					{
+						rect_transform->SetSnapUp(snap_up);
+					}
+
+					ImGui::SameLine();
+					if (ImGui::Checkbox("Snap Down", &snap_down))
+					{
+						rect_transform->SetSnapDown(snap_down);
+					}
+
+					if (ImGui::Checkbox("Snap Left", &snap_left))
+					{
+						rect_transform->SetSnapLeft(snap_left);
+					}
+					ImGui::SameLine();
+					if (ImGui::Checkbox("Snap Right", &snap_right))
+					{
+						rect_transform->SetSnapRight(snap_right);
+					}
+				}
+			}
+			else
+				ImGui::Text("Values are given by screen space");
+
+			ImGui::Text("Has canvas");
+
+	/*		ImGui::Separator();
+			ImGui::Text("Debug");
+
+			ImGui::Text("Global origin: x%f, y%f", rect_transform->GetOriginGlobalPos().x, rect_transform->GetOriginGlobalPos().y);
+			ImGui::Text("Global anchor: x:%f, y:%f", rect_transform->GetAnchorGlobalPos().x, rect_transform->GetAnchorGlobalPos().y);
+			ImGui::Text("Global pos: x:%f, y:%f", rect_transform->GetGlobalPos().x, rect_transform->GetGlobalPos().y);
+			ImGui::Text("Local pos: x%f, y%f", rect_transform->GetLocalPos().x, rect_transform->GetLocalPos().y);
+			ImGui::Text("local origin: x%f, y%f", rect_transform->GetOriginLocalPos().x, rect_transform->GetOriginLocalPos().y);*/
+		}
+		else
+			ImGui::Text("No canvas found");
+	}
+}
+
+void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
+{
+	if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{	
+		const char* mode_names[] = { "Screen Space", "World Space" };
+		int render_mode = canvas->GetRenderMode();
+
+		const char* scale_names[] = { "Constant Size", "Scale with screen size" };
+		int scale_mode = canvas->GetScaleMode();
+
+		ImGui::Combo("Render Mode", &render_mode, mode_names, 2);
+
+		if (render_mode == 0)
+		{
+			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_SCREEN_SPACE);
+
+			ImGui::Text("Size: %d %d", (int)canvas->GetSize().x, (int)canvas->GetSize().y);
+		}
+		else if (render_mode == 1)
+		{
+			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_WORLD_SPACE);
+
+			float2 size = canvas->GetSize();
+			if (ImGui::DragFloat2("Canvas Size", (float*)&size, true, 0.25f))
+			{
+				canvas->SetSize(size);
+			}
+		}
+
+		ImGui::Separator();
+
+		ImGui::Combo("Scale Mode", &scale_mode, scale_names, 2);
+
+		if (scale_mode == 0)
+		{
+			canvas->SetScaleMode(CanvasScaleMode::SCALEMODE_CONSTANT_SIZE);
+
+			float scale = canvas->GetScale();
+			if (ImGui::DragFloat("Scale", &scale, true, 0.01f, 0.0f))
+			{
+				canvas->SetScale(scale);
+			}
+		}
+		else if (scale_mode == 1)
+		{
+			canvas->SetScaleMode(CanvasScaleMode::SCALEMODE_WITH_SCREEN_SIZE);
+
+			float2 reference_size = canvas->GetReferenceSize();
+
+			if (ImGui::DragFloat2("Reference Size", (float*)&reference_size, true, 0.1f, 0))
+			{
+				canvas->SetReferenceSize(reference_size);
+			}
+
+			ImGui::Text("Scale: %f", canvas->GetScale());
+		}
+	}
+}
+
+void PropertiesWindow::DrawImagePanel(ComponentImage * image)
+{
+	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		Texture* tex = image->GetTexture();
+
+		if(ImGui::InputResourceTexture("Texture", &tex));
+			image->SetTexture(tex);
+
+		if (image->GetTexture() != nullptr)
+		{
+			image->SetTexture(tex);
+
+			if(ImGui::Button("Set native size"))
+			{
+				image->SetNativeSize();
+			}
+		}
+
+		bool flip = image->GetFlip();
+		if (ImGui::Checkbox("Flip", &flip))
+		{
+			image->SetFlip(flip);
+		}
+
+		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().z, image->GetColour().w };
+
+		ImGui::Text("Colour");
+		if(ImGui::ColorEdit4("", colour))
+		{
+			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
+		}
+	}
+}
+
+void PropertiesWindow::DrawTextPanel(ComponentText * text)
+{
+	if (ImGui::CollapsingHeader("Label", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		Font* font = text->GetFont();
+		if (ImGui::InputResourceFont("Font", &font))
+		{
+			text->SetFont(font);
+		}
+
+		if (text->HasFont())
+		{
+			float colour[4] = { text->GetColour().x, text->GetColour().y, text->GetColour().w, text->GetColour().z };
+
+			int size = text->GetFontSize();
+
+			bool bold = text->GetStyleBold();
+			bool italic = text->GetStyleItalic();
+			bool underline = text->GetStyleUnderline();
+			bool strikethrough = text->GetStyelStrikethrough();
+
+			char buffer[255];
+			strcpy(buffer, text->GetText().c_str());
+			if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
+			{
+				text->SetText(buffer);
+			}
+
+			if (ImGui::DragInt("Font Size", &size, true))
+			{
+				text->SetFontSize(size);
+			}
+
+			ImGui::Text("Colour");
+			if (ImGui::ColorEdit4("", colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				text->SetColour(float4(colour[0], colour[1], colour[3], colour[2]));
+			}
+
+			ImGui::Text("Character");
+			if (ImGui::Checkbox("Bold", &bold))
+			{
+				text->SetStyleBold(bold);
+			}
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Italic", &italic))
+			{
+				text->SetStyleItalic(italic);
+			}
+	
+			if (ImGui::Checkbox("Underline", &underline))
+			{
+				text->SetStyleUnderline(underline);
+			}
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Strikethrough", &strikethrough))
+			{
+				text->SetStyelStrikethrough(strikethrough);
+			}
+		}
+	}
+}
+
+void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
+{
+	if (ImGui::CollapsingHeader("Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float progress = bar->GetProgressPercentage();
+		if (ImGui::DragFloat("Progress %", &progress))
+		{
+			bar->SetProgressPercentage(progress);
+		}
+
+		float base_colour[4] = { bar->GetBaseColour().x, bar->GetBaseColour().y,bar->GetBaseColour().z, bar->GetBaseColour().w };
+		float progress_colour[4] = { bar->GetProgressColour().x,bar->GetProgressColour().y,bar->GetProgressColour().z, bar->GetProgressColour().w };
+
+		ImGui::Text("Base Colour");
+		if (ImGui::ColorEdit4("Base", base_colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			bar->SetBaseColour(float4(base_colour[0], base_colour[1], base_colour[2], base_colour[3]));
+		}
+
+		ImGui::Text("Progress Colour");
+		if (ImGui::ColorEdit4("Progress", progress_colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			bar->SetProgressColour(float4(progress_colour[0], progress_colour[1], progress_colour[2], progress_colour[3]));
 		}
 	}
 }
@@ -562,7 +1031,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 		}
 
 		Script* script = comp_script->GetScript();
-		if (ImGui::InputResourceScript(("Script##Script_" + script_name).c_str(), &script))
+		if (ImGui::InputResourceScript("Script", &script))
 		{
 			comp_script->SetScript(script);
 		}
@@ -630,7 +1099,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			case ScriptField::GameObject:
 			{
 				GameObject* gameobject = comp_script->GetScript()->GetGameObjectProperty((*it)->fieldName.c_str());
-				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName + script_name).c_str(), &gameobject)) {
+				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName).c_str(), &gameobject)) {
 					comp_script->GetScript()->SetGameObjectProperty((*it)->fieldName.c_str(), gameobject);
 				}
 			}
@@ -682,7 +1151,7 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Prefab* prefab = factory->GetFactoryObject();
-		if(ImGui::InputResourcePrefab(("Factory Object##" + std::to_string(factories_count)).c_str(), &prefab))
+		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
 		{
 			factory->SetFactoryObject(prefab);
 		}
@@ -697,6 +1166,179 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		if (ImGui::DragFloat(("Life Time##" + std::to_string(factories_count)).c_str(), &life_time, true, 0.025f, 0))
 		{
 			factory->SetLifeTime(life_time);
+		}
+	}
+}
+
+void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
+{
+	if (ImGui::CollapsingHeader(rigidbody->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float mass = rigidbody->GetMass();
+		if (ImGui::DragFloat("Mass", &mass))
+		{
+			rigidbody->SetMass(mass);
+		}
+		float l_damping = rigidbody->GetLinearDamping();
+		if (ImGui::DragFloat("Linear Damping", &l_damping))
+		{
+			rigidbody->SetLinearDamping(l_damping);
+		}
+		float a_damping = rigidbody->GetAngularDamping();
+		if (ImGui::DragFloat("Angular Damping", &a_damping))
+		{
+			rigidbody->SetAngularDamping(a_damping);
+		}
+		float3 linear_velocity = rigidbody->GetLinearVelocity();
+		if (ImGui::DragFloat3("Linear Velo", (float*)&linear_velocity))
+		{
+			rigidbody->SetLinearVelocity(linear_velocity);
+		}
+		bool use_gravity = rigidbody->IsUsingGravity();
+		if (ImGui::Checkbox("Gravity", &use_gravity))
+		{
+			rigidbody->SetUseGravity(use_gravity);
+		}
+		bool is_kinematic = rigidbody->IsKinematic();
+		if (ImGui::Checkbox("Kinematic", &is_kinematic))
+		{
+			rigidbody->SetKinematic(is_kinematic);
+		}
+		bool is_ccd = rigidbody->IsCCDMode();
+		if (ImGui::Checkbox("CCD", &is_ccd))
+		{
+			rigidbody->SetCCDMode(is_ccd);
+		}
+
+		ImGui::Text("Axis Lock");
+		ImGui::Separator();
+		ImGui::Text("Movement:");
+		bool linear_x = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearX);
+		if (ImGui::Checkbox("X##LinearX", &linear_x))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearX, linear_x);
+		}
+		ImGui::SameLine();
+		bool linear_y = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearY);
+		if (ImGui::Checkbox("Y##LinearY", &linear_y))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearY, linear_y);
+		}
+		ImGui::SameLine();
+		bool linear_z = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearZ);
+		if (ImGui::Checkbox("Z##LinearZ", &linear_z))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearZ, linear_z);
+		}
+
+		ImGui::Text("Rotation:");
+		bool angular_x = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularX);
+		if (ImGui::Checkbox("X##AngularX", &angular_x))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularX, angular_x);
+		}
+		ImGui::SameLine();
+		bool angular_y = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularY);
+		if (ImGui::Checkbox("Y##AngularY", &angular_y))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularY, angular_y);
+		}
+		ImGui::SameLine();
+		bool angular_z = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularZ);
+		if (ImGui::Checkbox("Z##AngularZ", &angular_z))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularZ, angular_z);
+		}
+	}
+}
+
+void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
+{
+	colliders_count++;
+	if (ImGui::CollapsingHeader((comp_collider->GetName() + "##" + std::to_string(colliders_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool is_active = comp_collider->IsActive();
+		if (ImGui::Checkbox(("Active##Collider" + std::to_string(colliders_count)).c_str(), &is_active))
+		{
+			comp_collider->SetActive(is_active);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
+		{
+			App->scene->selected_gameobjects.front()->DestroyComponent(comp_collider);
+		}
+
+		PhysicsMaterial* material = comp_collider->GetColliderMaterial();
+		if (ImGui::InputResourcePhysMaterial("Material", &material))
+		{
+			comp_collider->SetColliderMaterial(material);
+		}
+		ImGui::Spacing();
+
+		bool is_trigger = comp_collider->IsTrigger();
+		if (ImGui::Checkbox("Trigger", &is_trigger))
+		{
+			comp_collider->SetTrigger(is_trigger);
+		}
+
+		//material
+
+		float3 center = comp_collider->GetColliderCenter();
+		if (ImGui::DragFloat3("Center", (float*)&center, true, 0.25f)) {
+			comp_collider->SetColliderCenter(center);
+		}
+
+		float3 box_size;
+		float sphere_radius;
+		float capsule_radius;
+		float capsule_height;
+		const char* directions[3];
+		int current_direction;
+		bool is_convex = false;
+
+		switch (comp_collider->GetColliderType())
+		{
+		case ComponentCollider::BoxCollider:
+			box_size = comp_collider->GetBoxSize();
+			if (ImGui::DragFloat3("Size##box", (float*)&box_size, true, 0.25f)) {
+				comp_collider->SetBoxSize(box_size);
+			}
+			break;
+		case ComponentCollider::SphereCollider:
+			sphere_radius = comp_collider->GetSphereRadius();
+			if (ImGui::DragFloat("Radius##sphere", &sphere_radius, true, 0.25f)) {
+				comp_collider->SetSphereRadius(sphere_radius);
+			}
+			break;
+		case ComponentCollider::CapsuleCollider:
+			capsule_radius = comp_collider->GetCapsuleRadius();
+			if (ImGui::DragFloat("Radius##capsule", &capsule_radius, true, 0.25f)) {
+				comp_collider->SetCapsuleRadius(capsule_radius);
+			}
+			capsule_height = comp_collider->GetCapsuleHeight();
+			if (ImGui::DragFloat("Height##capsule", &capsule_height, true, 0.25f)) {
+				comp_collider->SetCapsuleHeight(capsule_height);
+			}
+
+			directions[0] = "X Axis";
+			directions[1] = "Y Axis";
+			directions[2] = "Z Axis";
+			current_direction = comp_collider->GetCapsuleDirection();
+
+			if (ImGui::Combo("Direction", &current_direction, directions, IM_ARRAYSIZE(directions)))
+			{
+				comp_collider->SetCapsuleDirection((ComponentCollider::CapsuleDirection) current_direction);
+			}
+			break;
+		case ComponentCollider::MeshCollider:
+			is_convex = comp_collider->IsConvex();
+			if (ImGui::Checkbox("Convex", &is_convex))
+			{
+				comp_collider->ChangeMeshToConvex(is_convex);
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -1211,7 +1853,6 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 		}
 		else
 			billboard->SetBillboardType(BILLBOARD_NONE);
-
 	}
 }
 
@@ -1248,6 +1889,18 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 
 				ImGui::TreePop();
 			}
+		}
+	}
+}
+
+void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
+{
+	distance_joints_count++;
+	if (ImGui::CollapsingHeader((joint->GetName() + "##" + std::to_string(distance_joints_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		GameObject* gameobject = joint->GetConnectedBody();
+		if (ImGui::InputResourceGameObject("Connected Body", &gameobject, ResourcesWindow::GameObjectFilter::GoFilterRigidBody)) {
+			joint->SetConnectedBody(gameobject);
 		}
 	}
 }
@@ -1370,3 +2023,4 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 		}
 	}
 }
+

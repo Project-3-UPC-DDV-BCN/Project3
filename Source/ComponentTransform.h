@@ -19,8 +19,9 @@ public:
 	float3 GetGlobalScale() const;
 	float3 GetLocalScale() const;
 	void UpdateGlobalMatrix();
+	void UpdateLocals();
 	const float4x4 GetMatrix() const;
-	const float* GetOpenGLMatrix() const;
+	const float4x4 GetOpenGLMatrix() const;
 	void SetMatrix(const float4x4 &matrix);
 
 	float3 GetForward()const;

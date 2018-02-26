@@ -10,7 +10,10 @@ class ComponentParticleEmmiter;
 class ComponentLight;
 class Primitive;
 class ComponentCamera;
+class ComponentCanvas;
 class DebugDraw;
+
+#define MAX_LIGHTS 8
 
 #define MAX_DIR_LIGHT 2
 #define MAX_SPO_LIGHT 8
@@ -46,6 +49,8 @@ public:
 	bool IsUsingSkybox()const;
 
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
+	void AddCanvasToDraw(ComponentCanvas* canvas);
+	void RemoveCanvasToDraw(ComponentCanvas* canvas);
 
 	void BindArrayBuffer(uint id) const;
 	void BindElementArrayBuffer(uint id) const;
@@ -116,6 +121,10 @@ private:
 	void DrawSceneCameras(ComponentCamera* camera);
 
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
+
+public:
+	Light lights[MAX_LIGHTS];
 	void DrawZBuffer();
 	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
 	void DrawGrid(ComponentCamera* camera);
@@ -152,6 +161,7 @@ private:
 	int spot_light_count;
 
 	std::list<Primitive*> debug_primitive_to_draw;
+	std::list<ComponentCanvas*> canvas_to_draw;
 	std::list<ComponentParticleEmmiter*> particles_to_draw;
 
 

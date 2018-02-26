@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "Color.h"
 #include "Primitive.h"
-#include "MathGeoLib\Math\Rect.h"
+#include "MathGeoLib/Rect.h"
 
 enum LightType {
 	DIRECTIONAL_LIGHT = 0,

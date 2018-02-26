@@ -67,6 +67,20 @@ private:
 	static MonoObject* GetRight(MonoObject* object);
 	static MonoObject* GetUp(MonoObject* object);
 
+	//RECTTRANSFORM
+	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectPosition(MonoObject * object);
+	static void SetRectRotation(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectRotation(MonoObject * object);
+	static void SetRectSize(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectSize(MonoObject * object);
+	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
+	static MonoObject* GetRectAnchor(MonoObject * object);
+
+	//PROGRESSBAR
+	static void SetPercentageProgress(MonoObject * object, float progress);
+	static float GetPercentageProgress(MonoObject * object);
+
 	//FACTORY
 	static void StartFactory(MonoObject * object);
 	static MonoObject* Spawn(MonoObject* object);

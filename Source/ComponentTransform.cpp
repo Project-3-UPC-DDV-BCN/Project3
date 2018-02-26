@@ -1,6 +1,9 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "componentRigidBody.h"
 #include "ComponentLight.h"
+#include "Application.h"
+#include "ComponentBlast.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
@@ -38,11 +41,6 @@ float3 ComponentTransform::GetGlobalPosition() const
 
 float3 ComponentTransform::GetLocalPosition() const
 {
-	/*if (GetGameObject()->GetParent() != nullptr)
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)GetGameObject()->GetParent()->GetComponent(ComponentType::CompTransform);
-		return GetGlobalPosition() - parent_transform->GetGlobalPosition();
-	}*/
 	return position; //If it's the parent. local position = global position
 }
 
@@ -65,11 +63,6 @@ float3 ComponentTransform::GetGlobalRotation() const
 
 float3 ComponentTransform::GetLocalRotation() const
 {
-	/*if (GetGameObject()->GetParent() != nullptr)
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)GetGameObject()->GetParent()->GetComponent(ComponentType::CompTransform);
-		return GetGlobalRotation() - parent_transform->GetGlobalRotation();
-	}*/
 	return shown_rotation; //If it's the parent. local rotation = global rotation
 }
 
@@ -77,6 +70,11 @@ void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
+	//ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+	//if (rb)
+	//{
+	//	rb->SetColliderScale(scale);
+	//}
 }
 
 float3 ComponentTransform::GetGlobalScale() const
@@ -86,17 +84,11 @@ float3 ComponentTransform::GetGlobalScale() const
 
 float3 ComponentTransform::GetLocalScale() const
 {
-	/*if (GetGameObject()->GetParent() != nullptr)
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)GetGameObject()->GetParent()->GetComponent(ComponentType::CompTransform);
-		return GetGlobalScale() - parent_transform->GetGlobalScale();
-	}*/
 	return scale; //If it's the parent. local scale = global scale
 }
 
 void ComponentTransform::UpdateGlobalMatrix()
 {
-	
 	if (!is_particle && !this->GetGameObject()->IsRoot())
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
@@ -135,13 +127,28 @@ void ComponentTransform::UpdateGlobalMatrix()
 		global_scale = scale;
 	}
 
-
 	if (!is_particle)
 	{
 		GetGameObject()->UpdateBoundingBox();
-
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
+
+		if (!App->IsPlaying())
+		{
+			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+			if (rb)
+			{
+				rb->SetTransform(transform_matrix.Transposed().ptr());
+			}
+			else
+			{
+				ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
+				if (blast)
+				{
+					blast->SetTransform(transform_matrix.Transposed().ptr());
+				}
+			}
+		}
 	}
 		
 //POSSIBLEEE
@@ -155,19 +162,46 @@ void ComponentTransform::UpdateGlobalMatrix()
 
 }
 
+void ComponentTransform::UpdateLocals()
+{
+	float4x4 local_transform = float4x4::identity;
+
+	if(!this->GetGameObject()->IsRoot())
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
+		local_transform = transform_matrix * parent_transform->transform_matrix.Inverted();
+	}
+	else
+	{
+		local_transform = transform_matrix;
+	}
+
+	local_transform.Decompose(position, rotation, scale);
+
+	float3 _pos, _scale;
+	Quat _rot;
+	transform_matrix.Decompose(_pos, _rot, _scale);
+	global_pos = _pos;
+	global_rot = _rot.ToEulerXYZ() * RADTODEG;
+	global_scale = _scale;
+	
+}
+
 const float4x4 ComponentTransform::GetMatrix() const
 {
 	return transform_matrix;
 }
 
-const float * ComponentTransform::GetOpenGLMatrix() const
+const float4x4 ComponentTransform::GetOpenGLMatrix() const
 {
-	return transform_matrix.Transposed().ptr();
+	return transform_matrix.Transposed();
 }
 
 void ComponentTransform::SetMatrix(const float4x4 & matrix)
 {
 	transform_matrix = matrix;
+
+	UpdateLocals();
 
 	if (GetGameObject() == nullptr)
 	{
@@ -220,7 +254,8 @@ void ComponentTransform::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
-	position = data.GetVector3("position"); 
+	position = data.GetVector3("position");
+	SetPosition(position);
 	float4 float_to_quat = data.GetVector4("rotation");
 	rotation.x = float_to_quat.x;
 	rotation.y = float_to_quat.y;
@@ -228,5 +263,7 @@ void ComponentTransform::Load(Data & data)
 	rotation.w = float_to_quat.w;
 	shown_rotation = rotation.ToEulerXYZ();
 	shown_rotation *= RADTODEG;
+	SetRotation(shown_rotation);
 	scale = data.GetVector3("scale");
+	SetScale(scale);
 }

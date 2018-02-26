@@ -9,14 +9,17 @@ class Component
 {
 public:
 	enum ComponentType {
-		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompCircleCollider, CompAudioSource, CompAnimaton, 
-		CompScript, CompParticleSystem, CompBillboard, CompFactory,  CompAudioListener, CompAudioDistZone, CompLight, CompUnknown,
+		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompSphereCollider, CompCapsuleCollider, CompMeshCollider, CompAudioSource, 
+		CompAnimaton, CompScript, CompParticleSystem, CompFactory, CompFixedJoint, CompDistanceJoint, CompSphericalJoint, CompRevoluteJoint, CompPrismaticJoint, 
+		CompD6Joint, CompBlast, CompLight, CompAudioListener, CompAudioDistZone, CompBillboard, CompCanvas, CompRectTransform, CompImage, CompText, CompProgressBar, CompUnknown,
 	};
 
 	Component();
 	virtual ~Component();
+
 	virtual void OnEnable();
 	virtual void OnDisable();
+
 	void SetActive(bool active);
 	bool IsActive() const;
 	void SetGameObject(GameObject* attached_gameobject);

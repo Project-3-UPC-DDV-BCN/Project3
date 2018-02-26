@@ -16,9 +16,6 @@
     <Filter Include="Sources\Helpers">
       <UniqueIdentifier>{121f8e6b-df36-4ab0-be0d-601ddfc9e503}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\UI">
-      <UniqueIdentifier>{0bfd2c1a-fc3d-45fa-b15a-22d09dc1e801}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\EditorUI">
       <UniqueIdentifier>{5aa5b117-256e-4d7f-a04d-495686e3e688}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,18 @@
     <Filter Include="Sources\3d Party\imGui\ImGuiTextEditor">
       <UniqueIdentifier>{85858fa6-7434-4fea-978f-5e30f618d536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3d Party\Nvidia">
+      <UniqueIdentifier>{0bad3b47-c021-4477-8e36-4c6dd026b74d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia\PhysX">
+      <UniqueIdentifier>{ddff0942-c94a-46d4-9124-a5411e851ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia\Flow">
+      <UniqueIdentifier>{cbd15e68-5df4-42e5-bec8-cddb8c138533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\3d Party\Nvidia\Blast">
+      <UniqueIdentifier>{b2008ffc-7f13-45a0-86a9-7c51583e6dbf}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Sources\3d Party\Wwise">
       <UniqueIdentifier>{b05dcfb5-f765-4cb6-9757-4ff2e955f8f7}</UniqueIdentifier>
     </Filter>
@@ -61,8 +70,13 @@
     <Filter Include="Sources\3d Party\Parson">
       <UniqueIdentifier>{1dbfddcf-d4e4-458f-9a0b-1f1ce259303c}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="Sources\Helpers\Resources">
       <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
+=======
+    <Filter Include="Sources\GameObject\Components\UI">
+      <UniqueIdentifier>{a89151dd-93f3-4407-8d21-204a484a11f2}</UniqueIdentifier>
+>>>>>>> origin/Vertical-Slice-1
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +119,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="PhysBody3D.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
       <Filter>Sources\3d Party\imGui</Filter>
     </ClInclude>
@@ -128,9 +139,6 @@
     </ClInclude>
     <ClInclude Include="imgui\stb_truetype.h">
       <Filter>Sources\3d Party\imGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Console.h">
-      <Filter>Sources\UI</Filter>
     </ClInclude>
     <ClInclude Include="ModuleScene.h">
       <Filter>Sources\Modules</Filter>
@@ -191,9 +199,6 @@
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Sources\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentMeshRenderer.h">
       <Filter>Sources\GameObject\Components</Filter>
@@ -273,186 +278,6 @@
     <ClInclude Include="imgui\CustomImGui.h">
       <Filter>Sources\3d Party\imGui</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\AABB.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\AABB2D.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Capsule.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Circle.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Frustum.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\GeometryAll.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\GeomType.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\HitInfo.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\KDTree.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Line.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\LineSegment.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\OBB.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\PBVolume.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Plane.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Polygon.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Polyhedron.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\QuadTree.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Ray.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Sphere.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\Triangle.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Geometry\TriangleMesh.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\assume.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\BitOps.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Callstack.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Complex.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\CoordinateAxisConvention.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\FixedPoint.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float2.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float3.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float3x3.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float3x4.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4_neon.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4_sse.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4d.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4x4.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4x4_neon.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\float4x4_sse.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\FloatCmp.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\grisu3.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\InclWindows.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MathAll.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MathConstants.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MathFunc.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MathLog.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MathNamespace.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MathTypes.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\MatrixProxy.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\myassert.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Polynomial.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Quat.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\quat_simd.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Rect.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\Reinterpret.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\simd.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\sse_mathfun.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\SSEMath.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Math\TransformOps.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Time\Clock.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
-    <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClInclude>
     <ClInclude Include="GameWindow.h">
       <Filter>Sources\EditorUI</Filter>
     </ClInclude>
@@ -504,6 +329,63 @@
     <ClInclude Include="ComponentFactory.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModulePhysics.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRigidBody.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCollider.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePhysMatImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsMaterial.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointRevolute.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointSpherical.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointDistance.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointFixed.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentJointPrismatic.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlow.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContext.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContextD3D11.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContextD3D12.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowContextExt.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowShader.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="Nvidia\Flow\include\NvFlowTypes.h">
+      <Filter>Sources\3d Party\Nvidia\Flow</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBlastMeshImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
@@ -512,6 +394,12 @@
     </ClInclude>
     <ClInclude Include="ModuleShaderImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="BlastModel.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleBlast.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Particles.h">
       <Filter>Sources\Helpers</Filter>
@@ -533,9 +421,6 @@
     </ClInclude>
     <ClInclude Include="Wwise.h">
       <Filter>Sources\3d Party\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Geomath.h">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClInclude>
     <ClInclude Include="AudioEvent.h">
       <Filter>Sources\Audio</Filter>
@@ -570,6 +455,716 @@
     <ClInclude Include="DebugDraw.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="ComponentBlast.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\AkDefaultLowLevelIODispatcher.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\AkFileLocationBase.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\AkFilePackage.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\AkFilePackageLowLevelIO.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\AkFilePackageLUT.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\AkMultipleFileLocation.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Common\stdafx.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Win32\AkDefaultIOHookDeferred.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Win32\AkFileHelpers.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Win32\AkFilePackageLowLevelIOBlocking.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Win32\AkFilePackageLowLevelIODeferred.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\IO\Win32\stdafx.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Comm\AkCommunication.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\AkApplyGain.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\AkDelayLineMemory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\AkDelayLineMemoryStream.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\AkModulatorProcess.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\AkVolAutomation.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\Generic\AkDelayLineMemory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\DSP\Generic\AkDelayLineMemoryStream.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\MusicEngine\Common\AkMusicEngine.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkAudioInputPlugin.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkAudioInputSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkCompressorFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkDelayFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkExpanderFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkFlangerFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkGainFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkGuitarDistortionFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkHarmonizerFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkMatrixReverbFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkMeterFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkMotionGeneratorSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkMotionSinkFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkParametricEQFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkPeakLimiterFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkPitchShifterFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkRecorderFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkReflectGameData.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkRoomVerbFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSilenceSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSineSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSinkFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSoundSeedImpactFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSoundSeedWindSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSoundSeedWooshSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkStereoDelayFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkSynthOneSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkTimeStretchFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkToneSourceFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkTremoloFXFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AkVorbisDecoderFactory.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AllPluginsFactories.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\AllPluginsRegistrationHelpers.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\PluginServices\AkFXDurationHandler.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\PluginServices\AkFXParameterChangeHandler.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\PluginServices\AkFXTailHandler.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\PluginServices\AkMixerInputMap.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\PluginServices\AkValueRamp.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Plugin\PluginServices\AkVectorValueRamp.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkBytesMem.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkCallback.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkCommonDefs.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkDynamicDialogue.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkDynamicSequence.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkFPUtilities.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkMemoryMgr.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkMidiTypes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkModule.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkQueryParameters.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkSimd.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkSoundEngine.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkSoundEngineExport.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkSpeakerConfig.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkSpeakerVolumes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkStreamMgrModule.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkTypes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\AkVirtualAcoustics.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\IAkMixerPlugin.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\IAkPlugin.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\IAkPluginMemAlloc.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\IAkProcessorFeatures.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\IAkRTPCSubscriber.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Common\IAkStreamMgr.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\arm_neon\AkSimd.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\arm_neon\AkSimdShuffle.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\Generic\AkSimd.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\Generic\AkSpeakerVolumes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\POSIX\AkTypes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\SSE\AkSimd.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\Windows\AkSimd.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\Windows\AkTypes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Platforms\Windows\AkWinSoundEngine.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookBlocking.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookDeferred.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Win32\AkFileHelpers.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Win32\AkFilePackageLowLevelIOBlocking.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Win32\AkFilePackageLowLevelIODeferred.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundEngine\Win32\stdafx.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundFrame\SF.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SoundFrame\SFObjects.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SpatialAudio\Common\AkSpatialAudio.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\SpatialAudio\Common\AkSpatialAudioTypes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkAllocator.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkArray.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkAssert.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkAutoLock.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkBankReadHelpers.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkDynaBlkPool.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkFNVHash.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkHashList.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkKeyArray.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkKeyDef.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkListBare.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkListBareLight.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkLock.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkMonitorError.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkObject.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkPlatformFuncs.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkSet.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkSmartPtr.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkString.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkSyncCaller.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Common\AkVectors.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\POSIX\AkLock.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\POSIX\AkPlatformFuncs.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Win32\AkLock.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Tools\Win32\AkPlatformFuncs.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\AudioPlugin.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\IXmlTextReader.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\IXmlTextWriter.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\PlatformID.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\TargetVer.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\Undo.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\Utilities.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\SourceControl\ISourceControl.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\SourceControl\ISourceControlDialogBase.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\SourceControl\ISourceControlOperationProgress.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\SourceControl\ISourceControlUtilities.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\Wwise\SourceControl\SourceControlContainers.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkGuid.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkJsonBase.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkVariantBase.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\waapi.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\AkJson.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\AkVariant.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\autobahn.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\civetweb.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\Client.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\FutureUtils.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\IWebSocketClientHandler.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\JsonProvider.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\Logger.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\WwiseAuthoringAPI\AkAutobahn\WebSocketClient.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\AkPlatforms.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\AkWwiseSDKVersion.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Wwise\include\AK\IBytes.h">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\AABB.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\AABB2D.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\assume.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\BitOps.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Callstack.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Capsule.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Circle.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Clock.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\FixedPoint.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float2.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float3.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float3x3.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float3x4.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4_neon.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4_sse.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4d.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4x4.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4x4_neon.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\float4x4_sse.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\FloatCmp.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Frustum.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\GeometryAll.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\GeomType.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\GJK.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\grisu3.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\HitInfo.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\InclWindows.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\JSONReport.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\KDTree.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\LCG.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Line.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\LineSegment.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathAll.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathBuildConfig.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathConstants.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathFunc.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathGeoLib.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathGeoLibFwd.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathLog.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathNamespace.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MathTypes.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\MatrixProxy.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\myassert.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\OBB.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\ObjectGenerators.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\PBVolume.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Plane.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Polygon.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Polyhedron.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Polynomial.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\QuadTree.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Quat.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\quat_simd.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Ray.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Rect.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Reinterpret.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\SAT.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\simd.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Sphere.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\sse_mathfun.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\SSEMath.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\SystemInfo.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\TestData.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\TestRunner.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\TransformOps.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\Triangle.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\TriangleMesh.h">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRectTransform.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentText.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentImage.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentProgressBar.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UsefulFunctions.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFontImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+>>>>>>> origin/Vertical-Slice-1
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
   </ItemGroup>
@@ -613,9 +1208,12 @@
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="PhysBody3D.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
+=======
+>>>>>>> origin/Vertical-Slice-1
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>Sources\3d Party\imGui</Filter>
     </ClCompile>
@@ -701,13 +1299,13 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="InputConfigWindow.cpp">
       <Filter>Sources\EditorUI\Modules Config</Filter>
@@ -737,13 +1335,13 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="RenderTextureMSAA.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="imgui\ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\3d Party\imGui\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="Prefab.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMeshImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -755,7 +1353,7 @@
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMaterialImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -765,96 +1363,6 @@
     </ClCompile>
     <ClCompile Include="imgui\CustomImGui.cpp">
       <Filter>Sources\3d Party\imGui</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\AABB.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Capsule.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Circle.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Frustum.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Line.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\LineSegment.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\OBB.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Plane.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Polygon.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Polyhedron.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Ray.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Sphere.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\Triangle.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Geometry\TriangleMesh.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\BitOps.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float2.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float3.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float3x3.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float3x4.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float4.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\float4x4.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\MathFunc.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\MathLog.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\MathOps.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\Polynomial.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\Quat.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\SSEMath.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Math\TransformOps.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Time\Clock.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
-    </ClCompile>
-    <ClCompile Include="MathGeoLib\Algorithm\Random\LCG.cpp">
-      <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
     <ClCompile Include="GameWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
@@ -869,16 +1377,16 @@
       <Filter>Sources\EditorUI\Modules Config</Filter>
     </ClCompile>
     <ClCompile Include="Script.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp">
       <Filter>Sources\3d Party\imGui\ImGuiTextEditor</Filter>
     </ClCompile>
     <ClCompile Include="CSScript.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="LuaScript.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="TextEditorWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
@@ -892,14 +1400,53 @@
     <ClCompile Include="ComponentFactory.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ModulePhysics.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRigidBody.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCollider.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePhysMatImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsMaterial.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointRevolute.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointSpherical.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointDistance.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointFixed.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentJointPrismatic.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleBlastMeshImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ShaderProgram.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleShaderImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="BlastModel.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleBlast.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Particles.cpp">
       <Filter>Sources\Helpers</Filter>
@@ -911,7 +1458,7 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="ParticleData.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleParticleImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -940,6 +1487,16 @@
     <ClCompile Include="Include_Wwise.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="Wwise.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -948,6 +1505,7 @@
     </ClCompile>
     <ClCompile Include="SoundBank.cpp">
       <Filter>Sources\Audio</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="AudioWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
@@ -973,20 +1531,339 @@
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentBlast.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Common\stdafx.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="RenderTextureMSAA.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
+    <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookDeferred.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Prefab.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
+    <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\stdafx.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\AABB.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\AABBTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\BitOps.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Material.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
+    <ClCompile Include="MathGeoLib\Callstack.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\CallstackTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Capsule.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Circle.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Clock.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\ClockTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\ConversionTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\DegenerateTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\EncloseTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float2.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float3.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float3x3.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float3x4.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float4.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float4d.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Float4dTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\float4x4.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Frustum.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\FrustumTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\GJK.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\GJKTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\grisu3.c">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\grisu3_cpp.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\LCG.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\LCGTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Line.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\LineSegment.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\LineTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\MathFunc.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\MathFuncTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\MathLog.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\MathOps.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\MatrixTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\MemcpyTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\NegativeTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\NEONTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\OBB.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\OBBTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Script.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
+    <ClCompile Include="MathGeoLib\PBVolume.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\PBVolumeTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="CSScript.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaScript.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
+    <ClCompile Include="MathGeoLib\Plane.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Polygon.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\PolygonTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Polyhedron.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\PolyhedronTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Polynomial.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Shader.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
+    <ClCompile Include="MathGeoLib\PositiveTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Quat.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\QuatTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Ray.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\SerializationTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Sphere.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="ParticleData.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleParticleImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+=======
+    <ClCompile Include="MathGeoLib\SphereTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\SSEMath.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\SSEMathTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\SystemInfo.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\SystemInfoTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TestData.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TestRunner.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TransformOps.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TransformTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\Triangle.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TriangleMesh.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TriangleMeshTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\TriangleTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="MathGeoLib\VectorTests.cpp">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentText.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentImage.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentProgressBar.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UsefulFunctions.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="ModuleFontImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+>>>>>>> origin/Vertical-Slice-1
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MathGeoLib\Geometry\KDTree.inl">
+    <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </None>
+    <None Include="Wwise\IO\Common\AkMultipleFileLocation.inl">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </None>
+    <None Include="Wwise\include\AK\AkWwiseSDKVersion.cs">
+      <Filter>Sources\3d Party\Wwise</Filter>
+    </None>
+    <None Include="MathGeoLib\float2.inl">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </None>
-    <None Include="MathGeoLib\Geometry\QuadTree.inl">
+    <None Include="MathGeoLib\KDTree.inl">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </None>
-    <None Include="MathGeoLib\Math\float2.inl">
+    <None Include="MathGeoLib\Matrix.inl">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </None>
-    <None Include="MathGeoLib\Math\Matrix.inl">
+    <None Include="MathGeoLib\QuadTree.inl">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </None>
+    <None Include="MathGeoLib\SystemInfoIos.m">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </None>
+    <None Include="MathGeoLib\TriangleMesh_IntersectRay_AVX.inl">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </None>
+    <None Include="MathGeoLib\TriangleMesh_IntersectRay_CPP.inl">
+      <Filter>Sources\3d Party\MathGeolib</Filter>
+    </None>
+    <None Include="MathGeoLib\TriangleMesh_IntersectRay_SSE.inl">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </None>
   </ItemGroup>

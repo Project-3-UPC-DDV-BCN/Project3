@@ -218,7 +218,7 @@ float3 Particle::GetEmmisionVector()
 float Particle::GetDistanceToCamera()
 {
 	//We get the current camera
-	float3 camera_position = App->renderer3D->editor_camera->camera_frustum.pos;
+	float3 camera_position = App->renderer3D->editor_camera->camera_frustum.Pos();
 
 	//Compute the distance & return
 	float distance = (camera_position - GetAtributes().particle_transform->GetGlobalPosition()).Length();

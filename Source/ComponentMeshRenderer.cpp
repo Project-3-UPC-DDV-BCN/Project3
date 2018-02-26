@@ -7,12 +7,19 @@
 
 ComponentMeshRenderer::ComponentMeshRenderer(GameObject* attached_gameobject)
 {
-	SetActive(true);
+	SetActive(true);	
 	SetName("Mesh_Renderer");
 	SetType(ComponentType::CompMeshRenderer);
 	SetGameObject(attached_gameobject);
 	mesh = nullptr;
 	material = App->resources->GetMaterial("default_material");
+	interior_material = App->resources->GetMaterial("default_material");
+	mesh_type = NormalMesh;
+
+	material_indices_number = 0;
+	material_indices_start = 0;
+	interior_material_indices_number = 0;
+	interior_material_indices_start = 0;
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer()
@@ -62,8 +69,8 @@ void ComponentMeshRenderer::UpdateBoundingBox()
 	{
 		GetMesh()->box.SetNegativeInfinity();
 		GetMesh()->box.Enclose((float3*)GetMesh()->vertices, GetMesh()->num_vertices);
-		math::OBB obb = GetMesh()->box.Transform(GetGameObject()->GetGlobalTransfomMatrix());
-		GetMesh()->box = obb.MinimalEnclosingAABB();
+		//math::OBB obb = GetMesh()->box.Transform(GetGameObject()->GetGlobalTransfomMatrix());
+		GetMesh()->box.TransformAsAABB(GetGameObject()->GetGlobalTransfomMatrix());
 	}
 }
 
@@ -93,6 +100,14 @@ void ComponentMeshRenderer::Save(Data & data) const
 	data.CreateSection("Material");
 	if(material)material->Save(data);
 	data.CloseSection();
+	data.CreateSection("Interior_Material");
+	if (interior_material)interior_material->Save(data);
+	data.CloseSection();
+	//data.AddInt("Mesh_Type", mesh_type);
+	data.AddInt("Mat_Indices_Number", material_indices_number);
+	data.AddInt("Mat_Indices_Start", material_indices_start);
+	data.AddInt("Int_Mat_Indices_Number", interior_material_indices_number);
+	data.AddInt("Int_Mat_Indices_Start", interior_material_indices_start);
 }
 
 void ComponentMeshRenderer::Load(Data & data)
@@ -124,6 +139,43 @@ void ComponentMeshRenderer::Load(Data & data)
 		}
 	}
 	data.LeaveSection();
+	data.EnterSection("Interior_Material");
+	uint int_material_uid = data.GetUInt("UUID");
+	if (int_material_uid != 0)
+	{
+		interior_material = App->resources->GetMaterial(int_material_uid);
+		if (!interior_material)
+		{
+			interior_material = new Material();
+			interior_material->Load(data);
+		}
+	}
+	data.LeaveSection();
+	//mesh_type = (MeshType)data.GetInt("Mesh_Type");
+	material_indices_number = data.GetInt("Mat_Indices_Number");
+	material_indices_start = data.GetInt("Mat_Indices_Start");
+	interior_material_indices_number = data.GetInt("Int_Mat_Indices_Number");
+	interior_material_indices_start = data.GetInt("Int_Mat_Indices_Start");
+}
+
+Material * ComponentMeshRenderer::GetInteriorMaterial() const
+{
+	return interior_material;
+}
+
+void ComponentMeshRenderer::SetInteriorMaterial(Material * material)
+{
+	interior_material = material;
+}
+
+void ComponentMeshRenderer::SetMeshType(MeshType type)
+{
+	mesh_type = type;
+}
+
+ComponentMeshRenderer::MeshType ComponentMeshRenderer::GetMeshType() const
+{
+	return mesh_type;
 }
 
 

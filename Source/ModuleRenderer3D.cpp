@@ -15,20 +15,23 @@
 #include "ComponentLight.h"
 #include "RenderTexture.h"
 #include "ModuleCamera3D.h"
+#include "ComponentCanvas.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "ModuleScene.h"
 #include "RenderTextureMSAA.h"
 #include "CubeMap.h"
 #include "SceneWindow.h"
+#include "ModulePhysics.h"
 #include "ModuleResources.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentBillboard.h"
 #include "ShaderProgram.h"
+#include "DebugDraw.h"
+#include "GameWindow.h"
 #include "ComponentParticleEmmiter.h"
 #include "ModuleMeshImporter.h"
-#include "DebugDraw.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -45,6 +48,7 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	editor_camera = nullptr;
 	game_camera = nullptr;
 	use_skybox = true;
+	lights_count = 0;
 	debug_draw = new DebugDraw();
 
 	for (uint i = 0; i < MAX_DIR_LIGHT; ++i)
@@ -205,9 +209,12 @@ void ModuleRenderer3D::DrawEditorScene()
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		App->scene->DrawSkyBox(editor_camera->camera_frustum.pos, editor_camera);
+		App->scene->DrawSkyBox(editor_camera->camera_frustum.Pos(), editor_camera);
 		glEnable(GL_DEPTH_TEST);
 	}
+
+	// Debug Draw render
+	debug_draw->Render(editor_camera);
 
 	DrawGrid(editor_camera);
 
@@ -222,7 +229,7 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
-		App->scene->DrawSkyBox(camera->camera_frustum.pos, camera);
+		App->scene->DrawSkyBox(camera->camera_frustum.Pos(), camera);
 		glEnable(GL_DEPTH_TEST);
 	}
 	
@@ -263,6 +270,128 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 
 		//restore previous polygon mode
 		glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
+}
+
+void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
+{
+	// Activate
+	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
+	glActiveTexture(GL_TEXTURE0);
+	GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+	GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+	GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
+	GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
+	GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
+	GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
+	GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
+	GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
+	GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
+	GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
+	GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
+	GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
+	GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
+	GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
+	GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
+	GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
+	GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
+	GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
+	GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_SCISSOR_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+	{
+		std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
+
+		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
+
+		UseShaderProgram(program->GetProgramID());
+
+		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
+		{
+			// WORLD
+			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			{
+				if((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+					SetUniformBool(program->GetProgramID(), "is_ui", false);
+				else
+					SetUniformBool(program->GetProgramID(), "is_ui", true);
+
+				SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
+				SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
+				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetTransform().Transposed().ptr());
+			}
+
+			// ORTHO
+			else
+			{
+				SetUniformBool(program->GetProgramID(), "is_ui", true);
+
+				float2 win_size = App->editor->game_window->GetSize();
+
+				float far_p = -1000;
+				float near_p = 1000;
+
+				float ortho_projection[4][4] =
+				{
+				{ 2.0f / win_size.x,       0.0f,               0.0f,			   0.0f },
+				{ 0.0f,                    2.0f / win_size.y, 0.0f,			   0.0f },
+				{ 0.0f,                    0.0f,              -2/(far_p - near_p), -((far_p + near_p)/(far_p - near_p)) },
+				{ -1.0f,                   1.0f,               0.0f,			   1.0f },
+				};
+
+				float4x4 ide = float4x4::identity;
+				SetUniformMatrix(program->GetProgramID(), "view", (float*)ide.Transposed().v);
+				SetUniformMatrix(program->GetProgramID(), "projection", &ortho_projection[0][0]);
+				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetOrtoTransform().Transposed().ptr());
+			}
+
+			bool has_texture = ((*it).GetTextureId() > 0);
+
+			SetUniformInt(program->GetProgramID(), "Tex_Diffuse", 0);
+			SetUniformInt(program->GetProgramID(), "Tex_NormalMap", 0);
+			SetUniformBool(program->GetProgramID(), "has_normalmap", false);
+			SetUniformBool(program->GetProgramID(), "has_texture", has_texture);
+			SetUniformBool(program->GetProgramID(), "has_material_color", !has_texture);
+			SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
+
+			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
+
+			BindVertexArrayObject((*it).GetPlane()->id_vao);
+
+			SendLight(program->GetProgramID());
+
+			glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
+
+			glDrawElements(GL_TRIANGLES, (*it).GetPlane()->num_indices, GL_UNSIGNED_INT, NULL);
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+			UnbindVertexArrayObject();
+		}
+	}
+
+	// DeActivate
+	glUseProgram(last_program);
+	glBindTexture(GL_TEXTURE_2D, last_texture);
+	glBindSampler(0, last_sampler);
+	glActiveTexture(last_active_texture);
+	glBindVertexArray(last_vertex_array);
+	glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
+	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
+	glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
+	if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
+	if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+	if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
+	if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
+	glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
+	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
 }
 
 void ModuleRenderer3D::DrawDebugOBB(OBB& obb, ComponentCamera * active_camera)
@@ -369,8 +498,6 @@ float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float botto
 	return n_projection;
 }
 
-
-
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
@@ -447,10 +574,13 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	{
 		//App->scene->octree.DebugDraw();
 	}
+	
+	DrawCanvas(active_camera, is_editor_camera);
 
 	// Debug Draw render
-	debug_draw->Render(editor_camera);
-	
+	if(is_editor_camera)
+		debug_draw->Render(editor_camera);
+
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
 }
@@ -466,26 +596,88 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		billboard->RotateObject(); 
 	}
 	
-	Material* material = mesh->GetMaterial();
-
-	uint program = 0;
-	if (material != nullptr)
+	if (mesh->GetMeshType() == ComponentMeshRenderer::NormalMesh)
 	{
-		program = material->GetShaderProgramID();
-		UseShaderProgram(program);
-		material->LoadToMemory();
+		Material* material = mesh->GetMaterial();
+
+		uint program = 0;
+		if (material != nullptr)
+		{
+			Material* material = mesh->GetMaterial();
+
+			uint program = 0;
+			if (material != nullptr)
+			{
+				program = material->GetShaderProgramID();
+				UseShaderProgram(program);
+				material->LoadToMemory();
+			}
+
+			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+			SetUniformBool(program, "is_ui", false);
+
+			//TODO: Calculate Normal Matrix here and send it as uniform.
+			// We need this because transitioning to World Space gives a non accurate Normal.
+			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
+
+			SendLight(program);
+
+			BindVertexArrayObject(mesh->GetMesh()->id_vao);
+			glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+		}
 	}
+	else
+	{
+		Material* material = mesh->GetMaterial();
+		Material* interior_material = mesh->GetInteriorMaterial();
 
-	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
-	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
-	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-	//TODO: Calculate Normal Matrix here and send it as uniform.
-	// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
+		BindVertexArrayObject(mesh->GetMesh()->id_vao);
 
-	SendLight(program);
+		uint program = 0;
+		if (material != nullptr)
+		{
+			interior_material->SetDiffuseColor(0, 0.5, 0.5);
+			program = material->GetShaderProgramID();
+			UseShaderProgram(program);
+			material->LoadToMemory();
 
-	BindVertexArrayObject(mesh->GetMesh()->id_vao);
-	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+			//TODO: Calculate Normal Matrix here and send it as uniform.
+			// We need this because transitioning to World Space gives a non accurate Normal.
+			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
+
+			SendLight(program);
+
+			glDrawElements(GL_TRIANGLES, mesh->material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->material_indices_start));
+		}
+
+		program = 0;
+		if (interior_material != nullptr)
+		{
+			interior_material->SetDiffuseColor(1, 1, 1);
+			program = interior_material->GetShaderProgramID();
+			UseShaderProgram(program);
+			interior_material->LoadToMemory();
+
+			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
+			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+			//TODO: Calculate Normal Matrix here and send it as uniform.
+			// We need this because transitioning to World Space gives a non accurate Normal.
+			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
+
+			SendLight(program);
+
+			glDrawElements(GL_TRIANGLES, mesh->interior_material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->interior_material_indices_start));
+		}
+	}
+	
 	UnbindVertexArrayObject();
 }
 
@@ -494,12 +686,33 @@ void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 	dynamic_mesh_to_draw.push_back(mesh);
 }
 
+void ModuleRenderer3D::AddCanvasToDraw(ComponentCanvas * canvas)
+{
+	canvas_to_draw.push_back(canvas);
+}
+
+void ModuleRenderer3D::RemoveCanvasToDraw(ComponentCanvas * canvas)
+{
+	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+	{
+		if ((*cv == canvas))
+		{
+			canvas_to_draw.erase(cv);
+			break;
+		}
+	}
+}
+
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();
 	debug_draw->Clear();
+
+	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+		(*cv)->ClearDrawElements();
+	
+	canvas_to_draw.clear();
 	debug_primitive_to_draw.clear();
-	rendering_cameras.clear();
 	particles_to_draw.clear();
 }
 
@@ -507,12 +720,12 @@ void ModuleRenderer3D::ResetRender()
 bool ModuleRenderer3D::CleanUp()
 {
 	CONSOLE_DEBUG("Destroying 3D Renderer");
-	SDL_GL_DeleteContext(context);
 	rendering_cameras.clear();
 
-	// Clear debug draw
 	debug_draw->Clear();
 	RELEASE(debug_draw);
+	
+	SDL_GL_DeleteContext(context);
 
 	return true;
 }
@@ -654,6 +867,10 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	}
 }
 
+DebugDraw * ModuleRenderer3D::GetDebugDraw() const
+{
+	return debug_draw;
+}
 
 void ModuleRenderer3D::AddLight(ComponentLight * light)
 {
@@ -739,11 +956,6 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 			break;
 		}
 	}
-}
-
-DebugDraw * ModuleRenderer3D::GetDebugDraw() const
-{
-	return debug_draw;
 }
 
 // ------------- Shaders -------------------------

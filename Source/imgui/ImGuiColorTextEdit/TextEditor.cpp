@@ -2762,7 +2762,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		};
 
 		static const char* const csharpClasses[] = {
-			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource",
+			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar"
 		};
 		for (auto& k : csharpClasses)
 			langDef.mClasses.insert(k);
@@ -2805,7 +2805,6 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.class_static_auto_complete["Time"] = "TimeScale_DeltaTime";
 		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()_GetVolume()_SetVolume()_GetPitch()_SetPitch()_SetRTPvalue()_SetMyRTPvalue()";
 		langDef.class_static_auto_complete["TheAudioSource"] = "Play()_Stop()_Send()";
-
 		langDef.functions_info["Abs()"] = "Returns the absolute value of value. \n1. float Abs(float value) \n2. int Abs(int value)";
 		langDef.functions_info["Acos()"] = "Returns the arc-cosine of value. \nfloat Acos(float value)";
 		langDef.functions_info["Asin()"] = "Returns the arc-sine of value. \nfloat Asin(float value)";

@@ -14,6 +14,10 @@
 #include "ModuleScriptImporter.h"
 #include "TextEditorWindow.h"
 #include "Material.h"
+#include "PhysicsMaterial.h"
+#include "BlastModel.h"
+#include "ModuleBlast.h"
+#include "ModuleBlastMeshImporter.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -26,6 +30,7 @@ AssetsWindow::AssetsWindow()
 	show_delete_window = false;
 	show_new_script_window = false;
 	show_new_shader_window = false;
+	show_new_phys_mat_window = false;
 	options_is_open = false;
 	asset_hovered = false;
 
@@ -84,6 +89,7 @@ void AssetsWindow::DrawWindow()
 					show_delete_window = false;
 					show_new_script_window = false;
 					show_new_shader_window = false;
+					show_new_phys_mat_window = false;
 				}
 				if (selected_folder->name != "Assets") {
 					if (ImGui::MenuItem("Delete")) {
@@ -91,6 +97,7 @@ void AssetsWindow::DrawWindow()
 						show_new_folder_window = false;
 						show_new_script_window = false;
 						show_new_shader_window = false;
+						show_new_phys_mat_window = false;
 						delete_path = selected_folder->path;
 					}
 				}
@@ -109,7 +116,7 @@ void AssetsWindow::DrawWindow()
 
 		ImGui::NextColumn();
 
-		if (ImGui::BeginChild("Files", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar, App->IsPlaying())) 
+		if (ImGui::BeginChild("Files", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar, App->IsPlaying()))
 		{
 			if (!selected_folder->directory_files.empty())
 			{
@@ -148,10 +155,10 @@ void AssetsWindow::DrawWindow()
 						}
 					}
 					ImGui::Selectable(((*it)->name + (*it)->extension).c_str(), &selected);
-					if (ImGui::IsItemHoveredRect()) 
+					if (ImGui::IsItemHoveredRect())
 					{
 						asset_hovered = true;
-						
+
 						if (ImGui::IsMouseDragging() && !App->editor->drag_data->hasData)
 						{
 							Resource::ResourceType type = App->resources->AssetExtensionToResourceType((*it)->extension);
@@ -247,10 +254,11 @@ void AssetsWindow::DrawWindow()
 					show_new_script_window = true;
 					show_new_shader_window = false;
 					show_new_material_window = false;
+					show_new_phys_mat_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
-					
+
 					options_is_open = false;
 				}
 
@@ -259,10 +267,11 @@ void AssetsWindow::DrawWindow()
 					show_new_script_window = false;
 					show_new_shader_window = true;
 					show_new_material_window = false;
+					show_new_phys_mat_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
-					
+
 					options_is_open = false;
 					shader_type = Shader::ST_VERTEX;
 				}
@@ -272,10 +281,11 @@ void AssetsWindow::DrawWindow()
 					show_new_script_window = false;
 					show_new_shader_window = true;
 					show_new_material_window = false;
+					show_new_phys_mat_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
-					
+
 					options_is_open = false;
 					shader_type = Shader::ST_FRAGMENT;
 				}
@@ -285,10 +295,24 @@ void AssetsWindow::DrawWindow()
 					show_new_script_window = false;
 					show_new_shader_window = false;
 					show_new_material_window = true;
-					
+					show_new_phys_mat_window = false;
+
 					show_delete_window = false;
 					show_new_folder_window = false;
-					
+
+					options_is_open = false;
+				}
+
+				if (ImGui::MenuItem("Create Physics Material"))
+				{
+					show_new_script_window = false;
+					show_new_shader_window = false;
+					show_new_material_window = false;
+					show_new_phys_mat_window = true;
+
+					show_delete_window = false;
+					show_new_folder_window = false;
+
 					options_is_open = false;
 				}
 
@@ -306,6 +330,7 @@ void AssetsWindow::DrawWindow()
 					show_new_folder_window = false;
 					show_new_script_window = false;
 					show_new_shader_window = false;
+					show_new_phys_mat_window = false;
 					options_is_open = false;
 				}
 				if (ImGui::MenuItem("Delete")) {
@@ -314,6 +339,7 @@ void AssetsWindow::DrawWindow()
 					show_new_folder_window = false;
 					show_new_script_window = false;
 					show_new_shader_window = false;
+					show_new_phys_mat_window = false;
 					options_is_open = false;
 				}
 
@@ -347,7 +373,7 @@ void AssetsWindow::DrawWindow()
 						{
 							App->editor->text_editor_window->SetLanguageType(TextEditor::LanguageDefinition::GLSL());
 						}
-						
+
 						App->editor->text_editor_window->SetActive(true);
 						options_is_open = false;
 					}
@@ -357,6 +383,24 @@ void AssetsWindow::DrawWindow()
 				{
 					if (ImGui::MenuItem("Load")) {
 						App->scene->LoadScene(selected_file_path);
+						options_is_open = false;
+					}
+				}
+
+				if (extension == ".bmesh")
+				{
+					if (ImGui::MenuItem("Load to scene##bmesh")) {
+						std::string file_name = App->file_system->GetFileNameWithoutExtension(selected_file_path);
+						BlastModel* model = App->blast_mesh_importer->LoadModelFromLibrary(selected_file_path, false);
+						if (model)
+						{
+							App->blast->CreateFamily(model);
+							App->blast->SpawnFamily(model, false);
+						}
+						else
+						{
+							CONSOLE_ERROR("model '%s' is null", file_name.c_str());
+						}
 						options_is_open = false;
 					}
 				}
@@ -379,6 +423,11 @@ void AssetsWindow::DrawWindow()
 		if (show_new_material_window)
 		{
 			CreateNewMaterialWindow();
+		}
+
+		if (show_new_phys_mat_window)
+		{
+			CreateNewPhysMatWindow();
 		}
 	}
 	ImGui::EndDock();
@@ -467,7 +516,7 @@ void AssetsWindow::CreateNewScriptWindow(Script::ScriptType type)
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
 	ImGui::SetNextWindowPosCenter();
 
-	ImGui::Begin("New Script Name" , &active,
+	ImGui::Begin("New Script Name", &active,
 		ImGuiWindowFlags_NoFocusOnAppearing |
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoCollapse |
@@ -687,6 +736,45 @@ void AssetsWindow::CreateMaterial(std::string material_name)
 	App->resources->CreateResource(selected_folder->path + "\\" + new_file_name);
 }
 
+void AssetsWindow::CreateNewPhysMatWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
+	ImGui::SetNextWindowPosCenter();
+	ImGui::Begin("New Physics Material", &active,
+		ImGuiWindowFlags_NoFocusOnAppearing |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders |
+		ImGuiWindowFlags_NoTitleBar);
+	ImGui::Spacing();
+	ImGui::Text("New Physics Material");
+	static char inputText[30];
+	ImGui::InputText("", inputText, 30);
+	ImGui::Spacing();
+	if (ImGui::Button("Confirm")) {
+		std::string str(inputText);
+		if (!str.empty()) {
+			for (std::string::iterator it = str.begin(); it != str.end(); it++)
+			{
+				if (*it == ' ') *it = '_';
+			}
+			Data data;
+			PhysicsMaterial* mat = new PhysicsMaterial();
+			mat->SetName(str);
+			mat->Save(data);
+			data.SaveAsBinary(selected_folder->path + "\\" + str + ".pmat");
+			App->resources->CreateResource(selected_folder->path + "\\" + str + ".pmat");
+			show_new_phys_mat_window = false;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel")) {
+		strcpy(inputText, "");
+		show_new_phys_mat_window = false;
+	}
+	ImGui::End();
+}
+
 void AssetsWindow::CheckDirectory(Directory& directory)
 {
 	//Check if the directory has been modified
@@ -860,5 +948,5 @@ void AssetsWindow::DeleteWindow(std::string path)
 		show_delete_window = false;
 	}
 	ImGui::End();
-	
+
 }

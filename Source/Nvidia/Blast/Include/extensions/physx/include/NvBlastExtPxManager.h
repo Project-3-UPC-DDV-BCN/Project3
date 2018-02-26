@@ -23,7 +23,7 @@
 // components in life support devices or systems without express written approval of
 // NVIDIA Corporation.
 //
-// Copyright (c) 2016-2017 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2016-2018 NVIDIA Corporation. All rights reserved.
 
 
 #ifndef NVBLASTEXTPXMANAGER_H
@@ -31,7 +31,7 @@
 
 #include "NvBlastTypes.h"
 #include "PxConvexMeshGeometry.h"
-#include "PxTransform.h"
+#include "../foundation/PxTransform.h"
 #include "NvPreprocessor.h"
 
 

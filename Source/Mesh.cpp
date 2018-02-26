@@ -16,6 +16,9 @@ Mesh::Mesh()
 	id_indices = 0;
 	num_vertices = 0;
 
+	box.minPoint = { 0,0,0 };
+	box.maxPoint = { 0,0,0 };
+
 	SetType(Resource::MeshResource);
 
 }
@@ -48,7 +51,7 @@ bool Mesh::Load(Data & data)
 		std::string assets_path = data.GetString("assets_path");
 		if (App->file_system->FileExist(assets_path))
 		{
-			App->resources->CreateLibraryFile(Resource::TextureResource, assets_path);
+			App->resources->CreateLibraryFile(Resource::MeshResource, assets_path);
 			Load(data);
 		}
 		else

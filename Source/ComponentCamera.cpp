@@ -1,5 +1,5 @@
 #include "ComponentCamera.h"
-#include "MathGeoLib\Geometry\Plane.h"
+#include "MathGeoLib/Plane.h"
 #include "RenderTexture.h"
 #include "Application.h"
 #include "ModuleScene.h"
@@ -17,16 +17,16 @@ ComponentCamera::ComponentCamera(GameObject* attached_gameobject)
 	SetType(ComponentType::CompCamera);
 	SetGameObject(attached_gameobject);
 
-	(attached_gameobject) ? camera_frustum.pos = attached_gameobject->GetGlobalTransfomMatrix().TranslatePart() : camera_frustum.pos = float3::zero;
-	(attached_gameobject) ? camera_frustum.front = attached_gameobject->GetGlobalTransfomMatrix().WorldZ() : camera_frustum.front = float3::unitZ;
-	(attached_gameobject) ? camera_frustum.up = attached_gameobject->GetGlobalTransfomMatrix().WorldY() : camera_frustum.up = float3::unitY;
+	(attached_gameobject) ? camera_frustum.SetPos(attached_gameobject->GetGlobalTransfomMatrix().TranslatePart()) : camera_frustum.SetPos(float3::zero);
+	(attached_gameobject) ? camera_frustum.SetFront(attached_gameobject->GetGlobalTransfomMatrix().WorldZ()) : camera_frustum.SetFront(float3::unitZ);
+	(attached_gameobject) ? camera_frustum.SetUp(attached_gameobject->GetGlobalTransfomMatrix().WorldY()) : camera_frustum.SetUp(float3::unitY);
 
-	camera_frustum.type = FrustumType::PerspectiveFrustum;
-	camera_frustum.nearPlaneDistance = 0.3f;
-	camera_frustum.farPlaneDistance = 1000;
-	aspect_ratio = (float)App->window->GetWidth() / (float)App->window->GetHeight();
-	camera_frustum.horizontalFov = math::Atan(aspect_ratio * math::Tan(camera_frustum.verticalFov / 2)) * 2;
+	camera_frustum.SetKind(math::FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	camera_frustum.SetViewPlaneDistances(0.3f, 1000.0f);
+	current_fov = 60;
+	aspect_ratio = 1.3f;
 	SetFOV(60);
+	//camera_frustum.SetVerticalFovAndAspectRatio(60.f * DEGTORAD, 1.3f);
 
 	background_color = Black;
 
@@ -96,9 +96,9 @@ bool ComponentCamera::ContainsGameObjectAABB(AABB& gameobject_bounding_box)
 
 void ComponentCamera::UpdatePosition()
 {
-	camera_frustum.pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
-	camera_frustum.front = GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized();
-	camera_frustum.up = GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized();
+	camera_frustum.SetPos(GetGameObject()->GetGlobalTransfomMatrix().TranslatePart());
+	camera_frustum.SetFront(GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized());
+	camera_frustum.SetUp(GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized());
 }
 
 float * ComponentCamera::GetProjectionMatrix() const
@@ -108,7 +108,7 @@ float * ComponentCamera::GetProjectionMatrix() const
 	matrix = camera_frustum.ProjectionMatrix();
 	matrix.Transpose();
 
-	return (float*)matrix.v;
+	return matrix.ptr();
 }
 
 float * ComponentCamera::GetViewMatrix()
@@ -118,18 +118,19 @@ float * ComponentCamera::GetViewMatrix()
 	matrix = camera_frustum.ViewMatrix();
 	matrix.Transpose();
 
-	return (float*)matrix.v;
+	return matrix.ptr();
 }
 
 void ComponentCamera::SetFOV(float fov)
 {
-	camera_frustum.verticalFov = fov * DEGTORAD;
-	camera_frustum.horizontalFov = math::Atan(aspect_ratio * math::Tan(camera_frustum.verticalFov / 2)) * 2;
+	camera_frustum.SetHorizontalFovAndAspectRatio(fov * DEGTORAD, aspect_ratio);
+	current_fov = fov;
+	camera_frustum.ComputeProjectionMatrix();
 }
 
 float ComponentCamera::GetFOV() const
 {
-	return camera_frustum.verticalFov * RADTODEG;
+	return current_fov;
 }
 
 Color ComponentCamera::GetBackgroundColor() const
@@ -139,28 +140,33 @@ Color ComponentCamera::GetBackgroundColor() const
 
 void ComponentCamera::SetNearPlaneDistance(float distance)
 {
-	camera_frustum.nearPlaneDistance = distance;
+	camera_frustum.SetViewPlaneDistances(distance, GetFarPlanceDistance());
 }
 
 float ComponentCamera::GetNearPlaneDistance() const
 {
-	return camera_frustum.nearPlaneDistance;
+	return camera_frustum.NearPlaneDistance();
 }
 
 void ComponentCamera::SetFarPlaneDistance(float distance)
 {
-	camera_frustum.farPlaneDistance = distance;
+	camera_frustum.SetViewPlaneDistances(GetNearPlaneDistance(), distance);
 }
 
 float ComponentCamera::GetFarPlanceDistance() const
 {
-	return camera_frustum.farPlaneDistance;
+	return camera_frustum.FarPlaneDistance();
 }
 
 void ComponentCamera::SetAspectRatio(float ratio)
 {
-	aspect_ratio = ratio;
-	camera_frustum.horizontalFov = math::Atan(aspect_ratio * math::Tan(camera_frustum.verticalFov / 2)) * 2;
+	//float r = DEGTORAD * ratio;
+
+	//if (r > 0.0f)
+	//{
+		camera_frustum.SetHorizontalFovAndAspectRatio(current_fov * DEGTORAD, ratio);
+		aspect_ratio = ratio;
+	//}
 }
 
 float ComponentCamera::GetAspectRatio() const

@@ -305,9 +305,9 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 			GameObject* go = new GameObject(parent);
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->AddComponent(Component::CompMeshRenderer);
 			mesh_renderer->SetMesh(mesh);
-			mesh->DecreaseUsedCount();
+			mesh->UnloadFromMemory();
 			mesh_renderer->SetMaterial(material);
-			material->DecreaseUsedCount();
+			material->UnloadFromMemory();
 			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 			aiVector3D position;
 			aiQuaternion rotation_quat;
@@ -654,6 +654,7 @@ void ModuleMeshImporter::CreatePlane() const
 
 	//create the buffer from loaded info
 	plane->vertices_data = new float[plane->num_vertices * 19]; // vert pos, tex coords, normals, color, tangents, bitangents
+
 
 	float* normals = nullptr, *tangents = nullptr, *bitangents = nullptr;
 	float null[3] = { 0.f,0.f,0.f };

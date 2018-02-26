@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "MathGeoLib\Algorithm\Random\LCG.h"
+#include "MathGeoLib/LCG.h"
 #include <list>
 #include "Timer.h"
 
@@ -25,7 +25,12 @@ class ModuleParticleImporter;
 class ModuleMaterialImporter;
 class ModuleScriptImporter;
 class ModuleShaderImporter;
+class ModuleFontImporter;
 struct SDL_Surface;
+class ModulePhysics;
+class ModulePhysMatImporter;
+class ModuleBlastMeshImporter;
+class ModuleBlast;
 
 class Application
 {
@@ -84,8 +89,13 @@ public:
 	ModulePrefabImporter* prefab_importer;
 	ModuleMaterialImporter* material_importer;
 	ModuleScriptImporter* script_importer;
+	ModulePhysics* physics;
+	ModulePhysMatImporter* phys_mats_importer;
+	ModuleBlastMeshImporter* blast_mesh_importer;
 	ModuleParticleImporter* particle_importer; 
 	ModuleShaderImporter* shader_importer;
+	ModuleFontImporter* font_importer;
+	ModuleBlast* blast;
 
 private:
 

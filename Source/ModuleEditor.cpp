@@ -112,7 +112,7 @@ update_status ModuleEditor::Update(float deltaTime)
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
-				char const * lFilterPatterns[1] = { "*.scene" };
+				char const * lFilterPatterns[1] = { "*.scene.json" };
 				const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
 				if (path != NULL) {
 					App->scene->LoadScene(path);
@@ -120,7 +120,7 @@ update_status ModuleEditor::Update(float deltaTime)
 			}
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				char const * lFilterPatterns[1] = { "*.scene" };
+				char const * lFilterPatterns[1] = { "*.scene.json" };
 				const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name + ".scene").c_str(), 1, lFilterPatterns, NULL);
 				if (path != NULL) {
 					std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
@@ -226,14 +226,25 @@ update_status ModuleEditor::Update(float deltaTime)
 	ImGui::SameLine(ImGui::GetIO().DisplaySize.x / 2 - 75);
 	if (!App->IsPlaying())
 	{
-		if (ImGui::Button("Play", { 50,40 })) {
-			App->Play();
-			App->time->time_scale = 1.0f;
+		if (App->IsPaused())
+		{
+			if (ImGui::Button("Paused", { 50,40 })) {
+				App->UnPause();
+				App->time->time_scale = 1.0f;
+			}
+		}
+		else
+		{
+			if (ImGui::Button("Play", { 50,40 })) {
+				App->Play();
+				App->time->time_scale = 1.0f;
+			}
 		}
 	}
 	else
 	{
 		if (ImGui::Button("Pause", { 50,40 })) {
+			App->Pause();
 			App->time->time_scale = 0.0f;
 		}
 	}
@@ -245,6 +256,8 @@ update_status ModuleEditor::Update(float deltaTime)
 	if (ImGui::Button("Step", { 50,40 })) {
 		App->UpdateStep();
 	}
+	ImGui::SameLine();
+
 	ImGui::Separator();
 	ImGui::BeginDockspace();
 	for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); it++) {
@@ -290,7 +303,7 @@ void ModuleEditor::HandleInput(SDL_Event * event)
 
 void ModuleEditor::OpenBrowserPage(const char * url)
 {
-	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+	//ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void ModuleEditor::AddData_Editor(float ms, float fps)

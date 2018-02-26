@@ -1,8 +1,8 @@
 #pragma once
 #include "Resource.h"
-#include "MathGeoLib\Math\float3.h"
-#include "MathGeoLib\Math\float2.h"
-#include "MathGeoLib\Math\float4.h"
+#include "MathGeoLib/float3.h"
+#include "MathGeoLib/float2.h"
+#include "MathGeoLib/float4.h"
 #include <vector>
 #include <map>
 
@@ -34,9 +34,9 @@ public:
 	virtual void InitScript() = 0;
 	virtual void StartScript() = 0;
 	virtual void UpdateScript() = 0;
-	virtual void OnCollisionEnter() = 0;
-	virtual void OnCollisionStay() = 0;
-	virtual void OnCollisionExit() = 0;
+	virtual void OnCollisionEnter(GameObject* gameobject) = 0;
+	virtual void OnCollisionStay(GameObject* gameobject) = 0;
+	virtual void OnCollisionExit(GameObject* gameobject) = 0;
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;
 

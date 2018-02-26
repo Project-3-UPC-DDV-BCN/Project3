@@ -1,8 +1,8 @@
 #pragma once
 #include "Component.h"
-#include "MathGeoLib\Geometry\Frustum.h"
-#include "MathGeoLib\Geometry\AABB.h"
-#include "MathGeoLib\Math\Rect.h"
+#include "MathGeoLib/Frustum.h"
+#include "MathGeoLib/AABB.h"
+#include "MathGeoLib/Rect.h"
 #include "Color.h"
 #include "Primitive.h"
 
@@ -61,5 +61,6 @@ private:
 	Rect camera_viewport;
 	int render_order;
 	float aspect_ratio;
+	float current_fov;
 };
 

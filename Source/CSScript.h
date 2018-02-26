@@ -20,9 +20,9 @@ public:
 	void InitScript();
 	void StartScript();
 	void UpdateScript();
-	void OnCollisionEnter();
-	void OnCollisionStay();
-	void OnCollisionExit();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
 
@@ -90,6 +90,20 @@ public:
 	MonoObject* GetForward(MonoObject* object);
 	MonoObject* GetRight(MonoObject* object);
 	MonoObject* GetUp(MonoObject* object);
+
+	//RECTTRANSFORM
+	void SetRectPosition(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectPosition(MonoObject * object);
+	void SetRectRotation(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectRotation(MonoObject * object);
+	void SetRectSize(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectSize(MonoObject * object);
+	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectAnchor(MonoObject * object);
+
+	//PROGRESSBAR
+	void SetPercentageProgress(MonoObject * object, float progress);
+	float GetPercentageProgress(MonoObject * object);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);

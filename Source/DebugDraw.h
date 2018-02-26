@@ -2,8 +2,10 @@
 #define _H_DEBUG_DRAW__
 
 #include "Component.h"
-#include "MathGeoLib\Math\float3.h"
-#include "MathGeoLib\Math\float4x4.h"
+#include "MathGeoLib\float3.h"
+#include "MathGeoLib\float4x4.h"
+#include "MathGeoLib/float3.h"
+#include "MathGeoLib/float4x4.h"
 #include "Glew\include\glew.h"
 
 class ComponentCamera;
@@ -18,6 +20,7 @@ public:
 	void SetTransform(float4x4 transform);
 	void SetColour(float4 colour);
 	void SetMode(int mode);
+
 	void SetStroke(uint stroke);
 
 	uint GetNumVertices();
@@ -27,6 +30,7 @@ public:
 	float4 GetColour();
 	float4x4 GetTransform();
 	int GetMode();
+
 	uint GetStroke();
 
 private:
@@ -64,6 +68,7 @@ private:
 
 private:
 	std::vector<DebugShape> shapes;
+
 	uint line_stroke = 1;
 };
 

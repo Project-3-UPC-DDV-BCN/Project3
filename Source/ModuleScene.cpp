@@ -23,6 +23,11 @@
 #include "SkyDome.h"
 #include "ComponentScript.h";
 #include "GameWindow.h"
+#include "ModulePhysics.h"
+#include "BlastModel.h"
+#include "ModuleBlast.h"
+#include "ComponentLight.h"
+#include "ComponentRigidBody.h"
 #include "ComponentParticleEmmiter.h"
 #include "ComponentLight.h"
 #include "ComponentTransform.h"
@@ -35,6 +40,7 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : M
 	main_camera = nullptr;
 	skybox = nullptr;
 	tmp_scene_data = new Data();
+	triangles_count = 0;
 }
 
 ModuleScene::~ModuleScene()
@@ -48,7 +54,7 @@ bool ModuleScene::Start()
 	CONSOLE_DEBUG("Loading Scene");
 	bool ret = true;
 
-	math::float3 initial_pos(0.f, 5.f, -10.f);
+	math::float3 initial_pos(0.f, 5.f, -20.f);
 	App->camera->SetPosition(initial_pos);
 	math::float3 initial_look_at(0, 0, 0);
 	App->camera->LookAt(initial_look_at);
@@ -81,17 +87,16 @@ void ModuleScene::CreateMainCamera()
 	main_camera = new GameObject();
 	main_camera->SetName("Main Camera");
 	ComponentTransform* transform = (ComponentTransform*)main_camera->GetComponent(Component::CompTransform);
-	transform->SetPosition({ 0,1,-10 });
+	transform->SetPosition({ 0,1,-20 });
 	ComponentCamera* camera = (ComponentCamera*)main_camera->AddComponent(Component::CompCamera);
 	main_camera->SetTag("Main Camera");
-	scene_gameobjects.push_back(main_camera);
-	root_gameobjects.push_back(main_camera);
+	AddGameObjectToScene(main_camera);
 	scene_cameras.push_back(camera);
 	App->resources->AddGameObject(main_camera);
 	App->renderer3D->game_camera = camera;
-	if (App->editor->game_window->game_scene_width != 0 && App->editor->game_window->game_scene_height != 0)
+	if (App->editor->game_window->GetSize().x != 0 && App->editor->game_window->GetSize().y != 0)
 	{
-		App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+		App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 	}
 }
 
@@ -101,8 +106,7 @@ void ModuleScene::CreateMainLight()
 	main_light->SetName("Directional Light");
 	ComponentLight* light = (ComponentLight*)main_light->AddComponent(Component::CompLight);
 	light->SetTypeToDirectional();
-	scene_gameobjects.push_back(main_light);
-	root_gameobjects.push_back(main_light);
+	AddGameObjectToScene(main_light);
 	App->resources->AddGameObject(main_light);
 	ComponentTransform* trans = (ComponentTransform*)main_light->GetComponent(Component::CompTransform);
 	trans->SetPosition({ 0, 100, 0 });
@@ -146,16 +150,17 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 		Data data;
 		gameObject->Save(data, true);
 		AABB camera_pos(float3::zero, float3::zero);
-		for (int i = 0; i < saving_index; i++) {
+
+		for (int i = 0; i < saving_index; i++) 
+		{
 			GameObject* go = new GameObject();
 			data.EnterSection("GameObject_" + std::to_string(i));
 			go->Load(data, true);
 			data.LeaveSection();
-			scene_gameobjects.push_back(go);
-			if (go->IsRoot()) root_gameobjects.push_back(go);
 			if (i == 0) { //return the first object (parent)
 				ret = go;
 			}
+			AddGameObjectToScene(go);
 			App->resources->AddGameObject(go);
 			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 			if (transform) transform->UpdateGlobalMatrix();
@@ -230,6 +235,8 @@ update_status ModuleScene::Update(float dt)
 		bool active_parents = RecursiveCheckActiveParents((*it));
 		if (active_parents && (*it)->IsActive())
 		{
+			(*it)->Update();
+
 			if (mesh_renderer != nullptr && mesh_renderer->IsActive() && mesh_renderer->GetMesh() != nullptr)
 			{
 				App->renderer3D->AddMeshToDraw(mesh_renderer);
@@ -239,7 +246,7 @@ update_status ModuleScene::Update(float dt)
 				if (App->renderer3D->game_camera == nullptr && (*it)->GetTag() == "Main Camera")
 				{
 					App->renderer3D->game_camera = camera;
-					App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+					App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 				}
 			}
 			if (p_emmiter != nullptr)
@@ -250,8 +257,6 @@ update_status ModuleScene::Update(float dt)
 			{
 				(*it)->UpdateScripts();
 				(*it)->UpdateFactory();
-				if (!(*it)->Update())
-					return update_status::UPDATE_ERROR;
 			}
 			else if(p_emmiter != nullptr)
 			{
@@ -289,9 +294,17 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 	if (gameobject != nullptr)
 	{
 		scene_gameobjects.push_back(gameobject);
-
 		if (gameobject->GetParent() == nullptr)
 			root_gameobjects.push_back(gameobject);
+
+		ComponentRigidBody* rb = (ComponentRigidBody*)gameobject->GetComponent(Component::CompRigidBody);
+		if (rb)
+		{
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+			App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+		}
+
+		RenameDuplicatedGameObject(gameobject);
 
 		CONSOLE_DEBUG("GameObject Created: %s", gameobject->GetName().c_str());
 	}
@@ -419,6 +432,8 @@ void ModuleScene::NewScene(bool loading_scene)
 	octree.Clear();
 	octree.Create(float3::zero, float3::zero);
 	octree.update_tree = true;
+	App->blast->CleanFamilies();
+	App->physics->CleanPhysScene();
 	if (!loading_scene)
 	{
 		CreateMainCamera();
@@ -429,7 +444,8 @@ void ModuleScene::NewScene(bool loading_scene)
 void ModuleScene::LoadScene(std::string path)
 {
 	Data data;
-	if (data.LoadBinary(path)) {
+	if (data.LoadBinary(path)) 
+	{
 		NewScene(true);
 		scene_name = data.GetString("Scene Name");
 		App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
@@ -439,8 +455,7 @@ void ModuleScene::LoadScene(std::string path)
 			GameObject* game_object = new GameObject();
 			game_object->Load(data);
 			data.LeaveSection();
-			scene_gameobjects.push_back(game_object);
-			if (game_object->IsRoot()) root_gameobjects.push_back(game_object);
+			AddGameObjectToScene(game_object);
 			App->resources->AddGameObject(game_object);
 			ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
 			if (transform) transform->UpdateGlobalMatrix();
@@ -452,7 +467,7 @@ void ModuleScene::LoadScene(std::string path)
 				if (game_object->GetTag() == "Main Camera")
 				{
 					App->renderer3D->game_camera = camera;
-					App->renderer3D->OnResize(App->editor->game_window->game_scene_width, App->editor->game_window->game_scene_height, App->renderer3D->game_camera);
+					App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 				}
 			}
 		}
@@ -538,6 +553,50 @@ void ModuleScene::InitScripts()
 			(*it)->StartScripts();
 		}
 	}
+}
+
+GameObject * ModuleScene::CreateCanvas(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompCanvas);
+
+	return ret;
+}
+
+GameObject * ModuleScene::CreateImage(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompImage);
+
+	return ret;
+}
+
+GameObject * ModuleScene::CreateText(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompText);
+
+	return ret;
+}
+
+GameObject * ModuleScene::CreateProgressBar(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompProgressBar);
+
+	return ret;
 }
 
 void ModuleScene::SetParticleSystemsState()

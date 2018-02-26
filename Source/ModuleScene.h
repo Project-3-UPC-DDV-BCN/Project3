@@ -17,6 +17,7 @@ class Mesh;
 class Prefab;
 class CubeMap;
 class SkyDome;
+class BlastModel;
 
 class ModuleScene : public Module
 {
@@ -59,11 +60,21 @@ public:
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject);
 
+	void LoadBlastModel(BlastModel* model);
+
+	void DrawSkyBox(float3 pos);
 	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);
 
 	void InitScripts();
 
+	// UI
+	GameObject* CreateCanvas(GameObject* parent = nullptr);
+	GameObject* CreateImage(GameObject* parent = nullptr);
+	GameObject* CreateText(GameObject* parent = nullptr);
+	GameObject* CreateProgressBar(GameObject* parent = nullptr);
+
 	void SetParticleSystemsState();
+
 
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
@@ -89,6 +100,8 @@ public:
 	ImGuizmo::MODE mCurrentGizmoMode;
 
 	Data* tmp_scene_data;
+
+	int triangles_count;
 
 private:
 	std::list<GameObject*> gameobjects_to_destroy;

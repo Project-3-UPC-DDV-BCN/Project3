@@ -5,8 +5,10 @@
 #include "ModuleRenderer3D.h"
 #include "ComponentCamera.h"
 #include "Mesh.h"
-#include "MathGeoLib\Math\float4x4.h"
-#include "MathGeoLib\Math\Quat.h"
+#include "MathGeoLib\float4x4.h"
+#include "MathGeoLib\Quat.h"
+#include "MathGeoLib/float4x4.h"
+#include "MathGeoLib/Quat.h"
 #include "ComponentCamera.h"
 
 DebugShape::DebugShape(uint _num_vertices, float * _vertices, uint _num_indices, uint * _indices)
@@ -180,6 +182,7 @@ void DebugDraw::Quad(float3 center, float2 size, float4 colour)
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
 	shape.SetColour(colour);
+
 	shape.SetStroke(line_stroke);
 
 	AddShape(shape);
@@ -322,6 +325,8 @@ void DebugDraw::Render(ComponentCamera* camera)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -329,6 +334,8 @@ void DebugDraw::Render(ComponentCamera* camera)
 
 	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
 	glUseProgram(program->GetProgramID());
+
+	glLineWidth(2);
 
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{

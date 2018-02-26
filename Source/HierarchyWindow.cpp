@@ -52,23 +52,80 @@ void HierarchyWindow::DrawWindow()
 						gameobject_to_rename = App->scene->selected_gameobjects.front();
 						rename_window_y = ImGui::GetMousePos().y;
 					}
-					if (ImGui::MenuItem("Create Child")) {
+					if (ImGui::MenuItem("Create Child")) 
+					{
 						GameObject* parent = nullptr;
 						parent = App->scene->selected_gameobjects.front();
 						App->scene->CreateGameObject(parent);
 						open_gameobject_node = parent;
 					}
+
+					if (ImGui::BeginMenu("Child UI"))
+					{
+						if (ImGui::MenuItem("Canvas"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateCanvas(parent);
+						}
+
+						if (ImGui::MenuItem("Image"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateImage(parent);
+						}
+
+						if (ImGui::MenuItem("Text"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateText(parent);
+						}
+
+						if (ImGui::MenuItem("Progress Bar"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateProgressBar(parent);
+						}
+
+						ImGui::EndMenu();
+					}
+
 					if (ImGui::MenuItem("Create prefab")) {
 						App->scene->CreatePrefab(App->scene->selected_gameobjects.front());
 					}
 				}
 				ImGui::Separator();
 			}
-			if (ImGui::MenuItem("Create Game Object")) {
+			if (ImGui::MenuItem("Create Game Object")) 
+			{
 				App->scene->CreateGameObject(nullptr);
 			}
 			if (ImGui::MenuItem("Create Light Object")) {
 				App->scene->CreateLightObject(nullptr);
+			}
+
+			if (ImGui::BeginMenu("UI"))
+			{
+				if (ImGui::MenuItem("Canvas"))
+				{
+					App->scene->CreateCanvas(nullptr);
+				}
+
+				if (ImGui::MenuItem("Image"))
+				{
+					App->scene->CreateImage(nullptr);
+				}
+
+				if (ImGui::MenuItem("Text"))
+				{
+					App->scene->CreateText(nullptr);
+				}
+
+				if (ImGui::MenuItem("Progress Bar"))
+				{
+					App->scene->CreateProgressBar(nullptr);
+				}
+
+				ImGui::EndMenu();
 			}
 
 			ImGui::EndPopup();

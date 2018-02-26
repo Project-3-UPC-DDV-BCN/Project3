@@ -23,7 +23,8 @@ void GameWindow::DrawWindow()
 	{
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		if (game_scene_width != size.x || game_scene_height != size.y) {
+		if (game_scene_width != size.x || game_scene_height != size.y) 
+		{
 			if (App->renderer3D->game_camera != nullptr)
 			{
 				App->renderer3D->OnResize(size.x, size.y, App->renderer3D->game_camera);
@@ -38,4 +39,9 @@ void GameWindow::DrawWindow()
 		}
 	}
 	ImGui::EndDock();
+}
+
+float2 GameWindow::GetSize() const
+{
+	return float2(game_scene_width, game_scene_height);
 }

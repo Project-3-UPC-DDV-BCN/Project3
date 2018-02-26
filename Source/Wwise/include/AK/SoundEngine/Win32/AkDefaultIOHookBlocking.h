@@ -89,7 +89,7 @@ written agreement between you and Audiokinetic Inc.
 #define _AK_DEFAULT_IO_HOOK_BLOCKING_H_
 
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>
-#include "../Common/AkFileLocationBase.h"
+#include "../IO/Common/AkFileLocationBase.h"
 
 //-----------------------------------------------------------------------------
 // Name: class CAkDefaultIOHookBlocking.

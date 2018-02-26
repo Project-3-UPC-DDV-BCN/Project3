@@ -10,10 +10,21 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
+#include "ComponentRectTransform.h"
+#include "ComponentCanvas.h"
+#include "ComponentImage.h"
+#include "ComponentText.h"
+#include "ComponentLight.h"
+#include "ComponentProgressBar.h"
+#include "ComponentRigidBody.h"
+#include "ComponentCollider.h"
+#include "ComponentJointDistance.h"
 #include "ComponentAudioSource.h"
 #include "ComponentListener.h"
 #include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
+#include "ComponentBlast.h"
+#include "ModulePhysics.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -34,6 +45,7 @@ GameObject::GameObject(GameObject* parent)
 	is_selected = false;
 	is_static = false;
 	is_used_in_prefab = false;
+	is_ui = false;
 	AddComponent(Component::CompTransform);
 	used_in_scene = false;
 	uuid = App->RandomNumber().Int();
@@ -65,13 +77,22 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentCamera(this));
 		break;
 	case Component::CompRigidBody:
+		components_list.push_back(component = new ComponentRigidBody(this));
 		break;
 	case Component::CompMeshRenderer:
 		components_list.push_back(component = new ComponentMeshRenderer(this));
 		break;
 	case Component::CompBoxCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::BoxCollider));
 		break;
-	case Component::CompCircleCollider:
+	case Component::CompSphereCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::SphereCollider));
+		break;
+	case Component::CompCapsuleCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::CapsuleCollider));
+		break;
+	case Component::CompMeshCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::MeshCollider));
 		break;
 	case Component::CompAnimaton:
 		break;
@@ -87,6 +108,45 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
 		break;
+	case Component::CompRectTransform:
+		if (GetComponent(Component::CompRectTransform) == nullptr)
+			components_list.push_front(component = new ComponentRectTransform(this));
+		break;
+	case Component::CompCanvas:
+		SetIsUI(true);
+		if (GetComponent(Component::CompCanvas) == nullptr)
+		{
+			components_list.push_back(component = new ComponentCanvas(this));
+			is_canvas = true;
+			SetName("Canvas");
+		}
+		break;
+	case Component::CompImage:
+		SetIsUI(true);
+		if (GetComponent(Component::CompImage) == nullptr)
+		{
+			components_list.push_back(component = new ComponentImage(this));
+			SetName("Image");
+		}
+		break;
+	case Component::CompText:
+		SetIsUI(true);
+		if (GetComponent(Component::CompText) == nullptr)
+		{
+			components_list.push_back(component = new ComponentText(this));
+			SetName("Text");
+		}
+		break;
+	case Component::CompProgressBar:
+		SetIsUI(true);
+		if (GetComponent(Component::CompProgressBar) == nullptr)
+		{
+			components_list.push_back(component = new ComponentProgressBar(this));
+			SetName("ProgressBar");
+		}
+		break;
+	case Component::CompDistanceJoint:
+		components_list.push_back(component = new ComponentJointDistance(this));
 	case Component::CompAudioSource:
 		components_list.push_back(component = new ComponentAudioSource(this));
 		break;
@@ -99,6 +159,8 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));
 		break;
+	case Component::CompBlast:
+		components_list.push_back(component = new ComponentBlast(this));
 	default:
 		break;
 	}
@@ -129,11 +191,17 @@ Component * GameObject::GetComponent(std::string component_type)
 void GameObject::DestroyComponent(Component* component)
 {
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) {
-		if (*it == component) {
+		if (*it == component) 
+		{
+			if (component->GetType() == Component::CompCanvas)
+				is_canvas = false;
+
+			(*it)->CleanUp();
 			RELEASE(*it);
 			it = components_list.erase(it);
 		}
-		else {
+		else 
+		{
 			it++;
 		}
 	}
@@ -165,6 +233,23 @@ void GameObject::SetActive(bool active)
 			{
 				App->scene->EraseGoInOctree(mesh_renderer);
 			}
+		}
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)GetComponent(Component::CompRigidBody);
+	if (rb)
+	{
+		if (!active)
+		{
+			rb->SetToSleep();
+			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
+			App->physics->RemoveActorFromList(rb->GetRigidBody());
+		}
+		else
+		{
+			rb->WakeUp();
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+			App->physics->AddActorToList(rb->GetRigidBody(), this);
 		}
 	}
 }
@@ -340,7 +425,7 @@ math::float4x4 GameObject::GetGlobalTransfomMatrix()
 	return transform->GetMatrix();
 }
 
-const float * GameObject::GetOpenGLMatrix()
+math::float4x4 GameObject::GetOpenGLMatrix()
 {
 	ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
 	return transform->GetOpenGLMatrix();
@@ -405,6 +490,39 @@ void GameObject::UpdateScripts()
 	}
 }
 
+void GameObject::OnCollisionEnter(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionEnter(other_collider);
+		}
+	}
+}
+
+void GameObject::OnCollisionStay(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionStay(other_collider);
+		}
+	}
+}
+
+void GameObject::OnCollisionExit(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionExit(other_collider);
+		}
+	}
+}
+
 void GameObject::UpdateFactory()
 {
 	ComponentFactory* comp_factory = nullptr;
@@ -414,6 +532,27 @@ void GameObject::UpdateFactory()
 			comp_factory->CheckLifeTimes();
 		}
 	}
+}
+
+void GameObject::SetIsUI(bool set)
+{
+	if (!is_ui && set)
+		AddComponent(Component::CompRectTransform);
+	
+	if (is_ui && !set)
+		DestroyComponent(GetComponent(Component::CompRectTransform));
+	
+	is_ui = set;
+}
+
+bool GameObject::GetIsUI() const
+{
+	return is_ui;
+}
+
+bool GameObject::GetIsCanvas() const
+{
+	return is_canvas;
 }
 
 void GameObject::Destroy()
@@ -464,9 +603,9 @@ UID GameObject::GetUID() const
 void GameObject::Save(Data & data, bool is_duplicated)
 {
 	std::string tempName = name;  //<- needed if is a duplicated game_object
-	if (is_duplicated) {
+	/*if (is_duplicated) {
 		App->scene->RenameDuplicatedGameObject(this);
-	}
+	}*/
 
 	data.CreateSection("GameObject_" + std::to_string(App->scene->saving_index++));
 	uint new_uuid = uuid;
@@ -533,59 +672,82 @@ void GameObject::Load(Data & data, bool is_prefab)
 	{
 		data.EnterSection("Component_" + std::to_string(i));
 		Component* component = GetComponent((Component::ComponentType)data.GetInt("Type"));
-		if (component != nullptr) {
+
+		if (component != nullptr) 
+		{
 			component->Load(data);
 		}
-		else {
-			AddComponent((Component::ComponentType)data.GetInt("Type"));
-			GetComponent((Component::ComponentType)data.GetInt("Type"))->Load(data);
+		else 
+		{
+			int type = data.GetInt("Type");
+			if (type != -1)
+			{
+				AddComponent((Component::ComponentType)data.GetInt("Type"));
+				GetComponent((Component::ComponentType)data.GetInt("Type"))->Load(data);
+			}
+			else
+			{
+				CONSOLE_ERROR("Could not load component from gameobject: %s (Wrong component id?)", name.c_str());
+			}
 		}
 		data.LeaveSection();
 	}
 	data.LeaveSection();
 
 	UID parent_id = data.GetUInt("ParentID");
-	if (parent_id != 0) {
+	if (parent_id != 0) 
+	{
 		SetParentByID(parent_id);
 	}
 
 	is_root = data.GetBool("IsRoot");
 
-	if (!is_prefab) {
+	if (!is_prefab) 
+	{
 		//Store gameObject name to know the existing gameObjects when loading scene
 		int gameObjectCount = 1;
 		bool inParenthesis = false;
 		std::string str;
 		std::string tempName = name;
-		for (int i = 0; i < name.size(); i++) {
-			if (name[i] == ')') {
+		for (int i = 0; i < name.size(); i++) 
+		{
+			if (name[i] == ')') 
+			{
 				inParenthesis = false;
-				if (name[i + 1] == '\0') {
+				if (name[i + 1] == '\0') 
+				{
 					break;
 				}
-				else {
+				else 
+				{
 					str.clear();
 				}
 			}
-			if (inParenthesis) {
+			if (inParenthesis) 
+			{
 				str.push_back(name[i]);
 			}
-			if (name[i] == '(') {
+			if (name[i] == '(') 
+			{
 				inParenthesis = true;
 			}
 		}
-		if (atoi(str.c_str()) != 0) {
+		if (atoi(str.c_str()) != 0) 
+		{
 			name.erase(name.end() - (str.length() + 2), name.end());
 			gameObjectCount = stoi(str);
 		}
 
 		std::map<std::string, int>::iterator it = App->scene->scene_gameobjects_name_counter.find(name);
-		if (it != App->scene->scene_gameobjects_name_counter.end()) {
-			if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount) {
+		if (it != App->scene->scene_gameobjects_name_counter.end()) 
+		{
+			if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount) 
+			{
 				App->scene->scene_gameobjects_name_counter[name] = gameObjectCount;
 			}
 		}
-		else {
+		else 
+		{
 			App->scene->scene_gameobjects_name_counter[name] = 1;
 		}
 		name = tempName;
@@ -600,6 +762,7 @@ bool GameObject::Update()
 	for (std::list<Component*>::iterator c = components_list.begin(); c != components_list.end(); ++c)
 	{
 		ret = (*c)->Update();
+
 		if (ret == false)
 			break;
 	}

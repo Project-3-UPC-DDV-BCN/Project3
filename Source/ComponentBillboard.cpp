@@ -78,7 +78,7 @@ bool ComponentBillboard::RotateObject()
 	object_z *= -1;
 
 	//Get the director vector which the object/particle should be pointing at 
-	float3 direction = object_transform->GetGlobalPosition() - reference->camera_frustum.pos;
+	float3 direction = object_transform->GetGlobalPosition() - reference->camera_frustum.Pos();
 
 	if (billboarding_type == BILLBOARD_Y)
 		direction.y = 0;
@@ -99,10 +99,10 @@ bool ComponentBillboard::RotateObject()
 	float3 desired_pos_projection_xy = { 0, direction.y, direction.z };
 	float angle_xy = desired_pos_projection_xy.AngleBetweenNorm(reference_axis)*RADTODEG;
 
-	if (reference->camera_frustum.pos.x > 0)
+	if (reference->camera_frustum.Pos().x > 0)
 		angle_xz *= -1;
 
-	if (reference->camera_frustum.pos.y < 0)
+	if (reference->camera_frustum.Pos().y < 0)
 		angle_xy *= -1;
 
 	switch (billboarding_type)

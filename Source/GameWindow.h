@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "MathGeoLib\float2.h"
 
 class GameWindow :
 	public Window
@@ -11,7 +12,9 @@ public:
 
 	void DrawWindow();
 
-public:
+	float2 GetSize() const;
+
+private:
 	float game_scene_width;
 	float game_scene_height;
 };

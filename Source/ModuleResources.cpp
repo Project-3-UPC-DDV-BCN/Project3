@@ -18,10 +18,14 @@
 #include "ComponentMeshRenderer.h"
 #include "Script.h"
 #include "ModuleScriptImporter.h"
+#include "PhysicsMaterial.h"
+#include "ModulePhysMatImporter.h"
+#include "BlastModel.h"
+#include "ModuleBlastMeshImporter.h"
 #include "Shader.h"
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
-
+#include "Font.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -30,7 +34,8 @@ ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_g
 
 ModuleResources::~ModuleResources()
 {
-	for (std::map<uint, GameObject*>::iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); ++it) {
+	for (std::map<uint, GameObject*>::iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); ++it) 
+	{
 		it->second->DeleteFromResourcesDestructor();
 		it->second = nullptr;
 	}
@@ -40,10 +45,12 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	textures_list.clear();
+
 	for (std::map<uint, Mesh*>::iterator it = meshes_list.begin(); it != meshes_list.end(); ++it) {
 		RELEASE(it->second);
 	}
 	meshes_list.clear();
+
 	for (std::map<uint, Prefab*>::iterator it = prefabs_list.begin(); it != prefabs_list.end(); ++it) {
 		RELEASE(it->second);
 	}
@@ -53,6 +60,12 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	materials_list.clear();
+
+	for (std::map<uint, Font*>::iterator it = fonts_list.begin(); it != fonts_list.end(); ++it)
+	{
+		RELEASE(it->second);
+	}
+	fonts_list.clear();
 
 	Data shprograms;
 	uint i = 0;
@@ -74,7 +87,8 @@ ModuleResources::~ModuleResources()
 	shprograms.AddUInt("num_sections", i);
 	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms");
 
-	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
+	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) 
+	{
 		RELEASE(it->second);
 	}
 	shaders_list.clear();
@@ -96,10 +110,9 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH))
-	{
-		App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
-	}
+	if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_BMODEL_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_BMODEL_FOLDER_PATH);
 
 	CreateDefaultShaders();
 	CreateDefaultMaterial();
@@ -128,12 +141,12 @@ void ModuleResources::FillResourcesLists()
 
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
+		if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
 		CreateResource(*it);
 	}
 
 	if (exist_shprog_meta)
 		LoadShaderProgramMeta(shprog_meta_file);
-
 }
 
 void ModuleResources::AddResource(Resource * resource)
@@ -164,10 +177,16 @@ void ModuleResources::AddResource(Resource * resource)
 
 		break;
 	case Resource::FontResource:
+		AddFont((Font*)resource);
 		break;
 	case Resource::MaterialResource:
 		AddMaterial((Material*)resource);
 		break;
+	case Resource::PhysicsMatResource:
+		AddPhysMaterial((PhysicsMaterial*)resource);
+		break;
+	case Resource::BlastMeshResource:
+		AddBlastModel((BlastModel*)resource);
 	case Resource::ShaderResource:
 		AddShader((Shader*)resource);
 		break;
@@ -233,12 +252,30 @@ void ModuleResources::ImportFile(std::string path)
 	case Resource::ParticleFXResource:
 		break;
 	case Resource::FontResource:
+		if (!App->file_system->DirectoryExist(ASSETS_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_FONTS_FOLDER_PATH);
+		if (App->file_system->FileExist(ASSETS_FONTS_FOLDER_PATH + file_name))
+		{
+			exist = true;
+			break;
+		}
+		App->file_system->Copy(path, ASSETS_FONTS_FOLDER + file_name);
+		path = ASSETS_FONTS_FOLDER + file_name;
 		break;
 	case Resource::RenderTextureResource:
 		break;
 	case Resource::GameObjectResource:
 		break;
 	case Resource::MaterialResource:
+		break;
+	case Resource::BlastMeshResource:
+		if (!App->file_system->DirectoryExist(ASSETS_FBX_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_FBX_FOLDER_PATH);
+		if (App->file_system->FileExist(ASSETS_FBX_FOLDER + file_name))
+		{
+			exist = true;
+			break;
+		}
+		App->file_system->Copy(path, ASSETS_FBX_FOLDER + file_name);
+		path = ASSETS_FBX_FOLDER + file_name;
 		break;
 	case Resource::Unknown:
 		break;
@@ -481,6 +518,15 @@ std::map<uint, Script*> ModuleResources::GetScriptsList() const
 	return scripts_list;
 }
 
+PhysicsMaterial * ModuleResources::GetPhysMaterial(std::string name) const
+{
+	for (std::map<uint, PhysicsMaterial*>::const_iterator it = phys_materials_list.begin(); it != phys_materials_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
 Shader * ModuleResources::GetShader(std::string name) const
 {
 	for (std::map<uint, Shader*>::const_iterator it = shaders_list.begin(); it != shaders_list.end(); it++)
@@ -488,6 +534,34 @@ Shader * ModuleResources::GetShader(std::string name) const
 		if (it->second != nullptr && it->second->GetName() == name) return it->second;
 	}
 	return nullptr;
+}
+
+PhysicsMaterial * ModuleResources::GetPhysMaterial(UID uid) const
+{
+	if (phys_materials_list.find(uid) != phys_materials_list.end()) return phys_materials_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddPhysMaterial(PhysicsMaterial * material)
+{
+	if (material != nullptr)
+	{
+		phys_materials_list[material->GetUID()] = material;
+	}
+}
+
+void ModuleResources::RemovePhysMaterial(PhysicsMaterial * material)
+{
+	if (material)
+	{
+		std::map<uint, PhysicsMaterial*>::iterator it = phys_materials_list.find(material->GetUID());
+		if (it != phys_materials_list.end()) phys_materials_list.erase(it);
+	}
+}
+
+std::map<uint, PhysicsMaterial*> ModuleResources::GetPhysMaterialsList() const
+{
+	return phys_materials_list;
 }
 
 Shader * ModuleResources::GetShader(UID uid) const
@@ -518,6 +592,15 @@ std::map<uint, Shader*> ModuleResources::GetShadersList() const
 	return shaders_list;
 }
 
+Font * ModuleResources::GetFont(std::string name) const
+{
+	for (std::map<uint, Font*>::const_iterator it = fonts_list.begin(); it != fonts_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
 ParticleData * ModuleResources::GetParticleTemplate(std::string name) const
 {
 	for (std::map<uint, ParticleData*>::const_iterator it = particles_list.begin(); it != particles_list.end(); it++)
@@ -525,7 +608,34 @@ ParticleData * ModuleResources::GetParticleTemplate(std::string name) const
 		if (it->second != nullptr && it->second->GetName() == name) return it->second;
 	}
 	return nullptr;
+}
 
+Font * ModuleResources::GetFont(UID uid) const
+{
+	if (fonts_list.find(uid) != fonts_list.end()) return fonts_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddFont(Font * font)
+{
+	if (font != nullptr)
+	{
+		fonts_list[font->GetUID()] = font;
+	}
+}
+
+void ModuleResources::RemoveFont(Font * font)
+{
+	if (font)
+	{
+		std::map<uint, Font*>::iterator it = fonts_list.find(font->GetUID());
+		if (it != fonts_list.end()) fonts_list.erase(it);
+	}
+}
+
+std::map<uint, Font*> ModuleResources::GetFontsList() const
+{
+	return fonts_list;
 }
 
 ParticleData * ModuleResources::GetParticleTemplate(UID uid) const
@@ -563,6 +673,43 @@ ShaderProgram * ModuleResources::GetShaderProgram(std::string name) const
 		if (it->second != nullptr && it->second->GetName() == name) return it->second;
 	}
 	return nullptr;
+}
+
+BlastModel * ModuleResources::GetBlastModel(std::string name) const
+{
+	for (std::map<uint, BlastModel*>::const_iterator it = blast_models_list.begin(); it != blast_models_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
+	return nullptr;
+}
+
+BlastModel * ModuleResources::GetBlastModel(UID uid) const
+{
+	if (blast_models_list.find(uid) != blast_models_list.end()) return blast_models_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddBlastModel(BlastModel * mesh)
+{
+	if (mesh != nullptr)
+	{
+		blast_models_list[mesh->GetUID()] = mesh;
+	}
+}
+
+void ModuleResources::RemoveBlastModel(BlastModel * mesh)
+{
+	if (mesh)
+	{
+		std::map<uint, BlastModel*>::iterator it = blast_models_list.find(mesh->GetUID());
+		if (it != blast_models_list.end()) blast_models_list.erase(it);
+	}
+}
+
+std::map<uint, BlastModel*> ModuleResources::GetBlastModelsList() const
+{
+	return blast_models_list;
 }
 
 ShaderProgram * ModuleResources::GetShaderProgram(UID uid) const
@@ -673,10 +820,12 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
 	else if (str == ".fbx" || str == ".FBX") return Resource::MeshResource;
+	else if (str == ".bmesh") return Resource::BlastMeshResource;
 	else if (str == ".cs" || str == ".lua") return Resource::ScriptResource;
 	else if (str == ".wav" || str == ".ogg") return Resource::AudioResource;
 	else if (str == ".prefab") return Resource::PrefabResource;
 	else if (str == ".mat") return Resource::MaterialResource;
+	else if (str == ".pmat") return Resource::PhysicsMatResource;
 	else if (str == ".animation") return Resource::AnimationResource;
 	else if (str == ".particle") return Resource::ParticleFXResource;
 	else if (str == ".scene") return Resource::SceneResource;
@@ -691,13 +840,16 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 {
 	if (str == ".dds") return Resource::TextureResource;
 	else if (str == ".mesh") return Resource::MeshResource;
+	else if (str == ".bmesh") return Resource::BlastMeshResource;
 	else if (str == ".scene") return Resource::SceneResource;
 	else if (str == ".mat") return Resource::MaterialResource;
+	else if (str == ".pmat") return Resource::PhysicsMatResource;
 	else if (str == ".particle") return Resource::ParticleFXResource;
 	else if (str == ".dll") return Resource::ScriptResource;
 	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
+	else if (str == ".ttf") return Resource::FontResource;
 
 	return Resource::Unknown;
 }
@@ -706,12 +858,15 @@ std::string ModuleResources::ResourceTypeToLibraryExtension(Resource::ResourceTy
 {
 	if (type == Resource::TextureResource) return ".dds";
 	else if (type == Resource::MeshResource) return ".mesh";
+	else if (type == Resource::BlastMeshResource) return ".bmesh";
 	else if (type == Resource::SceneResource) return ".scene";
 	else if (type == Resource::ParticleFXResource) return ".particle";
 	else if (type == Resource::PrefabResource) return ".prefab";
 	else if (type == Resource::MaterialResource) return ".mat";
+	else if (type == Resource::PhysicsMatResource) return ".pmat";
 	else if (type == Resource::ScriptResource) return ".dll";
 	else if (type == Resource::ShaderResource) return ".shader";
+	else if (type == Resource::FontResource) return ".ttf";
 	
 	return "";
 }
@@ -780,6 +935,20 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 			library_file = directory + file_name + ".mat";
 		}
 		break;
+	case Resource::PhysicsMatResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_PHYS_MATS_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".pmat", directory, false))
+		{
+			library_file = directory + file_name + ".pmat";
+		}
+		break;
+	case Resource::BlastMeshResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_BMODEL_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".bmodel", directory, false))
+		{
+			library_file = directory + file_name + ".bmodel";
+		}
+		break;
 	case Resource::ShaderResource:
 		directory = App->file_system->StringToPathFormat(LIBRARY_SHADERS_FOLDER);
 		if (App->file_system->FileExistInDirectory(file_name + ".shader", directory, false))
@@ -831,10 +1000,20 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 		ret = App->particle_importer->ImportTemplate(file_path);
 		break;
 	case Resource::FontResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
+		ret = App->font_importer->ImportFont(file_path);
 		break;
 	case Resource::MaterialResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
 		ret = App->material_importer->ImportMaterial(file_path);
+		break;
+	case Resource::PhysicsMatResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_PHYS_MATS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PHYS_MATS_FOLDER_PATH);
+		ret = App->phys_mats_importer->ImportPhysicsMaterial(file_path);
+		break;
+	case Resource::BlastMeshResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
+		ret = App->blast_mesh_importer->ImportModel(file_path);
 		break;
 	case Resource::ShaderResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
@@ -895,6 +1074,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		resource = (Resource*)App->script_importer->LoadScriptFromLibrary(library_path);
 		break;
 	case Resource::AudioResource:
+
 		break;
 	case Resource::ParticleFXResource:
 		if (GetParticleTemplate(name) != nullptr)
@@ -905,6 +1085,11 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		resource = (Resource*)App->particle_importer->LoadTemplateFromLibrary(library_path);
 		break;
 	case Resource::FontResource:
+		resource = (Resource*)GetFont(name);
+
+		if (resource == nullptr)
+			resource = (Resource*)App->font_importer->LoadFontFromLibrary(library_path);
+
 		break;
 	case Resource::MaterialResource:
 		if (GetMaterial(name) != nullptr)
@@ -913,6 +1098,14 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			break;
 		}
 		resource = (Resource*)App->material_importer->LoadMaterialFromLibrary(library_path);
+		break;
+	case Resource::PhysicsMatResource:
+		if (GetPhysMaterial(name) != nullptr)
+		{
+			resource = (Resource*)GetPhysMaterial(name);
+			break;
+		}
+		resource = (Resource*)App->phys_mats_importer->LoadPhysicsMaterialFromLibrary(library_path);
 		break;
 	case Resource::ShaderResource:
 		if (GetShader(name) != nullptr)
@@ -923,6 +1116,14 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		resource = (Resource*)App->shader_importer->LoadShaderFromLibrary(library_path);
 		break;
 	case Resource::Unknown:
+		break;
+	case Resource::BlastMeshResource:
+		if (GetBlastModel(name) != nullptr)
+		{
+			resource = (Resource*)GetBlastModel(name);
+			break;
+		}
+		resource = (Resource*)App->blast_mesh_importer->LoadModelFromLibrary(library_path, false);
 		break;
 	default:
 		break;
@@ -1025,6 +1226,7 @@ void ModuleResources::DeleteResource(std::string file_path)
 	Texture* texture = nullptr;
 	Prefab* prefab = nullptr;
 	Material* material = nullptr;
+	PhysicsMaterial* phys_material = nullptr;
 	Shader* shader = nullptr;
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::PrefabResource;
@@ -1082,6 +1284,15 @@ void ModuleResources::DeleteResource(std::string file_path)
 			RemoveMaterial(material);
 		}
 		break;
+	case Resource::PhysicsMatResource:
+		phys_material = GetPhysMaterial(resource_name);
+		if (phys_material != nullptr)
+		{
+			App->file_system->Delete_File(phys_material->GetLibraryPath());
+			App->file_system->Delete_File(file_path + ".meta");
+			RemovePhysMaterial(phys_material);
+		}
+		break;
 	case Resource::ShaderResource:
 		shader = GetShader(resource_name);
 		if (shader != nullptr)
@@ -1117,6 +1328,18 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 				RemoveMesh(mesh);
 			}
 		}
+
+		/*ComponentBlastMeshRenderer* blast_mesh_renderer = (ComponentBlastMeshRenderer*)gameobject->GetComponent(Component::CompMeshRenderer);
+
+		if (blast_mesh_renderer != nullptr)
+		{
+			BlastMesh* blast_mesh = blast_mesh_renderer->GetMesh();
+			if (blast_mesh != nullptr)
+			{
+				App->file_system->Delete_File(blast_model->GetLibraryPath());
+				RemoveBlastMesh(blast_mesh);
+			}
+		}*/
 	}
 }
 
@@ -1126,6 +1349,7 @@ void ModuleResources::CreateDefaultShaders()
 	if (!App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(SHADER_DEFAULT_FOLDER_PATH);
 
 	//Default Shader
+
 	std::string vert_default_path = SHADER_DEFAULT_FOLDER "default_vertex.vshader";
 	if (!App->file_system->FileExist(vert_default_path))
 	{
@@ -1189,9 +1413,19 @@ void ModuleResources::CreateDefaultShaders()
 		"uniform bool has_material_color;\n"
 		"uniform vec4 material_color;\n"
 		"uniform bool has_texture;\n"
-			"uniform bool has_normalmap;\n\n"
+		"uniform sampler2D ourTexture;\n\n"
+		"uniform bool is_ui;\n"
+
+		"struct Material {\n"
+		"	sampler2D diffuse;\n"
+		"	sampler2D specular;\n"
+		"	float shininess;\n"
+		"};\n\n"
+
+		"uniform bool has_normalmap;\n\n"
 		"uniform sampler2D Tex_Diffuse;\n\n"
 		"uniform sampler2D Tex_NormalMap;\n\n"
+
 
 		"struct DirLight {\n"
 		"	vec3 direction;\n\n"
@@ -1254,53 +1488,56 @@ void ModuleResources::CreateDefaultShaders()
 		"{\n"
 			"if (has_texture)\n"
 			"{\n"
-			"	color = texture(Tex_Diffuse, TexCoord);\n"
+				"color = texture(Tex_Diffuse, TexCoord);\n"
 			"}\n"
 			"else if (has_material_color)\n"
-			"	color = material_color;\n"
+				"color = material_color;\n"
 			"else\n"
-			"	color = ourColor;\n\n"
-			"vec3 normal;\n"
-			"vec3 viewDir;\n"
+				"color = ourColor;\n"
+
+		"if (is_ui == false)\n"
+		"{\n"
+			"vec3 normal = normalize(Normal);\n"
+			"vec3 viewDir = normalize(viewPos - FragPos);\n"
 			"vec3 fragPosarg;\n"
+
 			"if (has_normalmap)\n"
 			"{\n"
-			"normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);\n"
-			"vec3 TangentViewPos = TBN * viewPos;\n"
-			"viewDir = normalize(TangentViewPos - TangentFragPos);\n"
-			"fragPosarg = TangentFragPos;\n"
+				"normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);\n"
+				"vec3 TangentViewPos = TBN * viewPos;\n"
+				"viewDir = normalize(TangentViewPos - TangentFragPos);\n"
+				"fragPosarg = TangentFragPos;\n"
 			"}\n"
 			"else\n"
 			"{\n"
-			"normal = normalize(Normal);\n"
-			"viewDir = normalize(viewPos - FragPos);\n"
-			"fragPosarg = FragPos;\n"
+				"normal = normalize(Normal);\n"
+				"viewDir = normalize(viewPos - FragPos);\n"
+				"fragPosarg = FragPos;\n"
 			"}\n"
-			"vec3 result = vec3(0.0, 0.0, 0.0);"
-
-			"for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"			
+			"vec3 result = vec3(0.0, 0.0, 0.0); \n"
+			"for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
 				"result += CalcDirLight(dirLights[i], normal, viewDir);\n"
-
 			"for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
 				"result += CalcPointLight(pointLights[k], normal, FragPos, viewDir);\n"
-
 			"for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
 				"result += CalcSpotLight(spotLights[j], normal, FragPos, viewDir);\n"
-	
-			"color = vec4(result, 1.0) + color * AMBIENT_LIGHT;\n"
+			"color = vec4((color.rgb * AMBIENT_LIGHT + result), color.a);  \n"
+		"}\n"
+
 		"}\n\n"
 
-		"vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
+		"	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
 		"{\n"
-			"	if (light.active == true)\n"
-			"	{\n"
-			"vec3 lightDir;\n"
+		"	if (light.active == true)\n"
+			"{\n"
+			"	vec3 lightDir;\n"
 			"	if (has_normalmap)\n"
 			"	{\n"
-			"	lightDir = normalize(-TBN * light.direction);\n"
+			"		lightDir = normalize(-TBN * light.direction);\n"
 			"	}\n"
-			"	else lightDir = (-light.direction);\n"
-		
+			"	else\n"
+			"	{\n"
+			"		lightDir = (-light.direction);\n"
 			"		float diff = max(dot(lightDir, normal), 0.0);\n"
 			"		vec3 reflectDir = reflect(-lightDir, normal);\n"
 			"		vec3 halfwayDir = normalize(lightDir + viewDir);\n"
@@ -1310,11 +1547,10 @@ void ModuleResources::CreateDefaultShaders()
 			"		vec3 specular = light.specular * spec;\n"
 			"		return (ambient + diffuse + specular) * vec3(light.color);\n"
 			"	}\n"
-			"	else\n"
-			"		color = ourColor;\n"		
-			"}";
-			"		return vec3(0.0, 0.0, 0.0);\n"
-		"}\n\n"
+			"}\n"
+			"else\n"
+			"	return vec3(0.0, 0.0, 0.0);\n"
+		"}\n"
 
 		"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
 		"{\n"
@@ -1570,6 +1806,9 @@ void ModuleResources::CreateDefaultShaders()
 			"out vec4 ourColor;\n"
 			"out vec3 Normal;\n"
 			"out vec3 TexCoord;\n\n"
+			"uniform mat4 Model; \n"
+			"uniform mat4 view; \n"
+			"uniform mat4 projection;\n\n "
 			"void main()\n"
 			"{ \n"
 			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
@@ -1632,18 +1871,15 @@ void ModuleResources::CreateDefaultShaders()
 		default_deb_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
 
 		std::string shader_text =
-		"#version 330 core\n"
-		"layout(location = 0) in vec3 position;\n"
-		"uniform mat4 Model;\n"
-		"uniform mat4 view;\n"
-		"uniform mat4 projection;\n\n"
-		"void main()\n"
-		"{ \n"
-		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
-		"	ourColor = color;\n"
-		"	TexCoord = -position;\n"
-		"}";
-			
+			"#version 330 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"uniform mat4 Model;\n"
+			"uniform mat4 view;\n"
+			"uniform mat4 projection;\n\n"
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"}";
 
 		default_deb_vert->SetContent(shader_text);
 		std::ofstream outfile(deb_vert_default_path.c_str(), std::ofstream::out);
@@ -1683,7 +1919,6 @@ void ModuleResources::CreateDefaultShaders()
 	prog->SetVertexShader(vertex);
 
 	fragment = GetShader("default_debug_fragment");
-
 	prog->SetFragmentShader(fragment);
 
 	prog->LinkShaderProgram();

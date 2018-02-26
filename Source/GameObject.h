@@ -4,7 +4,7 @@
 #include "Component.h"
 #include <list>
 #include <string>
-#include "MathGeoLib\Math\float4x4.h"
+#include "MathGeoLib/float4x4.h"
 
 class GameObject
 {
@@ -43,7 +43,7 @@ public:
 
 	void UpdateBoundingBox();
 	math::float4x4 GetGlobalTransfomMatrix();
-	const float* GetOpenGLMatrix();
+	math::float4x4 GetOpenGLMatrix();
 	void UpdateGlobalMatrix();
 	void UpdateCamera();
 	void SetGlobalTransfomMatrix(const float4x4 &matrix);
@@ -53,8 +53,19 @@ public:
 	void InitScripts();
 	void StartScripts();
 	void UpdateScripts();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 
 	void UpdateFactory();
+
+	// Sets element as UI and can be used by a component canvas
+	void SetIsUI(bool set);
+
+	// Returns true if the GameObject it's a UI element
+	bool GetIsUI() const;
+
+	bool GetIsCanvas() const;
 
 	void Destroy();
 	void OnDestroy();
@@ -85,5 +96,7 @@ private:
 	bool is_selected;
 	bool is_static;
 	bool is_used_in_prefab;
+	bool is_ui;
+	bool is_canvas;
 };
 
