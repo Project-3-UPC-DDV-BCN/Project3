@@ -43,6 +43,57 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game)
 	cuda_context_manager = nullptr;
 	dispatcher = nullptr;
 	flow_context = nullptr;
+
+	physx_foundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
+	if (!physx_foundation)
+	{
+		CONSOLE_DEBUG("Error. PxCreateFoundation failed!");
+	}
+	else
+	{
+		/*pvd = physx::PxCreatePvd(*physx_foundation);
+		if (!pvd)
+		{
+		CONSOLE_DEBUG("Error. PxCreatePvd failed!");
+		ret = false;
+		}
+		else
+		{*/
+		physx::PxTolerancesScale scale;
+		physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, scale, false/*, pvd*/);
+		if (!physx_physics)
+		{
+			CONSOLE_DEBUG("Error. PxCreatePhysics failed!");
+		}
+		else
+		{
+			physx::PxCookingParams cooking_params(scale);
+			cooking_params.buildGPUData = true;
+			cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
+			if (!cooking)
+			{
+				CONSOLE_DEBUG("Error. PxCreateCooking failed!");
+			}
+			else
+			{
+				//if (!PxInitExtensions(*physx_physics/*, pvd*/))
+				//{
+				//	CONSOLE_DEBUG("Error. PxInitExtensions failed!");
+				//	ret = false;
+				//}
+				//else
+				//{
+				CreateMainScene();
+				//}
+			}
+		}
+		//}
+	}
+
+	/*NvFlowContextDescD3D11 desc;
+	desc.device = createdevice;
+	flow_context = NvFlowCreateContextD3D11(NV_FLOW_VERSION, )
+	flow_grid = NvFlowCreateGrid();*/
 }
 
 ModulePhysics::~ModulePhysics()
@@ -53,60 +104,6 @@ ModulePhysics::~ModulePhysics()
 bool ModulePhysics::Init(Data * editor_config)
 {
 	bool ret = true;
-
-	physx_foundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
-	if (!physx_foundation)
-	{
-		CONSOLE_DEBUG("Error. PxCreateFoundation failed!");
-		ret = false;
-	}
-	else
-	{
-		/*pvd = physx::PxCreatePvd(*physx_foundation);
-		if (!pvd)
-		{
-			CONSOLE_DEBUG("Error. PxCreatePvd failed!");
-			ret = false;
-		}
-		else
-		{*/
-			physx::PxTolerancesScale scale;
-			physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, scale, false/*, pvd*/);
-			if (!physx_physics)
-			{
-				CONSOLE_DEBUG("Error. PxCreatePhysics failed!");
-				ret = false;
-			}
-			else
-			{
-				physx::PxCookingParams cooking_params(scale);
-				cooking_params.buildGPUData = true;
-				cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
-				if (!cooking)
-				{
-					CONSOLE_DEBUG("Error. PxCreateCooking failed!");
-					ret = false;
-				}
-				else
-				{
-					//if (!PxInitExtensions(*physx_physics/*, pvd*/))
-					//{
-					//	CONSOLE_DEBUG("Error. PxInitExtensions failed!");
-					//	ret = false;
-					//}
-					//else
-					//{
-						CreateMainScene();
-					//}
-				}
-			}
-		//}
-	}
-
-	/*NvFlowContextDescD3D11 desc;
-	desc.device = createdevice;
-	flow_context = NvFlowCreateContextD3D11(NV_FLOW_VERSION, )
-	flow_grid = NvFlowCreateGrid();*/
 
 	return ret;
 }
