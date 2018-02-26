@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Window.h"
-#include "MathGeoLib\Math\float2.h"
+#include "MathGeoLib\float2.h"
 
 class GameWindow :
 	public Window

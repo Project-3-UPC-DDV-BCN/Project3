@@ -4,8 +4,8 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include "MathGeoLib\Math\float2.h"
-#include "MathGeoLib\Math\float4.h"
+#include "MathGeoLib\float2.h"
+#include "MathGeoLib\float4.h"
 
 // -----------------------------------------
 // -----------------------------------------

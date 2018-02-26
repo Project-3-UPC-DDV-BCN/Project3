@@ -10,14 +10,12 @@
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
-<<<<<<< HEAD
 #include "ComponentRectTransform.h"
 #include "ComponentCanvas.h"
 #include "ComponentImage.h"
 #include "ComponentText.h"
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
-=======
 #include "ComponentRigidBody.h"
 #include "ComponentCollider.h"
 #include "ComponentJointDistance.h"
@@ -27,7 +25,6 @@
 #include "ComponentLight.h"
 #include "ComponentBlast.h"
 #include "ModulePhysics.h"
->>>>>>> origin/Vertical-Slice-1
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -111,7 +108,6 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
 		break;
-<<<<<<< HEAD
 	case Component::CompRectTransform:
 		if (GetComponent(Component::CompRectTransform) == nullptr)
 			components_list.push_front(component = new ComponentRectTransform(this));
@@ -148,7 +144,6 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 			components_list.push_back(component = new ComponentProgressBar(this));
 			SetName("ProgressBar");
 		}
-=======
 	case Component::CompDistanceJoint:
 		components_list.push_back(component = new ComponentJointDistance(this));
 	case Component::CompAudioSource:
@@ -159,7 +154,6 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompAudioDistZone:
 		components_list.push_back(component = new ComponentDistorsionZone(this));
->>>>>>> origin/Vertical-Slice-1
 		break;
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));

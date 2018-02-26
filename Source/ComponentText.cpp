@@ -5,7 +5,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "UsefulFunctions.h"
-#include "MathGeoLib\Math\Quat.h"
+#include "MathGeoLib\Quat.h"
 #include "ModuleResources.h"
 
 ComponentText::ComponentText(GameObject * attached_gameobject)

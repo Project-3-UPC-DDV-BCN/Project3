@@ -1203,6 +1203,11 @@ void CSScript::SetRectPosition(MonoObject * object, MonoObject * vector3)
 	rect_transform->SetPos(float2(new_pos.x, new_pos.y));
 }
 
+MonoObject * CSScript::GetRectPosition(MonoObject * object)
+{
+	return nullptr;
+}
+
 MonoObject * CSScript::GetForward(MonoObject * object)
 {
 	if (!MonoObjectIsValid(object))
@@ -1332,13 +1337,11 @@ void CSScript::SetRectSize(MonoObject * object, MonoObject * vector3)
 }
 
 MonoObject * CSScript::GetRectSize(MonoObject * object)
-=======
-
+{
 	return nullptr;
 }
 
 MonoObject * CSScript::GetRight(MonoObject * object)
->>>>>>> origin/Vertical-Slice-1
 {
 	if (!MonoObjectIsValid(object))
 	{
@@ -1402,13 +1405,12 @@ void CSScript::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 }
 
 MonoObject * CSScript::GetRectAnchor(MonoObject * object)
-=======
+{
 
 	return nullptr;
 }
 
 MonoObject * CSScript::GetUp(MonoObject * object)
->>>>>>> origin/Vertical-Slice-1
 {
 	if (!MonoObjectIsValid(object))
 	{
@@ -1475,10 +1477,6 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 
 	ComponentProgressBar* progres_barr = (ComponentProgressBar*)active_gameobject->GetComponent(Component::CompProgressBar);
 	return progres_barr->GetProgressPercentage();
-=======
-
-	return nullptr;
->>>>>>> origin/Vertical-Slice-1
 }
 
 void CSScript::StartFactory(MonoObject * object)

@@ -653,11 +653,8 @@ void ModuleMeshImporter::CreatePlane() const
 	}
 
 	//create the buffer from loaded info
-<<<<<<< HEAD
-	plane->vertices_data = new float[plane->num_vertices * 13]; // vert pos, tex coords, normals, color
-=======
 	plane->vertices_data = new float[plane->num_vertices * 19]; // vert pos, tex coords, normals, color, tangents, bitangents
->>>>>>> origin/Vertical-Slice-1
+
 
 	float* normals = nullptr, *tangents = nullptr, *bitangents = nullptr;
 	float null[3] = { 0.f,0.f,0.f };

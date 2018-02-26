@@ -192,7 +192,7 @@ const float4x4 ComponentTransform::GetMatrix() const
 	return transform_matrix;
 }
 
-float4x4 ComponentTransform::GetOpenGLMatrix() const
+const float4x4 ComponentTransform::GetOpenGLMatrix() const
 {
 	return transform_matrix.Transposed();
 }

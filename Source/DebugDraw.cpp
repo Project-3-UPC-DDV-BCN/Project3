@@ -5,13 +5,10 @@
 #include "ModuleRenderer3D.h"
 #include "ComponentCamera.h"
 #include "Mesh.h"
-<<<<<<< HEAD
-#include "MathGeoLib\Math\float4x4.h"
-#include "MathGeoLib\Math\Quat.h"
-=======
+#include "MathGeoLib\float4x4.h"
+#include "MathGeoLib\Quat.h"
 #include "MathGeoLib/float4x4.h"
 #include "MathGeoLib/Quat.h"
->>>>>>> origin/Vertical-Slice-1
 #include "ComponentCamera.h"
 
 DebugShape::DebugShape(uint _num_vertices, float * _vertices, uint _num_indices, uint * _indices)
@@ -61,14 +58,11 @@ void DebugShape::SetMode(int _mode)
 	mode = _mode;
 }
 
-<<<<<<< HEAD
-=======
 void DebugShape::SetStroke(uint _stroke)
 {
 	stroke = _stroke;
 }
 
->>>>>>> origin/Vertical-Slice-1
 uint DebugShape::GetNumVertices()
 {
 	return num_vertices;
@@ -104,10 +98,6 @@ int DebugShape::GetMode()
 	return mode;
 }
 
-<<<<<<< HEAD
-DebugDraw::DebugDraw()
-{
-=======
 uint DebugShape::GetStroke()
 {
 	return stroke;
@@ -116,7 +106,6 @@ uint DebugShape::GetStroke()
 DebugDraw::DebugDraw()
 {
 	SetLineStroke(2);
->>>>>>> origin/Vertical-Slice-1
 }
 
 void DebugDraw::Line(float3 start, float3 end, float4 colour)
@@ -141,10 +130,7 @@ void DebugDraw::Line(float3 start, float3 end, float4 colour)
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
 	shape.SetColour(colour);
-<<<<<<< HEAD
-=======
 	shape.SetStroke(line_stroke);
->>>>>>> origin/Vertical-Slice-1
 
 	AddShape(shape);
 
@@ -196,10 +182,8 @@ void DebugDraw::Quad(float3 center, float2 size, float4 colour)
 	DebugShape shape(num_vertices, vertices, num_indices, indices);
 	shape.SetMode(GL_LINES);
 	shape.SetColour(colour);
-<<<<<<< HEAD
-=======
+
 	shape.SetStroke(line_stroke);
->>>>>>> origin/Vertical-Slice-1
 
 	AddShape(shape);
 
@@ -252,10 +236,7 @@ void DebugDraw::Quad(float4x4 transform, float2 size, float4 colour)
 	shape.SetMode(GL_LINES);
 	shape.SetTransform(transform);
 	shape.SetColour(colour);
-<<<<<<< HEAD
-=======
 	shape.SetStroke(line_stroke);
->>>>>>> origin/Vertical-Slice-1
 
 	AddShape(shape);
 
@@ -296,10 +277,7 @@ void DebugDraw::Circle(float4x4 transform, float rad, float4 colour, uint resolu
 	shape.SetMode(GL_LINES);
 	shape.SetTransform(transform);
 	shape.SetColour(colour);
-<<<<<<< HEAD
-=======
 	shape.SetStroke(line_stroke);
->>>>>>> origin/Vertical-Slice-1
 
 	AddShape(shape);
 
@@ -307,8 +285,6 @@ void DebugDraw::Circle(float4x4 transform, float rad, float4 colour, uint resolu
 	delete[] indices;
 }
 
-<<<<<<< HEAD
-=======
 void DebugDraw::SetLineStroke(uint stroke)
 {
 	line_stroke = stroke;
@@ -319,7 +295,6 @@ uint DebugDraw::GetLineStroke() const
 	return line_stroke;
 }
 
->>>>>>> origin/Vertical-Slice-1
 void DebugDraw::Render(ComponentCamera* camera)
 {
 	// Activate
@@ -348,13 +323,10 @@ void DebugDraw::Render(ComponentCamera* camera)
 	glEnable(GL_BLEND);
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-<<<<<<< HEAD
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
-=======
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
->>>>>>> origin/Vertical-Slice-1
 	glEnable(GL_SCISSOR_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -363,17 +335,12 @@ void DebugDraw::Render(ComponentCamera* camera)
 	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
 	glUseProgram(program->GetProgramID());
 
-<<<<<<< HEAD
 	glLineWidth(2);
 
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
-=======
-	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
-	{
 		glLineWidth((*it).GetStroke());
 
->>>>>>> origin/Vertical-Slice-1
 		uint id_vertices_data = 0;
 		uint id_indices = 0;
 

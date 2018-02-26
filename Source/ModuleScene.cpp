@@ -597,6 +597,7 @@ GameObject * ModuleScene::CreateProgressBar(GameObject * parent)
 	ret->AddComponent(Component::CompProgressBar);
 
 	return ret;
+}
 
 void ModuleScene::SetParticleSystemsState()
 {

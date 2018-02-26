@@ -64,20 +64,25 @@ PropertiesWindow::~PropertiesWindow()
 
 void PropertiesWindow::DrawWindow()
 {
-	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) {
+	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar))
+	{
 		GameObject* selected_gameobject = nullptr;
-		if (App->scene->selected_gameobjects.size() == 1) {
+		if (App->scene->selected_gameobjects.size() == 1)
+		{
 			selected_gameobject = App->scene->selected_gameobjects.front();
 		}
-		else if (App->scene->selected_gameobjects.size() > 1) {
+		else if (App->scene->selected_gameobjects.size() > 1)
+		{
 			ImGui::Text("More than 1 GameObject selected!");
 		}
 
-		if (selected_gameobject != nullptr && !selected_gameobject->is_on_destroy) {
+		if (selected_gameobject != nullptr && !selected_gameobject->is_on_destroy)
+		{
 			ImGui::Text("Name: %s", selected_gameobject->GetName().c_str());
 			bool is_gameobject_active = selected_gameobject->IsActive();
 
-			if (ImGui::Checkbox("Active", &is_gameobject_active)) {
+			if (ImGui::Checkbox("Active", &is_gameobject_active))
+			{
 				selected_gameobject->SetActive(is_gameobject_active);
 			}
 			ImGui::SameLine();
@@ -88,13 +93,17 @@ void PropertiesWindow::DrawWindow()
 			}
 			ImGui::Text("Tag:");
 			ImGui::SameLine();
-			if (ImGui::SmallButton((selected_gameobject->GetTag() + "##tags").c_str())) {
+			if (ImGui::SmallButton((selected_gameobject->GetTag() + "##tags").c_str()))
+			{
 				ImGui::OpenPopup("Tags##gameobject");
 			}
-			if (ImGui::BeginPopup("Tags##gameobject")) {
-				for (int i = 0; i < App->tags_and_layers->tags_list.size(); i++) {
+			if (ImGui::BeginPopup("Tags##gameobject"))
+			{
+				for (int i = 0; i < App->tags_and_layers->tags_list.size(); i++)
+				{
 					std::string name = App->tags_and_layers->tags_list[i];
-					if (ImGui::MenuItem(name.c_str())) {
+					if (ImGui::MenuItem(name.c_str()))
+					{
 						if (name == "Main Camera" && App->renderer3D->game_camera == nullptr)
 						{
 							selected_gameobject->SetTag(name);
@@ -102,7 +111,8 @@ void PropertiesWindow::DrawWindow()
 					}
 				}
 				ImGui::Separator();
-				if (ImGui::MenuItem("Add Tag##gameobject")) {
+				if (ImGui::MenuItem("Add Tag##gameobject"))
+				{
 					App->editor->tags_and_layers_window->active = true;
 				}
 				ImGui::EndPopup();
@@ -110,18 +120,22 @@ void PropertiesWindow::DrawWindow()
 			ImGui::SameLine();
 			ImGui::Text("Layer:");
 			ImGui::SameLine();
-			if (ImGui::SmallButton((selected_gameobject->GetLayer() + "##layers").c_str())) {
+			if (ImGui::SmallButton((selected_gameobject->GetLayer() + "##layers").c_str()))
+			{
 				ImGui::OpenPopup("Layers##gameobject");
 			}
-			if (ImGui::BeginPopup("Layers##gameobject")) {
-				for (int i = 0; i < App->tags_and_layers->layers_list.size(); i++) {
+			if (ImGui::BeginPopup("Layers##gameobject"))
+			{
+				for (int i = 0; i < App->tags_and_layers->layers_list.size(); i++)
+				{
 					std::string name = App->tags_and_layers->layers_list[i];
 					if (ImGui::MenuItem(name.c_str())) {
 						selected_gameobject->SetLayer(name);
 					}
 				}
 				ImGui::Separator();
-				if (ImGui::MenuItem("Add Layer##gameobject")) {
+				if (ImGui::MenuItem("Add Layer##gameobject"))
+				{
 					App->editor->tags_and_layers_window->active = true;
 				}
 				ImGui::EndPopup();
@@ -136,19 +150,22 @@ void PropertiesWindow::DrawWindow()
 			distance_joints_count = 0;
 			lights_count = 0;
 
-			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++) {
+			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++)
+			{
 				DrawComponent((*it));
 				ImGui::Separator();
 				ImGui::Spacing();
 			}
 
-			if (ImGui::Button("Add Component")) {
+			if (ImGui::Button("Add Component"))
+			{
 				ImGui::OpenPopup("Components");
 			}
 
 			if (ImGui::BeginPopup("Components"))
 			{
-				if (ImGui::MenuItem("Mesh Renderer")) {
+				if (ImGui::MenuItem("Mesh Renderer"))
+				{
 					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
 					}
@@ -166,8 +183,10 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
 					}
 				}*/
-				if (ImGui::MenuItem("Camera")) {
-					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr) {
+				if (ImGui::MenuItem("Camera"))
+				{
+					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr)
+					{
 						selected_gameobject->AddComponent(Component::CompCamera);
 					}
 					else
@@ -190,231 +209,240 @@ void PropertiesWindow::DrawWindow()
 
 					ImGui::EndMenu();
 
-				if (ImGui::MenuItem("Particle Emmiter")) {
-					if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
-						selected_gameobject->AddComponent(Component::CompParticleSystem);
-					}
-					else
-					{
-						CONSOLE_WARNING("GameObject can't have more than 1 Particle Emmiter!");
-					}
-				}
-
-				if (ImGui::MenuItem("Billboard")) {
-					if (selected_gameobject->GetComponent(Component::CompBillboard) == nullptr) {
-						selected_gameobject->AddComponent(Component::CompBillboard);
-					}
-					else
-					{
-						CONSOLE_WARNING("GameObject can't have more than 1 Billboard!");
-					}
-				}
-
-				if (ImGui::MenuItem("Light")) {
-					if (App->renderer3D->GetDirectionalLightCount() < 2 || App->renderer3D->GetSpotLightCount() < 8 || App->renderer3D->GetPointLightCount() < 8)
-					{
-						if (selected_gameobject->GetComponent(Component::CompLight) == nullptr)
+					if (ImGui::MenuItem("Particle Emmiter")) {
+						if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompParticleSystem);
+						}
+						else
 						{
-							ComponentLight* light = (ComponentLight*)selected_gameobject->AddComponent(Component::CompLight);
-							if (App->renderer3D->GetSpotLightCount() == 8)
+							CONSOLE_WARNING("GameObject can't have more than 1 Particle Emmiter!");
+						}
+					}
+
+					if (ImGui::MenuItem("Billboard")) {
+						if (selected_gameobject->GetComponent(Component::CompBillboard) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompBillboard);
+						}
+						else
+						{
+							CONSOLE_WARNING("GameObject can't have more than 1 Billboard!");
+						}
+					}
+
+					if (ImGui::MenuItem("Light")) {
+						if (App->renderer3D->GetDirectionalLightCount() < 2 || App->renderer3D->GetSpotLightCount() < 8 || App->renderer3D->GetPointLightCount() < 8)
+						{
+							if (selected_gameobject->GetComponent(Component::CompLight) == nullptr)
 							{
-								if (App->renderer3D->GetDirectionalLightCount() == 2)
+								ComponentLight* light = (ComponentLight*)selected_gameobject->AddComponent(Component::CompLight);
+								if (App->renderer3D->GetSpotLightCount() == 8)
 								{
-									light->SetTypeToDirectional();
+									if (App->renderer3D->GetDirectionalLightCount() == 2)
+									{
+										light->SetTypeToDirectional();
+									}
+									else
+									{
+										light->SetTypeToPoint();
+									}
 								}
-								else
-								{
-									light->SetTypeToPoint();
-								}
+							}
+							else
+							{
+								CONSOLE_ERROR("GameObject can't have more than 1 Light for now...");
 							}
 						}
 						else
 						{
-							CONSOLE_ERROR("GameObject can't have more than 1 Light for now...");
+							CONSOLE_ERROR("Max lights created. Can't add more lights");
 						}
 					}
-					else
-					{
-						CONSOLE_ERROR("Max lights created. Can't add more lights");
-					}
-				}
 
-				if (ImGui::BeginMenu("Script")) {
-					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
-					Script* script = nullptr;
-
-					if (ImGui::BeginMenu("C#"))
+					if (ImGui::BeginMenu("Script"))
 					{
-						if (scripts.empty())
+						std::map<uint, Script*> scripts = App->resources->GetScriptsList();
+						Script* script = nullptr;
+
+						if (ImGui::BeginMenu("C#"))
 						{
-							ImGui::MenuItem("No Scripts##NoCSScript");
-						}
-						else
-						{
-							for (std::map<uint, Script*>::iterator it = scripts.begin(); it != scripts.end(); it++)
+							if (scripts.empty())
 							{
-								if (it->second->GetScriptType() == Script::CsScript)
+								ImGui::MenuItem("No Scripts##NoCSScript");
+							}
+							else
+							{
+								for (std::map<uint, Script*>::iterator it = scripts.begin(); it != scripts.end(); it++)
 								{
-									if (ImGui::MenuItem(it->second->GetName().c_str()))
+									if (it->second->GetScriptType() == Script::CsScript)
 									{
-										script = it->second;
+										if (ImGui::MenuItem(it->second->GetName().c_str()))
+										{
+											script = it->second;
+										}
 									}
 								}
+							}
+							ImGui::EndMenu();
+						}
+
+						if (script != nullptr)
+						{
+							ComponentScript* comp_script = (ComponentScript*)selected_gameobject->AddComponent(Component::CompScript);
+							if (comp_script != nullptr)
+							{
+								script->SetAttachedGameObject(selected_gameobject);
+								comp_script->SetScript(script);
 							}
 						}
 						ImGui::EndMenu();
 					}
 
-					if (script != nullptr)
+					if (ImGui::BeginMenu("Audio"))
 					{
-						ComponentScript* comp_script = (ComponentScript*)selected_gameobject->AddComponent(Component::CompScript);
-						if (comp_script != nullptr)
+						if (ImGui::MenuItem("Audio Listener"))
 						{
-							script->SetAttachedGameObject(selected_gameobject);
-							comp_script->SetScript(script);
+							if (App->audio->GetDefaultListener() != nullptr)
+							{
+
+							}
+							else
+								ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
 						}
-					}
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Audio")) {
-					if (ImGui::MenuItem("Audio Listener"))
-					{
-						if (App->audio->GetDefaultListener() != nullptr)
+						if (ImGui::MenuItem("Audio Source"))
 						{
+							ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
+						}
+						if (ImGui::MenuItem("Distorsion Zone"))
+						{
+							ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
+						}
+						ImGui::EndMenu();
+					}
 
+					if (ImGui::BeginMenu("New Factory"))
+					{
+						static char input_text[30];
+						ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
+						ImGui::Spacing();
+						if (ImGui::Button("Create"))
+						{
+							ComponentFactory* factory = (ComponentFactory*)selected_gameobject->AddComponent(Component::CompFactory);
+							if (factory) factory->SetName(input_text);
+							input_text[0] = 0;
+							ImGui::CloseCurrentPopup();
+						}
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::MenuItem("RigidBody"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						else
-							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
-					}
-					if (ImGui::MenuItem("Audio Source"))
-					{
-						ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
-					}
-					if (ImGui::MenuItem("Distorsion Zone"))
-					{
-						ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
-					}
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("New Factory")) {
-					static char input_text[30];
-					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
-					ImGui::Spacing();
-					if (ImGui::Button("Create"))
-					{
-						ComponentFactory* factory = (ComponentFactory*)selected_gameobject->AddComponent(Component::CompFactory);
-						if (factory) factory->SetName(input_text);
-						input_text[0] = 0;
-						ImGui::CloseCurrentPopup();
-					}
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::MenuItem("RigidBody")) {
-					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-						App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
-					}
-					else
-					{
-						CONSOLE_WARNING("GameObject can't have more than 1 RigidBody!");
-					}
-				}
-
-				if (ImGui::BeginMenu("Colliders")) {
-					if (ImGui::MenuItem("Box"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
-						}
-						selected_gameobject->AddComponent(Component::CompBoxCollider);
-					}
-					if (ImGui::MenuItem("Sphere"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
-						}
-						selected_gameobject->AddComponent(Component::CompSphereCollider);
-					}
-					if (ImGui::MenuItem("Capsule"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
-						}
-						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
-					}
-					if (ImGui::MenuItem("Mesh"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompMeshRenderer))
 						{
-							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							CONSOLE_WARNING("GameObject can't have more than 1 RigidBody!");
+						}
+					}
+
+					if (ImGui::BeginMenu("Colliders"))
+					{
+						if (ImGui::MenuItem("Box"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+							{
 								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
 							}
-							selected_gameobject->AddComponent(Component::CompMeshCollider);
+							selected_gameobject->AddComponent(Component::CompBoxCollider);
 						}
-						else
+						if (ImGui::MenuItem("Sphere"))
 						{
-							CONSOLE_ERROR("Can't have Mesh Collider without a mesh in the GameObject");
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+							{
+								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							}
+							selected_gameobject->AddComponent(Component::CompSphereCollider);
 						}
+						if (ImGui::MenuItem("Capsule"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+							{
+								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							}
+							selected_gameobject->AddComponent(Component::CompCapsuleCollider);
+						}
+						if (ImGui::MenuItem("Mesh"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompMeshRenderer))
+							{
+								if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
+								{
+									ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+									App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+									App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+								}
+								selected_gameobject->AddComponent(Component::CompMeshCollider);
+							}
+							else
+							{
+								CONSOLE_ERROR("Can't have Mesh Collider without a mesh in the GameObject");
+							}
+						}
+						ImGui::EndMenu();
 					}
-					ImGui::EndMenu();
+
+					/*if (ImGui::BeginMenu("Joints")) {
+						if (ImGui::MenuItem("Fixed"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								selected_gameobject->AddComponent(Component::CompRigidBody);
+							}
+							selected_gameobject->AddComponent(Component::CompFixedJoint);
+						}
+						if (ImGui::MenuItem("Distance"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								selected_gameobject->AddComponent(Component::CompRigidBody);
+							}
+							selected_gameobject->AddComponent(Component::CompDistanceJoint);
+						}
+						if (ImGui::MenuItem("Revolute"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								selected_gameobject->AddComponent(Component::CompRigidBody);
+							}
+							selected_gameobject->AddComponent(Component::CompRevoluteJoint);
+						}
+						if (ImGui::MenuItem("Spherical"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								selected_gameobject->AddComponent(Component::CompRigidBody);
+							}
+							selected_gameobject->AddComponent(Component::CompSphericalJoint);
+						}
+						if (ImGui::MenuItem("Prismatic"))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								selected_gameobject->AddComponent(Component::CompRigidBody);
+							}
+							selected_gameobject->AddComponent(Component::CompPrismaticJoint);
+						}
+						ImGui::EndMenu();
+					}*/
+
+					ImGui::EndPopup();
 				}
-
-				/*if (ImGui::BeginMenu("Joints")) {
-					if (ImGui::MenuItem("Fixed"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
-						}
-						selected_gameobject->AddComponent(Component::CompFixedJoint);
-					}
-					if (ImGui::MenuItem("Distance"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
-						}
-						selected_gameobject->AddComponent(Component::CompDistanceJoint);
-					}
-					if (ImGui::MenuItem("Revolute"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
-						}
-						selected_gameobject->AddComponent(Component::CompRevoluteJoint);
-					}
-					if (ImGui::MenuItem("Spherical"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
-						}
-						selected_gameobject->AddComponent(Component::CompSphericalJoint);
-					}
-					if (ImGui::MenuItem("Prismatic"))
-					{
-						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
-							selected_gameobject->AddComponent(Component::CompRigidBody);
-						}
-						selected_gameobject->AddComponent(Component::CompPrismaticJoint);
-					}
-					ImGui::EndMenu();
-				}*/
-
-				ImGui::EndPopup();
 			}
 		}
 	}
-
 	ImGui::EndDock();
 }
 

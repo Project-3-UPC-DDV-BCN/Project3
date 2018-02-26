@@ -4,8 +4,8 @@
 #include <vector>
 #include <iostream>
 #include "Component.h"
-#include "MathGeoLib\Math\float4x4.h"
-#include "MathGeoLib\Geometry\AABB.h"
+#include "MathGeoLib\float4x4.h"
+#include "MathGeoLib\AABB.h"
 
 class Mesh;
 class ComponentRectTransform;

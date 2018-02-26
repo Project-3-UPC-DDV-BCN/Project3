@@ -389,7 +389,6 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
 }
 
-=======
 void ModuleRenderer3D::DrawDebugOBB(OBB& obb, ComponentCamera * active_camera)
 {
 	float3 size = obb.Size();
@@ -494,9 +493,6 @@ float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float botto
 	return n_projection;
 }
 
-
-
->>>>>>> origin/Vertical-Slice-1
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
@@ -866,7 +862,7 @@ void ModuleRenderer3D::UnbindElementArrayBuffer() const
 	}
 }
 
-DebugDraw * ModuleRenderer3D::GetDebugDraw()
+DebugDraw * ModuleRenderer3D::GetDebugDraw() const
 {
 	return debug_draw;
 }
@@ -955,11 +951,6 @@ void ModuleRenderer3D::RemoveLight(ComponentLight * light)
 			break;
 		}
 	}
-}
-
-DebugDraw * ModuleRenderer3D::GetDebugDraw() const
-{
-	return debug_draw;
 }
 
 // ------------- Shaders -------------------------
