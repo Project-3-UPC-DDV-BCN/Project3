@@ -101,6 +101,10 @@ public:
 	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetRectAnchor(MonoObject * object);
 
+	//TEXT
+	void SetText(MonoObject * object, MonoString* t);
+	MonoString* GetText(MonoObject * object);
+
 	//PROGRESSBAR
 	void SetPercentageProgress(MonoObject * object, float progress);
 	float GetPercentageProgress(MonoObject * object);

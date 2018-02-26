@@ -267,6 +267,10 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectAnchor", (const void*)SetRectAnchor);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectAnchor", (const void*)GetRectAnchor);
 
+	//TEXT
+	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
+	mono_add_internal_call("TheEngine.TheText::GettText", (const void*)GetText);
+
 	// PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
 	mono_add_internal_call("TheEngine.TheProgressBar::GetPercentageProgress", (const void*)GetPercentageProgress);
@@ -491,6 +495,16 @@ void ModuleScriptImporter::SetRectAnchor(MonoObject * object, MonoObject * vecto
 MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 {
 	return current_script->GetRectAnchor(object);
+}
+
+void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
+{
+	return current_script->SetText(object, text);
+}
+
+MonoString* ModuleScriptImporter::GetText(MonoObject * object)
+{
+	return current_script->GetText(object);
 }
 
 void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float progress)

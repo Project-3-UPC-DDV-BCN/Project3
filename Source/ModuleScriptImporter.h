@@ -77,6 +77,10 @@ private:
 	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	static MonoObject* GetRectAnchor(MonoObject * object);
 
+	// TEXT
+	static void SetText(MonoObject * object, MonoString* text);
+	static MonoString* GetText(MonoObject * object);
+
 	//PROGRESSBAR
 	static void SetPercentageProgress(MonoObject * object, float progress);
 	static float GetPercentageProgress(MonoObject * object);

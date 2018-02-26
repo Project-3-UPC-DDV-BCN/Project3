@@ -22,6 +22,7 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentAudioSource.h"
 #include "AudioEvent.h"
+#include "ComponentText.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -892,6 +893,7 @@ MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * typ
 	}
 	else if (name == "TheEngine.TheFactory") comp_type = Component::CompTransform;
 	else if (name == "TheEngine.TheProgressBar") comp_type = Component::CompProgressBar;
+	else if (name == "TheEngine.TheText") comp_type = Component::CompText;
 
 	if (comp_type != Component::CompUnknown)
 	{
@@ -949,6 +951,10 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	else if (name == "TheEngine.TheParticleEmmiter")
 	{
 		comp_name = "TheParticleEmmiter";
+	}
+	else if (name == "TheEngine.TheText")
+	{
+		comp_name = "TheText";
 	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
@@ -1408,6 +1414,40 @@ MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 {
 
 	return nullptr;
+}
+
+void CSScript::SetText(MonoObject * object, MonoString* t)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	const char* txt = mono_string_to_utf8(t);
+
+	ComponentText* text = (ComponentText*)active_gameobject->GetComponent(Component::CompText);
+	text->SetText(txt);
+}
+
+MonoString* CSScript::GetText(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return mono_string_new(mono_domain, "");
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return mono_string_new(mono_domain, "");
+	}
+
+	ComponentText* text = (ComponentText*)active_gameobject->GetComponent(Component::CompText);
+	return mono_string_new(mono_domain, text->GetText().c_str());
 }
 
 MonoObject * CSScript::GetUp(MonoObject * object)
