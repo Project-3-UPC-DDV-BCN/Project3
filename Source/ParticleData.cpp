@@ -100,6 +100,9 @@ void ParticleData::Save(Data & data) const
 
 	// Colors -----
 
+	float4 new_col = {color.r, color.g, color.b, color.a};
+	data.AddVector4("Color", new_col);
+
 	// Motion -----
 
 	data.AddBool("Relative_Pos", relative_pos);
@@ -272,6 +275,12 @@ bool ParticleData::Load(Data & _data)
 		time_to_stop = _data.GetFloat("Time_To_Stop"); 
 	
 	// Colors -----
+	float4 col = _data.GetVector4("Color");
+
+	color.r = col.x; 
+	color.g = col.y;
+	color.b = col.z;
+	color.a = col.w;
 
 	//Billboard
 	billboarding = _data.GetBool("Billboard");

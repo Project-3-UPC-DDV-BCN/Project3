@@ -320,11 +320,11 @@ void Particle::UpdateRotation()
 
 }
 
-
 void Particle::SetMovementFromStats()
 {
 	movement += particle_data->gravity * App->time->GetGameDt();
 }
+
 void Particle::SetMovement()
 {
 	//Getting the angle in which the particle have to be launched
@@ -406,7 +406,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		float percentage = GetAlphaInterpolationPercentage(); 
 
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
-		CONSOLE_LOG("Alpha: %f", percentage);
+		//CONSOLE_LOG("Alpha: %f", percentage);
 	}
 	else
 	{
@@ -423,7 +423,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f , 0.0f, 1.0f));
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f); 
+		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}
 	else
 	{
@@ -433,7 +434,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f);
+		App->renderer3D->SetUniformVector4(id, "material_color", color);
 
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
 	}

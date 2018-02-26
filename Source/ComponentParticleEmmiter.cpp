@@ -283,8 +283,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 void ComponentParticleEmmiter::UpdateCurrentData()
 {
-
-
+	
 }
 
 ComponentParticleEmmiter::~ComponentParticleEmmiter()

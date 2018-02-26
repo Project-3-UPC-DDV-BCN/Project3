@@ -37,9 +37,6 @@
     <Filter Include="Sources\GameObject\Components">
       <UniqueIdentifier>{ae7286de-084c-42ab-89ad-970261411237}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Resources">
-      <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\3d Party\imGui\ImGuizmo">
       <UniqueIdentifier>{394f6fe7-3bd6-499d-ae70-df52919e040a}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,9 @@
     </Filter>
     <Filter Include="Sources\3d Party\Parson">
       <UniqueIdentifier>{1dbfddcf-d4e4-458f-9a0b-1f1ce259303c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Helpers\Resources">
+      <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,13 +208,13 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="InputConfigWindow.h">
       <Filter>Sources\EditorUI\Modules Config</Filter>
@@ -244,13 +244,13 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="RenderTextureMSAA.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="imgui\ImGuizmo\ImGuizmo.h">
       <Filter>Sources\3d Party\imGui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="Prefab.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleMeshImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -262,7 +262,7 @@
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleMaterialImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -466,7 +466,7 @@
       <Filter>Sources\EditorUI\Modules Config</Filter>
     </ClInclude>
     <ClInclude Include="Script.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="lua\include\lauxlib.h">
       <Filter>Sources\3d Party\Lua</Filter>
@@ -487,10 +487,10 @@
       <Filter>Sources\3d Party\imGui\ImGuiTextEditor</Filter>
     </ClInclude>
     <ClInclude Include="CSScript.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="LuaScript.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="TextEditorWindow.h">
       <Filter>Sources\EditorUI</Filter>
@@ -505,10 +505,10 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ShaderProgram.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleShaderImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -523,11 +523,11 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ParticleData.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleParticleImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Include_Wwise.h">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClInclude>
@@ -570,6 +570,8 @@
     <ClInclude Include="DebugDraw.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -699,13 +701,13 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="InputConfigWindow.cpp">
       <Filter>Sources\EditorUI\Modules Config</Filter>
@@ -735,13 +737,13 @@
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="RenderTextureMSAA.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="imgui\ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\3d Party\imGui\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="Prefab.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMeshImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -753,7 +755,7 @@
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMaterialImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -867,16 +869,16 @@
       <Filter>Sources\EditorUI\Modules Config</Filter>
     </ClCompile>
     <ClCompile Include="Script.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp">
       <Filter>Sources\3d Party\imGui\ImGuiTextEditor</Filter>
     </ClCompile>
     <ClCompile Include="CSScript.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="LuaScript.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="TextEditorWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
@@ -891,10 +893,10 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ShaderProgram.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleShaderImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -909,11 +911,11 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="ParticleData.cpp">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleParticleImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -971,6 +973,8 @@
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

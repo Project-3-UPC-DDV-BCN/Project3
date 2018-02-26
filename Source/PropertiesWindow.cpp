@@ -948,22 +948,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Color"))
-			{
-				static bool alpha_preview = true;
-				ImGui::Checkbox("Alpha", &alpha_preview);
-
-				int misc_flags = (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0);
-
-				ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
-				flags |= misc_flags;
-				flags |= ImGuiColorEditFlags_RGB;
-
-				ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
-
-				ImGui::TreePop();
-			}
-
 			if (ImGui::TreeNode("Motion"))
 			{
 				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
@@ -1105,30 +1089,44 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
-				if (ImGui::TreeNodeEx("Color"))
+				if (ImGui::TreeNode("Color"))
 				{
 
-					static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b};
+					static bool alpha_preview = true;
+					ImGui::Checkbox("Alpha", &alpha_preview);
 
-					ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
-					
-					static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b};
+					int misc_flags = (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0);
 
-					ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+					ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+					flags |= misc_flags;
+					flags |= ImGuiColorEditFlags_RGB;
 
-					if (ImGui::Button("Apply Color Interpolation"))
+					ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
+
+					if (ImGui::TreeNode("Interpolation"))
 					{
-						current_emmiter->data->change_color_interpolation = true;
+						static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b };
 
-						Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
-						Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+						ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
 
-						current_emmiter->data->initial_color = initial;
-						current_emmiter->data->final_color = final;
+						static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b };
 
+						ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+
+						if (ImGui::Button("Apply Color Interpolation"))
+						{
+							current_emmiter->data->change_color_interpolation = true;
+
+							Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
+							Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+
+							current_emmiter->data->initial_color = initial;
+							current_emmiter->data->final_color = final;
+						}
+
+						ImGui::TreePop();
 					}
-
-					ImGui::TreePop();
+					ImGui::TreePop(); 
 				}
 
 			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
@@ -1141,12 +1139,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::SameLine();
 			if (ImGui::Button("Update Template"))
 			{
-
+				
 			}
 
 		}
-
-	
 
 		if (rename_template)
 		{
