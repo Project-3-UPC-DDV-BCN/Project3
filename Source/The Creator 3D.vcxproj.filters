@@ -34,9 +34,6 @@
     <Filter Include="Sources\GameObject\Components">
       <UniqueIdentifier>{ae7286de-084c-42ab-89ad-970261411237}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Resources">
-      <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\3d Party\imGui\ImGuizmo">
       <UniqueIdentifier>{394f6fe7-3bd6-499d-ae70-df52919e040a}</UniqueIdentifier>
     </Filter>
@@ -73,8 +70,13 @@
     <Filter Include="Sources\3d Party\Parson">
       <UniqueIdentifier>{1dbfddcf-d4e4-458f-9a0b-1f1ce259303c}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
+    <Filter Include="Sources\Helpers\Resources">
+      <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
+=======
     <Filter Include="Sources\GameObject\Components\UI">
       <UniqueIdentifier>{a89151dd-93f3-4407-8d21-204a484a11f2}</UniqueIdentifier>
+>>>>>>> origin/Vertical-Slice-1
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -211,13 +213,13 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="InputConfigWindow.h">
       <Filter>Sources\EditorUI\Modules Config</Filter>
@@ -247,13 +249,13 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="RenderTextureMSAA.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="imgui\ImGuizmo\ImGuizmo.h">
       <Filter>Sources\3d Party\imGui\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="Prefab.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleMeshImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -265,7 +267,7 @@
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleMaterialImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -289,7 +291,7 @@
       <Filter>Sources\EditorUI\Modules Config</Filter>
     </ClInclude>
     <ClInclude Include="Script.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="lua\include\lauxlib.h">
       <Filter>Sources\3d Party\Lua</Filter>
@@ -310,10 +312,10 @@
       <Filter>Sources\3d Party\imGui\ImGuiTextEditor</Filter>
     </ClInclude>
     <ClInclude Include="CSScript.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="LuaScript.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="TextEditorWindow.h">
       <Filter>Sources\EditorUI</Filter>
@@ -385,10 +387,10 @@
       <Filter>Sources\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ShaderProgram.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleShaderImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -409,7 +411,7 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ParticleData.h">
-      <Filter>Sources\Resources</Filter>
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleParticleImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
@@ -453,6 +455,8 @@
     <ClInclude Include="DebugDraw.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
     <ClInclude Include="ComponentBlast.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
@@ -1160,6 +1164,7 @@
     <ClInclude Include="Font.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+>>>>>>> origin/Vertical-Slice-1
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
   </ItemGroup>
@@ -1203,6 +1208,12 @@
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="PhysBody3D.cpp">
+      <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+=======
+>>>>>>> origin/Vertical-Slice-1
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>Sources\3d Party\imGui</Filter>
     </ClCompile>
@@ -1476,6 +1487,16 @@
     <ClCompile Include="Include_Wwise.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="Wwise.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -1484,6 +1505,7 @@
     </ClCompile>
     <ClCompile Include="SoundBank.cpp">
       <Filter>Sources\Audio</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="AudioWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
@@ -1515,14 +1537,24 @@
     <ClCompile Include="Wwise\IO\Common\stdafx.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="RenderTextureMSAA.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookDeferred.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Prefab.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\stdafx.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="MathGeoLib\AABB.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
@@ -1533,8 +1565,13 @@
     <ClCompile Include="MathGeoLib\BitOps.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Material.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="MathGeoLib\Callstack.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="MathGeoLib\CallstackTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
@@ -1647,17 +1684,30 @@
     <ClCompile Include="MathGeoLib\OBBTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Script.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="MathGeoLib\PBVolume.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="MathGeoLib\PBVolumeTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="CSScript.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaScript.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="MathGeoLib\Plane.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Polygon.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="MathGeoLib\PolygonTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
@@ -1671,11 +1721,19 @@
     <ClCompile Include="MathGeoLib\Polynomial.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Shader.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+=======
     <ClCompile Include="MathGeoLib\PositiveTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Quat.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="MathGeoLib\QuatTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
@@ -1689,11 +1747,22 @@
     <ClCompile Include="MathGeoLib\Sphere.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="ParticleData.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleParticleImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Sources\3d Party\Wwise</Filter>
+=======
     <ClCompile Include="MathGeoLib\SphereTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\SSEMath.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
+>>>>>>> origin/Vertical-Slice-1
     </ClCompile>
     <ClCompile Include="MathGeoLib\SSEMathTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
@@ -1751,12 +1820,15 @@
     <ClCompile Include="UsefulFunctions.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
     <ClCompile Include="ModuleFontImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
+>>>>>>> origin/Vertical-Slice-1
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>

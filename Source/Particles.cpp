@@ -182,6 +182,8 @@ void Particle::SetEmmisionAngle(float new_angle)
 
 float3 Particle::GetEmmisionVector()
 {
+	LCG random;
+
 	float3 direction;
 	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
 
@@ -189,24 +191,21 @@ float3 Particle::GetEmmisionVector()
 	direction = emmiter_transform->GetMatrix().WorldY();
 
 	//We apply the rotation angle to the vector 
-	LCG random_angle_z;
-	int angle_z = random_angle_z.Int(0, particle_data->emision_angle);
+	int angle_z = random.Int(0, particle_data->emision_angle);
 
 	float3x3 z_rotation;
 	z_rotation = z_rotation.FromEulerXYZ(0, 0, angle_z * DEGTORAD);
 	direction = z_rotation.Transform(direction);
 
 	//We apply a rotation on X for randomization
-	LCG random_angle_y;
-	int angle_y = random_angle_y.Int(0, 360);
+	int angle_y = random.Int(0, 360);
 
 	float3x3 y_rotation;
 	y_rotation = y_rotation.FromEulerXYZ(0, angle_y * DEGTORAD, 0);
 	direction = y_rotation.Transform(direction);
 
 	//Dir is the maximum angle direction so we hace to add some randomnes 
-	LCG random_percentage;
-	int amount = random_percentage.Int(0, 100);
+	int amount = random.Int(0, 100);
 	amount /= 10; 
 
 	float from_point_to_origin = direction.x;
@@ -321,11 +320,11 @@ void Particle::UpdateRotation()
 
 }
 
-
 void Particle::SetMovementFromStats()
 {
 	movement += particle_data->gravity * App->time->GetGameDt();
 }
+
 void Particle::SetMovement()
 {
 	//Getting the angle in which the particle have to be launched
@@ -407,8 +406,14 @@ void Particle::Draw(ComponentCamera* active_camera)
 		float percentage = GetAlphaInterpolationPercentage(); 
 
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
-		CONSOLE_LOG("Alpha: %f", percentage);
+		//CONSOLE_LOG("Alpha: %f", percentage);
 	}
+	else
+	{
+		App->renderer3D->SetUniformBool(id, "alpha_interpolation", false);
+		App->renderer3D->SetUniformFloat(id, "alpha_percentage", 0);
+	}
+
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -418,7 +423,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f , 0.0f, 1.0f));
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f); 
+		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}
 	else
 	{
@@ -428,7 +434,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f);
+		App->renderer3D->SetUniformVector4(id, "material_color", color);
 
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
 	}
