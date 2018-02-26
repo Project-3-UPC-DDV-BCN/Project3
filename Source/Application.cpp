@@ -374,7 +374,7 @@ void Application::Play()
 			App->file_system->Create_Directory(TMP_FOLDER_PATH);
 		}
 
-		App->scene->SaveScene(TMP_FOLDER"tmp_scene");
+		App->scene->SaveScene(TMP_FOLDER"tmp_scene.json");
 		App->scene->saving_index = 0;
 		App->scene->is_game = true;
 		App->scene->InitScripts();
