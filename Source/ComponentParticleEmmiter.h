@@ -103,5 +103,5 @@ private:
 	//Spawn Management
 	float emmision_frequency;							//Difference between spawn
 	bool show_emit_area; 
-
+	bool wave_launched; 
 };

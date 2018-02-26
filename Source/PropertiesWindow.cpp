@@ -737,6 +737,69 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
+			if (ImGui::TreeNode("System Stats"))
+			{
+				ImGui::Text("Template Loaded:"); ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
+
+				ImGui::Text("Rendering Particles: "); ImGui::SameLine(); 
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", current_emmiter->GetParticlesNum());
+
+				ImGui::Text("Auto Pause:"); ImGui::SameLine();
+
+				if (current_emmiter->data->autopause)
+				{
+					float time_left = current_emmiter->data->time_to_stop;
+
+					if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+					{
+						time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
+						ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
+					}
+					else
+						ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
+				}
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Shock Wave: "); ImGui::SameLine();
+
+				if (current_emmiter->show_shockwave)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_alpha_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Size Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_size_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_rotation_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Color Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_color_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::TreePop(); 
+			}
+
 			ImGui::Separator();	
 
 			if (ImGui::Button("PLAY"))
@@ -762,62 +825,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
-			ImGui::Separator(); 
 
-			ImGui::Text("Template Loaded:"); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
 
-			ImGui::Text("Auto Pause:"); ImGui::SameLine();
-
-			if (current_emmiter->data->autopause)
-			{
-				float time_left = current_emmiter->data->time_to_stop;
-
-				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
-				{
-					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
-					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
-				}
-				else
-					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
-			}
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Shock Wave: "); ImGui::SameLine();
-
-			if (current_emmiter->show_shockwave)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_alpha_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Size Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_size_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_rotation_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Color Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_color_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+			
 
 			ImGui::Separator();
 
@@ -839,6 +849,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else if (emmision_behaviour_combo == 1)
 			{
 				current_emmiter->data->emmision_type = EMMISION_SIMULTANEOUS;
+				ImGui::TextColored(ImVec4(0, 1, 1, 1), "Setting the time-step to 0 will cause a unique emission.");
 				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
 				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 1, 10.0f);
 			}

@@ -132,7 +132,9 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
 	runtime_behaviour = "null"; 
+
 	show_shockwave = false; 
+	wave_launched = false; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -140,7 +142,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-	emmit_area_obb.SetFrom(emit_area); 
+	emmit_area_obb.SetFrom(emit_area);
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -169,14 +171,15 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 bool ComponentParticleEmmiter::Update()
 {
 
-	if (data->emmision_type == EMMISION_CONTINUOUS)
+	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();
 
 	else if (data->emmision_type == EMMISION_SIMULTANEOUS && system_state == PARTICLE_STATE_PLAY)
 	{
-		if (LaunchingAllowed())
+		if (data->time_step_sim == 0 && wave_launched == false)
 		{
-			LaunchParticlesWave();
+			LaunchParticlesWave(); 
+			wave_launched = true; 
 		}
 	}
 
@@ -427,6 +430,7 @@ void ComponentParticleEmmiter::PlayEmmiter()
 void ComponentParticleEmmiter::StopEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PAUSE);
+	wave_launched = false; 
 }
 
 bool ComponentParticleEmmiter::LaunchingAllowed()
@@ -442,8 +446,8 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 	for (int i = 0; i < data->amount_to_emmit; i++)
 	{
 		Particle* new_particle = CreateParticle();
+		new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
 		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
-		spawn_timer.Start();
 	}
 }
 
