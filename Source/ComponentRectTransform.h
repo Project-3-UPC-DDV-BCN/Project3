@@ -41,6 +41,9 @@ public:
 	float3 GetLocalPos() const;
 	float3 GetGlobalPos() const;
 
+	void SetZPos(float set);
+	float GetZPos() const;
+
 	void SetRotation(const float3& rotation);
 	float3 GetLocalRotation() const;
 
@@ -85,6 +88,7 @@ private:
 	ComponentCanvas*	c_canvas = nullptr;
 
 	float2				pos;
+	float				z_pos;
 	float2				size;
 	float2			    anchor;
 	float				scale;
