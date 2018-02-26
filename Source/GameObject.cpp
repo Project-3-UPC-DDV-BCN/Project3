@@ -170,10 +170,8 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 
 Component * GameObject::GetComponent(Component::ComponentType component_type)
 {
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) 
-	{
-		if ((*it)->GetType() == component_type)
-		{
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == component_type) {
 			return (*it);
 		}
 	}
