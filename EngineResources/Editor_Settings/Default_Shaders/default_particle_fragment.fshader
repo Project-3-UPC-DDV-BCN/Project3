@@ -26,5 +26,5 @@ void main()
 		discard;
 	if(alpha_interpolation)
 		color.a = alpha_percentage;
-	color = color + material_color;
+	color = vec4(color.rgb + material_color.rgb, color.a);
 }

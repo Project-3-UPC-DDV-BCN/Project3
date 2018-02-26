@@ -1704,7 +1704,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"
 
-			"	color = color + material_color;\n"
+			"	color = vec4(color.rgb + material_color.rgb, color.a);\n"
 
 			"}";
 
