@@ -189,24 +189,23 @@ float3 Particle::GetEmmisionVector()
 	direction = emmiter_transform->GetMatrix().WorldY();
 
 	//We apply the rotation angle to the vector 
-	LCG random_angle_z;
-	int angle_z = random_angle_z.Int(0, particle_data->emision_angle);
+	LCG random; 
+
+	int angle_z = random.Int(0, particle_data->emision_angle);
 
 	float3x3 z_rotation;
 	z_rotation = z_rotation.FromEulerXYZ(0, 0, angle_z * DEGTORAD);
 	direction = z_rotation.Transform(direction);
 
 	//We apply a rotation on X for randomization
-	LCG random_angle_y;
-	int angle_y = random_angle_y.Int(0, 360);
+	int angle_y = random.Int(0, 360);
 
 	float3x3 y_rotation;
 	y_rotation = y_rotation.FromEulerXYZ(0, angle_y * DEGTORAD, 0);
 	direction = y_rotation.Transform(direction);
 
 	//Dir is the maximum angle direction so we hace to add some randomnes 
-	LCG random_percentage;
-	int amount = random_percentage.Int(0, 100);
+	int amount = random.Int(0, 100);
 	amount /= 10; 
 
 	float from_point_to_origin = direction.x;
@@ -409,6 +408,12 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
 		CONSOLE_LOG("Alpha: %f", percentage);
 	}
+	else
+	{
+		App->renderer3D->SetUniformBool(id, "alpha_interpolation", false);
+		App->renderer3D->SetUniformFloat(id, "alpha_percentage", 0);
+	}
+
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

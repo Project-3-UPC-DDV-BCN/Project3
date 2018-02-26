@@ -1018,6 +1018,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						current_emmiter->data->final_scale = fin_scale;
 					}
 
+					ImGui::SameLine(); 
+
+					if (ImGui::Button("Delete"))
+					{
+						current_emmiter->data->change_size_interpolation = false;
+					}
+
 					ImGui::TreePop();
 				}
 
@@ -1039,6 +1046,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 						current_emmiter->data->initial_angular_v = init_angular_v;
 						current_emmiter->data->final_angular_v = fin_angular_v;
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("Delete"))
+					{
+						current_emmiter->data->change_rotation_interpolation = false;
 					}
 
 					ImGui::TreePop();
@@ -1067,6 +1081,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			
 						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
 							current_emmiter->data->alpha_interpolation_delayed = true;
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("Delete"))
+					{
+						current_emmiter->data->change_alpha_interpolation = false;
 					}
 
 					ImGui::TreePop();
