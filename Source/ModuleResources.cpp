@@ -34,7 +34,8 @@ ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_g
 
 ModuleResources::~ModuleResources()
 {
-	for (std::map<uint, GameObject*>::iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); ++it) {
+	for (std::map<uint, GameObject*>::iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); ++it) 
+	{
 		it->second->DeleteFromResourcesDestructor();
 		it->second = nullptr;
 	}
@@ -44,10 +45,12 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	textures_list.clear();
+
 	for (std::map<uint, Mesh*>::iterator it = meshes_list.begin(); it != meshes_list.end(); ++it) {
 		RELEASE(it->second);
 	}
 	meshes_list.clear();
+
 	for (std::map<uint, Prefab*>::iterator it = prefabs_list.begin(); it != prefabs_list.end(); ++it) {
 		RELEASE(it->second);
 	}
@@ -84,7 +87,8 @@ ModuleResources::~ModuleResources()
 	shprograms.AddUInt("num_sections", i);
 	shprograms.SaveAsMeta(LIBRARY_SHADERS_FOLDER"shprograms");
 
-	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) {
+	for (std::map<uint, Shader*>::iterator it = shaders_list.begin(); it != shaders_list.end(); ++it) 
+	{
 		RELEASE(it->second);
 	}
 	shaders_list.clear();

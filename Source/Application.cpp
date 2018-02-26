@@ -58,7 +58,6 @@ Application::Application()
 	font_importer = new ModuleFontImporter(this);
 	blast = new ModuleBlast(this);
 
-
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -80,7 +79,6 @@ Application::Application()
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
-	AddModule(resources);
 	AddModule(font_importer);
 
 	//TIME
@@ -123,15 +121,20 @@ Application::~Application()
 	shader_importer = nullptr;
 	blast = nullptr;
 
-	std::list<Module*>::iterator item = list_modules.begin();
-
-	while (item != list_modules.end())
+	for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); ++it)
 	{
-		RELEASE(*item);
-		++item;
+		RELEASE(*it);
 	}
-
 	list_modules.clear();
+	//std::list<Module*>::iterator item = list_modules.begin();
+
+	//while (item != list_modules.end())
+	//{
+	//	RELEASE(*item);
+	//	++item;
+	//}
+
+	//list_modules.clear();
 
 	RELEASE(random);
 	SDL_FreeCursor(cursor);
