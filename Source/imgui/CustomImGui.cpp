@@ -1,6 +1,5 @@
 #include "CustomImGui.h"
 #include "imgui_internal.h"
-#include "../ResourcesWindow.h"
 #include "../Texture.h"
 #include "../Application.h"
 #include "../ModuleEditor.h"
@@ -11,6 +10,8 @@
 #include "../Script.h"
 #include "../Shader.h"
 #include "../Font.h"
+#include "../PhysicsMaterial.h"
+#include "../BlastModel.h"
 
 namespace ImGui
 {
@@ -91,6 +92,7 @@ namespace ImGui
 
 		return false;
 	}
+
 
 	bool ImGui::InputResourceMesh(const char * label, Mesh ** mesh)
 	{
@@ -235,7 +237,7 @@ namespace ImGui
 		return false;
 	}
 
-	bool ImGui::InputResourceGameObject(const char * label, GameObject ** gameobject)
+	bool ImGui::InputResourceGameObject(const char * label, GameObject ** gameobject, ResourcesWindow::GameObjectFilter filter)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
@@ -292,6 +294,7 @@ namespace ImGui
 		if (Button(button_id.c_str(), { 20, 20 }))
 		{
 			App->editor->resources_window->SetResourceType(Resource::GameObjectResource);
+			App->editor->resources_window->go_filter = filter;
 			App->editor->resources_window->SetActive(true);
 			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
@@ -455,7 +458,8 @@ namespace ImGui
 
 		return false;
 	}
-	bool InputResourceShader(const char * label, Shader ** shader, Shader::ShaderType type)
+
+	bool InputResourcePhysMaterial(const char * label, PhysicsMaterial ** phys_mat)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
@@ -478,20 +482,109 @@ namespace ImGui
 		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
 		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
 		std::string buf_display;
-		Shader* tmp_script = *shader;
-		if (tmp_script != nullptr)
+		PhysicsMaterial* tmp_material = *phys_mat;
+		if (tmp_material != nullptr)
 		{
-			buf_display = tmp_script->GetName();
+			buf_display = tmp_material->GetName();
 		}
 		else
 		{
-			buf_display = "None(Shader)";
+			buf_display = "None(Phys Material)";
 		}
+
 		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
 
 		ItemSize(rect, style.FramePadding.y);
 		if (!ItemAdd(rect, &id))
 			return false;
+
+		if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max) && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::PhysicsMatResource)
+			{
+				RenderFrame(rect.Min, rect.Max, ImGui::ColorConvertFloat4ToU32({ 0,0.8f,1,0.2f }));
+				if (ImGui::IsMouseReleased(0))
+				{
+					*phys_mat = (PhysicsMaterial*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}
+		ImGui::SameLine();
+
+		if (Button("+##phys_material", { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::PhysicsMatResource);
+			App->editor->resources_window->SetActive(true);
+		}
+
+		PhysicsMaterial* new_material = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->phys_mat_changed)
+		{
+			new_material = App->editor->resources_window->GetPhysMat();
+			if (new_material != tmp_material)
+			{
+				*phys_mat = new_material;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool InputResourceShader(const char * label, Shader ** shader, Shader::ShaderType type)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		std::string buf_display;
+		Shader* tmp_shader = *shader;
+		if (tmp_shader != nullptr)
+		{
+			buf_display = tmp_shader->GetName();
+		}
+		else
+		{
+			buf_display = "None(Shader)";
+		}
+
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max) && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::PhysicsMatResource)
+			{
+				RenderFrame(rect.Min, rect.Max, ImGui::ColorConvertFloat4ToU32({ 0,0.8f,1,0.2f }));
+				if (ImGui::IsMouseReleased(0))
+				{
+					*shader = (Shader*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}
 		ImGui::SameLine();
 
 		char name[15];
@@ -512,7 +605,7 @@ namespace ImGui
 		if (App->editor->resources_window->active && App->editor->resources_window->script_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_shader = App->editor->resources_window->GetShader();
-			if (new_shader != tmp_script)
+			if (new_shader != tmp_shader)
 			{
 				*shader = new_shader;
 				App->editor->resources_window->SetActive(false);
@@ -523,6 +616,7 @@ namespace ImGui
 
 		return false;
 	}
+
 	bool InputResourceFont(const char * label, Font ** font)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
@@ -546,6 +640,7 @@ namespace ImGui
 		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
 		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
 		std::string buf_display;
+		
 		Font* tmp_font = *font;
 		if (tmp_font != nullptr)
 		{
@@ -555,6 +650,7 @@ namespace ImGui
 		{
 			buf_display = "None(Font)";
 		}
+		
 		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
 
 		ItemSize(rect, style.FramePadding.y);
@@ -574,6 +670,7 @@ namespace ImGui
 			}
 		}
 		ImGui::SameLine();
+		
 		std::string button_id("+##font_");
 		button_id += label;
 		if (Button(button_id.c_str(), { 20, 20 }))
@@ -600,3 +697,81 @@ namespace ImGui
 		return false;
 	}
 }
+
+
+	bool ImGui::InputResourceBlastModel(const char * label, BlastModel ** mesh)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+
+		BlastModel* tmp_mesh = *mesh;
+		if (tmp_mesh != nullptr)
+		{
+			buf_display = tmp_mesh->GetName();
+		}
+		else
+		{
+			buf_display = "None(Mesh)";
+		}
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		if (ImGui::IsItemHovered() && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::BlastMeshResource)
+			{
+				RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_ButtonHovered));
+				if (ImGui::IsMouseReleased(0))
+				{
+					*mesh = (BlastModel*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}
+		ImGui::SameLine();
+
+		if (Button("+##mesh", { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::MeshResource);
+			App->editor->resources_window->SetActive(true);
+		}
+
+		BlastModel* new_mesh = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->mesh_changed)
+		{
+			new_mesh = App->editor->resources_window->GetBlastModel();
+			if (new_mesh != tmp_mesh)
+			{
+				*mesh = new_mesh;
+
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}

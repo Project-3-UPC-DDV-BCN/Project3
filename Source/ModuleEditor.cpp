@@ -28,6 +28,7 @@
 #include "CSScript.h"
 #include "LuaScript.h"
 #include "TextEditorWindow.h"
+#include "AudioWindow.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, false)
 {
@@ -72,6 +73,7 @@ bool ModuleEditor::Init(Data* editor_config)
 	editor_windows.push_back(game_window = new GameWindow());
 	editor_windows.push_back(resources_config_window = new ResourcesConfigWindow());
 	editor_windows.push_back(text_editor_window = new TextEditorWindow());
+	editor_windows.push_back(audio_window = new AudioWindow());
 
 	//editor_panels.push_back(animator_panel = new PanelAnimator());
 	//editor_panels.push_back(particle_editor_panel = new PanelParticleEditor());
@@ -178,6 +180,11 @@ update_status ModuleEditor::Update(float deltaTime)
 			{
 				style_editor_window->active = !style_editor_window->active;
 			}
+			if (ImGui::MenuItem("Audio Engine"))
+			{
+				audio_window->active = !audio_window->active;
+			}
+
 			ImGui::EndMenu();
 			style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 		}
@@ -219,14 +226,25 @@ update_status ModuleEditor::Update(float deltaTime)
 	ImGui::SameLine(ImGui::GetIO().DisplaySize.x / 2 - 75);
 	if (!App->IsPlaying())
 	{
-		if (ImGui::Button("Play", { 50,40 })) {
-			App->Play();
-			App->time->time_scale = 1.0f;
+		if (App->IsPaused())
+		{
+			if (ImGui::Button("Paused", { 50,40 })) {
+				App->UnPause();
+				App->time->time_scale = 1.0f;
+			}
+		}
+		else
+		{
+			if (ImGui::Button("Play", { 50,40 })) {
+				App->Play();
+				App->time->time_scale = 1.0f;
+			}
 		}
 	}
 	else
 	{
 		if (ImGui::Button("Pause", { 50,40 })) {
+			App->Pause();
 			App->time->time_scale = 0.0f;
 		}
 	}
@@ -238,6 +256,8 @@ update_status ModuleEditor::Update(float deltaTime)
 	if (ImGui::Button("Step", { 50,40 })) {
 		App->UpdateStep();
 	}
+	ImGui::SameLine();
+
 	ImGui::Separator();
 	ImGui::BeginDockspace();
 	for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); it++) {
@@ -283,7 +303,7 @@ void ModuleEditor::HandleInput(SDL_Event * event)
 
 void ModuleEditor::OpenBrowserPage(const char * url)
 {
-	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+	//ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void ModuleEditor::AddData_Editor(float ms, float fps)

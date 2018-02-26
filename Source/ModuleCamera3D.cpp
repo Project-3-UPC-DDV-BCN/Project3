@@ -13,6 +13,7 @@
 #include "ModuleWindow.h"
 #include "Mesh.h"
 #include <vector>
+#include "ModulePhysics.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -62,6 +63,7 @@ void ModuleCamera3D::CreateEditorCamera()
 {
 	editor_camera = new ComponentCamera(nullptr);
 	App->renderer3D->editor_camera = editor_camera;
+	App->physics->SetCullingBox(editor_camera->camera_frustum.MinimalEnclosingAABB());
 }
 
 // -----------------------------------------------------------------
@@ -90,14 +92,14 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(key_up) == KEY_REPEAT) new_pos.y += speed;
 		if (App->input->GetKey(key_down) == KEY_REPEAT) new_pos.y -= speed;
 
-		if (App->input->GetKey(key_forward) == KEY_REPEAT) new_pos += tmp_camera_frustum->front * speed;
-		if (App->input->GetKey(key_backward) == KEY_REPEAT) new_pos -= tmp_camera_frustum->front * speed;
+		if (App->input->GetKey(key_forward) == KEY_REPEAT) new_pos += tmp_camera_frustum->Front() * speed;
+		if (App->input->GetKey(key_backward) == KEY_REPEAT) new_pos -= tmp_camera_frustum->Front() * speed;
 		//if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed;
 		//if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed;
 
 		// TEMPORAL FOR LIGHT TESTING
-		if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed * 4;
-		if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed * 4;
+		if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->Front() * speed * 4;
+		if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->Front() * speed * 4;
 		if (App->input->GetKey(key_left) == KEY_REPEAT) new_pos -= tmp_camera_frustum->WorldRight() * speed;
 		if (App->input->GetKey(key_right) == KEY_REPEAT) new_pos += tmp_camera_frustum->WorldRight() * speed;
 
@@ -116,24 +118,25 @@ update_status ModuleCamera3D::Update(float dt)
 			if (dx != 0)
 			{
 				Quat rotation_x = Quat::RotateY(dx);
-				tmp_camera_frustum->front = rotation_x.Mul(tmp_camera_frustum->front).Normalized();
-				tmp_camera_frustum->up = rotation_x.Mul(tmp_camera_frustum->up).Normalized();
+				tmp_camera_frustum->SetFront(rotation_x.Mul(tmp_camera_frustum->Front()).Normalized());
+				tmp_camera_frustum->SetUp(rotation_x.Mul(tmp_camera_frustum->Up()).Normalized());
 			}
 
 			if (dy != 0)
 			{
 				Quat rotation_y = Quat::RotateAxisAngle(tmp_camera_frustum->WorldRight(), dy);
 
-				float3 new_up = rotation_y.Mul(tmp_camera_frustum->up).Normalized();
+				float3 new_up = rotation_y.Mul(tmp_camera_frustum->Up()).Normalized();
 
 				if (new_up.y > 0.0f)
 				{
-					tmp_camera_frustum->up = new_up;
-					tmp_camera_frustum->front = rotation_y.Mul(tmp_camera_frustum->front).Normalized();
+					tmp_camera_frustum->SetUp(new_up);
+					tmp_camera_frustum->SetFront(rotation_y.Mul(tmp_camera_frustum->Front()).Normalized());
 				}
 			}
 		}
 
+		App->physics->SetCullingBox(tmp_camera_frustum->MinimalEnclosingAABB());
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGuizmo::IsOver())
@@ -151,12 +154,12 @@ update_status ModuleCamera3D::Update(float dt)
 // -----------------------------------------------------------------
 void ModuleCamera3D::LookAt(const float3 &spot)
 {
-	float3 direction = spot - editor_camera->camera_frustum.pos;
+	float3 direction = spot - editor_camera->camera_frustum.Pos();
 
-	float3x3 matrix = float3x3::LookAt(editor_camera->camera_frustum.front, direction.Normalized(), editor_camera->camera_frustum.up, float3::unitY);
+	float3x3 matrix = float3x3::LookAt(editor_camera->camera_frustum.Front(), direction.Normalized(), editor_camera->camera_frustum.Up(), float3::unitY);
 
-	editor_camera->camera_frustum.front = matrix.MulDir(editor_camera->camera_frustum.front).Normalized();
-	editor_camera->camera_frustum.up = matrix.MulDir(editor_camera->camera_frustum.up).Normalized();
+	editor_camera->camera_frustum.SetFront(matrix.MulDir(editor_camera->camera_frustum.Front()).Normalized());
+	editor_camera->camera_frustum.SetUp(matrix.MulDir(editor_camera->camera_frustum.Up()).Normalized());
 }
 
 void ModuleCamera3D::OrbitAt(const float3 & spot)
@@ -166,9 +169,9 @@ void ModuleCamera3D::OrbitAt(const float3 & spot)
 
 void ModuleCamera3D::FocusOnObject(AABB& box)
 {
-	editor_camera->camera_frustum.pos.x = box.maxPoint.x;
-	editor_camera->camera_frustum.pos.y = box.maxPoint.y + 20;
-	editor_camera->camera_frustum.pos.z = box.maxPoint.z;
+	editor_camera->camera_frustum.SetPos({ box.maxPoint.x, box.maxPoint.y + 20,  box.maxPoint.z });
+	//editor_camera->camera_frustum.Pos().y = ;
+	//editor_camera->camera_frustum.Pos().z =;
 
 	float3 look_at_pos;
 
@@ -197,7 +200,7 @@ bool ModuleCamera3D::IsOrbital() const
 
 math::float3 ModuleCamera3D::GetPosition() const
 {
-	return editor_camera->camera_frustum.pos;
+	return editor_camera->camera_frustum.Pos();
 }
 
 void ModuleCamera3D::SetPosition(math::float3 position)
@@ -241,7 +244,14 @@ void ModuleCamera3D::MousePickRay(int mouse_x, int mouse_y)
 
 		for (std::list<GameObject*>::iterator it = App->scene->scene_gameobjects.begin(); it != App->scene->scene_gameobjects.end(); it++)
 		{
-			Ray inv_ray = ray.ReturnTransform((*it)->GetGlobalTransfomMatrix().Inverted()); //Triangle intersection needs the inverted ray
+			//Ray inv_ray = ray..ReturnTransform((*it)->GetGlobalTransfomMatrix().Inverted()); //Triangle intersection needs the inverted ray
+			float3 tmp_pos, tmp_dir;
+			tmp_pos = ray.pos;
+			tmp_dir = ray.dir;
+			tmp_pos = (*it)->GetGlobalTransfomMatrix().Inverted().TransformPos(tmp_pos);
+			tmp_dir = (*it)->GetGlobalTransfomMatrix().Inverted().TransformDir(tmp_dir);
+
+			Ray inv_ray(tmp_pos, tmp_dir);
 
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
 			if (mesh_renderer != nullptr && mesh_renderer->GetMesh() != nullptr)

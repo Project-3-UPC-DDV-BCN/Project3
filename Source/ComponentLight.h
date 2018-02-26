@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 #include "Color.h"
+#include "Primitive.h"
+#include "MathGeoLib/Rect.h"
 
 enum LightType {
 	DIRECTIONAL_LIGHT = 0,
@@ -59,6 +61,13 @@ public:
 	void SetDirectionFromGO(float3 pre_direction);
 	void SetPositionFromGO(float3 pre_position);
 
+	Frustum view;
+	void UpdateViewPosition();
+
+	float * GetProjectionMatrix() const;
+	float * GetViewMatrix();
+
+
 private:
 	Color color = White;
 	LightType type = SPOT_LIGHT;
@@ -72,4 +81,6 @@ private:
 	float3 light_offset_direction;
 	float3 direction;
 	float3 position;
+	Rect viewport;
+	float aspect_ratio = 0.0f;
 };

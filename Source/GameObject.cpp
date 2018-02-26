@@ -3,17 +3,31 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ComponentTransform.h"
+#include "ComponentParticleEmmiter.h"
+#include "ComponentBillboard.h"
 #include "ComponentCamera.h"
 #include "Mesh.h"
 #include "ModuleResources.h"
 #include "ComponentScript.h"
 #include "ComponentFactory.h"
+<<<<<<< HEAD
 #include "ComponentRectTransform.h"
 #include "ComponentCanvas.h"
 #include "ComponentImage.h"
 #include "ComponentText.h"
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
+=======
+#include "ComponentRigidBody.h"
+#include "ComponentCollider.h"
+#include "ComponentJointDistance.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
+#include "ComponentLight.h"
+#include "ComponentBlast.h"
+#include "ModulePhysics.h"
+>>>>>>> origin/Vertical-Slice-1
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -66,15 +80,22 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentCamera(this));
 		break;
 	case Component::CompRigidBody:
+		components_list.push_back(component = new ComponentRigidBody(this));
 		break;
 	case Component::CompMeshRenderer:
 		components_list.push_back(component = new ComponentMeshRenderer(this));
 		break;
 	case Component::CompBoxCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::BoxCollider));
 		break;
-	case Component::CompCircleCollider:
+	case Component::CompSphereCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::SphereCollider));
 		break;
-	case Component::CompAudioSource:
+	case Component::CompCapsuleCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::CapsuleCollider));
+		break;
+	case Component::CompMeshCollider:
+		components_list.push_back(component = new ComponentCollider(this, ComponentCollider::MeshCollider));
 		break;
 	case Component::CompAnimaton:
 		break;
@@ -82,10 +103,15 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		components_list.push_back(component = new ComponentScript(this));
 		break;
 	case Component::CompParticleSystem:
+		components_list.push_back(component = new ComponentParticleEmmiter(this));
+		break;
+	case Component::CompBillboard:
+		components_list.push_back(component = new ComponentBillboard(this));
 		break;
 	case Component::CompFactory:
 		components_list.push_back(component = new ComponentFactory(this));
 		break;
+<<<<<<< HEAD
 	case Component::CompRectTransform:
 		if (GetComponent(Component::CompRectTransform) == nullptr)
 			components_list.push_front(component = new ComponentRectTransform(this));
@@ -122,10 +148,24 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 			components_list.push_back(component = new ComponentProgressBar(this));
 			SetName("ProgressBar");
 		}
+=======
+	case Component::CompDistanceJoint:
+		components_list.push_back(component = new ComponentJointDistance(this));
+	case Component::CompAudioSource:
+		components_list.push_back(component = new ComponentAudioSource(this));
+		break;
+	case Component::CompAudioListener:
+		components_list.push_back(component = new ComponentListener(this));
+		break;
+	case Component::CompAudioDistZone:
+		components_list.push_back(component = new ComponentDistorsionZone(this));
+>>>>>>> origin/Vertical-Slice-1
 		break;
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));
 		break;
+	case Component::CompBlast:
+		components_list.push_back(component = new ComponentBlast(this));
 	default:
 		break;
 	}
@@ -198,6 +238,23 @@ void GameObject::SetActive(bool active)
 			{
 				App->scene->EraseGoInOctree(mesh_renderer);
 			}
+		}
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)GetComponent(Component::CompRigidBody);
+	if (rb)
+	{
+		if (!active)
+		{
+			rb->SetToSleep();
+			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
+			App->physics->RemoveActorFromList(rb->GetRigidBody());
+		}
+		else
+		{
+			rb->WakeUp();
+			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+			App->physics->AddActorToList(rb->GetRigidBody(), this);
 		}
 	}
 }
@@ -373,7 +430,7 @@ math::float4x4 GameObject::GetGlobalTransfomMatrix()
 	return transform->GetMatrix();
 }
 
-const float * GameObject::GetOpenGLMatrix()
+math::float4x4 GameObject::GetOpenGLMatrix()
 {
 	ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
 	return transform->GetOpenGLMatrix();
@@ -518,9 +575,9 @@ UID GameObject::GetUID() const
 void GameObject::Save(Data & data, bool is_duplicated)
 {
 	std::string tempName = name;  //<- needed if is a duplicated game_object
-	if (is_duplicated) {
+	/*if (is_duplicated) {
 		App->scene->RenameDuplicatedGameObject(this);
-	}
+	}*/
 
 	data.CreateSection("GameObject_" + std::to_string(App->scene->saving_index++));
 	uint new_uuid = uuid;

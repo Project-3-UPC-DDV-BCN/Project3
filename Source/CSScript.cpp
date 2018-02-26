@@ -15,8 +15,13 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "ComponentFactory.h"
+#include "ComponentFactory.h"
 #include "ComponentRectTransform.h"
 #include "ComponentProgressBar.h"
+#include "ModuleAudio.h"
+#include "ComponentParticleEmmiter.h"
+#include "ComponentAudioSource.h"
+#include "AudioEvent.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -457,22 +462,25 @@ Texture * CSScript::GetTextureProperty(const char * propertyName)
 std::vector<ScriptField*> CSScript::GetScriptFields()
 {
 	void* iter = nullptr;
-	MonoClassField* field = mono_class_get_fields(mono_class, &iter);
-
-	script_fields.clear();
-	
-	while (field != nullptr)
+	if (mono_class)
 	{
-		uint32_t flags = mono_field_get_flags(field);
-		if ((flags & MONO_FIELD_ATTR_PUBLIC) && (flags & MONO_FIELD_ATTR_STATIC) == 0)
+		MonoClassField* field = mono_class_get_fields(mono_class, &iter);
+
+		script_fields.clear();
+
+		while (field != nullptr)
 		{
-			ScriptField* property_field = new ScriptField();
-			property_field->fieldName = mono_field_get_name(field);
-			MonoType* type = mono_field_get_type(field);
-			ConvertMonoType(type, *property_field);
-			script_fields.push_back(property_field);
+			uint32_t flags = mono_field_get_flags(field);
+			if ((flags & MONO_FIELD_ATTR_PUBLIC) && (flags & MONO_FIELD_ATTR_STATIC) == 0)
+			{
+				ScriptField* property_field = new ScriptField();
+				property_field->fieldName = mono_field_get_name(field);
+				MonoType* type = mono_field_get_type(field);
+				ConvertMonoType(type, *property_field);
+				script_fields.push_back(property_field);
+			}
+			field = mono_class_get_fields(mono_class, &iter);
 		}
-		field = mono_class_get_fields(mono_class, &iter);
 	}
 
 	return script_fields;
@@ -934,6 +942,14 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheProgressBar";
 	}
+	else if (name == "TheEngine.TheAudioSource")
+	{
+		comp_name = "TheAudioSource";
+	}
+	else if (name == "TheEngine.TheParticleEmmiter")
+	{
+		comp_name = "TheParticleEmmiter";
+	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
 	if (c)
@@ -1187,7 +1203,7 @@ void CSScript::SetRectPosition(MonoObject * object, MonoObject * vector3)
 	rect_transform->SetPos(float2(new_pos.x, new_pos.y));
 }
 
-MonoObject * CSScript::GetRectPosition(MonoObject * object)
+MonoObject * CSScript::GetForward(MonoObject * object)
 {
 	if (!MonoObjectIsValid(object))
 	{
@@ -1209,19 +1225,17 @@ MonoObject * CSScript::GetRectPosition(MonoObject * object)
 			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
 			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
 
-			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
-			float3 new_pos;
-			new_pos.x = rect_transform->GetPos().x;
-			new_pos.y = rect_transform->GetPos().y;
-			new_pos.z = 0;
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 forward = transform->GetForward();
 
-			if (x_field) mono_field_set_value(new_object, x_field, &new_pos.x);
-			if (y_field) mono_field_set_value(new_object, y_field, &new_pos.y);
-			if (z_field) mono_field_set_value(new_object, z_field, &new_pos.z);
+			if (x_field) mono_field_set_value(new_object, x_field, &forward.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &forward.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &forward.z);
 
 			return new_object;
 		}
 	}
+
 	return nullptr;
 }
 
@@ -1318,6 +1332,13 @@ void CSScript::SetRectSize(MonoObject * object, MonoObject * vector3)
 }
 
 MonoObject * CSScript::GetRectSize(MonoObject * object)
+=======
+
+	return nullptr;
+}
+
+MonoObject * CSScript::GetRight(MonoObject * object)
+>>>>>>> origin/Vertical-Slice-1
 {
 	if (!MonoObjectIsValid(object))
 	{
@@ -1339,19 +1360,17 @@ MonoObject * CSScript::GetRectSize(MonoObject * object)
 			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
 			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
 
-			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
-			float3 new_size;
-			new_size.x = rect_transform->GetSize().x;
-			new_size.y = rect_transform->GetSize().y;
-			new_size.z = 0;
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 right = transform->GetRight();
 
-			if (x_field) mono_field_set_value(new_object, x_field, &new_size.x);
-			if (y_field) mono_field_set_value(new_object, y_field, &new_size.y);
-			if (z_field) mono_field_set_value(new_object, z_field, &new_size.z);
+			if (x_field) mono_field_set_value(new_object, x_field, &right.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &right.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &right.z);
 
 			return new_object;
 		}
 	}
+
 	return nullptr;
 }
 
@@ -1383,6 +1402,13 @@ void CSScript::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 }
 
 MonoObject * CSScript::GetRectAnchor(MonoObject * object)
+=======
+
+	return nullptr;
+}
+
+MonoObject * CSScript::GetUp(MonoObject * object)
+>>>>>>> origin/Vertical-Slice-1
 {
 	if (!MonoObjectIsValid(object))
 	{
@@ -1404,19 +1430,17 @@ MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
 			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
 
-			ComponentRectTransform* rect_transform = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
-			float3 new_anchor;
-			new_anchor.x = rect_transform->GetAnchor().x;
-			new_anchor.y = rect_transform->GetAnchor().y;
-			new_anchor.z = 0;
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 up = transform->GetUp();
 
-			if (x_field) mono_field_set_value(new_object, x_field, &new_anchor.x);
-			if (y_field) mono_field_set_value(new_object, y_field, &new_anchor.y);
-			if (z_field) mono_field_set_value(new_object, z_field, &new_anchor.z);
+			if (x_field) mono_field_set_value(new_object, x_field, &up.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &up.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &up.z);
 
 			return new_object;
 		}
 	}
+
 	return nullptr;
 }
 
@@ -1451,6 +1475,10 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 
 	ComponentProgressBar* progres_barr = (ComponentProgressBar*)active_gameobject->GetComponent(Component::CompProgressBar);
 	return progres_barr->GetProgressPercentage();
+=======
+
+	return nullptr;
+>>>>>>> origin/Vertical-Slice-1
 }
 
 void CSScript::StartFactory(MonoObject * object)
@@ -1771,6 +1799,25 @@ int CSScript::GetMouseXMotion()
 int CSScript::GetMouseYMotion()
 {
 	return App->input->GetMouseYMotion();
+}
+
+int CSScript::GetControllerJoystickMove(int pad, MonoString * axis)
+{
+	const char* key = mono_string_to_utf8(axis);
+	JOYSTICK_MOVES code = App->input->StringToJoyMove(key);
+	return App->input->GetControllerJoystickMove(pad,code);
+}
+
+int CSScript::GetControllerButton(int pad, MonoString * button)
+{
+	const char* key = mono_string_to_utf8(button);
+	SDL_Keycode code = App->input->StringToKey(key);
+	return App->input->GetControllerButton(pad,code);
+}
+
+void CSScript::RumbleController(int pad, float strength, int ms)
+{
+	App->input->RumbleController(pad, strength, ms);
 }
 
 void CSScript::CreateGameObject(MonoObject * object)
@@ -2191,4 +2238,129 @@ bool CSScript::GameObjectIsValid()
 		return false;
 	}
 	return true;
+}
+
+bool CSScript::IsMuted()
+{
+	return App->audio->IsMuted();
+}
+
+void CSScript::SetMute(bool set)
+{
+	App->audio->SetMute(set);
+}
+
+int CSScript::GetVolume()
+{
+	return App->audio->GetVolume();
+}
+
+void CSScript::SetVolume(int volume)
+{
+	App->audio->SetVolume(volume);
+}
+
+int CSScript::GetPitch()
+{
+	return App->audio->GetPitch();
+}
+
+void CSScript::SetPitch(int pitch)
+{
+	App->audio->SetPitch(pitch);
+}
+
+void CSScript::SetRTPvalue(MonoString* name, float value)
+{
+	const char* new_name = mono_string_to_utf8(name);
+	App->audio->SetRTPvalue(new_name, value);
+}
+
+bool CSScript::Play(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	return as->PlayEvent(event_name);
+}
+
+bool CSScript::Stop(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->StopEvent(event_name);
+}
+
+bool CSScript::Send(MonoObject * object, MonoString* name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	const char* event_name = mono_string_to_utf8(name);
+	
+	return as->SendEvent(event_name);
+}
+
+void CSScript::PlayEmmiter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)active_gameobject->GetComponent(Component::CompParticleSystem);
+
+	if(emmiter != nullptr)
+		emmiter->PlayEmmiter(); 
+}
+
+void CSScript::StopEmmiter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)active_gameobject->GetComponent(Component::CompParticleSystem);
+
+	if (emmiter != nullptr)
+		emmiter->StopEmmiter();
 }

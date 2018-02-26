@@ -38,9 +38,10 @@ private:
 	void DeleteWindow(std::string path);
 	void CreateDirectortWindow();
 	void CreateNewScriptWindow(Script::ScriptType type);
+	void CreateScript(Script::ScriptType type, std::string scriptName);
+	void CreateNewPhysMatWindow();
 	void CreateNewShaderWindow(Shader::ShaderType type);
 	void CreateNewMaterialWindow();
-	void CreateScript(Script::ScriptType type, std::string script_name);
 	void CreateShader(Shader::ShaderType type, std::string shader_name);
 	void CreateMaterial(std::string material_name);
 	void CheckDirectory(Directory& directory);
@@ -53,6 +54,7 @@ private:
 	bool show_new_folder_window;
 	bool show_delete_window;
 	bool show_new_script_window;
+	bool show_new_phys_mat_window;
 	bool show_new_shader_window;
 	bool show_new_material_window = false;
 
@@ -71,6 +73,7 @@ private:
 	std::string delete_path;
 
 	Shader::ShaderType shader_type;
+
 	std::vector<Directory*> directories;
 };
 

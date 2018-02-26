@@ -6,6 +6,7 @@
 #include <list>
 
 class ComponentMeshRenderer;
+class ComponentParticleEmmiter;
 class ComponentLight;
 class Primitive;
 class ComponentCamera;
@@ -17,6 +18,9 @@ class DebugDraw;
 #define MAX_DIR_LIGHT 2
 #define MAX_SPO_LIGHT 8
 #define MAX_POI_LIGHT 8
+
+#define SHADOW_HEIGHT 1024
+#define SHADOW_WIDTH 1024
 
 class ModuleRenderer3D : public Module
 {
@@ -47,7 +51,6 @@ public:
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
 	void AddCanvasToDraw(ComponentCanvas* canvas);
 	void RemoveCanvasToDraw(ComponentCanvas* canvas);
-	void ResetRender();
 
 	void BindArrayBuffer(uint id) const;
 	void BindElementArrayBuffer(uint id) const;
@@ -58,13 +61,15 @@ public:
 	void AddLight(ComponentLight* light);
 	void RemoveLight(ComponentLight* light);
 
-	DebugDraw* GetDebugDraw();
+	DebugDraw* GetDebugDraw() const;
+
+	void ResetRender();
 
 	//Shaders
 	uint GenVertexArrayObject() const;
 	void BindVertexArrayObject(uint id) const;
 	void UnbindVertexArrayObject() const;
-	void DeleteVertexArrayObject(uint id);
+	void DeleteVertexArrayObject(uint vao);
 
 	uint CreateVertexShader(const char* source);
 	uint CreateFragmentShader(const char* source);
@@ -86,27 +91,43 @@ public:
 	void SetUniformVector4(uint program, const char* name, float4 data);
 	void SetUniformMatrix(uint program, const char* name, float* data);
 	void SetUniformUInt(uint program, const char* name, uint data);
+	void SetUniformInt(uint program, const char* name, int data);
 
 	uint CreateShaderProgram();
 	void AttachShaderToProgram(uint program_id, uint shader_id);
 	bool LinkProgram(uint program_id);
 	void DeleteProgram(uint program_id);
 
+	//particles
+	void AddParticleToDraw(ComponentParticleEmmiter* particle);
+
+	//Debug
+	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
+	void DrawDebugOBB(OBB& aabb, ComponentCamera* active_camera);
+	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+
 	void SendLight(uint program_id);
 	int GetDirectionalLightCount() const;
 	int GetSpotLightCount() const;
 	int GetPointLightCount() const;
 
+	void SetDepthMap();
+	void DrawFromLightForShadows();
+	void SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat);
+
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
-	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
+
 	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
 public:
 	Light lights[MAX_LIGHTS];
+	void DrawZBuffer();
+	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
+	void DrawGrid(ComponentCamera* camera);
 
 public:
 
@@ -141,5 +162,15 @@ private:
 
 	std::list<Primitive*> debug_primitive_to_draw;
 	std::list<ComponentCanvas*> canvas_to_draw;
+	std::list<ComponentParticleEmmiter*> particles_to_draw;
 
+
+	// SHADOW MAPPING DON'T TOUCH
+
+	uint depth_map;
+	uint depth_mapFBO;
+	float near_plane, far_plane;
+
+	unsigned int quadVAO = 0;
+	unsigned int quadVBO;
 };

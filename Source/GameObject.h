@@ -4,7 +4,7 @@
 #include "Component.h"
 #include <list>
 #include <string>
-#include "MathGeoLib\Math\float4x4.h"
+#include "MathGeoLib/float4x4.h"
 
 class GameObject
 {
@@ -43,7 +43,7 @@ public:
 
 	void UpdateBoundingBox();
 	math::float4x4 GetGlobalTransfomMatrix();
-	const float* GetOpenGLMatrix();
+	math::float4x4 GetOpenGLMatrix();
 	void UpdateGlobalMatrix();
 	void UpdateCamera();
 	void SetGlobalTransfomMatrix(const float4x4 &matrix);

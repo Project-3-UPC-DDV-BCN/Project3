@@ -17,9 +17,15 @@
 #include "Data.h"
 #include "TagsAndLayers.h"
 #include "ModuleMaterialImporter.h"
+#include "ModuleParticleImporter.h"
 #include "ModuleScriptImporter.h"
+#include "ModulePhysics.h"
+#include "ModulePhysMatImporter.h"
+#include "ModuleBlastMeshImporter.h"
 #include "ModuleShaderImporter.h"
 #include "ModuleFontImporter.h"
+#include "ModuleBlast.h"
+
 
 Application::Application()
 {
@@ -44,8 +50,14 @@ Application::Application()
 	prefab_importer = new ModulePrefabImporter(this);
 	material_importer = new ModuleMaterialImporter(this);
 	script_importer = new ModuleScriptImporter(this);
+	physics = new ModulePhysics(this);
+	phys_mats_importer = new ModulePhysMatImporter(this);
+	blast_mesh_importer = new ModuleBlastMeshImporter(this);
+	particle_importer = new ModuleParticleImporter(this); 
 	shader_importer = new ModuleShaderImporter(this);
 	font_importer = new ModuleFontImporter(this);
+	blast = new ModuleBlast(this);
+
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -62,7 +74,9 @@ Application::Application()
 	AddModule(prefab_importer);
 	AddModule(material_importer);
 	AddModule(script_importer);
+	AddModule(phys_mats_importer);
 	AddModule(shader_importer);
+	AddModule(particle_importer); 
 	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
@@ -71,7 +85,11 @@ Application::Application()
 
 	//TIME
 	AddModule(time);
-	//Game Modules
+	AddModule(physics);
+	AddModule(blast);
+	AddModule(blast_mesh_importer);
+
+	AddModule(resources);
 
 	random = new math::LCG();
 	cursor = nullptr;
@@ -97,8 +115,13 @@ Application::~Application()
 	texture_importer = nullptr;
 	prefab_importer = nullptr;
 	material_importer = nullptr;
+	particle_importer = nullptr; 
 	script_importer = nullptr;
+	phys_mats_importer = nullptr;
+	physics = nullptr;
+	blast_mesh_importer = nullptr;
 	shader_importer = nullptr;
+	blast = nullptr;
 
 	std::list<Module*>::iterator item = list_modules.begin();
 
@@ -347,10 +370,12 @@ void Application::Play()
 		{
 			App->file_system->Create_Directory(TMP_FOLDER_PATH);
 		}
+
 		App->scene->SaveScene(TMP_FOLDER"tmp_scene");
 		App->scene->saving_index = 0;
 		App->scene->is_game = true;
 		App->scene->InitScripts();
+		App->scene->SetParticleSystemsState(); 
 	}
 }
 

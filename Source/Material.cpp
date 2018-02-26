@@ -92,9 +92,11 @@ void Material::Save(Data & data) const
 	
 	if (reflection_texture != nullptr)
 		data.AddString("reflection_texture", reflection_texture->GetLibraryPath());
-
-	data.AddInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
-	data.AddInt("fragment_shader", shader_program->GetFragmentShader()->GetUID());
+	if (shader_program != nullptr)
+	{
+		data.AddInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
+		data.AddInt("fragment_shader", shader_program->GetFragmentShader()->GetUID());
+	}
 }
 
 bool Material::Load(Data & data)
@@ -225,11 +227,21 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	bool has_tex = false;
+	bool has_tex = false, has_normalmap = false;
 	if (diffuse_texture != nullptr && diffuse_texture->GetID() != 0)
 	{
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
+	
 		has_tex = true;
+	}
+
+	if (normalmap_texture != nullptr && normalmap_texture->GetID() != 0)
+	{
+		glActiveTexture(GL_TEXTURE1);		
+		glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
+	
+		has_normalmap = true;
 	}
 
 	bool has_mat_color = false;
@@ -239,7 +251,10 @@ void Material::LoadToMemory()
 		has_mat_color = true;
 	}
 
+	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Diffuse", 0);
+	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_NormalMap", 1);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture", has_tex);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
 	
 }

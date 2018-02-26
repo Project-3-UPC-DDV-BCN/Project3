@@ -63,6 +63,9 @@ private:
 	static void SetScale(MonoObject * object, MonoObject * vector);
 	static MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	static void LookAt(MonoObject * object, MonoObject * vector);
+	static MonoObject* GetForward(MonoObject* object);
+	static MonoObject* GetRight(MonoObject* object);
+	static MonoObject* GetUp(MonoObject* object);
 
 	//RECTTRANSFORM
 	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -102,11 +105,31 @@ private:
 	static MonoObject* GetMousePosition();
 	static int GetMouseXMotion();
 	static int GetMouseYMotion();
+	static int GetControllerJoystickMove(int pad, MonoString* axis);
+	static int GetControllerButton(int pad, MonoString* button);
+	static void RumbleController(int pad, float strength, int ms);
 
 	//CONSOLE
 	static void Log(MonoObject* object);
 	static void Warning(MonoObject* object);
 	static void Error(MonoObject* object);
+
+	//AUDIO
+	static bool IsMuted();
+	static void SetMute(bool set);
+	static int GetVolume();
+	static void SetVolume(int volume);
+	static int GetPitch();
+	static void SetPitch(int pitch);
+	static void SetRTPvalue(MonoString* name, float value);
+
+	static bool Play(MonoObject * object, MonoString * name);
+	static bool Stop(MonoObject * object, MonoString * name);
+	static bool Send(MonoObject * object, MonoString * name);
+
+	//PARTICLE EMMITER
+	static void PlayEmmiter(MonoObject * object);
+	static void StopEmmiter(MonoObject * object);
 
 private:
 	std::string mono_path;

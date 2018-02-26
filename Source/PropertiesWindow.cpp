@@ -2,16 +2,22 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "MathGeoLib\MathGeoLib.h"
+#include "ModuleParticleImporter.h"
 #include "ComponentCamera.h"
 #include "ComponentMeshRenderer.h"
 #include "ComponentTransform.h"
 #include "TagsAndLayers.h"
+#include "tinyfiledialogs.h"
 #include "ModuleEditor.h"
 #include "TagsAndLayersWindow.h"
+#include "ComponentBillboard.h"
+#include "ParticleData.h"
 #include "ModuleScene.h"
 #include "Mesh.h"
 #include "Material.h"
+#include <algorithm>
 #include "imgui/CustomImGui.h"
+#include "ComponentParticleEmmiter.h"
 #include "ModuleRenderer3D.h"
 #include "ComponentRectTransform.h"
 #include "ComponentCanvas.h"
@@ -22,10 +28,24 @@
 #include "CSScript.h"
 #include "ModuleResources.h"
 #include "ComponentFactory.h"
+#include "ComponentRigidBody.h"
+#include "ComponentCollider.h"
+#include "PhysicsMaterial.h"
+#include "ComponentJointDistance.h"
+#include "BlastModel.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "ComponentAudioSource.h"
+#include "ComponentListener.h"
+#include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
+#include "ModulePhysics.h"
+
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
+
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 PropertiesWindow::PropertiesWindow()
 {
@@ -33,6 +53,8 @@ PropertiesWindow::PropertiesWindow()
 	window_name = "Properties";
 	scripts_count = 0;
 	factories_count = 0;
+	colliders_count = 0;
+	distance_joints_count = 0;
 	lights_count = 0;
 }
 
@@ -110,6 +132,8 @@ void PropertiesWindow::DrawWindow()
 
 			scripts_count = 0;
 			factories_count = 0;
+			colliders_count = 0;
+			distance_joints_count = 0;
 			lights_count = 0;
 
 			for (std::list<Component*>::iterator it = selected_gameobject->components_list.begin(); it != selected_gameobject->components_list.end(); it++) {
@@ -125,7 +149,7 @@ void PropertiesWindow::DrawWindow()
 			if (ImGui::BeginPopup("Components"))
 			{
 				if (ImGui::MenuItem("Mesh Renderer")) {
-					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
+					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
 					}
 					else
@@ -133,6 +157,15 @@ void PropertiesWindow::DrawWindow()
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
 					}
 				}
+				/*if (ImGui::MenuItem("Blast Mesh Renderer")) {
+					if (selected_gameobject->GetComponent(Component::CompBlastMeshRenderer) == nullptr && selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompBlastMeshRenderer);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
+					}
+				}*/
 				if (ImGui::MenuItem("Camera")) {
 					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompCamera);
@@ -156,6 +189,25 @@ void PropertiesWindow::DrawWindow()
 					}
 
 					ImGui::EndMenu();
+
+				if (ImGui::MenuItem("Particle Emmiter")) {
+					if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompParticleSystem);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Particle Emmiter!");
+					}
+				}
+
+				if (ImGui::MenuItem("Billboard")) {
+					if (selected_gameobject->GetComponent(Component::CompBillboard) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompBillboard);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 Billboard!");
+					}
 				}
 
 				if (ImGui::MenuItem("Light")) {
@@ -225,6 +277,27 @@ void PropertiesWindow::DrawWindow()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Audio")) {
+					if (ImGui::MenuItem("Audio Listener"))
+					{
+						if (App->audio->GetDefaultListener() != nullptr)
+						{
+
+						}
+						else
+							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+					}
+					if (ImGui::MenuItem("Audio Source"))
+					{
+						ComponentAudioSource* audio_source = (ComponentAudioSource*)selected_gameobject->AddComponent(Component::CompAudioSource);
+					}
+					if (ImGui::MenuItem("Distorsion Zone"))
+					{
+						ComponentDistorsionZone* dist_zone = (ComponentDistorsionZone*)selected_gameobject->AddComponent(Component::CompAudioDistZone);
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("New Factory")) {
 					static char input_text[30];
 					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
@@ -233,9 +306,109 @@ void PropertiesWindow::DrawWindow()
 					{
 						ComponentFactory* factory = (ComponentFactory*)selected_gameobject->AddComponent(Component::CompFactory);
 						if (factory) factory->SetName(input_text);
+						input_text[0] = 0;
+						ImGui::CloseCurrentPopup();
 					}
 					ImGui::EndMenu();
 				}
+
+				if (ImGui::MenuItem("RigidBody")) {
+					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+						App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 RigidBody!");
+					}
+				}
+
+				if (ImGui::BeginMenu("Colliders")) {
+					if (ImGui::MenuItem("Box"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						}
+						selected_gameobject->AddComponent(Component::CompBoxCollider);
+					}
+					if (ImGui::MenuItem("Sphere"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						}
+						selected_gameobject->AddComponent(Component::CompSphereCollider);
+					}
+					if (ImGui::MenuItem("Capsule"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						}
+						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
+					}
+					if (ImGui::MenuItem("Mesh"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompMeshRenderer))
+						{
+							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
+								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							}
+							selected_gameobject->AddComponent(Component::CompMeshCollider);
+						}
+						else
+						{
+							CONSOLE_ERROR("Can't have Mesh Collider without a mesh in the GameObject");
+						}
+					}
+					ImGui::EndMenu();
+				}
+
+				/*if (ImGui::BeginMenu("Joints")) {
+					if (ImGui::MenuItem("Fixed"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompFixedJoint);
+					}
+					if (ImGui::MenuItem("Distance"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompDistanceJoint);
+					}
+					if (ImGui::MenuItem("Revolute"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompRevoluteJoint);
+					}
+					if (ImGui::MenuItem("Spherical"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompSphericalJoint);
+					}
+					if (ImGui::MenuItem("Prismatic"))
+					{
+						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
+							selected_gameobject->AddComponent(Component::CompRigidBody);
+						}
+						selected_gameobject->AddComponent(Component::CompPrismaticJoint);
+					}
+					ImGui::EndMenu();
+				}*/
 
 				ImGui::EndPopup();
 			}
@@ -256,15 +429,22 @@ void PropertiesWindow::DrawComponent(Component * component)
 		DrawCameraPanel((ComponentCamera*)component);
 		break;
 	case Component::CompRigidBody:
+		DrawRigidBodyPanel((ComponentRigidBody*)component);
 		break;
 	case Component::CompMeshRenderer:
 		DrawMeshRendererPanel((ComponentMeshRenderer*)component);
 		break;
 	case Component::CompBoxCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
-	case Component::CompCircleCollider:
+	case Component::CompSphereCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
-	case Component::CompAudioSource:
+	case Component::CompCapsuleCollider:
+		DrawColliderPanel((ComponentCollider*)component);
+		break;
+	case Component::CompMeshCollider:
+		DrawColliderPanel((ComponentCollider*)component);
 		break;
 	case Component::CompAnimaton:
 		break;
@@ -272,6 +452,10 @@ void PropertiesWindow::DrawComponent(Component * component)
 		DrawScriptPanel((ComponentScript*)component);
 		break;
 	case Component::CompParticleSystem:
+		DrawParticleEmmiterPanel((ComponentParticleEmmiter*)component); 
+		break;
+	case Component::CompBillboard:
+		DrawBillboardPanel((ComponentBillboard*)component);
 		break;
 	case Component::CompFactory:
 		DrawFactoryPanel((ComponentFactory*)component);
@@ -290,6 +474,18 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompProgressBar:
 		DrawProgressBarPanel((ComponentProgressBar*)component);
+		break;
+	case Component::CompDistanceJoint:
+		DrawJointDistancePanel((ComponentJointDistance*)component);
+		break;
+	case Component::CompAudioListener:
+		DrawAudioListener((ComponentListener*)component);
+		break;
+	case Component::CompAudioSource:
+		DrawAudioSource((ComponentAudioSource*)component);
+		break;
+	case Component::CompAudioDistZone:
+		DrawAudioDistZone((ComponentDistorsionZone*)component);
 		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
@@ -322,7 +518,7 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 		if (ImGui::DragFloat3("Position", (float*)&position, is_static, 0.25f)) {
 			transform->SetPosition(position);
 		}
-		if (ImGui::DragFloat3("Rotation", (float*)&rotation, is_static, 0.25f)) {
+		if (ImGui::DragFloat3("Rotation", (float*)&rotation, is_static, 0.25f)) {		
 			transform->SetRotation(rotation);
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f)) {
@@ -665,6 +861,41 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 					}
 				}
 
+				ImGui::Separator();
+
+				ImGui::Text("Material name: "); ImGui::SameLine();
+				ImGui::Text(mesh_renderer->GetMaterial()->GetName().c_str());
+
+
+				// NORMAL MAP
+				ImGui::Text("Normal: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetNormalMapTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetNormalMapTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* normalmap = material->GetNormalMapTexture();
+				if (ImGui::InputResourceTexture("Change Normal Map", &normalmap))
+				{
+					material->SetNormalMapTexture(normalmap);
+				}
+
+				// DIFFUSE
+				ImGui::Text("Diffuse: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetDiffuseTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetDiffuseTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* diffuse = material->GetDiffuseTexture();
+				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
+				{
+					material->SetDiffuseTexture(diffuse);
+				}
+				
+
 			}
 		ImGui::TreePop();
 		}
@@ -772,7 +1003,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 		}
 
 		Script* script = comp_script->GetScript();
-		if (ImGui::InputResourceScript(("Script##Script_" + script_name).c_str(), &script))
+		if (ImGui::InputResourceScript("Script", &script))
 		{
 			comp_script->SetScript(script);
 		}
@@ -840,7 +1071,7 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			case ScriptField::GameObject:
 			{
 				GameObject* gameobject = comp_script->GetScript()->GetGameObjectProperty((*it)->fieldName.c_str());
-				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName + script_name).c_str(), &gameobject)) {
+				if (ImGui::InputResourceGameObject((" " + (*it)->fieldName).c_str(), &gameobject)) {
 					comp_script->GetScript()->SetGameObjectProperty((*it)->fieldName.c_str(), gameobject);
 				}
 			}
@@ -892,7 +1123,7 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Prefab* prefab = factory->GetFactoryObject();
-		if(ImGui::InputResourcePrefab(("Factory Object##" + std::to_string(factories_count)).c_str(), &prefab))
+		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
 		{
 			factory->SetFactoryObject(prefab);
 		}
@@ -908,6 +1139,706 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		{
 			factory->SetLifeTime(life_time);
 		}
+	}
+}
+
+void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
+{
+	if (ImGui::CollapsingHeader(rigidbody->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float mass = rigidbody->GetMass();
+		if (ImGui::DragFloat("Mass", &mass))
+		{
+			rigidbody->SetMass(mass);
+		}
+		float l_damping = rigidbody->GetLinearDamping();
+		if (ImGui::DragFloat("Linear Damping", &l_damping))
+		{
+			rigidbody->SetLinearDamping(l_damping);
+		}
+		float a_damping = rigidbody->GetAngularDamping();
+		if (ImGui::DragFloat("Angular Damping", &a_damping))
+		{
+			rigidbody->SetAngularDamping(a_damping);
+		}
+		float3 linear_velocity = rigidbody->GetLinearVelocity();
+		if (ImGui::DragFloat3("Linear Velo", (float*)&linear_velocity))
+		{
+			rigidbody->SetLinearVelocity(linear_velocity);
+		}
+		bool use_gravity = rigidbody->IsUsingGravity();
+		if (ImGui::Checkbox("Gravity", &use_gravity))
+		{
+			rigidbody->SetUseGravity(use_gravity);
+		}
+		bool is_kinematic = rigidbody->IsKinematic();
+		if (ImGui::Checkbox("Kinematic", &is_kinematic))
+		{
+			rigidbody->SetKinematic(is_kinematic);
+		}
+		bool is_ccd = rigidbody->IsCCDMode();
+		if (ImGui::Checkbox("CCD", &is_ccd))
+		{
+			rigidbody->SetCCDMode(is_ccd);
+		}
+
+		ImGui::Text("Axis Lock");
+		ImGui::Separator();
+		ImGui::Text("Movement:");
+		bool linear_x = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearX);
+		if (ImGui::Checkbox("X##LinearX", &linear_x))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearX, linear_x);
+		}
+		ImGui::SameLine();
+		bool linear_y = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearY);
+		if (ImGui::Checkbox("Y##LinearY", &linear_y))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearY, linear_y);
+		}
+		ImGui::SameLine();
+		bool linear_z = rigidbody->GetDynamicLocks(ComponentRigidBody::LinearZ);
+		if (ImGui::Checkbox("Z##LinearZ", &linear_z))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::LinearZ, linear_z);
+		}
+
+		ImGui::Text("Rotation:");
+		bool angular_x = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularX);
+		if (ImGui::Checkbox("X##AngularX", &angular_x))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularX, angular_x);
+		}
+		ImGui::SameLine();
+		bool angular_y = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularY);
+		if (ImGui::Checkbox("Y##AngularY", &angular_y))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularY, angular_y);
+		}
+		ImGui::SameLine();
+		bool angular_z = rigidbody->GetDynamicLocks(ComponentRigidBody::AngularZ);
+		if (ImGui::Checkbox("Z##AngularZ", &angular_z))
+		{
+			rigidbody->SetDynamicLocks(ComponentRigidBody::AngularZ, angular_z);
+		}
+	}
+}
+
+void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
+{
+	colliders_count++;
+	if (ImGui::CollapsingHeader((comp_collider->GetName() + "##" + std::to_string(colliders_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool is_active = comp_collider->IsActive();
+		if (ImGui::Checkbox(("Active##Collider" + std::to_string(colliders_count)).c_str(), &is_active))
+		{
+			comp_collider->SetActive(is_active);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
+		{
+			App->scene->selected_gameobjects.front()->DestroyComponent(comp_collider);
+		}
+
+		PhysicsMaterial* material = comp_collider->GetColliderMaterial();
+		if (ImGui::InputResourcePhysMaterial("Material", &material))
+		{
+			comp_collider->SetColliderMaterial(material);
+		}
+		ImGui::Spacing();
+
+		bool is_trigger = comp_collider->IsTrigger();
+		if (ImGui::Checkbox("Trigger", &is_trigger))
+		{
+			comp_collider->SetTrigger(is_trigger);
+		}
+
+		//material
+
+		float3 center = comp_collider->GetColliderCenter();
+		if (ImGui::DragFloat3("Center", (float*)&center, true, 0.25f)) {
+			comp_collider->SetColliderCenter(center);
+		}
+
+		float3 box_size;
+		float sphere_radius;
+		float capsule_radius;
+		float capsule_height;
+		const char* directions[3];
+		int current_direction;
+		bool is_convex = false;
+
+		switch (comp_collider->GetColliderType())
+		{
+		case ComponentCollider::BoxCollider:
+			box_size = comp_collider->GetBoxSize();
+			if (ImGui::DragFloat3("Size##box", (float*)&box_size, true, 0.25f)) {
+				comp_collider->SetBoxSize(box_size);
+			}
+			break;
+		case ComponentCollider::SphereCollider:
+			sphere_radius = comp_collider->GetSphereRadius();
+			if (ImGui::DragFloat("Radius##sphere", &sphere_radius, true, 0.25f)) {
+				comp_collider->SetSphereRadius(sphere_radius);
+			}
+			break;
+		case ComponentCollider::CapsuleCollider:
+			capsule_radius = comp_collider->GetCapsuleRadius();
+			if (ImGui::DragFloat("Radius##capsule", &capsule_radius, true, 0.25f)) {
+				comp_collider->SetCapsuleRadius(capsule_radius);
+			}
+			capsule_height = comp_collider->GetCapsuleHeight();
+			if (ImGui::DragFloat("Height##capsule", &capsule_height, true, 0.25f)) {
+				comp_collider->SetCapsuleHeight(capsule_height);
+			}
+
+			directions[0] = "X Axis";
+			directions[1] = "Y Axis";
+			directions[2] = "Z Axis";
+			current_direction = comp_collider->GetCapsuleDirection();
+
+			if (ImGui::Combo("Direction", &current_direction, directions, IM_ARRAYSIZE(directions)))
+			{
+				comp_collider->SetCapsuleDirection((ComponentCollider::CapsuleDirection) current_direction);
+			}
+			break;
+		case ComponentCollider::MeshCollider:
+			is_convex = comp_collider->IsConvex();
+			if (ImGui::Checkbox("Convex", &is_convex))
+			{
+				comp_collider->ChangeMeshToConvex(is_convex);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * current_emmiter)
+{
+	if (ImGui::CollapsingHeader("Component Particle Emmiter"))
+	{
+		bool active_bool = current_emmiter->IsActive();
+		bool keeper = active_bool;
+		static bool rename_template = false;
+
+		ImGui::Checkbox("Active", &active_bool);
+
+		if (keeper != active_bool)
+			current_emmiter->SetActive(keeper);
+
+		if (current_emmiter->IsActive())
+		{
+			ImGui::Separator();
+
+			if (ImGui::TreeNode("Templates"))
+			{
+				if (!App->resources->GetParticlesList().empty())
+				{
+					map<uint, ParticleData*> tmp_map = App->resources->GetParticlesList();
+
+					for (map<uint, ParticleData*>::const_iterator it = tmp_map.begin(); it != tmp_map.end(); it++)
+					{
+						if (ImGui::MenuItem(it->second->GetName().c_str()))
+						{
+							current_emmiter->data = it->second;
+						}
+					}
+				}
+
+
+				ImGui::TreePop();
+			}
+
+			ImGui::Separator();	
+
+			if (ImGui::Button("PLAY"))
+			{
+				current_emmiter->PlayEmmiter(); 
+
+				//if(current_emmiter->show_shockwave)
+				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("STOP"))
+			{
+				current_emmiter->StopEmmiter();
+			}
+
+			ImGui::SameLine(); 
+			ImGui::Text("Particle System State: "); ImGui::SameLine();
+
+			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+				ImGui::TextColored({ 0,255,0,1 }, "PLAY");
+			else
+				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
+
+			static int runtime_behaviour_combo; 
+			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
+
+			if (runtime_behaviour_combo == 0)
+				current_emmiter->runtime_behaviour = "Auto"; 
+			
+			else if (runtime_behaviour_combo == 1)
+				current_emmiter->runtime_behaviour = "Manual";
+			
+			ImGui::Separator();
+
+			ImGui::Text("Template Loaded:"); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());	
+	
+			ImGui::Text("Auto Pause:"); ImGui::SameLine(); 
+
+			if (current_emmiter->data->autopause)
+			{
+				float time_left = current_emmiter->data->time_to_stop;
+
+				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+				{
+					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
+				}
+				else
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
+			}
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Shock Wave: "); ImGui::SameLine();
+
+			if (current_emmiter->show_shockwave)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_alpha_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Size Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_size_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_rotation_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+			ImGui::Text("Color Interpolation: "); ImGui::SameLine();
+
+			if (current_emmiter->data->change_color_interpolation)
+				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+			else
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+			
+			ImGui::Separator(); 
+
+			if (ImGui::TreeNode("Relative Position"))
+			{
+				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+				ImGui::TreePop(); 
+			}
+
+			if (ImGui::TreeNode("Auto-Pause"))
+			{		
+				static float turnoff_time = 0; 
+
+				ImGui::DragFloat("Turn off timer", &turnoff_time, 1, .1f, 0, 1000.0f);
+			
+				if (ImGui::Button("Apply"))
+				{
+					if (turnoff_time != 0)
+					{
+						current_emmiter->data->autopause = true;
+						current_emmiter->data->time_to_stop = turnoff_time;
+					}
+				}
+
+				ImGui::SameLine(); 
+				if (ImGui::Button("Delete"))
+					current_emmiter->data->autopause = false;
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Shock Wave"))
+			{
+				static Texture* st_particle_texture = nullptr;
+				ImGui::InputResourceTexture("Wave Texture", &st_particle_texture);
+
+				static float wave_duration; 
+				static float final_wave_scale; 
+
+				ImGui::SliderFloat("Duration", &wave_duration, 0.1f, 5.0f);
+				ImGui::SliderFloat("Final Scale", &final_wave_scale, 1.0f, 10.0f); 
+
+				if(ImGui::Button("Apply"))
+				{
+					current_emmiter->show_shockwave = true; 
+
+					current_emmiter->data->shock_wave.wave_texture = st_particle_texture; 
+					current_emmiter->data->shock_wave.duration = wave_duration; 
+					current_emmiter->data->shock_wave.final_scale = final_wave_scale;
+				}
+
+				ImGui::TreePop(); 
+			}
+
+			float prev_width = current_emmiter->data->emmit_width;
+			float prev_height = current_emmiter->data->emmit_height;
+			float prev_depth = current_emmiter->data->emmit_depth;
+
+			if (ImGui::TreeNode("Emit Area"))
+			{
+				static bool show = current_emmiter->ShowEmmisionArea();
+				ImGui::Checkbox("Show Emmiter Area", &show);
+				current_emmiter->SetShowEmmisionArea(show);
+
+				ImGui::DragFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+
+				ImGui::TreePop();
+			}
+
+			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
+			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
+			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
+
+			if (ImGui::TreeNode("Texture"))
+			{
+				static Texture* st_particle_texture = nullptr;
+				ImGui::InputResourceTexture("Texture To Add", &st_particle_texture);
+
+				if (ImGui::Button("Add To Stack"))
+				{
+					current_emmiter->data->animation_system.AddToFrameStack(st_particle_texture);
+				}
+
+				ImGui::Text("Frame Stack Size:"); ImGui::SameLine();
+				ImGui::Text(to_string(current_emmiter->data->animation_system.GetNumFrames()).c_str());
+
+				current_emmiter->data->animation_system.PaintStackUI();
+
+				ImGui::DragFloat("Time Step", &current_emmiter->data->animation_system.timeStep, true, 0.1f, 0, 2.0f);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Color"))
+			{
+				static bool alpha_preview = true;
+				ImGui::Checkbox("Alpha", &alpha_preview);
+
+				int misc_flags = (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0);
+
+				ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+				flags |= misc_flags;
+				flags |= ImGuiColorEditFlags_RGB;
+
+				ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Motion"))
+			{
+				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
+				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
+				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
+				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
+				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
+				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Billboard"))
+			{
+				ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
+
+				static int billboard_type;
+				ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+
+				if (billboard_type != 0)
+				{
+					current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
+					++billboard_type;
+				}
+				else
+					current_emmiter->data->billboard_type = BILLBOARD_NONE;
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Interpolation"))
+			{
+				if (ImGui::TreeNode("Size"))
+				{
+					static float3 init_scale = { 1,1,1 };
+					static float3 fin_scale = { 1,1,1 };
+
+					ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 1, 10000);
+					init_scale.y = init_scale.x;
+
+					ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 1, 10000);
+					fin_scale.y = fin_scale.x;
+
+					if (ImGui::Button("Apply Scale Interpolation"))
+					{
+						current_emmiter->data->change_size_interpolation = true;
+
+						if (init_scale.x == fin_scale.x)
+							current_emmiter->data->change_size_interpolation = false; 
+
+						current_emmiter->data->initial_scale = init_scale;
+						current_emmiter->data->final_scale = fin_scale;
+					}
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Rotation"))
+				{
+					static float init_angular_v = 0;
+					static float fin_angular_v = 0;
+
+					ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
+
+					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+
+					if (ImGui::Button("Apply Rotation Interpolation"))
+					{
+						current_emmiter->data->change_rotation_interpolation = true;
+
+						if(init_angular_v == fin_angular_v)
+							current_emmiter->data->change_rotation_interpolation = false;
+
+						current_emmiter->data->initial_angular_v = init_angular_v;
+						current_emmiter->data->final_angular_v = fin_angular_v;
+					}
+
+					ImGui::TreePop();
+				}
+
+
+				if (ImGui::TreeNode("Alpha"))
+				{
+					static int current_interpolation_type; 
+					ImGui::Combo("Interpolation Type", &current_interpolation_type, "Alpha Interpolation\0Match Lifetime\0Manual Start\0");
+
+					switch (current_interpolation_type)
+					{
+					case 1:
+						current_emmiter->data->init_alpha_interpolation_time = 0;
+						break; 
+
+					case 2:
+						ImGui::DragFloat("Start at", &current_emmiter->data->init_alpha_interpolation_time, 1, 0.1f, 0, current_emmiter->data->max_lifetime); 
+						break; 
+					}
+
+					if (ImGui::Button("Apply Alpha Interpolation"))
+					{
+						current_emmiter->data->change_alpha_interpolation = true;
+			
+						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
+							current_emmiter->data->alpha_interpolation_delayed = true;
+					}
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNodeEx("Color"))
+				{
+
+					static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b};
+
+					ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
+					
+					static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b};
+
+					ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+
+					if (ImGui::Button("Apply Color Interpolation"))
+					{
+						current_emmiter->data->change_color_interpolation = true;
+
+						Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
+						Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+
+						current_emmiter->data->initial_color = initial;
+						current_emmiter->data->final_color = final;
+
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::TreePop();
+			}
+
+			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
+
+			if (ImGui::Button("Save Template"))
+			{
+				rename_template = true;
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Update Template"))
+			{
+
+			}
+
+		}
+
+	
+
+		if (rename_template)
+		{
+			ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x + 20, 150));
+			bool windowActive = true;
+			ImGui::Begin("Rename Game Object", &windowActive,
+				ImGuiWindowFlags_NoFocusOnAppearing |
+				ImGuiWindowFlags_AlwaysAutoResize |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_ShowBorders |
+				ImGuiWindowFlags_NoTitleBar);
+
+			ImGui::Text("Enter new name");
+			static char inputText[20];
+			ImGui::InputText("", inputText, 20);
+
+			if (ImGui::Button("Confirm"))
+			{
+				App->resources->AddParticleTemplate(current_emmiter->data);
+
+				Data template_to_save; 
+
+				ParticleData* new_template = new ParticleData(); 
+				new_template->Copy(current_emmiter->data); 
+				new_template->SetName(inputText);
+
+				new_template->Save(template_to_save);
+				new_template->SaveTextures(template_to_save); 
+				
+				string new_path_name(EDITOR_PARTICLE_FOLDER); 
+				new_path_name += inputText; 
+				new_path_name += ".particle"; 
+
+				template_to_save.SaveAsBinary(new_path_name);
+				App->resources->CreateResource(new_path_name);
+				App->resources->AddParticleTemplate(new_template);
+				
+				rename_template = false;
+			}
+
+			ImGui::SameLine();
+			
+			if (ImGui::Button("Cancel")) {
+				inputText[0] = '\0';
+				rename_template = false;
+			}
+			ImGui::End();
+		}
+
+		ImGui::SameLine();
+	}
+}
+
+
+void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
+{
+	if (ImGui::CollapsingHeader("Component Billboard"))
+	{
+		static int billboard_type;
+		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+
+		if (billboard_type != 0)
+		{
+			billboard->SetBillboardType((BillboardingType)--billboard_type);
+			++billboard_type;
+		}
+		else
+			billboard->SetBillboardType(BILLBOARD_NONE);
+	}
+}
+
+void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
+{
+	if (ImGui::CollapsingHeader("Listener"))
+	{
+	}
+}
+
+void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
+{
+	if (audio_source->GetEventsVector().empty())
+		audio_source->GetEvents();
+
+	if (ImGui::CollapsingHeader("Audio Source")) {
+		if (audio_source->soundbank != nullptr) {
+			std::string soundbank_name = "SoundBank: ";
+			soundbank_name += audio_source->soundbank->name.c_str();
+			if (ImGui::TreeNode(soundbank_name.c_str()))
+			{		
+				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
+				{
+					ImGui::Text(audio_source->GetEventsVector()[i]->name.c_str());
+					audio_source->GetEventsVector()[i]->UIDraw(audio_source);
+				}	
+				ImGui::TreePop();
+			}
+			if (ImGui::TreeNode("Settings##Event"))
+			{
+				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
+				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
+
+				ImGui::TreePop();
+			}
+		}
+	}
+}
+
+void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
+{
+	distance_joints_count++;
+	if (ImGui::CollapsingHeader((joint->GetName() + "##" + std::to_string(distance_joints_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		GameObject* gameobject = joint->GetConnectedBody();
+		if (ImGui::InputResourceGameObject("Connected Body", &gameobject, ResourcesWindow::GameObjectFilter::GoFilterRigidBody)) {
+			joint->SetConnectedBody(gameobject);
+		}
+	}
+}
+
+void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
+{
+	if (ImGui::CollapsingHeader("Distorsion Zone")) {
+		char* bus_name = new char[41];
+
+		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
+		bus_name[dist_zone->bus.length()] = '\0';
+
+		ImGui::InputText("Target bus", bus_name, 40);
+		dist_zone->bus = bus_name;
+
+		ImGui::DragFloat("Value", &dist_zone->distorsion_value, true, 0.1, 0.0, 12.0, "%.1f");
+
+		delete[] bus_name;
 	}
 }
 

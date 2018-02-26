@@ -8,10 +8,10 @@ class GameObject;
 class Component
 {
 public:
-	enum ComponentType 
-	{
-		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompCircleCollider, CompAudioSource, CompAnimaton, 
-		CompScript, CompParticleSystem, CompFactory, CompCanvas, CompRectTransform, CompImage, CompText, CompProgressBar, CompLight, CompUnknown
+	enum ComponentType {
+		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompSphereCollider, CompCapsuleCollider, CompMeshCollider, CompAudioSource, 
+		CompAnimaton, CompScript, CompParticleSystem, CompFactory, CompFixedJoint, CompDistanceJoint, CompSphericalJoint, CompRevoluteJoint, CompPrismaticJoint, 
+		CompD6Joint, CompBlast, CompLight, CompAudioListener, CompAudioDistZone, CompBillboard, CompCanvas, CompRectTransform, CompImage, CompText, CompProgressBar, CompUnknown,
 	};
 
 	Component();

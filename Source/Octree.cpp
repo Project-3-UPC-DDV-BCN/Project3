@@ -1,7 +1,7 @@
 #include "Octree.h"
 #include "Globals.h"
 #include "Primitive.h"
-#include "MathGeoLib\Geometry\OBB.h"
+#include "MathGeoLib/OBB.h"
 #include "Mesh.h"
 #include "ComponentMeshRenderer.h"
 

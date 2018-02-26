@@ -12,11 +12,18 @@ class GameObject;
 class Material;
 class Script;
 class Font;
+class PhysicsMaterial;
+class BlastModel;
 
 class ResourcesWindow :
 	public Window
 {
 public:
+
+	enum GameObjectFilter {
+		GoFilterRigidBody, GoFilterNone
+	};
+
 	ResourcesWindow();
 	virtual ~ResourcesWindow();
 
@@ -28,6 +35,8 @@ public:
 	GameObject* GetGameobject() const;
 	Material* GetMaterial() const;
 	Script* GetScript() const;
+	PhysicsMaterial* GetPhysMat() const;
+	BlastModel* GetBlastModel() const;
 	Shader* GetShader() const;
 	Font* GetFont() const;
 	void SetShaderType(Shader::ShaderType type);
@@ -43,6 +52,8 @@ private:
 	std::list<GameObject*> gameobjects_list;
 	std::map<uint, Material*> materials_list;
 	std::map<uint, Script*> scripts_list;
+	std::map<uint, PhysicsMaterial*> phys_material_list;
+	std::map<uint, BlastModel*> blast_models_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, Font*> fonts_list;
 
@@ -52,6 +63,8 @@ private:
 	GameObject* gameobject_to_return;
 	Material* material_to_return;
 	Script* script_to_return;
+	PhysicsMaterial* phys_mat_to_return;
+	BlastModel* blast_model_to_return;
 	Shader* shader_to_return;
 	Shader::ShaderType shader_type;
 	Font* font_to_return;
@@ -63,6 +76,10 @@ public:
 	bool gameobject_changed;
 	bool material_changed;
 	bool script_changed;
+	bool phys_mat_changed;
+	bool blast_model_changed;
+	
+	GameObjectFilter go_filter;
 	bool shader_changed;
 	bool font_changed;
 

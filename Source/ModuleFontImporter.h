@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include "SDL/include/SDL_pixels.h"
-#include "MathGeoLib\Math\float4.h"
+#include "MathGeoLib\float4.h"
 
 class Font;
 class Texture;

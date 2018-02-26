@@ -8,6 +8,8 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "Script.h"
+#include "PhysicsMaterial.h"
+#include "BlastModel.h"
 #include "Shader.h"
 #include "Font.h"
 
@@ -22,6 +24,8 @@ ResourcesWindow::ResourcesWindow()
 	gameobject_to_return = nullptr;
 	material_to_return = nullptr;
 	script_to_return = nullptr;
+	phys_mat_to_return = nullptr;
+	blast_model_to_return = nullptr;
 	shader_to_return = nullptr;
 	font_to_return = nullptr;
 
@@ -31,12 +35,15 @@ ResourcesWindow::ResourcesWindow()
 	gameobject_changed = false;
 	material_changed = false;
 	script_changed = false;
+	phys_mat_changed = false;
+	blast_model_changed = false;
 	shader_changed = false;
 	font_changed = false;
 
 	shader_type = Shader::ShaderType::ST_NULL;
 
 	type = Resource::Unknown;
+	go_filter = GoFilterNone;
 
 	current_input_name = "";
 }
@@ -192,6 +199,16 @@ void ResourcesWindow::DrawWindow()
 		}
 		for (std::list<GameObject*>::const_iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); it++)
 		{
+			if (go_filter != GoFilterNone)
+			{
+				switch (go_filter)
+				{
+				case ResourcesWindow::GoFilterRigidBody:
+					if ((*it)->GetComponent(Component::CompRigidBody) == nullptr) continue;
+					break;
+				}
+			}
+
 			std::string name = (*it)->GetName();
 			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
 			{
@@ -226,6 +243,24 @@ void ResourcesWindow::DrawWindow()
 			}
 		}
 		break;
+	case Resource::PhysicsMatResource:
+		phys_material_list = App->resources->GetPhysMaterialsList();
+		if (ImGui::Selectable("None##physmaterial"))
+		{
+			phys_mat_to_return = nullptr;
+			phys_mat_changed = true;
+			break;
+		}
+		for (std::map<uint, PhysicsMaterial*>::const_iterator it = phys_material_list.begin(); it != phys_material_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				phys_mat_to_return = it->second;
+				phys_mat_changed = true;
+				break;
+			}
+		}
+		break;
 	case Resource::ShaderResource:
 		shaders_list = App->resources->GetShadersList();
 		if (ImGui::Selectable("None##shader"))
@@ -250,6 +285,24 @@ void ResourcesWindow::DrawWindow()
 		}
 		break;
 	case Resource::Unknown:
+		break;
+	case Resource::BlastMeshResource:
+		blast_models_list = App->resources->GetBlastModelsList();
+		if (ImGui::Selectable("None##Mesh"))
+		{
+			blast_model_to_return = nullptr;
+			blast_model_changed = true;
+			break;
+		}
+		for (std::map<uint, BlastModel*>::const_iterator it = blast_models_list.begin(); it != blast_models_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				blast_model_to_return = it->second;
+				blast_model_changed = true;
+				break;
+			}
+		}
 		break;
 	default:
 		break;
@@ -293,6 +346,16 @@ Script * ResourcesWindow::GetScript() const
 	return script_to_return;
 }
 
+PhysicsMaterial * ResourcesWindow::GetPhysMat() const
+{
+	return phys_mat_to_return;
+}
+
+BlastModel * ResourcesWindow::GetBlastModel() const
+{
+	return blast_model_to_return;
+}
+
 Shader * ResourcesWindow::GetShader() const
 {
 	return shader_to_return;
@@ -327,7 +390,9 @@ void ResourcesWindow::Reset()
 	material_changed = false;
 	script_changed = false;
 	font_changed = false;
-
+	phys_mat_changed = false;
+	blast_model_changed = false;
+	
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
 	prefab_to_return = nullptr;
@@ -335,6 +400,10 @@ void ResourcesWindow::Reset()
 	material_to_return = nullptr;
 	script_to_return = nullptr;
 	font_to_return = nullptr;
+	phys_mat_to_return = nullptr;
+	blast_model_to_return = nullptr;
+
+	go_filter = GoFilterNone;
 
 	shader_type = Shader::ShaderType::ST_NULL;
 	current_input_name = "";

@@ -23,7 +23,7 @@
 // components in life support devices or systems without express written approval of
 // NVIDIA Corporation.
 //
-// Copyright (c) 2016-2017 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2016-2018 NVIDIA Corporation. All rights reserved.
 
 
 #ifndef NVBLASTTKFRAMEWORK_H
@@ -36,7 +36,7 @@
 #include "NvBlastPreprocessor.h"
 #include "NvBlastTypes.h"
 
-#include "PxVec3.h"
+#include "../foundation/PxVec3.h"
 
 
 // Forward declarations

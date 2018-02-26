@@ -2,8 +2,13 @@
 #define _H_DEBUG_DRAW__
 
 #include "Component.h"
+<<<<<<< HEAD
 #include "MathGeoLib\Math\float3.h"
 #include "MathGeoLib\Math\float4x4.h"
+=======
+#include "MathGeoLib/float3.h"
+#include "MathGeoLib/float4x4.h"
+>>>>>>> origin/Vertical-Slice-1
 #include "Glew\include\glew.h"
 
 class ComponentCamera;
@@ -18,6 +23,10 @@ public:
 	void SetTransform(float4x4 transform);
 	void SetColour(float4 colour);
 	void SetMode(int mode);
+<<<<<<< HEAD
+=======
+	void SetStroke(uint stroke);
+>>>>>>> origin/Vertical-Slice-1
 
 	uint GetNumVertices();
 	float* GetVertices();
@@ -26,6 +35,10 @@ public:
 	float4 GetColour();
 	float4x4 GetTransform();
 	int GetMode();
+<<<<<<< HEAD
+=======
+	uint GetStroke();
+>>>>>>> origin/Vertical-Slice-1
 
 private:
 	uint     num_vertices = 0;
@@ -37,6 +50,11 @@ private:
 
 	float4x4 transform = float4x4::identity;
 	int      mode = 0x0004;
+<<<<<<< HEAD
+=======
+
+	uint     stroke = 1;
+>>>>>>> origin/Vertical-Slice-1
 };
 
 class DebugDraw
@@ -49,6 +67,12 @@ public:
 	void Quad(float4x4 transform, float2 size, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f));
 	void Circle(float4x4 transform, float rad, float4 colour = float4(1.0f, 1.0f, 1.0f, 1.0f), uint resolution = 13);
 
+<<<<<<< HEAD
+=======
+	void SetLineStroke(uint stroke);
+	uint GetLineStroke() const;
+
+>>>>>>> origin/Vertical-Slice-1
 	void Render(ComponentCamera* cameras);
 	void Clear();
 
@@ -57,6 +81,10 @@ private:
 
 private:
 	std::vector<DebugShape> shapes;
+<<<<<<< HEAD
+=======
+	uint line_stroke = 1;
+>>>>>>> origin/Vertical-Slice-1
 };
 
 #endif // !_H_DEBUG_DRAW__

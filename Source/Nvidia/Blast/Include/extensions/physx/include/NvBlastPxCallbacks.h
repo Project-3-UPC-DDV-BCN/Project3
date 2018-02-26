@@ -23,15 +23,15 @@
 // components in life support devices or systems without express written approval of
 // NVIDIA Corporation.
 //
-// Copyright (c) 2016-2017 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2016-2018 NVIDIA Corporation. All rights reserved.
 
 
 #ifndef NVBLASTPXCALLBACKS_H
 #define NVBLASTPXCALLBACKS_H
 
 #include "NvBlastGlobals.h"
-#include "PxErrorCallback.h"
-#include "PxAllocatorCallback.h"
+#include "../foundation/PxErrorCallback.h"
+#include "../foundation/PxAllocatorCallback.h"
 
 /**
 This file contains helper functions to get PxShared compatible versions of global AllocatorCallback and ErrorCallback.

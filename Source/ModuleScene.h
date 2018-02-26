@@ -3,10 +3,12 @@
 #include "MathGeoLib\MathBuildConfig.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include "Primitive.h"
+#include "ComponentParticleEmmiter.h"
 #include <map>
 #include <string>
 #include "Octree.h"
 #include "imgui\ImGuizmo\ImGuizmo.h"
+
 
 class GameObject;
 class Texture;
@@ -15,6 +17,7 @@ class Mesh;
 class Prefab;
 class CubeMap;
 class SkyDome;
+class BlastModel;
 
 class ModuleScene : public Module
 {
@@ -57,7 +60,10 @@ public:
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject);
 
+	void LoadBlastModel(BlastModel* model);
+
 	void DrawSkyBox(float3 pos);
+	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);
 
 	void InitScripts();
 
@@ -66,6 +72,9 @@ public:
 	GameObject* CreateImage(GameObject* parent = nullptr);
 	GameObject* CreateText(GameObject* parent = nullptr);
 	GameObject* CreateProgressBar(GameObject* parent = nullptr);
+
+	void SetParticleSystemsState();
+
 
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
@@ -77,6 +86,7 @@ public:
 	std::list<GameObject*> scene_gameobjects;
 	std::map<std::string, int> scene_gameobjects_name_counter;
 	std::list<ComponentCamera*> scene_cameras;
+	std::list<ComponentParticleEmmiter*> scene_emmiters; 
 	std::list<ComponentMeshRenderer*> static_meshes;
 	std::list<ComponentMeshRenderer*> dynamic_meshes;
 	Octree octree;
@@ -91,8 +101,9 @@ public:
 
 	Data* tmp_scene_data;
 
+	int triangles_count;
+
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;
-	
 };

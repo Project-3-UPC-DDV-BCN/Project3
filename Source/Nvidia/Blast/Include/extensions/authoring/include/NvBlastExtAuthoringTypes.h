@@ -23,7 +23,7 @@
 // components in life support devices or systems without express written approval of
 // NVIDIA Corporation.
 //
-// Copyright (c) 2016-2017 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2016-2018 NVIDIA Corporation. All rights reserved.
 
 
 #ifndef NVBLASTAUTHORINGTYPES_H
@@ -89,6 +89,14 @@ struct Triangle
 	physx::PxVec3 getNormal() const
 	{
 		return ((b.p - a.p).cross(c.p - a.p));
+	}
+	inline Vertex& getVertex(uint32_t index)
+	{
+		return (&a)[index];
+	}
+	inline const Vertex& getVertex(uint32_t index) const
+	{
+		return (&a)[index];
 	}
 };
 
