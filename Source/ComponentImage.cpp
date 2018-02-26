@@ -105,7 +105,7 @@ void ComponentImage::Save(Data & data) const
 	data.AddVector4("colour", colour);
 	data.AddBool("flip", flip);
 	if (texture != nullptr)
-		data.AddUInt("texture_uid", texture->GetUID());
+		data.AddString("texture_name", texture->GetName().c_str());
 	
 }
 
@@ -116,7 +116,7 @@ void ComponentImage::Load(Data & data)
 	SetColour(data.GetVector4("colour"));
 	SetFlip(data.GetBool("flip"));
 	uint uid = data.GetUInt("texture_uid");
-	texture = App->resources->GetTexture(uid);
+	texture = App->resources->GetTexture(data.GetString("texture_name"));
 }
 
 ComponentCanvas * ComponentImage::GetCanvas()

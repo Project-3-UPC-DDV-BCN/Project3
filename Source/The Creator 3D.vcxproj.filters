@@ -72,7 +72,7 @@
     </Filter>
     <Filter Include="Sources\Helpers\Resources">
       <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Sources\GameObject\Components\UI">
       <UniqueIdentifier>{a89151dd-93f3-4407-8d21-204a484a11f2}</UniqueIdentifier>
     </Filter>
@@ -339,9 +339,6 @@
     <ClInclude Include="ModulePhysMatImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsMaterial.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentJointRevolute.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
@@ -381,9 +378,6 @@
     <ClInclude Include="ModuleBlastMeshImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
@@ -392,9 +386,6 @@
     </ClInclude>
     <ClInclude Include="ModuleShaderImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="BlastModel.h">
-      <Filter>Sources\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleBlast.h">
       <Filter>Sources\Modules</Filter>
@@ -1157,11 +1148,16 @@
     <ClInclude Include="ModuleFontImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="BlastModel.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="PhysicsMaterial.h" />
+    <ClInclude Include="Component.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1201,9 +1197,6 @@
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysBody3D.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
@@ -1290,15 +1283,6 @@
     <ClCompile Include="ModuleResources.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="InputConfigWindow.cpp">
       <Filter>Sources\EditorUI\Modules Config</Filter>
     </ClCompile>
@@ -1326,14 +1310,8 @@
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTextureMSAA.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\3d Party\imGui\ImGuizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="Prefab.cpp">
-      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMeshImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -1343,9 +1321,6 @@
     </ClCompile>
     <ClCompile Include="ModulePrefabImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleMaterialImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -1368,17 +1343,8 @@
     <ClCompile Include="ResourcesConfigWindow.cpp">
       <Filter>Sources\EditorUI\Modules Config</Filter>
     </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\ImGuiColorTextEdit\TextEditor.cpp">
       <Filter>Sources\3d Party\imGui\ImGuiTextEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="CSScript.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="LuaScript.cpp">
-      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="TextEditorWindow.cpp">
       <Filter>Sources\EditorUI</Filter>
@@ -1404,9 +1370,6 @@
     <ClCompile Include="ModulePhysMatImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsMaterial.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentJointRevolute.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
@@ -1425,17 +1388,8 @@
     <ClCompile Include="ModuleBlastMeshImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderProgram.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleShaderImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="BlastModel.cpp">
-      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleBlast.cpp">
       <Filter>Sources\Modules</Filter>
@@ -1448,9 +1402,6 @@
     </ClCompile>
     <ClCompile Include="ComponentBillboard.cpp">
       <Filter>Sources\GameObject\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleData.cpp">
-      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleParticleImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
@@ -1487,7 +1438,7 @@
     </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Wwise.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -1529,7 +1480,7 @@
     </ClCompile>
     <ClCompile Include="RenderTextureMSAA.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -1538,7 +1489,7 @@
     </ClCompile>
     <ClCompile Include="Prefab.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Wwise\include\AK\SoundEngine\Win32\stdafx.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
     </ClCompile>
@@ -1551,10 +1502,9 @@
     <ClCompile Include="MathGeoLib\BitOps.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
-
     <ClCompile Include="Material.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MathGeoLib\Callstack.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
@@ -1671,7 +1621,7 @@
     </ClCompile>
     <ClCompile Include="Script.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MathGeoLib\PBVolume.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
@@ -1683,7 +1633,7 @@
     </ClCompile>
     <ClCompile Include="LuaScript.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MathGeoLib\Plane.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
@@ -1707,7 +1657,7 @@
     </ClCompile>
     <ClCompile Include="ShaderProgram.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MathGeoLib\PositiveTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
@@ -1734,7 +1684,7 @@
     </ClCompile>
     <ClCompile Include="Wwise\IO\Win32\AkDefaultIOHookBlocking.cpp">
       <Filter>Sources\3d Party\Wwise</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MathGeoLib\SphereTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
@@ -1800,11 +1750,25 @@
     <ClCompile Include="ModuleFontImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="BlastModel.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="CSScript.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="LuaScript.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ParticleData.cpp" />
+    <ClCompile Include="PhysicsMaterial.cpp" />
+    <ClCompile Include="Prefab.cpp" />
+    <ClCompile Include="RenderTextureMSAA.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">

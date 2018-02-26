@@ -625,7 +625,7 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddBool("snap_down", snap_down);
 	data.AddBool("snap_left", snap_left);
 	data.AddBool("snap_right", snap_right);
-	data.AddFloat("scale", scale);
+	data.AddFloat("scale", 1.0f);
 }
 
 void ComponentRectTransform::Load(Data & data)
