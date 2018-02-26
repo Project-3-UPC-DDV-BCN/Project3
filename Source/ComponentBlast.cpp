@@ -32,16 +32,19 @@ ComponentBlast::~ComponentBlast()
 
 void ComponentBlast::SetTransform(float* transform)
 {
-	if (blast_model->family_created)
+	if (blast_model != nullptr)
 	{
-		uint actors_num = blast_model->family->getActorCount();
-		Nv::Blast::ExtPxActor* actors;
-		uint written = blast_model->family->getActors(&actors, actors_num);
-		physx::PxMat44 mat(transform);
-		physx::PxTransform phys_transform(mat);
-		for (int i = 0; i < written; i++)
+		if (blast_model->family_created)
 		{
-			actors->getPhysXActor().setGlobalPose(phys_transform);
+			uint actors_num = blast_model->family->getActorCount();
+			Nv::Blast::ExtPxActor* actors;
+			uint written = blast_model->family->getActors(&actors, actors_num);
+			physx::PxMat44 mat(transform);
+			physx::PxTransform phys_transform(mat);
+			for (int i = 0; i < written; i++)
+			{
+				actors->getPhysXActor().setGlobalPose(phys_transform);
+			}
 		}
 	}
 }
