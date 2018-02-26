@@ -117,29 +117,35 @@ void CSScript::UpdateScript()
 	}
 }
 
-void CSScript::OnCollisionEnter()
+void CSScript::OnCollisionEnter(GameObject* other_collider)
 {
 	if (on_collision_enter != nullptr)
 	{
-		CallFunction(on_collision_enter, nullptr); //nullptr should be the collision
+		void* param[1];
+		param[0] = &other_collider;
+		CallFunction(on_collision_enter, param);
 		inside_function = false;
 	}
 }
 
-void CSScript::OnCollisionStay()
+void CSScript::OnCollisionStay(GameObject* other_collider)
 {
 	if (on_collision_stay != nullptr)
 	{
-		CallFunction(on_collision_stay, nullptr); //nullptr should be the collision
+		void* param[1];
+		param[0] = &other_collider;
+		CallFunction(on_collision_enter, param);
 		inside_function = false;
 	}
 }
 
-void CSScript::OnCollisionExit()
+void CSScript::OnCollisionExit(GameObject* other_collider)
 {
 	if (on_collision_exit != nullptr)
 	{
-		CallFunction(on_collision_exit, nullptr); //nullptr should be the collision
+		void* param[1];
+		param[0] = &other_collider;
+		CallFunction(on_collision_enter, param);
 		inside_function = false;
 	}
 }

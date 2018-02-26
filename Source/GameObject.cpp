@@ -490,6 +490,39 @@ void GameObject::UpdateScripts()
 	}
 }
 
+void GameObject::OnCollisionEnter(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionEnter(other_collider);
+		}
+	}
+}
+
+void GameObject::OnCollisionStay(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionStay(other_collider);
+		}
+	}
+}
+
+void GameObject::OnCollisionExit(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionExit(other_collider);
+		}
+	}
+}
+
 void GameObject::UpdateFactory()
 {
 	ComponentFactory* comp_factory = nullptr;
