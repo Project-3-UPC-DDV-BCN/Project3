@@ -19,7 +19,7 @@ OctreeNode::~OctreeNode()
 
 bool OctreeNode::NodeIsFull() const
 {
-	return node_contents.size() == 5;
+	return node_contents.size() == 6;
 }
 
 void OctreeNode::InsertInNode(ComponentMeshRenderer * mesh)

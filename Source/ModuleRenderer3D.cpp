@@ -527,11 +527,12 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		{
 			if (active_camera->GetGameObject() && (*it)->GetMesh())
 			{
-				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
+				/*if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
-					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-						DrawMesh(*it, active_camera);
-				}
+					
+				}*/
+				if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
+				DrawMesh(*it, active_camera);
 			}
 		}
 		else
