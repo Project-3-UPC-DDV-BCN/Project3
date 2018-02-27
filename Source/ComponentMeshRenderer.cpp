@@ -156,6 +156,10 @@ void ComponentMeshRenderer::Load(Data & data)
 	material_indices_start = data.GetInt("Mat_Indices_Start");
 	interior_material_indices_number = data.GetInt("Int_Mat_Indices_Number");
 	interior_material_indices_start = data.GetInt("Int_Mat_Indices_Start");
+	if (mesh)
+	{
+		UpdateBoundingBox();
+	}
 }
 
 Material * ComponentMeshRenderer::GetInteriorMaterial() const

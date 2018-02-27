@@ -23,6 +23,7 @@
 #include "ComponentAudioSource.h"
 #include "AudioEvent.h"
 #include "ComponentText.h"
+#include "ComponentRigidBody.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -961,6 +962,10 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	else if (name == "TheEngine.TheText")
 	{
 		comp_name = "TheText";
+	}
+	else if (name == "TheEngine.TheRigidBody")
+	{
+		comp_name = "TheRigidBody";
 	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
@@ -2421,4 +2426,22 @@ void CSScript::StopEmmiter(MonoObject * object)
 
 	if (emmiter != nullptr)
 		emmiter->StopEmmiter();
+}
+
+void CSScript::SetLinearVelocity(MonoObject * object, float x, float y, float z)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)active_gameobject->GetComponent(Component::CompRigidBody);
+
+	if (rb != nullptr)
+		rb->SetLinearVelocity({ x,y,z });
 }

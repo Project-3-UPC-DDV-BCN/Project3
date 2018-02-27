@@ -160,6 +160,9 @@ public:
 	void PlayEmmiter(MonoObject * object);
 	void StopEmmiter(MonoObject * object);
 
+	//RIGIDBODY
+	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);

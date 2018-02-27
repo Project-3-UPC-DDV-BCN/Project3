@@ -6,6 +6,7 @@
 #include "Prefab.h"
 #include "ModuleResources.h"
 #include "ModuleScene.h"
+#include "ComponentRigidBody.h"
 
 ComponentFactory::ComponentFactory(GameObject* attached_gameobject)
 {
@@ -72,6 +73,14 @@ GameObject* ComponentFactory::Spawn()
 			transform->SetPosition(spawn_position);
 			transform->SetRotation(spawn_rotation);
 			transform->SetScale(spawn_scale);
+			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
+			if (rb)
+			{
+				//float4x4 m = transform->GetOpenGLMatrix();
+				//transform->GetForward();
+				rb->SetPosition(spawn_position);
+				rb->SetRotation(spawn_rotation);
+			}
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
 			go->SetActive(true);

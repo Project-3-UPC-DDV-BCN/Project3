@@ -300,8 +300,11 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 		ComponentRigidBody* rb = (ComponentRigidBody*)gameobject->GetComponent(Component::CompRigidBody);
 		if (rb)
 		{
-			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-			App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+			if (gameobject->IsActive() && RecursiveCheckActiveParents(rb->GetGameObject()))
+			{
+				App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+				App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+			}
 		}
 
 		RenameDuplicatedGameObject(gameobject);
@@ -457,8 +460,8 @@ void ModuleScene::LoadScene(std::string path)
 			data.LeaveSection();
 			AddGameObjectToScene(game_object);
 			App->resources->AddGameObject(game_object);
-			ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
-			if (transform) transform->UpdateGlobalMatrix();
+			//ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
+			//if (transform) transform->UpdateGlobalMatrix();
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
 			if (mesh_renderer) mesh_renderer->LoadToMemory();
 			ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);

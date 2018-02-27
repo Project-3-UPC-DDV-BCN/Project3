@@ -285,9 +285,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
 
 	//TIME
-	mono_add_internal_call("TheEngine.Time::SetTimeScale", (const void*)SetTimeScale);
-	mono_add_internal_call("TheEngine.Time::GetTimeScale", (const void*)GetTimeScale);
-	mono_add_internal_call("TheEngine.Time::GetDeltaTime", (const void*)GetDeltaTime);
+	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
+	mono_add_internal_call("TheEngine.TheTime::GetTimeScale", (const void*)GetTimeScale);
+	mono_add_internal_call("TheEngine.TheTime::GetDeltaTime", (const void*)GetDeltaTime);
 
 	//INPUT
 	mono_add_internal_call("TheEngine.TheInput::IsKeyDown", (const void*)IsKeyDown);
@@ -324,6 +324,9 @@ void ModuleScriptImporter::RegisterAPI()
 
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
+
+	//RIGIDBODY
+	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
 
 }
 
@@ -739,4 +742,9 @@ void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
 void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 {
 	current_script->StopEmmiter(object);
+}
+
+void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
+{
+	current_script->SetLinearVelocity(object, x, y, z);
 }

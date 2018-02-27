@@ -135,6 +135,9 @@ private:
 	static void PlayEmmiter(MonoObject * object);
 	static void StopEmmiter(MonoObject * object);
 
+	//RIGIDBODY
+	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+
 private:
 	std::string mono_path;
 	MonoDomain* mono_domain;

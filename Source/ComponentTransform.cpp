@@ -138,7 +138,9 @@ void ComponentTransform::UpdateGlobalMatrix()
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
-				rb->SetTransform(transform_matrix.Transposed().ptr());
+				//rb->SetTransform(transform_matrix.Transposed().ptr());
+				rb->SetPosition(global_pos);
+				rb->SetRotation(global_rot);
 			}
 			else
 			{
@@ -146,6 +148,8 @@ void ComponentTransform::UpdateGlobalMatrix()
 				if (blast)
 				{
 					blast->SetTransform(transform_matrix.Transposed().ptr());
+					//blast->SetPosition(global_pos);
+					//blast->SetRotation(global_rot);
 				}
 			}
 		}

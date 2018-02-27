@@ -241,13 +241,13 @@ void GameObject::SetActive(bool active)
 	{
 		if (!active)
 		{
-			rb->SetToSleep();
+			//rb->SetToSleep();
 			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
 			App->physics->RemoveActorFromList(rb->GetRigidBody());
 		}
 		else
 		{
-			rb->WakeUp();
+			//rb->WakeUp();
 			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 			App->physics->AddActorToList(rb->GetRigidBody(), this);
 		}
@@ -622,11 +622,11 @@ void GameObject::Save(Data & data, bool is_duplicated)
 	if (is_duplicated)
 	{
 		uuid = App->RandomNumber().Int();
-		active = true;
+		/*active = true;
 		is_static = false;
 		is_selected = false;
 		tag = "Default";
-		layer = "Default";
+		layer = "Default";*/
 	}
 	data.AddUInt("UUID", uuid);
 	data.AddString("Name", name);

@@ -140,8 +140,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			if(invert_axis) new_rot.x += pitch_rotate_speed*move_percentage*Time.DeltaTime;
-			else new_rot.x -= pitch_rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x += pitch_rotate_speed*move_percentage*TheTime.DeltaTime;
+			else new_rot.x -= pitch_rotate_speed*move_percentage*TheTime.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -149,8 +149,8 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_down - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			if(invert_axis) new_rot.x -= pitch_rotate_speed*move_percentage*Time.DeltaTime;
-			else new_rot.x += pitch_rotate_speed*move_percentage*Time.DeltaTime;
+			if(invert_axis) new_rot.x -= pitch_rotate_speed*move_percentage*TheTime.DeltaTime;
+			else new_rot.x += pitch_rotate_speed*move_percentage*TheTime.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -158,7 +158,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y -= yaw_rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y -= yaw_rotate_speed*move_percentage*TheTime.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 
@@ -166,7 +166,7 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.y += yaw_rotate_speed*move_percentage*Time.DeltaTime;
+			new_rot.y += yaw_rotate_speed*move_percentage*TheTime.DeltaTime;
 			trans.LocalRotation = new_rot;
 		}
 		
@@ -180,7 +180,7 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_RB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z += roll_rotate_speed*Time.DeltaTime;
+			new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
 			trans.LocalRotation = new_rot;
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
@@ -188,7 +188,7 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_LB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z -= roll_rotate_speed*Time.DeltaTime;
+			new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
 			trans.LocalRotation = new_rot;
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
@@ -211,24 +211,24 @@ public class Slave1Movement {
 
 		if(curr_vel < target_vel) 
 		{
-			curr_vel += acceleration*Time.DeltaTime;
+			curr_vel += acceleration*TheTime.DeltaTime;
 			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
 			TheInput.RumbleController(0,rumble,accel_rumble_ms);
 		}
 		else if(curr_vel > target_vel)
 		{
 			if(!slowing)
-				curr_vel-=acceleration*Time.DeltaTime;
+				curr_vel-=acceleration*TheTime.DeltaTime;
 			else
 			{
-				curr_vel-=slow_acceleration*Time.DeltaTime;
+				curr_vel-=slow_acceleration*TheTime.DeltaTime;
 				float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
 				TheInput.RumbleController(0,rumble,accel_rumble_ms);
 			}
 		}
 		
 		TheVector3 new_vel_pos = trans.LocalPosition;
-		new_vel_pos += trans.ForwardDirection*curr_vel*Time.DeltaTime;
+		new_vel_pos += trans.ForwardDirection*curr_vel*TheTime.DeltaTime;
 		trans.LocalPosition = new_vel_pos;
 	}
 }
