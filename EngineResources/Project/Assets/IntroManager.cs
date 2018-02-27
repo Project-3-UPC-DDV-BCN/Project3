@@ -5,9 +5,15 @@ public class IntroManager
 {
 	public TheGameObject canvas_go;	
 	public TheGameObject text_go;
+
+	public TheGameObject audio_emiter;
+	
+	TheAudioSource audio_source;
+	
 	TheText text = null;
 	List<string> texts = new List<string>();	
-
+	
+	int count = 0;
 	void Start () 
 	{
 		text = text_go.GetComponent<TheText>();
@@ -19,6 +25,9 @@ public class IntroManager
 		AddText("That's just the beginning, continue with it,");
 		AddText("prove your reputation Boba.");
 		NextText();
+
+		audio_source = audio_emiter.GetComponent<TheAudioSource>();
+		audio_source.Play("Play_Dialogue1");
 	
 	}
 	
@@ -26,7 +35,24 @@ public class IntroManager
 	{
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
 		{
+			if(count == 0)
+			{
+				audio_source.Play("Play_Dialogue1");
+			}
+			else if (count == 2)
+			{
+				audio_source.Stop("Play_Dialogue1");
+				audio_source.Play("Play_Dialogue2");
+			}
+			else if (count == 4)
+			{
+				audio_source.Stop("Play_Dialogue2");
+				audio_source.Play("Play_Dialogue3");
+			}
+
 			NextText();
+			
+			count++;
 		}
 	}
 
