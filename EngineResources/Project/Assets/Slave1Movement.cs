@@ -4,19 +4,19 @@ using TheEngine.TheConsole;
 public class Slave1Movement {
 
 	TheTransform trans;
-	public int controller_sensibility = 100;
+	public int controller_sensibility = 2500;
 	public int trigger_sensibility = 0;
-	public float roll_rotate_speed = 1.0f;
-	public float pitch_rotate_speed = 10.0f;
-	public float yaw_rotate_speed = 10.0f;
-	public float max_vel = 10.0f;
-	public float acceleration = 1.0f;
-	public float slow_acceleration = 10.0f;
+	public float roll_rotate_speed = 45.0f;
+	public float pitch_rotate_speed = 40.0f;
+	public float yaw_rotate_speed = 25.0f;
+	public float max_vel = 50.0f;
+	public float acceleration = 10.0f;
+	public float slow_acceleration = 50.0f;
 	public float slow_vel_percent = 0.02f;
-	public float rotate_rumble_strength = 0.1f;
-	public float accel_max_rumble_strength = 1.0f;
+	public float rotate_rumble_strength = 0.05f;
+	public float accel_max_rumble_strength = 0.3f;
 	public int rotate_rumble_ms = 5;
-	public int accel_rumble_ms = 5;
+	public int accel_rumble_ms = 3;
 	
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
