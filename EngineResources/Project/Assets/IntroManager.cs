@@ -11,12 +11,13 @@ public class IntroManager
 	void Start () 
 	{
 		text = text_go.GetComponent<TheText>();
-		AddText("You are here to show us your well-known");
-		AddText("reputation as mercenary.");
-		AddText("Destroy the X Wings that are in front");
-		AddText("of you, and be careful with the asteroids");
-		AddText("We don't want unskilled pilots in");
-		AddText("our forces.");
+		AddText("You are here to show us your ability");
+		AddText("in dogfights Boba prove that your services");
+		AddText("can help us to save the galaxy.");
+		AddText("Destroy every ships you see,");
+		AddText("the galaxy could depend of one of your shots.");
+		AddText("That's just the beginning, continue with it,");
+		AddText("prove your reputation Boba.");
 		NextText();
 	
 	}
