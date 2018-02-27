@@ -32,8 +32,14 @@ public class Slave1Movement {
 	public int engine_energy = 2;
 	public int max_energy_on_system = 4;
 	
-	private float slow_timer = 0;
+	public TheGameObject weapons;
+	public TheGameObject shields;
+	public TheGameObject energy;
 
+	TheProgressBar weapons_bar = null;
+	TheProgressBar shields_bar = null;
+	TheProgressBar energy_bar = null;
+	
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
@@ -41,6 +47,13 @@ public class Slave1Movement {
 		if(shield_energy+weapon_energy+engine_energy > max_energy)
 			TheConsole.Warning("Energy is not properly set up!");
 		
+		weapons_bar = weapons.GetComponent<TheProgressBar>();
+		shields_bar = shields.GetComponent<TheProgressBar>();
+		energy_bar = energy.GetComponent<TheProgressBar>();
+
+		weapons_bar.PercentageProgress = 100;
+		shields_bar.PercentageProgress = 100;
+		energy_bar.PercentageProgress = 100;
 		//for halves, consider a point each 2 
 		max_energy *= 2;
 		shield_energy *= 2;
@@ -56,6 +69,10 @@ public class Slave1Movement {
 		Movement();
 		EnergyManagement();
 		SetValuesWithEnergy();
+
+		weapons_bar.PercentageProgress = (100 / 8) * weapon_energy;
+		shields_bar.PercentageProgress = (100 / 8) * shield_energy;
+		energy_bar.PercentageProgress = (100 / 8) * engine_energy;
 	}
 
 	void SetValuesWithEnergy()

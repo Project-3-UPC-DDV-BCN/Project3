@@ -16,6 +16,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	c_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
 	pos = float2::zero;
+	z_pos = 0;
 	size = float2::zero;
 	anchor = float2(0.5f, 0.5f);
 	scale = 1;
@@ -235,6 +236,20 @@ float3 ComponentRectTransform::GetLocalPos() const
 float3 ComponentRectTransform::GetGlobalPos() const
 {
 	return c_transform->GetGlobalPosition();
+}
+
+void ComponentRectTransform::SetZPos(float set)
+{
+	if (set != z_pos)
+	{
+		z_pos = set;
+		UpdateTransform();
+	}
+}
+
+float ComponentRectTransform::GetZPos()
+{
+	return z_pos;
 }
 
 void ComponentRectTransform::SetRotation(const float3 & _rotation)
@@ -609,6 +624,7 @@ float3 ComponentRectTransform::GetPreferedPos()
 
 	ret.x = anchor_pos.x + GetScaledPos().x;
 	ret.y = anchor_pos.y + GetScaledPos().y;
+	ret.z = z_pos;
 
 	return ret;
 }

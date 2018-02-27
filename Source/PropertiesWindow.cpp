@@ -567,6 +567,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 			if (c_canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE || !is_canvas)
 			{
 				float2 position = rect_transform->GetPos();
+				float z_position = rect_transform->GetZPos();
 				float3 rotation = rect_transform->GetLocalRotation();
 				float2 anchor = rect_transform->GetAnchor();
 				float2 size = rect_transform->GetSize();
@@ -582,6 +583,11 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetPos(position);
 				}
 
+				if (ImGui::DragFloat("Z Position", &z_position, true))
+				{
+					rect_transform->SetZPos(z_position);
+				}
+
 				if (ImGui::DragFloat3("Rotation", (float*)&rotation, true, 0.25f))
 				{
 					rect_transform->SetRotation(rotation);
@@ -589,7 +595,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 
 				if (!is_canvas)
 				{
-					if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))
+					if (ImGui::DragFloat2("Size", (float*)&size, true, 0.1f, 0))
 					{
 						rect_transform->SetSize(size);
 					}
