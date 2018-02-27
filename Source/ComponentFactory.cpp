@@ -76,10 +76,11 @@ GameObject* ComponentFactory::Spawn()
 			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
-				//float4x4 m = transform->GetOpenGLMatrix();
-				//transform->GetForward();
-				rb->SetPosition(spawn_position);
-				rb->SetRotation(spawn_rotation);
+				float4x4 m = transform->GetOpenGLMatrix();
+				rb->SetTransform(m.ptr());
+				rb->SetLinearVelocity({ 0,0,0 });
+				/*rb->SetPosition(spawn_position);
+				rb->SetRotation(spawn_rotation);*/
 			}
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);

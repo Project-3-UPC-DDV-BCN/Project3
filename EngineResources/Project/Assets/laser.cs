@@ -1,4 +1,5 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class laser {
 
@@ -6,12 +7,13 @@ public class laser {
 	TheTransform trans;
 
 	void Start () {
-		rb = TheGameObject.Self.GetComponent<TheRigidBody>();
-		trans = TheGameObject.Self.GetComponent<TheTransform>();
+		//rb = TheGameObject.Self.GetComponent<TheRigidBody>();
+		//trans = TheGameObject.Self.GetComponent<TheTransform>();
 	}
 	
 	void Update () {
-		TheVector3 vec = -trans.RightDirection*2000*TheTime.DeltaTime;
-		rb.SetLinearVelocity(vec.x, vec.y, vec.z);
+		TheVector3 vec = TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection*2000*TheTime.DeltaTime;
+		TheGameObject.Self.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+		//TheConsole.Log("Laser " + TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection);
 	}
 }
