@@ -35,11 +35,7 @@ public class IntroManager
 	{
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
 		{
-			if(count == 0)
-			{
-				audio_source.Play("Play_Dialogue1");
-			}
-			else if (count == 2)
+			if (count == 2)
 			{
 				audio_source.Stop("Play_Dialogue1");
 				audio_source.Play("Play_Dialogue2");
