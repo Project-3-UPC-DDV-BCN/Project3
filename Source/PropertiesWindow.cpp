@@ -1780,7 +1780,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::SameLine();
 			if (ImGui::Button("Update Template"))
 			{
-				
+				string template_name = current_emmiter->data->GetName(); 
+				ParticleData* to_mod = App->resources->GetParticleTemplate(template_name); 
+
+				to_mod->Copy(current_emmiter->data); 
 			}
 
 		}
