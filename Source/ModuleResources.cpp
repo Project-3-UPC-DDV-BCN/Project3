@@ -307,7 +307,10 @@ Texture * ModuleResources::GetTexture(std::string name) const
 
 Texture * ModuleResources::GetTexture(UID uid) const
 {
-	if (textures_list.find(uid) != textures_list.end()) return textures_list.at(uid);
+	for (std::map<uint, Texture*>::const_iterator it = textures_list.begin(); it != textures_list.end(); it++)
+	{
+		if (it->first == uid) return it->second;
+	}
 	return nullptr;
 }
 

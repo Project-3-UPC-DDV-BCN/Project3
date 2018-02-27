@@ -1468,9 +1468,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
 
 
-
-			
-
 			ImGui::Separator();
 
 			static int runtime_behaviour_combo; 
@@ -1482,7 +1479,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else if (runtime_behaviour_combo == 1)
 				current_emmiter->runtime_behaviour = "Manual";
 
-			static int emmision_behaviour_combo;
+			int emmision_behaviour_combo = current_emmiter->data->emmision_type;
+
 			ImGui::Combo("Emision Behaviour", &emmision_behaviour_combo, "Continuous Emmision\0Simultaneous Emmision\0");
 
 			if (emmision_behaviour_combo == 0)
@@ -1493,7 +1491,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->data->emmision_type = EMMISION_SIMULTANEOUS;
 				ImGui::TextColored(ImVec4(0, 1, 1, 1), "Setting the time-step to 0 will cause a unique emission.");
 				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
-				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 1, 10.0f);
+				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 0, 10.0f);
 			}
 								
 			ImGui::Separator(); 
@@ -1623,6 +1621,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (ImGui::TreeNode("Size"))
 				{
 					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
+					CONSOLE_LOG("%f", current_emmiter->data->global_scale); 
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
@@ -1781,7 +1780,10 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::SameLine();
 			if (ImGui::Button("Update Template"))
 			{
-				
+				string template_name = current_emmiter->data->GetName(); 
+				ParticleData* to_mod = App->resources->GetParticleTemplate(template_name); 
+
+				to_mod->Copy(current_emmiter->data); 
 			}
 
 		}

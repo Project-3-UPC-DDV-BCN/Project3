@@ -182,7 +182,7 @@ bool ComponentParticleEmmiter::Update()
 			LaunchParticlesWave(); 
 			wave_launched = true; 
 		}
-		else
+		else if(data->time_step_sim != 0)
 		{
 			if (LaunchingAllowed())
 			{
