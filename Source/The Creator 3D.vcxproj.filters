@@ -1158,6 +1158,8 @@
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1628,9 +1630,6 @@
     <ClCompile Include="MathGeoLib\PBVolumeTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
-    <ClCompile Include="CSScript.cpp">
-      <Filter>Sources\Helpers\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="LuaScript.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
@@ -1769,6 +1768,11 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="CSScript.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">

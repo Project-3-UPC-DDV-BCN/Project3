@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using TheEngine.Math;
 
 namespace TheEngine
 {
@@ -103,7 +104,7 @@ namespace TheEngine
 
         public static float Magnitude(TheVector3 vector)
         {
-            return Math.Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+            return TheMath.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
 
         public TheVector3 Normalized
@@ -137,10 +138,10 @@ namespace TheEngine
         public static TheVector3 Slerp(TheVector3 start, TheVector3 end, float value)
         {
             float dot = DotProduct(start, end);
-            Math.Math.Clamp(dot, -1, 1);
-            float theta = Math.Math.Acos(dot) * value;
+            TheMath.Clamp(dot, -1, 1);
+            float theta = TheMath.Acos(dot) * value;
             TheVector3 relative_vector = end - start * dot;
-            return (start * Math.Math.Cos(theta)) + (relative_vector.Normalized * Math.Math.Sin(theta));
+            return (start * TheMath.Cos(theta)) + (relative_vector.Normalized * TheMath.Sin(theta));
         }
 
         public static TheVector3 NLerp(TheVector3 start, TheVector3 end, float value)
@@ -157,7 +158,7 @@ namespace TheEngine
         {
             TheVector3 ret;
             float dot = DotProduct(normal, normal);
-            if (dot < Math.Math.Epsilon)
+            if (dot < TheMath.Epsilon)
             {
                 ret = Zero;
             }
@@ -170,13 +171,13 @@ namespace TheEngine
 
         public static float AngleBetween(TheVector3 a, TheVector3 b)
         {
-            return Math.Math.Acos(DotProduct(a, b) / DotProduct(a.Normalized, b.Normalized)) * Math.Math.RadToDeg;
+            return TheMath.Acos(DotProduct(a, b) / DotProduct(a.Normalized, b.Normalized)) * TheMath.RadToDeg;
         }
 
         public static float Distance(TheVector3 a, TheVector3 b)
         {
             TheVector3 vector = new TheVector3(a.x - b.x, a.y - b.y, a.z - b.z);
-            return Math.Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+            return TheMath.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
 
         public static TheVector3 MoveTowards(TheVector3 position, TheVector3 target, float step)
@@ -184,7 +185,7 @@ namespace TheEngine
             TheVector3 diff = target - position;
             float magnitude = diff.Length;
             TheVector3 ret;
-            if (magnitude <= step || magnitude < Math.Math.Epsilon)
+            if (magnitude <= step || magnitude < TheMath.Epsilon)
             {
                 ret = target;
             }
