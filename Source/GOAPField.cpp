@@ -1,35 +1,42 @@
 #include "GOAPField.h"
+#include "Globals.h"
 
-GOAPField::GOAPField(GOAPFieldType t, ComparisonMethod cm, bool b) : type(t), comp_method(cm)
+GOAPField::GOAPField(const char* name, ComparisonMethod cm, bool b) : comp_method(cm)
 {
-	value.b_value = b;
+	var = new GOAPVariable(name, b);
 }
 
-GOAPField::GOAPField(GOAPFieldType t, ComparisonMethod cm, float num) : type(t), comp_method(cm)
+GOAPField::GOAPField(const char* name, ComparisonMethod cm, float num) : comp_method(cm)
 {
-	value.num_value = num;
+	var = new GOAPVariable(name, num);
 }
 
 GOAPField::~GOAPField()
 {
+	RELEASE(var);
 }
 
 bool GOAPField::GetValue()
 {
-	return value.b_value;
+	return var->GetValue();
 }
 
 float GOAPField::GetValue() const
 {
-	return value.num_value;
+	return var->GetValue();
 }
 
-GOAPField::GOAPFieldType GOAPField::GetType() const
+GOAPVariable::VariableType GOAPField::GetType() const
 {
-	return type;
+	return var->GetType();
 }
 
 GOAPField::ComparisonMethod GOAPField::GetComparisonMethod() const
 {
 	return comp_method;
+}
+
+const char * GOAPField::GetName() const
+{
+	return var->GetName();
 }

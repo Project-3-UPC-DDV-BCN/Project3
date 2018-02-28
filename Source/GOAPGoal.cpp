@@ -25,12 +25,13 @@ void GOAPGoal::Save(Data & data) const
 		data.CreateSection("condition_" + std::to_string(i));
 		data.AddInt("type", conditions[i]->GetType());
 		data.AddInt("comparison", conditions[i]->GetComparisonMethod());
+		data.AddString("name", conditions[i]->GetName());
 		switch (conditions[i]->GetType())
 		{
-		case GOAPField::T_BOOL:
+		case GOAPVariable::T_BOOL:
 			data.AddBool("value", conditions[i]->GetValue());
 			break;
-		case GOAPField::T_NUMBER:
+		case GOAPVariable::T_FLOAT:
 			data.AddFloat("value", conditions[i]->GetValue());
 			break;
 		default:
@@ -53,21 +54,23 @@ bool GOAPGoal::Load(Data & data)
 	for (int i = 0; i < conditions_num; ++i)
 	{
 		data.EnterSection("condition_" + std::to_string(i));
-		GOAPField::GOAPFieldType type = (GOAPField::GOAPFieldType)data.GetInt("type");
+		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
 		GOAPField::ComparisonMethod cm = (GOAPField::ComparisonMethod)data.GetInt("comparison");
+		std::string name = data.GetString("name");
 		switch (type)
 		{
-		case GOAPField::T_NULL:
+		case GOAPVariable::T_NULL:
 			break;
-		case GOAPField::T_BOOL:
-			AddCondition(type, cm, data.GetBool("value"));
+		case GOAPVariable::T_BOOL:
+			AddCondition(name, cm, data.GetBool("value"));
 			break;
-		case GOAPField::T_NUMBER:
-			AddCondition(type, cm, data.GetFloat("value"));
+		case GOAPVariable::T_FLOAT:
+			AddCondition(name, cm, data.GetFloat("value"));
 			break;
 		default:
 			break;
 		}
+		data.LeaveSection();
 	}
 	return true;
 }
@@ -95,14 +98,14 @@ void GOAPGoal::SetIncrement(int increment_rate, float time_step)
 	increment_time = time_step;
 }
 
-void GOAPGoal::AddCondition(GOAPField::GOAPFieldType value_type, GOAPField::ComparisonMethod comparison_method, bool value)
+void GOAPGoal::AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, bool value)
 {
-	conditions.push_back(new GOAPField(value_type, comparison_method, value));
+	conditions.push_back(new GOAPField(name.c_str(), comparison_method, value));
 }
 
-void GOAPGoal::AddCondition(GOAPField::GOAPFieldType value_type, GOAPField::ComparisonMethod comparison_method, float value)
+void GOAPGoal::AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, float value)
 {
-	conditions.push_back(new GOAPField(value_type, comparison_method, value));
+	conditions.push_back(new GOAPField(name.c_str(), comparison_method, value));
 }
 
 const std::vector<GOAPField*>& GOAPGoal::GetConditions() const

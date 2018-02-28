@@ -17,6 +17,7 @@ class Shader;
 class ShaderProgram;
 class Font;
 class GOAPGoal;
+class GOAPAction;
 
 class ModuleResources :
 	public Module
@@ -114,6 +115,13 @@ public:
 	void RemoveGOAPGoal(GOAPGoal* goal);
 	std::map<uint, GOAPGoal*> GetGOAPGoalList() const;
 
+	//GOAP Action
+	GOAPAction* GetGOAPAction(std::string name) const;
+	GOAPAction* GetGOAPAction(UID uid) const;
+	void AddGOAPAction(GOAPAction* action);
+	void RemoveGOAPGoal(GOAPAction* action);
+	std::map<uint, GOAPAction*> GetGOAPActionList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -150,5 +158,6 @@ private:
 	std::map<uint, ShaderProgram*> shader_programs_list;
 	std::map<uint, Font*> fonts_list;
 	std::map<uint, GOAPGoal*> goap_goals_list;
+	std::map<uint, GOAPAction*> goap_actions_list;
 };
 

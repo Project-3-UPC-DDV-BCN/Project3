@@ -13,6 +13,8 @@ class Script;
 class Font;
 class PhysicsMaterial;
 class BlastModel;
+class GOAPGoal;
+class GOAPAction;
 
 namespace ImGui
 {
@@ -27,5 +29,7 @@ namespace ImGui
 	bool InputResourceBlastModel(const char* label, BlastModel** mesh);
 	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 	bool InputResourceFont(const char* label, Font** font);
+	bool InputResourceGOAPGoal(const char* label, GOAPGoal** goal);
+	bool InputResourceGOAPAction(const char* label, GOAPAction** action);
 }
 

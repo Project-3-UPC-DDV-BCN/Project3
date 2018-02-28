@@ -1,16 +1,11 @@
 #ifndef __GOAPField__
 #define __GOAPField__
 
+#include "GOAPVariable.h"
+
 class GOAPField
 {
 public:
-	enum GOAPFieldType
-	{
-		T_NULL,
-		T_BOOL,
-		T_NUMBER
-	};
-
 	enum ComparisonMethod
 	{
 		CM_NULL,
@@ -23,8 +18,8 @@ public:
 	};
 
 public:
-	GOAPField(GOAPFieldType t, ComparisonMethod cm, bool b);
-	GOAPField(GOAPFieldType t, ComparisonMethod cm, float num);
+	GOAPField(const char* name, ComparisonMethod cm, bool b);
+	GOAPField(const char* name, ComparisonMethod cm, float num);
 	~GOAPField();
 
 	//Returns the value of the field
@@ -33,19 +28,17 @@ public:
 	float GetValue() const;
 
 	//Returns the type of the field
-	GOAPFieldType GetType() const;
+	GOAPVariable::VariableType GetType() const;
 
 	//Returns the comparison method for the field
 	ComparisonMethod GetComparisonMethod() const;
 
-private:
-	union Value
-	{
-		bool b_value;
-		float num_value;
-	} value;
+	//Get the field name
+	const char* GetName()const;
 
-	GOAPFieldType type = T_NULL;
+private:
+	
+	GOAPVariable* var = nullptr;
 	ComparisonMethod comp_method = CM_NULL;
 };
 

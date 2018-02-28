@@ -26,8 +26,8 @@ public:
 	void SetIncrement(int increment_rate, float time_step);
 
 	// Adds a condition to the goal
-	void AddCondition(GOAPField::GOAPFieldType value_type, GOAPField::ComparisonMethod comparison_method, bool value);
-	void AddCondition(GOAPField::GOAPFieldType value_type, GOAPField::ComparisonMethod comparison_method, float value);
+	void AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, bool value);
+	void AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, float value);
 
 	const std::vector<GOAPField*>& GetConditions() const;
 	uint GetPriority()const;

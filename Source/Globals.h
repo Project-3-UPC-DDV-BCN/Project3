@@ -79,6 +79,8 @@ enum update_status
 #define ASSETS_FONTS_FOLDER_PATH "./Project/Assets/Fonts"
 #define ASSETS_SOUNDBANK_FOLDER "./Project/Assets/SoundBanks/"
 #define ASSETS_SOUNDBANK_FOLDER_PATH "./Project/Assets/SoundBanks"
+#define ASSETS_GOAP_FOLDER "./Project/Assets/GOAP/"
+#define ASSETS_GOAP_FOLDER_PATH "./Project/Assets/GOAP"
 
 #define LIBRARY_FOLDER "./Project/Library/"
 #define LIBRARY_FOLDER_PATH "./Project/Library"
@@ -127,3 +129,4 @@ enum update_status
 #define MATERIAL_DEFAULT_FOLDER_PATH "./Editor_Settings/Default_Materials"
 #define DEFAULT_PARTICLE_TEMPLATE_FOLDER "./Editor_Settings/Default_Particle_Template/"
 #define DEFAULT_PARTICLE_TEMPLATE_PATH "./Editor_Settings/Default_Particle_Template"
+#define GOAP_TEMPLATE_FILE_PATH "./Editor_Settings/Scripts_Templates/GOAP.txt"

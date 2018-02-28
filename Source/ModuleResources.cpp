@@ -27,6 +27,7 @@
 #include "ShaderProgram.h"
 #include "Font.h"
 #include "GOAPGoal.h"
+#include "GOAPAction.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -873,6 +874,52 @@ void ModuleResources::RemoveGOAPGoal(GOAPGoal * goal)
 std::map<uint, GOAPGoal*> ModuleResources::GetGOAPGoalList() const
 {
 	return goap_goals_list;
+}
+
+GOAPAction * ModuleResources::GetGOAPAction(std::string name) const
+{
+	GOAPAction* ret = nullptr;
+	for (std::map<uint, GOAPAction*>::const_iterator it = goap_actions_list.begin(); it != goap_actions_list.end(); it++)
+	{
+		if (it->second->GetName() == name)
+		{
+			ret = it->second;
+			break;
+		}
+	}
+	return ret;
+}
+
+GOAPAction * ModuleResources::GetGOAPAction(UID uid) const
+{
+	if (goap_actions_list.find(uid) != goap_actions_list.end()) return goap_actions_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddGOAPAction(GOAPAction * action)
+{
+	if (action != nullptr)
+	{
+		goap_actions_list[action->GetUID()] = action;
+	}
+}
+
+void ModuleResources::RemoveGOAPGoal(GOAPAction * action)
+{
+	if (action)
+	{
+		std::map<uint, GOAPAction*>::iterator it = goap_actions_list.find(action->GetUID());
+		if (it != goap_actions_list.end())
+		{
+			RELEASE(it->second);
+			goap_actions_list.erase(it);
+		}
+	}
+}
+
+std::map<uint, GOAPAction*> ModuleResources::GetGOAPActionList() const
+{
+	return std::map<uint, GOAPAction*>();
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
@@ -2162,12 +2209,50 @@ bool ModuleResources::CheckResourceName(std::string& name)
 void ModuleResources::LoadGOAPGoal(std::string path)
 {
 	GOAPGoal* goal = new GOAPGoal();
-	Data data;
-	data.LoadJSON(path);
-	goal->Load(data);
+	Data file;
+	if (HasMetaFile(path))
+	{
+		Data data;
+		if (data.LoadJSON(path + ".meta"))
+		{
+			std::string lib_path = data.GetString("lib_path");
+			if (!App->file_system->FileExist(lib_path))
+				App->file_system->Copy(path, lib_path);
+			file.LoadJSON(lib_path);
+		}	
+		goal->Load(file);
+	}
+	else
+	{
+		file.LoadJSON(path);
+		goal->Load(file);
+		goal->CreateMeta();
+	}
 	AddGOAPGoal(goal);
 }
 
 void ModuleResources::LoadGOAPAction(std::string path)
 {
+	std::string name = App->file_system->GetFileNameWithoutExtension(path);
+	GOAPAction* action = new GOAPAction(name.c_str());
+	Data file;
+	if (HasMetaFile(path))
+	{
+		Data data;
+		if (data.LoadJSON(path + ".meta"))
+		{
+			std::string lib_path = data.GetString("lib_path");
+			if (!App->file_system->FileExist(lib_path))
+				App->file_system->Copy(path, lib_path);
+			file.LoadJSON(lib_path);
+		}
+		action->Load(file);
+	}
+	else
+	{
+		file.LoadJSON(path);
+		action->Load(file);
+		action->CreateMeta();
+	}
+	AddGOAPAction(action);
 }
