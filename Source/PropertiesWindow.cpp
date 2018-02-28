@@ -1502,9 +1502,14 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 								
 			ImGui::Separator(); 
 
-			if (ImGui::TreeNode("Relative Position"))
+			if (ImGui::TreeNode("Position Type"))
 			{
-				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+				static int selection = 0; 
+				ImGui::Combo("", &selection, "World\0Local\0"); 
+
+				if (selection == 0) current_emmiter->data->relative_pos = false; 
+				else if (selection == 1) current_emmiter->data->relative_pos = true;
+
 				ImGui::TreePop(); 
 			}
 
@@ -1738,6 +1743,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::TreeNode("Color"))
 				{
+					ImGui::TextColored(ImVec4(0, 1, 1, 1), "If textures are used, (0,0,0) will show the original color"); 
 
 					static bool alpha_preview = true;
 					ImGui::Checkbox("Alpha", &alpha_preview);

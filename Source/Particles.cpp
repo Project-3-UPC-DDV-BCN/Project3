@@ -436,14 +436,15 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", 0);
 	}
 
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
+		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f); 
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
@@ -455,6 +456,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
+		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f);
 		App->renderer3D->SetUniformVector4(id, "material_color", color);

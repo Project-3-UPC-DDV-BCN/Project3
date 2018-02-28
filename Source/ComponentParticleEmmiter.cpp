@@ -75,7 +75,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetWorldSpace(data->relative_pos);
 	
 	//Copy Interpolations
-	///Color
 	if (data->change_color_interpolation)
 	{
 		new_particle->particle_data->initial_color = data->initial_color; 

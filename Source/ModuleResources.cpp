@@ -1687,6 +1687,7 @@ void ModuleResources::CreateDefaultShaders()
 			"out vec4 color;\n\n"
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
+			"uniform float material_alpha;\n"
 			"uniform bool alpha_interpolation;\n"
 			"uniform bool color_interpolation;\n"
 			"uniform vec3 color_to_show;\n"
@@ -1696,19 +1697,23 @@ void ModuleResources::CreateDefaultShaders()
 			"void main()\n"
 			"{\n"
 			"	if(has_texture)\n"
+			"	{\n"
 			"		color = texture(ourTexture, TexCoord);\n"
+			"		color.rgb = color.rgb + material_color.rgb;\n"
+			"	}\n"
 			"	else if(has_material_color)\n"
 			"		color = material_color;\n"
 			"	else\n"
 			"		color = ourColor;\n"
+
 			"   if(color.a < 0.1f)\n"
 			"		discard;\n"
 
 			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"
 
-			"	color = vec4(color.rgb + material_color.rgb, color.a);\n"
-
+			"	if (material_alpha != 1)\n"
+			"		color.a = material_alpha;\n"
 			"}";
 
 		default_particle_frag->SetContent(shader_text);
