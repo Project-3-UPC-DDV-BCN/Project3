@@ -26,6 +26,7 @@
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
 #include "Font.h"
+#include "GOAPGoal.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -92,6 +93,13 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	shaders_list.clear();
+
+	for (std::map<uint, GOAPGoal*>::iterator it = goap_goals_list.begin(); it != goap_goals_list.end(); ++it)
+	{
+		RELEASE(it->second);
+	}
+	goap_goals_list.clear();
+
 }
 
 bool ModuleResources::Init(Data * editor_config)
@@ -142,7 +150,9 @@ void ModuleResources::FillResourcesLists()
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
 		if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
-		CreateResource(*it);
+		else if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) LoadGOAPGoal(*it);
+		else if (App->file_system->GetFileName(*it).find("_GOAPAction") != std::string::npos) LoadGOAPAction(*it);
+		else CreateResource(*it);
 	}
 
 	if (exist_shprog_meta)
@@ -817,6 +827,52 @@ void ModuleResources::OnShaderUpdate(Shader * shader) const
 			it->second->LinkShaderProgram(); //if the modified shader affects this program, link the program again
 		}
 	}
+}
+
+GOAPGoal * ModuleResources::GetGOAPGoal(std::string name) const
+{
+	GOAPGoal* ret = nullptr;
+	for (std::map<uint, GOAPGoal*>::const_iterator it = goap_goals_list.begin(); it != goap_goals_list.end(); it++)
+	{
+		if (it->second->GetName() == name)
+		{
+			ret = it->second;
+			break;
+		}
+	}
+	return ret;
+}
+
+GOAPGoal * ModuleResources::GetGOAPGoal(UID uid) const
+{
+	if (goap_goals_list.find(uid) != goap_goals_list.end()) return goap_goals_list.at(uid);
+	return nullptr;
+}
+
+void ModuleResources::AddGOAPGoal(GOAPGoal * goal)
+{
+	if (goal != nullptr)
+	{
+		goap_goals_list[goal->GetUID()] = goal;
+	}
+}
+
+void ModuleResources::RemoveGOAPGoal(GOAPGoal * goal)
+{
+	if (goal)
+	{
+		std::map<uint, GOAPGoal*>::iterator it = goap_goals_list.find(goal->GetUID());
+		if (it != goap_goals_list.end())
+		{
+			RELEASE(it->second);
+			goap_goals_list.erase(it);
+		}
+	}
+}
+
+std::map<uint, GOAPGoal*> ModuleResources::GetGOAPGoalList() const
+{
+	return goap_goals_list;
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
@@ -2101,4 +2157,17 @@ bool ModuleResources::CheckResourceName(std::string& name)
 	}
 
 	return ret;
+}
+
+void ModuleResources::LoadGOAPGoal(std::string path)
+{
+	GOAPGoal* goal = new GOAPGoal();
+	Data data;
+	data.LoadJSON(path);
+	goal->Load(data);
+	AddGOAPGoal(goal);
+}
+
+void ModuleResources::LoadGOAPAction(std::string path)
+{
 }

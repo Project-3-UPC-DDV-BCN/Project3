@@ -16,6 +16,7 @@ class ParticleData;
 class Shader;
 class ShaderProgram;
 class Font;
+class GOAPGoal;
 
 class ModuleResources :
 	public Module
@@ -106,6 +107,13 @@ public:
 	void LoadShaderProgramMeta(std::string path) const;	
 	void OnShaderUpdate(Shader* shader) const;
 
+	//GOAP Goal
+	GOAPGoal* GetGOAPGoal(std::string name) const;
+	GOAPGoal* GetGOAPGoal(UID uid) const;
+	void AddGOAPGoal(GOAPGoal* goal);
+	void RemoveGOAPGoal(GOAPGoal* goal);
+	std::map<uint, GOAPGoal*> GetGOAPGoalList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -119,7 +127,8 @@ public:
 	//Checks if name is valid (not contain invalid characters) and change it for a valid name if necessary
 	bool CheckResourceName(std::string& name);
 
-	
+	void LoadGOAPGoal(std::string path);
+	void LoadGOAPAction(std::string path);
 
 private:
 	void DeleteFBXMeshes(GameObject* gameobject);
@@ -140,5 +149,6 @@ private:
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 	std::map<uint, Font*> fonts_list;
+	std::map<uint, GOAPGoal*> goap_goals_list;
 };
 
