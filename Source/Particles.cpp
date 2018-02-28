@@ -22,6 +22,9 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	emmiter = parent;
 	runtime_behaviour = RUNTIME_NONE; 
 	particle_data = new ParticleData(); 
+
+	emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
+	prev_emmiter_pos = emmiter_transform->GetGlobalPosition();
 	
 	//Timers
 	particle_timer.Start();
@@ -49,6 +52,17 @@ ParticleComponents Particle::GetAtributes()
 ParticleData * Particle::GetData()
 {
 	return particle_data;
+}
+
+
+float3 Particle::GetPrevEmmiterPos()
+{
+	return prev_emmiter_pos;
+}
+
+void Particle::SetPrevEmmiterPos(float3 _spawn_pos)
+{
+	prev_emmiter_pos = _spawn_pos; 
 }
 
 void Particle::SetRuntimeBehaviour(const char * string)
@@ -346,7 +360,15 @@ void Particle::Update()
 	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + movement);
 
 	if (IsWorldSpace())
-		ApplyWorldSpace(); 
+	{
+		if (prev_emmiter_pos.Equals(emmiter_transform->GetGlobalPosition()) == false)
+		{
+			ApplyRelativePos();
+			prev_emmiter_pos = emmiter_transform->GetGlobalPosition(); 
+		}
+		
+	}
+		
 
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ComponentMeshRenderer.h"
-#include "ComponentTransform.h"
 #include "ComponentCamera.h"
 
 #include "Timer.h"
@@ -14,6 +13,7 @@ using namespace std;
 
 class ComponentParticleEmmiter; 
 class ComponentBillboard;  
+class ComponentTransform; 
 class ParticleData; 
 
 enum RuntimeBehaviour
@@ -111,11 +111,14 @@ public:
 
 	void SetWorldSpace(bool is_space); 
 	bool IsWorldSpace(); 
-	void ApplyWorldSpace(); 
+	void ApplyRelativePos();
 
 	//Setters & Getters ----
 	ParticleComponents GetAtributes();
 	ParticleData* GetData(); 
+
+	float3 GetPrevEmmiterPos();
+	void SetPrevEmmiterPos(float3 spawn_pos);
 
 	//Runtime 
 	void SetRuntimeBehaviour(const char* string); 
@@ -147,5 +150,7 @@ private:
 
 	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 
+	ComponentTransform* emmiter_transform;
+	float3 prev_emmiter_pos; 
 
 };
