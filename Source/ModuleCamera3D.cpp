@@ -312,6 +312,10 @@ void ModuleCamera3D::MousePickRay(int mouse_x, int mouse_y)
 	}
 }
 
+void ModuleCamera3D::UIMousePickRay(int mouse_x, int mouse_y)
+{
+}
+
 void ModuleCamera3D::SaveData(Data * data)
 {
 	data->CreateSection("Camera_Config");

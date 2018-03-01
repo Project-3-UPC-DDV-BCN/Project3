@@ -315,8 +315,37 @@ Mesh * CanvasDrawElement::GetPlane() const
 	return plane;
 }
 
+bool CanvasDrawElement::CheckRay(Ray ray, CanvasRenderMode mode)
+{
+	bool ret = false;
+
+	if(mode == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
+	{
+
+	}
+	else if(mode == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+	{
+
+	}
+
+	AABB box
+
+	if (ray.Intersects(mesh_renderer->GetMesh()->box, dist_near, dist_far))
+	{
+	
+	}
+
+	return ret;
+}
+
 AABB CanvasDrawElement::GetBBox()
 {
 	plane->box.Transform(GetTransform());
+	return plane->box;
+}
+
+AABB CanvasDrawElement::GetOrthoBBox()
+{
+	plane->box.Transform(GetOrtoTransform());
 	return plane->box;
 }

@@ -1143,11 +1143,6 @@
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="ComponentCanvas.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
@@ -1159,6 +1154,11 @@
     </ClInclude>
     <ClInclude Include="PhysicsMaterial.h">
       <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1798,7 +1798,7 @@
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

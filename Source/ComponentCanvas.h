@@ -6,6 +6,7 @@
 #include "Component.h"
 #include "MathGeoLib\float4x4.h"
 #include "MathGeoLib\AABB.h"
+#include "MathGeoLib\Ray.h"
 
 class Mesh;
 class ComponentRectTransform;
@@ -29,7 +30,12 @@ public:
 	uint GetTextureId() const;
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
+
+	bool CheckRay(Ray ray);
+
+private:
 	AABB GetBBox();
+	AABB GetOrthoBBox();
 
 private:
 	Mesh*    plane = nullptr;
