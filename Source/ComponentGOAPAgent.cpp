@@ -126,4 +126,19 @@ void ComponentGOAPAgent::AddVariable(std::string & name, float value)
 
 void ComponentGOAPAgent::FindActionPath()
 {
+	//clear current path
+	path.clear();
+
+	GOAPGoal* goal_to_complete = GetGoalToComplete();
+}
+
+GOAPGoal * ComponentGOAPAgent::GetGoalToComplete()
+{
+	GOAPGoal* ret = goals[0];
+	for (int i = 1; i < goals.size(); ++i)
+	{
+		if (ret->GetPriority() < goals[i]->GetPriority())
+			ret = goals[i];
+	}
+	return ret;
 }
