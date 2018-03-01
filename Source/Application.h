@@ -68,6 +68,8 @@ public:
 		OnPlay, OnPause, OnStop
 	};
 
+	EngineState GetEngineState(); 
+
 private:
 
 	void AddModule(Module* mod);

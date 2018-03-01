@@ -1453,9 +1453,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::Button("PLAY"))
 			{
 				current_emmiter->PlayEmmiter();
-
-				//if(current_emmiter->show_shockwave)
-				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
 			}
 
 			ImGui::SameLine();
@@ -1770,6 +1767,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 							current_emmiter->data->initial_color = Color(temp_initial_color[0], temp_initial_color[1], temp_initial_color[2], temp_initial_color[3]);
 							current_emmiter->data->final_color = Color(temp_final_color[0], temp_final_color[1], temp_final_color[2], temp_final_color[3]);
+
+							CONSOLE_LOG("initial: %f %f %f", temp_initial_color[0], temp_initial_color[1], temp_initial_color[2], temp_initial_color[3]); 
+							CONSOLE_LOG("final: %f %f %f", temp_final_color[0], temp_final_color[1], temp_final_color[2], temp_final_color[3]);
 						}
 												
 						ImGui::SameLine(); 

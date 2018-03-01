@@ -192,6 +192,13 @@ bool ComponentParticleEmmiter::Update()
 		}
 	}
 
+	if (show_shockwave && GetSystemState() == PARTICLE_STATE_PLAY)
+	{
+		//UpdateShockWave();
+		CONSOLE_LOG("%f", data->shock_wave.wave_transform->GetGlobalPosition().x)
+		DrawShockWave(App->renderer3D->editor_camera);
+	}
+
 	if (active_particles.empty() == false)
 	{
 		for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();)
@@ -222,19 +229,6 @@ bool ComponentParticleEmmiter::Update()
 					system_state = PARTICLE_STATE_PAUSE; 
 				}
 			}
-
-			// Shock Wave
-			if (data->shock_wave.active == true)
-			{
-				UpdateShockWave(); 
-				DrawShockWave(App->renderer3D->editor_camera); 
-
-				if (data->shock_wave.done == true)
-				{
-					data->shock_wave.active = false; 
-				}
-			}
-				
 				
 		}
 	}
@@ -385,7 +379,7 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 
 void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
 {
-	data->shock_wave.object = new GameObject(); 
+	data->shock_wave.object = new GameObject(nullptr); 
 
 	data->shock_wave.active = true; 
 	data->shock_wave.done = false; 
@@ -394,8 +388,8 @@ void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration,
 	data->shock_wave.wave_transform = new ComponentTransform(data->shock_wave.object);
 	data->shock_wave.wave_texture = texture; 
 
-	data->shock_wave.duration = duration; 
-	data->shock_wave.final_scale = final_scale; 
+	data->shock_wave.duration = duration;
+	data->shock_wave.final_scale = final_scale;
 	data->shock_wave.wave_timer.Start(); 
 }
 
@@ -412,7 +406,6 @@ void ComponentParticleEmmiter::UpdateShockWave()
 	float current_scale = data->shock_wave.final_scale * percentage; 
 
 	data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
-	data->shock_wave.wave_transform->SetScale({ 1, 1, 1 });
 
 	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
 	{
@@ -426,6 +419,10 @@ void ComponentParticleEmmiter::UpdateShockWave()
 void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
+
+	if (show_shockwave)
+		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
+
 	Start();
 }
 
@@ -455,34 +452,34 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
-	//uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
-	//App->renderer3D->UseShaderProgram(id);
+	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+	App->renderer3D->UseShaderProgram(id);
 
-	//App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
-	//App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
-	//App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
+	App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
+	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
+	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
-	//if (data->shock_wave.wave_texture != nullptr)
-	//{	
-	//	if (data->shock_wave.wave_texture->GetID() == 0)
-	//		data->shock_wave.wave_texture->LoadToMemory();
+	if (data->shock_wave.wave_texture != nullptr)
+	{	
+		if (data->shock_wave.wave_texture->GetID() == 0)
+			data->shock_wave.wave_texture->LoadToMemory();
 
-	//	App->renderer3D->SetUniformBool(id, "has_texture", true);
-	//	App->renderer3D->SetUniformBool(id, "has_material_color", false);
+		App->renderer3D->SetUniformBool(id, "has_texture", true);
+		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-	//	App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 
-	//	glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
-	//}
+		glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
+	}
 
-	//if (data->shock_wave.wave_mesh->id_indices == 0)
-	//	data->shock_wave.wave_mesh->LoadToMemory();
+	if (data->shock_wave.wave_mesh->id_indices == 0)
+		data->shock_wave.wave_mesh->LoadToMemory();
 
-	//App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
+	App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
 
-	//glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
-	//App->renderer3D->UnbindVertexArrayObject();
+	App->renderer3D->UnbindVertexArrayObject();
 }
 
 

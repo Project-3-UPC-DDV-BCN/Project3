@@ -556,7 +556,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		}
 
 		(*it)->DrawParticles(active_camera); 
-	
+
 	}
 
 	if (is_editor_camera)

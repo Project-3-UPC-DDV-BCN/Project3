@@ -425,6 +425,11 @@ bool Application::IsStopped()
 	return state == OnStop;
 }
 
+Application::EngineState Application::GetEngineState()
+{
+	return state;
+}
+
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);

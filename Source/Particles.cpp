@@ -254,12 +254,7 @@ void Particle::UpdateColor()
 	if (!particle_data->change_color_interpolation)
 		return;
 
-	static float color_difference[3] =
-	{
-		particle_data->final_color.r - particle_data->initial_color.r,
-		particle_data->final_color.g - particle_data->initial_color.g,
-		particle_data->final_color.b - particle_data->initial_color.b,
-	}; 
+	Color difference(particle_data->final_color.r - particle_data->initial_color.r, particle_data->final_color.g - particle_data->initial_color.g, particle_data->final_color.b - particle_data->initial_color.b, particle_data->final_color.a - particle_data->initial_color.a);
 
 	//We get the number that we have to increment 
 	float time_ex = interpolation_timer.Read() / 1000;
@@ -269,20 +264,16 @@ void Particle::UpdateColor()
 	float percentage = (time / (particle_data->max_lifetime));
 
 	//Setting the increment in each component
-	float increment_r = color_difference[0] * percentage;
-	float increment_g = color_difference[1] * percentage;
-	float increment_b = color_difference[2] * percentage;
+	float increment_r = difference.r * percentage;
+	float increment_g = difference.g * percentage;
+	float increment_b = difference.b * percentage;
 
 	//Applying the increment
 	particle_data->color.r = (particle_data->initial_color.r + increment_r);
 	particle_data->color.g = (particle_data->initial_color.g + increment_g);
 	particle_data->color.b = (particle_data->initial_color.b + increment_b);
 
-	//CONSOLE_LOG("R:%f G:%f B:%f", particle_data->color.r , particle_data->color.g, particle_data->color.b)
-
 }
-
-
 
 void Particle::UpdateSize()
 {
@@ -335,29 +326,36 @@ void Particle::UpdateRotation()
 
 void Particle::SetMovementFromStats()
 {
-	movement += particle_data->gravity * App->GetDt();
-	CONSOLE_LOG("%f", App->GetDt()); 
+	movement += particle_data->gravity;
+
 }
 
 void Particle::SetMovement()
 {
 	//Getting the angle in which the particle have to be launched
 	if (GetEmmisionAngle() == 0)
-		movement = emmiter->emmit_area_obb.axis[1] * particle_data->velocity;
+		movement = emmiter->emmit_area_obb.axis[1];
 	else	
 		movement = GetEmmisionVector(); 
 	
 	//Setting the movement vector
 	movement.Normalize(); 
 	movement *= particle_data->velocity;
-	movement *= App->GetDt();
 }
 
 void Particle::Update()
 {
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
-	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + (movement));
+
+	float3 increment = movement; 
+
+	if (App->GetEngineState() == Application::EngineState::OnPlay)
+		increment *= App->time->GetGameDt();
+	else
+		increment *= App->GetDt();
+
+	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + increment);
 
 	if (IsWorldSpace())
 	{
@@ -369,7 +367,6 @@ void Particle::Update()
 		
 	}
 		
-
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
 		UpdateColor();
