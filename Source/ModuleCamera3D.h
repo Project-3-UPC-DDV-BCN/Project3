@@ -50,4 +50,6 @@ public:
 	int key_down;
 	int key_left;
 	int key_right;
+
+	LineSegment save_segment;
 };

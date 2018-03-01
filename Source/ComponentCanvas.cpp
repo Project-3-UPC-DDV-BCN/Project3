@@ -8,6 +8,7 @@
 #include "ModuleResources.h"
 #include "ModuleRenderer3D.h"
 #include "Mesh.h"
+#include "MathGeoLib\LineSegment.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -25,6 +26,8 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
 	scale_mode = CanvasScaleMode::SCALEMODE_CONSTANT_SIZE;
 	scale = 1.0f;
+
+	
 }
 
 ComponentCanvas::~ComponentCanvas()
@@ -204,8 +207,10 @@ void ComponentCanvas::Load(Data & data)
 	SetScale(data.GetFloat("scale"));
 }
 
-CanvasDrawElement::CanvasDrawElement()
+CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas)
 {
+	canvas = _canvas;
+
 	plane = App->resources->GetMesh("PrimitivePlane");
 	texture_id = 0;
 	transform = float4x4::identity;
@@ -214,6 +219,9 @@ CanvasDrawElement::CanvasDrawElement()
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertical_flip = false;
 	horizontal_flip = false;
+
+	plane->box.SetNegativeInfinity();
+	plane->box.Enclose((vec*)plane->vertices, plane->num_vertices);
 }
 
 void CanvasDrawElement::SetPosition(const float2& _pos)
@@ -315,7 +323,7 @@ Mesh * CanvasDrawElement::GetPlane() const
 	return plane;
 }
 
-bool CanvasDrawElement::CheckRay(Ray ray, CanvasRenderMode mode)
+bool CanvasDrawElement::CheckRay(LineSegment &ray, CanvasRenderMode mode)
 {
 	bool ret = false;
 
@@ -328,8 +336,29 @@ bool CanvasDrawElement::CheckRay(Ray ray, CanvasRenderMode mode)
 	}
 	else 
 	{
+		float4x4 canvas_matrix = canvas->GetCompRectTransform()->GetMatrix();
+
+		float3 pos;
+		Quat rot;
+		float3 scal;
+		canvas_matrix.Decompose(pos, rot, scal);
+
+		scal.x *= canvas->GetSize().x;
+		scal.y *= canvas->GetSize().y;
+
+		scal.x /= 2;
+		scal.y /= 2;
+
+		float4x4 trans = GetTransform();
+
+		float4x4 ortho_trans = GetOrtoTransform();
+		ortho_trans[0][3] = -ortho_trans[0][3] + scal.x;
+		ortho_trans[1][3] += scal.y;
+		
+
+
 		box = GetOrthoBBox();
-		ray.Transform(GetOrtoTransform().Inverted());
+		ray.Transform(ortho_trans.Inverted());
 	}
 
 	if (ray.Intersects(box))

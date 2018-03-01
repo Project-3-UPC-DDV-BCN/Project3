@@ -16,10 +16,10 @@
 #include "ModulePhysics.h"
 #include "GameWindow.h"
 #include "ComponentCanvas.h"
+#include "DebugDraw.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
-
 	name = "Camera";
 	can_update = false;
 	camera_is_orbital = false;
@@ -150,6 +150,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 	
+	App->renderer3D->GetDebugDraw()->Line(float3(save_segment.a.x, save_segment.a.y, save_segment.a.z), float3(save_segment.b.x, save_segment.b.y, save_segment.b.z));
+
 	return UPDATE_CONTINUE;
 }
 
@@ -331,6 +333,8 @@ void ModuleCamera3D::UIMousePickRay(int mouse_x, int mouse_y)
 	float2 window_pos = App->editor->game_window->GetPos();
 	float2 window_size = App->editor->game_window->GetSize();
 
+	ComponentCamera* camera = App->renderer3D->game_camera;
+
 	if (mouse_x > window_pos.x && mouse_x < window_pos.x + window_size.x && mouse_y > window_pos.y && mouse_y < window_pos.y + window_size.y)
 	{
 		//Ray needs x and y between [-1,1]
@@ -338,30 +342,34 @@ void ModuleCamera3D::UIMousePickRay(int mouse_x, int mouse_y)
 
 		float normalized_mouse_y = 1 - ((mouse_y - window_pos.y) / window_size.y) * 2;
 
-		Frustum frustum = GetCamera()->camera_frustum;
-
 		std::list<ComponentCanvas*> canvas = App->renderer3D->GetCanvasToDraw();
 
 		for (std::list<ComponentCanvas*>::iterator cv = canvas.begin(); cv != canvas.end(); ++cv)
 		{
-			Frustum frustum = GetCamera()->camera_frustum;
+			Frustum frustum = camera->camera_frustum;
 
 			if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
 			{
+				frustum.Transform(float4x4::identity);
+				frustum.SetPos(float3(0, 0, -10.3f));
+				frustum.SetFront(float3(0.1f, 0, 1));
+				frustum.SetUp(float3(0, 1, 0));
 				frustum.SetOrthographic(window_size.x, window_size.y);
 			}
 
-			Ray ray = GetCamera()->camera_frustum.UnProject(normalized_mouse_x, normalized_mouse_y);
+			LineSegment segment = frustum.UnProjectLineSegment(normalized_mouse_x, normalized_mouse_y);
 
 			std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
 
 			for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 			{
-				if ((*it).CheckRay(ray, (*cv)->GetRenderMode()))
+				if ((*it).CheckRay(segment, (*cv)->GetRenderMode()))
 				{
 					CONSOLE_LOG("click!!!!");
 				}
 			}
+
+			save_segment = segment;
 		}
 
 	}

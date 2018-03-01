@@ -12,11 +12,12 @@ class Mesh;
 class ComponentRectTransform;
 class ComponentCamera;
 enum CanvasRenderMode;
+class ComponentCanvas;
 
 class CanvasDrawElement
 {
 public:
-	CanvasDrawElement();
+	CanvasDrawElement(ComponentCanvas* canvas);
 
 	void SetPosition(const float2& pos);
 	void SetSize(const float2& size);
@@ -32,22 +33,23 @@ public:
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
 
-	bool CheckRay(Ray ray, CanvasRenderMode mode);
+	bool CheckRay(LineSegment &ray, CanvasRenderMode mode);
 
 private:
 	AABB GetBBox();
 	AABB GetOrthoBBox();
 
 private:
-	Mesh*    plane = nullptr;
-	float2   pos;
-	float2   size;
-	float4x4 transform;
-	float4x4 orto_transform;
-	uint	 texture_id;
-	bool	 vertical_flip;
-	bool	 horizontal_flip;
-	float4   colour;
+	ComponentCanvas * canvas = nullptr;
+	Mesh*			  plane = nullptr;
+	float2			  pos;
+	float2			  size;
+	float4x4		  transform;
+	float4x4		  orto_transform;
+	uint			  texture_id;
+	bool			  vertical_flip;
+	bool			  horizontal_flip;
+	float4			  colour;
 };
 
 enum CanvasRenderMode

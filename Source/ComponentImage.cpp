@@ -34,7 +34,7 @@ bool ComponentImage::Update()
 
 	if (canvas != nullptr)
 	{
-		CanvasDrawElement de;
+		CanvasDrawElement de(canvas);
 		de.SetTransform(c_rect_trans->GetMatrix());
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		de.SetSize(c_rect_trans->GetScaledSize());
