@@ -47,12 +47,16 @@ bool ModuleAudio::Start()
 	LoadSoundBank("Ship_Soundbank.bnk");
 	
 	SoundBank* sbk;
-	GameObject* go = App->scene->CreateGameObject();
-	go->SetName("Audio");
-	ComponentAudioSource* as = (ComponentAudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
-	GameObject* go_ = App->scene->CreateGameObject();
-	go_->AddComponent(Component::ComponentType::CompAudioListener);
+	if (!App->IsGameMode())
+	{
+		GameObject* go = App->scene->CreateGameObject();
+		go->SetName("Audio");
+		ComponentAudioSource* as = (ComponentAudioSource*)go->AddComponent(Component::ComponentType::CompAudioSource);
+
+		GameObject* go_ = App->scene->CreateGameObject();
+		go_->AddComponent(Component::ComponentType::CompAudioListener);
+	}
 
 	return true;
 }

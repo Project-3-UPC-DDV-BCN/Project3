@@ -94,6 +94,8 @@ Application::Application()
 	cursor_add = SDL_LoadBMP(EDITOR_IMAGES_FOLDER"PlusArrow.bmp");
 
 	tags_and_layers = new TagsAndLayers();
+
+	is_game_mode = false;
 }
 
 Application::~Application()
@@ -156,6 +158,11 @@ bool Application::Init()
 
 	if (data.EnterSection("Engine_Settings"))
 	{
+		if (data.EnterSection("Application"))
+		{
+			is_game_mode = data.GetBool("GameMode");
+			starting_scene = data.GetString("StartingScene");
+		}
 		while (item != list_modules.end() && ret == true)
 		{
 			ret = (*item)->Init(&data);
@@ -178,6 +185,11 @@ bool Application::Init()
 	fps_timer.Start();
 
 	tags_and_layers->Load(&data);
+
+	if (is_game_mode)
+	{
+		scene->LoadScene(starting_scene);
+	}
 
 	return ret;
 }
@@ -209,7 +221,17 @@ void Application::FinishUpdate()
 		SDL_Delay(capped_ms - last_frame_ms);
 	}
 
-	App->editor->AddData_Editor(last_frame_ms, last_fps);
+	if (!App->IsGameMode())
+	{
+		App->editor->AddData_Editor(last_frame_ms, last_fps);
+	}
+	else
+	{
+		if (IsStopped())
+		{
+			Play();
+		}
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -320,6 +342,10 @@ void Application::SetCustomCursor(EnGineCursors cursor_type)
 void Application::CreateEngineData(Data * data)
 {
 	data->CreateSection("Engine_Settings");
+	data->CreateSection("Application");
+	data->AddBool("GameMode", is_game_mode);
+	data->AddString("StartingScene", starting_scene);
+	data->CloseSection();
 	for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); ++it)
 	{
 		(*it)->SaveData(data);
@@ -405,19 +431,24 @@ void Application::Stop()
 	}
 }
 
-bool Application::IsPlaying()
+bool Application::IsPlaying() const
 {
 	return state == OnPlay;
 }
 
-bool Application::IsPaused()
+bool Application::IsPaused() const
 {
 	return state == OnPause;
 }
 
-bool Application::IsStopped()
+bool Application::IsStopped() const
 {
 	return state == OnStop;
+}
+
+bool Application::IsGameMode() const
+{
+	return is_game_mode;
 }
 
 void Application::AddModule(Module* mod)

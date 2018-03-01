@@ -58,9 +58,11 @@ public:
 	void Pause();
 	void UnPause();
 	void Stop();
-	bool IsPlaying();
-	bool IsPaused();
-	bool IsStopped();
+	bool IsPlaying()const;
+	bool IsPaused()const;
+	bool IsStopped()const;
+
+	bool IsGameMode() const;
 
 	enum EngineState {
 		OnPlay, OnPause, OnStop
@@ -117,6 +119,8 @@ private:
 
 	SDL_Surface* cursor_add;
 
+	bool is_game_mode;
+	std::string starting_scene;
 };
 
 // Give App pointer access everywhere

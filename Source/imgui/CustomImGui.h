@@ -27,5 +27,6 @@ namespace ImGui
 	bool InputResourceBlastModel(const char* label, BlastModel** mesh);
 	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 	bool InputResourceFont(const char* label, Font** font);
+	bool InputResourceScene(const char* label, std::string& scene);
 }
 

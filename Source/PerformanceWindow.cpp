@@ -69,28 +69,31 @@ void PerformanceWindow::AddData(float ms, float fps)
 
 void PerformanceWindow::AddModuleData(std::string name, float ms)
 {
-	std::map<std::string, std::vector<float>>::iterator it;
-	it = module_data.find(name);
-
-	if (it != module_data.end())
+	if (this)
 	{
-		if (it->second.size() == FPS_MS_SIZE)
+		std::map<std::string, std::vector<float>>::iterator it;
+		it = module_data.find(name);
+
+		if (it != module_data.end())
 		{
-			for (int i = 0; i < FPS_MS_SIZE - 1; i++)
+			if (it->second.size() == FPS_MS_SIZE)
 			{
-				it->second[i] = it->second[i + 1];
+				for (int i = 0; i < FPS_MS_SIZE - 1; i++)
+				{
+					it->second[i] = it->second[i + 1];
+				}
+				it->second[FPS_MS_SIZE - 1] = ms;
 			}
-			it->second[FPS_MS_SIZE - 1] = ms;
-		}
 
+			else
+				it->second.push_back(ms);
+		}
 		else
-		it->second.push_back(ms);
-	}
-	else
-	{
-		std::vector<float> temp;
-		temp.push_back(ms);
-		module_data.insert(std::pair<std::string, std::vector<float>>(name, temp));
+		{
+			std::vector<float> temp;
+			temp.push_back(ms);
+			module_data.insert(std::pair<std::string, std::vector<float>>(name, temp));
+		}
 	}
 
 }

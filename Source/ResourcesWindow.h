@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include "Shader.h"
+#include <vector>
 
 class Texture;
 class Mesh;
@@ -39,6 +40,7 @@ public:
 	BlastModel* GetBlastModel() const;
 	Shader* GetShader() const;
 	Font* GetFont() const;
+	std::string GetScene() const;
 	void SetShaderType(Shader::ShaderType type);
 	void SetCurrentInputName(std::string name);
 	std::string GetCurrentInputName() const;
@@ -56,6 +58,7 @@ private:
 	std::map<uint, BlastModel*> blast_models_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, Font*> fonts_list;
+	std::vector<std::string> scenes_list;
 
 	Texture* texture_to_return;
 	Mesh* mesh_to_return;
@@ -68,6 +71,7 @@ private:
 	Shader* shader_to_return;
 	Shader::ShaderType shader_type;
 	Font* font_to_return;
+	std::string scene_to_return;
 
 public:
 	bool texture_changed;
@@ -78,6 +82,7 @@ public:
 	bool script_changed;
 	bool phys_mat_changed;
 	bool blast_model_changed;
+	bool scene_changed;
 	
 	GameObjectFilter go_filter;
 	bool shader_changed;

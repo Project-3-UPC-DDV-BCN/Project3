@@ -2,6 +2,7 @@
 #include "Module.h"
 #include <map>
 #include "Resource.h"
+#include <vector>
 
 class Texture;
 class Mesh;
@@ -106,6 +107,11 @@ public:
 	void LoadShaderProgramMeta(std::string path) const;	
 	void OnShaderUpdate(Shader* shader) const;
 
+	std::string GetScene(std::string name) const;
+	void AddScene(std::string scene_path);
+	void RemoveScene(std::string name);
+	std::vector<std::string> GetScenesList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -140,5 +146,6 @@ private:
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 	std::map<uint, Font*> fonts_list;
+	std::vector<std::string> scenes_list;
 };
 

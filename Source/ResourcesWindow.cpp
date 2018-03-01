@@ -114,6 +114,26 @@ void ResourcesWindow::DrawWindow()
 		}
 		break;
 	case Resource::SceneResource:
+		scenes_list = App->resources->GetScenesList();
+		if (ImGui::Selectable("None##Scene"))
+		{
+			scene_to_return = nullptr;
+			scene_changed = true;
+			break;
+		}
+		for (std::vector<std::string>::const_iterator it = scenes_list.begin(); it != scenes_list.end(); it++)
+		{
+			std::string name = (*it);
+			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
+			{
+				if (ImGui::Selectable(name.c_str()))
+				{
+					scene_to_return = (*it);
+					scene_changed = true;
+					break;
+				}
+			}
+		}
 		break;
 	case Resource::AnimationResource:
 		break;
@@ -364,6 +384,11 @@ Shader * ResourcesWindow::GetShader() const
 Font * ResourcesWindow::GetFont() const
 {
 	return font_to_return;
+}
+
+std::string ResourcesWindow::GetScene() const
+{
+	return scene_to_return;
 }
 
 void ResourcesWindow::SetShaderType(Shader::ShaderType type)

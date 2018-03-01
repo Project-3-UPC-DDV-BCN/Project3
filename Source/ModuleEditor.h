@@ -27,6 +27,7 @@ class ResourcesConfigWindow;
 class Resource;
 class TextEditorWindow;
 class AudioWindow;
+class GameBuildWindow;
 
 struct DragData {
 	std::string fromPanel;
@@ -89,5 +90,6 @@ public:
 	DragData* drag_data;
 	TextEditorWindow* text_editor_window = nullptr;
 	AudioWindow* audio_window = nullptr;
+	GameBuildWindow* game_build = nullptr;
 };
 

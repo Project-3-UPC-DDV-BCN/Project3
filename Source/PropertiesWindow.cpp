@@ -44,9 +44,6 @@
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
-
-#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
-
 PropertiesWindow::PropertiesWindow()
 {
 	active = true;

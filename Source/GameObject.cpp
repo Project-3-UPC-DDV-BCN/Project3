@@ -190,7 +190,7 @@ Component * GameObject::GetComponent(std::string component_type)
 
 void GameObject::DestroyComponent(Component* component)
 {
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if (*it == component) 
 		{
 			if (component->GetType() == Component::CompCanvas)
@@ -198,11 +198,8 @@ void GameObject::DestroyComponent(Component* component)
 
 			(*it)->CleanUp();
 			RELEASE(*it);
-			it = components_list.erase(it);
-		}
-		else 
-		{
-			it++;
+			components_list.erase(it);
+			break;
 		}
 	}
 }

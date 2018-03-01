@@ -696,6 +696,82 @@ namespace ImGui
 
 		return false;
 	}
+	bool InputResourceScene(const char * label, std::string& scene)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+		std::string tmp_scene = scene;
+		if (!tmp_scene.empty())
+		{
+			buf_display = tmp_scene;
+		}
+		else
+		{
+			buf_display = "None(Scene)";
+		}
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		/*if (ImGui::IsItemHovered() && App->editor->drag_data->hasData)
+		{
+			if (App->editor->drag_data->resource->GetType() == Resource::SceneResource)
+			{
+				RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_ButtonHovered));
+				if (ImGui::IsMouseReleased(0))
+				{
+					scene = (Texture*)App->editor->drag_data->resource;
+					return true;
+				}
+			}
+		}*/
+		ImGui::SameLine();
+		std::string button_id("+##scene_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::SceneResource);
+			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
+		}
+
+		std::string new_scene;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->scene_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		{
+			new_scene = App->editor->resources_window->GetScene();
+			if (new_scene != tmp_scene)
+			{
+				scene = new_scene;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 

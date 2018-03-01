@@ -138,9 +138,9 @@ void ComponentTransform::UpdateGlobalMatrix()
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
-				//rb->SetTransform(transform_matrix.Transposed().ptr());
-				rb->SetPosition(global_pos);
-				rb->SetRotation(global_rot);
+				rb->SetTransform(transform_matrix.Transposed().ptr());
+				/*rb->SetPosition(global_pos);
+				rb->SetRotation(global_rot);*/
 			}
 			else
 			{

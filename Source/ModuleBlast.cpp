@@ -263,6 +263,7 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 		{
 			rb->SetNewRigidBody(rigid_body);
 		}*/
+		actor.getPhysXActor().setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
 	}
 	model->AddActor(&actor);
 }

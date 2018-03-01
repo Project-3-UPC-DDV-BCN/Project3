@@ -819,6 +819,40 @@ void ModuleResources::OnShaderUpdate(Shader * shader) const
 	}
 }
 
+std::string ModuleResources::GetScene(std::string name) const
+{
+	for (std::vector<std::string>::const_iterator it = scenes_list.begin(); it != scenes_list.end(); it++)
+	{
+		if ((*it) == name) return (*it);
+	}
+	return "";
+}
+
+void ModuleResources::AddScene(std::string scene_path)
+{
+	if (std::find(scenes_list.begin(), scenes_list.end(), scene_path) == scenes_list.end())
+	{
+		scenes_list.push_back(scene_path);
+	}
+}
+
+void ModuleResources::RemoveScene(std::string name)
+{
+	for (std::vector<std::string>::iterator it = scenes_list.begin(); it != scenes_list.end(); it++)
+	{
+		if ((*it) == name)
+		{
+			scenes_list.erase(it);
+			break;
+		}
+	}
+}
+
+std::vector<std::string> ModuleResources::GetScenesList() const
+{
+	return scenes_list;
+}
+
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
 {
 	if (str == ".jpg" || str == ".png" || str == ".tga" || str == ".dds") return Resource::TextureResource;
@@ -908,6 +942,11 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 		}
 		break;
 	case Resource::SceneResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_SCENES_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".scene", directory, false))
+		{
+			library_file = directory + file_name + ".scene";
+		}
 		break;
 	case Resource::AnimationResource:
 		break;
@@ -985,6 +1024,9 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 		ret = App->mesh_importer->ImportMesh(file_path);
 		break;
 	case Resource::SceneResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_SCENES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCENES_FOLDER_PATH);
+		ret = LIBRARY_SCENES_FOLDER_PATH + App->file_system->GetFileName(file_path);
+		App->file_system->Copy(file_path, ret);
 		break;
 	case Resource::AnimationResource:
 		break;
@@ -1057,6 +1099,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		resource = (Resource*)App->mesh_importer->LoadMeshFromLibrary(library_path);
 		break;
 	case Resource::SceneResource:
+		AddScene(library_path);
 		break;
 	case Resource::AnimationResource:
 		break;

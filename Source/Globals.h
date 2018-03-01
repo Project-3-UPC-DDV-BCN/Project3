@@ -102,6 +102,8 @@ enum update_status
 #define LIBRARY_BMODEL_FOLDER_PATH "./Project/Library/B_Models"
 #define LIBRARY_PARTICLES_FOLDER "./Project/Library/Particles/"
 #define LIBRARY_PARTICLES_FOLDER_PATH "./Project/Library/Particles"
+#define LIBRARY_SCENES_FOLDER "./Project/Library/Scenes/"
+#define LIBRARY_SCENES_FOLDER_PATH "./Project/Library/Scenes"
 
 #define EDITOR_CONFIG_FILE "./Editor_Settings/Editor_Config.json"
 #define EDITOR_LAYOUT_FILE "./Editor_Settings/Editor_Layout"
