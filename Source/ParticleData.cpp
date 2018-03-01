@@ -58,6 +58,7 @@ void ParticleData::LoadDefaultData()
 	initial_angular_v = 0;
 	final_angular_v = 0;
 
+	color = { 1,1,1,1 }; 
 	initial_color = { 0,0,0,0 }; 
 	final_color = { 0,0,0,0 };
 
@@ -204,6 +205,8 @@ void ParticleData::Copy(ParticleData * other)
 	emmision_type = other->emmision_type;
 	time_step_sim = other->time_step_sim; 
 	amount_to_emmit = other->amount_to_emmit; 
+
+	color = other->color; 
 									
 	max_lifetime = other->max_lifetime;
 	emmision_rate = other->emmision_rate;

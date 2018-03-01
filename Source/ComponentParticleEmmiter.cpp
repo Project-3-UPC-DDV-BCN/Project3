@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "Shader.h"
-
+#include "ComponentTransform.h"
 #include "ShaderProgram.h"
 #include "ParticleData.h"
 #include "ComponentCamera.h"
@@ -75,7 +75,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetWorldSpace(data->relative_pos);
 	
 	//Copy Interpolations
-	///Color
 	if (data->change_color_interpolation)
 	{
 		new_particle->particle_data->initial_color = data->initial_color; 
@@ -360,7 +359,6 @@ void ComponentParticleEmmiter::SetShowEmmisionArea(bool show)
 	show_emit_area = show;
 }
 
-
 particle_system_state ComponentParticleEmmiter::GetSystemState() const
 {
 	return system_state;
@@ -371,15 +369,10 @@ void ComponentParticleEmmiter::SetSystemState(particle_system_state new_state)
 	system_state = new_state;
 }
 
-void Particle::ApplyWorldSpace()
+void Particle::ApplyRelativePos()
 {
-	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-	
-	float4x4 emmiter_rot = emmiter_transform->GetMatrix(); 
-	float4x4 particle_rot = components.particle_transform->GetMatrix(); 
-
-	particle_rot = emmiter_rot * particle_rot; 
-	components.particle_transform->SetMatrix(particle_rot);
+	float3 particle_desplacament = emmiter_transform->GetGlobalPosition() - prev_emmiter_pos;
+	components.particle_transform->SetPosition(components.particle_transform->GetGlobalPosition() + particle_desplacament);
 }
 
 

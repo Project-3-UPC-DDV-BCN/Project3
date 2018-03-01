@@ -22,6 +22,9 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	emmiter = parent;
 	runtime_behaviour = RUNTIME_NONE; 
 	particle_data = new ParticleData(); 
+
+	emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
+	prev_emmiter_pos = emmiter_transform->GetGlobalPosition();
 	
 	//Timers
 	particle_timer.Start();
@@ -49,6 +52,17 @@ ParticleComponents Particle::GetAtributes()
 ParticleData * Particle::GetData()
 {
 	return particle_data;
+}
+
+
+float3 Particle::GetPrevEmmiterPos()
+{
+	return prev_emmiter_pos;
+}
+
+void Particle::SetPrevEmmiterPos(float3 _spawn_pos)
+{
+	prev_emmiter_pos = _spawn_pos; 
 }
 
 void Particle::SetRuntimeBehaviour(const char * string)
@@ -346,7 +360,15 @@ void Particle::Update()
 	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + movement);
 
 	if (IsWorldSpace())
-		ApplyWorldSpace(); 
+	{
+		if (prev_emmiter_pos.Equals(emmiter_transform->GetGlobalPosition()) == false)
+		{
+			ApplyRelativePos();
+			prev_emmiter_pos = emmiter_transform->GetGlobalPosition(); 
+		}
+		
+	}
+		
 
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
@@ -414,14 +436,15 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", 0);
 	}
 
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
+		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f); 
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
@@ -433,6 +456,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
+		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f);
 		App->renderer3D->SetUniformVector4(id, "material_color", color);

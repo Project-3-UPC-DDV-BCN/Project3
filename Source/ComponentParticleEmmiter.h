@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "ComponentBillboard.h"
+#include "MathGeoLib\MathGeoLib.h"
 #include "Particles.h"
 #include <map>
 
