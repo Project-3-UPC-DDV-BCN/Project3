@@ -26,7 +26,7 @@ class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
 class ComponentGOAPAgent;
-
+class GOAPGoal;
 
 class PropertiesWindow :
 	public Window
@@ -72,6 +72,7 @@ private:
 	int add_goal_inc_rate = 0;
 	float add_goal_inc_time = 0;
 
+	GOAPGoal* goal_to_add_condition = nullptr;
 	
 };
 

@@ -2070,14 +2070,74 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 						ImGui::Text("Increment Rate:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementRate());
 						ImGui::Text("Increment Timestep:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementTime());
 
+						std::vector<GOAPField*> conditions = goals[i]->GetConditions();
+						if (conditions.size() > 0)
+						{
+							for (int j = 0; j < conditions.size(); ++j)
+							{
+								std::string name_ = conditions[i]->GetName();
+								name_ += "##Conditions_";
+								name_ += i;
+								if (ImGui::TreeNode(name_.c_str()))
+								{
+									std::string cm;
+									switch (conditions[i]->GetComparisonMethod())
+									{
+									case GOAPField::CM_EQUAL:
+										cm = "==";
+										break;
+									case GOAPField::CM_DIFFERENT:
+										cm = "!=";
+										break;
+									case GOAPField::CM_HIGHER:
+										cm = ">";
+										break;
+									case GOAPField::CM_LOWER:
+										cm = "<";
+										break;
+									case GOAPField::CM_HIGHER_OR_EQUAL:
+										cm = ">=";
+										break;
+									case GOAPField::CM_LOWER_OR_EQUAL:
+										cm = "<=";
+										break;
+									case GOAPField::CM_NULL:
+									default:
+										break;
+									}
 
+									if (conditions[i]->GetType() == GOAPVariable::VariableType::T_BOOL)
+									{
+										ImGui::TextColored(ImVec4(255, 255, 0, 255), cm.c_str()); ImGui::SameLine(); 
+										if (conditions[i]->GetValue())
+											ImGui::Text("True");
+										else
+											ImGui::Text("False");			
+									}
+									else if (conditions[i]->GetType() == GOAPVariable::VariableType::T_FLOAT)
+									{
+										ImGui::TextColored(ImVec4(255, 255, 0, 255), cm.c_str()); ImGui::SameLine(); ImGui::Text("%.2f", conditions[i]->GetValue());
+									}
+								}
+							}
+						}
+						else
+							ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO CONDITIONS CREATED!");
+
+						std::string button_name = "Add Event##";
+						button_name += goals[i]->GetName();
+						button_name += i;
+						if (ImGui::Button(button_name.c_str()))
+						{
+							goal_to_add_condition = goals[i];
+						}
 
 						ImGui::TreePop();
 					}
 				}
 			}
 			else
-				ImGui::TextColored(ImVec4(255, 0, 0, 255), "No goals created");
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO GOALS CREATED!");
 			
 			if (ImGui::Button("Add Goal##Goap_add_goal"))
 				add_goal = true;
@@ -2086,7 +2146,25 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 		}
 		if (ImGui::TreeNode("Actions##Goap_actions"))
 		{
+			std::vector<GOAPAction*> actions = goap_agent->actions;
+			if (actions.size() > 0)
+			{
+				for (int i = 0; i < actions.size(); ++i)
+				{
+					std::string name = actions[i]->GetName();
+					name += "##Actions_";
+					name += i;
+					if (ImGui::TreeNode(name.c_str()))
+					{
 
+						ImGui::TreePop();
+					}
+				}
+			}
+			else
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO ACTIONS CREATED!");
+			
+			
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("Blackboard##Goap_blackboard"))
@@ -2131,6 +2209,11 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 		}
 		
 		ImGui::End();
+	}
+
+	if (goal_to_add_condition != nullptr) 
+	{
+		
 	}
 }
 
