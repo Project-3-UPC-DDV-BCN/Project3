@@ -42,6 +42,10 @@
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
 #include "ComponentGOAPAgent.h"
+#include "GOAPAction.h"
+#include "GOAPGoal.h"
+#include "GOAPField.h"	
+#include "GOAPVariable.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -2048,5 +2052,39 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 
 void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 {
+	if (ImGui::CollapsingHeader("GOAP Agent"))
+	{
+		if (ImGui::TreeNode("Goals##Goap_goal"))
+		{
+			if (goap_agent->goals.size() > 0)
+			{
+
+			}
+			else
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "No goals created");
+			
+			if (ImGui::Button("Add Goal##Goap_add_goal"))
+				add_goal = true;
+
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Actions##Goap_actions"))
+		{
+
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Blackboard##Goap_blackboard"))
+		{
+
+			ImGui::TreePop();
+		}
+	}
+
+	// Pop-up to create goal
+	if (add_goal)
+	{
+		GOAPGoal goal;
+		
+	}
 }
 

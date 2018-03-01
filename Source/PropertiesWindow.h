@@ -64,5 +64,6 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+	bool add_goal = false;
 };
 
