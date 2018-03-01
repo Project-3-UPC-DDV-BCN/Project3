@@ -2124,7 +2124,7 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 						else
 							ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO CONDITIONS CREATED!");
 
-						std::string button_name = "Add Event##";
+						std::string button_name = "Add Condition##";
 						button_name += goals[i]->GetName();
 						button_name += i;
 						if (ImGui::Button(button_name.c_str()))
@@ -2213,7 +2213,27 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 
 	if (goal_to_add_condition != nullptr) 
 	{
-		
+		ImGui::Begin("AddCondition##GOAP");
+
+		ImGui::InputText("Name##AddCondition", add_condition_name, 256);
+
+		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
+
+		if (float_bool)
+		{
+
+		}
+
+		if (ImGui::Button("Save Condition##AddCondition"))
+		{
+
+			//goal_to_add_condition->AddCondition(add_condition_name, );
+			goal_to_add_condition = nullptr;
+			add_condition_name[0] = '\0';
+			float_bool = 0;
+		}
+
+		ImGui::End();
 	}
 }
 
