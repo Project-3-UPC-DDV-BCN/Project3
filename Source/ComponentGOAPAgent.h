@@ -25,6 +25,7 @@ public:
 
 private:
 	void FindActionPath();
+	GOAPGoal* GetGoalToComplete();
 
 
 public:
@@ -35,6 +36,7 @@ public:
 private:
 	std::vector<GOAPAction*> path;
 
+	GOAPAction* curr_action = nullptr;
 };
 
 #endif // !__COMPONENTGOAPAGENT__
