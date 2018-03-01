@@ -67,7 +67,6 @@ Application::Application()
 	AddModule(window);
 	AddModule(input);
 	AddModule(audio);
-	AddModule(renderer3D);
 	AddModule(mesh_importer);
 	AddModule(texture_importer);
 	AddModule(prefab_importer);
@@ -86,6 +85,8 @@ Application::Application()
 	AddModule(physics);
 	AddModule(blast);
 	AddModule(blast_mesh_importer);
+
+	AddModule(renderer3D);
 
 	AddModule(resources);
 

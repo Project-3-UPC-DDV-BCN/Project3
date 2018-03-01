@@ -11,6 +11,7 @@
 class Mesh;
 class ComponentRectTransform;
 class ComponentCamera;
+enum CanvasRenderMode;
 
 class CanvasDrawElement
 {
@@ -31,7 +32,7 @@ public:
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
 
-	bool CheckRay(Ray ray);
+	bool CheckRay(Ray ray, CanvasRenderMode mode);
 
 private:
 	AABB GetBBox();

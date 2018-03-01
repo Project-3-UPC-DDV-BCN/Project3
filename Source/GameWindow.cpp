@@ -10,6 +10,7 @@ GameWindow::GameWindow()
 	window_name = "Game";
 	game_scene_width = 0;
 	game_scene_height = 0;
+	window_pos = float2::zero;
 }
 
 GameWindow::~GameWindow()
@@ -22,6 +23,7 @@ void GameWindow::DrawWindow()
 		ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) 
 	{
 		ImVec2 size = ImGui::GetContentRegionAvail();
+		window_pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 
 		if (game_scene_width != size.x || game_scene_height != size.y) 
 		{
@@ -39,6 +41,11 @@ void GameWindow::DrawWindow()
 		}
 	}
 	ImGui::EndDock();
+}
+
+float2 GameWindow::GetPos() const
+{
+	return window_pos;
 }
 
 float2 GameWindow::GetSize() const

@@ -14,6 +14,7 @@ public:
 
 	bool Init(Data* editor_config);
 	update_status Update(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	void CreateEditorCamera();

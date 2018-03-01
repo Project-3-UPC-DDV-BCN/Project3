@@ -51,6 +51,8 @@ public:
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
 	void AddCanvasToDraw(ComponentCanvas* canvas);
 	void RemoveCanvasToDraw(ComponentCanvas* canvas);
+	std::list<ComponentCanvas*> GetCanvasToDraw() const;
+
 
 	void BindArrayBuffer(uint id) const;
 	void BindElementArrayBuffer(uint id) const;

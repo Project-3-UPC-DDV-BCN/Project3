@@ -704,6 +704,11 @@ void ModuleRenderer3D::RemoveCanvasToDraw(ComponentCanvas * canvas)
 	}
 }
 
+std::list<ComponentCanvas*> ModuleRenderer3D::GetCanvasToDraw() const
+{
+	return canvas_to_draw;
+}
+
 void ModuleRenderer3D::ResetRender()
 {
 	dynamic_mesh_to_draw.clear();

@@ -319,20 +319,22 @@ bool CanvasDrawElement::CheckRay(Ray ray, CanvasRenderMode mode)
 {
 	bool ret = false;
 
-	if(mode == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
-	{
+	AABB box;
 
+	if(mode == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+	{
+		box = GetBBox();
+		ray.Transform(GetTransform().Inverted());
 	}
-	else if(mode == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+	else 
 	{
-
+		box = GetOrthoBBox();
+		ray.Transform(GetOrtoTransform().Inverted());
 	}
 
-	AABB box
-
-	if (ray.Intersects(mesh_renderer->GetMesh()->box, dist_near, dist_far))
+	if (ray.Intersects(box))
 	{
-	
+		ret = true;
 	}
 
 	return ret;
