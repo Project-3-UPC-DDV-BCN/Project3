@@ -41,6 +41,7 @@
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
+#include "ComponentGOAPAgent.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -172,6 +173,16 @@ void PropertiesWindow::DrawWindow()
 					else
 					{
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
+					}
+				}
+				if (ImGui::MenuItem("GOAP Agent"))
+				{
+					if (selected_gameobject->GetComponent(Component::CompGOAPAgent) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompGOAPAgent);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 GOAP Agent!");
 					}
 				}
 				/*if (ImGui::MenuItem("Blast Mesh Renderer")) {
@@ -517,6 +528,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
+		break;
+	case Component::CompGOAPAgent:
+		DrawGOAPAgent((ComponentGOAPAgent*)component);
 		break;
 	default:
 		break;
@@ -2030,5 +2044,9 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			ImGui::ColorPicker4(("Current Color##" + std::to_string(lights_count)).c_str(), comp_light->GetColorToEdit(), flags);
 		}
 	}
+}
+
+void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
+{
 }
 
