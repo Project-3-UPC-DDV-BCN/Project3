@@ -81,7 +81,7 @@ void GOAPAction::Save(Data & data) const
 		data.CreateSection("effect_" + std::to_string(i));
 		data.AddInt("type", effects[i]->GetType());
 		data.AddString("name", effects[i]->GetName());
-		switch (preconditions[i]->GetType())
+		switch (effects[i]->GetType())
 		{
 		case GOAPVariable::T_BOOL:
 			data.AddBool("value", effects[i]->GetValue());

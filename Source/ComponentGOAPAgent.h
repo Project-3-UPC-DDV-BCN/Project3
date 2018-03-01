@@ -18,10 +18,23 @@ public:
 
 	bool Update();
 
+	void AddGoal(GOAPGoal* goal);
+	void AddAction(GOAPAction* action);
+	void AddVariable(std::string & name, bool value);
+	void AddVariable(std::string & name, float value);
+
+private:
+	void FindActionPath();
+
+
 public:
-	std::vector<GOAPAction*> goals;
+	std::vector<GOAPGoal*> goals;
 	std::vector<GOAPAction*> actions;
 	std::vector<GOAPVariable*> blackboard;
+
+private:
+	std::vector<GOAPAction*> path;
+
 };
 
 #endif // !__COMPONENTGOAPAGENT__
