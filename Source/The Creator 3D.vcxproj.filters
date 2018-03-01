@@ -225,9 +225,6 @@
     <ClInclude Include="tinyfiledialogs.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="TagsAndLayers.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -1153,7 +1150,6 @@
     <ClInclude Include="BlastModel.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="Font.h" />
     <ClInclude Include="PhysicsMaterial.h" />
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObject\Components</Filter>
@@ -1164,6 +1160,12 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="Font.h">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1294,9 +1296,6 @@
     </ClCompile>
     <ClCompile Include="tinyfiledialogs.c">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="TagsAndLayers.cpp">
       <Filter>Sources</Filter>
@@ -1809,6 +1808,9 @@
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">
