@@ -225,9 +225,6 @@
     <ClInclude Include="tinyfiledialogs.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="TagsAndLayers.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -1125,11 +1122,6 @@
     <ClInclude Include="MathGeoLib\TriangleMesh.h">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="ComponentCanvas.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentRectTransform.h">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
@@ -1148,22 +1140,26 @@
     <ClInclude Include="ModuleFontImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="BlastModel.h" />
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="PhysicsMaterial.h" />
-    <ClInclude Include="Component.h">
+    <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="BlastModel.h">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsMaterial.h">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1294,9 +1290,6 @@
     </ClCompile>
     <ClCompile Include="tinyfiledialogs.c">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="TagsAndLayers.cpp">
       <Filter>Sources</Filter>
@@ -1730,11 +1723,6 @@
     <ClCompile Include="MathGeoLib\VectorTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp" />
-    <ClCompile Include="ComponentFactory.cpp" />
-    <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentRectTransform.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
@@ -1809,6 +1797,9 @@
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">
