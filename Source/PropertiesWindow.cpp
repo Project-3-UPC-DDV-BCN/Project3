@@ -1758,15 +1758,29 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
-						ImGui::ColorEdit3("Initial Color", (float*)&current_emmiter->data->initial_color);
-						ImGui::ColorEdit3("Final Color", (float*)&current_emmiter->data->final_color);
+						static float temp_initial_color[4] = { current_emmiter->data->initial_color.r, current_emmiter->data->initial_color.g, current_emmiter->data->initial_color.b, current_emmiter->data->initial_color.a };
+						static float temp_final_color[4] = { current_emmiter->data->final_color.r, current_emmiter->data->final_color.g, current_emmiter->data->final_color.b, current_emmiter->data->final_color.a };
+
+						ImGui::ColorEdit3("Initial Color", temp_initial_color);
+						ImGui::ColorEdit3("Final Color", temp_final_color);
 
 						if (ImGui::Button("Apply Color Interpolation"))
-							current_emmiter->data->change_color_interpolation = true;						
+						{
+							current_emmiter->data->change_color_interpolation = true;
 
+							current_emmiter->data->initial_color = Color(temp_initial_color[0], temp_initial_color[1], temp_initial_color[2], temp_initial_color[3]);
+							current_emmiter->data->final_color = Color(temp_final_color[0], temp_final_color[1], temp_final_color[2], temp_final_color[3]);
+						}
+												
 						ImGui::SameLine(); 
-						if (ImGui::Button("Delete"))				
+						if (ImGui::Button("Delete"))
+						{
 							current_emmiter->data->change_color_interpolation = false;
+
+							current_emmiter->data->initial_color = { 1,1,1,1 }; 
+							current_emmiter->data->final_color = { 1,1,1,1 };
+						}
+						
 					
 						ImGui::TreePop();
 					}

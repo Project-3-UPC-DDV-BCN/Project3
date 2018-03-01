@@ -277,7 +277,6 @@ void Particle::UpdateColor()
 	particle_data->color.r = (particle_data->initial_color.r + increment_r);
 	particle_data->color.g = (particle_data->initial_color.g + increment_g);
 	particle_data->color.b = (particle_data->initial_color.b + increment_b);
-	particle_data->color.a = 1;
 
 	//CONSOLE_LOG("R:%f G:%f B:%f", particle_data->color.r , particle_data->color.g, particle_data->color.b)
 
@@ -358,7 +357,7 @@ void Particle::Update()
 {
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
-	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + (movement * App->GetDt()));
+	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + (movement));
 
 	if (IsWorldSpace())
 	{
