@@ -2,7 +2,8 @@ using TheEngine;
 using TheEngine.TheConsole;
 
 public class laser {
-
+	
+	int i = 80;
 	TheRigidBody rb;
 	TheTransform trans;
 
@@ -13,7 +14,7 @@ public class laser {
 	
 	void Update () {
 		TheVector3 vec = TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection*2000*TheTime.DeltaTime;
-		TheGameObject.Self.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+		TheGameObject.Self.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x + 10, vec.y, vec.z);
 		//TheConsole.Log("Laser " + TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection);
 	}
 }

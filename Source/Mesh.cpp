@@ -75,6 +75,7 @@ bool Mesh::Load(Data & data)
 		App->resources->AddMesh(this);
 	}
 	CreateVerticesFromData();
+	RELEASE(mesh);
 
 	return ret;
 }

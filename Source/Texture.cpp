@@ -212,6 +212,8 @@ bool Texture::Load(Data & data)
 		SetCompression(text->compression);
 	}
 
+	RELEASE(text);
+
 	return ret;
 }
 

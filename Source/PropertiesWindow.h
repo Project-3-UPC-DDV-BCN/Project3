@@ -24,6 +24,7 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
+class GameObject;
 
 
 class PropertiesWindow :
@@ -62,5 +63,7 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+
+	std::map<GameObject*, Component*> components_to_destroy;
 };
 

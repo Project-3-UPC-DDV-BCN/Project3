@@ -89,6 +89,8 @@ bool Shader::Load(Data & data)
 		SetUID(data.GetUInt("UUID"));
 	}
 
+	RELEASE(shader);
+
 	return ret;
 }
 

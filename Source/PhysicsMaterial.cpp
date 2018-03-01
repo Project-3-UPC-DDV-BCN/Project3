@@ -118,6 +118,8 @@ bool PhysicsMaterial::Load(Data & data)
 		SetRestitutionMode(data.GetUInt("restitution_mode"));
 	}
 
+	RELEASE(phys_mat);
+
 	return ret;
 }
 

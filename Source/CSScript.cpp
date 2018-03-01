@@ -2259,6 +2259,7 @@ bool CSScript::Load(Data & data)
 		data.LeaveSection();
 	}
 	GetScriptFields();
+	RELEASE(text);
 	return ret;
 }
 

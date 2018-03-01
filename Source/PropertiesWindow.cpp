@@ -154,6 +154,12 @@ void PropertiesWindow::DrawWindow()
 				ImGui::Spacing();
 			}
 
+			for (std::map<GameObject*, Component*>::iterator it = components_to_destroy.begin(); it != components_to_destroy.end();)
+			{
+				it->first->DestroyComponent(it->second);
+				it = components_to_destroy.erase(it);
+			}
+
 			if (ImGui::Button("Add Component"))
 			{
 				ImGui::OpenPopup("Components");
@@ -835,6 +841,13 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 		{
 			mesh_renderer->SetActive(is_active);
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete Component##Mesh_Renderer"))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(mesh_renderer->GetGameObject(),mesh_renderer));
+			mesh_renderer = nullptr;
+			return;
+		}
 
 		Mesh* mesh = mesh_renderer->GetMesh();
 		if (ImGui::InputResourceMesh("Mesh", &mesh))
@@ -943,6 +956,12 @@ void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 		{
 			comp_camera->SetActive(is_active);
 		}
+		if (ImGui::Button("Delete Component##Camera"))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_camera->GetGameObject(), comp_camera));
+			comp_camera = nullptr;
+			return;
+		}
 
 		Color background_color = comp_camera->GetBackgroundColor();
 		ImGui::Text("Background Color:");
@@ -1030,7 +1049,9 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Script_" + script_name).c_str()))
 		{
-			App->scene->selected_gameobjects.front()->DestroyComponent(comp_script);
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_script->GetGameObject(), comp_script));
+			comp_script = nullptr;
+			return;
 		}
 
 		Script* script = comp_script->GetScript();
@@ -1153,6 +1174,19 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	factories_count++;
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		bool is_active = factory->IsActive();
+		if (ImGui::Checkbox(("Active##Factory_" + std::to_string(factories_count)).c_str(), &is_active))
+		{
+			factory->SetActive(is_active);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(("Delete Component##Factory_" + std::to_string(factories_count)).c_str()))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(factory->GetGameObject(), factory));
+			factory = nullptr;
+			return;
+		}
+
 		Prefab* prefab = factory->GetFactoryObject();
 		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
 		{
@@ -1177,6 +1211,19 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 {
 	if (ImGui::CollapsingHeader(rigidbody->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		bool is_active = rigidbody->IsActive();
+		if (ImGui::Checkbox("Active##RigidBody", &is_active))
+		{
+			rigidbody->SetActive(is_active);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete Component##RigidBody"))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
+			rigidbody = nullptr;
+			return;
+		}
+
 		float mass = rigidbody->GetMass();
 		if (ImGui::DragFloat("Mass", &mass))
 		{
@@ -1268,7 +1315,9 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
 		{
-			App->scene->selected_gameobjects.front()->DestroyComponent(comp_collider);
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_collider->GetGameObject(), comp_collider));
+			comp_collider = nullptr;
+			return;
 		}
 
 		PhysicsMaterial* material = comp_collider->GetColliderMaterial();
@@ -1358,6 +1407,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 		if (keeper != active_bool)
 			current_emmiter->SetActive(keeper);
+
 
 		if (current_emmiter->IsActive())
 		{
@@ -1935,9 +1985,17 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 		if (ImGui::CollapsingHeader((comp_light->GetName() + "##" + std::to_string(lights_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			bool is_active = comp_light->IsActive();
-			if (ImGui::Checkbox(("Active##Light" + std::to_string(lights_count)).c_str(), &is_active))
+			if (ImGui::Checkbox(("Active##Light_" + std::to_string(lights_count)).c_str(), &is_active))
 			{
 				comp_light->SetActive(is_active);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button(("Delete Component##Light_" + std::to_string(lights_count)).c_str()))
+			{
+				components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_light->GetGameObject(), comp_light));
+				comp_light = nullptr;
+				return;
 			}
 
 			ImGui::Text("Type:");
