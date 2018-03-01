@@ -24,6 +24,7 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
+class ComponentGOAPAgent;
 
 
 class PropertiesWindow :
@@ -54,6 +55,7 @@ public:
 	void DrawAudioSource(ComponentAudioSource* audio_source);
 	void DrawAudioDistZone(ComponentDistorsionZone* dist_zone);
 	void DrawLightPanel(ComponentLight* light);
+	void DrawGOAPAgent(ComponentGOAPAgent* goap_agent);
 
 private:
 	int scripts_count;
@@ -62,5 +64,6 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+	bool add_goal = false;
 };
 
