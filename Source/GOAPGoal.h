@@ -35,7 +35,11 @@ public:
 	float GetIncrementTime()const;
 	bool NeedIncrement();
 
+	GOAPField* GetCondition(int index) const;
+	int GetNumConditions()const;
+
 	void StartTimer();
+
 private:
 	std::vector<GOAPField*> conditions;
 	uint priority = 0; // form 1 to 100 -> 100 max priority

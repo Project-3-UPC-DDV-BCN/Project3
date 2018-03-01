@@ -1,6 +1,7 @@
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
 #include "GOAPAction.h"
+#include "GOAPVariable.h"
 #include "Application.h"
 #include "ModuleResources.h"
 
@@ -124,12 +125,127 @@ void ComponentGOAPAgent::AddVariable(std::string & name, float value)
 	blackboard.push_back(new GOAPVariable(name.c_str(), value));
 }
 
+bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, float & var) const
+{
+	for (int i = 0; i < blackboard.size(); ++i)
+	{
+		if (name == blackboard[i]->GetName())
+		{
+			var = blackboard[i]->GetValue();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, bool & var) const
+{
+	for (int i = 0; i < blackboard.size(); ++i)
+	{
+		if (name == blackboard[i]->GetName())
+		{
+			var = blackboard[i]->GetValue();
+			return true;
+		}
+	}
+	return false;
+}
+
 void ComponentGOAPAgent::FindActionPath()
 {
 	//clear current path
 	path.clear();
 
 	GOAPGoal* goal_to_complete = GetGoalToComplete();
+
+	if (goal_to_complete != nullptr)
+	{
+		std::vector<std::vector<GOAPEffect*>> effects_to_fulfill;
+		//Track the effects to fulfill for the goal 
+		for (int i = 0; i < goal_to_complete->GetNumConditions(); ++i)
+		{
+			GOAPField* condition = goal_to_complete->GetCondition(i);
+			GOAPVariable::VariableType type = condition->GetType();
+			switch (type)
+			{
+			case GOAPVariable::T_NULL:
+				break;
+			case GOAPVariable::T_BOOL:
+			{
+				bool cond_var = condition->GetValue();
+				bool black_var;
+				if (GetBlackboardVariable(condition->GetName(), black_var))
+				{
+					GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
+					switch (cm)
+					{
+					case GOAPField::CM_EQUAL:
+						if (black_var != cond_var)
+							effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), cond_var));
+						break;
+					case GOAPField::CM_DIFFERENT:
+						if (black_var == cond_var)
+							effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), cond_var));
+						break;
+					default:
+						break;
+					}
+				}
+				else
+				{
+					CONSOLE_ERROR("Blackboard has no variable %s, condition %s is avoided.", condition->GetName());
+				}
+				break;
+			}
+			case GOAPVariable::T_FLOAT:
+			{
+				float cond_var = condition->GetValue();
+				float black_var;
+				if (GetBlackboardVariable(condition->GetName(), black_var))
+				{
+					GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
+					switch (cm)
+					{
+					case GOAPField::CM_NULL:
+						break;
+					case GOAPField::CM_EQUAL:
+						if (cond_var != black_var)
+						{
+							if (black_var > cond_var)
+								effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f));
+							else
+								effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f));
+						}
+						break;
+					case GOAPField::CM_DIFFERENT:
+						break;
+					case GOAPField::CM_HIGHER:
+						break;
+					case GOAPField::CM_LOWER:
+						break;
+					case GOAPField::CM_HIGHER_OR_EQUAL:
+						break;
+					case GOAPField::CM_LOWER_OR_EQUAL:
+						break;
+					default:
+						break;
+					}
+				}
+				else
+				{
+					CONSOLE_ERROR("Blackboard has no variable %s, condition %s is avoided.", condition->GetName());
+				}
+			}
+			default:
+				break;
+			}
+		}
+
+	}
+	else
+	{
+		CONSOLE_WARNING("GOAP Agent don't have a goal to complete!");
+	}
 }
 
 GOAPGoal * ComponentGOAPAgent::GetGoalToComplete()

@@ -175,10 +175,10 @@ void GOAPAction::AddPreCondition(std::string & name, GOAPField::ComparisonMethod
 
 void GOAPAction::AddEffect(std::string & name, bool value)
 {
-	effects.push_back(new GOAPVariable(name.c_str(), value));
+	effects.push_back(new GOAPEffect(name.c_str(), value));
 }
 
-void GOAPAction::AddEffect(std::string & name, float value)
+void GOAPAction::AddEffect(std::string & name, GOAPEffect::EffectType effect, float value)
 {
-	effects.push_back(new GOAPVariable(name.c_str(), value));
+	effects.push_back(new GOAPEffect(name.c_str(), effect, value));
 }

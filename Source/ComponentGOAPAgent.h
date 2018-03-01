@@ -23,6 +23,9 @@ public:
 	void AddVariable(std::string & name, bool value);
 	void AddVariable(std::string & name, float value);
 
+	bool GetBlackboardVariable(const char* name, float& var) const;
+	bool GetBlackboardVariable(const char* name, bool& var) const;
+
 private:
 	void FindActionPath();
 	GOAPGoal* GetGoalToComplete();

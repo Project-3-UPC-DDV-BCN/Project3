@@ -141,6 +141,19 @@ bool GOAPGoal::NeedIncrement()
 	return ret;
 }
 
+GOAPField* GOAPGoal::GetCondition(int index) const
+{
+	GOAPField* ret = nullptr;
+	if (index >= 0 && index < conditions.size())
+		ret = conditions[index];
+	return ret;
+}
+
+int GOAPGoal::GetNumConditions() const
+{
+	return conditions.size();
+}
+
 void GOAPGoal::StartTimer()
 {
 	timer.Start();

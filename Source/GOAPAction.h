@@ -3,7 +3,7 @@
 
 #include "Resource.h"
 #include "GOAPField.h"
-#include "GOAPVariable.h"
+#include "GOAPEffect.h"
 #include <vector>
 
 class CSScript;
@@ -26,11 +26,11 @@ public:
 
 	//Adds an effect
 	void AddEffect(std::string& name, bool value);
-	void AddEffect(std::string& name, float value);
+	void AddEffect(std::string& name, GOAPEffect::EffectType effect, float value);
 
 private:
 	std::vector<GOAPField*> preconditions;
-	std::vector<GOAPVariable*> effects;
+	std::vector<GOAPEffect*> effects;
 
 	CSScript* script = nullptr;
 	
