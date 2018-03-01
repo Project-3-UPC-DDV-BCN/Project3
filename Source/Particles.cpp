@@ -333,8 +333,10 @@ void Particle::SetMovementFromStats()
 void Particle::SetMovement()
 {
 	//Getting the angle in which the particle have to be launched
+	ComponentTransform* trans = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
+
 	if (GetEmmisionAngle() == 0)
-		movement = emmiter->emmit_area_obb.axis[1];
+		movement = trans->GetMatrix().WorldY();
 	else	
 		movement = GetEmmisionVector(); 
 	
@@ -366,10 +368,17 @@ void Particle::Update()
 		}
 		
 	}
+
+
+	//float before[3] = { particle_data->color.r, particle_data->color.g, particle_data->color.b }; 
+	//CONSOLE_LOG("Before: %f %f %f", particle_data->color.r, particle_data->color.g, particle_data->color.b);
 		
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
 		UpdateColor();
+
+	//float after[3] = { particle_data->color.r, particle_data->color.g, particle_data->color.b };
+	//CONSOLE_LOG("Later: %f %f %f", particle_data->color.r, particle_data->color.g, particle_data->color.b); 
 
 	//Update scale
 	if (particle_data->change_size_interpolation)
@@ -436,6 +445,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	
 
 	if (GetAtributes().texture == nullptr)
 	{
@@ -443,7 +453,10 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
 		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
-		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f); 
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
+
+		CONSOLE_LOG("cOLOR SEND: %f %f %f", color.x, color.y,color.z);
+
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}
 	else
@@ -455,7 +468,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
 		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
-		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f);
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());

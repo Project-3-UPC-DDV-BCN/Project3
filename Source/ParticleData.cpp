@@ -6,6 +6,7 @@
 
 ParticleData::ParticleData()
 {
+	
 }
 
 ParticleData::~ParticleData()

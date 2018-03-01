@@ -79,6 +79,9 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	{
 		new_particle->particle_data->initial_color = data->initial_color; 
 		new_particle->particle_data->final_color = data->final_color;
+
+		//CONSOLE_LOG("Init: %f %f %f", data->initial_color.r, data->initial_color.g, data->initial_color.b);
+		//CONSOLE_LOG("Final: %f %f %f", data->final_color.r, data->final_color.g, data->final_color.b);
 	}
 	else
 		new_particle->particle_data->change_color_interpolation = false;
@@ -135,6 +138,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 	show_shockwave = false; 
 	wave_launched = false; 
+	show_emit_area = true; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -190,13 +194,6 @@ bool ComponentParticleEmmiter::Update()
 			}
 				
 		}
-	}
-
-	if (show_shockwave && GetSystemState() == PARTICLE_STATE_PLAY)
-	{
-		//UpdateShockWave();
-		CONSOLE_LOG("%f", data->shock_wave.wave_transform->GetGlobalPosition().x)
-		DrawShockWave(App->renderer3D->editor_camera);
 	}
 
 	if (active_particles.empty() == false)
@@ -255,6 +252,7 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 
 void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
+
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
 	//Position increment
@@ -267,9 +265,10 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 	float3 inc_angle = parent_eule_rot - obb_rot; 
 
 	//Apply
-	float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
+	Quat rot = Quat::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z); 
+	//float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
 
-	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, { data->width_increment + 1,data->height_increment + 1,data->depth_increment + 1 });
+	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot, {1 /*data->width_increment + 1*/,1/*data->height_increment + 1*/,1/*data->depth_increment + 1*/ });
 
 	emmit_area_obb.Transform(transform_to_apply);
 }
@@ -395,24 +394,24 @@ void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration,
 
 void ComponentParticleEmmiter::UpdateShockWave()
 {
-	//We get the number that we have to increment 
-	float time_ex = data->shock_wave.wave_timer.Read() / 1000;
-	float time_dec = data->shock_wave.wave_timer.Read() % 1000;
-	float time = time_ex + time_dec / 1000;
+	////We get the number that we have to increment 
+	//float time_ex = data->shock_wave.wave_timer.Read() / 1000;
+	//float time_dec = data->shock_wave.wave_timer.Read() % 1000;
+	//float time = time_ex + time_dec / 1000;
 
-	float percentage = (time / (data->shock_wave.duration));
+	//float percentage = (time / (data->shock_wave.duration));
 
-	//We get the current scale 
-	float current_scale = data->shock_wave.final_scale * percentage; 
+	////We get the current scale 
+	//float current_scale = data->shock_wave.final_scale * percentage; 
 
-	data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
+	//data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
 
-	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
-	{
-		data->shock_wave.active = false;
-		data->shock_wave.done = true; 
-		show_shockwave = false; 
-	}
+	//if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
+	//{
+	//	data->shock_wave.active = false;
+	//	data->shock_wave.done = true; 
+	//	show_shockwave = false; 
+	//}
 		
 }
 
@@ -452,34 +451,34 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
-	uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
-	App->renderer3D->UseShaderProgram(id);
+	//uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+	//App->renderer3D->UseShaderProgram(id);
 
-	App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
-	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
-	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
+	//App->renderer3D->SetUniformMatrix(id, "Model", data->shock_wave.wave_transform->GetMatrix().Transposed().ptr());
+	//App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
+	//App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
-	if (data->shock_wave.wave_texture != nullptr)
-	{	
-		if (data->shock_wave.wave_texture->GetID() == 0)
-			data->shock_wave.wave_texture->LoadToMemory();
+	//if (data->shock_wave.wave_texture != nullptr)
+	//{	
+	//	if (data->shock_wave.wave_texture->GetID() == 0)
+	//		data->shock_wave.wave_texture->LoadToMemory();
 
-		App->renderer3D->SetUniformBool(id, "has_texture", true);
-		App->renderer3D->SetUniformBool(id, "has_material_color", false);
+	//	App->renderer3D->SetUniformBool(id, "has_texture", true);
+	//	App->renderer3D->SetUniformBool(id, "has_material_color", false);
 
-		App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
+	//	App->renderer3D->SetUniformVector4(id, "material_color", float4(1.0f, 0.1f, 0.0f, 1.0f));
 
-		glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
-	}
+	//	glBindTexture(GL_TEXTURE_2D, data->shock_wave.wave_texture->GetID());
+	//}
 
-	if (data->shock_wave.wave_mesh->id_indices == 0)
-		data->shock_wave.wave_mesh->LoadToMemory();
+	//if (data->shock_wave.wave_mesh->id_indices == 0)
+	//	data->shock_wave.wave_mesh->LoadToMemory();
 
-	App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
+	//App->renderer3D->BindVertexArrayObject(data->shock_wave.wave_mesh->id_vao);
 
-	glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	//glDrawElements(GL_TRIANGLES, data->shock_wave.wave_mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
-	App->renderer3D->UnbindVertexArrayObject();
+	//App->renderer3D->UnbindVertexArrayObject();
 }
 
 

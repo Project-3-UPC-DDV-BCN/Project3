@@ -1689,8 +1689,6 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform vec4 material_color;\n"
 			"uniform float material_alpha;\n"
 			"uniform bool alpha_interpolation;\n"
-			"uniform bool color_interpolation;\n"
-			"uniform vec3 color_to_show;\n"
 			"uniform float alpha_percentage;\n"
 			"uniform bool has_texture;\n"
 			"uniform sampler2D ourTexture;\n\n"
