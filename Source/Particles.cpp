@@ -254,7 +254,7 @@ void Particle::UpdateColor()
 	if (!particle_data->change_color_interpolation)
 		return;
 
-	static int color_difference[3] =
+	static float color_difference[3] =
 	{
 		particle_data->final_color.r - particle_data->initial_color.r,
 		particle_data->final_color.g - particle_data->initial_color.g,
@@ -336,7 +336,8 @@ void Particle::UpdateRotation()
 
 void Particle::SetMovementFromStats()
 {
-	movement += particle_data->gravity * App->time->GetGameDt();
+	movement += particle_data->gravity * App->GetDt();
+	CONSOLE_LOG("%f", App->GetDt()); 
 }
 
 void Particle::SetMovement()
@@ -350,14 +351,14 @@ void Particle::SetMovement()
 	//Setting the movement vector
 	movement.Normalize(); 
 	movement *= particle_data->velocity;
-	movement *= App->time->GetGameDt();
+	movement *= App->GetDt();
 }
 
 void Particle::Update()
 {
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
-	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + movement);
+	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + (movement * App->GetDt()));
 
 	if (IsWorldSpace())
 	{

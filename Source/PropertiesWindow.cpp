@@ -1758,25 +1758,16 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
-						static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b };
-
-						ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
-
-						static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b };
-
-						ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+						ImGui::ColorEdit3("Initial Color", (float*)&current_emmiter->data->initial_color);
+						ImGui::ColorEdit3("Final Color", (float*)&current_emmiter->data->final_color);
 
 						if (ImGui::Button("Apply Color Interpolation"))
-						{
-							current_emmiter->data->change_color_interpolation = true;
+							current_emmiter->data->change_color_interpolation = true;						
 
-							Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
-							Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
-
-							current_emmiter->data->initial_color = initial;
-							current_emmiter->data->final_color = final;
-						}
-
+						ImGui::SameLine(); 
+						if (ImGui::Button("Delete"))				
+							current_emmiter->data->change_color_interpolation = false;
+					
 						ImGui::TreePop();
 					}
 					ImGui::TreePop(); 

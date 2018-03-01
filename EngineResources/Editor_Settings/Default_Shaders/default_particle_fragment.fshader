@@ -28,8 +28,8 @@ void main()
 		color = ourColor;
    if(color.a < 0.1f)
 		discard;
-	if(alpha_interpolation)
-		color.a = alpha_percentage;
 	if (material_alpha != 1)
 		color.a = material_alpha;
+	if(alpha_interpolation)
+		color.a = alpha_percentage;
 }

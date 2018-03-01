@@ -365,6 +365,11 @@ void Application::UpdateStep()
 	}
 }
 
+float Application::GetDt()
+{
+	return dt;
+}
+
 void Application::Play()
 {
 	if (state == OnStop) {
