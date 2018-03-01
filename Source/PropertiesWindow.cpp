@@ -2056,15 +2056,21 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 	{
 		if (ImGui::TreeNode("Goals##Goap_goal"))
 		{
-			if (goap_agent->goals.size() > 0)
+			std::vector<GOAPGoal*> goals = goap_agent->goals;
+			if (goals.size() > 0)
 			{
-				for (int i = 0; i < goap_agent->goals.size(); ++i)
+				for (int i = 0; i < goals.size(); ++i)
 				{
-					std::string name = goap_agent->goals[i]->GetName();
+					std::string name = goals[i]->GetName();
 					name += "##Goal_";
 					name += i;
 					if (ImGui::TreeNode(name.c_str()))
 					{
+						ImGui::Text("Priority:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetPriority());
+						ImGui::Text("Increment Rate:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementRate());
+						ImGui::Text("Increment Timestep:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementTime());
+
+
 
 						ImGui::TreePop();
 					}
