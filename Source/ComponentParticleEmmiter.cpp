@@ -38,13 +38,13 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
 	float3 particle_pos = emmit_area_obb.RandomPointInside(random);
-	emmit_area_obb.LocalToWorld().TransformPos(particle_pos);
+	emmit_area_obb.LocalToWorld().TransformPos(emmit_area_obb.CenterPoint());
 
 	Particle* new_particle = new Particle(this);
 
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
-	new_particle->components.particle_transform->SetPosition(particle_pos);
+	new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
 	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
 
 	//We generate the always squared surface for the particle 
@@ -252,25 +252,30 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 
 void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
-
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	//Position increment
-	float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area_obb.CenterPoint();
+	if (parent_transform->dirty)
+	{
+		//Position increment
+		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area_obb.CenterPoint();
 
-	//Rotation increment
-	float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
-	float3 obb_rot = emmit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ();
+		//Rotation increment
+		float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
+		float3 obb_rot = emmit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ();
 
-	float3 inc_angle = parent_eule_rot - obb_rot; 
+		float3 inc_angle = parent_eule_rot - obb_rot;
 
-	//Apply
-	Quat rot = Quat::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z); 
-	//float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
+		//Apply
+		Quat rot = Quat::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
+		//float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
 
-	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot, {1 /*data->width_increment + 1*/,1/*data->height_increment + 1*/,1/*data->depth_increment + 1*/ });
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot, { 1 /*data->width_increment + 1*/,1/*data->height_increment + 1*/,1/*data->depth_increment + 1*/ });
 
-	emmit_area_obb.Transform(transform_to_apply);
+		emmit_area_obb.Transform(transform_to_apply);
+
+		parent_transform->dirty = false; 
+	}
+
 }
 
 void ComponentParticleEmmiter::UpdateCurrentData()

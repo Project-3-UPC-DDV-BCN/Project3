@@ -31,6 +31,8 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	bool dirty; 
+
 private:
 	float3 position;
 	Quat rotation;

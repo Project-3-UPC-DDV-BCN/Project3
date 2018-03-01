@@ -203,6 +203,7 @@ float3 Particle::GetEmmisionVector()
 
 	//First we create a vector matching the Y axis
 	direction = emmiter_transform->GetMatrix().WorldY();
+	float3 direction_cpy = direction; 
 
 	//We apply the rotation angle to the vector 
 	int angle_z = random.Int(0, particle_data->emision_angle);
@@ -211,11 +212,10 @@ float3 Particle::GetEmmisionVector()
 	z_rotation = z_rotation.FromEulerXYZ(0, 0, angle_z * DEGTORAD);
 	direction = z_rotation.Transform(direction);
 
-	//We apply a rotation on X for randomization
+	//We apply a rotation on Y for randomization
 	int angle_y = random.Int(0, 360);
+	float3x3 y_rotation = float3x3::RotateAxisAngle(direction_cpy, angle_y * DEGTORAD);
 
-	float3x3 y_rotation;
-	y_rotation = y_rotation.FromEulerXYZ(0, angle_y * DEGTORAD, 0);
 	direction = y_rotation.Transform(direction);
 
 	//Dir is the maximum angle direction so we hace to add some randomnes 
