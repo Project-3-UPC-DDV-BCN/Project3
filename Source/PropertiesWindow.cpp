@@ -2058,7 +2058,17 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 		{
 			if (goap_agent->goals.size() > 0)
 			{
+				for (int i = 0; i < goap_agent->goals.size(); ++i)
+				{
+					std::string name = goap_agent->goals[i]->GetName();
+					name += "##Goal_";
+					name += i;
+					if (ImGui::TreeNode(name.c_str()))
+					{
 
+						ImGui::TreePop();
+					}
+				}
 			}
 			else
 				ImGui::TextColored(ImVec4(255, 0, 0, 255), "No goals created");
@@ -2083,8 +2093,38 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 	// Pop-up to create goal
 	if (add_goal)
 	{
-		GOAPGoal goal;
+		ImGui::Begin("AddGoal##GOAP");
+
+		if (add_goal_priority < 0)
+			add_goal_priority = 0;
+		if (add_goal_inc_rate < 0)
+			add_goal_inc_rate = 0;
+		if (add_goal_inc_time < 0)
+			add_goal_inc_time = 0;
+
+		ImGui::InputText("Name##AddGoal", add_goal_name, 256);
+		ImGui::InputInt("Priority##AddGoal", &add_goal_priority); 
+		ImGui::InputInt("Increment Rate##AddGoal", &add_goal_inc_rate);
+		ImGui::InputFloat("Increment Time##AddGoal", &add_goal_inc_time);
+		ImGui::TextColored(ImVec4(255, 255, 0, 255), "If 0, there is no increment");
+
+		if (ImGui::Button("Save Goal##AddGoal"))
+		{
+			add_goal = false;
+			GOAPGoal* goal = new GOAPGoal();
+			goal->SetName(add_goal_name);
+			goal->SetPriority(add_goal_priority);
+			goal->SetIncrement(add_goal_inc_rate, add_goal_inc_time);
+
+			goap_agent->AddGoal(goal);
+			
+			add_goal_name[0] = '\0';
+			add_goal_priority = 0;
+			add_goal_inc_rate = 0;
+			add_goal_inc_time = 0;
+		}
 		
+		ImGui::End();
 	}
 }
 

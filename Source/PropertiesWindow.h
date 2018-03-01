@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include <map>
+#include <string>
 
 class ComponentMeshRenderer;
 class ComponentTransform;
@@ -64,6 +65,13 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+
 	bool add_goal = false;
+	char add_goal_name[256] = "\0";
+	int add_goal_priority = 0;
+	int add_goal_inc_rate = 0;
+	float add_goal_inc_time = 0;
+
+	
 };
 
