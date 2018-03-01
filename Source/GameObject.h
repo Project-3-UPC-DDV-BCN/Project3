@@ -36,6 +36,7 @@ public:
 	std::string GetLayer() const;
 	void SetIsUsedInPrefab(bool used);
 	bool GetIsUsedInPrefab()const;
+	void SetNewUID();
 
 	int GetAllChildsCount() const;
 	void GetAllChildsName(std::vector<std::string>& names);
@@ -53,6 +54,9 @@ public:
 	void InitScripts();
 	void StartScripts();
 	void UpdateScripts();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 
 	void UpdateFactory();
 

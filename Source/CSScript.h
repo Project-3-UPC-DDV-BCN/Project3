@@ -20,9 +20,9 @@ public:
 	void InitScript();
 	void StartScript();
 	void UpdateScript();
-	void OnCollisionEnter();
-	void OnCollisionStay();
-	void OnCollisionExit();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
 
@@ -101,6 +101,10 @@ public:
 	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetRectAnchor(MonoObject * object);
 
+	//TEXT
+	void SetText(MonoObject * object, MonoString* t);
+	MonoString* GetText(MonoObject * object);
+
 	//PROGRESSBAR
 	void SetPercentageProgress(MonoObject * object, float progress);
 	float GetPercentageProgress(MonoObject * object);
@@ -118,6 +122,11 @@ public:
 	void SetTimeScale(MonoObject* object, float scale);
 	float GetTimeScale();
 	float GetDeltaTime();
+
+	//TIMER
+	void CreateTimer(MonoObject* object, float time);
+	float ReadTime(MonoObject* object);
+	void ResetTime(MonoObject* object);
 
 	//INPUT
 	mono_bool IsKeyDown(MonoString * key_name);
@@ -150,6 +159,9 @@ public:
 	//PARTICLE EMMITER
 	void PlayEmmiter(MonoObject * object);
 	void StopEmmiter(MonoObject * object);
+
+	//RIGIDBODY
+	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
@@ -192,6 +204,7 @@ private:
 	std::vector<ScriptField*> script_fields;
 	bool modifying_self;
 	std::map<MonoObject*, GameObject*> created_gameobjects;
+	//std::map<MonoObject*, PerfTimer*> created_timers;
 	GameObject* active_gameobject;
 	bool inside_function;
 

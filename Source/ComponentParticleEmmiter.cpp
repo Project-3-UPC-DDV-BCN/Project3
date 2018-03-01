@@ -45,6 +45,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
 	new_particle->components.particle_transform->SetPosition(particle_pos);
+	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
 
 	//We generate the always squared surface for the particle 
 	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitiveParticlePlane");
@@ -132,7 +133,9 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
 	runtime_behaviour = "null"; 
+
 	show_shockwave = false; 
+	wave_launched = false; 
 
 	//Make the aabb enclose a primitive cube
 	AABB emit_area; 
@@ -140,7 +143,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-	emmit_area_obb.SetFrom(emit_area); 
+	emmit_area_obb.SetFrom(emit_area);
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -168,6 +171,28 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
+
+	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
+		GenerateParticles();
+
+	else if (data->emmision_type == EMMISION_SIMULTANEOUS && system_state == PARTICLE_STATE_PLAY)
+	{
+		if (data->time_step_sim == 0 && wave_launched == false)
+		{
+			LaunchParticlesWave(); 
+			wave_launched = true; 
+		}
+		else if(data->time_step_sim != 0)
+		{
+			if (LaunchingAllowed())
+			{
+				LaunchParticlesWave();
+				spawn_timer.Start(); 
+			}
+				
+		}
+	}
+
 	if (active_particles.empty() == false)
 	{
 		for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();)
@@ -215,8 +240,6 @@ bool ComponentParticleEmmiter::Update()
 		}
 	}
 
-	GenerateParticles();
-
 	if (data->shock_wave.active && data->shock_wave.done == false && system_state == PARTICLE_STATE_PLAY)
 	{
 		UpdateShockWave();
@@ -260,8 +283,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 void ComponentParticleEmmiter::UpdateCurrentData()
 {
-
-
+	
 }
 
 ComponentParticleEmmiter::~ComponentParticleEmmiter()
@@ -417,6 +439,25 @@ void ComponentParticleEmmiter::PlayEmmiter()
 void ComponentParticleEmmiter::StopEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PAUSE);
+	wave_launched = false; 
+}
+
+bool ComponentParticleEmmiter::LaunchingAllowed()
+{
+	if (spawn_timer.Read() > data->time_step_sim * 1000)
+		return true;  
+
+	return false;
+}
+
+void ComponentParticleEmmiter::LaunchParticlesWave()
+{
+	for (int i = 0; i < data->amount_to_emmit; i++)
+	{
+		Particle* new_particle = CreateParticle();
+		new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
+		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
+	}
 }
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)

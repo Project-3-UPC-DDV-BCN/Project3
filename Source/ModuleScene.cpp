@@ -300,8 +300,11 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 		ComponentRigidBody* rb = (ComponentRigidBody*)gameobject->GetComponent(Component::CompRigidBody);
 		if (rb)
 		{
-			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-			App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+			if (gameobject->IsActive() && RecursiveCheckActiveParents(rb->GetGameObject()))
+			{
+				App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+				App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+			}
 		}
 
 		RenameDuplicatedGameObject(gameobject);
@@ -444,7 +447,7 @@ void ModuleScene::NewScene(bool loading_scene)
 void ModuleScene::LoadScene(std::string path)
 {
 	Data data;
-	if (data.LoadJSON(path)) 
+	if (data.LoadBinary(path)) 
 	{
 		NewScene(true);
 		scene_name = data.GetString("Scene Name");
@@ -457,8 +460,8 @@ void ModuleScene::LoadScene(std::string path)
 			data.LeaveSection();
 			AddGameObjectToScene(game_object);
 			App->resources->AddGameObject(game_object);
-			ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
-			if (transform) transform->UpdateGlobalMatrix();
+			//ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
+			//if (transform) transform->UpdateGlobalMatrix();
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
 			if (mesh_renderer) mesh_renderer->LoadToMemory();
 			ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
@@ -472,7 +475,7 @@ void ModuleScene::LoadScene(std::string path)
 			}
 		}
 		data.ClearData();
-		if (data.LoadJSON(path)) {
+		if (data.LoadBinary(path)) {
 			std::list<GameObject*>::iterator it = scene_gameobjects.begin();
 			for (int i = 0; i < gameObjectsCount; i++) {
 				data.EnterSection("GameObject_" + std::to_string(i));
@@ -498,7 +501,7 @@ void ModuleScene::SaveScene(std::string path) const
 	for (std::list<GameObject*>::const_iterator it = root_gameobjects.begin(); it != root_gameobjects.end(); it++) {
 		(*it)->Save(data);
 	}
-	data.SaveAsJSON(path);
+	data.SaveAsBinary(path);
 }
 
 void ModuleScene::LoadPrefab(Prefab* prefab)
@@ -521,8 +524,8 @@ void ModuleScene::CreatePrefab(GameObject * gameobject)
 	prefab->SetLibraryPath(library_path);
 	prefab->SetName(gameobject->GetName());
 	prefab->Save(data);
-	data.SaveAsJSON(assets_path);
-	data.SaveAsJSON(library_path);
+	data.SaveAsBinary(assets_path);
+	data.SaveAsBinary(library_path);
 	
 	//Won't use this prefab, instead create a new resource from this prefab
 	delete prefab;

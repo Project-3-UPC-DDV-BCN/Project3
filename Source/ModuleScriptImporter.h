@@ -77,6 +77,10 @@ private:
 	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	static MonoObject* GetRectAnchor(MonoObject * object);
 
+	// TEXT
+	static void SetText(MonoObject * object, MonoString* text);
+	static MonoString* GetText(MonoObject * object);
+
 	//PROGRESSBAR
 	static void SetPercentageProgress(MonoObject * object, float progress);
 	static float GetPercentageProgress(MonoObject * object);
@@ -130,6 +134,9 @@ private:
 	//PARTICLE EMMITER
 	static void PlayEmmiter(MonoObject * object);
 	static void StopEmmiter(MonoObject * object);
+
+	//RIGIDBODY
+	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 
 private:
 	std::string mono_path;

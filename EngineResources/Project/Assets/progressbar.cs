@@ -2,11 +2,11 @@ using TheEngine;
 
 public class progressbar
 {
-	public TheProgressBar bar = null;
+	public TheText text = null;
 
 	void Start () 
 	{
-		bar = TheGameObject.Self.GetComponent<TheProgressBar>();
-		bar.PercentageProgress = 100.0f;
+		text = TheGameObject.Self.GetComponent<TheText>();
+		text.Text = "hi";
 	}
 }

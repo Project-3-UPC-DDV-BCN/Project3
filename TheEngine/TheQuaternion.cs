@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using TheEngine.Math;
 
 namespace TheEngine
 {
@@ -50,22 +51,22 @@ namespace TheEngine
         {
             TheVector3 ret = new TheVector3
             {
-                x = Math.Math.Atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z),
-                y = Math.Math.Asin(-2 * (x * z - w * y)),
-                z = Math.Math.Atan2(2 * (y * z + w * x), w * w - x * x - y * y + z * z)
+                x = TheMath.Atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z),
+                y = TheMath.Asin(-2 * (x * z - w * y)),
+                z = TheMath.Atan2(2 * (y * z + w * x), w * w - x * x - y * y + z * z)
             };
             return ret;
         }
 
         public static TheQuaternion FromEulerAngles(TheVector3 angles)
         {
-            float cos_z_2 = Math.Math.Cos(0.5f * angles.z);
-            float cos_y_2 = Math.Math.Cos(0.5f * angles.y);
-            float cos_x_2 = Math.Math.Cos(0.5f * angles.x);
+            float cos_z_2 = TheMath.Cos(0.5f * angles.z);
+            float cos_y_2 = TheMath.Cos(0.5f * angles.y);
+            float cos_x_2 = TheMath.Cos(0.5f * angles.x);
 
-            float sin_z_2 = Math.Math.Sin(0.5f * angles.z);
-            float sin_y_2 = Math.Math.Sin(0.5f * angles.y);
-            float sin_x_2 = Math.Math.Sin(0.5f * angles.x);
+            float sin_z_2 = TheMath.Sin(0.5f * angles.z);
+            float sin_y_2 = TheMath.Sin(0.5f * angles.y);
+            float sin_x_2 = TheMath.Sin(0.5f * angles.x);
 
             TheQuaternion ret = new TheQuaternion
             {
@@ -81,7 +82,7 @@ namespace TheEngine
         public static float AngleBetween(TheQuaternion a, TheQuaternion b)
         {
             float dot = DotProduct(a, b);
-            return Math.Math.Acos(Math.Math.Min(Math.Math.Abs(dot), 1f)) * 2f * Math.Math.RadToDeg;
+            return TheMath.Acos(TheMath.Min(TheMath.Abs(dot), 1f)) * 2f * TheMath.RadToDeg;
         }
 
         public static TheQuaternion Lerp(TheQuaternion a, TheQuaternion b, float value)
@@ -107,8 +108,8 @@ namespace TheEngine
 
             if (dot < 0.95f)
             {
-                float angle = Math.Math.Acos(dot);
-                return (a * Math.Math.Sin(angle * (1 - value)) + result * Math.Math.Sin(angle * value)) / Math.Math.Sin(angle);
+                float angle = TheMath.Acos(dot);
+                return (a * TheMath.Sin(angle * (1 - value)) + result * TheMath.Sin(angle * value)) / TheMath.Sin(angle);
             }
             else
             {
@@ -126,7 +127,7 @@ namespace TheEngine
             }
             else
             {
-                float value = Math.Math.Min(1f, step / angle);
+                float value = TheMath.Min(1f, step / angle);
                 result = Slerp(from, to, value);
             }
             return result;
@@ -134,13 +135,13 @@ namespace TheEngine
 
         public static TheQuaternion FromAngleAxis(float angle, TheVector3 axis)
         {
-            TheVector3 tmp = axis * Math.Math.Sin(angle / 2);
+            TheVector3 tmp = axis * TheMath.Sin(angle / 2);
             TheQuaternion ret = new TheQuaternion
             {
                 x = tmp.x,
                 y = tmp.y,
                 z = tmp.z,
-                w = Math.Math.Cos(angle / 2)
+                w = TheMath.Cos(angle / 2)
             };
 
             return ret;
@@ -154,9 +155,9 @@ namespace TheEngine
 
         public static void ToAngleAxis(TheQuaternion a, out float angle, out TheVector3 axis)
         {
-            angle = Math.Math.Acos(a.w);
+            angle = TheMath.Acos(a.w);
 
-            float sin_theta_inv = 1.0f / Math.Math.Sin(angle);
+            float sin_theta_inv = 1.0f / TheMath.Sin(angle);
 
             axis = new TheVector3
             {
@@ -195,7 +196,7 @@ namespace TheEngine
 
         public static float Magnitude(TheQuaternion quaternion)
         {
-            return Math.Math.Sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w);
+            return TheMath.Sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w);
         }
 
         public TheQuaternion Normalized

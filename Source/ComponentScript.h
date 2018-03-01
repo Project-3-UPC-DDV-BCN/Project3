@@ -14,6 +14,9 @@ public:
 	void InitScript();
 	void StartScript();
 	void UpdateScript();
+	void OnCollisionEnter(GameObject* other_collider);
+	void OnCollisionStay(GameObject* other_collider);
+	void OnCollisionExit(GameObject* other_collider);
 
 	void SetScript(Script* script);
 	std::string GetScriptName() const;

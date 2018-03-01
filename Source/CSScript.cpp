@@ -22,6 +22,8 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentAudioSource.h"
 #include "AudioEvent.h"
+#include "ComponentText.h"
+#include "ComponentRigidBody.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -116,29 +118,35 @@ void CSScript::UpdateScript()
 	}
 }
 
-void CSScript::OnCollisionEnter()
+void CSScript::OnCollisionEnter(GameObject* other_collider)
 {
 	if (on_collision_enter != nullptr)
 	{
-		CallFunction(on_collision_enter, nullptr); //nullptr should be the collision
+		void* param[1];
+		param[0] = &other_collider;
+		CallFunction(on_collision_enter, param);
 		inside_function = false;
 	}
 }
 
-void CSScript::OnCollisionStay()
+void CSScript::OnCollisionStay(GameObject* other_collider)
 {
 	if (on_collision_stay != nullptr)
 	{
-		CallFunction(on_collision_stay, nullptr); //nullptr should be the collision
+		void* param[1];
+		param[0] = &other_collider;
+		CallFunction(on_collision_enter, param);
 		inside_function = false;
 	}
 }
 
-void CSScript::OnCollisionExit()
+void CSScript::OnCollisionExit(GameObject* other_collider)
 {
 	if (on_collision_exit != nullptr)
 	{
-		CallFunction(on_collision_exit, nullptr); //nullptr should be the collision
+		void* param[1];
+		param[0] = &other_collider;
+		CallFunction(on_collision_enter, param);
 		inside_function = false;
 	}
 }
@@ -892,6 +900,7 @@ MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * typ
 	}
 	else if (name == "TheEngine.TheFactory") comp_type = Component::CompTransform;
 	else if (name == "TheEngine.TheProgressBar") comp_type = Component::CompProgressBar;
+	else if (name == "TheEngine.TheText") comp_type = Component::CompText;
 
 	if (comp_type != Component::CompUnknown)
 	{
@@ -949,6 +958,14 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	else if (name == "TheEngine.TheParticleEmmiter")
 	{
 		comp_name = "TheParticleEmmiter";
+	}
+	else if (name == "TheEngine.TheText")
+	{
+		comp_name = "TheText";
+	}
+	else if (name == "TheEngine.TheRigidBody")
+	{
+		comp_name = "TheRigidBody";
 	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
@@ -1410,6 +1427,40 @@ MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 	return nullptr;
 }
 
+void CSScript::SetText(MonoObject * object, MonoString* t)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	const char* txt = mono_string_to_utf8(t);
+
+	ComponentText* text = (ComponentText*)active_gameobject->GetComponent(Component::CompText);
+	text->SetText(txt);
+}
+
+MonoString* CSScript::GetText(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return mono_string_new(mono_domain, "");
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return mono_string_new(mono_domain, "");
+	}
+
+	ComponentText* text = (ComponentText*)active_gameobject->GetComponent(Component::CompText);
+	return mono_string_new(mono_domain, text->GetText().c_str());
+}
+
 MonoObject * CSScript::GetUp(MonoObject * object)
 {
 	if (!MonoObjectIsValid(object))
@@ -1666,6 +1717,20 @@ float CSScript::GetTimeScale()
 float CSScript::GetDeltaTime()
 {
 	return App->time->GetGameDt();
+}
+
+void CSScript::CreateTimer(MonoObject * object, float time)
+{
+	
+}
+
+float CSScript::ReadTime(MonoObject * object)
+{
+	return 0.0f;
+}
+
+void CSScript::ResetTime(MonoObject * object)
+{
 }
 
 mono_bool CSScript::IsKeyDown(MonoString * key_name)
@@ -2361,4 +2426,22 @@ void CSScript::StopEmmiter(MonoObject * object)
 
 	if (emmiter != nullptr)
 		emmiter->StopEmmiter();
+}
+
+void CSScript::SetLinearVelocity(MonoObject * object, float x, float y, float z)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)active_gameobject->GetComponent(Component::CompRigidBody);
+
+	if (rb != nullptr)
+		rb->SetLinearVelocity({ x,y,z });
 }

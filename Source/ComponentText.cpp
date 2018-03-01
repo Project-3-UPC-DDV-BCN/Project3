@@ -107,6 +107,9 @@ void ComponentText::Load(Data & data)
 
 	std::string font_name = data.GetString("font");
 	SetFont(App->resources->GetFont(font_name));
+
+	if (font != nullptr)
+		SetText(data.GetString("text").c_str());
 }
 
 void ComponentText::SetFont(Font * _font)

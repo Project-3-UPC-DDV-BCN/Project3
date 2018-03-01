@@ -241,13 +241,13 @@ void GameObject::SetActive(bool active)
 	{
 		if (!active)
 		{
-			rb->SetToSleep();
+			//rb->SetToSleep();
 			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
 			App->physics->RemoveActorFromList(rb->GetRigidBody());
 		}
 		else
 		{
-			rb->WakeUp();
+			//rb->WakeUp();
 			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 			App->physics->AddActorToList(rb->GetRigidBody(), this);
 		}
@@ -377,6 +377,11 @@ bool GameObject::GetIsUsedInPrefab() const
 	return is_used_in_prefab;
 }
 
+void GameObject::SetNewUID()
+{
+	uuid = App->RandomNumber().Int();
+}
+
 int GameObject::GetAllChildsCount() const
 {
 	int count = childs.size();
@@ -490,6 +495,39 @@ void GameObject::UpdateScripts()
 	}
 }
 
+void GameObject::OnCollisionEnter(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionEnter(other_collider);
+		}
+	}
+}
+
+void GameObject::OnCollisionStay(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionStay(other_collider);
+		}
+	}
+}
+
+void GameObject::OnCollisionExit(GameObject* other_collider)
+{
+	ComponentScript* comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnCollisionExit(other_collider);
+		}
+	}
+}
+
 void GameObject::UpdateFactory()
 {
 	ComponentFactory* comp_factory = nullptr;
@@ -584,11 +622,11 @@ void GameObject::Save(Data & data, bool is_duplicated)
 	if (is_duplicated)
 	{
 		uuid = App->RandomNumber().Int();
-		active = true;
+		/*active = true;
 		is_static = false;
 		is_selected = false;
 		tag = "Default";
-		layer = "Default";
+		layer = "Default";*/
 	}
 	data.AddUInt("UUID", uuid);
 	data.AddString("Name", name);

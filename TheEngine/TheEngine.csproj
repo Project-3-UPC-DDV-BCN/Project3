@@ -51,14 +51,17 @@
     <Compile Include="TheComponent.cs" />
     <Compile Include="TheFactory.cs" />
     <Compile Include="TheInput.cs" />
-    <Compile Include="Math.cs" />
+    <Compile Include="TheMath.cs" />
     <Compile Include="TheQuaternion.cs" />
     <Compile Include="TheGameObject.cs" />
     <Compile Include="TheConsole.cs" />
     <Compile Include="TheRectTransform.cs" />
+    <Compile Include="TheRigidBody.cs" />
+    <Compile Include="TheText.cs" />
+    <Compile Include="TheTimer.cs" />
     <Compile Include="TheTransform.cs" />
     <Compile Include="TheVector3.cs" />
-    <Compile Include="Time.cs" />
+    <Compile Include="TheTime.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

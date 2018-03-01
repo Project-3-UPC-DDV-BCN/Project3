@@ -351,15 +351,20 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				SetUniformMatrix(program->GetProgramID(), "Model", (*it).GetOrtoTransform().Transposed().ptr());
 			}
 
-			SetUniformBool(program->GetProgramID(), "has_texture", (*it).GetTextureId() > 0);
-			SetUniformBool(program->GetProgramID(), "has_material_color", true);
+			bool has_texture = ((*it).GetTextureId() > 0);
+
+			SetUniformInt(program->GetProgramID(), "Tex_Diffuse", 0);
+			SetUniformInt(program->GetProgramID(), "Tex_NormalMap", 0);
+			SetUniformBool(program->GetProgramID(), "has_normalmap", false);
+			SetUniformBool(program->GetProgramID(), "has_texture", has_texture);
+			SetUniformBool(program->GetProgramID(), "has_material_color", !has_texture);
 			SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
 
 			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
 
 			BindVertexArrayObject((*it).GetPlane()->id_vao);
 
-			App->renderer3D->SendLight(program->GetProgramID());
+			SendLight(program->GetProgramID());
 
 			glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
 
@@ -522,11 +527,12 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		{
 			if (active_camera->GetGameObject() && (*it)->GetMesh())
 			{
-				if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
+				/*if (active_camera->ContainsGameObjectAABB((*it)->GetMesh()->box))
 				{
-					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-						DrawMesh(*it, active_camera);
-				}
+					
+				}*/
+				if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
+				DrawMesh(*it, active_camera);
 			}
 		}
 		else

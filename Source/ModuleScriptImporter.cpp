@@ -267,6 +267,10 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectAnchor", (const void*)SetRectAnchor);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectAnchor", (const void*)GetRectAnchor);
 
+	//TEXT
+	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
+	mono_add_internal_call("TheEngine.TheText::GettText", (const void*)GetText);
+
 	// PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
 	mono_add_internal_call("TheEngine.TheProgressBar::GetPercentageProgress", (const void*)GetPercentageProgress);
@@ -281,9 +285,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
 
 	//TIME
-	mono_add_internal_call("TheEngine.Time::SetTimeScale", (const void*)SetTimeScale);
-	mono_add_internal_call("TheEngine.Time::GetTimeScale", (const void*)GetTimeScale);
-	mono_add_internal_call("TheEngine.Time::GetDeltaTime", (const void*)GetDeltaTime);
+	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
+	mono_add_internal_call("TheEngine.TheTime::GetTimeScale", (const void*)GetTimeScale);
+	mono_add_internal_call("TheEngine.TheTime::GetDeltaTime", (const void*)GetDeltaTime);
 
 	//INPUT
 	mono_add_internal_call("TheEngine.TheInput::IsKeyDown", (const void*)IsKeyDown);
@@ -320,6 +324,9 @@ void ModuleScriptImporter::RegisterAPI()
 
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
+
+	//RIGIDBODY
+	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
 
 }
 
@@ -491,6 +498,16 @@ void ModuleScriptImporter::SetRectAnchor(MonoObject * object, MonoObject * vecto
 MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 {
 	return current_script->GetRectAnchor(object);
+}
+
+void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
+{
+	return current_script->SetText(object, text);
+}
+
+MonoString* ModuleScriptImporter::GetText(MonoObject * object)
+{
+	return current_script->GetText(object);
 }
 
 void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float progress)
@@ -725,4 +742,9 @@ void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
 void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 {
 	current_script->StopEmmiter(object);
+}
+
+void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
+{
+	current_script->SetLinearVelocity(object, x, y, z);
 }

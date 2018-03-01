@@ -549,7 +549,7 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 		if (ImGui::DragFloat3("Rotation", (float*)&rotation, is_static, 0.25f)) {		
 			transform->SetRotation(rotation);
 		}
-		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f)) {
+		if (ImGui::DragFloat3("Scale", (float*)&scale, is_static, 0.25f, 0.01f)) {
 			transform->SetScale(scale);
 		}
 	}
@@ -567,6 +567,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 			if (c_canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE || !is_canvas)
 			{
 				float2 position = rect_transform->GetPos();
+				float z_position = rect_transform->GetZPos();
 				float3 rotation = rect_transform->GetLocalRotation();
 				float2 anchor = rect_transform->GetAnchor();
 				float2 size = rect_transform->GetSize();
@@ -582,6 +583,11 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetPos(position);
 				}
 
+				if (ImGui::DragFloat("Z Position", &z_position, true))
+				{
+					rect_transform->SetZPos(z_position);
+				}
+
 				if (ImGui::DragFloat3("Rotation", (float*)&rotation, true, 0.25f))
 				{
 					rect_transform->SetRotation(rotation);
@@ -589,7 +595,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 
 				if (!is_canvas)
 				{
-					if (ImGui::DragFloat2("Size", (float*)&size, true, 1, 0))
+					if (ImGui::DragFloat2("Size", (float*)&size, true, 0.1f, 0))
 					{
 						rect_transform->SetSize(size);
 					}
@@ -1379,11 +1385,74 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
+			if (ImGui::TreeNode("System Stats"))
+			{
+				ImGui::Text("Template Loaded:"); ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
+
+				ImGui::Text("Rendering Particles: "); ImGui::SameLine(); 
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", current_emmiter->GetParticlesNum());
+
+				ImGui::Text("Auto Pause:"); ImGui::SameLine();
+
+				if (current_emmiter->data->autopause)
+				{
+					float time_left = current_emmiter->data->time_to_stop;
+
+					if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
+					{
+						time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
+						ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
+					}
+					else
+						ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
+				}
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Shock Wave: "); ImGui::SameLine();
+
+				if (current_emmiter->show_shockwave)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_alpha_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Size Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_size_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_rotation_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::Text("Color Interpolation: "); ImGui::SameLine();
+
+				if (current_emmiter->data->change_color_interpolation)
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
+				else
+					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
+
+				ImGui::TreePop(); 
+			}
+
 			ImGui::Separator();	
 
 			if (ImGui::Button("PLAY"))
 			{
-				current_emmiter->PlayEmmiter(); 
+				current_emmiter->PlayEmmiter();
 
 				//if(current_emmiter->show_shockwave)
 				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
@@ -1396,13 +1465,16 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				current_emmiter->StopEmmiter();
 			}
 
-			ImGui::SameLine(); 
+			ImGui::SameLine();
 			ImGui::Text("Particle System State: "); ImGui::SameLine();
 
 			if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
 				ImGui::TextColored({ 0,255,0,1 }, "PLAY");
 			else
 				ImGui::TextColored({ 255,0,0,1 }, "PAUSED");
+
+
+			ImGui::Separator();
 
 			static int runtime_behaviour_combo; 
 			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
@@ -1412,64 +1484,22 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			
 			else if (runtime_behaviour_combo == 1)
 				current_emmiter->runtime_behaviour = "Manual";
-			
-			ImGui::Separator();
 
-			ImGui::Text("Template Loaded:"); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());	
-	
-			ImGui::Text("Auto Pause:"); ImGui::SameLine(); 
+			int emmision_behaviour_combo = current_emmiter->data->emmision_type;
 
-			if (current_emmiter->data->autopause)
+			ImGui::Combo("Emision Behaviour", &emmision_behaviour_combo, "Continuous Emmision\0Simultaneous Emmision\0");
+
+			if (emmision_behaviour_combo == 0)
+				current_emmiter->data->emmision_type = EMMISION_CONTINUOUS;
+
+			else if (emmision_behaviour_combo == 1)
 			{
-				float time_left = current_emmiter->data->time_to_stop;
-
-				if (current_emmiter->GetSystemState() == PARTICLE_STATE_PLAY)
-				{
-					time_left = current_emmiter->data->time_to_stop * 1000 - current_emmiter->global_timer.Read();
-					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left / 1000);
-				}
-				else
-					ImGui::TextColored(ImVec4(0, 1, 0, 1), "%.2f sec", time_left);
+				current_emmiter->data->emmision_type = EMMISION_SIMULTANEOUS;
+				ImGui::TextColored(ImVec4(0, 1, 1, 1), "Setting the time-step to 0 will cause a unique emission.");
+				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
+				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 0, 10.0f);
 			}
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Shock Wave: "); ImGui::SameLine();
-
-			if (current_emmiter->show_shockwave)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Alpha Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_alpha_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Size Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_size_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Rotation Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_rotation_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-
-			ImGui::Text("Color Interpolation: "); ImGui::SameLine();
-
-			if (current_emmiter->data->change_color_interpolation)
-				ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
-			else
-				ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
-			
+								
 			ImGui::Separator(); 
 
 			if (ImGui::TreeNode("Relative Position"))
@@ -1564,29 +1594,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Color"))
-			{
-				static bool alpha_preview = true;
-				ImGui::Checkbox("Alpha", &alpha_preview);
-
-				int misc_flags = (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0);
-
-				ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
-				flags |= misc_flags;
-				flags |= ImGuiColorEditFlags_RGB;
-
-				ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
-
-				ImGui::TreePop();
-			}
-
 			if (ImGui::TreeNode("Motion"))
 			{
 				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
 				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
 				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
 				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
-				ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 5.0f, -1000, 1000);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
 
 				ImGui::TreePop();
@@ -1610,28 +1623,42 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Interpolation"))
-			{
+			
 				if (ImGui::TreeNode("Size"))
 				{
-					static float3 init_scale = { 1,1,1 };
-					static float3 fin_scale = { 1,1,1 };
+					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
+					CONSOLE_LOG("%f", current_emmiter->data->global_scale); 
 
-					ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 1, 10000);
-					init_scale.y = init_scale.x;
-
-					ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 1, 10000);
-					fin_scale.y = fin_scale.x;
-
-					if (ImGui::Button("Apply Scale Interpolation"))
+					if (ImGui::TreeNode("Interpolation"))
 					{
-						current_emmiter->data->change_size_interpolation = true;
+						static float3 init_scale = { 1,1,1 };
+						static float3 fin_scale = { 1,1,1 };
 
-						if (init_scale.x == fin_scale.x)
-							current_emmiter->data->change_size_interpolation = false; 
+						ImGui::DragFloat("Initial", &init_scale.x, 1, 1, 0.1f, 1000.0f);
+						init_scale.y = init_scale.x;
 
-						current_emmiter->data->initial_scale = init_scale;
-						current_emmiter->data->final_scale = fin_scale;
+						ImGui::DragFloat("Final", &fin_scale.x, 1, 1, 0.1f, 1000.0f);
+						fin_scale.y = fin_scale.x;
+
+						if (ImGui::Button("Apply Scale Interpolation"))
+						{
+							current_emmiter->data->change_size_interpolation = true;
+
+							if (init_scale.x == fin_scale.x)
+								current_emmiter->data->change_size_interpolation = false;
+
+							current_emmiter->data->initial_scale = init_scale;
+							current_emmiter->data->final_scale = fin_scale;
+						}
+
+						ImGui::SameLine();
+
+						if (ImGui::Button("Delete"))
+						{
+							current_emmiter->data->change_size_interpolation = false;
+						}
+
+						ImGui::TreePop(); 
 					}
 
 					ImGui::TreePop();
@@ -1642,19 +1669,33 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					static float init_angular_v = 0;
 					static float fin_angular_v = 0;
 
-					ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
-
-					ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
-
-					if (ImGui::Button("Apply Rotation Interpolation"))
+					ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 1.0f, -1000.0f, 1000.0f);
+				
+					if (ImGui::TreeNode("Interpolation"))
 					{
-						current_emmiter->data->change_rotation_interpolation = true;
+						ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
 
-						if(init_angular_v == fin_angular_v)
+						ImGui::DragFloat("Final", &fin_angular_v, 1, 0.5f, 0, 150);
+
+						if (ImGui::Button("Apply Rotation Interpolation"))
+						{
+							current_emmiter->data->change_rotation_interpolation = true;
+
+							if (init_angular_v == fin_angular_v)
+								current_emmiter->data->change_rotation_interpolation = false;
+
+							current_emmiter->data->initial_angular_v = init_angular_v;
+							current_emmiter->data->final_angular_v = fin_angular_v;
+						}
+
+						ImGui::SameLine();
+
+						if (ImGui::Button("Delete"))
+						{
 							current_emmiter->data->change_rotation_interpolation = false;
+						}
 
-						current_emmiter->data->initial_angular_v = init_angular_v;
-						current_emmiter->data->final_angular_v = fin_angular_v;
+						ImGui::TreePop();
 					}
 
 					ImGui::TreePop();
@@ -1685,37 +1726,55 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 							current_emmiter->data->alpha_interpolation_delayed = true;
 					}
 
-					ImGui::TreePop();
-				}
+					ImGui::SameLine();
 
-				if (ImGui::TreeNodeEx("Color"))
-				{
-
-					static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b};
-
-					ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
-					
-					static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b};
-
-					ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
-
-					if (ImGui::Button("Apply Color Interpolation"))
+					if (ImGui::Button("Delete"))
 					{
-						current_emmiter->data->change_color_interpolation = true;
-
-						Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
-						Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
-
-						current_emmiter->data->initial_color = initial;
-						current_emmiter->data->final_color = final;
-
+						current_emmiter->data->change_alpha_interpolation = false;
 					}
 
 					ImGui::TreePop();
 				}
 
-				ImGui::TreePop();
-			}
+				if (ImGui::TreeNode("Color"))
+				{
+
+					static bool alpha_preview = true;
+					ImGui::Checkbox("Alpha", &alpha_preview);
+
+					int misc_flags = (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0);
+
+					ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
+					flags |= misc_flags;
+					flags |= ImGuiColorEditFlags_RGB;
+
+					ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
+
+					if (ImGui::TreeNode("Interpolation"))
+					{
+						static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b };
+
+						ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
+
+						static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b };
+
+						ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+
+						if (ImGui::Button("Apply Color Interpolation"))
+						{
+							current_emmiter->data->change_color_interpolation = true;
+
+							Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
+							Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+
+							current_emmiter->data->initial_color = initial;
+							current_emmiter->data->final_color = final;
+						}
+
+						ImGui::TreePop();
+					}
+					ImGui::TreePop(); 
+				}
 
 			current_emmiter->SetEmmisionRate(current_emmiter->data->emmision_rate);
 
@@ -1727,12 +1786,13 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::SameLine();
 			if (ImGui::Button("Update Template"))
 			{
+				string template_name = current_emmiter->data->GetName(); 
+				ParticleData* to_mod = App->resources->GetParticleTemplate(template_name); 
 
+				to_mod->Copy(current_emmiter->data); 
 			}
 
 		}
-
-	
 
 		if (rename_template)
 		{
