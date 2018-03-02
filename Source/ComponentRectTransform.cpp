@@ -38,6 +38,7 @@ bool ComponentRectTransform::Update()
 	bool ret = true;
 
 	bool is_canvas;
+
 	ComponentCanvas* cv = GetCanvas(is_canvas);
 	if (cv != nullptr && !is_canvas && scale != cv->GetScale())
 	{
@@ -45,17 +46,20 @@ bool ComponentRectTransform::Update()
 		UpdateTransformAndChilds();
 	}
 
-	float4x4 global_anchor_trans = GetAnchorTransform(); global_anchor_trans.RemoveScale();
-	float4x4 global_origin_trans = GetOriginMatrix(); global_origin_trans.RemoveScale();
+	if (GetGameObject()->IsSelected() || is_canvas)
+	{
+		float4x4 global_anchor_trans = GetAnchorTransform(); global_anchor_trans.RemoveScale();
+		float4x4 global_origin_trans = GetOriginMatrix(); global_origin_trans.RemoveScale();
 
-	if(!is_canvas)
-		App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(0.0f, 0.5f, 1.0f, 1.0f));
-	else
-		App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(1.0f, 1.0f, 1.0f, 1.0f));
+		if (!is_canvas)
+			App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(0.0f, 0.5f, 1.0f, 1.0f));
+		else
+			App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	App->renderer3D->GetDebugDraw()->Circle(global_anchor_trans, 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
-	App->renderer3D->GetDebugDraw()->Circle(global_origin_trans, 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
-	App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
+		App->renderer3D->GetDebugDraw()->Circle(global_anchor_trans, 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
+		App->renderer3D->GetDebugDraw()->Circle(global_origin_trans, 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
+		App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
+	}
 
 	return ret;
 }

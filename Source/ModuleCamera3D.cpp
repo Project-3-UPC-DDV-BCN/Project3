@@ -150,7 +150,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 	
-	App->renderer3D->GetDebugDraw()->Line(float3(save_segment.a.x, save_segment.a.y, save_segment.a.z), float3(save_segment.b.x, save_segment.b.y, save_segment.b.z));
+	App->renderer3D->GetDebugDraw()->Line(float3(save_segment.a.x, save_segment.a.y, save_segment.a.z), float3(save_segment.b.x, save_segment.b.y, save_segment.b.z)
+	, float4(1, 0, 0, 1));
 
 	return UPDATE_CONTINUE;
 }
@@ -351,13 +352,15 @@ void ModuleCamera3D::UIMousePickRay(int mouse_x, int mouse_y)
 			if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
 			{
 				frustum.Transform(float4x4::identity);
-				frustum.SetPos(float3(0, 0, -10.3f));
-				frustum.SetFront(float3(0.1f, 0, 1));
-				frustum.SetUp(float3(0, 1, 0));
+				frustum.SetPos(float3(0, 0, -1));
+				frustum.SetFront(float3::unitZ);
+				frustum.SetUp(float3::unitY);
 				frustum.SetOrthographic(window_size.x, window_size.y);
 			}
 
 			LineSegment segment = frustum.UnProjectLineSegment(normalized_mouse_x, normalized_mouse_y);
+
+			save_segment = segment;
 
 			std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
 

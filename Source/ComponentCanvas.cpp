@@ -331,8 +331,12 @@ bool CanvasDrawElement::CheckRay(LineSegment &ray, CanvasRenderMode mode)
 
 	if(mode == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 	{
+		float4x4 trans = GetTransform();
+		trans[0][3] += 3;
+		trans[1][3] -= 3;
+
 		box = GetBBox();
-		ray.Transform(GetTransform().Inverted());
+		ray.Transform(trans.Inverted());
 	}
 	else 
 	{
@@ -352,11 +356,9 @@ bool CanvasDrawElement::CheckRay(LineSegment &ray, CanvasRenderMode mode)
 		float4x4 trans = GetTransform();
 
 		float4x4 ortho_trans = GetOrtoTransform();
-		ortho_trans[0][3] = -ortho_trans[0][3] + scal.x;
-		ortho_trans[1][3] += scal.y;
+		ortho_trans[0][3] = -ortho_trans[0][3] + scal.x - 7;
+		ortho_trans[1][3] += scal.y - 7;
 		
-
-
 		box = GetOrthoBBox();
 		ray.Transform(ortho_trans.Inverted());
 	}

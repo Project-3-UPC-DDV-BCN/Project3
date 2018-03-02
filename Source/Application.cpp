@@ -65,6 +65,8 @@ Application::Application()
 	// Main Modules
 	AddModule(file_system);
 	AddModule(window);
+	AddModule(camera);
+	AddModule(renderer3D);
 	AddModule(input);
 	AddModule(audio);
 	AddModule(mesh_importer);
@@ -75,7 +77,6 @@ Application::Application()
 	AddModule(phys_mats_importer);
 	AddModule(shader_importer);
 	AddModule(particle_importer); 
-	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
 	AddModule(font_importer);
@@ -85,8 +86,6 @@ Application::Application()
 	AddModule(physics);
 	AddModule(blast);
 	AddModule(blast_mesh_importer);
-
-	AddModule(renderer3D);
 
 	AddModule(resources);
 
