@@ -178,6 +178,8 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
+	if (data == nullptr)
+		return false;
 
 	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();
@@ -294,6 +296,7 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	
 	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
 	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
+	data.AddString("Template", this->data->GetName()); 
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -307,6 +310,9 @@ void ComponentParticleEmmiter::Load(Data & data)
 	float3 pos = data.GetVector3("Position"); 
 	float3 rot = data.GetVector3("Rotation");
 	float3 scale = { 1,1,1 }; 
+
+	//Load Template 
+	this->data = App->resources->GetParticleTemplate(data.GetString("Template")); 
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
