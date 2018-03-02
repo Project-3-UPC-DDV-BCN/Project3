@@ -1022,6 +1022,10 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 		if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 		ret = App->shader_importer->ImportShader(file_path);
 		break;
+	case Resource::SoundBankResource:
+		if (!App->file_system->DirectoryExist(LIBRARY_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SOUNDBANK_FOLDER_PATH);
+		
+		break;
 	case Resource::Unknown:
 		break;
 	default:

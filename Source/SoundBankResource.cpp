@@ -66,9 +66,10 @@ void SoundBankResource::UnloadFromMemory()
 	{
 		if (soundbanks[i] == soundbank) 
 		{
-			
+			soundbanks.erase(soundbanks.begin() + i);
 		}
 	}
+	soundbank = nullptr;
 }
 
 unsigned int SoundBankResource::GetBankInfo(std::string path, SoundBank *& bank)
