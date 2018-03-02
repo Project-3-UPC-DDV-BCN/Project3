@@ -160,6 +160,16 @@ unsigned int ModuleAudio::GetBankInfo(std::string path, SoundBank *& bank)
 	return ret;
 }
 
+void ModuleAudio::PushSoundBank(SoundBank * sbk)
+{
+	soundbanks.push_back(sbk);
+}
+
+std::vector<SoundBank*> ModuleAudio::GetSoundBanks() const
+{
+	return soundbanks;
+}
+
 Wwise::SoundObject * ModuleAudio::CreateSoundObject(const char * name, math::float3 position)
 {
 	Wwise::SoundObject* ret = Wwise::CreateSoundObj(last_go_id++, name, position.x, position.y, position.z);

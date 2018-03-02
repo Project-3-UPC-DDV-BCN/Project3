@@ -8,6 +8,7 @@
 
 #include <string>
 #include <list>
+#include <vector>
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define DEFAULT_VOLUME 50
@@ -34,6 +35,9 @@ public:
 
 	SoundBank* LoadSoundBank(std::string path);
 	unsigned int GetBankInfo(std::string path, SoundBank* &bank);
+
+	void PushSoundBank(SoundBank* sbk);
+	std::vector<SoundBank*> GetSoundBanks() const;
 
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
@@ -77,7 +81,7 @@ private:
 
 	Wwise::SoundObject* camera_listener = nullptr;
 	std::list <Wwise::SoundObject*> sound_obj;
-	std::list<SoundBank*> soundbanks;
+	std::vector<SoundBank*> soundbanks;
 	std::vector<ComponentDistorsionZone*> environments;
 
 	ComponentListener* default_listener = nullptr;
