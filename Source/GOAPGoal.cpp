@@ -145,3 +145,8 @@ void GOAPGoal::StartTimer()
 {
 	timer.Start();
 }
+
+const char * GOAPGoal::GetConditionName()
+{
+	return condition->GetName();
+}

@@ -138,6 +138,18 @@ private:
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 
+	//GOAP AGENT
+	static mono_bool GetBlackboardVariableB(MonoString* name);
+	static float GetBlackboardVariableF(MonoString* name);
+	static int GetNumGoals();
+	static MonoString* GetGoalName(int index);
+	static MonoString* GetGoalConditionName(int index);
+	static void SetGoalPriority(int index, int priority);
+	static int GetGoalPriority(int index);
+	static void CompleteAction();
+	static void FailAction();
+
+
 private:
 	std::string mono_path;
 	MonoDomain* mono_domain;

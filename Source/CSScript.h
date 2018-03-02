@@ -165,6 +165,19 @@ public:
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 
+	//GOAPAGENT
+	mono_bool GetBlackboardVariableB(MonoString* name) const;
+	float GetBlackboardVariableF(MonoString* name);
+	int GetNumGoals();
+	MonoString* GetGoalName(int index);
+	MonoString* GetGoalConditionName(int index);
+	void SetGoalPriority(int index, int priority);
+	int GetGoalPriority(int index);
+	void CompleteAction();
+	void FailAction();
+	
+
+
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);

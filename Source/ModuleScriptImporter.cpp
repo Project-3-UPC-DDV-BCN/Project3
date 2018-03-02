@@ -328,6 +328,16 @@ void ModuleScriptImporter::RegisterAPI()
 	//RIGIDBODY
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
 
+	//GOAP
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableB", (const void*)GetBlackboardVariableB);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableF", (const void*)GetBlackboardVariableF);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetNumGoals", (const void*)GetNumGoals);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::SetGoalPriority", (const void*)SetGoalPriority);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalPriority", (const void*)GetGoalPriority);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::CompleteAction", (const void*)CompleteAction);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::FailAction", (const void*)FailAction);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalName", (const void*)GetGoalName);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalConditionName", (const void*)GetGoalConditionName);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -747,4 +757,49 @@ void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 {
 	current_script->SetLinearVelocity(object, x, y, z);
+}
+
+mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoString * name)
+{
+	return current_script->GetBlackboardVariableB(name);
+}
+
+float ModuleScriptImporter::GetBlackboardVariableF(MonoString * name)
+{
+	return current_script->GetBlackboardVariableF(name);
+}
+
+int ModuleScriptImporter::GetNumGoals()
+{
+	return current_script->GetNumGoals();
+}
+
+MonoString * ModuleScriptImporter::GetGoalName(int index)
+{
+	return current_script->GetGoalName(index);
+}
+
+MonoString * ModuleScriptImporter::GetGoalConditionName(int index)
+{
+	return current_script->GetGoalConditionName(index);
+}
+
+void ModuleScriptImporter::SetGoalPriority(int index, int priority)
+{
+	current_script->SetGoalPriority(index, priority);
+}
+
+int ModuleScriptImporter::GetGoalPriority(int index)
+{
+	return current_script->GetGoalPriority(index);
+}
+
+void ModuleScriptImporter::CompleteAction()
+{
+	current_script->CompleteAction();
+}
+
+void ModuleScriptImporter::FailAction()
+{
+	current_script->FailAction();
 }

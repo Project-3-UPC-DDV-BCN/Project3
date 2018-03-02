@@ -41,6 +41,9 @@ public:
 	void SetBlackboardVariable(const char* name, float var);
 	void SetBlackboardVariable(const char* name, bool var);
 
+	void CompleteCurrentAction();
+	void FailCurrentAction();
+
 private:
 	void FindActionPath();
 	GOAPGoal* GetGoalToComplete();

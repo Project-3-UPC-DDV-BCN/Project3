@@ -285,6 +285,16 @@ void ComponentGOAPAgent::SetBlackboardVariable(const char * name, bool var)
 	}
 }
 
+void ComponentGOAPAgent::CompleteCurrentAction()
+{
+	curr_act_state = AS_COMPLETED;
+}
+
+void ComponentGOAPAgent::FailCurrentAction()
+{
+	curr_act_state = AS_FAIL;
+}
+
 void ComponentGOAPAgent::FindActionPath()
 {
 	if (new_path)

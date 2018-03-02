@@ -38,6 +38,8 @@ public:
 
 	void StartTimer();
 
+	const char* GetConditionName();
+
 private:
 	GOAPField* condition;
 	uint priority = 0; // form 1 to 100 -> 100 max priority
