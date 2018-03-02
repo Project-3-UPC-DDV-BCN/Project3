@@ -12,6 +12,14 @@ class GOAPAction;
 class GOAPGoal;
 class GOAPVariable;
 
+enum ActionState
+{
+	AS_NULL,
+	AS_FAIL,
+	AS_RUNNING,
+	AS_COMPLETED
+};
+
 class ComponentGOAPAgent : public Component
 {
 public:
@@ -29,6 +37,9 @@ public:
 
 	bool GetBlackboardVariable(const char* name, float& var) const;
 	bool GetBlackboardVariable(const char* name, bool& var) const;
+
+	void SetBlackboardVariable(const char* name, float var);
+	void SetBlackboardVariable(const char* name, bool var);
 
 private:
 	void FindActionPath();
@@ -51,6 +62,8 @@ private:
 
 	bool SystemFulfillCondition(GOAPField* condition);
 
+	void ApplyEffect(GOAPEffect* effect);
+
 public:
 	std::vector<GOAPGoal*> goals;
 	std::vector<GOAPAction*> actions;
@@ -67,8 +80,11 @@ private:
 	std::vector<bool> completed_paths;
 	std::vector<GOAPEffect*> created_effects;
 	uint possible_paths = 0;
-	GOAPAction* curr_action = nullptr;
 	GOAPGoal* goal_to_complete = nullptr;
+
+	GOAPAction* curr_action = nullptr;
+	bool need_start = true;
+	ActionState curr_act_state = AS_NULL;
 
 };
 

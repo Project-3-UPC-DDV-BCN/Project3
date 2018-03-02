@@ -107,7 +107,10 @@ bool ComponentGOAPAgent::Update()
 	if (path_valid)
 	{
 		if (curr_action == nullptr)
+		{
 			curr_action = path.front();
+			curr_act_state = AS_RUNNING;
+		}
 
 		//check if the conditions for the current actions are fulfilled
 		bool fulfilled = true;
@@ -119,13 +122,71 @@ bool ComponentGOAPAgent::Update()
 				path_valid = false;
 				new_path = true;
 				fulfilled = false;
+				curr_act_state = AS_FAIL;
+				///curr_action->OnFail();
 				break;
 			}
 		}
 
 		if (fulfilled == true)
 		{
+			//call the action script functions
+			if (need_start)
+			{
+				///curr_action->Start();
+				need_start = false;
+			}
 
+			if (curr_act_state == AS_RUNNING)
+			{
+				///curr_action->Update();
+
+				//check if the requirements for next action are fulfilled
+				GOAPAction* next_action = path.at(1);
+				bool next_fulfilled = true;
+				for (int c = 0; c < next_action->GetNumPreconditions(); ++c)
+				{
+					GOAPField* precon = next_action->GetPrecondition(c);
+					if (!SystemFulfillCondition(precon))
+					{
+						next_fulfilled = false;
+						break;
+					}
+				}
+
+				if (next_fulfilled) // current action has finished his work
+				{
+					curr_act_state = AS_COMPLETED;
+				}
+
+			}
+
+			if (curr_act_state == AS_COMPLETED)
+			{
+				///curr_action->OnComplete();
+				//apply the effects
+
+				for (int e = 0; e < curr_action->GetNumEffects(); ++e)
+				{
+					GOAPEffect* effect = curr_action->GetEffect(e);
+					ApplyEffect(effect);
+				}
+
+				curr_action = nullptr;
+				path.erase(path.begin());
+				if (path.empty()) //we finished the path, find a new path
+				{
+					path_valid = false;
+					new_path = true;
+				}
+			}
+
+			if (curr_act_state == AS_FAIL)
+			{
+				///curr_action->OnFail();
+
+			}
+				
 		}
 	}
 	else
@@ -180,6 +241,44 @@ bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, bool & var) co
 		}
 	}
 	return false;
+}
+
+void ComponentGOAPAgent::SetBlackboardVariable(const char * name, float var)
+{
+	bool set = false;
+	for (int i = 0; i < blackboard.size(); ++i)
+	{
+		if (blackboard[i]->GetName() == name)
+		{
+			blackboard[i]->SetValue(var);
+			set = true;
+			break;
+		}
+	}
+
+	if (!set)
+	{
+		CONSOLE_ERROR("Couldn't set %s variable.", name);
+	}
+}
+
+void ComponentGOAPAgent::SetBlackboardVariable(const char * name, bool var)
+{
+	bool set = false;
+	for (int i = 0; i < blackboard.size(); ++i)
+	{
+		if (blackboard[i]->GetName() == name)
+		{
+			blackboard[i]->SetValue(var);
+			set = true;
+			break;
+		}
+	}
+
+	if (!set)
+	{
+		CONSOLE_ERROR("Couldn't set %s variable.", name);
+	}
 }
 
 void ComponentGOAPAgent::FindActionPath()
@@ -870,4 +969,43 @@ void ComponentGOAPAgent::ResetVariables()
 bool ComponentGOAPAgent::SystemFulfillCondition(GOAPField * condition)
 {
 	return false;
+}
+
+void ComponentGOAPAgent::ApplyEffect(GOAPEffect * effect)
+{
+	GOAPEffect::EffectType type = effect->GetEffect();
+
+	switch (type)
+	{
+	case GOAPEffect::E_DECREASE:
+	{
+		float curr_value;
+		if (GetBlackboardVariable(effect->GetName(), curr_value))
+		{
+			curr_value -= effect->GetValue();
+			SetBlackboardVariable(effect->GetName(), curr_value);
+		}
+		break;
+	}
+	case GOAPEffect::E_SET:
+	{
+		SetBlackboardVariable(effect->GetName(), effect->GetValue());
+		break;
+	}
+	case GOAPEffect::E_SET_DIFFERENT:
+		//no custom effects can do this
+		break;
+	case GOAPEffect::E_INCREASE:
+	{
+		float curr_value;
+		if (GetBlackboardVariable(effect->GetName(), curr_value))
+		{
+			curr_value += effect->GetValue();
+			SetBlackboardVariable(effect->GetName(), curr_value);
+		}
+		break;
+	}
+	default:
+		break;
+	}
 }

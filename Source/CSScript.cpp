@@ -36,7 +36,7 @@ CSScript::CSScript()
 
 	init = nullptr;
 	start = nullptr;
-	update = nullptr;
+	update = nullptr; 
 	on_collision_enter = nullptr;
 	on_collision_stay = nullptr;
 	on_collision_exit = nullptr;
