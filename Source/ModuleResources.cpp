@@ -139,14 +139,124 @@ void ModuleResources::FillResourcesLists()
 		}
 	}
 
-	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
+	/*for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
 		if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
 		CreateResource(*it);
-	}
+	}*/
 
 	if (exist_shprog_meta)
 		LoadShaderProgramMeta(shprog_meta_file);
+
+
+	// Meshes
+	std::vector<std::string> mesh_order;
+	//Textures
+	std::vector<std::string> texture_order;
+	//Shader
+	std::vector<std::string> shader_order;
+	//ShaderProgram
+	std::vector<std::string> shader_program_order;
+	//Materials
+	std::vector<std::string> material_order;
+	//Scripts
+	std::vector<std::string> script_order;
+	//Audio
+
+	//Font
+	std::vector<std::string> font_order;
+	//PhysicsMat
+	std::vector<std::string> phys_mat_order;
+	//BlastMesh
+	std::vector<std::string> blast_mesh_order;
+	//GOAPGoal
+
+	//GOAPAction
+
+	//ParticleFX
+	std::vector<std::string> particle_order;
+
+	// Create lists in order of Drive
+	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
+	{
+		std::string extension = App->file_system->GetFileExtension(*it);
+		Resource::ResourceType type = AssetExtensionToResourceType(extension);
+
+		switch (type) {
+		case Resource::MeshResource:
+			if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
+			mesh_order.push_back(*it);
+			break;
+		case Resource::TextureResource:
+			texture_order.push_back(*it);
+			break;
+		case Resource::ShaderResource:
+			shader_order.push_back(*it);
+			break;
+		case Resource::ShaderProgramResource:
+			shader_program_order.push_back(*it);
+			break;
+		case Resource::MaterialResource:
+			material_order.push_back(*it);
+			break;
+		case Resource::ScriptResource:
+			script_order.push_back(*it);
+			break;
+		case Resource::AudioResource:
+			break;
+		case Resource::FontResource:
+			font_order.push_back(*it);
+			break;
+		case Resource::PhysicsMatResource:
+			phys_mat_order.push_back(*it);
+			break;
+		case Resource::BlastMeshResource:
+			blast_mesh_order.push_back(*it);
+			break;
+			// case Resource::GoapGoal
+			// case Resource::GoapAction
+		case Resource::ParticleFXResource:
+			particle_order.push_back(*it);
+			break;
+		}
+	}
+
+	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = shader_order.begin(); it != shader_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = shader_program_order.begin(); it != shader_program_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
+		CreateResource(*it);
+
+	// AudioRes
+
+	for (std::vector<string>::iterator it = font_order.begin(); it != font_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = phys_mat_order.begin(); it != phys_mat_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = blast_mesh_order.begin(); it != blast_mesh_order.end(); ++it)
+		CreateResource(*it);
+
+	//GOAPGoal
+
+	//GOAPAction
+
+	for (std::vector<string>::iterator it = particle_order.begin(); it != particle_order.end(); ++it)
+		CreateResource(*it);
+
 }
 
 void ModuleResources::AddResource(Resource * resource)
