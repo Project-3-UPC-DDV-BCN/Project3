@@ -11,7 +11,7 @@ class CSScript;
 class GOAPAction : public Resource
 {
 public:
-	GOAPAction(const char* name);
+	GOAPAction(const char* name, uint cost = 1);
 	~GOAPAction();
 
 	void Save(Data& data) const;
@@ -28,10 +28,21 @@ public:
 	void AddEffect(std::string& name, bool value);
 	void AddEffect(std::string& name, GOAPEffect::EffectType effect, float value);
 
+	//Get Effects
+	int GetNumEffects() const;
+	GOAPEffect* GetEffect(int index)const;
+
+	//Get Precondition
+	int GetNumPreconditions() const;
+	GOAPField* GetPrecondition(int index) const;
+
+	//Returns the cost of this action
+	uint GetCost() const;
+
 private:
 	std::vector<GOAPField*> preconditions;
 	std::vector<GOAPEffect*> effects;
-
+	uint cost = 0;
 	CSScript* script = nullptr;
 	
 };

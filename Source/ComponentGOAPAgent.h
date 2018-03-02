@@ -3,6 +3,10 @@
 
 #include "Component.h"
 #include <vector>
+#include "GOAPEffect.h"
+#include "GOAPField.h"
+
+#define MAX_ITERATIONS 50
 
 class GOAPAction;
 class GOAPGoal;
@@ -30,6 +34,22 @@ private:
 	void FindActionPath();
 	GOAPGoal* GetGoalToComplete();
 
+	void ResetTmpEffects();
+	GOAPEffect* TmpEffectsContains(const char* name, GOAPEffect::EffectType t) const;
+
+	//Fill the effects froma goal for a new path
+	void FillEffectsFromGoal(GOAPGoal* goal);
+
+	//Adds the field condition to effects while pathfinding
+	void AddEffectsFormField(GOAPField* field, int path_index);
+
+	int AddPossiblePath(int ref);
+
+	int GetBestTmpPath();
+
+	void ResetVariables();
+
+	bool SystemFulfillCondition(GOAPField* condition);
 
 public:
 	std::vector<GOAPGoal*> goals;
@@ -38,8 +58,18 @@ public:
 
 private:
 	std::vector<GOAPAction*> path;
+	bool path_valid = false;
+	bool new_path = true;
+	bool calculating_path = false;
 
+	std::vector<std::vector<GOAPAction*>> tmp_paths;
+	std::vector<std::vector<GOAPEffect*>> effects_to_fulfill;
+	std::vector<bool> completed_paths;
+	std::vector<GOAPEffect*> created_effects;
+	uint possible_paths = 0;
 	GOAPAction* curr_action = nullptr;
+	GOAPGoal* goal_to_complete = nullptr;
+
 };
 
 #endif // !__COMPONENTGOAPAGENT__

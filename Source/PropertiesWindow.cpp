@@ -2070,7 +2070,7 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 						ImGui::Text("Increment Rate:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementRate());
 						ImGui::Text("Increment Timestep:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementTime());
 
-						std::vector<GOAPField*> conditions = goals[i]->GetConditions();
+						/*std::vector<GOAPField*> conditions = goals[i]->GetConditions();
 						if (conditions.size() > 0)
 						{
 							for (int j = 0; j < conditions.size(); ++j)
@@ -2122,7 +2122,7 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 							}
 						}
 						else
-							ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO CONDITIONS CREATED!");
+							ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO CONDITIONS CREATED!");*/
 
 						std::string button_name = "Add Condition##";
 						button_name += goals[i]->GetName();

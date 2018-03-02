@@ -7,7 +7,7 @@
 #include <sstream>
 #include "CSScript.h"
 
-GOAPAction::GOAPAction(const char* name)
+GOAPAction::GOAPAction(const char* name, uint cost) : cost(cost)
 {
 	//Create script
 	std::ifstream in_file;
@@ -181,4 +181,29 @@ void GOAPAction::AddEffect(std::string & name, bool value)
 void GOAPAction::AddEffect(std::string & name, GOAPEffect::EffectType effect, float value)
 {
 	effects.push_back(new GOAPEffect(name.c_str(), effect, value));
+}
+
+int GOAPAction::GetNumEffects() const
+{
+	return effects.size();
+}
+
+GOAPEffect * GOAPAction::GetEffect(int index) const
+{
+	return (index > 0 && index < effects.size()) ? effects[index] : nullptr;
+}
+
+int GOAPAction::GetNumPreconditions() const
+{
+	return preconditions.size();
+}
+
+GOAPField * GOAPAction::GetPrecondition(int index) const
+{
+	return (index > 0 && index < preconditions.size()) ? preconditions[index] : nullptr;
+}
+
+uint GOAPAction::GetCost() const
+{
+	return cost;
 }

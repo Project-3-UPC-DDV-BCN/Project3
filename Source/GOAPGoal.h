@@ -29,19 +29,17 @@ public:
 	void AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, bool value);
 	void AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, float value);
 
-	const std::vector<GOAPField*>& GetConditions() const;
 	uint GetPriority()const;
 	uint GetIncrementRate()const;
 	float GetIncrementTime()const;
 	bool NeedIncrement();
 
-	GOAPField* GetCondition(int index) const;
-	int GetNumConditions()const;
+	GOAPField* GetCondition() const;
 
 	void StartTimer();
 
 private:
-	std::vector<GOAPField*> conditions;
+	GOAPField* condition;
 	uint priority = 0; // form 1 to 100 -> 100 max priority
 	uint increment_rate = 0;
 	float increment_time = 0.0f; // 0, no increment

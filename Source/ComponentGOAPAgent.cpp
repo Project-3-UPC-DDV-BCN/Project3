@@ -102,7 +102,38 @@ void ComponentGOAPAgent::Load(Data & data)
 
 bool ComponentGOAPAgent::Update()
 {
-	return false;
+	bool ret = true;
+
+	if (path_valid)
+	{
+		if (curr_action == nullptr)
+			curr_action = path.front();
+
+		//check if the conditions for the current actions are fulfilled
+		bool fulfilled = true;
+		for (int c = 0; c < curr_action->GetNumPreconditions(); ++c)
+		{
+			GOAPField* precon = curr_action->GetPrecondition(c);
+			if (!SystemFulfillCondition(precon)) //this path is not valid since the preconditions for this actions are not fulfilled
+			{
+				path_valid = false;
+				new_path = true;
+				fulfilled = false;
+				break;
+			}
+		}
+
+		if (fulfilled == true)
+		{
+
+		}
+	}
+	else
+	{
+		FindActionPath();
+	}
+
+	return ret;
 }
 
 void ComponentGOAPAgent::AddGoal(GOAPGoal * goal)
@@ -153,98 +184,122 @@ bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, bool & var) co
 
 void ComponentGOAPAgent::FindActionPath()
 {
-	//clear current path
-	path.clear();
-
-	GOAPGoal* goal_to_complete = GetGoalToComplete();
-
-	if (goal_to_complete != nullptr)
+	if (new_path)
 	{
-		std::vector<std::vector<GOAPEffect*>> effects_to_fulfill;
-		//Track the effects to fulfill for the goal 
-		for (int i = 0; i < goal_to_complete->GetNumConditions(); ++i)
+		goal_to_complete = GetGoalToComplete();
+		if (goal_to_complete == nullptr)
 		{
-			GOAPField* condition = goal_to_complete->GetCondition(i);
-			GOAPVariable::VariableType type = condition->GetType();
-			switch (type)
+			CONSOLE_WARNING("GOAP Agent don't have a goal to complete!");
+			return;
+		}
+		possible_paths = 1;
+		completed_paths[0] = false;
+		FillEffectsFromGoal(goal_to_complete);
+		calculating_path = true;
+	}
+
+	if (calculating_path)
+	{
+		int iterations = 0;
+		int completed = 0;
+		for (int p = 0; p < possible_paths && iterations < MAX_ITERATIONS; p++)
+		{
+			if (!completed_paths[p])
 			{
-			case GOAPVariable::T_NULL:
-				break;
-			case GOAPVariable::T_BOOL:
-			{
-				bool cond_var = condition->GetValue();
-				bool black_var;
-				if (GetBlackboardVariable(condition->GetName(), black_var))
+				while (iterations < MAX_ITERATIONS && !effects_to_fulfill[p].empty())
 				{
-					GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
-					switch (cm)
+					//the effect to fulfill
+					GOAPEffect* effect = effects_to_fulfill[p].front();
+
+					//find an action that fulfill this effect
+					GOAPAction* action = nullptr;
+					for (int a = 0; a < actions.size(); ++a)
 					{
-					case GOAPField::CM_EQUAL:
-						if (black_var != cond_var)
-							effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), cond_var));
-						break;
-					case GOAPField::CM_DIFFERENT:
-						if (black_var == cond_var)
-							effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), cond_var));
-						break;
-					default:
-						break;
-					}
-				}
-				else
-				{
-					CONSOLE_ERROR("Blackboard has no variable %s, condition %s is avoided.", condition->GetName());
-				}
-				break;
-			}
-			case GOAPVariable::T_FLOAT:
-			{
-				float cond_var = condition->GetValue();
-				float black_var;
-				if (GetBlackboardVariable(condition->GetName(), black_var))
-				{
-					GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
-					switch (cm)
-					{
-					case GOAPField::CM_NULL:
-						break;
-					case GOAPField::CM_EQUAL:
-						if (cond_var != black_var)
+						for (int e = 0; e < actions[a]->GetNumEffects(); ++e) //check that each action effects
 						{
-							if (black_var > cond_var)
-								effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f));
-							else
-								effects_to_fulfill[0].push_back(new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f));
+							GOAPEffect* action_effect = actions[a]->GetEffect(e);
+
+							if (effect->GetType() == action_effect->GetType() && effect->GetEffect() == action_effect->GetEffect() ///possible bug
+								&& effect->GetName() == action_effect->GetName()) // first check if this effect fulfills the needs
+							{
+								if (effect->GetEffect() == GOAPEffect::E_DECREASE || effect->GetEffect() == GOAPEffect::E_INCREASE) //if it's an increase or decrease, the value doesn't matter
+								{
+									action = actions[a];
+									break;
+								}
+								else //check the values
+								{
+									if (effect->GetEffect() == GOAPEffect::E_SET) // check they are equal
+									{
+										if (effect->GetValue() == action_effect->GetValue())
+										{
+											action = actions[a];
+											break;
+										}
+									}
+									else if (effect->GetEffect() == GOAPEffect::E_SET_DIFFERENT) //check they are different
+									{
+										if (effect->GetValue() != action_effect->GetValue())
+										{
+											action = actions[a];
+											break;
+										}
+									}
+								}
+							}
 						}
-						break;
-					case GOAPField::CM_DIFFERENT:
-						break;
-					case GOAPField::CM_HIGHER:
-						break;
-					case GOAPField::CM_LOWER:
-						break;
-					case GOAPField::CM_HIGHER_OR_EQUAL:
-						break;
-					case GOAPField::CM_LOWER_OR_EQUAL:
-						break;
-					default:
-						break;
+
+						if (action != nullptr)
+							break;
 					}
+
+					//check if an action is found
+					if (action == nullptr)
+					{
+						//this means there's no action that fulfills the effect, so this path is not valid. Remove it
+						effects_to_fulfill[p].clear();
+						tmp_paths[p].clear();
+						completed_paths[p] = true;
+						completed++;
+						continue;
+					}
+					else
+					{
+						//add this action to the path
+						tmp_paths[p].push_back(action);
+					}
+
+					//check if the action has any preconditions and add them in the effects to fulfill list
+					for (int precon = 0; precon < action->GetNumPreconditions(); ++precon)
+					{
+						AddEffectsFormField(action->GetPrecondition(precon), p);
+					}
+
+					//remove the effect
+					effects_to_fulfill[p].erase(effects_to_fulfill[p].begin());
+
+					iterations++;
 				}
-				else
+
+				if (effects_to_fulfill[p].empty())
 				{
-					CONSOLE_ERROR("Blackboard has no variable %s, condition %s is avoided.", condition->GetName());
+					completed_paths[p] = true;
+					std::reverse(std::begin(tmp_paths[p]), std::end(tmp_paths[p]));
+					completed++;
 				}
 			}
-			default:
-				break;
+			else completed++;
+
+			if (completed == possible_paths)
+			{
+				calculating_path = false;
+				int best_path = GetBestTmpPath();
+				path = tmp_paths[best_path];
+				path_valid = true;
+				//reset all variables
+				ResetVariables();
 			}
 		}
-
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAP Agent don't have a goal to complete!");
 	}
 }
 
@@ -257,4 +312,562 @@ GOAPGoal * ComponentGOAPAgent::GetGoalToComplete()
 			ret = goals[i];
 	}
 	return ret;
+}
+
+void ComponentGOAPAgent::ResetTmpEffects()
+{
+	for (std::vector<GOAPEffect*>::iterator it = created_effects.begin(); it != created_effects.end();)
+	{
+		RELEASE(*it);
+		it = created_effects.erase(it);
+	}
+}
+
+GOAPEffect * ComponentGOAPAgent::TmpEffectsContains(const char * name, GOAPEffect::EffectType t) const
+{
+	for (std::vector<GOAPEffect*>::const_iterator it = created_effects.begin(); it != created_effects.end();)
+	{
+		if ((*it)->GetName() == name && (*it)->GetEffect() == t)
+		{
+			return (*it);
+		}
+	}
+	return nullptr;
+}
+
+void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
+{
+	//Get the condition to compare
+	GOAPField* condition = goal->GetCondition();
+	
+	//check depending on type
+	GOAPVariable::VariableType type = condition->GetType();
+	GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
+	switch (type)
+	{
+	case GOAPVariable::T_BOOL:
+	{	//bools can be compared: equal or different
+		bool condition_var = condition->GetValue();
+		bool blackboard_var;
+		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
+		{
+			switch (cm)
+			{
+			case GOAPField::CM_EQUAL: //check if the variable is different, otherwise this is already fulfilled
+			{
+				if (blackboard_var != condition_var)
+				{
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+						{
+							effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+							created_effects.push_back(effect);
+						}
+					for (int p = 0; p < possible_paths; ++p) //add the effect to all posible paths effects to fulfill
+					{
+						effects_to_fulfill[p].push_back(effect);
+					}
+				}
+				break;
+			}
+			case GOAPField::CM_DIFFERENT://check if the variable is equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var == condition_var)
+					{
+						GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+						if (effect == nullptr || effect->GetValue() != condition->GetValue())
+						{
+							effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+							created_effects.push_back(effect);
+						}
+						for (int p = 0; p < possible_paths; ++p) //add the effect to all posible paths effects to fulfill
+						{
+							effects_to_fulfill[p].push_back(effect);
+						}
+					}
+				break;
+			}
+			}
+		}
+		else
+		{
+			CONSOLE_ERROR("Blackboard doesn't contain the variable %s", condition->GetName());
+		}
+		break;
+
+	}
+	case GOAPVariable::T_FLOAT:
+	{
+		float condition_var = condition->GetValue();
+		float blackboard_var;
+		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
+		{
+			switch (cm)
+			{
+			case GOAPField::CM_EQUAL: //check if the variable is different, otherwise this is already fulfilled
+			{
+				if (blackboard_var != condition_var)
+				{
+					//check the possible ways the condition can be fulfilled, if there's more than one way, different possible paths will be created				
+					int new_pos_path = AddPossiblePath(0);
+
+					///An action that sets the value to the contition_var will fulfill it
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[0].push_back(effect);
+
+					if (blackboard_var < condition_var) // if the bb_var is lower, find an increment effect
+					{
+						effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+						if (effect == nullptr)
+						{
+							effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+							created_effects.push_back(effect);
+						}
+						effects_to_fulfill[new_pos_path].push_back(effect);
+					}
+					else // if the bb_var is higher, find a decrement effect
+					{
+						effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+						if (effect == nullptr)
+						{
+							effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+							created_effects.push_back(effect);
+						}
+						effects_to_fulfill[new_pos_path].push_back(effect);
+					}
+				}
+				break;
+			}
+			case GOAPField::CM_DIFFERENT: //check if the variables are equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var == condition_var)
+				{
+					// check ways of fulfilling the goal: set_different, increase, decrease
+					int increase_path = AddPossiblePath(0);
+					int decrease_path = AddPossiblePath(0);
+
+					/// a set to a different value will fulfill the condition
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET_DIFFERENT);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET_DIFFERENT, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[0].push_back(effect);
+
+					///an increse also fulfill the condition
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[increase_path].push_back(effect);
+
+					/// same for decrease
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[decrease_path].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_HIGHER: //check if the variable is lower or equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var <= condition_var)
+				{
+					//only increasing values will be tanken in acount here
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[0].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_LOWER: //check if the variable is higher or equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var >= condition_var)
+				{
+					//only decreasing values will be tanken in acount here
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[0].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_HIGHER_OR_EQUAL://check if the variable is lower, otherwise this is already fulfilled
+			{
+				if (blackboard_var < condition_var)
+				{
+					//two possible solutions: set to the value or increase
+					int increase_path = AddPossiblePath(0);
+
+					/// set to the value
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[0].push_back(effect);
+
+					/// increase
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[increase_path].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_LOWER_OR_EQUAL:
+			{
+				if (blackboard_var > condition_var)
+				{
+					//two possible effects: set to the value or decrease
+					int decrease_path = AddPossiblePath(0);
+
+					/// set to the value
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[0].push_back(effect);
+
+					/// decrease
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[decrease_path].push_back(effect);
+				}
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		break;
+	}
+	default:
+		break;
+	}
+	
+}
+
+void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_index)
+{
+	//check depending on type
+	GOAPVariable::VariableType type = condition->GetType();
+	GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
+	switch (type)
+	{
+	case GOAPVariable::T_BOOL:
+	{	//bools can be compared: equal or different
+		bool condition_var = condition->GetValue();
+		bool blackboard_var;
+		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
+		{
+			switch (cm)
+			{
+			case GOAPField::CM_EQUAL: //check if the variable is different, otherwise this is already fulfilled
+			{
+				if (blackboard_var != condition_var)
+				{
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET); //bool values are always set effects
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+					
+				}
+				break;
+			}
+			case GOAPField::CM_DIFFERENT://check if the variable is equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var == condition_var)
+				{
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+				}
+				break;
+			}
+			}
+		}
+		else
+		{
+			CONSOLE_ERROR("Blackboard doesn't contain the variable %s", condition->GetName());
+		}
+		break;
+
+	}
+	case GOAPVariable::T_FLOAT:
+	{
+		float condition_var = condition->GetValue();
+		float blackboard_var;
+		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
+		{
+			switch (cm)
+			{
+			case GOAPField::CM_EQUAL: //check if the variable is different, otherwise this is already fulfilled
+			{
+				if (blackboard_var != condition_var)
+				{
+					//check the possible ways the condition can be fulfilled, if there's more than one way, different possible paths will be created				
+					int new_pos_path = AddPossiblePath(path_index);
+
+					///An action that sets the value to the contition_var will fulfill it
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+
+					if (blackboard_var < condition_var) // if the bb_var is lower, find an increment effect
+					{
+						effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+						if (effect == nullptr)
+						{
+							effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+							created_effects.push_back(effect);
+						}
+						effects_to_fulfill[new_pos_path].push_back(effect);
+					}
+					else // if the bb_var is higher, find a decrement effect
+					{
+						effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+						if (effect == nullptr)
+						{
+							effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+							created_effects.push_back(effect);
+						}
+						effects_to_fulfill[new_pos_path].push_back(effect);
+					}
+				}
+				break;
+			}
+			case GOAPField::CM_DIFFERENT: //check if the variables are equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var == condition_var)
+				{
+					// check ways of fulfilling the goal: set_different, increase, decrease
+					int increase_path = AddPossiblePath(path_index);
+					int decrease_path = AddPossiblePath(path_index);
+
+					/// a set to a different value will fulfill the condition
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET_DIFFERENT);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET_DIFFERENT, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+
+					///an increse also fulfill the condition
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[increase_path].push_back(effect);
+
+					/// same for decrease
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[decrease_path].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_HIGHER: //check if the variable is lower or equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var <= condition_var)
+				{
+					//only increasing values will be tanken in acount here
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_LOWER: //check if the variable is higher or equal, otherwise this is already fulfilled
+			{
+				if (blackboard_var >= condition_var)
+				{
+					//only decreasing values will be tanken in acount here
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_HIGHER_OR_EQUAL://check if the variable is lower, otherwise this is already fulfilled
+			{
+				if (blackboard_var < condition_var)
+				{
+					//two possible solutions: set to the value or increase
+					int increase_path = AddPossiblePath(path_index);
+
+					/// set to the value
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+
+					/// increase
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_INCREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_INCREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[increase_path].push_back(effect);
+				}
+				break;
+			}
+			case GOAPField::CM_LOWER_OR_EQUAL:
+			{
+				if (blackboard_var > condition_var)
+				{
+					//two possible effects: set to the value or decrease
+					int decrease_path = AddPossiblePath(path_index);
+
+					/// set to the value
+					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
+					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[path_index].push_back(effect);
+
+					/// decrease
+					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
+					if (effect == nullptr)
+					{
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
+						created_effects.push_back(effect);
+					}
+					effects_to_fulfill[decrease_path].push_back(effect);
+				}
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+int ComponentGOAPAgent::AddPossiblePath(int ref)
+{
+	int ret = possible_paths;
+
+	tmp_paths[possible_paths] = tmp_paths[ref];
+	effects_to_fulfill[possible_paths] = effects_to_fulfill[ref];
+	completed_paths[possible_paths] = false;
+
+	possible_paths++;
+
+	return ret;
+}
+
+int ComponentGOAPAgent::GetBestTmpPath()
+{
+	int ret = 0;
+
+	int lower_cost = 99999999999;
+
+	for (int i = 0; i < possible_paths; ++i) 
+	{
+		int path_cost = 0;
+
+		for (int a = 0; a < tmp_paths[i].size(); ++a) //calculate path i cost
+		{
+			path_cost += tmp_paths[i][a]->GetCost();
+		}
+
+		if (path_cost < lower_cost)
+		{
+			lower_cost = path_cost;
+			ret = i;
+		}
+	}
+	return ret;
+}
+
+void ComponentGOAPAgent::ResetVariables()
+{
+	ResetTmpEffects();
+	for (int p = 0; p < possible_paths; ++p)
+	{
+		tmp_paths[p].clear();
+	}
+	tmp_paths.clear();
+
+	for (int p = 0; p < possible_paths; ++p)
+	{
+		effects_to_fulfill[p].clear();
+	}
+	effects_to_fulfill.clear();
+
+	for (int p = 0; p < possible_paths; ++p)
+	{
+		completed_paths[p] = false;
+	}
+	completed_paths.clear();
+}
+
+bool ComponentGOAPAgent::SystemFulfillCondition(GOAPField * condition)
+{
+	return false;
 }

@@ -19,26 +19,24 @@ void GOAPGoal::Save(Data & data) const
 	data.AddUInt("priority", priority);
 	data.AddUInt("increment_rate", increment_rate);
 	data.AddFloat("increment_time", increment_time);
-	data.AddInt("conditions_num", conditions.size());	
-	for (int i = 0; i < conditions.size(); ++i)
+
+	
+	data.CreateSection("condition");
+	data.AddInt("type", condition->GetType());
+	data.AddInt("comparison", condition->GetComparisonMethod());
+	data.AddString("name", condition->GetName());
+	switch (condition->GetType())
 	{
-		data.CreateSection("condition_" + std::to_string(i));
-		data.AddInt("type", conditions[i]->GetType());
-		data.AddInt("comparison", conditions[i]->GetComparisonMethod());
-		data.AddString("name", conditions[i]->GetName());
-		switch (conditions[i]->GetType())
-		{
-		case GOAPVariable::T_BOOL:
-			data.AddBool("value", conditions[i]->GetValue());
-			break;
-		case GOAPVariable::T_FLOAT:
-			data.AddFloat("value", conditions[i]->GetValue());
-			break;
-		default:
-			break;
-		}
-		data.CloseSection();
+	case GOAPVariable::T_BOOL:
+		data.AddBool("value", condition->GetValue());
+		break;
+	case GOAPVariable::T_FLOAT:
+		data.AddFloat("value", condition->GetValue());
+		break;
+	default:
+		break;
 	}
+	data.CloseSection();
 }
 
 bool GOAPGoal::Load(Data & data)
@@ -100,17 +98,14 @@ void GOAPGoal::SetIncrement(int increment_rate, float time_step)
 
 void GOAPGoal::AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, bool value)
 {
-	conditions.push_back(new GOAPField(name.c_str(), comparison_method, value));
+	if(condition != nullptr)
+		condition = new GOAPField(name.c_str(), comparison_method, value);
 }
 
 void GOAPGoal::AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, float value)
 {
-	conditions.push_back(new GOAPField(name.c_str(), comparison_method, value));
-}
-
-const std::vector<GOAPField*>& GOAPGoal::GetConditions() const
-{
-	return conditions;
+	if (condition != nullptr)
+		condition = new GOAPField(name.c_str(), comparison_method, value);
 }
 
 uint GOAPGoal::GetPriority() const
@@ -141,17 +136,9 @@ bool GOAPGoal::NeedIncrement()
 	return ret;
 }
 
-GOAPField* GOAPGoal::GetCondition(int index) const
+GOAPField* GOAPGoal::GetCondition() const
 {
-	GOAPField* ret = nullptr;
-	if (index >= 0 && index < conditions.size())
-		ret = conditions[index];
-	return ret;
-}
-
-int GOAPGoal::GetNumConditions() const
-{
-	return conditions.size();
+	return condition;
 }
 
 void GOAPGoal::StartTimer()
