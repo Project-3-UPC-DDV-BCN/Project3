@@ -11,7 +11,7 @@ public:
 		E_NULL,
 		E_DECREASE,
 		E_SET,
-		E_SET_DIFFERENT,
+		E_SET_DIFFERENT, //internal use only
 		E_INCREASE,
 	};
 

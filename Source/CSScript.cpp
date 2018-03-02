@@ -42,6 +42,8 @@ CSScript::CSScript()
 	on_collision_exit = nullptr;
 	on_enable = nullptr;
 	on_disable = nullptr;
+	on_complete = nullptr;
+	on_fail = nullptr;
 
 	active_gameobject = nullptr;
 	attached_gameobject = nullptr;
@@ -78,6 +80,8 @@ bool CSScript::LoadScript(std::string script_path)
 		on_collision_exit = GetFunction("OnCollisionExit", 1);
 		on_enable = GetFunction("OnEnable", 0);
 		on_disable = GetFunction("OnDisable", 0);
+		on_complete = GetFunction("OnComplete", 0);
+		on_fail = GetFunction("OnFail", 0);
 
 		ret = true;
 	}
@@ -165,6 +169,24 @@ void CSScript::OnDisable()
 	if (on_disable != nullptr)
 	{
 		CallFunction(on_disable, nullptr);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnComplete()
+{
+	if (on_complete != nullptr)
+	{
+		CallFunction(on_complete, nullptr);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnFail()
+{
+	if (on_fail != nullptr)
+	{
+		CallFunction(on_fail, nullptr);
 		inside_function = false;
 	}
 }

@@ -39,6 +39,17 @@ public:
 	//Returns the cost of this action
 	uint GetCost() const;
 
+	//Calls script Update
+	void Update();
+	//Calls script Start
+	void Start();
+	//Calls script OnComplete
+	void OnComplete();
+	//Calls script OnFail()
+	void OnFail();
+
+	CSScript* GetScript()const;
+
 private:
 	std::vector<GOAPField*> preconditions;
 	std::vector<GOAPEffect*> effects;

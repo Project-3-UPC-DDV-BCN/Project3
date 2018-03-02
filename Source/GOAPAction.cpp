@@ -207,3 +207,26 @@ uint GOAPAction::GetCost() const
 {
 	return cost;
 }
+
+void GOAPAction::Update()
+{
+	script->UpdateScript();
+}
+
+void GOAPAction::Start()
+{
+	script->StartScript();
+}
+
+void GOAPAction::OnComplete()
+{
+}
+
+void GOAPAction::OnFail()
+{
+}
+
+CSScript * GOAPAction::GetScript() const
+{
+	return script;
+}

@@ -4,6 +4,8 @@
 #include "GOAPVariable.h"
 #include "Application.h"
 #include "ModuleResources.h"
+#include "CSScript.h"
+#include "ModuleScriptImporter.h"
 
 ComponentGOAPAgent::ComponentGOAPAgent(GameObject * attached_gameobject)
 {
@@ -123,7 +125,7 @@ bool ComponentGOAPAgent::Update()
 				new_path = true;
 				fulfilled = false;
 				curr_act_state = AS_FAIL;
-				///curr_action->OnFail();
+				curr_action->OnFail();
 				break;
 			}
 		}
@@ -133,13 +135,13 @@ bool ComponentGOAPAgent::Update()
 			//call the action script functions
 			if (need_start)
 			{
-				///curr_action->Start();
+				curr_action->Start();
 				need_start = false;
 			}
 
 			if (curr_act_state == AS_RUNNING)
 			{
-				///curr_action->Update();
+				curr_action->Update();
 
 				//check if the requirements for next action are fulfilled
 				GOAPAction* next_action = path.at(1);
@@ -163,7 +165,7 @@ bool ComponentGOAPAgent::Update()
 
 			if (curr_act_state == AS_COMPLETED)
 			{
-				///curr_action->OnComplete();
+				curr_action->OnComplete();
 				//apply the effects
 
 				for (int e = 0; e < curr_action->GetNumEffects(); ++e)
@@ -181,10 +183,11 @@ bool ComponentGOAPAgent::Update()
 				}
 			}
 
-			if (curr_act_state == AS_FAIL)
+			if (curr_act_state == AS_FAIL)//the action failed
 			{
-				///curr_action->OnFail();
-
+				curr_action->OnFail();
+				path_valid = false;
+				new_path = true;
 			}
 				
 		}
@@ -205,6 +208,7 @@ void ComponentGOAPAgent::AddGoal(GOAPGoal * goal)
 void ComponentGOAPAgent::AddAction(GOAPAction * action)
 {
 	actions.push_back(action);
+	action->GetScript()->SetAttachedGameObject(this->GetGameObject());
 }
 
 void ComponentGOAPAgent::AddVariable(std::string & name, bool value)
@@ -285,6 +289,7 @@ void ComponentGOAPAgent::FindActionPath()
 {
 	if (new_path)
 	{
+		path.clear();
 		goal_to_complete = GetGoalToComplete();
 		if (goal_to_complete == nullptr)
 		{

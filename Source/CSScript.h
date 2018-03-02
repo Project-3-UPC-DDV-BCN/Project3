@@ -25,6 +25,8 @@ public:
 	void OnCollisionExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
+	void OnComplete();
+	void OnFail();
 
 	void SetIntProperty(const char* propertyName, int value);
 	int GetIntProperty(const char* propertyName);
@@ -200,6 +202,8 @@ private:
 	MonoMethod* on_collision_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
+	MonoMethod* on_complete;
+	MonoMethod* on_fail;
 
 	std::vector<ScriptField*> script_fields;
 	bool modifying_self;
