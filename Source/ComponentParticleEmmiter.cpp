@@ -37,14 +37,20 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
-	float3 particle_pos = emmit_area_obb.RandomPointInside(random);
-	emmit_area_obb.LocalToWorld().TransformPos(emmit_area_obb.CenterPoint());
+	float3 particle_pos = emmit_area.RandomPointInside(random);
+//	emmit_area.LocalToWorld().TransformPos(emmit_area_obb.CenterPoint());
 
 	Particle* new_particle = new Particle(this);
 
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
-	new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
+
+	if(data->emmit_style == EMMIT_FROM_CENTER)
+		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
+
+	else if (data->emmit_style == EMMIT_FROM_RANDOM)
+		new_particle->components.particle_transform->SetPosition(particle_pos);
+
 	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
 
 	//We generate the always squared surface for the particle 
@@ -141,12 +147,11 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	show_emit_area = true; 
 
 	//Make the aabb enclose a primitive cube
-	AABB emit_area; 
-	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };
-	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
-	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
+	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
+	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
+	emmit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-	emmit_area_obb.SetFrom(emit_area);
+
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -256,22 +261,15 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 	if (parent_transform->dirty)
 	{
+
 		//Position increment
-		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area_obb.CenterPoint();
+		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
 
-		//Rotation increment
-		float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
-		float3 obb_rot = emmit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ();
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1});
 
-		float3 inc_angle = parent_eule_rot - obb_rot;
+		CONSOLE_LOG("%f %f %f", data->width_increment, data->height_increment, data->depth_increment);
 
-		//Apply
-		Quat rot = Quat::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
-		//float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
-
-		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot, { 1 /*data->width_increment + 1*/,1/*data->height_increment + 1*/,1/*data->depth_increment + 1*/ });
-
-		emmit_area_obb.Transform(transform_to_apply);
+		emmit_area.TransformAsAABB(transform_to_apply);
 
 		parent_transform->dirty = false; 
 	}
@@ -449,7 +447,7 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 	for (int i = 0; i < data->amount_to_emmit; i++)
 	{
 		Particle* new_particle = CreateParticle();
-		new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
+		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
 		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
 	}
 }

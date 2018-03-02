@@ -23,6 +23,7 @@ void ParticleData::LoadDefaultData()
 	color = Color(255, 255, 255, 0);
 	billboard_type = BILLBOARD_NONE; 
 	emmision_type = EMMISION_CONTINUOUS; 
+	emmit_style = EMMIT_FROM_RANDOM;
 	billboarding = false;
 	gravity = { 0,0,0 };
 	angular_v = 0;
@@ -90,6 +91,8 @@ void ParticleData::Save(Data & data) const
 	data.AddFloat("Emit_Width",emmit_width);
 	data.AddFloat("Emit_Height", emmit_height);
 	data.AddFloat("Emit_Depth", emmit_depth);
+
+	data.AddInt("Emmision_Style", (int)emmit_style);
 
 	//billboarding 
 	data.AddBool("Billboard", billboarding); 
@@ -204,6 +207,7 @@ void ParticleData::Copy(ParticleData * other)
 	animation_system = other->animation_system;
 
 	emmision_type = other->emmision_type;
+	emmit_style = other->emmit_style;
 	time_step_sim = other->time_step_sim; 
 	amount_to_emmit = other->amount_to_emmit; 
 
@@ -257,6 +261,7 @@ bool ParticleData::Load(Data & _data)
 	_data.EnterSection("Particle");
 	
 	emmision_type = static_cast<emmision_behaviour>(_data.GetInt("Emmision_Type"));
+	emmit_style = static_cast<emmision_style>(_data.GetInt("Emmision_Style"));
 
 	if (emmision_type == EMMISION_SIMULTANEOUS)
 	{

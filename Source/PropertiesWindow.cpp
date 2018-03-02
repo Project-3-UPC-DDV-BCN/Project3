@@ -1569,10 +1569,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 
+				static int style; 
+				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 
+
+				if (style == 0)
+					current_emmiter->data->emmit_style = EMMIT_FROM_CENTER; 
+				else if (style == 1)
+					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
+
 				ImGui::TreePop();
 			}
 
 			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
+
+			if (current_emmiter->data->width_increment != 0 || current_emmiter->data->height_increment != 0 || current_emmiter->data->depth_increment != 0)
+			{
+				ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+				trans->dirty = true; 
+			}
+				
 			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
 			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
 

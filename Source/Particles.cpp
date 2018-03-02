@@ -138,7 +138,7 @@ float Particle::GetAlphaInterpolationPercentage()
 		if (alpha_started)
 		{
 			alpha_percentage = (interpolation_timer.Read() / (time_to_interpolate * 1000)); 
-			CONSOLE_LOG("iNTERPOL: %f", alpha_percentage); 
+			//CONSOLE_LOG("iNTERPOL: %f", alpha_percentage); 
 		}
 
 	}
@@ -455,7 +455,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
 
-		CONSOLE_LOG("cOLOR SEND: %f %f %f", color.x, color.y,color.z);
+	//	CONSOLE_LOG("cOLOR SEND: %f %f %f", color.x, color.y,color.z);
 
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}
