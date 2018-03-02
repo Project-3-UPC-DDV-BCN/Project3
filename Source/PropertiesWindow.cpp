@@ -1569,7 +1569,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 
-				static int style; 
+				static int style = 1; 
 				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 
 
 				if (style == 0)
@@ -1661,9 +1661,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						{
 							current_emmiter->data->change_size_interpolation = true;
 
-							if (init_scale.x == fin_scale.x)
-								current_emmiter->data->change_size_interpolation = false;
-
 							current_emmiter->data->initial_scale = init_scale;
 							current_emmiter->data->final_scale = fin_scale;
 						}
@@ -1673,6 +1670,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						if (ImGui::Button("Delete"))
 						{
 							current_emmiter->data->change_size_interpolation = false;
+
+							current_emmiter->data->initial_scale = { 1,1,1 }; 
+							current_emmiter->data->final_scale = { 1,1,1 };
 						}
 
 						ImGui::TreePop(); 

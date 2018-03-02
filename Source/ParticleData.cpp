@@ -155,7 +155,7 @@ void ParticleData::Save(Data & data) const
 		data.AddBool("Alpha_Interpolation", true);		
 	}
 	else
-		data.AddBool("Size_Interpolation", false);
+		data.AddBool("Alpha_Interpolation", false);
 
 	if (change_rotation_interpolation)
 	{
@@ -236,6 +236,8 @@ void ParticleData::Copy(ParticleData * other)
 
 	autopause = other->autopause; 
 	time_to_stop = other->time_to_stop; 
+
+	change_alpha_interpolation = other->change_alpha_interpolation;
 									
 	change_size_interpolation = other->change_size_interpolation;
 	initial_scale = other->initial_scale;
@@ -356,7 +358,6 @@ bool ParticleData::Load(Data & _data)
 		initial_scale = _data.GetVector3("Initial_Size");
 		final_scale = _data.GetVector3("Final_Size");
 	}
-
 
 
 	if (change_rotation_interpolation)

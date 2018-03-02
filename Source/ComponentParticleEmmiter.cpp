@@ -113,7 +113,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	///Alpha 
 	if (data->change_alpha_interpolation)
 	{
-		new_particle->particle_data->change_alpha_interpolation = true;
 		new_particle->particle_data->init_alpha_interpolation_time = data->init_alpha_interpolation_time; 
 		new_particle->particle_data->alpha_interpolation_delayed = data->alpha_interpolation_delayed; 
 	}
