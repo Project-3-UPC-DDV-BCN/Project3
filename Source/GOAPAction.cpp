@@ -7,41 +7,45 @@
 #include <sstream>
 #include "CSScript.h"
 
-GOAPAction::GOAPAction(const char* name, uint cost) : cost(cost)
+GOAPAction::GOAPAction(const char* name, uint cost, bool create_script) : cost(cost)
 {
-	//Create script
-	std::ifstream in_file;
-	std::string new_file_name = name;
-	std::string script_name = name;
-	
-	in_file.open(GOAP_TEMPLATE_FILE_PATH);
-	new_file_name += ".cs";
+	if (create_script)
+	{
+		//Create script
+		std::ifstream in_file;
+		std::string new_file_name = name;
+		std::string script_name = name;
 
-	if (in_file.is_open()) {
-		std::stringstream str_stream;
-		str_stream << in_file.rdbuf();//read the file
-		std::string str = str_stream.str();//str holds the content of the file
+		in_file.open(GOAP_TEMPLATE_FILE_PATH);
+		new_file_name += ".cs";
 
-		if (str.empty())
-			return;
-		size_t start_pos = 0;
-		std::string class_name_template = "#CLASS_NAME#";
-		while ((start_pos = str.find(class_name_template, start_pos)) != std::string::npos) {
-			str.replace(start_pos, class_name_template.length(), script_name);
-			start_pos += script_name.length();
+		if (in_file.is_open()) {
+			std::stringstream str_stream;
+			str_stream << in_file.rdbuf();//read the file
+			std::string str = str_stream.str();//str holds the content of the file
+
+			if (str.empty())
+				return;
+			size_t start_pos = 0;
+			std::string class_name_template = "#CLASS_NAME#";
+			while ((start_pos = str.find(class_name_template, start_pos)) != std::string::npos) {
+				str.replace(start_pos, class_name_template.length(), script_name);
+				start_pos += script_name.length();
+			}
+
+			in_file.close();
+
+			std::ofstream output_file(ASSETS_GOAP_FOLDER + new_file_name);
+			output_file << str;
+			output_file.close();
+
+			App->resources->CreateResource(ASSETS_GOAP_FOLDER + new_file_name);
+			script = (CSScript*)App->resources->GetScript(script_name);
 		}
-
-		in_file.close();
-
-		std::ofstream output_file(ASSETS_GOAP_FOLDER_PATH + new_file_name);
-		output_file << str;
-		output_file.close();
-
-		App->resources->CreateResource(ASSETS_GOAP_FOLDER_PATH + new_file_name);
-		script = (CSScript*)App->resources->GetScript(script_name);
 	}
 	
 	SetName(name);
+	SetType(Resource::GOAPActionResource);
 }
 
 GOAPAction::~GOAPAction()
@@ -54,7 +58,8 @@ void GOAPAction::Save(Data & data) const
 	data.AddString("assets_path", GetAssetsPath());
 	data.AddString("name", GetName());
 	data.AddUInt("UUID", GetUID());
-	data.AddString("script", script->GetName());
+	if(script != nullptr)
+		data.AddString("script", script->GetName());
 	data.AddInt("preconditions_num", preconditions.size());
 	for (int i = 0; i < preconditions.size(); ++i)
 	{

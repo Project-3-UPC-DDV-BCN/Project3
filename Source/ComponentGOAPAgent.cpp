@@ -29,7 +29,7 @@ void ComponentGOAPAgent::Save(Data & data) const
 		data.CloseSection();
 	}
 	data.AddInt("num_actions", actions.size());
-	for (int i = 0; i < goals.size(); ++i)
+	for (int i = 0; i < actions.size(); ++i)
 	{
 		data.CreateSection("action_" + std::to_string(i));
 		data.AddString("name", actions[i]->GetName());
@@ -105,98 +105,99 @@ void ComponentGOAPAgent::Load(Data & data)
 bool ComponentGOAPAgent::Update()
 {
 	bool ret = true;
-
-	if (path_valid)
+	if (App->IsPlaying() && !App->IsPaused())
 	{
-		if (curr_action == nullptr)
+		if (path_valid)
 		{
-			curr_action = path.front();
-			curr_act_state = AS_RUNNING;
-		}
-
-		//check if the conditions for the current actions are fulfilled
-		bool fulfilled = true;
-		for (int c = 0; c < curr_action->GetNumPreconditions(); ++c)
-		{
-			GOAPField* precon = curr_action->GetPrecondition(c);
-			if (!SystemFulfillCondition(precon)) //this path is not valid since the preconditions for this actions are not fulfilled
+			if (curr_action == nullptr)
 			{
-				path_valid = false;
-				new_path = true;
-				fulfilled = false;
-				curr_act_state = AS_FAIL;
-				curr_action->OnFail();
-				break;
-			}
-		}
-
-		if (fulfilled == true)
-		{
-			//call the action script functions
-			if (need_start)
-			{
-				curr_action->Start();
-				need_start = false;
+				curr_action = path.front();
+				curr_act_state = AS_RUNNING;
 			}
 
-			if (curr_act_state == AS_RUNNING)
+			//check if the conditions for the current actions are fulfilled
+			bool fulfilled = true;
+			for (int c = 0; c < curr_action->GetNumPreconditions(); ++c)
 			{
-				curr_action->Update();
-
-				//check if the requirements for next action are fulfilled
-				GOAPAction* next_action = path.at(1);
-				bool next_fulfilled = true;
-				for (int c = 0; c < next_action->GetNumPreconditions(); ++c)
-				{
-					GOAPField* precon = next_action->GetPrecondition(c);
-					if (!SystemFulfillCondition(precon))
-					{
-						next_fulfilled = false;
-						break;
-					}
-				}
-
-				if (next_fulfilled) // current action has finished his work
-				{
-					curr_act_state = AS_COMPLETED;
-				}
-
-			}
-
-			if (curr_act_state == AS_COMPLETED)
-			{
-				curr_action->OnComplete();
-				//apply the effects
-
-				for (int e = 0; e < curr_action->GetNumEffects(); ++e)
-				{
-					GOAPEffect* effect = curr_action->GetEffect(e);
-					ApplyEffect(effect);
-				}
-
-				curr_action = nullptr;
-				path.erase(path.begin());
-				if (path.empty()) //we finished the path, find a new path
+				GOAPField* precon = curr_action->GetPrecondition(c);
+				if (!SystemFulfillCondition(precon)) //this path is not valid since the preconditions for this actions are not fulfilled
 				{
 					path_valid = false;
 					new_path = true;
+					fulfilled = false;
+					curr_act_state = AS_FAIL;
+					curr_action->OnFail();
+					break;
 				}
 			}
 
-			if (curr_act_state == AS_FAIL)//the action failed
+			if (fulfilled == true)
 			{
-				curr_action->OnFail();
-				path_valid = false;
-				new_path = true;
+				//call the action script functions
+				if (need_start)
+				{
+					curr_action->Start();
+					need_start = false;
+				}
+
+				if (curr_act_state == AS_RUNNING)
+				{
+					curr_action->Update();
+
+					//check if the requirements for next action are fulfilled
+					GOAPAction* next_action = path.at(1);
+					bool next_fulfilled = true;
+					for (int c = 0; c < next_action->GetNumPreconditions(); ++c)
+					{
+						GOAPField* precon = next_action->GetPrecondition(c);
+						if (!SystemFulfillCondition(precon))
+						{
+							next_fulfilled = false;
+							break;
+						}
+					}
+
+					if (next_fulfilled) // current action has finished his work
+					{
+						curr_act_state = AS_COMPLETED;
+					}
+
+				}
+
+				if (curr_act_state == AS_COMPLETED)
+				{
+					curr_action->OnComplete();
+					//apply the effects
+
+					for (int e = 0; e < curr_action->GetNumEffects(); ++e)
+					{
+						GOAPEffect* effect = curr_action->GetEffect(e);
+						ApplyEffect(effect);
+					}
+
+					curr_action = nullptr;
+					path.erase(path.begin());
+					if (path.empty()) //we finished the path, find a new path
+					{
+						path_valid = false;
+						new_path = true;
+					}
+				}
+
+				if (curr_act_state == AS_FAIL)//the action failed
+				{
+					curr_action->OnFail();
+					path_valid = false;
+					new_path = true;
+				}
+
 			}
-				
+		}
+		else
+		{
+			FindActionPath();
 		}
 	}
-	else
-	{
-		FindActionPath();
-	}
-
 	return ret;
 }
 
@@ -208,7 +209,8 @@ void ComponentGOAPAgent::AddGoal(GOAPGoal * goal)
 void ComponentGOAPAgent::AddAction(GOAPAction * action)
 {
 	actions.push_back(action);
-	action->GetScript()->SetAttachedGameObject(this->GetGameObject());
+	if(action->GetScript()!= nullptr)
+		action->GetScript()->SetAttachedGameObject(this->GetGameObject());
 }
 
 void ComponentGOAPAgent::AddVariable(std::string & name, bool value)

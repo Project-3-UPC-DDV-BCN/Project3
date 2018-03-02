@@ -2070,77 +2070,74 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 						ImGui::Text("Increment Rate:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementRate());
 						ImGui::Text("Increment Timestep:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementTime());
 
-						/*std::vector<GOAPField*> conditions = goals[i]->GetConditions();
-						if (conditions.size() > 0)
+						if (goals[i]->GetCondition() == nullptr)
 						{
-							for (int j = 0; j < conditions.size(); ++j)
+							std::string button_name = "Set Condition##";
+							button_name += goals[i]->GetName();
+							button_name += i;
+							if (ImGui::Button(button_name.c_str()))
 							{
-								std::string name_ = conditions[i]->GetName();
-								name_ += "##Conditions_";
-								name_ += i;
-								if (ImGui::TreeNode(name_.c_str()))
-								{
-									std::string cm;
-									switch (conditions[i]->GetComparisonMethod())
-									{
-									case GOAPField::CM_EQUAL:
-										cm = "==";
-										break;
-									case GOAPField::CM_DIFFERENT:
-										cm = "!=";
-										break;
-									case GOAPField::CM_HIGHER:
-										cm = ">";
-										break;
-									case GOAPField::CM_LOWER:
-										cm = "<";
-										break;
-									case GOAPField::CM_HIGHER_OR_EQUAL:
-										cm = ">=";
-										break;
-									case GOAPField::CM_LOWER_OR_EQUAL:
-										cm = "<=";
-										break;
-									case GOAPField::CM_NULL:
-									default:
-										break;
-									}
-
-									if (conditions[i]->GetType() == GOAPVariable::VariableType::T_BOOL)
-									{
-										ImGui::TextColored(ImVec4(255, 255, 0, 255), cm.c_str()); ImGui::SameLine(); 
-										if (conditions[i]->GetValue())
-											ImGui::Text("True");
-										else
-											ImGui::Text("False");			
-									}
-									else if (conditions[i]->GetType() == GOAPVariable::VariableType::T_FLOAT)
-									{
-										ImGui::TextColored(ImVec4(255, 255, 0, 255), cm.c_str()); ImGui::SameLine(); ImGui::Text("%.2f", conditions[i]->GetValue());
-									}
-								}
+								goal_to_add_condition = goals[i];
 							}
 						}
 						else
-							ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO CONDITIONS CREATED!");*/
-
-						std::string button_name = "Add Condition##";
-						button_name += goals[i]->GetName();
-						button_name += i;
-						if (ImGui::Button(button_name.c_str()))
 						{
-							goal_to_add_condition = goals[i];
-						}
+							GOAPField* f = goals[i]->GetCondition();
 
+							GOAPField::ComparisonMethod cm = f->GetComparisonMethod();
+							ImGui::Text("Var Name: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 255, 0, 255), "%s",f->GetName());
+							ImGui::Text("Comparison Method: "); ImGui::SameLine();
+							switch (cm)
+							{
+							case GOAPField::CM_EQUAL:
+								 ImGui::TextColored(ImVec4(0, 255, 0, 255), "Equal");
+								break;
+							case GOAPField::CM_DIFFERENT:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Different");
+								break;
+							case GOAPField::CM_HIGHER:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Higher");
+								break;
+							case GOAPField::CM_LOWER:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Lower");
+								break;
+							case GOAPField::CM_HIGHER_OR_EQUAL:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Higher or Equal");
+								break;
+							case GOAPField::CM_LOWER_OR_EQUAL:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Lower or Equal");
+								break;
+							default:
+								break;
+							}
+							ImGui::Text("Var Value: "); ImGui::SameLine();
+							GOAPVariable::VariableType var_t = f->GetType();
+							switch (var_t)
+							{
+							case GOAPVariable::T_BOOL:
+							{
+								(f->GetValue()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
+								break;
+							}
+							case GOAPVariable::T_FLOAT:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", f->GetValue());
+								break;
+							default:
+								break;
+							}
+						}
 						ImGui::TreePop();
 					}
 				}
 			}
 			else
-				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO GOALS CREATED!");
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO GOALS ADDED!");
 			
-			if (ImGui::Button("Add Goal##Goap_add_goal"))
-				add_goal = true;
+			static GOAPGoal* g = nullptr;
+			if (ImGui::InputResourceGOAPGoal("Add Goal", &g))
+			{
+				goap_agent->AddGoal(g);
+			}
 
 			ImGui::TreePop();
 		}
@@ -2162,8 +2159,13 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 				}
 			}
 			else
-				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO ACTIONS CREATED!");
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO ACTIONS ADDED!");
 			
+			static GOAPAction* a = nullptr;
+			if (ImGui::InputResourceGOAPAction("Add Action", &a))
+			{
+				goap_agent->AddAction(a);
+			}
 			
 			ImGui::TreePop();
 		}
@@ -2172,68 +2174,6 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 
 			ImGui::TreePop();
 		}
-	}
-
-	// Pop-up to create goal
-	if (add_goal)
-	{
-		ImGui::Begin("AddGoal##GOAP");
-
-		if (add_goal_priority < 0)
-			add_goal_priority = 0;
-		if (add_goal_inc_rate < 0)
-			add_goal_inc_rate = 0;
-		if (add_goal_inc_time < 0)
-			add_goal_inc_time = 0;
-
-		ImGui::InputText("Name##AddGoal", add_goal_name, 256);
-		ImGui::InputInt("Priority##AddGoal", &add_goal_priority); 
-		ImGui::InputInt("Increment Rate##AddGoal", &add_goal_inc_rate);
-		ImGui::InputFloat("Increment Time##AddGoal", &add_goal_inc_time);
-		ImGui::TextColored(ImVec4(255, 255, 0, 255), "If 0, there is no increment");
-
-		if (ImGui::Button("Save Goal##AddGoal"))
-		{
-			add_goal = false;
-			GOAPGoal* goal = new GOAPGoal();
-			goal->SetName(add_goal_name);
-			goal->SetPriority(add_goal_priority);
-			goal->SetIncrement(add_goal_inc_rate, add_goal_inc_time);
-
-			goap_agent->AddGoal(goal);
-			
-			add_goal_name[0] = '\0';
-			add_goal_priority = 0;
-			add_goal_inc_rate = 0;
-			add_goal_inc_time = 0;
-		}
-		
-		ImGui::End();
-	}
-
-	if (goal_to_add_condition != nullptr) 
-	{
-		ImGui::Begin("AddCondition##GOAP");
-
-		ImGui::InputText("Name##AddCondition", add_condition_name, 256);
-
-		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
-
-		if (float_bool)
-		{
-
-		}
-
-		if (ImGui::Button("Save Condition##AddCondition"))
-		{
-
-			//goal_to_add_condition->AddCondition(add_condition_name, );
-			goal_to_add_condition = nullptr;
-			add_condition_name[0] = '\0';
-			float_bool = 0;
-		}
-
-		ImGui::End();
 	}
 }
 

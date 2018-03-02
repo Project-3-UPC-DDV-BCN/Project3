@@ -11,7 +11,7 @@ class CSScript;
 class GOAPAction : public Resource
 {
 public:
-	GOAPAction(const char* name, uint cost = 1);
+	GOAPAction(const char* name, uint cost = 1, bool create_script = true);
 	~GOAPAction();
 
 	void Save(Data& data) const;

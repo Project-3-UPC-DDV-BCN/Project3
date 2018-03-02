@@ -23,7 +23,7 @@ public:
 	MonoDomain* GetDomain() const;
 	MonoImage* GetEngineImage() const;
 
-	std::string CompileScript(std::string assets_path);
+	std::string CompileScript(std::string assets_path, std::string& lib);
 	void SetCurrentScript(CSScript* script);
 
 private:

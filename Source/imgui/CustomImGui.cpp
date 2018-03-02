@@ -814,7 +814,7 @@ namespace ImGui
 
 		GOAPAction* new_action = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->goal_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->action_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
 			new_action = App->editor->resources_window->GetGOAPAction();
 			if (new_action != tmp_action)

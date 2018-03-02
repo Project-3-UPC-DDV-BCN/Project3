@@ -41,7 +41,7 @@ public:
 	const char* GetConditionName();
 
 private:
-	GOAPField* condition;
+	GOAPField* condition = nullptr;
 	uint priority = 0; // form 1 to 100 -> 100 max priority
 	uint increment_rate = 0;
 	float increment_time = 0.0f; // 0, no increment

@@ -122,6 +122,7 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_BMODEL_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_BMODEL_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_GOAP_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_GOAP_FOLDER_PATH);
 
 	CreateDefaultShaders();
 	CreateDefaultMaterial();
@@ -919,7 +920,7 @@ void ModuleResources::RemoveGOAPGoal(GOAPAction * action)
 
 std::map<uint, GOAPAction*> ModuleResources::GetGOAPActionList() const
 {
-	return std::map<uint, GOAPAction*>();
+	return goap_actions_list;
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
@@ -2233,8 +2234,10 @@ void ModuleResources::LoadGOAPGoal(std::string path)
 
 void ModuleResources::LoadGOAPAction(std::string path)
 {
+	if (App->file_system->GetFileExtension(path) == ".cs" || App->file_system->GetFileExtension(path) == ".meta")
+		return;
 	std::string name = App->file_system->GetFileNameWithoutExtension(path);
-	GOAPAction* action = new GOAPAction(name.c_str());
+	GOAPAction* action = new GOAPAction(name.c_str(),1,false);
 	Data file;
 	if (HasMetaFile(path))
 	{

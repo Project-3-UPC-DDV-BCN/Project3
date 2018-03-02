@@ -1,9 +1,10 @@
 #include "GOAPGoal.h"
 #include "Data.h"
 
-
 GOAPGoal::GOAPGoal()
 {
+	SetType(Resource::GOAPGoalResource);
+	condition = nullptr;
 }
 
 GOAPGoal::~GOAPGoal()
@@ -20,23 +21,25 @@ void GOAPGoal::Save(Data & data) const
 	data.AddUInt("increment_rate", increment_rate);
 	data.AddFloat("increment_time", increment_time);
 
-	
-	data.CreateSection("condition");
-	data.AddInt("type", condition->GetType());
-	data.AddInt("comparison", condition->GetComparisonMethod());
-	data.AddString("name", condition->GetName());
-	switch (condition->GetType())
+	if (condition != nullptr)
 	{
-	case GOAPVariable::T_BOOL:
-		data.AddBool("value", condition->GetValue());
-		break;
-	case GOAPVariable::T_FLOAT:
-		data.AddFloat("value", condition->GetValue());
-		break;
-	default:
-		break;
+		data.CreateSection("condition");
+		data.AddInt("type", condition->GetType());
+		data.AddInt("comparison", condition->GetComparisonMethod());
+		data.AddString("name", condition->GetName());
+		switch (condition->GetType())
+		{
+		case GOAPVariable::T_BOOL:
+			data.AddBool("value", condition->GetValue());
+			break;
+		case GOAPVariable::T_FLOAT:
+			data.AddFloat("value", condition->GetValue());
+			break;
+		default:
+			break;
+		}
+		data.CloseSection();
 	}
-	data.CloseSection();
 }
 
 bool GOAPGoal::Load(Data & data)

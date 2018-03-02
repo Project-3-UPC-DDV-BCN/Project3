@@ -93,11 +93,16 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 std::string ModuleScriptImporter::ImportScript(std::string path)
 {
 	std::string ret = "";
-	std::string result = CompileScript(path);
+	std::string lib;
+	std::string result = CompileScript(path, lib);
 
 	if (result != "")
 	{
 		CONSOLE_ERROR("%s", result.c_str());
+	}
+	else
+	{
+		return lib;
 	}
 
 	return ret;
@@ -131,12 +136,13 @@ MonoImage * ModuleScriptImporter::GetEngineImage() const
 	return mono_engine_image;
 }
 
-std::string ModuleScriptImporter::CompileScript(std::string assets_path)
+std::string ModuleScriptImporter::CompileScript(std::string assets_path, std::string& lib)
 {
 	std::string script_name = App->file_system->GetFileNameWithoutExtension(assets_path);
 	std::string ret;
 	if (!App->file_system->DirectoryExist(LIBRARY_SCRIPTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCRIPTS_FOLDER_PATH);
 	std::string output_name = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
+	lib = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
 
 	MonoClass* compiler_class = mono_class_from_name(mono_compiler_image, "Compiler", "Compiler");
 	if (compiler_class)
