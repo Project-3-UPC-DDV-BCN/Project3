@@ -16,7 +16,7 @@ class ParticleData;
 class Shader;
 class ShaderProgram;
 class Font;
-class SoundBank;
+class SoundBankResource;
 
 class ModuleResources :
 	public Module
@@ -80,11 +80,11 @@ public:
 	void RemoveBlastModel(BlastModel* mesh);
 	std::map<uint, BlastModel*> GetBlastModelsList() const;
 
-	SoundBank* GetSoundBank(std::string name) const;
-	SoundBank* GetSoundBank(UID uid) const;
-	void AddSoundBank(SoundBank* sbk);
-	void RemoveSoundBank(BlastModel* sbk);
-	std::map<uint, SoundBank*> GetSoundBanksList() const;
+	SoundBankResource* GetSoundBank(std::string name) const;
+	SoundBankResource* GetSoundBank(UID uid) const;
+	void AddSoundBank(SoundBankResource* sbk);
+	void RemoveSoundBank(SoundBankResource* sbk);
+	std::map<uint, SoundBankResource*> GetSoundBanksList() const;
 
 	Shader* GetShader(std::string name) const;
 	Shader* GetShader(UID uid) const;
@@ -147,6 +147,6 @@ private:
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 	std::map<uint, Font*> fonts_list;
-	std::map<uint, SoundBank*> soundbanks_list;
+	std::map<uint, SoundBankResource*> soundbanks_list;
 };
 

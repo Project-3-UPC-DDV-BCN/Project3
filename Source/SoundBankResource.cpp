@@ -112,3 +112,13 @@ unsigned int SoundBankResource::GetBankInfo(std::string path, SoundBank *& bank)
 
 	return ret;
 }
+
+SoundBank * SoundBankResource::GetSoundBank() const
+{
+	return soundbank;
+}
+
+void SoundBankResource::SetSoundBank(SoundBank * sbk)
+{
+	soundbank = sbk;
+}

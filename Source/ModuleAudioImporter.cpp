@@ -27,22 +27,47 @@ bool ModuleAudioImporter::CleanUp()
 std::string ModuleAudioImporter::ImportSoundBank(std::string path)
 {
 	std::string name_without_extension = App->file_system->GetFileNameWithoutExtension(path);
+	std::string name_without_path = App->file_system->GetFileName(path);
 
-	if (App->file_system->FileExist(ASSETS_SOUNDBANK_FOLDER + path))
+	if (App->file_system->FileExist(path))
 	{
 		SoundBankResource* sbk = new SoundBankResource();
-		sbk->SetAssetsPath(ASSETS_SOUNDBANK_FOLDER + path);
-		sbk->SetLibraryPath(LIBRARY_SOUNDBANK_FOLDER + path);
-		sbk->SetName(path);
+		sbk->SetAssetsPath(ASSETS_SOUNDBANK_FOLDER + name_without_path);
+		sbk->SetLibraryPath(LIBRARY_SOUNDBANK_FOLDER + name_without_path);
+		sbk->SetName(name_without_path);
 		sbk->LoadToMemory();
 
 		Data data;
 		sbk->Save(data);
 		sbk->CreateMeta();
-		App->file_system->Copy(ASSETS_SOUNDBANK_FOLDER + path, LIBRARY_SOUNDBANK_FOLDER + path);
+		App->file_system->Copy(path, LIBRARY_SOUNDBANK_FOLDER + name_without_path);
 
 		RELEASE(sbk);
 	}
 
-	return std::string();
+	return (LIBRARY_SOUNDBANK_FOLDER_PATH + name_without_path);
+}
+
+SoundBankResource* ModuleAudioImporter::LoadSoundBankFromLibrary(std::string path)
+{
+	std::string name_without_extension = App->file_system->GetFileNameWithoutExtension(path);
+	std::string name_without_path = App->file_system->GetFileName(path);
+
+	if (App->file_system->FileExist(path))
+	{
+		SoundBankResource* sbk = new SoundBankResource();
+		sbk->SetAssetsPath(ASSETS_SOUNDBANK_FOLDER + name_without_path);
+		sbk->SetLibraryPath(LIBRARY_SOUNDBANK_FOLDER + name_without_path);
+		sbk->SetName(name_without_path);
+		sbk->LoadToMemory();
+
+		Data data;
+		sbk->Save(data);
+		sbk->CreateMeta();
+		App->file_system->Copy(path, LIBRARY_SOUNDBANK_FOLDER + name_without_path);
+
+		RELEASE(sbk);
+	}
+
+	return nullptr;
 }

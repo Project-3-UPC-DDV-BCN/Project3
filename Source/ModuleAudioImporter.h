@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include <string>
+#include "Resource.h"
 
 class ModuleAudioImporter :
 	public Module
@@ -14,7 +15,7 @@ public:
 	bool CleanUp();
 
 	std::string ImportSoundBank(std::string path);
-	
+	SoundBankResource* LoadSoundBankFromLibrary(std::string path);
 private:
 
 };

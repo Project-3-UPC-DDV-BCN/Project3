@@ -16,6 +16,7 @@
 #include "ComponentDistorsionZone.h"
 #include "ComponentAudioSource.h"
 #include "ComponentListener.h"
+#include "ModuleResources.h"
 
 #include "ModuleScene.h"
 
@@ -45,7 +46,7 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	App->audio_importer->ImportSoundBank("Ship_Soundbank.bnk");
+	//App->resources->CreateResource("./Project/Library/SoundBanks/Ship_Soundbank.bnk");
 
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();

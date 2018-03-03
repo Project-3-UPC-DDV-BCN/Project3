@@ -19,6 +19,9 @@ public:
 	void UnloadFromMemory();
 	unsigned int GetBankInfo(std::string path, SoundBank *& bank);
 
+	SoundBank* GetSoundBank() const;
+	void SetSoundBank(SoundBank* sbk);
+
 private:
 	JSONTool * json = nullptr;
 	SoundBank* soundbank = nullptr;

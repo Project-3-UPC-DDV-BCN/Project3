@@ -12,7 +12,7 @@
 #include "BlastModel.h"
 #include "Shader.h"
 #include "Font.h"
-#include "SoundBank.h"
+#include "SoundBankResource.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -307,19 +307,19 @@ void ResourcesWindow::DrawWindow()
 		}
 		break;
 	case Resource::SoundBankResource:
-		soundbanks_list = App->resources->GetBlastModelsList();
-		if (ImGui::Selectable("None##Mesh"))
+		soundbanks_list = App->resources->GetSoundBanksList();
+		if (ImGui::Selectable("None##SoundBank"))
 		{
-			blast_model_to_return = nullptr;
-			blast_model_changed = true;
+			soundbank_to_return = nullptr;
+			soundbank_changed = true;
 			break;
 		}
-		for (std::map<uint, BlastModel*>::const_iterator it = blast_models_list.begin(); it != blast_models_list.end(); it++)
+		for (std::map<uint, SoundBankResource*>::const_iterator it = soundbanks_list.begin(); it != soundbanks_list.end(); it++)
 		{
 			if (ImGui::Selectable(it->second->GetName().c_str()))
 			{
-				blast_model_to_return = it->second;
-				blast_model_changed = true;
+				soundbank_to_return = it->second;
+				soundbank_changed = true;
 				break;
 			}
 		}
@@ -386,7 +386,7 @@ Font * ResourcesWindow::GetFont() const
 	return font_to_return;
 }
 
-SoundBank * ResourcesWindow::GetSoundBank() const
+SoundBankResource * ResourcesWindow::GetSoundBank() const
 {
 	return soundbank_to_return;
 }

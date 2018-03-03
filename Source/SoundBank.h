@@ -8,7 +8,8 @@
 
 class AudioEvent;
 
-class SoundBank {
+class SoundBank 
+{
 
 public: 
 

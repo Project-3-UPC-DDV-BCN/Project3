@@ -13,7 +13,7 @@ class Script;
 class Font;
 class PhysicsMaterial;
 class BlastModel;
-class SoundBank;
+class SoundBankResource;
 
 namespace ImGui
 {
@@ -28,6 +28,6 @@ namespace ImGui
 	bool InputResourceBlastModel(const char* label, BlastModel** mesh);
 	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 	bool InputResourceFont(const char* label, Font** font);
-	bool InputResourceAudio(const char* label, SoundBank** soundbank);
+	bool InputResourceAudio(const char* label, SoundBankResource** soundbank);
 }
 

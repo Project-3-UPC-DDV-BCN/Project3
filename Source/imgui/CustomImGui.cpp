@@ -12,7 +12,7 @@
 #include "../Font.h"
 #include "../PhysicsMaterial.h"
 #include "../BlastModel.h"
-#include "../SoundBank.h"
+#include "../SoundBankResource.h"
 
 namespace ImGui
 {
@@ -698,7 +698,7 @@ namespace ImGui
 		return false;
 	}
 	
-	bool InputResourceAudio(const char * label, SoundBank ** soundbank)
+	bool InputResourceAudio(const char * label, SoundBankResource ** soundbank)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
 		if (window->SkipItems)
@@ -722,10 +722,10 @@ namespace ImGui
 		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
 		std::string buf_display;
 
-		SoundBank* tmp_soundbank = *soundbank;
+		SoundBankResource* tmp_soundbank = *soundbank;
 		if (tmp_soundbank != nullptr)
 		{
-			buf_display = tmp_soundbank->name;
+			buf_display = tmp_soundbank->GetName();
 		}
 		else
 		{
@@ -740,12 +740,12 @@ namespace ImGui
 
 		if (ImGui::IsItemHovered() && App->editor->drag_data->hasData)
 		{
-			if (App->editor->drag_data->resource->GetType() == Resource::FontResource)
+			if (App->editor->drag_data->resource->GetType() == Resource::SoundBankResource)
 			{
 				RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_ButtonHovered));
 				if (ImGui::IsMouseReleased(0))
 				{
-					*soundbank = (SoundBank*)App->editor->drag_data->resource;
+					*soundbank = (SoundBankResource*)App->editor->drag_data->resource;
 					return true;
 				}
 			}
@@ -756,16 +756,16 @@ namespace ImGui
 		button_id += label;
 		if (Button(button_id.c_str(), { 20, 20 }))
 		{
-			App->editor->resources_window->SetResourceType(Resource::FontResource);
+			App->editor->resources_window->SetResourceType(Resource::SoundBankResource);
 			App->editor->resources_window->SetActive(true);
 			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
 
-		SoundBank* new_soundbank = nullptr;
+		SoundBankResource* new_soundbank = nullptr;
 
-		if (App->editor->resources_window->active && App->editor->resources_window->font_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		if (App->editor->resources_window->active && App->editor->resources_window->soundbank_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
 		{
-			new_soundbank = App->editor->resources_window->GetFont();
+			new_soundbank = App->editor->resources_window->GetSoundBank();
 			if (new_soundbank != tmp_soundbank)
 			{
 				*soundbank = new_soundbank;

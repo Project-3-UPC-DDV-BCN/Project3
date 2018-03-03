@@ -5,6 +5,7 @@
 #include "Wwise.h"
 
 class AudioEvent;
+class SoundBankResource;
 
 class ComponentAudioSource : 
 	public Component 
@@ -34,7 +35,7 @@ public :
 	std::vector<AudioEvent*> GetEventsToPlayVector() const;
 
 public:
-	SoundBank* soundbank = nullptr;
+	SoundBankResource* soundbank = nullptr;
 private:
 	std::vector<AudioEvent*>events;
 	std::vector<AudioEvent*>events_to_play;

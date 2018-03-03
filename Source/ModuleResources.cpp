@@ -27,6 +27,8 @@
 #include "ShaderProgram.h"
 #include "Font.h"
 #include "SoundBank.h"
+#include "SoundBankResource.h"
+#include "ModuleAudioImporter.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -63,6 +65,11 @@ ModuleResources::~ModuleResources()
 	materials_list.clear();
 
 	for (std::map<uint, Font*>::iterator it = fonts_list.begin(); it != fonts_list.end(); ++it)
+	{
+		RELEASE(it->second);
+	}
+	fonts_list.clear();
+	for (std::map<uint, SoundBankResource*>::iterator it = soundbanks_list.begin(); it != soundbanks_list.end(); ++it)
 	{
 		RELEASE(it->second);
 	}
@@ -114,6 +121,7 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_BMODEL_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_BMODEL_FOLDER_PATH);
+	if (!App->file_system->DirectoryExist(LIBRARY_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SOUNDBANK_FOLDER_PATH);
 
 	CreateDefaultShaders();
 	CreateDefaultMaterial();
@@ -193,6 +201,9 @@ void ModuleResources::AddResource(Resource * resource)
 		break;
 	case Resource::ShaderProgramResource:
 		AddShaderProgram((ShaderProgram*)resource);
+		break;
+	case Resource::SoundBankResource:
+		AddSoundBank((SoundBankResource*)resource);
 		break;
 	case Resource::Unknown:
 		break;
@@ -716,25 +727,39 @@ std::map<uint, BlastModel*> ModuleResources::GetBlastModelsList() const
 	return blast_models_list;
 }
 
-SoundBank * ModuleResources::GetSoundBank(std::string name) const
+SoundBankResource * ModuleResources::GetSoundBank(std::string name) const
 {
+	for (std::map<uint, SoundBankResource*>::const_iterator it = soundbanks_list.begin(); it != soundbanks_list.end(); it++)
+	{
+		if (it->second != nullptr && it->second->GetName() == name) return it->second;
+	}
 	return nullptr;
 }
 
-SoundBank * ModuleResources::GetSoundBank(UID uid) const
+SoundBankResource * ModuleResources::GetSoundBank(UID uid) const
 {
+	if (soundbanks_list.find(uid) != soundbanks_list.end()) return soundbanks_list.at(uid);
 	return nullptr;
 }
 
-void ModuleResources::AddSoundBank(SoundBank * sbk)
+void ModuleResources::AddSoundBank(SoundBankResource * sbk)
 {
+	if (sbk != nullptr)
+	{
+		soundbanks_list[sbk->GetUID()] = sbk;
+	}
 }
 
-void ModuleResources::RemoveSoundBank(BlastModel * sbk)
+void ModuleResources::RemoveSoundBank(SoundBankResource * sbk)
 {
+	if (sbk)
+	{
+		std::map<uint, SoundBankResource*>::iterator it = soundbanks_list.find(sbk->GetUID());
+		if (it != soundbanks_list.end()) soundbanks_list.erase(it);
+	}
 }
 
-std::map<uint, SoundBank*> ModuleResources::GetSoundBanksList() const
+std::map<uint, SoundBankResource*> ModuleResources::GetSoundBanksList() const
 {
 	return soundbanks_list;
 }
@@ -859,6 +884,7 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".ttf") return Resource::FontResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
+	else if (str == ".bnk") return Resource::SoundBankResource;
 
 	return Resource::Unknown;
 }
@@ -1156,6 +1182,14 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 		}
 		resource = (Resource*)App->blast_mesh_importer->LoadModelFromLibrary(library_path, false);
 		break;
+	case Resource::SoundBankResource:
+		if (GetSoundBank(name) != nullptr)
+		{
+			resource = (Resource*)GetSoundBank(name);
+			break;
+		}
+		resource = (Resource*)App->audio_importer->LoadSoundBankFromLibrary(library_path, false);
+		break;
 	default:
 		break;
 	}
@@ -1203,6 +1237,13 @@ void ModuleResources::CreateResource(std::string file_path)
 						App->shader_importer->ImportShader(file_path);
 					}
 				}
+				if (extension == ".bnk")
+				{
+					if (App->file_system->CompareFilesTime(file_path, library_path))
+					{
+						App->audio_importer->ImportSoundBank(file_path);
+					}
+				}
 			}
 			resource = CreateResourceFromLibrary(library_path);
 			if (resource != nullptr)
@@ -1226,6 +1267,13 @@ void ModuleResources::CreateResource(std::string file_path)
 			if (App->file_system->CompareFilesTime(file_path, path))
 			{
 				App->shader_importer->ImportShader(file_path);
+			}
+		}
+		if (extension == ".bnk")
+		{
+			if (App->file_system->CompareFilesTime(file_path, library_path))
+			{
+				App->audio_importer->ImportSoundBank(file_path);
 			}
 		}
 		resource = CreateResourceFromLibrary(path);

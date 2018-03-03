@@ -5,8 +5,8 @@
 #include "AudioEvent.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
-
 #include "ComponentListener.h"
+#include "SoundBankResource.h"
 
 #include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
 
@@ -22,7 +22,7 @@ ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 	obj = App->audio->CreateSoundObject(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
 
 	if (App->audio->GetSoundBank() != nullptr) {
-		this->soundbank = App->audio->GetSoundBank();
+		this->soundbank->SetSoundBank(App->audio->GetSoundBank());
 		GetEvents();
 	}
 
@@ -124,8 +124,8 @@ AkGameObjectID ComponentAudioSource::GetID() const
 void ComponentAudioSource::GetEvents()
 {
 	if (soundbank != nullptr) {
-		for (int i = 0; i < soundbank->events.size(); i++) {
-			events.push_back(soundbank->events[i]);
+		for (int i = 0; i < soundbank->GetSoundBank()->events.size(); i++) {
+			events.push_back(soundbank->GetSoundBank()->events[i]);
 		}
 	}
 }
