@@ -1873,6 +1873,10 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
+	bool active_bool = audio_source->IsActive();
+
+	ImGui::Checkbox("Active", &active_bool);
+
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 
@@ -1897,6 +1901,10 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 
 				ImGui::TreePop();
 			}
+		}
+		else
+		{
+			
 		}
 	}
 }

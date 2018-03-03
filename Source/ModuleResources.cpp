@@ -26,6 +26,7 @@
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
 #include "Font.h"
+#include "SoundBank.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -713,6 +714,29 @@ void ModuleResources::RemoveBlastModel(BlastModel * mesh)
 std::map<uint, BlastModel*> ModuleResources::GetBlastModelsList() const
 {
 	return blast_models_list;
+}
+
+SoundBank * ModuleResources::GetSoundBank(std::string name) const
+{
+	return nullptr;
+}
+
+SoundBank * ModuleResources::GetSoundBank(UID uid) const
+{
+	return nullptr;
+}
+
+void ModuleResources::AddSoundBank(SoundBank * sbk)
+{
+}
+
+void ModuleResources::RemoveSoundBank(BlastModel * sbk)
+{
+}
+
+std::map<uint, SoundBank*> ModuleResources::GetSoundBanksList() const
+{
+	return soundbanks_list;
 }
 
 ShaderProgram * ModuleResources::GetShaderProgram(UID uid) const

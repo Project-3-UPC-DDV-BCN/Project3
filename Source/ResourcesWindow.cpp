@@ -12,6 +12,7 @@
 #include "BlastModel.h"
 #include "Shader.h"
 #include "Font.h"
+#include "SoundBank.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -39,6 +40,7 @@ ResourcesWindow::ResourcesWindow()
 	blast_model_changed = false;
 	shader_changed = false;
 	font_changed = false;
+	soundbank_changed = false;
 
 	shader_type = Shader::ShaderType::ST_NULL;
 
@@ -304,6 +306,24 @@ void ResourcesWindow::DrawWindow()
 			}
 		}
 		break;
+	case Resource::SoundBankResource:
+		soundbanks_list = App->resources->GetBlastModelsList();
+		if (ImGui::Selectable("None##Mesh"))
+		{
+			blast_model_to_return = nullptr;
+			blast_model_changed = true;
+			break;
+		}
+		for (std::map<uint, BlastModel*>::const_iterator it = blast_models_list.begin(); it != blast_models_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				blast_model_to_return = it->second;
+				blast_model_changed = true;
+				break;
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -364,6 +384,11 @@ Shader * ResourcesWindow::GetShader() const
 Font * ResourcesWindow::GetFont() const
 {
 	return font_to_return;
+}
+
+SoundBank * ResourcesWindow::GetSoundBank() const
+{
+	return soundbank_to_return;
 }
 
 void ResourcesWindow::SetShaderType(Shader::ShaderType type)
