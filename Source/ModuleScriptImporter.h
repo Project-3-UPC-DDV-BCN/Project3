@@ -3,6 +3,7 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <vector>
+#include <map>
 
 class Script;
 class CSScript;
@@ -20,7 +21,7 @@ public:
 	std::string ImportScript(std::string path);
 	Script* LoadScriptFromLibrary(std::string path);
 
-	MonoDomain* GetDomain() const;
+	MonoDomain* GetEngineDomain() const;
 	MonoImage* GetEngineImage() const;
 
 	std::string CompileScript(std::string assets_path);
@@ -29,6 +30,9 @@ public:
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
 	MonoClass* DumpClassInfo(MonoImage* image, std::string& class_name, std::string& name_space);
+
+	void LoadEngineDomain();
+	void UnloadEngineDomain();
 
 	void RegisterAPI();
 
@@ -140,10 +144,13 @@ private:
 
 private:
 	std::string mono_path;
-	MonoDomain* mono_domain;
+	MonoDomain* root_mono_domain;
+	MonoDomain* engine_mono_domain;
 	MonoImage* mono_engine_image;
 	static CSScript* current_script;
 	static bool inside_function;
 	MonoImage* mono_compiler_image;
+	
+	std::map<std::string, MonoAssembly*> script_assemblies;
 };
 

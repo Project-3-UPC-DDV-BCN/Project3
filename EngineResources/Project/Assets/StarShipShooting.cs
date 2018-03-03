@@ -6,7 +6,7 @@ public class StarShipShooting {
 	TheFactory laser_factory;
     public TheGameObject laser_spawner;
 	
-	float spawn_time = 0.1f;
+	float spawn_time = 0.01f;
 	float timer = 0.1f;
 	bool used_left_laser = false;
 

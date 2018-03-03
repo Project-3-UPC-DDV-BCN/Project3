@@ -76,6 +76,9 @@
     <Filter Include="Sources\Resources">
       <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3d Party\Mono">
+      <UniqueIdentifier>{a4fe9a04-9710-4ad0-9c57-5bc379c136a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -1171,6 +1174,15 @@
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="GameBuildWindow.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\object.h">
+      <Filter>Sources\3d Party\Mono</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1799,6 +1811,12 @@
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="GameBuildWindow.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">
