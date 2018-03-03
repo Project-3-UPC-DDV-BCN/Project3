@@ -221,19 +221,19 @@ void ModuleResources::FillResourcesLists()
 		}
 	}
 
-	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
+	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
 		CreateResource(*it);
 
-	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
+	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = shader_order.begin(); it != shader_order.end(); ++it)
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = shader_program_order.begin(); it != shader_program_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
