@@ -149,15 +149,137 @@ void ModuleResources::FillResourcesLists()
 		}
 	}
 
-	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
+	/*for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
 		if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
 		else if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) LoadGOAPGoal(*it);
 		else if (App->file_system->GetFileName(*it).find("_GOAPAction") != std::string::npos) LoadGOAPAction(*it);
 		else CreateResource(*it);
 	}
+		CreateResource(*it);
+	}*/
 
-	if (exist_shprog_meta)
+	// Meshes
+	std::vector<std::string> mesh_order;
+	//Textures
+	std::vector<std::string> texture_order;
+	//Shader
+	std::vector<std::string> shader_order;
+	//ShaderProgram
+	std::vector<std::string> shader_program_order;
+	//Materials
+	std::vector<std::string> material_order;
+	//Scripts
+	std::vector<std::string> script_order;
+	//Audio
+
+	//Font
+	std::vector<std::string> font_order;
+	//PhysicsMat
+	std::vector<std::string> phys_mat_order;
+	//BlastMesh
+	std::vector<std::string> blast_mesh_order;
+	//GOAPGoal
+	std::vector<std::string> goap_goal_order;
+	//GOAPAction
+	std::vector<std::string> goap_action_order;
+	//ParticleFX
+	std::vector<std::string> particle_order;
+
+	// Create lists in order of Drive
+	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
+	{
+		std::string extension = App->file_system->GetFileExtension(*it);
+		Resource::ResourceType type;
+		type = AssetExtensionToResourceType(extension);
+		if (type == Resource::Unknown)
+		{
+			if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) type = Resource::GOAPGoalResource;
+			if (App->file_system->GetFileName(*it).find("_GOAPAction") != std::string::npos) type = Resource::GOAPActionResource;
+		}
+
+		switch (type) {
+		case Resource::MeshResource:
+			if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
+			mesh_order.push_back(*it);
+			break;
+		case Resource::TextureResource:
+			texture_order.push_back(*it);
+			break;
+		case Resource::ShaderResource:
+			shader_order.push_back(*it);
+			break;
+		case Resource::ShaderProgramResource:
+			shader_program_order.push_back(*it);
+			break;
+		case Resource::MaterialResource:
+			material_order.push_back(*it);
+			break;
+		case Resource::ScriptResource:
+			script_order.push_back(*it);
+			break;
+		case Resource::AudioResource:
+			break;
+		case Resource::FontResource:
+			font_order.push_back(*it);
+			break;
+		case Resource::PhysicsMatResource:
+			phys_mat_order.push_back(*it);
+			break;
+		case Resource::BlastMeshResource:
+			blast_mesh_order.push_back(*it);
+			break;
+		case Resource::GOAPGoalResource:
+			goap_goal_order.push_back(*it);
+			break;
+		case Resource::GOAPActionResource:
+			goap_action_order.push_back(*it);
+			break;
+		case Resource::ParticleFXResource:
+			particle_order.push_back(*it);
+			break;
+		}
+	}
+
+	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = shader_order.begin(); it != shader_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = shader_program_order.begin(); it != shader_program_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
+		CreateResource(*it);
+
+	// AudioRes
+
+	for (std::vector<string>::iterator it = font_order.begin(); it != font_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = phys_mat_order.begin(); it != phys_mat_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = blast_mesh_order.begin(); it != blast_mesh_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = goap_goal_order.begin(); it != goap_goal_order.end(); ++it)
+		LoadGOAPGoal(*it);
+
+	for (std::vector<string>::iterator it = goap_action_order.begin(); it != goap_action_order.end(); ++it)
+		LoadGOAPAction(*it);
+
+	for (std::vector<string>::iterator it = particle_order.begin(); it != particle_order.end(); ++it)
+		CreateResource(*it);
+
+	if (exist_shprog_meta) //shader meta should be the last thing because it contains the programs
 		LoadShaderProgramMeta(shprog_meta_file);
 }
 
@@ -1791,27 +1913,31 @@ void ModuleResources::CreateDefaultShaders()
 			"out vec4 color;\n\n"
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
+			"uniform float material_alpha;\n"
 			"uniform bool alpha_interpolation;\n"
-			"uniform bool color_interpolation;\n"
-			"uniform vec3 color_to_show;\n"
 			"uniform float alpha_percentage;\n"
 			"uniform bool has_texture;\n"
 			"uniform sampler2D ourTexture;\n\n"
 			"void main()\n"
 			"{\n"
 			"	if(has_texture)\n"
+			"	{\n"
 			"		color = texture(ourTexture, TexCoord);\n"
+			"		color.rgb = color.rgb + material_color.rgb;\n"
+			"	}\n"
 			"	else if(has_material_color)\n"
 			"		color = material_color;\n"
 			"	else\n"
 			"		color = ourColor;\n"
+
 			"   if(color.a < 0.1f)\n"
 			"		discard;\n"
 
+			"	if (material_alpha != 1)\n"
+			"		color.a = material_alpha;\n"
+
 			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"
-
-			"	color = vec4(color.rgb + material_color.rgb, color.a);\n"
 
 			"}";
 

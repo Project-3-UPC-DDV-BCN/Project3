@@ -51,10 +51,8 @@ bool GOAPGoal::Load(Data & data)
 	priority = data.GetUInt("priority");
 	increment_rate = data.GetUInt("increment_rate");
 	increment_time = data.GetFloat("increment_time");
-	int conditions_num = data.GetInt("conditions_num");
-	for (int i = 0; i < conditions_num; ++i)
+	if (data.EnterSection("condition"))
 	{
-		data.EnterSection("condition_" + std::to_string(i));
 		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
 		GOAPField::ComparisonMethod cm = (GOAPField::ComparisonMethod)data.GetInt("comparison");
 		std::string name = data.GetString("name");

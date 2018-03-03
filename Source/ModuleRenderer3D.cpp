@@ -549,14 +549,16 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Particles
 	for (std::list<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
+
 		(*it)->AddaptEmmitAreaAABB();
+
 		if ((*it)->ShowEmmisionArea())
 		{
-			DrawDebugOBB((*it)->emmit_area_obb, active_camera);
+			DrawDebugCube((*it)->emmit_area, active_camera);
 		}
 
 		(*it)->DrawParticles(active_camera); 
-	
+
 	}
 
 	if (is_editor_camera)

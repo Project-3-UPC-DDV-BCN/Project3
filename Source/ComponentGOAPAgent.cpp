@@ -225,9 +225,10 @@ void ComponentGOAPAgent::AddVariable(std::string & name, float value)
 
 bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, float & var) const
 {
+	std::string cmp_name = name;
 	for (int i = 0; i < blackboard.size(); ++i)
 	{
-		if (name == blackboard[i]->GetName())
+		if (cmp_name == blackboard[i]->GetName())
 		{
 			var = blackboard[i]->GetValueF();
 			return true;
@@ -238,9 +239,10 @@ bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, float & var) c
 
 bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, bool & var) const
 {
+	std::string cmp_name = name;
 	for (int i = 0; i < blackboard.size(); ++i)
 	{
-		if (name == blackboard[i]->GetName())
+		if (cmp_name == blackboard[i]->GetName())
 		{
 			var = blackboard[i]->GetValueB();
 			return true;
@@ -309,7 +311,11 @@ void ComponentGOAPAgent::FindActionPath()
 			return;
 		}
 		possible_paths = 1;
-		completed_paths[0] = false;
+		completed_paths.push_back(false);
+		std::vector<GOAPEffect*> e_path;
+		effects_to_fulfill.push_back(e_path);
+		std::vector<GOAPAction*> path;
+		tmp_paths.push_back(path);
 		FillEffectsFromGoal(goal_to_complete);
 		calculating_path = true;
 	}
@@ -334,9 +340,9 @@ void ComponentGOAPAgent::FindActionPath()
 						for (int e = 0; e < actions[a]->GetNumEffects(); ++e) //check that each action effects
 						{
 							GOAPEffect* action_effect = actions[a]->GetEffect(e);
-
+							std::string cmp_name = effect->GetName();
 							if (effect->GetType() == action_effect->GetType() && effect->GetEffect() == action_effect->GetEffect() ///possible bug
-								&& effect->GetName() == action_effect->GetName()) // first check if this effect fulfills the needs
+								&& cmp_name == action_effect->GetName()) // first check if this effect fulfills the needs
 							{
 								if (effect->GetEffect() == GOAPEffect::E_DECREASE || effect->GetEffect() == GOAPEffect::E_INCREASE) //if it's an increase or decrease, the value doesn't matter
 								{
@@ -471,7 +477,7 @@ void ComponentGOAPAgent::ResetTmpEffects()
 
 GOAPEffect * ComponentGOAPAgent::TmpEffectsContains(const char * name, GOAPEffect::EffectType t) const
 {
-	for (std::vector<GOAPEffect*>::const_iterator it = created_effects.begin(); it != created_effects.end();)
+	for (std::vector<GOAPEffect*>::const_iterator it = created_effects.begin(); it != created_effects.end();++it)
 	{
 		if ((*it)->GetName() == name && (*it)->GetEffect() == t)
 		{
@@ -958,9 +964,13 @@ int ComponentGOAPAgent::AddPossiblePath(int ref)
 {
 	int ret = possible_paths;
 
-	tmp_paths[possible_paths] = tmp_paths[ref];
-	effects_to_fulfill[possible_paths] = effects_to_fulfill[ref];
-	completed_paths[possible_paths] = false;
+	std::vector < GOAPAction*> path = tmp_paths[ref];
+	tmp_paths.push_back(path);
+
+	std::vector<GOAPEffect*> e_path = effects_to_fulfill[ref];
+	effects_to_fulfill.push_back(e_path);
+
+	completed_paths.push_back(false);
 
 	possible_paths++;
 
@@ -975,17 +985,20 @@ int ComponentGOAPAgent::GetBestTmpPath()
 
 	for (int i = 0; i < possible_paths; ++i) 
 	{
-		int path_cost = 0;
-
-		for (int a = 0; a < tmp_paths[i].size(); ++a) //calculate path i cost
+		if (tmp_paths[i].size()>0)
 		{
-			path_cost += tmp_paths[i][a]->GetCost();
-		}
+			int path_cost = 0;
 
-		if (path_cost < lower_cost)
-		{
-			lower_cost = path_cost;
-			ret = i;
+			for (int a = 0; a < tmp_paths[i].size(); ++a) //calculate path i cost
+			{
+				path_cost += tmp_paths[i][a]->GetCost();
+			}
+
+			if (path_cost < lower_cost)
+			{
+				lower_cost = path_cost;
+				ret = i;
+			}
 		}
 	}
 	return ret;
@@ -1015,6 +1028,87 @@ void ComponentGOAPAgent::ResetVariables()
 
 bool ComponentGOAPAgent::SystemFulfillCondition(GOAPField * condition)
 {
+	GOAPVariable::VariableType var_t = condition->GetType();
+
+	switch (var_t)
+	{
+	case GOAPVariable::T_BOOL:
+	{
+		bool var;
+		if (GetBlackboardVariable(condition->GetName(), var))
+		{
+			GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
+			switch (cm)
+			{
+			case GOAPField::CM_EQUAL:
+				if (var == condition->GetValueB())
+				{
+					return true;
+				}
+				break;
+			case GOAPField::CM_DIFFERENT:
+				if (var != condition->GetValueB())
+				{
+					return true;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		break;
+	}
+	case GOAPVariable::T_FLOAT:
+	{
+		float var;
+		if (GetBlackboardVariable(condition->GetName(), var))
+		{
+			GOAPField::ComparisonMethod cm = condition->GetComparisonMethod();
+			switch (cm)
+			{
+			case GOAPField::CM_EQUAL:
+				if (var == condition->GetValueF())
+				{
+					return true;
+				}
+				break;
+			case GOAPField::CM_DIFFERENT:
+				if (var != condition->GetValueF())
+				{
+					return true;
+				}
+				break;
+			case GOAPField::CM_HIGHER:
+				if (var > condition->GetValueF())
+				{
+					return true;
+				}
+				break;
+			case GOAPField::CM_LOWER:
+				if (var < condition->GetValueF())
+				{
+					return true;
+				}
+				break;
+			case GOAPField::CM_HIGHER_OR_EQUAL:
+				if (var >= condition->GetValueF())
+				{
+					return true;
+				}
+				break;
+			case GOAPField::CM_LOWER_OR_EQUAL:
+				if (var <= condition->GetValueF())
+				{
+					return true;
+				}
+				break;
+			}
+		}
+		break;
+	}
+	default:
+		break;
+	}
 	return false;
 }
 

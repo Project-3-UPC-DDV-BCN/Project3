@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "Shader.h"
-
+#include "ComponentTransform.h"
 #include "ShaderProgram.h"
 #include "ParticleData.h"
 #include "ComponentCamera.h"
@@ -37,14 +37,20 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
-	float3 particle_pos = emmit_area_obb.RandomPointInside(random);
-	emmit_area_obb.LocalToWorld().TransformPos(particle_pos);
+	float3 particle_pos = emmit_area.RandomPointInside(random);
+//	emmit_area.LocalToWorld().TransformPos(emmit_area_obb.CenterPoint());
 
 	Particle* new_particle = new Particle(this);
 
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
-	new_particle->components.particle_transform->SetPosition(particle_pos);
+
+	if(data->emmit_style == EMMIT_FROM_CENTER)
+		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
+
+	else if (data->emmit_style == EMMIT_FROM_RANDOM)
+		new_particle->components.particle_transform->SetPosition(particle_pos);
+
 	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
 
 	//We generate the always squared surface for the particle 
@@ -75,11 +81,13 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetWorldSpace(data->relative_pos);
 	
 	//Copy Interpolations
-	///Color
 	if (data->change_color_interpolation)
 	{
 		new_particle->particle_data->initial_color = data->initial_color; 
 		new_particle->particle_data->final_color = data->final_color;
+
+		//CONSOLE_LOG("Init: %f %f %f", data->initial_color.r, data->initial_color.g, data->initial_color.b);
+		//CONSOLE_LOG("Final: %f %f %f", data->final_color.r, data->final_color.g, data->final_color.b);
 	}
 	else
 		new_particle->particle_data->change_color_interpolation = false;
@@ -136,14 +144,14 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 	show_shockwave = false; 
 	wave_launched = false; 
+	show_emit_area = true; 
 
 	//Make the aabb enclose a primitive cube
-	AABB emit_area; 
-	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };
-	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
-	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
+	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
+	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
+	emmit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-	emmit_area_obb.SetFrom(emit_area);
+
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -223,19 +231,6 @@ bool ComponentParticleEmmiter::Update()
 					system_state = PARTICLE_STATE_PAUSE; 
 				}
 			}
-
-			// Shock Wave
-			if (data->shock_wave.active == true)
-			{
-				UpdateShockWave(); 
-				DrawShockWave(App->renderer3D->editor_camera); 
-
-				if (data->shock_wave.done == true)
-				{
-					data->shock_wave.active = false; 
-				}
-			}
-				
 				
 		}
 	}
@@ -264,21 +259,21 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	//Position increment
-	float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area_obb.CenterPoint();
+	if (parent_transform->dirty)
+	{
 
-	//Rotation increment
-	float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
-	float3 obb_rot = emmit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ();
+		//Position increment
+		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
 
-	float3 inc_angle = parent_eule_rot - obb_rot; 
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1});
 
-	//Apply
-	float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
+		CONSOLE_LOG("%f %f %f", data->width_increment, data->height_increment, data->depth_increment);
 
-	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, { data->width_increment + 1,data->height_increment + 1,data->depth_increment + 1 });
+		emmit_area.TransformAsAABB(transform_to_apply);
 
-	emmit_area_obb.Transform(transform_to_apply);
+		parent_transform->dirty = false; 
+	}
+
 }
 
 void ComponentParticleEmmiter::UpdateCurrentData()
@@ -360,7 +355,6 @@ void ComponentParticleEmmiter::SetShowEmmisionArea(bool show)
 	show_emit_area = show;
 }
 
-
 particle_system_state ComponentParticleEmmiter::GetSystemState() const
 {
 	return system_state;
@@ -371,15 +365,10 @@ void ComponentParticleEmmiter::SetSystemState(particle_system_state new_state)
 	system_state = new_state;
 }
 
-void Particle::ApplyWorldSpace()
+void Particle::ApplyRelativePos()
 {
-	ComponentTransform* emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-	
-	float4x4 emmiter_rot = emmiter_transform->GetMatrix(); 
-	float4x4 particle_rot = components.particle_transform->GetMatrix(); 
-
-	particle_rot = emmiter_rot * particle_rot; 
-	components.particle_transform->SetMatrix(particle_rot);
+	float3 particle_desplacament = emmiter_transform->GetGlobalPosition() - prev_emmiter_pos;
+	components.particle_transform->SetPosition(components.particle_transform->GetGlobalPosition() + particle_desplacament);
 }
 
 
@@ -392,7 +381,7 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 
 void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
 {
-	data->shock_wave.object = new GameObject(); 
+	data->shock_wave.object = new GameObject(nullptr); 
 
 	data->shock_wave.active = true; 
 	data->shock_wave.done = false; 
@@ -401,38 +390,41 @@ void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration,
 	data->shock_wave.wave_transform = new ComponentTransform(data->shock_wave.object);
 	data->shock_wave.wave_texture = texture; 
 
-	data->shock_wave.duration = duration; 
-	data->shock_wave.final_scale = final_scale; 
+	data->shock_wave.duration = duration;
+	data->shock_wave.final_scale = final_scale;
 	data->shock_wave.wave_timer.Start(); 
 }
 
 void ComponentParticleEmmiter::UpdateShockWave()
 {
-	//We get the number that we have to increment 
-	float time_ex = data->shock_wave.wave_timer.Read() / 1000;
-	float time_dec = data->shock_wave.wave_timer.Read() % 1000;
-	float time = time_ex + time_dec / 1000;
+	////We get the number that we have to increment 
+	//float time_ex = data->shock_wave.wave_timer.Read() / 1000;
+	//float time_dec = data->shock_wave.wave_timer.Read() % 1000;
+	//float time = time_ex + time_dec / 1000;
 
-	float percentage = (time / (data->shock_wave.duration));
+	//float percentage = (time / (data->shock_wave.duration));
 
-	//We get the current scale 
-	float current_scale = data->shock_wave.final_scale * percentage; 
+	////We get the current scale 
+	//float current_scale = data->shock_wave.final_scale * percentage; 
 
-	data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
-	data->shock_wave.wave_transform->SetScale({ 1, 1, 1 });
+	//data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
 
-	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
-	{
-		data->shock_wave.active = false;
-		data->shock_wave.done = true; 
-		show_shockwave = false; 
-	}
+	//if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
+	//{
+	//	data->shock_wave.active = false;
+	//	data->shock_wave.done = true; 
+	//	show_shockwave = false; 
+	//}
 		
 }
 
 void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
+
+	if (show_shockwave)
+		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
+
 	Start();
 }
 
@@ -455,7 +447,7 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 	for (int i = 0; i < data->amount_to_emmit; i++)
 	{
 		Particle* new_particle = CreateParticle();
-		new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
+		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
 		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
 	}
 }

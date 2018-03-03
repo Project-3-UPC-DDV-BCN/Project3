@@ -22,6 +22,9 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	emmiter = parent;
 	runtime_behaviour = RUNTIME_NONE; 
 	particle_data = new ParticleData(); 
+
+	emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
+	prev_emmiter_pos = emmiter_transform->GetGlobalPosition();
 	
 	//Timers
 	particle_timer.Start();
@@ -49,6 +52,17 @@ ParticleComponents Particle::GetAtributes()
 ParticleData * Particle::GetData()
 {
 	return particle_data;
+}
+
+
+float3 Particle::GetPrevEmmiterPos()
+{
+	return prev_emmiter_pos;
+}
+
+void Particle::SetPrevEmmiterPos(float3 _spawn_pos)
+{
+	prev_emmiter_pos = _spawn_pos; 
 }
 
 void Particle::SetRuntimeBehaviour(const char * string)
@@ -124,7 +138,7 @@ float Particle::GetAlphaInterpolationPercentage()
 		if (alpha_started)
 		{
 			alpha_percentage = (interpolation_timer.Read() / (time_to_interpolate * 1000)); 
-			CONSOLE_LOG("iNTERPOL: %f", alpha_percentage); 
+			//CONSOLE_LOG("iNTERPOL: %f", alpha_percentage); 
 		}
 
 	}
@@ -189,6 +203,7 @@ float3 Particle::GetEmmisionVector()
 
 	//First we create a vector matching the Y axis
 	direction = emmiter_transform->GetMatrix().WorldY();
+	float3 direction_cpy = direction; 
 
 	//We apply the rotation angle to the vector 
 	int angle_z = random.Int(0, particle_data->emision_angle);
@@ -197,11 +212,10 @@ float3 Particle::GetEmmisionVector()
 	z_rotation = z_rotation.FromEulerXYZ(0, 0, angle_z * DEGTORAD);
 	direction = z_rotation.Transform(direction);
 
-	//We apply a rotation on X for randomization
+	//We apply a rotation on Y for randomization
 	int angle_y = random.Int(0, 360);
+	float3x3 y_rotation = float3x3::RotateAxisAngle(direction_cpy, angle_y * DEGTORAD);
 
-	float3x3 y_rotation;
-	y_rotation = y_rotation.FromEulerXYZ(0, angle_y * DEGTORAD, 0);
 	direction = y_rotation.Transform(direction);
 
 	//Dir is the maximum angle direction so we hace to add some randomnes 
@@ -240,12 +254,7 @@ void Particle::UpdateColor()
 	if (!particle_data->change_color_interpolation)
 		return;
 
-	static int color_difference[3] =
-	{
-		particle_data->final_color.r - particle_data->initial_color.r,
-		particle_data->final_color.g - particle_data->initial_color.g,
-		particle_data->final_color.b - particle_data->initial_color.b,
-	}; 
+	Color difference(particle_data->final_color.r - particle_data->initial_color.r, particle_data->final_color.g - particle_data->initial_color.g, particle_data->final_color.b - particle_data->initial_color.b, particle_data->final_color.a - particle_data->initial_color.a);
 
 	//We get the number that we have to increment 
 	float time_ex = interpolation_timer.Read() / 1000;
@@ -255,21 +264,16 @@ void Particle::UpdateColor()
 	float percentage = (time / (particle_data->max_lifetime));
 
 	//Setting the increment in each component
-	float increment_r = color_difference[0] * percentage;
-	float increment_g = color_difference[1] * percentage;
-	float increment_b = color_difference[2] * percentage;
+	float increment_r = difference.r * percentage;
+	float increment_g = difference.g * percentage;
+	float increment_b = difference.b * percentage;
 
 	//Applying the increment
 	particle_data->color.r = (particle_data->initial_color.r + increment_r);
 	particle_data->color.g = (particle_data->initial_color.g + increment_g);
 	particle_data->color.b = (particle_data->initial_color.b + increment_b);
-	particle_data->color.a = 1;
-
-	//CONSOLE_LOG("R:%f G:%f B:%f", particle_data->color.r , particle_data->color.g, particle_data->color.b)
 
 }
-
-
 
 void Particle::UpdateSize()
 {
@@ -322,35 +326,59 @@ void Particle::UpdateRotation()
 
 void Particle::SetMovementFromStats()
 {
-	movement += particle_data->gravity * App->time->GetGameDt();
+	movement += particle_data->gravity;
+
 }
 
 void Particle::SetMovement()
 {
 	//Getting the angle in which the particle have to be launched
+	ComponentTransform* trans = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
+
 	if (GetEmmisionAngle() == 0)
-		movement = emmiter->emmit_area_obb.axis[1] * particle_data->velocity;
+		movement = trans->GetMatrix().WorldY();
 	else	
 		movement = GetEmmisionVector(); 
 	
 	//Setting the movement vector
 	movement.Normalize(); 
 	movement *= particle_data->velocity;
-	movement *= App->time->GetGameDt();
 }
 
 void Particle::Update()
 {
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
-	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + movement);
+
+	float3 increment = movement; 
+
+	if (App->GetEngineState() == Application::EngineState::OnPlay)
+		increment *= App->time->GetGameDt();
+	else
+		increment *= App->GetDt();
+
+	GetAtributes().particle_transform->SetPosition(GetAtributes().particle_transform->GetLocalPosition() + increment);
 
 	if (IsWorldSpace())
-		ApplyWorldSpace(); 
+	{
+		if (prev_emmiter_pos.Equals(emmiter_transform->GetGlobalPosition()) == false)
+		{
+			ApplyRelativePos();
+			prev_emmiter_pos = emmiter_transform->GetGlobalPosition(); 
+		}
+		
+	}
 
+
+	//float before[3] = { particle_data->color.r, particle_data->color.g, particle_data->color.b }; 
+	//CONSOLE_LOG("Before: %f %f %f", particle_data->color.r, particle_data->color.g, particle_data->color.b);
+		
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
 		UpdateColor();
+
+	//float after[3] = { particle_data->color.r, particle_data->color.g, particle_data->color.b };
+	//CONSOLE_LOG("Later: %f %f %f", particle_data->color.r, particle_data->color.g, particle_data->color.b); 
 
 	//Update scale
 	if (particle_data->change_size_interpolation)
@@ -414,16 +442,21 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", 0);
 	}
 
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	
 
 	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
 		App->renderer3D->SetUniformBool(id, "has_material_color", true);
+		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
-		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f); 
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
+
+	//	CONSOLE_LOG("cOLOR SEND: %f %f %f", color.x, color.y,color.z);
+
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}
 	else
@@ -433,8 +466,9 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 		App->renderer3D->SetUniformBool(id, "has_texture", true);
 		App->renderer3D->SetUniformBool(id, "has_material_color", false);
+		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
-		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, 1.0f);
+		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());

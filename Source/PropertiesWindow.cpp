@@ -1471,9 +1471,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::Button("PLAY"))
 			{
 				current_emmiter->PlayEmmiter();
-
-				//if(current_emmiter->show_shockwave)
-				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
 			}
 
 			ImGui::SameLine();
@@ -1520,9 +1517,14 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 								
 			ImGui::Separator(); 
 
-			if (ImGui::TreeNode("Relative Position"))
+			if (ImGui::TreeNode("Position Type"))
 			{
-				ImGui::Checkbox("Relative Position", &current_emmiter->data->relative_pos);
+				static int selection = 0; 
+				ImGui::Combo("", &selection, "World\0Local\0"); 
+
+				if (selection == 0) current_emmiter->data->relative_pos = false; 
+				else if (selection == 1) current_emmiter->data->relative_pos = true;
+
 				ImGui::TreePop(); 
 			}
 
@@ -1585,10 +1587,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
 
+				static int style; 
+				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 
+
+				if (style == 0)
+					current_emmiter->data->emmit_style = EMMIT_FROM_CENTER; 
+				else if (style == 1)
+					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
+
 				ImGui::TreePop();
 			}
 
 			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
+
+			if (current_emmiter->data->width_increment != 0 || current_emmiter->data->height_increment != 0 || current_emmiter->data->depth_increment != 0)
+			{
+				ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+				trans->dirty = true; 
+			}
+				
 			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
 			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
 
@@ -1756,6 +1773,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 				if (ImGui::TreeNode("Color"))
 				{
+					ImGui::TextColored(ImVec4(0, 1, 1, 1), "If textures are used, (0,0,0) will show the original color"); 
 
 					static bool alpha_preview = true;
 					ImGui::Checkbox("Alpha", &alpha_preview);
@@ -1770,25 +1788,31 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
-						static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b };
+						static float temp_initial_color[4];
+						static float temp_final_color[4];
 
-						ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
-
-						static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b };
-
-						ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+						ImGui::ColorEdit3("Initial Color", temp_initial_color);
+						ImGui::ColorEdit3("Final Color", temp_final_color);
 
 						if (ImGui::Button("Apply Color Interpolation"))
 						{
 							current_emmiter->data->change_color_interpolation = true;
 
-							Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
-							Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+							current_emmiter->data->initial_color.Set(temp_initial_color[0], temp_initial_color[1], temp_initial_color[2], temp_initial_color[3]); 
+							current_emmiter->data->final_color.Set(temp_final_color[0], temp_final_color[1], temp_final_color[2], temp_final_color[3]); 
 
-							current_emmiter->data->initial_color = initial;
-							current_emmiter->data->final_color = final;
 						}
+												
+						ImGui::SameLine(); 
+						if (ImGui::Button("Delete"))
+						{
+							current_emmiter->data->change_color_interpolation = false;
 
+							current_emmiter->data->initial_color = { 1,1,1,1 }; 
+							current_emmiter->data->final_color = { 1,1,1,1 };
+						}
+						
+					
 						ImGui::TreePop();
 					}
 					ImGui::TreePop(); 
