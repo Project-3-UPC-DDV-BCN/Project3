@@ -70,10 +70,10 @@ void GOAPAction::Save(Data & data) const
 		switch (preconditions[i]->GetType())
 		{
 		case GOAPVariable::T_BOOL:
-			data.AddBool("value", preconditions[i]->GetValue());
+			data.AddBool("value", preconditions[i]->GetValueB());
 			break;
 		case GOAPVariable::T_FLOAT:
-			data.AddFloat("value", preconditions[i]->GetValue());
+			data.AddFloat("value", preconditions[i]->GetValueF());
 			break;
 		default:
 			break;
@@ -89,10 +89,10 @@ void GOAPAction::Save(Data & data) const
 		switch (effects[i]->GetType())
 		{
 		case GOAPVariable::T_BOOL:
-			data.AddBool("value", effects[i]->GetValue());
+			data.AddBool("value", effects[i]->GetValueB());
 			break;
 		case GOAPVariable::T_FLOAT:
-			data.AddFloat("value", effects[i]->GetValue());
+			data.AddFloat("value", effects[i]->GetValueF());
 			break;
 		default:
 			break;

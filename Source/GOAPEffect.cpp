@@ -21,14 +21,14 @@ GOAPEffect::EffectType GOAPEffect::GetEffect() const
 	return effect;
 }
 
-float GOAPEffect::GetValue() const
+float GOAPEffect::GetValueF() const
 {
-	return var->GetValue();
+	return var->GetValueF();
 }
 
-bool GOAPEffect::GetValue()
+bool GOAPEffect::GetValueB()
 {
-	return var->GetValue();
+	return var->GetValueB();
 }
 
 GOAPVariable::VariableType GOAPEffect::GetType() const

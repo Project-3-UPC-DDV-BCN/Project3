@@ -73,7 +73,5 @@ private:
 	float add_goal_inc_time = 0;
 
 	GOAPGoal* goal_to_add_condition = nullptr;
-	char add_condition_name[256] = "\0";
-	int float_bool = 0;
 };
 

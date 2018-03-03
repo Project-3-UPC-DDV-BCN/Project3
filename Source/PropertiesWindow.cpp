@@ -2116,15 +2116,26 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 							{
 							case GOAPVariable::T_BOOL:
 							{
-								(f->GetValue()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
+								(f->GetValueB()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
 								break;
 							}
 							case GOAPVariable::T_FLOAT:
-								ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", f->GetValue());
-								break;
+							{
+								float var = f->GetValueF();
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", var);
+								break; 
+							}
 							default:
 								break;
 							}
+						}
+						std::string b_name = "Save Goal##GOAPgoal" + std::to_string(i);
+						if (ImGui::Button(b_name.c_str()))
+						{
+							Data d;
+							goals[i]->Save(d);
+							d.SaveAsJSON(goals[i]->GetAssetsPath());
+							d.SaveAsJSON(goals[i]->GetLibraryPath());
 						}
 						ImGui::TreePop();
 					}
@@ -2174,6 +2185,92 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 
 			ImGui::TreePop();
 		}
+	}
+
+	if (goal_to_add_condition != nullptr)
+	{
+		ImGui::Begin("AddCondition##GOAP",NULL,ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char add_condition_name[30];
+
+		ImGui::InputText("Name##AddCondition", add_condition_name, 30);
+		static int float_bool = 0;
+		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
+
+		static bool b_value = false;
+		static float f_value = 0.0f;
+		static int cm_chosed = 0;
+		GOAPField::ComparisonMethod cm = GOAPField::CM_NULL;
+		if (float_bool == 0) //float
+		{
+			ImGui::InputFloat("##AddConditionGOAP", &f_value);
+			
+			ImGui::Combo("Comparison Method##AddCondition", &cm_chosed, "Equal\0Different\0Lower\0Higher\0Lower or Equal\0Higher or Equal\0\0");
+			switch (cm_chosed)
+			{
+			case 0:
+				cm = GOAPField::CM_EQUAL;
+				break;
+			case 1:
+				cm = GOAPField::CM_DIFFERENT;
+				break;
+			case 2:
+				cm = GOAPField::CM_LOWER;
+				break;
+			case 3:
+				cm = GOAPField::CM_HIGHER;
+				break;
+			case 4:
+				cm = GOAPField::CM_LOWER_OR_EQUAL;
+				break;
+			case 5:
+				cm = GOAPField::CM_HIGHER_OR_EQUAL;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (float_bool == 1) //bool
+		{
+			ImGui::Checkbox("##AddConditionGOAP", &b_value);
+
+			ImGui::Combo("Comparison Method##AddCondition", &cm_chosed, "Equal\0Different\0\0");
+			switch (cm_chosed)
+			{
+			case 0:
+				cm = GOAPField::CM_EQUAL;
+				break;
+			case 1:
+				cm = GOAPField::CM_DIFFERENT;
+				break;
+			}
+		}
+
+		if (ImGui::Button("Save Condition##AddConditionGOAP"))
+		{
+			if (float_bool == 0)
+			{
+				goal_to_add_condition->AddCondition(std::string(add_condition_name), cm, f_value);
+			}
+			else if (float_bool)
+			{
+				goal_to_add_condition->AddCondition(std::string(add_condition_name), cm, b_value);
+			}
+			goal_to_add_condition = nullptr;
+			add_condition_name[0] = '\0';
+			float_bool = 0;
+			cm_chosed = 0;
+		}
+		if (ImGui::Button("Cancel##AddConditionGOAP"))
+		{
+			float_bool = 0;
+			goal_to_add_condition = nullptr;
+			add_condition_name[0] = '\0';
+			cm_chosed = 0;
+		}
+
+		ImGui::End();
 	}
 }
 

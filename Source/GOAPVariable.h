@@ -18,8 +18,8 @@ public:
 	GOAPVariable(const char* name, float num);
 	~GOAPVariable();
 
-	bool GetValue();
-	float GetValue() const;
+	bool GetValueB();
+	float GetValueF() const;
 	const char* GetName() const;
 
 	void SetValue(bool b);

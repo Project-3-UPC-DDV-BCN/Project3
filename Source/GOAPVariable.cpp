@@ -14,12 +14,12 @@ GOAPVariable::~GOAPVariable()
 {
 }
 
-bool GOAPVariable::GetValue()
+bool GOAPVariable::GetValueB()
 {
 	return value.b_value;
 }
 
-float GOAPVariable::GetValue() const
+float GOAPVariable::GetValueF() const
 {
 	return value.num_value;
 }

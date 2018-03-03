@@ -16,14 +16,14 @@ GOAPField::~GOAPField()
 	RELEASE(var);
 }
 
-bool GOAPField::GetValue()
+bool GOAPField::GetValueB()
 {
-	return var->GetValue();
+	return var->GetValueB();
 }
 
-float GOAPField::GetValue() const
+float GOAPField::GetValueF() const
 {
-	return var->GetValue();
+	return var->GetValueF();
 }
 
 GOAPVariable::VariableType GOAPField::GetType() const

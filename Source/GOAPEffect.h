@@ -21,8 +21,8 @@ public:
 	~GOAPEffect();
 
 	EffectType GetEffect()const;
-	float GetValue()const;
-	bool GetValue();
+	float GetValueF()const;
+	bool GetValueB();
 
 	GOAPVariable::VariableType GetType()const;
 

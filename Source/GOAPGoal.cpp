@@ -30,10 +30,10 @@ void GOAPGoal::Save(Data & data) const
 		switch (condition->GetType())
 		{
 		case GOAPVariable::T_BOOL:
-			data.AddBool("value", condition->GetValue());
+			data.AddBool("value", condition->GetValueB());
 			break;
 		case GOAPVariable::T_FLOAT:
-			data.AddFloat("value", condition->GetValue());
+			data.AddFloat("value", condition->GetValueF());
 			break;
 		default:
 			break;
@@ -101,13 +101,13 @@ void GOAPGoal::SetIncrement(int increment_rate, float time_step)
 
 void GOAPGoal::AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, bool value)
 {
-	if(condition != nullptr)
+	if(condition == nullptr)
 		condition = new GOAPField(name.c_str(), comparison_method, value);
 }
 
 void GOAPGoal::AddCondition(std::string& name, GOAPField::ComparisonMethod comparison_method, float value)
 {
-	if (condition != nullptr)
+	if (condition == nullptr)
 		condition = new GOAPField(name.c_str(), comparison_method, value);
 }
 

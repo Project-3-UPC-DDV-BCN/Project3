@@ -23,9 +23,9 @@ public:
 	~GOAPField();
 
 	//Returns the value of the field
-	bool GetValue();
+	bool GetValueB();
 	//Returns the value of the field
-	float GetValue() const;
+	float GetValueF() const;
 
 	//Returns the type of the field
 	GOAPVariable::VariableType GetType() const;

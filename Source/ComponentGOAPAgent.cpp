@@ -44,10 +44,10 @@ void ComponentGOAPAgent::Save(Data & data) const
 		switch (blackboard[i]->GetType())
 		{
 		case GOAPVariable::T_BOOL:
-			data.AddBool("value", blackboard[i]->GetValue());
+			data.AddBool("value", blackboard[i]->GetValueB());
 			break;
 		case GOAPVariable::T_FLOAT:
-			data.AddFloat("value", blackboard[i]->GetValue());
+			data.AddFloat("value", blackboard[i]->GetValueF());
 			break;
 		default:
 			break;
@@ -229,7 +229,7 @@ bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, float & var) c
 	{
 		if (name == blackboard[i]->GetName())
 		{
-			var = blackboard[i]->GetValue();
+			var = blackboard[i]->GetValueF();
 			return true;
 		}
 	}
@@ -242,7 +242,7 @@ bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, bool & var) co
 	{
 		if (name == blackboard[i]->GetName())
 		{
-			var = blackboard[i]->GetValue();
+			var = blackboard[i]->GetValueB();
 			return true;
 		}
 	}
@@ -347,7 +347,22 @@ void ComponentGOAPAgent::FindActionPath()
 								{
 									if (effect->GetEffect() == GOAPEffect::E_SET) // check they are equal
 									{
-										if (effect->GetValue() == action_effect->GetValue())
+										GOAPVariable::VariableType t = effect->GetType();
+										bool set = false;
+										switch (t)
+										{
+										case GOAPVariable::T_BOOL:
+											if (effect->GetValueB() == action_effect->GetValueB())
+												set = true;
+											break;
+										case GOAPVariable::T_FLOAT:
+											if (effect->GetValueF() == action_effect->GetValueF())
+												set = true;
+											break;
+										default:
+											break;
+										}
+										if (set)
 										{
 											action = actions[a];
 											break;
@@ -355,7 +370,22 @@ void ComponentGOAPAgent::FindActionPath()
 									}
 									else if (effect->GetEffect() == GOAPEffect::E_SET_DIFFERENT) //check they are different
 									{
-										if (effect->GetValue() != action_effect->GetValue())
+										GOAPVariable::VariableType t = effect->GetType();
+										bool set = false;
+										switch (t)
+										{
+										case GOAPVariable::T_BOOL:
+											if (effect->GetValueB() != action_effect->GetValueB())
+												set = true;
+											break;
+										case GOAPVariable::T_FLOAT:
+											if (effect->GetValueF() != action_effect->GetValueF())
+												set = true;
+											break;
+										default:
+											break;
+										}
+										if (set)
 										{
 											action = actions[a];
 											break;
@@ -463,7 +493,7 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 	{
 	case GOAPVariable::T_BOOL:
 	{	//bools can be compared: equal or different
-		bool condition_var = condition->GetValue();
+		bool condition_var = condition->GetValueB();
 		bool blackboard_var;
 		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
 		{
@@ -474,9 +504,9 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 				if (blackboard_var != condition_var)
 				{
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueB() != condition->GetValueB())
 						{
-							effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+							effect = new GOAPEffect(condition->GetName(), condition->GetValueB());
 							created_effects.push_back(effect);
 						}
 					for (int p = 0; p < possible_paths; ++p) //add the effect to all posible paths effects to fulfill
@@ -491,9 +521,9 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 				if (blackboard_var == condition_var)
 					{
 						GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-						if (effect == nullptr || effect->GetValue() != condition->GetValue())
+						if (effect == nullptr || effect->GetValueB() != condition->GetValueB())
 						{
-							effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+							effect = new GOAPEffect(condition->GetName(), condition->GetValueB());
 							created_effects.push_back(effect);
 						}
 						for (int p = 0; p < possible_paths; ++p) //add the effect to all posible paths effects to fulfill
@@ -514,7 +544,7 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 	}
 	case GOAPVariable::T_FLOAT:
 	{
-		float condition_var = condition->GetValue();
+		float condition_var = condition->GetValueF();
 		float blackboard_var;
 		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
 		{
@@ -529,9 +559,9 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 
 					///An action that sets the value to the contition_var will fulfill it
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[0].push_back(effect);
@@ -569,9 +599,9 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 
 					/// a set to a different value will fulfill the condition
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET_DIFFERENT);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET_DIFFERENT, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET_DIFFERENT, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[0].push_back(effect);
@@ -587,7 +617,7 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 
 					/// same for decrease
 					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
 						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
 						created_effects.push_back(effect);
@@ -635,9 +665,9 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 
 					/// set to the value
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[0].push_back(effect);
@@ -662,9 +692,9 @@ void ComponentGOAPAgent::FillEffectsFromGoal(GOAPGoal * goal)
 
 					/// set to the value
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[0].push_back(effect);
@@ -701,7 +731,7 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 	{
 	case GOAPVariable::T_BOOL:
 	{	//bools can be compared: equal or different
-		bool condition_var = condition->GetValue();
+		bool condition_var = condition->GetValueB();
 		bool blackboard_var;
 		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
 		{
@@ -712,9 +742,9 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 				if (blackboard_var != condition_var)
 				{
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET); //bool values are always set effects
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueB() != condition->GetValueB())
 					{
-						effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), condition->GetValueB());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[path_index].push_back(effect);
@@ -727,9 +757,9 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 				if (blackboard_var == condition_var)
 				{
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueB() != condition->GetValueB())
 					{
-						effect = new GOAPEffect(condition->GetName(), condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), condition->GetValueB());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[path_index].push_back(effect);
@@ -747,7 +777,7 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 	}
 	case GOAPVariable::T_FLOAT:
 	{
-		float condition_var = condition->GetValue();
+		float condition_var = condition->GetValueF();
 		float blackboard_var;
 		if (GetBlackboardVariable(condition->GetName(), blackboard_var))
 		{
@@ -762,9 +792,9 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 
 					///An action that sets the value to the contition_var will fulfill it
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[path_index].push_back(effect);
@@ -802,9 +832,9 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 
 					/// a set to a different value will fulfill the condition
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET_DIFFERENT);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET_DIFFERENT, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET_DIFFERENT, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[path_index].push_back(effect);
@@ -820,7 +850,7 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 
 					/// same for decrease
 					effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_DECREASE);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
 						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_DECREASE, 0.f); //the increment value doesn't matter
 						created_effects.push_back(effect);
@@ -868,9 +898,9 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 
 					/// set to the value
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[path_index].push_back(effect);
@@ -895,9 +925,9 @@ void ComponentGOAPAgent::AddEffectsFormField(GOAPField * condition, int path_ind
 
 					/// set to the value
 					GOAPEffect* effect = TmpEffectsContains(condition->GetName(), GOAPEffect::E_SET);
-					if (effect == nullptr || effect->GetValue() != condition->GetValue())
+					if (effect == nullptr || effect->GetValueF() != condition->GetValueF())
 					{
-						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValue());
+						effect = new GOAPEffect(condition->GetName(), GOAPEffect::E_SET, condition->GetValueF());
 						created_effects.push_back(effect);
 					}
 					effects_to_fulfill[path_index].push_back(effect);
@@ -999,14 +1029,25 @@ void ComponentGOAPAgent::ApplyEffect(GOAPEffect * effect)
 		float curr_value;
 		if (GetBlackboardVariable(effect->GetName(), curr_value))
 		{
-			curr_value -= effect->GetValue();
+			curr_value -= effect->GetValueF();
 			SetBlackboardVariable(effect->GetName(), curr_value);
 		}
 		break;
 	}
 	case GOAPEffect::E_SET:
 	{
-		SetBlackboardVariable(effect->GetName(), effect->GetValue());
+		switch (effect->GetType())
+		{
+		case GOAPVariable::T_BOOL:
+			SetBlackboardVariable(effect->GetName(), effect->GetValueB());
+			break;
+		case GOAPVariable::T_FLOAT:
+			SetBlackboardVariable(effect->GetName(), effect->GetValueF());
+			break;
+		default:
+			break;
+		}
+		
 		break;
 	}
 	case GOAPEffect::E_SET_DIFFERENT:
@@ -1017,7 +1058,7 @@ void ComponentGOAPAgent::ApplyEffect(GOAPEffect * effect)
 		float curr_value;
 		if (GetBlackboardVariable(effect->GetName(), curr_value))
 		{
-			curr_value += effect->GetValue();
+			curr_value += effect->GetValueF();
 			SetBlackboardVariable(effect->GetName(), curr_value);
 		}
 		break;
