@@ -3,6 +3,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleAudio.h"
 #include "ModuleCamera3D.h"
+#include "ModuleAudioImporter.h"
 #include "JsonTool.h"
 
 #include "GameObject.h"
@@ -44,8 +45,8 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Ship_Soundbank.bnk");
-	
+	App->audio_importer->ImportSoundBank("Ship_Soundbank.bnk");
+
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
 	go->SetName("Audio");

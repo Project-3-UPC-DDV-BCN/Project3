@@ -9,6 +9,7 @@ class Module;
 class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
+class ModuleAudioImporter;
 class ModuleScene;
 class ModuleRenderer3D;
 class ModuleCamera3D;
@@ -76,6 +77,7 @@ public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleAudio* audio;
+	ModuleAudioImporter* audio_importer;
 	ModuleScene* scene;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
