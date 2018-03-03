@@ -85,6 +85,7 @@ void GOAPAction::Save(Data & data) const
 	{
 		data.CreateSection("effect_" + std::to_string(i));
 		data.AddInt("type", effects[i]->GetType());
+		data.AddInt("effect", effects[i]->GetEffect());
 		data.AddString("name", effects[i]->GetName());
 		switch (effects[i]->GetType())
 		{
@@ -137,7 +138,6 @@ bool GOAPAction::Load(Data & data)
 		data.EnterSection("effect_" + std::to_string(i));
 		std::string name = data.GetString("name");
 		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
-		data.LeaveSection();
 		switch (type)
 		{
 		case GOAPVariable::T_NULL:
@@ -146,11 +146,12 @@ bool GOAPAction::Load(Data & data)
 			AddEffect(name, data.GetBool("value"));
 			break;
 		case GOAPVariable::T_FLOAT:
-			AddEffect(name, data.GetFloat("value"));
+			AddEffect(name, (GOAPEffect::EffectType)data.GetInt("effect"),data.GetFloat("value"));
 			break;
 		default:
 			break;
 		}
+		data.LeaveSection();
 	}
 
 	return true;
@@ -195,7 +196,7 @@ int GOAPAction::GetNumEffects() const
 
 GOAPEffect * GOAPAction::GetEffect(int index) const
 {
-	return (index > 0 && index < effects.size()) ? effects[index] : nullptr;
+	return (index >= 0 && index < effects.size()) ? effects[index] : nullptr;
 }
 
 int GOAPAction::GetNumPreconditions() const
@@ -205,7 +206,7 @@ int GOAPAction::GetNumPreconditions() const
 
 GOAPField * GOAPAction::GetPrecondition(int index) const
 {
-	return (index > 0 && index < preconditions.size()) ? preconditions[index] : nullptr;
+	return (index >= 0 && index < preconditions.size()) ? preconditions[index] : nullptr;
 }
 
 uint GOAPAction::GetCost() const

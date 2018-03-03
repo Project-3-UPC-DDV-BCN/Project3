@@ -6,7 +6,7 @@ GOAPEffect::GOAPEffect(const char * name, EffectType effect, float value) : effe
 	var = new GOAPVariable(name, value);
 }
 
-GOAPEffect::GOAPEffect(const char * name, bool value)
+GOAPEffect::GOAPEffect(const char * name, bool value) : effect(E_SET)
 {
 	var = new GOAPVariable(name, value);
 }
