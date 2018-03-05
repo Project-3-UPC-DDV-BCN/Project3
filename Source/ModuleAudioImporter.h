@@ -4,6 +4,8 @@
 #include <string>
 #include "Resource.h"
 
+class SoundBankResource;
+
 class ModuleAudioImporter :
 	public Module
 {

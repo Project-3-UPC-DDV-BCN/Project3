@@ -1188,7 +1188,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			resource = (Resource*)GetSoundBank(name);
 			break;
 		}
-		resource = (Resource*)App->audio_importer->LoadSoundBankFromLibrary(library_path, false);
+		resource = (Resource*)App->audio_importer->LoadSoundBankFromLibrary(library_path);
 		break;
 	default:
 		break;
