@@ -258,7 +258,10 @@ void ModuleBlast::onActorCreated(Nv::Blast::ExtPxFamily & family, Nv::Blast::Ext
 			//physx::PxVec3 vel = dr.getNormalized() * impulse / actor.getPhysXActor().getMass();
 			//actor.getPhysXActor().setLinearVelocity(actor.getPhysXActor().getLinearVelocity() + vel);
 		}
-		//App->physics->AddActorToList(, go);
+		else
+		{
+			App->physics->AddActorToList(&actor.getPhysXActor(), go);
+		}
 		/*if (rb)
 		{
 			rb->SetNewRigidBody(rigid_body);
@@ -278,7 +281,10 @@ void ModuleBlast::onActorDestroyed(Nv::Blast::ExtPxFamily & family, Nv::Blast::E
 		uint32_t chunkIndex = chunkIndices[i];
 		GameObject* go = model->chunks[chunkIndex];
 		go->SetActive(false);
-		//App->physics->RemoveActorFromList(&actor.getPhysXActor(), go);
+		if (chunkIndex == 0)
+		{
+			App->physics->RemoveActorFromList(&actor.getPhysXActor());
+		}
 	}
 	model->DestroyActor(&actor);
 }

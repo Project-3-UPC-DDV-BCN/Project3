@@ -41,6 +41,7 @@
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
+#include "ModuleScriptImporter.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -294,8 +295,9 @@ void PropertiesWindow::DrawWindow()
 						ComponentScript* comp_script = (ComponentScript*)selected_gameobject->AddComponent(Component::CompScript);
 						if (comp_script != nullptr)
 						{
-							script->SetAttachedGameObject(selected_gameobject);
-							comp_script->SetScript(script);
+							Script* tmp_script = App->script_importer->LoadScriptFromLibrary(script->GetLibraryPath());
+							tmp_script->SetAttachedGameObject(selected_gameobject);
+							comp_script->SetScript(tmp_script);
 						}
 					}
 					ImGui::EndMenu();
@@ -343,7 +345,7 @@ void PropertiesWindow::DrawWindow()
 					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
 						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-						App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 					}
 					else
 					{
@@ -359,7 +361,7 @@ void PropertiesWindow::DrawWindow()
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompBoxCollider);
 					}
@@ -369,7 +371,7 @@ void PropertiesWindow::DrawWindow()
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompSphereCollider);
 					}
@@ -379,7 +381,7 @@ void PropertiesWindow::DrawWindow()
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
 					}
@@ -391,7 +393,7 @@ void PropertiesWindow::DrawWindow()
 							{
 								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+								App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 							}
 							selected_gameobject->AddComponent(Component::CompMeshCollider);
 						}
@@ -1054,12 +1056,12 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			return;
 		}
 
-		Script* script = comp_script->GetScript();
+		/*Script* script = comp_script->GetScript();
 		if (ImGui::InputResourceScript("Script", &script))
 		{
 			comp_script->SetScript(script);
 		}
-		ImGui::Spacing();
+		ImGui::Spacing();*/
 
 		std::vector<ScriptField*> script_fields = comp_script->GetScriptFields();
 

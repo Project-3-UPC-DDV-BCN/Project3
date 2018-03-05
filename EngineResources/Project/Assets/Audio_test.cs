@@ -4,7 +4,7 @@ public class Audio_test {
 
 	public TheGameObject audio; 
 	public TheAudioSource audio_source;
-	private string audio_dub1 = "Play_Dialogue1";
+	private string audio_dub1 = "Play_Dialogue2";
 	private string audio_dub2 = "Play_Dialogue2";
 	private string audio_dub3 = "Play_Dialogue3";
 	private string audio_dub4 = "Play_Dialogue4";

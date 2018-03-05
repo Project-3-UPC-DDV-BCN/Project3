@@ -6,6 +6,11 @@
 #include <string>
 #include "MathGeoLib/float4x4.h"
 
+namespace physx
+{
+	class PxRigidActor;
+}
+
 class GameObject
 {
 public:

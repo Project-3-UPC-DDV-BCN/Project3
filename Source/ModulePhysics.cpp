@@ -575,7 +575,16 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			{
 				if (pairHeader.actors[0] == it->first)
 				{
-					//it->second->OnCollisionEnter(pairHeader.actors[1]);
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairHeader.actors[1] == it2->first)
+						{
+							it2->second->OnCollisionEnter(it->second);
+							it->second->OnCollisionEnter(it2->second);
+							break;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -586,7 +595,16 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			{
 				if (pairHeader.actors[0] == it->first)
 				{
-					//it->second->OnCollisionStay(pairHeader.actors[1]);
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairHeader.actors[1] == it2->first)
+						{
+							it2->second->OnCollisionStay(it->second);
+							it->second->OnCollisionStay(it2->second);
+							break;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -597,7 +615,16 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			{
 				if (pairHeader.actors[0] == it->first)
 				{
-					//it->second->OnCollisionExit(pairHeader.actors[1]);
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairHeader.actors[1] == it2->first)
+						{
+							it2->second->OnCollisionExit(it->second);
+							it->second->OnCollisionExit(it2->second);
+							break;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -692,6 +719,20 @@ void ModulePhysics::RemoveActorFromList(physx::PxRigidActor * body)
 {
 	if (body == nullptr) return;
 	physics_objects.erase(body);
+}
+
+void ModulePhysics::AddNonBlastActorToList(physx::PxRigidActor * body, GameObject * gameobject)
+{
+	if (gameobject == nullptr || body == nullptr) return;
+	non_blast_objects.insert(std::pair<physx::PxRigidActor*, GameObject*>(body, gameobject));
+	AddActorToList(body, gameobject);
+}
+
+void ModulePhysics::RemoveNonBlastActorFromList(physx::PxRigidActor * body)
+{
+	if (body == nullptr) return;
+	non_blast_objects.erase(body);
+	RemoveActorFromList(body);
 }
 
 void ModulePhysics::CleanPhysScene()

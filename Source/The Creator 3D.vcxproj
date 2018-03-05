@@ -92,7 +92,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\jit\jit.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\appdomain.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\assembly.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\attrdefs.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\blob.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\class.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\debug-helpers.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\debug-mono-symfile.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\environment.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\exception.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\image.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\loader.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\metadata.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\mono-config.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\mono-debug.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\mono-gc.h" />
     <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\object.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\opcodes.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\profiler.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\reflection.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\row-indexes.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\sgen-bridge.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\threads.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\tokentype.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\metadata\verify.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\utils\mono-counters.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\utils\mono-dl-fallback.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\utils\mono-error.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\utils\mono-logger.h" />
+    <ClInclude Include="..\EngineResources\mono\include\mono-2.0\mono\utils\mono-publib.h" />
     <ClInclude Include="..\EngineResources\Project\Assets\SoundBanks\Wwise_IDs.h" />
     <ClInclude Include="AboutWindow.h" />
     <ClInclude Include="Application.h" />

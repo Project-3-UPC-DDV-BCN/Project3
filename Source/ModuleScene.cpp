@@ -308,7 +308,7 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 			if (gameobject->IsActive() && RecursiveCheckActiveParents(rb->GetGameObject()))
 			{
 				App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-				App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+				App->physics->AddNonBlastActorToList(rb->GetRigidBody(), gameobject);
 			}
 		}
 

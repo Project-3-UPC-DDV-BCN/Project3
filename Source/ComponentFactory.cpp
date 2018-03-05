@@ -78,9 +78,6 @@ GameObject* ComponentFactory::Spawn()
 			{
 				float4x4 m = transform->GetOpenGLMatrix();
 				rb->SetTransform(m.ptr());
-				rb->SetLinearVelocity({ 0,0,0 });
-				/*rb->SetPosition(spawn_position);
-				rb->SetRotation(spawn_rotation);*/
 			}
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
@@ -200,7 +197,7 @@ void ComponentFactory::CheckLifeTimes()
 		}
 		else
 		{
-			it->second -= 0.016;
+			it->second -= App->time->GetGameDt();
 			it++;
 		}
 	}

@@ -8,9 +8,7 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include <mono/metadata/mono-gc.h>
-#include <tchar.h>
-#define WIN32_MEAN_AND_LEAN
-#include <Windows.h>
+#include <mono/metadata/threads.h>
 
 CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -18,9 +16,9 @@ bool ModuleScriptImporter::inside_function = false;
 ModuleScriptImporter::ModuleScriptImporter(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
 	name = "Script_Importer";
-	root_mono_domain = nullptr;
-	engine_mono_domain = nullptr;
-	mono_engine_image = nullptr;
+	root_domain = nullptr;
+	engine_domain = nullptr;
+	engine_image = nullptr;
 }
 
 ModuleScriptImporter::~ModuleScriptImporter()
@@ -67,14 +65,14 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 
 	mono_set_dirs((mono_path + "lib").c_str(), (mono_path + "etc").c_str());
 
-	root_mono_domain = mono_jit_init("TheCreator");
+	root_domain = mono_jit_init("TheCreator");
 
 	RegisterAPI();
 
-	MonoAssembly* compiler_assembly = mono_domain_assembly_open(root_mono_domain, REFERENCE_ASSEMBLIES_FOLDER"ScriptCompiler.dll");
+	MonoAssembly* compiler_assembly = mono_domain_assembly_open(root_domain, REFERENCE_ASSEMBLIES_FOLDER"ScriptCompiler.dll");
 	if (compiler_assembly)
 	{
-		mono_compiler_image = mono_assembly_get_image(compiler_assembly);
+		compiler_image = mono_assembly_get_image(compiler_assembly);
 	}
 	else
 	{
@@ -82,28 +80,8 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 		return false;
 	}
 
-	//LoadEngineDomain();
 
-	engine_mono_domain = mono_domain_create_appdomain("Engine_Domain", nullptr);
-	if (!engine_mono_domain)
-	{
-		CONSOLE_ERROR("Can't create engine domain");
-	}
-
-	if (!mono_domain_set(engine_mono_domain, false))
-	{
-		CONSOLE_ERROR("Can't set engine domain");
-	}
-
-	MonoAssembly* engine_assembly = mono_domain_assembly_open(engine_mono_domain, REFERENCE_ASSEMBLIES_FOLDER"TheEngine.dll");
-	if (engine_assembly)
-	{
-		mono_engine_image = mono_assembly_get_image(engine_assembly);
-	}
-	else
-	{
-		CONSOLE_ERROR("Can't load 'TheEngine.dll'!");
-	}
+	LoadEngineDomain();
 
 	return true;
 }
@@ -145,18 +123,31 @@ std::string ModuleScriptImporter::ImportScript(std::string path)
 
 Script * ModuleScriptImporter::LoadScriptFromLibrary(std::string path)
 {
+	MonoImageOpenStatus status;
+	std::string domain_name = path;
+	/*std::string script_name = App->file_system->GetFileNameWithoutExtension(path);
+	for (std::map<CSScript*, MonoAssembly*>::iterator it = script_assemblies.begin(); it != script_assemblies.end(); it++)
+	{
+		if (it->first->GetName() == script_name)
+		{
+			domain_name = script_name;
+		}
+	}*/
 
-	MonoAssembly* assembly = mono_domain_assembly_open(engine_mono_domain, path.c_str());
+	MonoAssembly* assembly = mono_domain_assembly_open(engine_domain, domain_name.c_str()/*, &status*/);
+
 	if (assembly)
 	{
-		CSScript* script = DumpAssemblyInfo(assembly);
-		if (script != nullptr)
+		CSScript* script = new CSScript();
+		DumpAssemblyInfo(assembly, script);
+		if (script->LoadScript(path))
 		{
-			if (script->LoadScript(path))
-			{
-				script_assemblies[path] = assembly;
-				return script;
-			}
+			script_assemblies[script] = assembly;
+			return script;
+		}
+		else
+		{
+			RELEASE(script);
 		}
 	}
 
@@ -165,78 +156,126 @@ Script * ModuleScriptImporter::LoadScriptFromLibrary(std::string path)
 
 MonoDomain * ModuleScriptImporter::GetEngineDomain() const
 {
-	return engine_mono_domain;
+	return engine_domain;
 }
 
 MonoImage * ModuleScriptImporter::GetEngineImage() const
 {
-	return mono_engine_image;
+	return engine_image;
 }
 
 std::string ModuleScriptImporter::CompileScript(std::string assets_path)
 {
-	//UnloadEngineDomain();
 	std::string script_name = App->file_system->GetFileNameWithoutExtension(assets_path);
-	std::string ret;
-	if (!App->file_system->DirectoryExist(LIBRARY_SCRIPTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCRIPTS_FOLDER_PATH);
-	std::string output_name = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
-
-	MonoClass* compiler_class = mono_class_from_name(mono_compiler_image, "Compiler", "Compiler");
-	if (compiler_class)
+	Data data;
+	int i = 0;
+	for (std::map<CSScript*, MonoAssembly*>::iterator it = script_assemblies.begin(); it != script_assemblies.end(); it++)
 	{
-		MonoMethod* method = method = mono_class_get_method_from_name(compiler_class, "Compile", 2);
-
-		if (method)
-		{
-			MonoObject* exception = nullptr;
-			MonoObject* class_object = mono_object_new(root_mono_domain, compiler_class);
-			void* args[2];
-			MonoString* input_path = mono_string_new(root_mono_domain, assets_path.c_str());
-			MonoString* output_path = mono_string_new(root_mono_domain, output_name.c_str());
-			
-			args[0] = input_path;
-			args[1] = output_path;
-
-			MonoString* handle = (MonoString*)mono_runtime_invoke(method, NULL, args, &exception);
-
-			if (exception)
-			{
-				mono_print_unhandled_exception(exception);
-			}
-			else
-			{
-				if (handle)
-				{
-					ret = mono_string_to_utf8(handle);
-				}
-			}
-		}
+		it->first->GetScriptFields();
+		it->first->FillSavingData();
+		data.CreateSection("script_" + std::to_string(i));
+		it->first->Save(data);
+		data.CloseSection();
+		i++;
 	}
+	/*std::vector<CSScript*> scripts_to_update;
+	MonoAssembly* assembly_to_close = nullptr;
+	for (std::map<CSScript*, MonoAssembly*>::iterator it = script_assemblies.begin(); it != script_assemblies.end(); it++)
+	{
+		if (it->first->GetName() == script_name)
+		{
+			if (!assembly_to_close)
+			{
+				assembly_to_close = it->second;
+				mono_assembly_close(assembly_to_close);
+				mono_gc_collect(mono_gc_max_generation());
+			}
+			scripts_to_update.push_back(it->first);
+		}
+	}*/
 
-	//std::string library_path = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
-	//std::string compile_command = mono_path + "mini\\mcs.bat -target:library " + assets_path + " -out:" + library_path + " ";
-	//std::string folder = App->file_system->GetFullPath(REFERENCE_ASSEMBLIES_FOLDER);
-	//
-	//compile_command += "/reference:" + folder + "TheEngine.dll";
+	UnloadEngineDomain();
+	
+	//std::string ret;
+	//if (!App->file_system->DirectoryExist(LIBRARY_SCRIPTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCRIPTS_FOLDER_PATH);
+	//std::string output_name = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
 
+	//MonoClass* compiler_class = mono_class_from_name(compiler_image, "Compiler", "Compiler");
+	//if (compiler_class)
+	//{
+	//	MonoMethod* method = method = mono_class_get_method_from_name(compiler_class, "Compile", 2);
 
-	//char   psBuffer[4096];
-	//FILE   *pPipe;
+	//	if (method)
+	//	{
+	//		MonoObject* exception = nullptr;
+	//		void* args[2];
+	//		MonoString* input_path = mono_string_new(root_domain, assets_path.c_str());
+	//		MonoString* output_path = mono_string_new(root_domain, output_name.c_str());
+	//		
+	//		args[0] = input_path;
+	//		args[1] = output_path;
 
-	//if ((pPipe = _popen(compile_command.c_str(), "r")) == NULL)
-	//	exit(1);
-	//std::string s;
-	//fseek(pPipe, 0, SEEK_SET);
-	//while (fgets(psBuffer, 4096, pPipe)) {
-	//	puts(psBuffer);
-	//	s += psBuffer;
+	//		MonoString* handle = (MonoString*)mono_runtime_invoke(method, NULL, args, &exception);
+
+	//		if (exception)
+	//		{
+	//			mono_print_unhandled_exception(exception);
+	//		}
+	//		else
+	//		{
+	//			if (handle)
+	//			{
+	//				ret = mono_string_to_utf8(handle);
+	//			}
+	//		}
+	//	}
 	//}
 
-	//if (feof(pPipe))
-	//	_pclose(pPipe);
+	/*MonoAssembly* assembly = mono_domain_assembly_open(engine_mono_domain, output_name.c_str());
+	for (CSScript* script : script_assemblies)
+	{
+		DumpAssemblyInfo(assembly, script);
+	}
+	scripts_to_update.clear();*/
 
-	//LoadEngineDomain();
-	//mono_assembly_open()
+
+	std::string library_path = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
+	std::string compile_command = mono_path + "mini\\mcs.bat -target:library " + assets_path + " -out:" + library_path + " ";
+	std::string folder = App->file_system->GetFullPath(REFERENCE_ASSEMBLIES_FOLDER);
+	
+	compile_command += "/reference:" + folder + "TheEngine.dll";
+
+	char   psBuffer[4096];
+	FILE   *pPipe;
+	std::string ret;
+	if ((pPipe = _popen(compile_command.c_str(), "rt")) == NULL)
+		exit(1);
+
+	while (fgets(psBuffer, 4096, pPipe)) {
+		puts(psBuffer);
+		ret += psBuffer;
+	}
+
+	if (feof(pPipe))
+		_pclose(pPipe);
+
+	LoadEngineDomain();
+	i = 0;
+	data.SaveAsBinary(TMP_FOLDER"temp_scripts");
+	data.ClearData();
+	data.LoadBinary(TMP_FOLDER"temp_scripts");
+	for (std::map<CSScript*, MonoAssembly*>::iterator it = script_assemblies.begin(); it != script_assemblies.end(); it++)
+	{
+		data.EnterSection("script_" + std::to_string(i));
+		MonoAssembly* assembly = mono_domain_assembly_open(engine_domain, it->first->GetLibraryPath().c_str());
+		DumpAssemblyInfo(assembly, it->first);
+		if (it->first->LoadScript(it->first->GetLibraryPath()))
+		{
+			it->first->Load(data);
+		}
+		data.LeaveSection();
+		i++;
+	}
 	return ret;
 }
 
@@ -245,7 +284,7 @@ void ModuleScriptImporter::SetCurrentScript(CSScript * script)
 	current_script = script;
 }
 
-CSScript* ModuleScriptImporter::DumpAssemblyInfo(MonoAssembly * assembly)
+void ModuleScriptImporter::DumpAssemblyInfo(MonoAssembly* assembly, CSScript* script)
 {
 	MonoImage* mono_image = mono_assembly_get_image(assembly);
 	if (mono_image)
@@ -256,19 +295,18 @@ CSScript* ModuleScriptImporter::DumpAssemblyInfo(MonoAssembly * assembly)
 
 		if (loaded_script != nullptr)
 		{
-			CSScript* script = new CSScript();
-			script->SetDomain(engine_mono_domain);
+			script->SetDomain(engine_domain);
 			script->SetImage(mono_image);
 			script->SetName(class_name);
 			script->SetClassName(class_name);
 			script->SetNameSpace(name_space);
 			script->SetClass(loaded_script);
-			return script;
+			script->SetAssembly(assembly);
 		}
 	}
 }
 
-MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& class_name, std::string& name_space)
+MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage* image, std::string& class_name, std::string& name_space)
 {
 	MonoClass* mono_class = nullptr;
 
@@ -294,35 +332,51 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 
 void ModuleScriptImporter::LoadEngineDomain()
 {
-	/*engine_mono_domain = mono_domain_get_by_id(engine_id);
-	if (engine_mono_domain == nullptr)
+	engine_domain = mono_domain_create_appdomain("Engine_Domain", nullptr);
+	if (!engine_domain)
 	{
-		
-	}*/
-	
+		CONSOLE_ERROR("Can't create engine domain");
+	}
+
+	if (!mono_domain_set(engine_domain, false))
+	{
+		CONSOLE_ERROR("Can't set engine domain");
+	}
+
+	MonoImageOpenStatus status;
+	MonoAssembly* engine_assembly = mono_domain_assembly_open(engine_domain, REFERENCE_ASSEMBLIES_FOLDER"TheEngine.dll"/*, &status*/);
+	if (engine_assembly)
+	{
+		engine_image = mono_assembly_get_image(engine_assembly);
+	}
+	else
+	{
+		CONSOLE_ERROR("Can't load 'TheEngine.dll'!");
+	}
 }
 
 void ModuleScriptImporter::UnloadEngineDomain()
 {
-	//MonoDomain* old_domain = mono_domain_get();
-	//MonoDomain* root = mono_get_root_domain();
-	//if (old_domain && old_domain != root) {
-	//	if (!mono_domain_set(mono_get_root_domain(), false))
-	//		CONSOLE_LOG("[error] Error setting domain\n");
+	MonoDomain* old_domain = mono_domain_get();
+	MonoDomain* root = mono_get_root_domain();
+	if (old_domain && old_domain != root) {
+		if (!mono_domain_set(mono_get_root_domain(), false))
+			CONSOLE_LOG("[error] Error setting domain\n");
 
-	//	//mono_thread_pop_appdomain_ref();
-	//	mono_domain_unload(old_domain);
-	//	//mono_domain_free(old_domain, false);
-	//}
+	//mono_thread_pop_appdomain_ref();
+		
+	mono_domain_unload(old_domain);
+	//mono_domain_free(old_domain, false);
+	}
 
-	/*engine_id = mono_domain_get_id(engine_mono_domain);
-	mono_domain_set(root_mono_domain, false);
+	/*engine_id = mono_domain_get_id(engine_mono_domain);*/
+	/*mono_domain_set(root_mono_domain, false);
 	mono_domain_unload(engine_mono_domain);*/
 
 	//mono_assembly_
 
 	//unloading a domain is also a nice point in time to have the GC run.
-	//mono_gc_collect(mono_gc_max_generation());
+	mono_gc_collect(mono_gc_max_generation());
 }
 
 void ModuleScriptImporter::RegisterAPI()
@@ -526,6 +580,11 @@ MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflecti
 MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type)
 {
 	return current_script->GetComponent(object, type);
+}
+
+MonoObject * ModuleScriptImporter::GetGameObject(MonoObject * object)
+{
+	return nullptr;
 }
 
 void ModuleScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)

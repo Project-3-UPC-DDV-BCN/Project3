@@ -19,6 +19,7 @@ public:
 
 	//Retuns the library path if created or an empty string
 	std::string ImportScript(std::string path);
+	//if creating from resources, base_script = true.
 	Script* LoadScriptFromLibrary(std::string path);
 
 	MonoDomain* GetEngineDomain() const;
@@ -28,7 +29,7 @@ public:
 	void SetCurrentScript(CSScript* script);
 
 private:
-	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
+	void DumpAssemblyInfo(MonoAssembly* assembly, CSScript* script);
 	MonoClass* DumpClassInfo(MonoImage* image, std::string& class_name, std::string& name_space);
 
 	void LoadEngineDomain();
@@ -58,6 +59,7 @@ private:
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type);
+	static MonoObject* GetGameObject(MonoObject* object);
 
 	//TRANSFORM
 	static void SetPosition(MonoObject * object, MonoObject * vector);
@@ -144,13 +146,13 @@ private:
 
 private:
 	std::string mono_path;
-	MonoDomain* root_mono_domain;
-	MonoDomain* engine_mono_domain;
-	MonoImage* mono_engine_image;
+	MonoDomain* root_domain;
+	MonoDomain* engine_domain;
+	MonoImage* engine_image;
 	static CSScript* current_script;
 	static bool inside_function;
-	MonoImage* mono_compiler_image;
+	MonoImage* compiler_image;
 	
-	std::map<std::string, MonoAssembly*> script_assemblies;
+	std::map<CSScript*, MonoAssembly*> script_assemblies;
 };
 

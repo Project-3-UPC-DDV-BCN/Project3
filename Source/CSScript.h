@@ -56,6 +56,13 @@ public:
 	void SetNameSpace(std::string name_space);
 	void SetClassName(std::string class_name);
 
+	MonoDomain* GetDomain() const;
+	MonoImage* GetImage() const;
+	MonoClass* GetClass() const;
+	MonoAssembly* GetAssembly() const;
+	std::string GetNameSpace() const;
+	std::string _GetClassName() const;
+
 	//GAMEOBJECT
 	void SetGameObjectName(MonoObject * object, MonoString* name);
 	MonoString* GetGameObjectName(MonoObject* object);
@@ -78,6 +85,7 @@ public:
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type);
+	MonoObject* GetGameObject(MonoObject* object);
 
 	//TRANSFORM
 	void SetPosition(MonoObject * object, MonoObject * vector3);
@@ -163,16 +171,17 @@ public:
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 
+
+	void Save(Data& data) const;
+	bool Load(Data& data);
+	void FillSavingData();
+
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);
 	void ConvertMonoType(MonoType* type, ScriptField& script_field);
 	void CreateSelfGameObject();
 
-	void FillSavingData();
-
-	void Save(Data& data) const;
-	bool Load(Data& data);
 	void CreateMeta() const;
 	void LoadToMemory();
 	void UnloadFromMemory();
