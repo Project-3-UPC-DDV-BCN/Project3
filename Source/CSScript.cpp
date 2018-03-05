@@ -2612,4 +2612,32 @@ void CSScript::FailAction()
 	}
 }
 
+void CSScript::SetBlackboardVariable(MonoString * name, float value)
+{
+	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
+	if (goap != nullptr)
+	{
+		const char* var_name = mono_string_to_utf8(name);
+		goap->SetBlackboardVariable(var_name, value);
+	}
+	else
+	{
+		CONSOLE_WARNING("GOAPAgent not found!");
+	}
+}
+
+void CSScript::SetBlackboardVariable(MonoString * name, bool value)
+{
+	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
+	if (goap != nullptr)
+	{
+		const char* var_name = mono_string_to_utf8(name);
+		goap->SetBlackboardVariable(var_name, value);
+	}
+	else
+	{
+		CONSOLE_WARNING("GOAPAgent not found!");
+	}
+}
+
 // ------

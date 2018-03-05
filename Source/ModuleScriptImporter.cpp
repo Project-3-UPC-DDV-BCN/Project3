@@ -344,6 +344,8 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGOAPAgent::FailAction", (const void*)FailAction);
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalName", (const void*)GetGoalName);
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalConditionName", (const void*)GetGoalConditionName);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, float)", (const void*)SetBlackboardVariable);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, bool)", (const void*)SetBlackboardVariableB);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -808,4 +810,14 @@ void ModuleScriptImporter::CompleteAction()
 void ModuleScriptImporter::FailAction()
 {
 	current_script->FailAction();
+}
+
+void ModuleScriptImporter::SetBlackboardVariable(MonoString * name, float value)
+{
+	current_script->SetBlackboardVariable(name, value);
+}
+
+void ModuleScriptImporter::SetBlackboardVariableB(MonoString * name, bool value)
+{
+	current_script->SetBlackboardVariable(name, value);
 }

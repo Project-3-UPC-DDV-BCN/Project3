@@ -175,6 +175,8 @@ public:
 	int GetGoalPriority(int index);
 	void CompleteAction();
 	void FailAction();
+	void SetBlackboardVariable(MonoString* name, float value);
+	void SetBlackboardVariable(MonoString* name, bool value);
 	
 
 

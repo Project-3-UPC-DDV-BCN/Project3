@@ -148,6 +148,8 @@ private:
 	static int GetGoalPriority(int index);
 	static void CompleteAction();
 	static void FailAction();
+	static void SetBlackboardVariable(MonoString* name, float value);
+	static void SetBlackboardVariableB(MonoString* name, bool value);
 
 
 private:

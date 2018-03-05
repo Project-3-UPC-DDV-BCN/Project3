@@ -38,5 +38,11 @@ namespace TheEngine.TheGOAPAgent
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void FailAction();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetBlackboardVariable(string name, float value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetBlackboardVariable(string name, bool value);
     }
 }
