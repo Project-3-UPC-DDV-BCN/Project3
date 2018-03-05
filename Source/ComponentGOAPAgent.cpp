@@ -84,7 +84,6 @@ void ComponentGOAPAgent::Load(Data & data)
 		data.EnterSection("variable_" + std::to_string(i));
 		std::string name = data.GetString("name");
 		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
-		data.LeaveSection();
 		switch (type)
 		{
 		case GOAPVariable::T_NULL:
@@ -113,6 +112,7 @@ bool ComponentGOAPAgent::Update()
 			{
 				curr_action = path.front();
 				curr_act_state = AS_RUNNING;
+				need_start = true;
 			}
 
 			//check if the conditions for the current actions are fulfilled
@@ -418,7 +418,7 @@ void ComponentGOAPAgent::FindActionPath()
 						tmp_paths[p].clear();
 						completed_paths[p] = true;
 						completed++;
-						continue;
+						break;
 					}
 					else
 					{

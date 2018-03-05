@@ -3,6 +3,8 @@ using TheEngine.TheGOAPAgent;
 
 public class #CLASS_NAME# {
 
+	TheGOAPAgent agent = TheGameObject.Self.GetComponent<TheGOAPAgent>();
+
 	void Start () 
 	{
 		

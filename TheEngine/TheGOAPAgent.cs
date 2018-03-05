@@ -2,7 +2,7 @@
 
 namespace TheEngine.TheGOAPAgent
 {
-    class TheGOAPAgent
+    public class TheGOAPAgent : TheComponent
     {
         public int num_goals
         {
