@@ -38,7 +38,7 @@ void ComponentGOAPAgent::Save(Data & data) const
 	data.AddInt("num_variables", blackboard.size());
 	for (int i = 0; i < blackboard.size(); ++i)
 	{
-		data.CreateSection("varaiable_" + std::to_string(i));
+		data.CreateSection("variable_" + std::to_string(i));
 		data.AddInt("type", blackboard[i]->GetType());
 		data.AddString("name", blackboard[i]->GetName());
 		switch (blackboard[i]->GetType())
@@ -78,10 +78,10 @@ void ComponentGOAPAgent::Load(Data & data)
 		data.LeaveSection();
 	}
 
-	int num_variables = data.GetInt("num_varaibles");
+	int num_variables = data.GetInt("num_variables");
 	for (int i = 0; i < num_variables; ++i)
 	{
-		data.EnterSection("varaiable_" + std::to_string(i));
+		data.EnterSection("variable_" + std::to_string(i));
 		std::string name = data.GetString("name");
 		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
 		data.LeaveSection();
@@ -145,19 +145,24 @@ bool ComponentGOAPAgent::Update()
 					curr_action->Update();
 
 					//check if the requirements for next action are fulfilled
-					GOAPAction* next_action = path.at(1);
+					GOAPAction* next_action = nullptr;
 					bool next_fulfilled = true;
-					for (int c = 0; c < next_action->GetNumPreconditions(); ++c)
+					if (path.size() > 1)
 					{
-						GOAPField* precon = next_action->GetPrecondition(c);
-						if (!SystemFulfillCondition(precon))
+						next_action = path.at(1);
+						
+						for (int c = 0; c < next_action->GetNumPreconditions(); ++c)
 						{
-							next_fulfilled = false;
-							break;
+							GOAPField* precon = next_action->GetPrecondition(c);
+							if (!SystemFulfillCondition(precon))
+							{
+								next_fulfilled = false;
+								break;
+							}
 						}
 					}
 
-					if (next_fulfilled) // current action has finished his work
+					if (next_action != nullptr && next_fulfilled) // current action has finished his work
 					{
 						curr_act_state = AS_COMPLETED;
 					}

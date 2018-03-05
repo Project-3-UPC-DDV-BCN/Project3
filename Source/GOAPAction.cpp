@@ -216,20 +216,42 @@ uint GOAPAction::GetCost() const
 
 void GOAPAction::Update()
 {
-	script->UpdateScript();
+	if (script != nullptr)
+		script->UpdateScript();
+	else
+	{
+		CONSOLE_ERROR("GOAP Action: %s doesn't have an asosiated script!!!", GetName());
+	}
 }
 
 void GOAPAction::Start()
 {
-	script->StartScript();
+	if (script != nullptr)
+		script->StartScript();
+	else
+	{
+		CONSOLE_ERROR("GOAP Action: %s doesn't have an asosiated script!!!", GetName());
+	}
 }
 
 void GOAPAction::OnComplete()
 {
+	if (script != nullptr)
+		script->OnComplete();
+	else
+	{
+		CONSOLE_ERROR("GOAP Action: %s doesn't have an asosiated script!!!", GetName());
+	}
 }
 
 void GOAPAction::OnFail()
 {
+	if (script != nullptr)
+		script->OnFail();
+	else
+	{
+		CONSOLE_ERROR("GOAP Action: %s doesn't have an asosiated script!!!", GetName());
+	}
 }
 
 CSScript * GOAPAction::GetScript() const
