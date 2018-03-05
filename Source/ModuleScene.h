@@ -72,6 +72,7 @@ public:
 	GameObject* CreateImage(GameObject* parent = nullptr);
 	GameObject* CreateText(GameObject* parent = nullptr);
 	GameObject* CreateProgressBar(GameObject* parent = nullptr);
+	GameObject* CreateButton(GameObject* parent = nullptr);
 
 	void SetParticleSystemsState();
 

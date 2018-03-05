@@ -602,6 +602,17 @@ GameObject * ModuleScene::CreateProgressBar(GameObject * parent)
 	return ret;
 }
 
+GameObject * ModuleScene::CreateButton(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompButton);
+
+	return ret;
+}
+
 void ModuleScene::SetParticleSystemsState()
 {
 	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)

@@ -1164,6 +1164,11 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentButton.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1808,6 +1813,11 @@
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentButton.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">

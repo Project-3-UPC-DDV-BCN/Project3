@@ -37,7 +37,7 @@ public:
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
 
-	bool CheckRay(LineSegment &ray, CanvasRenderMode mode);
+	bool CheckRay(LineSegment ray, CanvasRenderMode mode);
 
 private:
 	AABB GetBBox();

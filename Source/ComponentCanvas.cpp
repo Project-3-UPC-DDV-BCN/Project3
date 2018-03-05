@@ -349,7 +349,7 @@ Mesh * CanvasDrawElement::GetPlane() const
 	return plane;
 }
 
-bool CanvasDrawElement::CheckRay(LineSegment &ray, CanvasRenderMode mode)
+bool CanvasDrawElement::CheckRay(LineSegment ray, CanvasRenderMode mode)
 {
 	bool ret = false;
 

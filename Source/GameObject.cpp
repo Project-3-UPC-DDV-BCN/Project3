@@ -25,6 +25,7 @@
 #include "ComponentLight.h"
 #include "ComponentBlast.h"
 #include "ModulePhysics.h"
+#include "ComponentButton.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -143,6 +144,12 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		{
 			components_list.push_back(component = new ComponentProgressBar(this));
 			SetName("ProgressBar");
+		}
+		SetIsUI(true);
+		if (GetComponent(Component::CompButton) == nullptr)
+		{
+			components_list.push_back(component = new ComponentButton(this));
+			SetName("Button");
 		}
 		break;
 	case Component::CompDistanceJoint:

@@ -41,6 +41,7 @@
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
+#include "ComponentButton.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -815,6 +816,75 @@ void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 {
 	if (ImGui::CollapsingHeader("Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		float progress = bar->GetProgressPercentage();
+		if (ImGui::DragFloat("Progress %", &progress))
+		{
+			bar->SetProgressPercentage(progress);
+		}
+
+		float base_colour[4] = { bar->GetBaseColour().x, bar->GetBaseColour().y,bar->GetBaseColour().z, bar->GetBaseColour().w };
+		float progress_colour[4] = { bar->GetProgressColour().x,bar->GetProgressColour().y,bar->GetProgressColour().z, bar->GetProgressColour().w };
+
+		ImGui::Text("Base Colour");
+		if (ImGui::ColorEdit4("Base", base_colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			bar->SetBaseColour(float4(base_colour[0], base_colour[1], base_colour[2], base_colour[3]));
+		}
+
+		ImGui::Text("Progress Colour");
+		if (ImGui::ColorEdit4("Progress", progress_colour, ImGuiColorEditFlags_AlphaBar))
+		{
+			bar->SetProgressColour(float4(progress_colour[0], progress_colour[1], progress_colour[2], progress_colour[3]));
+		}
+	}
+}
+
+void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
+{
+	if (ImGui::CollapsingHeader("Button", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float4 idle_colour = button->GetIdleColour();
+		float4 over_colour = button->GetOverColour();
+		float4 pressed_colour = button->GetPressedColour();
+
+		Texture* idle_texture = button->GetIdleTexture();
+		Texture* over_texutre = button->GetOverTexture();
+		Texture* pressed_texture = button->GetPressedTexture();
+
+		const char* mode_names[] = { "Colour", "Image" };
+		int mode = button->GetButtonMode();
+
+		ImGui::Combo("Render Mode", &mode, mode_names, 2);
+
+		if (mode == 0)
+		{
+			button->SetButtonMode(ButtonMode::BM_Colour);
+
+			if (ImGui::DragFloat4("Idle", (float*)&idle_colour))
+			{
+				button->SetIdleColour(idle_colour);
+			}
+
+			if (ImGui::DragFloat4("Over", (float*)&over_colour))
+			{
+				button->SetOverColour(over_colour);
+			}
+
+			if (ImGui::DragFloat4("Pressed", (float*)&pressed_colour))
+			{
+				button->SetPressedColour(pressed_colour);
+			}
+		}
+		else if (mode == 1)
+		{
+			button->SetButtonMode(ButtonMode::BM_Image);
+
+			if (ImGui::InputResourceTexture("Texture", &tex))
+			{
+				image->SetTexture(tex);
+			}
+		}
+
 		float progress = bar->GetProgressPercentage();
 		if (ImGui::DragFloat("Progress %", &progress))
 		{

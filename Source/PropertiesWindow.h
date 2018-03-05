@@ -24,7 +24,7 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
-
+class ComponentButton;
 
 class PropertiesWindow :
 	public Window
@@ -44,7 +44,8 @@ public:
 	void DrawCanvasPanel(ComponentCanvas* canvas);
 	void DrawImagePanel(ComponentImage* image);
 	void DrawTextPanel(ComponentText* text);
-	void DrawProgressBarPanel(ComponentProgressBar* text);
+	void DrawProgressBarPanel(ComponentProgressBar* progress);
+	void DrawButtonPanel(ComponentButton* button);
 	void DrawRigidBodyPanel(ComponentRigidBody* rigidbody);
 	void DrawColliderPanel(ComponentCollider* collider);
 	void DrawJointDistancePanel(ComponentJointDistance* joint);
