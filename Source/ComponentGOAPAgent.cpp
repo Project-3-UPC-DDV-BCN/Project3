@@ -107,9 +107,9 @@ bool ComponentGOAPAgent::Update()
 	bool ret = true;
 	if (App->IsPlaying() && !App->IsPaused())
 	{
-		if (path_valid)
+		if (path_valid && path.size() > 0)
 		{
-			if (curr_action == nullptr)
+			if (curr_action == nullptr && path.front() != nullptr)
 			{
 				curr_action = path.front();
 				curr_act_state = AS_RUNNING;
@@ -202,6 +202,11 @@ bool ComponentGOAPAgent::Update()
 				}
 
 			}
+		}
+		else if (path_valid && path.size() == 0)
+		{
+			path_valid = false;
+			new_path = true;
 		}
 		else
 		{
