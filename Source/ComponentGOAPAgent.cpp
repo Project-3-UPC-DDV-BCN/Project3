@@ -6,6 +6,7 @@
 #include "ModuleResources.h"
 #include "CSScript.h"
 #include "ModuleScriptImporter.h"
+#include "ModuleScriptImporter.h"
 
 ComponentGOAPAgent::ComponentGOAPAgent(GameObject * attached_gameobject)
 {
@@ -114,6 +115,10 @@ bool ComponentGOAPAgent::Update()
 				curr_act_state = AS_RUNNING;
 				need_start = true;
 			}
+
+			//set the current script to the current action one
+			if (curr_action != nullptr)
+				App->script_importer->SetCurrentScript(curr_action->GetScript());
 
 			//check if the conditions for the current actions are fulfilled
 			bool fulfilled = true;
