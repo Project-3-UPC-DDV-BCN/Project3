@@ -15,6 +15,8 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 
 	c_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
+	layer = 0;
+	interactable = true;
 	pos = float2::zero;
 	z_pos = 0;
 	size = float2::zero;
@@ -24,6 +26,12 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	snap_down = true;
 	snap_left = true;
 	snap_right = true;
+	on_click = false;
+	on_click_down = false;
+	on_click_up = false;
+	on_mouse_enter = false;
+	on_mouse_over = false;
+	on_mouse_out = false;
 
 	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
@@ -631,6 +639,101 @@ float3 ComponentRectTransform::GetPreferedPos()
 	ret.z = z_pos;
 
 	return ret;
+}
+
+void ComponentRectTransform::SetLayer(int layer)
+{
+}
+
+int ComponentRectTransform::GetLayer()
+{
+	int ret = 0;
+
+	ComponentCanvas* cv = GetCanvas();
+
+	if (cv != nullptr)
+	{
+		if(cv->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
+		{
+			ret = layer;
+		}
+		else
+		{
+			ret = 0;
+		}
+	}
+
+	return ret;
+}
+
+void ComponentRectTransform::SetInteractable(bool set)
+{
+	interactable = set;
+}
+
+bool ComponentRectTransform::GetInteractable() const
+{
+	return interactable;
+}
+
+void ComponentRectTransform::SetOnClick(bool set)
+{
+	on_click = set;
+}
+
+void ComponentRectTransform::SetOnClickDown(bool set)
+{
+	on_click_down = set;
+}
+
+void ComponentRectTransform::SetOnClickUp(bool set)
+{
+	on_click_up = set;
+}
+
+void ComponentRectTransform::SetOnMouseEnter(bool set)
+{
+	on_mouse_enter = set;
+}
+
+void ComponentRectTransform::SetOnMouseOver(bool set)
+{
+	on_mouse_over = set;
+}
+
+void ComponentRectTransform::SetOnMouseOut(bool set)
+{
+	on_mouse_out = set;
+}
+
+bool ComponentRectTransform::GetOnClick() const
+{
+	return on_click;
+}
+
+bool ComponentRectTransform::GetOnClickDown() const
+{
+	return on_click_down;
+}
+
+bool ComponentRectTransform::GetOnClickUp() const
+{
+	return on_click_up;
+}
+
+bool ComponentRectTransform::GetOnMouseEnter() const
+{
+	return on_mouse_enter;
+}
+
+bool ComponentRectTransform::GetOnMouseOver() const
+{
+	return on_mouse_over;
+}
+
+bool ComponentRectTransform::GetOnMouseOut() const
+{
+	return on_mouse_out;
 }
 
 void ComponentRectTransform::Save(Data & data) const

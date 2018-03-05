@@ -1162,9 +1162,8 @@
     </ClInclude>
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
-    <ClInclude Include="ComponentUI.h">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1807,9 +1806,8 @@
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
-    <ClCompile Include="ComponentUI.cpp">
-      <Filter>Sources\GameObject\Components\UI</Filter>
-    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Wwise\IO\Common\AkFilePackageLowLevelIO.inl">

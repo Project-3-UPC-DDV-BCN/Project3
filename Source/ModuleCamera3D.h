@@ -31,8 +31,9 @@ public:
 	void SetCameraSensitivity(float sensivity);
 	float GetCameraSensitivity() const;
 	void MousePickRay(int mouse_x, int mouse_y);
-	void UIMousePickRay(int mouse_x, int mouse_y);
 	void SaveData(Data* data);
+
+	LineSegment GetUIMouseRay(ComponentCanvas* cv);
 
 private:
 	bool isPlaying = false;
@@ -50,6 +51,4 @@ public:
 	int key_down;
 	int key_left;
 	int key_right;
-
-	LineSegment save_segment;
 };

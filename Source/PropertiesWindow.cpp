@@ -569,6 +569,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				float2 position = rect_transform->GetPos();
 				float z_position = rect_transform->GetZPos();
 				float3 rotation = rect_transform->GetLocalRotation();
+				bool interactable = rect_transform->GetInteractable();
 				float2 anchor = rect_transform->GetAnchor();
 				float2 size = rect_transform->GetSize();
 				float scale = rect_transform->GetScale();
@@ -591,6 +592,11 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				if (ImGui::DragFloat3("Rotation", (float*)&rotation, true, 0.25f))
 				{
 					rect_transform->SetRotation(rotation);
+				}
+
+				if (ImGui::Checkbox("Interactable", &interactable))
+				{
+					rect_transform->SetInteractable(interactable);
 				}
 
 				if (!is_canvas)
@@ -625,6 +631,8 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					{
 						rect_transform->SetSnapRight(snap_right);
 					}
+
+
 				}
 			}
 			else

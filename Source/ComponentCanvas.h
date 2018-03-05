@@ -17,7 +17,9 @@ class ComponentCanvas;
 class CanvasDrawElement
 {
 public:
-	CanvasDrawElement(ComponentCanvas* canvas);
+	CanvasDrawElement(ComponentCanvas* canvas, Component* cmp);
+
+	void SetLayer(int layer);
 
 	void SetPosition(const float2& pos);
 	void SetSize(const float2& size);
@@ -27,6 +29,8 @@ public:
 	void SetColour(const float4& colour);
 	void SetFlip(const bool& vertical_flip, const bool& horizontal_flip);
 
+	int GetLayer();
+	Component* GetComponent();
 	float4x4 GetTransform();
 	float4x4 GetOrtoTransform() const;
 	uint GetTextureId() const;
@@ -41,6 +45,9 @@ private:
 
 private:
 	ComponentCanvas * canvas = nullptr;
+	Component*		  cmp = nullptr;
+	int			      layer = 0;
+
 	Mesh*			  plane = nullptr;
 	float2			  pos;
 	float2			  size;

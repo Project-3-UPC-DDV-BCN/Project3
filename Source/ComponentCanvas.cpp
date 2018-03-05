@@ -207,9 +207,10 @@ void ComponentCanvas::Load(Data & data)
 	SetScale(data.GetFloat("scale"));
 }
 
-CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas)
+CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas, Component* _cmp)
 {
 	canvas = _canvas;
+	cmp = _cmp;
 
 	plane = App->resources->GetMesh("PrimitivePlane");
 	texture_id = 0;
@@ -222,6 +223,11 @@ CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas)
 
 	plane->box.SetNegativeInfinity();
 	plane->box.Enclose((vec*)plane->vertices, plane->num_vertices);
+}
+
+void CanvasDrawElement::SetLayer(int _layer)
+{
+	layer = _layer;
 }
 
 void CanvasDrawElement::SetPosition(const float2& _pos)
@@ -258,6 +264,16 @@ void CanvasDrawElement::SetFlip(const bool& _vertical_flip, const bool& _horizon
 {
 	vertical_flip = _vertical_flip;
 	horizontal_flip = _horizontal_flip;
+}
+
+int CanvasDrawElement::GetLayer()
+{
+	return layer;
+}
+
+Component * CanvasDrawElement::GetComponent()
+{
+	return cmp;
 }
 
 float4x4 CanvasDrawElement::GetTransform()

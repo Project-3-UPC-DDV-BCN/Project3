@@ -17,6 +17,7 @@
 #include "GameWindow.h"
 #include "ComponentCanvas.h"
 #include "DebugDraw.h"
+#include "ComponentRectTransform.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -149,22 +150,12 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
-	
-	App->renderer3D->GetDebugDraw()->Line(float3(save_segment.a.x, save_segment.a.y, save_segment.a.z), float3(save_segment.b.x, save_segment.b.y, save_segment.b.z)
-	, float4(1, 0, 0, 1));
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleCamera3D::PostUpdate(float dt)
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-	{
-		int mouse_x = App->input->GetMouseX();
-		int mouse_y = App->input->GetMouseY();
-		UIMousePickRay(mouse_x, mouse_y);
-	}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -329,8 +320,13 @@ void ModuleCamera3D::MousePickRay(int mouse_x, int mouse_y)
 	}
 }
 
-void ModuleCamera3D::UIMousePickRay(int mouse_x, int mouse_y)
+LineSegment ModuleCamera3D::GetUIMouseRay(ComponentCanvas* cv)
 {
+	LineSegment ret;
+
+	int mouse_x = App->input->GetMouseX();
+	int mouse_y = App->input->GetMouseY();
+
 	float2 window_pos = App->editor->game_window->GetPos();
 	float2 window_size = App->editor->game_window->GetSize();
 
@@ -342,40 +338,22 @@ void ModuleCamera3D::UIMousePickRay(int mouse_x, int mouse_y)
 		float normalized_mouse_x = (((mouse_x - window_pos.x) / window_size.x) * 2) - 1;
 
 		float normalized_mouse_y = 1 - ((mouse_y - window_pos.y) / window_size.y) * 2;
+		
+		Frustum frustum = camera->camera_frustum;
 
-		std::list<ComponentCanvas*> canvas = App->renderer3D->GetCanvasToDraw();
-
-		for (std::list<ComponentCanvas*>::iterator cv = canvas.begin(); cv != canvas.end(); ++cv)
+		if (cv->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
 		{
-			Frustum frustum = camera->camera_frustum;
-
-			if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
-			{
-				frustum.Transform(float4x4::identity);
-				frustum.SetPos(float3(0, 0, -1));
-				frustum.SetFront(float3::unitZ);
-				frustum.SetUp(float3::unitY);
-				frustum.SetOrthographic(window_size.x, window_size.y);
-			}
-
-			LineSegment segment = frustum.UnProjectLineSegment(normalized_mouse_x, normalized_mouse_y);
-
-			save_segment = segment;
-
-			std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
-
-			for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
-			{
-				if ((*it).CheckRay(segment, (*cv)->GetRenderMode()))
-				{
-					CONSOLE_LOG("click!!!!");
-				}
-			}
-
-			save_segment = segment;
+			frustum.Transform(float4x4::identity);
+			frustum.SetPos(float3(0, 0, -1));
+			frustum.SetFront(float3::unitZ);
+			frustum.SetUp(float3::unitY);
+			frustum.SetOrthographic(window_size.x, window_size.y);
 		}
 
+		ret = frustum.UnProjectLineSegment(normalized_mouse_x, normalized_mouse_y);
 	}
+
+	return ret;
 }
 
 void ModuleCamera3D::SaveData(Data * data)

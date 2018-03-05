@@ -35,8 +35,14 @@ public:
 	virtual bool Update();
 	virtual bool CleanUp();
 
-	virtual void Save(Data& data) const = 0;
-	virtual void Load(Data& data) = 0;
+	virtual void Save(Data& data) const;
+	virtual void Load(Data& data);
+
+	virtual void UIOnClick() {};
+	virtual void UIOnClickDown() {};
+	virtual void UIOnClickUp() {};
+	virtual void UIOnMouseEnter() {};
+	virtual void UIOnMouseOut() {};
 
 private:
 	ComponentType type;

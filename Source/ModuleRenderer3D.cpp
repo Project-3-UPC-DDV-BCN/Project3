@@ -32,6 +32,7 @@
 #include "GameWindow.h"
 #include "ComponentParticleEmmiter.h"
 #include "ModuleMeshImporter.h"
+#include "ComponentRectTransform.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -306,14 +307,40 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 	{
-		std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
+		ComponentCanvas* canvas = (*cv);
+
+		std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
 
 		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
 
 		UseShaderProgram(program->GetProgramID());
 
+		LineSegment segment = App->camera->GetUIMouseRay(*cv);
+
+		CanvasDrawElement* top_element = nullptr;
+		int highest_layer = -9999999999;
+
 		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 		{
+			ComponentRectTransform* rect_trans = (ComponentRectTransform*)(*it).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+
+			if (rect_trans != nullptr)
+			{
+				// Mouse Input
+				if ((*it).GetLayer() >= highest_layer)
+				{
+					if(rect_trans->GetInteractable())
+						top_element = &(*it);
+
+					rect_trans->SetOnClick(false);
+					rect_trans->SetOnClickDown(false);
+					rect_trans->SetOnClickUp(false);
+					rect_trans->SetOnMouseEnter(false);
+					rect_trans->SetOnMouseOver(false);
+					rect_trans->SetOnMouseOut(false);
+				}
+				// -----------
+			}
 			// WORLD
 			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 			{
@@ -340,7 +367,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				float ortho_projection[4][4] =
 				{
 				{ 2.0f / win_size.x,       0.0f,               0.0f,			   0.0f },
-				{ 0.0f,                    2.0f / win_size.y, 0.0f,			   0.0f },
+				{ 0.0f,                    2.0f / win_size.y,  0.0f,			   0.0f },
 				{ 0.0f,                    0.0f,              -2/(far_p - near_p), -((far_p + near_p)/(far_p - near_p)) },
 				{ -1.0f,                   1.0f,               0.0f,			   1.0f },
 				};
@@ -372,6 +399,20 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 			UnbindVertexArrayObject();
+		}
+
+		// Event managing
+		if (top_element != nullptr)
+		{
+			if (top_element->CheckRay(segment, canvas->GetRenderMode()))
+			{
+				ComponentRectTransform* rect_trans = (ComponentRectTransform*)top_element->GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+
+				if (!rect_trans->GetOnMouseOver())
+					rect_trans->SetOnMouseEnter(true);
+
+				rect_trans->SetOnMouseOver(true);
+			}
 		}
 	}
 
