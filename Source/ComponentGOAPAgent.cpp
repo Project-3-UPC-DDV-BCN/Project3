@@ -213,24 +213,32 @@ bool ComponentGOAPAgent::Update()
 
 void ComponentGOAPAgent::AddGoal(GOAPGoal * goal)
 {
-	goals.push_back(goal);
+	if(std::find(goals.begin(),goals.end(),goal) == goals.end())
+		goals.push_back(goal);
 }
 
 void ComponentGOAPAgent::AddAction(GOAPAction * action)
 {
-	actions.push_back(action);
-	if(action->GetScript()!= nullptr)
-		action->GetScript()->SetAttachedGameObject(this->GetGameObject());
+	if (std::find(actions.begin(), actions.end(), action) == actions.end())
+	{
+		actions.push_back(action);
+		if (action->GetScript() != nullptr)
+			action->GetScript()->SetAttachedGameObject(this->GetGameObject());
+	}
 }
 
 void ComponentGOAPAgent::AddVariable(std::string & name, bool value)
 {
-	blackboard.push_back(new GOAPVariable(name.c_str(), value));
+	bool tmp;
+	if(!GetBlackboardVariable(name.c_str(),tmp))
+		blackboard.push_back(new GOAPVariable(name.c_str(), value));
 }
 
 void ComponentGOAPAgent::AddVariable(std::string & name, float value)
 {
-	blackboard.push_back(new GOAPVariable(name.c_str(), value));
+	float tmp;
+	if (!GetBlackboardVariable(name.c_str(), tmp))
+		blackboard.push_back(new GOAPVariable(name.c_str(), value));
 }
 
 bool ComponentGOAPAgent::GetBlackboardVariable(const char * name, float & var) const
