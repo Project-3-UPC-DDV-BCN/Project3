@@ -104,6 +104,9 @@ public:
 	void ClearDrawElements();
 	std::vector<CanvasDrawElement> GetDrawElements();
 
+	void SetLastRectTransform(ComponentRectTransform* last);
+	ComponentRectTransform* GetLastRectTransform() const;
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
@@ -122,6 +125,8 @@ private:
 
 	CanvasRenderMode render_mode;
 	CanvasScaleMode scale_mode;
+
+	ComponentRectTransform* last_rect_trans = nullptr;
 
 	float scale;
 };

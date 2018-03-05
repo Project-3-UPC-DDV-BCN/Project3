@@ -33,6 +33,7 @@
 #include "ComponentParticleEmmiter.h"
 #include "ModuleMeshImporter.h"
 #include "ComponentRectTransform.h"
+#include "ModuleInput.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -309,6 +310,8 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	{
 		ComponentCanvas* canvas = (*cv);
 
+		ComponentRectTransform* last_rect_trans = canvas->GetLastRectTransform();
+
 		std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
 
 		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
@@ -329,15 +332,8 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				// Mouse Input
 				if ((*it).GetLayer() >= highest_layer)
 				{
-					if(rect_trans->GetInteractable())
+					if(rect_trans->GetInteractable() && (*it).CheckRay(segment, canvas->GetRenderMode()))
 						top_element = &(*it);
-
-					rect_trans->SetOnClick(false);
-					rect_trans->SetOnClickDown(false);
-					rect_trans->SetOnClickUp(false);
-					rect_trans->SetOnMouseEnter(false);
-					rect_trans->SetOnMouseOver(false);
-					rect_trans->SetOnMouseOut(false);
 				}
 				// -----------
 			}
@@ -402,17 +398,50 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 		}
 
 		// Event managing
+
+		ComponentRectTransform* rect_trans = nullptr;
+
 		if (top_element != nullptr)
+			rect_trans = (ComponentRectTransform*)top_element->GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+		
+		if (last_rect_trans != nullptr)
 		{
-			if (top_element->CheckRay(segment, canvas->GetRenderMode()))
+			if (last_rect_trans != rect_trans)
 			{
-				ComponentRectTransform* rect_trans = (ComponentRectTransform*)top_element->GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+				last_rect_trans->SetOnMouseOut(true);
+				last_rect_trans->SetOnMouseOver(false);
 
-				if (!rect_trans->GetOnMouseOver())
-					rect_trans->SetOnMouseEnter(true);
-
-				rect_trans->SetOnMouseOver(true);
+				if (last_rect_trans->GetOnClick())
+				{
+					last_rect_trans->SetOnClickUp(true);
+					last_rect_trans->SetOnClickDown(false);
+					last_rect_trans->SetOnClick(false);
+				}
 			}
+		}
+
+		if (top_element != nullptr)
+		{	
+			if (!rect_trans->GetOnMouseOver())
+				rect_trans->SetOnMouseEnter(true);
+
+			rect_trans->SetOnMouseOver(true);
+
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+				rect_trans->SetOnClickUp(false);
+				rect_trans->SetOnClickDown(true);
+				rect_trans->SetOnClick(true);
+			}
+
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				rect_trans->SetOnClickUp(true);
+				rect_trans->SetOnClickDown(false);
+				rect_trans->SetOnClick(false);
+			}
+
+			canvas->SetLastRectTransform(rect_trans);
 		}
 	}
 

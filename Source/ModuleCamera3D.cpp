@@ -46,7 +46,6 @@ bool ModuleCamera3D::Init(Data * editor_config)
 
 	if (editor_config->EnterSection("Camera_Config"))
 	{
-
 		key_speed = App->input->StringToKey(editor_config->GetString("key_speed"));
 		key_forward = App->input->StringToKey(editor_config->GetString("key_forward"));
 		key_backward = App->input->StringToKey(editor_config->GetString("key_backward"));
@@ -92,11 +91,17 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(key_speed) == KEY_REPEAT)
 			speed = 70.0f * dt;
 
-		if (App->input->GetKey(key_up) == KEY_REPEAT) new_pos.y += speed;
-		if (App->input->GetKey(key_down) == KEY_REPEAT) new_pos.y -= speed;
+		if (App->input->GetKey(key_up) == KEY_REPEAT) 
+			new_pos.y += speed;
 
-		if (App->input->GetKey(key_forward) == KEY_REPEAT) new_pos += tmp_camera_frustum->Front() * speed;
-		if (App->input->GetKey(key_backward) == KEY_REPEAT) new_pos -= tmp_camera_frustum->Front() * speed;
+		if (App->input->GetKey(key_down) == KEY_REPEAT) 
+			new_pos.y -= speed;
+
+		if (App->input->GetKey(key_forward) == KEY_REPEAT) 
+			new_pos += tmp_camera_frustum->Front() * speed;
+
+		if (App->input->GetKey(key_backward) == KEY_REPEAT) 
+			new_pos -= tmp_camera_frustum->Front() * speed;
 		//if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed;
 		//if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed;
 

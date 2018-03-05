@@ -49,6 +49,20 @@ bool ComponentImage::Update()
 		canvas->AddDrawElement(de);
 	}
 
+	if (c_rect_trans->GetOnMouseOver())
+	{
+		colour = float4(0.0f, 1.0f, 1.0f, 1.0f);
+	}
+	else
+	{
+		colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	if (c_rect_trans->GetOnClick())
+	{
+		colour = float4(0.0f, 0.0f, 1.0f, 1.0f);
+	}
+
 	return ret;
 }
 

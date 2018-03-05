@@ -184,6 +184,16 @@ std::vector<CanvasDrawElement> ComponentCanvas::GetDrawElements()
 	return draws;
 }
 
+void ComponentCanvas::SetLastRectTransform(ComponentRectTransform * last)
+{
+	last_rect_trans = last;
+}
+
+ComponentRectTransform * ComponentCanvas::GetLastRectTransform() const
+{
+	return last_rect_trans;
+}
+
 void ComponentCanvas::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());

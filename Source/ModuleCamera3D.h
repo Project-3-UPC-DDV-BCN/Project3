@@ -5,6 +5,7 @@
 #include "MathGeoLib\MathGeoLib.h"
 
 class ComponentCamera;
+class ComponentCanvas;
 
 class ModuleCamera3D : public Module
 {
