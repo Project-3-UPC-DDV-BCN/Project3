@@ -1882,6 +1882,10 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 		{
 			billboard->SetBillboardType((BillboardingType)--billboard_type);
 			++billboard_type;
+
+			//Reset transform 
+			ComponentTransform* trans = (ComponentTransform*)billboard->GetGameObject()->GetComponent(Component::CompTransform); 
+			trans->SetRotation(float3::zero); 
 		}
 		else
 			billboard->SetBillboardType(BILLBOARD_NONE);

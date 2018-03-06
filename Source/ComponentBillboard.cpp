@@ -86,6 +86,14 @@ bool ComponentBillboard::RotateObject()
 	else if (billboarding_type == BILLBOARD_X)
 		direction.x = 0;
 
+	else if (billboarding_type == BILLBOARD_ALL)
+	{
+		direction = { 0,0,1 };
+		object_transform->SetRotation({ 0, 0, 0 });
+		object_z = {0,0,1};
+	}
+		
+
 	direction.Normalize();
 	direction *= -1;
 
@@ -119,11 +127,19 @@ bool ComponentBillboard::RotateObject()
 		billboarding_type = BILLBOARD_Y; 
 		RotateObject(); 
 
-		billboarding_type = BILLBOARD_X; 
-		RotateObject(); 
+		float3 current_z_direction = object_transform->GetMatrix().WorldZ(); 
+		float3 direction = reference->camera_frustum.Pos() - object_transform->GetGlobalPosition(); 
+
+		direction.Normalize(); 
+		current_z_direction.Normalize(); 
+
+		float angle = direction.AngleBetweenNorm(current_z_direction)*RADTODEG;
+		angle *= -1; 
+
+		object_transform->SetRotation({ angle, object_transform->GetGlobalRotation().y, object_transform->GetGlobalRotation().z });
 
 		billboarding_type = BILLBOARD_ALL; 
-		//object_transform->SetRotation({ angle_xy, angle_xz, object_transform->GetGlobalRotation().z });
+
 		break;
 	}
 		
