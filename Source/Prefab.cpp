@@ -80,6 +80,7 @@ void Prefab::CreateMeta() const
 	data.AddUInt("UUID", GetUID());
 	data.AddString("Time_Created", dt);
 	data.AddString("Library_path", GetLibraryPath());
+	data.CloseSection();
 	data.SaveAsMeta(GetAssetsPath());
 }
 

@@ -3,7 +3,7 @@ using TheEngine.TheConsole;
 
 public class laser {
 	
-	public int ti = 1200;
+	public int ti = 200;
 	TheRigidBody rb;
 	TheTransform trans;
 
@@ -13,7 +13,7 @@ public class laser {
 	}
 	
 	void Update () {
-		//TheGameObject.Self.GetComponent<TheTransform>().GlobalPosition += TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection*ti*TheTime.DeltaTime;
+		TheGameObject.Self.GetComponent<TheTransform>().GlobalPosition += TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection*ti*TheTime.DeltaTime;
 		//TheGameObject.Self.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x + 10, vec.y, vec.z);
 		//TheConsole.Log("Laser " + TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection);
 	}
@@ -21,6 +21,11 @@ public class laser {
 	void OnCollisionEnter(TheGameObject collided)
 	{
 		string s = collided.name;
+		TheConsole.Log(collided.name);
+	}
+	
+	void OnTriggerEnter(TheGameObject collided)
+	{
 		TheConsole.Log(collided.name);
 	}
 }

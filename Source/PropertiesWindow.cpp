@@ -846,7 +846,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 		ImGui::SameLine();
 		if (ImGui::Button("Delete Component##Mesh_Renderer"))
 		{
-			components_to_destroy.insert(std::pair<GameObject*, Component*>(mesh_renderer->GetGameObject(),mesh_renderer));
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(mesh_renderer->GetGameObject(), mesh_renderer));
 			mesh_renderer = nullptr;
 			return;
 		}
@@ -863,7 +863,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			mesh_renderer->SetMaterial(material);
 		}
 
-		if(ImGui::TreeNodeEx("Mesh Info", ImGuiTreeNodeFlags_OpenOnArrow))
+		if (ImGui::TreeNodeEx("Mesh Info", ImGuiTreeNodeFlags_OpenOnArrow))
 		{
 			if (mesh_renderer->GetMesh() == nullptr)
 			{
@@ -940,8 +940,15 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				{
 					material->SetDiffuseTexture(diffuse);
 				}
-				
 
+				if(ImGui::Button("Save Material"))
+				{
+					Data data;
+					Material* mat = mesh_renderer->GetMaterial();
+					mat->Save(data);
+					data.SaveAsBinary(mat->GetAssetsPath());
+					data.SaveAsBinary(mat->GetLibraryPath());
+				}
 			}
 		ImGui::TreePop();
 		}

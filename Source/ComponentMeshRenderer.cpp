@@ -95,13 +95,13 @@ void ComponentMeshRenderer::Save(Data & data) const
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
 	data.CreateSection("Mesh");
-	if(mesh) mesh->Save(data);
+	if(mesh)data.AddInt("UUID", mesh->GetUID());
 	data.CloseSection();
 	data.CreateSection("Material");
-	if(material)material->Save(data);
+	if(material)data.AddInt("UUID", material->GetUID());
 	data.CloseSection();
 	data.CreateSection("Interior_Material");
-	if (interior_material)interior_material->Save(data);
+	if (interior_material)data.AddInt("UUID", interior_material->GetUID());
 	data.CloseSection();
 	//data.AddInt("Mesh_Type", mesh_type);
 	data.AddInt("Mat_Indices_Number", material_indices_number);
@@ -120,11 +120,6 @@ void ComponentMeshRenderer::Load(Data & data)
 	if (mesh_uid != 0)
 	{
 		mesh = App->resources->GetMesh(mesh_uid);
-		if (!mesh)
-		{
-			mesh = new Mesh();
-			mesh->Load(data);
-		}
 	}
 	data.LeaveSection();
 	data.EnterSection("Material");
@@ -132,11 +127,6 @@ void ComponentMeshRenderer::Load(Data & data)
 	if (material_uid != 0)
 	{
 		material = App->resources->GetMaterial(material_uid);
-		if (!material)
-		{
-			material = new Material();
-			material->Load(data);
-		}
 	}
 	data.LeaveSection();
 	data.EnterSection("Interior_Material");
@@ -144,11 +134,6 @@ void ComponentMeshRenderer::Load(Data & data)
 	if (int_material_uid != 0)
 	{
 		interior_material = App->resources->GetMaterial(int_material_uid);
-		if (!interior_material)
-		{
-			interior_material = new Material();
-			interior_material->Load(data);
-		}
 	}
 	data.LeaveSection();
 	//mesh_type = (MeshType)data.GetInt("Mesh_Type");

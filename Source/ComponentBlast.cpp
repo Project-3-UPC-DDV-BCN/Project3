@@ -57,7 +57,7 @@ void ComponentBlast::Save(Data & data) const
 	if (interior_material)
 	{
 		data.CreateSection("IntMaterial");
-		interior_material->Save(data);
+		data.AddInt("UUID", interior_material->GetUID());
 		data.CloseSection();
 	}
 	data.CreateSection("BlastModel");

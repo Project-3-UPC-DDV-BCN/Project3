@@ -23,6 +23,9 @@ public:
 	void OnCollisionEnter(GameObject* other_collider);
 	void OnCollisionStay(GameObject* other_collider);
 	void OnCollisionExit(GameObject* other_collider);
+	void OnTriggerEnter(GameObject* other_collider);
+	void OnTriggerStay(GameObject* other_collider);
+	void OnTriggerExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
 
@@ -207,6 +210,9 @@ private:
 	MonoMethod* on_collision_enter;
 	MonoMethod* on_collision_stay;
 	MonoMethod* on_collision_exit;
+	MonoMethod* on_trigger_enter;
+	MonoMethod* on_trigger_stay;
+	MonoMethod* on_trigger_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
 

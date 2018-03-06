@@ -535,17 +535,65 @@ void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 		if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
 		{
 			//Call OnTriggerEnter in script module
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+			{
+				if (pairs[i].otherActor == it->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairs[i].triggerActor == it2->first)
+						{
+							it2->second->OnTriggerEnter(it->second);
+							it->second->OnTriggerEnter(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
 
 			trigger_stay_pairs[&pairs[i]] = true;
 		}
 		else if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 		{ 
 			//Call OnTriggerExit in script module
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+			{
+				if (pairs[i].otherActor == it->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairs[i].triggerActor == it2->first)
+						{
+							it2->second->OnTriggerExit(it->second);
+							it->second->OnTriggerExit(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
 			trigger_stay_pairs.erase(&pairs[i]);
 		}
 		else if (trigger_stay_pairs[&pairs[i]] == true)
 		{
 			//Call OnTriggerStay in script module
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+			{
+				if (pairs[i].otherActor == it->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairs[i].triggerActor == it2->first)
+						{
+							it2->second->OnTriggerStay(it->second);
+							it->second->OnTriggerStay(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
 		}
 	}
 }

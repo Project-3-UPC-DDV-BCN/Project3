@@ -76,6 +76,9 @@ bool CSScript::LoadScript(std::string script_path)
 		on_collision_enter = GetFunction("OnCollisionEnter", 1);
 		on_collision_stay = GetFunction("OnCollisionStay", 1);
 		on_collision_exit = GetFunction("OnCollisionExit", 1);
+		on_trigger_enter = GetFunction("OnTriggerEnter", 1);
+		on_trigger_stay = GetFunction("OnTriggerStay", 1);
+		on_trigger_exit = GetFunction("OnTriggerExit", 1);
 		on_enable = GetFunction("OnEnable", 0);
 		on_disable = GetFunction("OnDisable", 0);
 
@@ -216,6 +219,108 @@ void CSScript::OnCollisionExit(GameObject* other_collider)
 
 		void* param = new_object;
 		CallFunction(on_collision_exit, &param);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnTriggerEnter(GameObject * other_collider)
+{
+	if (on_trigger_enter != nullptr)
+	{
+		MonoObject* new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetEngineDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_trigger_enter, &param);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnTriggerStay(GameObject * other_collider)
+{
+	if (on_trigger_stay != nullptr)
+	{
+		MonoObject* new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetEngineDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_trigger_stay, &param);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnTriggerExit(GameObject * other_collider)
+{
+	if (on_trigger_exit != nullptr)
+	{
+		MonoObject* new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetEngineDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_trigger_exit, &param);
 		inside_function = false;
 	}
 }
