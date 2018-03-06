@@ -371,16 +371,24 @@ void Particle::Update()
 
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
+	{
 		UpdateColor();
+	}
+	
 
 	//Update scale
 	if (particle_data->change_size_interpolation)
+	{
 		UpdateSize();
+	}
+		
 
 	//Update rotation
 	if (particle_data->change_rotation_interpolation)
-		UpdateRotation(); 
-
+	{
+		UpdateRotation();
+	}
+		
 	//Apply angular velocity
 	ApplyAngularVelocity();
 
