@@ -56,18 +56,17 @@ public class EntityProperties
 			countdown_number.text = countdown_timer; 
 		}
 
-	}
-
-	void HitEnemyAction()
-	{
-		//Do whatever is said
-	}
-
-	void HitAlliedAction()
-	{
-		//Do whatever is said
+		if(true)//Projectile hited an enemie (?) Maybe in other script ? 
+		{
+			score += 20; 
+		}
+		else if(true)//Projectile hited an aliance (?)
+		{
+			//Do whatever the designer says, if someday he says something
+		}
 	}
 	
+
 	bool IsInGameArea()
 	{
 		if(trans.GlobalPosition.Length < boundary_limit)
