@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include <vector>
+#include "Timer.h"
 
 class ComponentRectTransform;
 class ComponentTransform;
@@ -55,6 +56,9 @@ public:
 	void SetNumAnimTextures(uint set);
 	uint GetNumAnimTextures() const;
 
+	void SetLoop(bool loop);
+	bool GetLoop() const;
+
 	std::vector<Texture*> GetAnimTextures();
 
 	void SetFlip(const bool& flip);
@@ -70,20 +74,24 @@ private:
 private:
 	ComponentRectTransform* c_rect_trans = nullptr;
 
-	ImageMode mode;
+	ImageMode               mode;
+						    
+	// Mode single		    
+	Texture*			    texture;
+	float4				    colour;
+	bool                    flip;
+						    
+	// Mode animation	    
+	uint				    num_anim_textures;
+	std::vector<Texture*>   anim_textures;
+	float				    animation_speed;
+	uint                    curr_animation_image;
+	bool                    loop;
+	bool                    animation_play;
+	bool                    animation_preview_play;
+	Timer                   animation_timer;
 
-	// Mode single
-	Texture* texture;
-	float4 colour;
-	bool flip;
-
-	// Mode animation
-	uint num_anim_textures;
-	std::vector<Texture*> anim_textures;
-	float animation_speed;
-	bool animation_play;
-	bool animation_preview_play;
-	//Timer animation_timer;
+	bool				    was_in_play_mode;
 };
 
 #endif // !_H_COMPONENT_IMAGE__

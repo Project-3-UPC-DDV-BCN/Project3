@@ -23,11 +23,15 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 
 	animation_speed = 1.0f;
 	SetNumAnimTextures(1);
+	curr_animation_image = 0;
+	loop = true;
 
 	animation_play = true;
 	animation_preview_play = false;
 
 	c_rect_trans->SetSize(float2(100, 100));
+
+	was_in_play_mode = true;
 }
 
 ComponentImage::~ComponentImage()
@@ -37,6 +41,49 @@ ComponentImage::~ComponentImage()
 bool ComponentImage::Update()
 {
 	bool ret = true;
+
+	if (App->IsPlaying() && !was_in_play_mode)
+	{
+		was_in_play_mode = true;
+		animation_timer.Start();
+		curr_animation_image = 0;
+	}
+
+	Texture* tex = nullptr;
+
+	switch (mode)
+	{
+		case ImageMode::IM_SINGLE:
+		{
+			tex = texture;
+		}
+		break;
+
+		case ImageMode::IM_ANIMATION:
+		{
+			if ((App->IsPlaying() && animation_play) || (!App->IsPlaying() && animation_preview_play))
+			{
+				if (animation_timer.Read() > (animation_speed * 1000))
+				{
+					animation_timer.Start();
+					if (curr_animation_image < anim_textures.size() - 1)
+					{
+						curr_animation_image++;
+					}
+					else if(loop)
+					{
+						curr_animation_image = 0;
+					}
+				}
+			}
+
+			if (curr_animation_image < anim_textures.size())
+			{
+				tex = anim_textures[curr_animation_image];
+			}
+		}
+		break;
+	}
 
 	ComponentCanvas* canvas = GetCanvas();
 
@@ -49,9 +96,9 @@ bool ComponentImage::Update()
 		de.SetColour(colour);
 		de.SetFlip(false, flip);
 
-		if(texture != nullptr)
+		if(tex != nullptr)
 		{
-			de.SetTextureId(texture->GetID());
+			de.SetTextureId(tex->GetID());
 		}
 
 		canvas->AddDrawElement(de);
@@ -130,6 +177,13 @@ float ComponentImage::GetAnimSpeed() const
 
 void ComponentImage::SetAnimationPlay(bool set)
 {
+	if (set && !animation_play)
+	{
+		animation_timer.Start();
+	}
+	else if (!set && animation_play)
+		curr_animation_image = 0;
+
 	animation_play = set;
 }
 
@@ -140,6 +194,13 @@ bool ComponentImage::GetAnimationPlay() const
 
 void ComponentImage::SetAnimationPreviewPlay(bool set)
 {
+	if (set && !animation_preview_play)
+	{
+		animation_timer.Start();
+	}
+	else if(!set && animation_preview_play)
+		curr_animation_image = 0;
+
 	animation_preview_play = set;
 }
 
@@ -187,6 +248,16 @@ uint ComponentImage::GetNumAnimTextures() const
 	return num_anim_textures;
 }
 
+void ComponentImage::SetLoop(bool _loop)
+{
+	loop = _loop;
+}
+
+bool ComponentImage::GetLoop() const
+{
+	return loop;
+}
+
 std::vector<Texture*> ComponentImage::GetAnimTextures()
 {
 	return anim_textures;
@@ -197,10 +268,22 @@ void ComponentImage::Save(Data & data) const
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
+	data.AddInt("mode", mode);
 	data.AddVector4("colour", colour);
 	data.AddBool("flip", flip);
+	data.AddBool("loop", loop);
+	data.AddFloat("anim_speed", animation_speed);
+	data.AddInt("anim_textures_count", anim_textures.size());
 	if (texture != nullptr)
-		data.AddString("texture_name", texture->GetName().c_str());
+		data.AddString("texture", texture->GetName().c_str());
+	for (int i = 0; i < anim_textures.size(); ++i)
+	{
+		if (anim_textures[i] != nullptr)
+		{
+			std::string text_name = "anim_texture_" + std::to_string(i);
+			data.AddString(text_name.c_str(), anim_textures[i]->GetName().c_str());
+		}
+	}
 	
 }
 
@@ -208,9 +291,22 @@ void ComponentImage::Load(Data & data)
 {
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
+	SetMode(static_cast<ImageMode>(data.GetInt("mode")));
 	SetColour(data.GetVector4("colour"));
 	SetFlip(data.GetBool("flip"));
-	texture = App->resources->GetTexture(data.GetString("texture_name"));
+	SetLoop(data.GetBool("loop"));
+	SetAnimSpeed(data.GetFloat("anim_speed"));
+	int textures_count = data.GetInt("anim_textures_count");
+	SetNumAnimTextures(textures_count);
+	texture = App->resources->GetTexture(data.GetString("texture"));
+
+	for (int i = 0; i < textures_count; ++i)
+	{
+		std::string text_name = "anim_texture_" + std::to_string(i);
+		texture = App->resources->GetTexture(data.GetString(text_name.c_str()));
+		AddAnimTexture(texture, i);
+	}
+
 }
 
 ComponentCanvas * ComponentImage::GetCanvas()

@@ -761,18 +761,23 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 			float animation_speed = image->GetAnimSpeed();
 			int animation_images = image->GetNumAnimTextures();
 			bool preview_play = image->GetAnimationPreviewPlay();
+			bool loop = image->GetLoop();
 
 			std::string preview = "Preview: ";
 
 			if (preview_play)
-				preview += "On";
+				preview += "ON";
+			else
+				preview += "OFF";
 
-			if (preview_play)
-				preview += "Off";
-
-			if (ImGui::Checkbox("Preview Play", &preview_play))
+			if (ImGui::Checkbox(preview.c_str(), &preview_play))
 			{
 				image->SetAnimationPreviewPlay(preview_play);
+			}
+
+			if (ImGui::Checkbox("Loop", &loop))
+			{
+				image->SetLoop(loop);
 			}
 
 			if (ImGui::DragFloat("Speed", &animation_speed, true, 0.01f, 0.0f))
@@ -780,7 +785,7 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 				image->SetAnimSpeed(animation_speed);
 			}
 
-			if (ImGui::DragInt("Nº Images", &animation_images, true, 1, 0, 100))
+			if (ImGui::DragInt("Size", &animation_images, true, 1, 0, 100))
 			{
 				image->SetNumAnimTextures(animation_images);
 			}
