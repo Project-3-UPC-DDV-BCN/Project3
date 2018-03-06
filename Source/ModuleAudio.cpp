@@ -19,6 +19,7 @@
 #include "ModuleResources.h"
 
 #include "ModuleScene.h"
+#include "SoundBankResource.h"
 
 #include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
 
@@ -46,7 +47,7 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	//App->resources->CreateResource("./Project/Library/SoundBanks/Ship_Soundbank.bnk");
+	App->resources->CreateResource("./Project/Library/SoundBanks/Ship_Soundbank.bnk");
 
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
@@ -108,66 +109,12 @@ bool ModuleAudio::CleanUp()
 	return true;
 }
 
-SoundBank * ModuleAudio::LoadSoundBank(std::string path)
-{
-	SoundBank* new_bank = new SoundBank();
-	std::string bank_path = ASSETS_SOUNDBANK_FOLDER + path;
-	Wwise::LoadBank(bank_path.c_str());
-
-	std::string json_file = bank_path.substr(0, bank_path.find_last_of('.')) + ".json"; // Changing .bnk with .json
-	GetBankInfo(json_file, new_bank);
-	soundbanks.push_back(new_bank);
-	soundbank = new_bank;
-	return new_bank;
-}
-
-unsigned int ModuleAudio::GetBankInfo(std::string path, SoundBank *& bank)
-{
-	unsigned int ret = 0;
-
-	JSON_File * bank_file = json->LoadJSON(path.c_str());
-	bank_file->RootObject();
-
-	if (bank_file == nullptr) 
-	{
-		CONSOLE_DEBUG("Error reading bank json file");
-	}
-	else 
-	{
-		bank_file->ChangeObject("SoundBanksInfo");
-		int n_banks = bank_file->ArraySize("SoundBanks");
-		for (int i = 0; i < n_banks; i++) {
-			bank_file->RootObject();
-			bank_file->ChangeObject("SoundBanksInfo");
-			bank_file->MoveToInsideArray("SoundBanks", i);
-			ret = bank->id = bank_file->GetNumber("Id");
-			bank->name = bank_file->GetString("ShortName");
-			bank->path = bank_file->GetString("Path");
-
-			//bank_file->RootObject();
-			int n_events = bank_file->ArraySize("IncludedEvents");
-			for (int j = 0; j < n_events; j++) {
-
-				//create new event and load it
-				AudioEvent* new_event = new AudioEvent();
-				bank_file->RootObject();
-				bank_file->ChangeObject("SoundBanksInfo");
-				bank_file->MoveToInsideArray("SoundBanks", i);
-				new_event->Load(bank_file, bank, j);
-				bank->events.push_back(new_event);
-			}
-		}
-	}
-
-	return ret;
-}
-
-void ModuleAudio::PushSoundBank(SoundBank * sbk)
+void ModuleAudio::PushSoundBank(SoundBankResource * sbk)
 {
 	soundbanks.push_back(sbk);
 }
 
-std::vector<SoundBank*> ModuleAudio::GetSoundBanks() const
+std::vector<SoundBankResource*> ModuleAudio::GetSoundBanks() const
 {
 	return soundbanks;
 }

@@ -66,7 +66,7 @@ SoundBankResource* ModuleAudioImporter::LoadSoundBankFromLibrary(std::string pat
 		sbk->CreateMeta();
 		App->file_system->Copy(path, LIBRARY_SOUNDBANK_FOLDER + name_without_path);
 
-		RELEASE(sbk);
+		return sbk;
 	}
 
 	return nullptr;

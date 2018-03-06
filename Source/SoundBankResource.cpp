@@ -9,6 +9,7 @@
 SoundBankResource::SoundBankResource()
 {
 	SetType(Resource::SoundBankResource);
+	soundbank = new SoundBank();
 	json = new JSONTool();
 }
 
@@ -49,22 +50,22 @@ void SoundBankResource::CreateMeta() const
 
 void SoundBankResource::LoadToMemory()
 {
-	SoundBank* new_bank = new SoundBank();
+	SoundBankResource* new_bank = new SoundBankResource();
 	std::string bank_path = ASSETS_SOUNDBANK_FOLDER + GetName();
 	Wwise::LoadBank(bank_path.c_str());
 
 	std::string json_file = bank_path.substr(0, bank_path.find_last_of('.')) + ".json"; // Changing .bnk with .json
-	GetBankInfo(json_file, new_bank);
+	GetBankInfo(json_file, new_bank->soundbank);
 	App->audio->PushSoundBank(new_bank);
 }
 
 void SoundBankResource::UnloadFromMemory()
 {
-	std::vector<SoundBank*> soundbanks = App->audio->GetSoundBanks();
+	std::vector<SoundBankResource*> soundbanks = App->audio->GetSoundBanks();
 
 	for (int i = 0; i < soundbanks.size(); ++i)
 	{
-		if (soundbanks[i] == soundbank) 
+		if (soundbanks[i]->soundbank == soundbank) 
 		{
 			soundbanks.erase(soundbanks.begin() + i);
 		}

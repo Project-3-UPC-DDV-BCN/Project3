@@ -218,6 +218,7 @@ void ModuleResources::ImportFile(std::string path)
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::MeshResource;
 	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
+	else if (extension == ".bnk") type = Resource::SoundBankResource;
 
 	bool exist = false;
 
@@ -300,6 +301,16 @@ void ModuleResources::ImportFile(std::string path)
 		}
 		App->file_system->Copy(path, ASSETS_SHADERS_FOLDER + file_name);
 		path = ASSETS_SHADERS_FOLDER + file_name;
+		break;
+	case Resource::SoundBankResource:
+		if (!App->file_system->DirectoryExist(ASSETS_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_SOUNDBANK_FOLDER_PATH);
+		if (App->file_system->FileExist(ASSETS_SOUNDBANK_FOLDER + file_name))
+		{
+			exist = true;
+			break;
+		}
+		App->file_system->Copy(path, ASSETS_SOUNDBANK_FOLDER + file_name);
+		path = ASSETS_SOUNDBANK_FOLDER + file_name;
 		break;
 	default:
 		break;
@@ -903,6 +914,7 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
 	else if (str == ".ttf") return Resource::FontResource;
+	else if (str == ".bnk") return Resource::SoundBankResource;
 
 	return Resource::Unknown;
 }
@@ -936,6 +948,7 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 	Resource::ResourceType type = AssetExtensionToResourceType(extension);
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::PrefabResource;
+	else if (extension == ".bnk") type == Resource::SoundBankResource;
 
 	std::string library_file;
 	std::string directory;
@@ -1007,6 +1020,13 @@ std::string ModuleResources::GetLibraryFile(std::string file_path)
 		if (App->file_system->FileExistInDirectory(file_name + ".shader", directory, false))
 		{
 			library_file = directory + file_name + ".shader";
+		}
+		break;
+	case Resource::SoundBankResource:
+		directory = App->file_system->StringToPathFormat(LIBRARY_SOUNDBANK_FOLDER);
+		if (App->file_system->FileExistInDirectory(file_name + ".bnk", directory, false))
+		{
+			library_file = directory + file_name + ".bnk";
 		}
 		break;
 	case Resource::Unknown:
@@ -1307,9 +1327,11 @@ void ModuleResources::DeleteResource(std::string file_path)
 	Material* material = nullptr;
 	PhysicsMaterial* phys_material = nullptr;
 	Shader* shader = nullptr;
+	SoundBankResource* sbk = nullptr;
 
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::PrefabResource;
 	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
+	else if (extension == ".bnk") type = Resource::SoundBankResource;
 
 	switch (type)
 	{
@@ -1383,6 +1405,14 @@ void ModuleResources::DeleteResource(std::string file_path)
 		break;
 	case Resource::Unknown:
 		break;
+	case Resource::SoundBankResource:
+		sbk = GetSoundBank(resource_name);
+		if (sbk != nullptr)
+		{
+			App->file_system->Delete_File(sbk->GetLibraryPath());
+			App->file_system->Delete_File(file_path + ".meta");
+			RemoveSoundBank(sbk);
+		}
 	default:
 		break;
 	}

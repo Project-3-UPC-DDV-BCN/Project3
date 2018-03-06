@@ -19,6 +19,7 @@ class GameObject;
 class SoundBank;
 class ComponentDistorsionZone;
 class JSONTool;
+class SoundBankResource;
 
 class ModuleAudio : public Module
 {
@@ -33,11 +34,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	SoundBank* LoadSoundBank(std::string path);
-	unsigned int GetBankInfo(std::string path, SoundBank* &bank);
-
-	void PushSoundBank(SoundBank* sbk);
-	std::vector<SoundBank*> GetSoundBanks() const;
+	void PushSoundBank(SoundBankResource* sbk);
+	std::vector<SoundBankResource*> GetSoundBanks() const;
 
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
@@ -81,7 +79,7 @@ private:
 
 	Wwise::SoundObject* camera_listener = nullptr;
 	std::list <Wwise::SoundObject*> sound_obj;
-	std::vector<SoundBank*> soundbanks;
+	std::vector<SoundBankResource*> soundbanks;
 	std::vector<ComponentDistorsionZone*> environments;
 
 	ComponentListener* default_listener = nullptr;
