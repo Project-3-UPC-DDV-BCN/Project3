@@ -21,10 +21,15 @@ public class Slave1Movement {
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
 	private float curr_max_vel = 10.0f;
+	private float curr_accel;
 	bool slowing = false;
 	public bool invert_axis = false;
 	
 	public float slow_time = 2.0f;
+	private bool boosting = false;
+	public float boost_extra_vel = 25.0f;
+	public float boost_accel_multiplier = 1.5f;
+
 	//Energy management
 	public int max_energy = 6;
 	public int shield_energy = 2;
@@ -39,6 +44,11 @@ public class Slave1Movement {
 	TheProgressBar weapons_bar = null;
 	TheProgressBar shields_bar = null;
 	TheProgressBar energy_bar = null;
+
+	//audio
+	public TheGameObject audio_emiter;
+	
+	TheAudioSource audio_source;
 	
 	void Start () 
 	{
@@ -62,6 +72,11 @@ public class Slave1Movement {
 		max_energy_on_system *= 2;
 		
 		curr_max_vel = max_vel;
+		curr_accel = acceleration;
+
+		audio_source = audio_emiter.GetComponent<TheAudioSource>();
+		audio_source.Play("Play_Engine");
+		TheAudio.SetRTPvalue("Speed",vel_percent);
 	}
 	
 	void Update () 
@@ -210,8 +225,13 @@ public class Slave1Movement {
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
 		
-		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
+		//if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
 			//slow_timer = Time.time;
+		
+		if(TheInput.IsKeyDown("B"))
+		{
+			boosting = true;
+		}
 
 		slowing = false;
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
@@ -225,17 +245,31 @@ public class Slave1Movement {
 		}
 
 		float target_vel = vel_percent*curr_max_vel;
+		TheAudio.SetRTPvalue("Speed",vel_percent);
+		
+		if(boosting)
+		{
+			TheConsole.Log("boooooost");
+			target_vel = curr_max_vel+boost_extra_vel;
+			curr_accel = acceleration*boost_accel_multiplier;
+			if(curr_vel >= target_vel)
+				{
+					boosting = false;
+					curr_accel = acceleration;
+					TheConsole.Log("STOOOOP! boooooost");
+				}
+		}
 
 		if(curr_vel < target_vel) 
 		{
-			curr_vel += acceleration*TheTime.DeltaTime;
+			curr_vel += curr_accel*TheTime.DeltaTime;
 			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
 			TheInput.RumbleController(0,rumble,accel_rumble_ms);
 		}
 		else if(curr_vel > target_vel)
 		{
 			if(!slowing)
-				curr_vel-=acceleration*TheTime.DeltaTime;
+				curr_vel-=curr_accel*TheTime.DeltaTime;
 			else
 			{
 				curr_vel-=slow_acceleration*TheTime.DeltaTime;
