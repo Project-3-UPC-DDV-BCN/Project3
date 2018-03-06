@@ -24,6 +24,8 @@ public:
 	void SetCubeMapBackTexture(std::string texture_path);
 	void SetCubeMapBottomTexture(std::string texture_path);
 
+	void SetSize(float s) { size = s; }
+
 private:
 	Texture* textures[6];
 	std::string textures_path[6];
