@@ -186,6 +186,14 @@ void ModuleResources::FillResourcesLists()
 	//ParticleFX
 	std::vector<std::string> particle_order;
 
+	std::vector<std::string> meshes_in_mesh_library = App->file_system->GetFilesInDirectory(App->file_system->StringToPathFormat(LIBRARY_MESHES_FOLDER_PATH));
+
+	for (std::vector<std::string>::iterator it = meshes_in_mesh_library.begin(); it != meshes_in_mesh_library.end(); ++it)
+	{
+		Mesh* m = App->mesh_importer->LoadMeshFromLibrary(*it);
+		AddMesh(m);
+	}
+
 	// Create lists in order of Drive
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
 	{
