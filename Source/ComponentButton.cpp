@@ -3,6 +3,8 @@
 #include "ComponentCanvas.h"
 #include "GameObject.h"
 #include "Texture.h"
+#include "Application.h"
+#include "ModuleResources.h
 
 ComponentButton::ComponentButton(GameObject * attached_gameobject) : Component()
 {
@@ -185,10 +187,30 @@ float4 ComponentButton::GetPressedColour() const
 
 void ComponentButton::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.AddInt("mode", GetButtonMode());
+	data.AddVector4("idle_colour", GetIdleColour());
+	data.AddVector4("over_colour", GetOverColour());
+	data.AddVector4("pressed_colour", GetPressedColour());
+	if (idle_texture != nullptr)
+		data.AddString("idle_texture", idle_texture->GetName().c_str());
+	if (over_texture != nullptr)
+		data.AddString("over_texture", over_texture->GetName().c_str());
+	if (pressed_texture != nullptr)
+		data.AddString("pressed_texture", pressed_texture->GetName().c_str());
 }
 
 void ComponentButton::Load(Data & data)
 {
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+	SetButtonMode(static_cast<ButtonMode>(data.GetInt("mode")));
+	SetIdleColour(data.GetVector4("idle_colour"));
+	SetOverColour(data.GetVector4("over_colour"));
+	SetPressedColour(data.GetVector4("pressed_colour"));
+	//idle_texture = App->resources->GetTexture(data.GetString("idle_texture"));
 }
 
 ComponentCanvas * ComponentButton::GetCanvas()

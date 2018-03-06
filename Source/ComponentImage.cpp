@@ -149,7 +149,6 @@ void ComponentImage::Load(Data & data)
 	SetUID(data.GetUInt("UUID"));
 	SetColour(data.GetVector4("colour"));
 	SetFlip(data.GetBool("flip"));
-	uint uid = data.GetUInt("texture_uid");
 	texture = App->resources->GetTexture(data.GetString("texture_name"));
 }
 
