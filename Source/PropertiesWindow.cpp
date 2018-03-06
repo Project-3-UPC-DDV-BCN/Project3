@@ -1884,7 +1884,7 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 	if (ImGui::CollapsingHeader("Audio Source")) {
 		if (audio_source->soundbank != nullptr) {
 			std::string soundbank_name = "SoundBank: ";
-			soundbank_name += audio_source->soundbank->GetSoundBank()->name.c_str();
+			soundbank_name += audio_source->soundbank->GetName().c_str();
 			if (ImGui::TreeNode(soundbank_name.c_str()))
 			{		
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
