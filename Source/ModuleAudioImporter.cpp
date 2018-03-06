@@ -50,9 +50,6 @@ SoundBankResource* ModuleAudioImporter::LoadSoundBankFromLibrary(std::string pat
 		sbk->SetName(name_without_path);
 		sbk->LoadToMemory();
 
-		Data data;
-		sbk->Save(data);
-
 		return sbk;
 	}
 

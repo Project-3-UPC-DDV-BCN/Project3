@@ -186,13 +186,6 @@ void ModuleAudio::SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_
 	AK::SoundEngine::SetRTPCValue(rtpc, value, go_id);
 }
 
-void ModuleAudio::StopAllEvents()
-{
-	for (int i = 0; i < soundbank->events.size(); i++) {
-		AK::SoundEngine::ExecuteActionOnEvent(soundbank->events[i]->name.c_str(), AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause);
-	}
-}
-
 void ModuleAudio::ImGuiDraw()
 {
 }

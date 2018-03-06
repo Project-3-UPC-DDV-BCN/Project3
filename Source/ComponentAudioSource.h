@@ -32,7 +32,10 @@ public :
 	int* GetPickedEventPtr();
 
 	std::vector<AudioEvent*> GetEventsVector() const;
+	void ClearEventsVector();
 	std::vector<AudioEvent*> GetEventsToPlayVector() const;
+
+	void StopAllEvents();
 
 public:
 	SoundBankResource* soundbank = nullptr;

@@ -162,8 +162,19 @@ std::vector<AudioEvent*> ComponentAudioSource::GetEventsVector() const
 	return events;
 }
 
+void ComponentAudioSource::ClearEventsVector()
+{
+	events.clear();
+}
+
 std::vector<AudioEvent*> ComponentAudioSource::GetEventsToPlayVector() const
 {
 	return events_to_play;
 }
 
+void ComponentAudioSource::StopAllEvents()
+{
+	for (int i = 0; i < soundbank->GetSoundBank()->events.size(); i++) {
+		AK::SoundEngine::ExecuteActionOnEvent(soundbank->GetSoundBank()->events[i]->name.c_str(), AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause);
+	}
+}

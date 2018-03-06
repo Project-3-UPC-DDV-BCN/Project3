@@ -1878,6 +1878,14 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 		audio_source->GetEvents();
 
 	if (ImGui::CollapsingHeader("Audio Source")) {
+		SoundBankResource* sbk = audio_source->soundbank;
+		if (ImGui::InputResourceAudio("SoundBank", &sbk))
+		{
+			if (audio_source->soundbank) audio_source->StopAllEvents();
+			audio_source->soundbank = sbk;
+			audio_source->ClearEventsVector();
+		}
+
 		if (audio_source->soundbank != nullptr) {
 			std::string soundbank_name = "SoundBank: ";
 			soundbank_name += audio_source->soundbank->GetName().c_str();
@@ -1900,15 +1908,6 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 
 				ImGui::TreePop();
 			}
-		}
-		else
-		{
-			SoundBankResource* sbk = audio_source->soundbank;
-			if (ImGui::InputResourceAudio("SoundBank", &sbk))
-			{
-				audio_source->soundbank = sbk;
-			}
-
 		}
 	}
 }
