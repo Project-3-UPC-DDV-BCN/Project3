@@ -245,7 +245,7 @@ public class Slave1Movement {
 		}
 
 		float target_vel = vel_percent*curr_max_vel;
-		TheAudio.SetRTPvalue("Speed",vel_percent);
+		TheAudio.SetRTPvalue("Speed",vel_percent*100);
 		
 		if(boosting)
 		{
