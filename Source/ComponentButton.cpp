@@ -13,6 +13,8 @@ ComponentButton::ComponentButton(GameObject * attached_gameobject) : Component()
 
 	c_rect_trans = GetRectTrans();
 
+	c_rect_trans->SetSize(float2(100, 30));
+
 	button_mode = ButtonMode::BM_Colour;
 	button_state = ButtonState::BS_Idle;
 

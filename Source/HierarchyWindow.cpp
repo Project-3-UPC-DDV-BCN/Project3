@@ -80,6 +80,12 @@ void HierarchyWindow::DrawWindow()
 							App->scene->CreateText(parent);
 						}
 
+						if (ImGui::MenuItem("Button"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateButton(parent);
+						}
+
 						if (ImGui::MenuItem("Progress Bar"))
 						{
 							GameObject* parent = App->scene->selected_gameobjects.front();
@@ -118,6 +124,11 @@ void HierarchyWindow::DrawWindow()
 				if (ImGui::MenuItem("Text"))
 				{
 					App->scene->CreateText(nullptr);
+				}
+
+				if (ImGui::MenuItem("Button"))
+				{
+					App->scene->CreateButton(nullptr);
 				}
 
 				if (ImGui::MenuItem("Progress Bar"))

@@ -145,6 +145,8 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 			components_list.push_back(component = new ComponentProgressBar(this));
 			SetName("ProgressBar");
 		}
+		break;
+	case Component::CompButton:
 		SetIsUI(true);
 		if (GetComponent(Component::CompButton) == nullptr)
 		{

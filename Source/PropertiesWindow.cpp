@@ -519,6 +519,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
 		break;
+	case Component::CompButton:
+		DrawButtonPanel((ComponentButton*)component);
+		break;
 	default:
 		break;
 	}
@@ -848,7 +851,7 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 		float4 pressed_colour = button->GetPressedColour();
 
 		Texture* idle_texture = button->GetIdleTexture();
-		Texture* over_texutre = button->GetOverTexture();
+		Texture* over_texture = button->GetOverTexture();
 		Texture* pressed_texture = button->GetPressedTexture();
 
 		const char* mode_names[] = { "Colour", "Image" };
@@ -860,17 +863,20 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 		{
 			button->SetButtonMode(ButtonMode::BM_Colour);
 
-			if (ImGui::DragFloat4("Idle", (float*)&idle_colour))
+			ImGui::Text("Idle Colour");
+			if (ImGui::ColorEdit4("Idle", (float*)&idle_colour, ImGuiColorEditFlags_AlphaBar))
 			{
 				button->SetIdleColour(idle_colour);
 			}
 
-			if (ImGui::DragFloat4("Over", (float*)&over_colour))
+			ImGui::Text("Over Colour");
+			if (ImGui::ColorEdit4("Over", (float*)&over_colour, ImGuiColorEditFlags_AlphaBar))
 			{
 				button->SetOverColour(over_colour);
 			}
 
-			if (ImGui::DragFloat4("Pressed", (float*)&pressed_colour))
+			ImGui::Text("Pressed Colour");
+			if (ImGui::ColorEdit4("Pressed", (float*)&pressed_colour, ImGuiColorEditFlags_AlphaBar))
 			{
 				button->SetPressedColour(pressed_colour);
 			}
@@ -879,31 +885,20 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 		{
 			button->SetButtonMode(ButtonMode::BM_Image);
 
-			if (ImGui::InputResourceTexture("Texture", &tex))
+			if (ImGui::InputResourceTexture("Idle Texture", &idle_texture))
 			{
-				image->SetTexture(tex);
+				button->SetIdleTexture(idle_texture);
 			}
-		}
 
-		float progress = bar->GetProgressPercentage();
-		if (ImGui::DragFloat("Progress %", &progress))
-		{
-			bar->SetProgressPercentage(progress);
-		}
+			if (ImGui::InputResourceTexture("Over Texture", &over_texture))
+			{
+				button->SetOverTexture(over_texture);
+			}
 
-		float base_colour[4] = { bar->GetBaseColour().x, bar->GetBaseColour().y,bar->GetBaseColour().z, bar->GetBaseColour().w };
-		float progress_colour[4] = { bar->GetProgressColour().x,bar->GetProgressColour().y,bar->GetProgressColour().z, bar->GetProgressColour().w };
-
-		ImGui::Text("Base Colour");
-		if (ImGui::ColorEdit4("Base", base_colour, ImGuiColorEditFlags_AlphaBar))
-		{
-			bar->SetBaseColour(float4(base_colour[0], base_colour[1], base_colour[2], base_colour[3]));
-		}
-
-		ImGui::Text("Progress Colour");
-		if (ImGui::ColorEdit4("Progress", progress_colour, ImGuiColorEditFlags_AlphaBar))
-		{
-			bar->SetProgressColour(float4(progress_colour[0], progress_colour[1], progress_colour[2], progress_colour[3]));
+			if (ImGui::InputResourceTexture("Pressed Texture", &pressed_texture))
+			{
+				button->SetPressedTexture(pressed_texture);
+			}
 		}
 	}
 }
