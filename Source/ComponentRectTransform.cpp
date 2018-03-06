@@ -32,6 +32,8 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	on_mouse_enter = false;
 	on_mouse_over = false;
 	on_mouse_out = false;
+	fixed_aspect_ratio = false;
+	aspect_ratio = 1.0f;
 
 	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
@@ -276,8 +278,20 @@ float3 ComponentRectTransform::GetLocalRotation() const
 	return c_transform->GetLocalRotation();
 }
 
-void ComponentRectTransform::SetSize(const float2 & _size)
+void ComponentRectTransform::SetSize(float2 _size, bool use_fixed_ratio)
 {
+	if (fixed_aspect_ratio && use_fixed_ratio)
+	{
+		if (_size.x != size.x)
+		{
+			_size.y = _size.x / aspect_ratio;
+		}
+		else if (_size.y != size.y || _size.x == size.x)
+		{
+			_size.x = _size.y * aspect_ratio;
+		}
+	}
+
 	float2 scaled_pos = GetScaledPos();
 
 	size = _size;
@@ -344,6 +358,26 @@ float2 ComponentRectTransform::GetScaledSize() const
 	ret.y *= GetScaleAxis().y;
 
 	return ret;
+}
+
+void ComponentRectTransform::SetFixedAspectRatio(bool set)
+{
+	fixed_aspect_ratio = set;
+}
+
+bool ComponentRectTransform::GetFixedAspectRatio() const
+{
+	return fixed_aspect_ratio;
+}
+
+void ComponentRectTransform::SetAspectRatio(float _aspect_ratio)
+{
+	aspect_ratio = _aspect_ratio;
+}
+
+float ComponentRectTransform::GetAspectRatio() const
+{
+	return aspect_ratio;
 }
 
 void ComponentRectTransform::SetAnchor(const float2 & _anchor)
@@ -479,7 +513,7 @@ void ComponentRectTransform::SetSnapUp(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -493,7 +527,7 @@ void ComponentRectTransform::SetSnapUp(bool set)
 		snap_up = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -514,7 +548,7 @@ void ComponentRectTransform::SetSnapDown(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -528,7 +562,7 @@ void ComponentRectTransform::SetSnapDown(bool set)
 		snap_down = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -549,7 +583,7 @@ void ComponentRectTransform::SetSnapLeft(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -563,7 +597,7 @@ void ComponentRectTransform::SetSnapLeft(bool set)
 		snap_left = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -584,7 +618,7 @@ void ComponentRectTransform::SetSnapRight(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -598,7 +632,7 @@ void ComponentRectTransform::SetSnapRight(bool set)
 		snap_right = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;

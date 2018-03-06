@@ -611,6 +611,9 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						rect_transform->SetSize(size);
 					}
 
+					if (rect_transform->GetFixedAspectRatio())
+						ImGui::Text("Fixed aspect ratio");
+
 					if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
 					{
 						rect_transform->SetAnchor(anchor);

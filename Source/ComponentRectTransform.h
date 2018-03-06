@@ -47,13 +47,19 @@ public:
 	void SetRotation(const float3& rotation);
 	float3 GetLocalRotation() const;
 
-	void SetSize(const float2& size);
+	void SetSize(float2 size, bool use_fixed_ratio = true);
 	void SetLeftSize(const float& left);
 	void SetRightSize(const float& right);
 	void SetUpSize(const float& up);
 	void SetDownSize(const float& down);
 	float2 GetSize() const;
 	float2 GetScaledSize() const;
+
+	void SetFixedAspectRatio(bool set);
+	bool GetFixedAspectRatio() const;
+
+	void SetAspectRatio(float aspect_ratio);
+	float GetAspectRatio() const;
 
 	void SetAnchor(const float2& anchor);
 	float2 GetAnchor() const;
@@ -111,13 +117,17 @@ private:
 	float2				size;
 	float2			    anchor;
 	float				scale;
-	int					layer;
-	bool				interactable;
+
+	bool				fixed_aspect_ratio;
+	float				aspect_ratio;
 
 	bool			    snap_up;
 	bool				snap_down;
 	bool				snap_left;
 	bool				snap_right;
+
+	int					layer;
+	bool				interactable;
 
 	bool				on_click;
 	bool				on_click_down;

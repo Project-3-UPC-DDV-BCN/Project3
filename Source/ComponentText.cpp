@@ -15,6 +15,10 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	SetType(ComponentType::CompText);
 	SetGameObject(attached_gameobject);
 
+	c_rect_trans = GetRectTrans();
+
+	c_rect_trans->SetSize(float2(100, 40));
+
 	font = nullptr;
 	texture = 0;
 	colour = float4(1, 1, 1, 1);
@@ -24,9 +28,7 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	strikethrough = false;
 	font_size = 24.0f;
 
-	c_rect_trans = GetRectTrans();
-
-	c_rect_trans->SetSize(float2(100, 40));
+	c_rect_trans->SetFixedAspectRatio(true);
 
 	SetFont(App->font_importer->GetDefaultFont());
 
@@ -48,9 +50,6 @@ bool ComponentText::Update()
 	}
 
 	ComponentCanvas* canvas = GetCanvas();
-
-	float ratio = text_size.x / text_size.y;
-	c_rect_trans->SetSize(float2(c_rect_trans->GetSize().y * ratio, c_rect_trans->GetSize().y));
 
 	if (canvas != nullptr)
 	{
@@ -313,5 +312,9 @@ void ComponentText::UpdateText()
 		text_size = App->font_importer->CalcTextSize(text.c_str(), font, bold, italic, underline, strikethrough);
 
 		texture = App->font_importer->LoadText(text.c_str(), font, colour255, bold, italic, underline, strikethrough);
+
+		c_rect_trans->SetAspectRatio(text_size.x / text_size.y);
+
+		c_rect_trans->SetSize(float2(c_rect_trans->GetSize().x, c_rect_trans->GetSize().y));
 	}
 }
