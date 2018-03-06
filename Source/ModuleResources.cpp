@@ -1094,7 +1094,7 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 		break;
 	case Resource::SoundBankResource:
 		if (!App->file_system->DirectoryExist(LIBRARY_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SOUNDBANK_FOLDER_PATH);
-		
+		ret = App->audio_importer->ImportSoundBank(file_path);
 		break;
 	case Resource::Unknown:
 		break;

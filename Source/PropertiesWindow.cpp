@@ -1874,10 +1874,6 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
-	bool active_bool = audio_source->IsActive();
-
-	ImGui::Checkbox("Active", &active_bool);
-
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 
@@ -1894,7 +1890,9 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 				}	
 				ImGui::TreePop();
 			}
-			if (ImGui::TreeNode("Settings##Event"))
+			std::string settings_name = "Settings##";
+			settings_name += soundbank_name;
+			if (ImGui::TreeNode(settings_name.c_str()))
 			{
 				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
 				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
@@ -1906,7 +1904,7 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 		else
 		{
 			SoundBankResource* sbk = audio_source->soundbank;
-			if (ImGui::InputResourceAudio("SoundBank##InputResourceAudio", &sbk))
+			if (ImGui::InputResourceAudio("SoundBank", &sbk))
 			{
 				audio_source->soundbank = sbk;
 			}

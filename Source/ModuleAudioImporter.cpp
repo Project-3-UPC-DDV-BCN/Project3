@@ -31,21 +31,10 @@ std::string ModuleAudioImporter::ImportSoundBank(std::string path)
 
 	if (App->file_system->FileExist(path))
 	{
-		SoundBankResource* sbk = new SoundBankResource();
-		sbk->SetAssetsPath(ASSETS_SOUNDBANK_FOLDER + name_without_path);
-		sbk->SetLibraryPath(LIBRARY_SOUNDBANK_FOLDER + name_without_path);
-		sbk->SetName(name_without_path);
-		sbk->LoadToMemory();
-
-		Data data;
-		sbk->Save(data);
-		sbk->CreateMeta();
 		App->file_system->Copy(path, LIBRARY_SOUNDBANK_FOLDER + name_without_path);
-
-		RELEASE(sbk);
 	}
 
-	return (LIBRARY_SOUNDBANK_FOLDER_PATH + name_without_path);
+	return (LIBRARY_SOUNDBANK_FOLDER + name_without_path);
 }
 
 SoundBankResource* ModuleAudioImporter::LoadSoundBankFromLibrary(std::string path)
@@ -63,8 +52,6 @@ SoundBankResource* ModuleAudioImporter::LoadSoundBankFromLibrary(std::string pat
 
 		Data data;
 		sbk->Save(data);
-		sbk->CreateMeta();
-		App->file_system->Copy(path, LIBRARY_SOUNDBANK_FOLDER + name_without_path);
 
 		return sbk;
 	}
