@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "Texture.h"
 #include "Application.h"
-#include "ModuleResources.h
+#include "ModuleResources.h"
 
 ComponentButton::ComponentButton(GameObject * attached_gameobject) : Component()
 {
@@ -210,7 +210,9 @@ void ComponentButton::Load(Data & data)
 	SetIdleColour(data.GetVector4("idle_colour"));
 	SetOverColour(data.GetVector4("over_colour"));
 	SetPressedColour(data.GetVector4("pressed_colour"));
-	//idle_texture = App->resources->GetTexture(data.GetString("idle_texture"));
+	idle_texture = App->resources->GetTexture(data.GetString("idle_texture"));
+	over_texture = App->resources->GetTexture(data.GetString("over_texture"));
+	pressed_texture = App->resources->GetTexture(data.GetString("pressed_texture"));
 }
 
 ComponentCanvas * ComponentButton::GetCanvas()

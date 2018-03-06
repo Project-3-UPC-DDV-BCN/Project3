@@ -42,6 +42,7 @@
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
 #include "ComponentButton.h"
+#include "Texture.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -728,6 +729,8 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 
 		if (mode == 0)
 		{
+			image->SetMode(ImageMode::IM_SINGLE);
+
 			Texture* tex = image->GetTexture();
 
 			if (ImGui::InputResourceTexture("Texture", &tex));
@@ -753,8 +756,50 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 		}
 		else if (mode == 1)
 		{
+			image->SetMode(ImageMode::IM_ANIMATION);
 
+			float animation_speed = image->GetAnimSpeed();
+			int animation_images = image->GetNumAnimTextures();
+			bool preview_play = image->GetAnimationPreviewPlay();
+
+			std::string preview = "Preview: ";
+
+			if (preview_play)
+				preview += "On";
+
+			if (preview_play)
+				preview += "Off";
+
+			if (ImGui::Checkbox("Preview Play", &preview_play))
+			{
+				image->SetAnimationPreviewPlay(preview_play);
+			}
+
+			if (ImGui::DragFloat("Speed", &animation_speed, true, 0.01f, 0.0f))
+			{
+				image->SetAnimSpeed(animation_speed);
+			}
+
+			if (ImGui::DragInt("Nº Images", &animation_images, true, 1, 0, 100))
+			{
+				image->SetNumAnimTextures(animation_images);
+			}
+
+			std::vector<Texture*> textures = image->GetAnimTextures();
+			
+			for (int i = 0; i < textures.size(); ++i)
+			{
+				Texture* curr_text = textures[i];
+
+				std::string name = "Texture" + std::to_string(i);
+				if (ImGui::InputResourceTexture(name.c_str(), &curr_text));
+				{
+					image->AddAnimTexture(curr_text, i);
+				}
+			}
 		}
+
+		ImGui::Separator();
 
 		bool flip = image->GetFlip();
 		if (ImGui::Checkbox("Flip", &flip))

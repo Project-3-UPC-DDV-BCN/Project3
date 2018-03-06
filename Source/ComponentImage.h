@@ -9,6 +9,7 @@ class ComponentTransform;
 class ComponentCanvas;
 class CanvasDrawElement;
 class Texture;
+class Timer;
 
 enum ImageMode
 {
@@ -29,6 +30,7 @@ public:
 
 	bool HasImage();
 
+	// Mode single
 	void SetTexture(Texture* text);
 	Texture* GetTexture() const;
 
@@ -37,14 +39,26 @@ public:
 
 	void SetNativeSize();
 
-	void SetFlip(const bool& flip);
-	bool GetFlip() const;
-
+	// Mode animation
 	void SetAnimSpeed(float speed);
 	float GetAnimSpeed() const;
 
-	void AddAnimTexture(Texture* texture);
+	void SetAnimationPlay(bool set);
+	bool GetAnimationPlay() const;
+
+	void SetAnimationPreviewPlay(bool set);
+	bool GetAnimationPreviewPlay() const;
+
+	void AddAnimTexture(Texture* texture, int index);
 	void ClearAnimTextures();
+
+	void SetNumAnimTextures(uint set);
+	uint GetNumAnimTextures() const;
+
+	std::vector<Texture*> GetAnimTextures();
+
+	void SetFlip(const bool& flip);
+	bool GetFlip() const;
 
 	void Save(Data& data) const;
 	void Load(Data& data);
@@ -58,13 +72,18 @@ private:
 
 	ImageMode mode;
 
+	// Mode single
 	Texture* texture;
 	float4 colour;
 	bool flip;
 
+	// Mode animation
+	uint num_anim_textures;
 	std::vector<Texture*> anim_textures;
-	float speed;
-
+	float animation_speed;
+	bool animation_play;
+	bool animation_preview_play;
+	//Timer animation_timer;
 };
 
 #endif // !_H_COMPONENT_IMAGE__

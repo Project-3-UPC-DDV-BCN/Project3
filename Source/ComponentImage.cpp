@@ -21,7 +21,11 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	flip = false;
 
-	speed = 1.0f;
+	animation_speed = 1.0f;
+	SetNumAnimTextures(1);
+
+	animation_play = true;
+	animation_preview_play = false;
 
 	c_rect_trans->SetSize(float2(100, 100));
 }
@@ -113,22 +117,79 @@ bool ComponentImage::GetFlip() const
 
 void ComponentImage::SetAnimSpeed(float _speed)
 {
-	speed = _speed;
+	animation_speed = _speed;
+
+	if (animation_speed < 0)
+		animation_speed = 0.0f;
 }
 
 float ComponentImage::GetAnimSpeed() const
 {
-	return speed;
+	return animation_speed;
 }
 
-void ComponentImage::AddAnimTexture(Texture * texture)
+void ComponentImage::SetAnimationPlay(bool set)
 {
-	anim_textures.push_back(texture);
+	animation_play = set;
+}
+
+bool ComponentImage::GetAnimationPlay() const
+{
+	return animation_play;
+}
+
+void ComponentImage::SetAnimationPreviewPlay(bool set)
+{
+	animation_preview_play = set;
+}
+
+bool ComponentImage::GetAnimationPreviewPlay() const
+{
+	return animation_preview_play;
+}
+
+void ComponentImage::AddAnimTexture(Texture * texture, int index)
+{
+	for (int i = 0; i < anim_textures.size(); ++i)
+	{
+		if (i == index)
+		{
+			anim_textures[i] = texture;
+		}
+	}
 }
 
 void ComponentImage::ClearAnimTextures()
 {
 	anim_textures.clear();
+}
+
+void ComponentImage::SetNumAnimTextures(uint set)
+{
+	if (set != num_anim_textures)
+	{
+		num_anim_textures = set;
+
+		if (num_anim_textures < 0)
+			num_anim_textures = 0;
+
+		anim_textures.clear();
+
+		for (int i = 0; i < set && i < 100; ++i)
+		{
+			anim_textures.push_back(nullptr);
+		}
+	}
+}
+
+uint ComponentImage::GetNumAnimTextures() const
+{
+	return num_anim_textures;
+}
+
+std::vector<Texture*> ComponentImage::GetAnimTextures()
+{
+	return anim_textures;
 }
 
 void ComponentImage::Save(Data & data) const

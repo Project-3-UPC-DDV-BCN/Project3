@@ -120,6 +120,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 			components_list.push_back(component = new ComponentCanvas(this));
 			is_canvas = true;
 			SetName("Canvas");
+			App->scene->RenameDuplicatedGameObject(this);
 		}
 		break;
 	case Component::CompImage:
@@ -128,6 +129,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		{
 			components_list.push_back(component = new ComponentImage(this));
 			SetName("Image");
+			App->scene->RenameDuplicatedGameObject(this);
 		}
 		break;
 	case Component::CompText:
@@ -136,6 +138,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		{
 			components_list.push_back(component = new ComponentText(this));
 			SetName("Text");
+			App->scene->RenameDuplicatedGameObject(this);
 		}
 		break;
 	case Component::CompProgressBar:
@@ -144,6 +147,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		{
 			components_list.push_back(component = new ComponentProgressBar(this));
 			SetName("ProgressBar");
+			App->scene->RenameDuplicatedGameObject(this);
 		}
 		break;
 	case Component::CompButton:
@@ -152,6 +156,7 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		{
 			components_list.push_back(component = new ComponentButton(this));
 			SetName("Button");
+			App->scene->RenameDuplicatedGameObject(this);
 		}
 		break;
 	case Component::CompDistanceJoint:
