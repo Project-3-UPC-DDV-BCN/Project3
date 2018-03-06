@@ -1906,7 +1906,7 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 		else
 		{
 			SoundBankResource* sbk = audio_source->soundbank;
-			if (ImGui::InputResourceAudio("SoundBank", &sbk))
+			if (ImGui::InputResourceAudio("SoundBank##InputResourceAudio", &sbk))
 			{
 				audio_source->soundbank = sbk;
 			}
