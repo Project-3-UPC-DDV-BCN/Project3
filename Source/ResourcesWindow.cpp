@@ -417,6 +417,7 @@ void ResourcesWindow::Reset()
 	font_changed = false;
 	phys_mat_changed = false;
 	blast_model_changed = false;
+	soundbank_changed = false;
 	
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
@@ -427,6 +428,7 @@ void ResourcesWindow::Reset()
 	font_to_return = nullptr;
 	phys_mat_to_return = nullptr;
 	blast_model_to_return = nullptr;
+	soundbank_to_return = nullptr;
 
 	go_filter = GoFilterNone;
 
