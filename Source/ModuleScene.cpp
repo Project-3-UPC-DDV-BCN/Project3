@@ -31,6 +31,7 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentLight.h"
 #include "ComponentTransform.h"
+#include "ComponentRectTransform.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -588,6 +589,9 @@ GameObject * ModuleScene::CreateText(GameObject * parent)
 
 	ret->AddComponent(Component::CompText);
 
+	ComponentRectTransform* rt = (ComponentRectTransform*)ret->GetComponent(Component::CompRectTransform);
+	rt->SetInteractable(false);
+
 	return ret;
 }
 
@@ -609,6 +613,8 @@ GameObject * ModuleScene::CreateButton(GameObject * parent)
 	ret = CreateGameObject(parent);
 
 	ret->AddComponent(Component::CompButton);
+
+	CreateText(ret);
 
 	return ret;
 }

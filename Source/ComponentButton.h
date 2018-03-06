@@ -10,15 +10,15 @@ class Texture;
 
 enum ButtonMode
 {
-	BM_Colour,
-	BM_Image,
+	BM_COLOUR,
+	BM_IMAGE,
 };
 
 enum ButtonState
 {
-	BS_Idle,
-	BS_Over,
-	BS_Pressed,
+	BS_IDLE,
+	BS_OVER,
+	BS_PRESSED,
 };
 
 class ComponentButton : public Component

@@ -721,33 +721,45 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 {
 	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		Texture* tex = image->GetTexture();
+		const char* mode_names[] = { "Single", "Animation" };
+		int mode = image->GetMode();
 
-		if(ImGui::InputResourceTexture("Texture", &tex));
-			image->SetTexture(tex);
+		ImGui::Combo("Image mode", &mode, mode_names, 2);
 
-		if (image->GetTexture() != nullptr)
+		if (mode == 0)
 		{
+			Texture* tex = image->GetTexture();
+
+			if (ImGui::InputResourceTexture("Texture", &tex));
 			image->SetTexture(tex);
 
-			if(ImGui::Button("Set native size"))
+			if (image->GetTexture() != nullptr)
 			{
-				image->SetNativeSize();
+				image->SetTexture(tex);
+
+				if (ImGui::Button("Set native size"))
+				{
+					image->SetNativeSize();
+				}
 			}
+
+			float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().z, image->GetColour().w };
+
+			ImGui::Text("Colour");
+			if (ImGui::ColorEdit4("", colour))
+			{
+				image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
+			}
+		}
+		else if (mode == 1)
+		{
+
 		}
 
 		bool flip = image->GetFlip();
 		if (ImGui::Checkbox("Flip", &flip))
 		{
 			image->SetFlip(flip);
-		}
-
-		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().z, image->GetColour().w };
-
-		ImGui::Text("Colour");
-		if(ImGui::ColorEdit4("", colour))
-		{
-			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
 		}
 	}
 }
@@ -857,11 +869,11 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 		const char* mode_names[] = { "Colour", "Image" };
 		int mode = button->GetButtonMode();
 
-		ImGui::Combo("Render Mode", &mode, mode_names, 2);
+		ImGui::Combo("Button Mode", &mode, mode_names, 2);
 
 		if (mode == 0)
 		{
-			button->SetButtonMode(ButtonMode::BM_Colour);
+			button->SetButtonMode(ButtonMode::BM_COLOUR);
 
 			ImGui::Text("Idle Colour");
 			if (ImGui::ColorEdit4("Idle", (float*)&idle_colour, ImGuiColorEditFlags_AlphaBar))
@@ -883,7 +895,7 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 		}
 		else if (mode == 1)
 		{
-			button->SetButtonMode(ButtonMode::BM_Image);
+			button->SetButtonMode(ButtonMode::BM_IMAGE);
 
 			if (ImGui::InputResourceTexture("Idle Texture", &idle_texture))
 			{

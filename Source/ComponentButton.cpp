@@ -13,19 +13,19 @@ ComponentButton::ComponentButton(GameObject * attached_gameobject) : Component()
 
 	c_rect_trans = GetRectTrans();
 
-	c_rect_trans->SetSize(float2(100, 30));
+	c_rect_trans->SetSize(float2(110, 40));
 
-	button_mode = ButtonMode::BM_Colour;
-	button_state = ButtonState::BS_Idle;
+	button_mode = ButtonMode::BM_COLOUR;
+	button_state = ButtonState::BS_IDLE;
 
 	idle_texture = nullptr;
-	idle_colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	idle_colour = float4(0.098f, 0.392f, 0.701f, 1.0f);
 
 	over_texture = nullptr;
-	over_colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	over_colour = float4(0.078f, 0.129f, 0.180f, 1.0f);
 
 	pressed_texture = nullptr;
-	pressed_colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	pressed_colour = float4(0.078f, 0.329f, 0.380f, 1.0f);
 }
 
 ComponentButton::~ComponentButton()
@@ -47,17 +47,17 @@ bool ComponentButton::Update()
 
 		switch (button_mode)
 		{
-		case BM_Colour:
+		case BM_COLOUR:
 		{
 			switch (button_state)
 			{
-			case BS_Idle:
+			case BS_IDLE:
 				colour = idle_colour;
 				break;
-			case BS_Over:
+			case BS_OVER:
 				colour = over_colour;
 				break;
-			case BS_Pressed:
+			case BS_PRESSED:
 				colour = pressed_colour;
 				break;
 			default:
@@ -65,17 +65,17 @@ bool ComponentButton::Update()
 			}
 		}
 			break;
-		case BM_Image:
+		case BM_IMAGE:
 		{
 			switch (button_state)
 			{
-			case BS_Idle:
+			case BS_IDLE:
 				texture = idle_texture;
 				break;
-			case BS_Over:
+			case BS_OVER:
 				texture = over_texture;
 				break;
-			case BS_Pressed:
+			case BS_PRESSED:
 				texture = pressed_texture;
 				break;
 			default:
@@ -214,13 +214,13 @@ void ComponentButton::UpdateState()
 {
 	if (c_rect_trans->GetOnMouseOver())
 	{
-		button_state = ButtonState::BS_Over;
+		button_state = ButtonState::BS_OVER;
 
 		if (c_rect_trans->GetOnClick())
 		{
-			button_state = ButtonState::BS_Pressed;
+			button_state = ButtonState::BS_PRESSED;
 		}
 	}
 	else
-		button_state = ButtonState::BS_Idle;
+		button_state = ButtonState::BS_IDLE;
 }

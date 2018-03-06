@@ -2,12 +2,19 @@
 #define _H_COMPONENT_IMAGE__
 
 #include "Component.h"
+#include <vector>
 
 class ComponentRectTransform;
 class ComponentTransform;
 class ComponentCanvas;
 class CanvasDrawElement;
 class Texture;
+
+enum ImageMode
+{
+	IM_SINGLE,
+	IM_ANIMATION,
+};
 
 class ComponentImage : public Component
 {
@@ -16,6 +23,9 @@ public:
 	virtual ~ComponentImage();
 
 	bool Update();
+
+	void SetMode(ImageMode mode);
+	ImageMode GetMode() const;
 
 	bool HasImage();
 
@@ -30,6 +40,12 @@ public:
 	void SetFlip(const bool& flip);
 	bool GetFlip() const;
 
+	void SetAnimSpeed(float speed);
+	float GetAnimSpeed() const;
+
+	void AddAnimTexture(Texture* texture);
+	void ClearAnimTextures();
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
@@ -40,9 +56,14 @@ private:
 private:
 	ComponentRectTransform* c_rect_trans = nullptr;
 
+	ImageMode mode;
+
 	Texture* texture;
 	float4 colour;
 	bool flip;
+
+	std::vector<Texture*> anim_textures;
+	float speed;
 
 };
 

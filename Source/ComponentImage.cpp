@@ -13,11 +13,15 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 	SetType(ComponentType::CompImage);
 	SetGameObject(attached_gameobject);
 	
+	c_rect_trans = GetRectTrans();
+
+	mode = ImageMode::IM_SINGLE;
+
 	texture = nullptr;
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	flip = false;
 
-	c_rect_trans = GetRectTrans();
+	speed = 1.0f;
 
 	c_rect_trans->SetSize(float2(100, 100));
 }
@@ -50,6 +54,16 @@ bool ComponentImage::Update()
 	}
 
 	return ret;
+}
+
+void ComponentImage::SetMode(ImageMode _mode)
+{
+	mode = _mode;
+}
+
+ImageMode ComponentImage::GetMode() const
+{
+	return mode;
 }
 
 bool ComponentImage::HasImage()
@@ -95,6 +109,26 @@ void ComponentImage::SetFlip(const bool & _flip)
 bool ComponentImage::GetFlip() const
 {
 	return flip;
+}
+
+void ComponentImage::SetAnimSpeed(float _speed)
+{
+	speed = _speed;
+}
+
+float ComponentImage::GetAnimSpeed() const
+{
+	return speed;
+}
+
+void ComponentImage::AddAnimTexture(Texture * texture)
+{
+	anim_textures.push_back(texture);
+}
+
+void ComponentImage::ClearAnimTextures()
+{
+	anim_textures.clear();
 }
 
 void ComponentImage::Save(Data & data) const
