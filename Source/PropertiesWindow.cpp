@@ -688,7 +688,7 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_WORLD_SPACE);
 
 			float2 size = canvas->GetSize();
-			if (ImGui::DragFloat2("Canvas Size", (float*)&size, true, 0.25f))
+			if (ImGui::DragFloat2("Canvas Size", (float*)&size, true, 0.25f, 0))
 			{
 				canvas->SetSize(size);
 			}
@@ -896,7 +896,7 @@ void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 	if (ImGui::CollapsingHeader("Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		float progress = bar->GetProgressPercentage();
-		if (ImGui::DragFloat("Progress %", &progress))
+		if (ImGui::DragFloat("Progress %", &progress, true, 1, 0, 100))
 		{
 			bar->SetProgressPercentage(progress);
 		}
