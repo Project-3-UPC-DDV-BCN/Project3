@@ -49,7 +49,7 @@ void ComponentScript::OnCollisionEnter(GameObject* other_collider)
 	if (script)
 	{
 		App->script_importer->SetCurrentScript((CSScript*)script);
-		//script->OnCollisionEnter(other_collider);
+		script->OnCollisionEnter(other_collider);
 	}
 }
 
@@ -58,7 +58,7 @@ void ComponentScript::OnCollisionStay(GameObject* other_collider)
 	if (script)
 	{
 		App->script_importer->SetCurrentScript((CSScript*)script);
-		//script->OnCollisionStay(other_collider);
+		script->OnCollisionStay(other_collider);
 	}
 }
 
@@ -67,7 +67,52 @@ void ComponentScript::OnCollisionExit(GameObject* other_collider)
 	if (script)
 	{
 		App->script_importer->SetCurrentScript((CSScript*)script);
-		//script->OnCollisionExit(other_collider);
+		script->OnCollisionExit(other_collider);
+	}
+}
+
+void ComponentScript::OnTriggerEnter(GameObject * other_collider)
+{
+	if (script)
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		script->OnTriggerEnter(other_collider);
+	}
+}
+
+void ComponentScript::OnTriggerStay(GameObject * other_collider)
+{
+	if (script)
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		script->OnTriggerStay(other_collider);
+	}
+}
+
+void ComponentScript::OnTriggerExit(GameObject * other_collider)
+{
+	if (script)
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		script->OnTriggerExit(other_collider);
+	}
+}
+
+void ComponentScript::OnEnable()
+{
+	if (script && App->IsPlaying())
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		script->OnEnable();
+	}
+}
+
+void ComponentScript::OnDisable()
+{
+	if (script && App->IsPlaying())
+	{
+		App->script_importer->SetCurrentScript((CSScript*)script);
+		script->OnDisable();
 	}
 }
 

@@ -250,6 +250,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::GetChildCount", (const void*)GetGameObjectChildCount);
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
+	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -323,11 +324,11 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
 	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
-
 	mono_add_internal_call("TheEngine.TheAudioSource::Play", (const void*)Play);
 	mono_add_internal_call("TheEngine.TheAudioSource::Stop", (const void*)Stop);
 	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
 
+	//EMITER
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
 
@@ -346,6 +347,11 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalConditionName", (const void*)GetGoalConditionName);
 	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, float)", (const void*)SetBlackboardVariable);
 	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, bool)", (const void*)SetBlackboardVariableB);
+
+	//RANDOM
+	mono_add_internal_call("TheEngine.TheRandom::RandomInt", (const void*)RandomInt);
+	mono_add_internal_call("TheEngine.TheRandom::RandomFloat", (const void*)RandomFloat);
+	mono_add_internal_call("TheEngine.TheRandom::RandomRange", (const void*)RandomRange);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -431,6 +437,11 @@ MonoObject * ModuleScriptImporter::GetGameObjectChildString(MonoObject * object,
 int ModuleScriptImporter::GetGameObjectChildCount(MonoObject * object)
 {
 	return current_script->GetGameObjectChildCount(object);
+}
+
+MonoObject * ModuleScriptImporter::FindGameObject(MonoObject* object, MonoString * gameobject_name)
+{
+	return current_script->FindGameObject(object, gameobject_name);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
@@ -820,4 +831,19 @@ void ModuleScriptImporter::SetBlackboardVariable(MonoString * name, float value)
 void ModuleScriptImporter::SetBlackboardVariableB(MonoString * name, bool value)
 {
 	current_script->SetBlackboardVariable(name, value);
+}
+
+int ModuleScriptImporter::RandomInt(MonoObject * object)
+{
+	return current_script->RandomInt(object);
+}
+
+float ModuleScriptImporter::RandomFloat(MonoObject * object)
+{
+	return current_script->RandomFloat(object);
+}
+
+float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
+{
+	return current_script->RandomRange(object, min, max);
 }

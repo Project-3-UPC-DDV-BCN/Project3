@@ -160,7 +160,7 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 					}
 
 					std::vector<int> indices_data;
-					for (uint32_t j = 0; j < indices_count; j += 3)
+					for (uint32_t j = 0, i = 0; j < indices_count; j += 3, i++)
 					{
 						for (int tv : { 0, 1, 2})
 						{
@@ -168,7 +168,13 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 							int32_t newIndex = indRemap[oldIndex];
 							if (newIndex >= 0)
 							{
-								indices_data.push_back(reader->getMaterialIds()[j]);
+								int ind = 0;
+								if (reader->getMaterialCount() != 0)
+								{
+									ind = reader->getMaterialIds()[i];
+								}
+								if (ind < 0 && ind > 1) ind = 0;
+								indices_data.push_back(ind);
 								indices_data.push_back(newIndex);
 							}
 						}

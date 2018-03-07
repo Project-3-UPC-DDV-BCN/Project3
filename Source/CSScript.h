@@ -23,6 +23,9 @@ public:
 	void OnCollisionEnter(GameObject* other_collider);
 	void OnCollisionStay(GameObject* other_collider);
 	void OnCollisionExit(GameObject* other_collider);
+	void OnTriggerEnter(GameObject* other_collider);
+	void OnTriggerStay(GameObject* other_collider);
+	void OnTriggerExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
 	void OnComplete();
@@ -76,6 +79,7 @@ public:
 	MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);
+	MonoObject* FindGameObject(MonoObject* object, MonoString* gameobject_name);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
@@ -178,7 +182,10 @@ public:
 	void SetBlackboardVariable(MonoString* name, float value);
 	void SetBlackboardVariable(MonoString* name, bool value);
 	
-
+	//RANDOM
+	int RandomInt(MonoObject* object);
+	float RandomFloat(MonoObject* object);
+	float RandomRange(MonoObject* object, float min, float max);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
@@ -215,6 +222,9 @@ private:
 	MonoMethod* on_collision_enter;
 	MonoMethod* on_collision_stay;
 	MonoMethod* on_collision_exit;
+	MonoMethod* on_trigger_enter;
+	MonoMethod * on_trigger_stay;
+	MonoMethod * on_trigger_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
 	MonoMethod* on_complete;

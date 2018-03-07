@@ -46,9 +46,7 @@
 #include "GOAPGoal.h"
 #include "GOAPField.h"	
 #include "GOAPVariable.h"
-
-#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
-
+#include "ModuleScriptImporter.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -162,6 +160,12 @@ void PropertiesWindow::DrawWindow()
 				ImGui::Spacing();
 			}
 
+			for (std::map<GameObject*, Component*>::iterator it = components_to_destroy.begin(); it != components_to_destroy.end();)
+			{
+				it->first->DestroyComponent(it->second);
+				it = components_to_destroy.erase(it);
+			}
+
 			if (ImGui::Button("Add Component"))
 			{
 				ImGui::OpenPopup("Components");
@@ -171,7 +175,7 @@ void PropertiesWindow::DrawWindow()
 			{
 				if (ImGui::MenuItem("Mesh Renderer"))
 				{
-					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr || selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
+					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr && selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
 					}
 					else
@@ -306,8 +310,11 @@ void PropertiesWindow::DrawWindow()
 						ComponentScript* comp_script = (ComponentScript*)selected_gameobject->AddComponent(Component::CompScript);
 						if (comp_script != nullptr)
 						{
-							script->SetAttachedGameObject(selected_gameobject);
-							comp_script->SetScript(script);
+							/*script->SetAttachedGameObject(selected_gameobject);
+							comp_script->SetScript(script);*/
+							Script* tmp_script = App->script_importer->LoadScriptFromLibrary(script->GetLibraryPath());
+							tmp_script->SetAttachedGameObject(selected_gameobject);
+							comp_script->SetScript(tmp_script);
 						}
 					}
 					ImGui::EndMenu();
@@ -355,7 +362,7 @@ void PropertiesWindow::DrawWindow()
 					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
 						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-						App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+						App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 					}
 					else
 					{
@@ -371,7 +378,7 @@ void PropertiesWindow::DrawWindow()
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompBoxCollider);
 					}
@@ -381,7 +388,7 @@ void PropertiesWindow::DrawWindow()
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompSphereCollider);
 					}
@@ -391,7 +398,7 @@ void PropertiesWindow::DrawWindow()
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-							App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
 					}
@@ -403,7 +410,7 @@ void PropertiesWindow::DrawWindow()
 							{
 								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-								App->physics->AddActorToList(rb->GetRigidBody(), selected_gameobject);
+								App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 							}
 							selected_gameobject->AddComponent(Component::CompMeshCollider);
 						}
@@ -857,6 +864,14 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			mesh_renderer->SetActive(is_active);
 		}
 
+		ImGui::SameLine();
+		if (ImGui::Button("Delete Component##Mesh_Renderer"))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(mesh_renderer->GetGameObject(), mesh_renderer));
+			mesh_renderer = nullptr;
+			return;
+		}
+
 		Mesh* mesh = mesh_renderer->GetMesh();
 		if (ImGui::InputResourceMesh("Mesh", &mesh))
 		{
@@ -947,7 +962,14 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 					material->SetDiffuseTexture(diffuse);
 				}
 				
-
+				if (ImGui::Button("Save Material"))
+				{
+					Data data;
+					Material * mat = mesh_renderer->GetMaterial();
+					mat->Save(data);
+					data.SaveAsBinary(mat->GetAssetsPath());
+					data.SaveAsBinary(mat->GetLibraryPath());
+				}
 			}
 		ImGui::TreePop();
 		}
@@ -963,6 +985,14 @@ void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 		if (ImGui::Checkbox("Active##Camera", &is_active))
 		{
 			comp_camera->SetActive(is_active);
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Delete Component##Camera"))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_camera->GetGameObject(), comp_camera));
+			comp_camera = nullptr;
+			return;
 		}
 
 		Color background_color = comp_camera->GetBackgroundColor();
@@ -1051,15 +1081,17 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Script_" + script_name).c_str()))
 		{
-			App->scene->selected_gameobjects.front()->DestroyComponent(comp_script);
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_script->GetGameObject(), comp_script));
+			comp_script = nullptr;
+			return;
 		}
 
-		Script* script = comp_script->GetScript();
+		/*Script* script = comp_script->GetScript();
 		if (ImGui::InputResourceScript("Script", &script))
 		{
 			comp_script->SetScript(script);
 		}
-		ImGui::Spacing();
+		ImGui::Spacing();*/
 
 		std::vector<ScriptField*> script_fields = comp_script->GetScriptFields();
 
@@ -1174,6 +1206,20 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 	factories_count++;
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		bool is_active = factory->IsActive();
+		if (ImGui::Checkbox(("Active##Factory_" + std::to_string(factories_count)).c_str(), &is_active))
+		{
+			factory->SetActive(is_active);
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button(("Delete Component##Factory_" + std::to_string(factories_count)).c_str()))
+		{
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(factory->GetGameObject(), factory));
+			factory = nullptr;
+			return;
+		}
+
 		Prefab* prefab = factory->GetFactoryObject();
 		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
 		{
@@ -1198,6 +1244,28 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 {
 	if (ImGui::CollapsingHeader(rigidbody->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		bool is_active = rigidbody->IsActive();
+		if (ImGui::Checkbox("Active##RigidBody", &is_active))
+		{
+			rigidbody->SetActive(is_active);
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Delete Component##RigidBody"))
+		{
+			if (rigidbody->GetGameObject()->GetComponent(Component::CompBoxCollider) || rigidbody->GetGameObject()->GetComponent(Component::CompSphereCollider)
+				|| rigidbody->GetGameObject()->GetComponent(Component::CompCapsuleCollider) || rigidbody->GetGameObject()->GetComponent(Component::CompMeshCollider))
+			{
+				CONSOLE_ERROR("Can't delete a rigidbody if GameObject have a Collider");
+			}
+			else
+			{
+				components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
+				rigidbody = nullptr;
+				return;
+			}
+		}
+
 		float mass = rigidbody->GetMass();
 		if (ImGui::DragFloat("Mass", &mass))
 		{
@@ -1289,7 +1357,9 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
 		{
-			App->scene->selected_gameobjects.front()->DestroyComponent(comp_collider);
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_collider->GetGameObject(), comp_collider));
+			comp_collider = nullptr;
+			return;
 		}
 
 		PhysicsMaterial* material = comp_collider->GetColliderMaterial();
@@ -1980,9 +2050,17 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 		if (ImGui::CollapsingHeader((comp_light->GetName() + "##" + std::to_string(lights_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			bool is_active = comp_light->IsActive();
-			if (ImGui::Checkbox(("Active##Light" + std::to_string(lights_count)).c_str(), &is_active))
+			if (ImGui::Checkbox(("Active##Light_" + std::to_string(lights_count)).c_str(), &is_active))
 			{
 				comp_light->SetActive(is_active);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button(("Delete Component##Light_" + std::to_string(lights_count)).c_str()))
+			{
+				components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_light->GetGameObject(), comp_light));
+				comp_light = nullptr;
+				return;
 			}
 
 			ImGui::Text("Type:");

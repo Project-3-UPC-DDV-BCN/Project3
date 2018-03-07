@@ -303,7 +303,7 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 			if (gameobject->IsActive() && RecursiveCheckActiveParents(rb->GetGameObject()))
 			{
 				App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-				App->physics->AddActorToList(rb->GetRigidBody(), gameobject);
+				App->physics->AddNonBlastActorToList(rb->GetRigidBody(), gameobject);
 			}
 		}
 
@@ -511,17 +511,12 @@ void ModuleScene::LoadPrefab(Prefab* prefab)
 	DuplicateGameObject(prefab_root);
 }
 
-void ModuleScene::CreatePrefab(GameObject * gameobject)
+void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path, std::string library_path)
 {
 	Data data;
-	if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
-	std::string assets_path = ASSETS_PREFABS_FOLDER + gameobject->GetName() + ".prefab";
-	std::string library_path = LIBRARY_PREFABS_FOLDER + gameobject->GetName() + ".prefab";
 	Prefab* prefab = new Prefab();
 	prefab->SetRootGameObject(gameobject);
 	prefab->SetAssetsPath(assets_path);
-	prefab->SetLibraryPath(library_path);
 	prefab->SetName(gameobject->GetName());
 	prefab->Save(data);
 	data.SaveAsBinary(assets_path);
@@ -611,7 +606,6 @@ void ModuleScene::SetParticleSystemsState()
 			(*it)->SetSystemState(PARTICLE_STATE_PLAY);
 			(*it)->Start(); 
 		}
-			
 	}
 }
 
@@ -754,4 +748,9 @@ void ModuleScene::RenameDuplicatedGameObject(GameObject * gameObject, bool justI
 GameObject * ModuleScene::FindGameObject(uint id) const
 {
 	return App->resources->GetGameObject(id);
+}
+
+GameObject * ModuleScene::FindGameObjectByName(std::string name) const
+{
+	return App->resources->GetGameObject(name);
 }

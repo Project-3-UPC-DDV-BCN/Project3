@@ -38,6 +38,7 @@ public:
 	GameObject* DuplicateGameObject(GameObject* gameObject);
 	void RenameDuplicatedGameObject(GameObject * gameObject, bool justIncrease = false);
 	GameObject* FindGameObject(uint id) const;
+	GameObject* FindGameObjectByName(std::string name) const;
 
 	void AddGameObjectToScene(GameObject* gameobject);
 	void AddGameObjectToDestroy(GameObject* gameobject);
@@ -58,7 +59,7 @@ public:
 	void SaveScene(std::string path) const;
 
 	void LoadPrefab(Prefab* prefab);
-	void CreatePrefab(GameObject* gameobject);
+	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);
 
 	void LoadBlastModel(BlastModel* model);
 
@@ -74,7 +75,6 @@ public:
 	GameObject* CreateProgressBar(GameObject* parent = nullptr);
 
 	void SetParticleSystemsState();
-
 
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
@@ -106,4 +106,5 @@ public:
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;
+
 };

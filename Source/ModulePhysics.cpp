@@ -506,21 +506,22 @@ void ModulePhysics::CreateScene()
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
 	physx::PxRigidActor* rigid_actor = static_cast<physx::PxRigidActor*>(actor);
-	if (rigid_actor->userData == nullptr)
+	/*if (rigid_actor->userData == nullptr)
 	{
 		if (physics_objects.find(rigid_actor) != physics_objects.end())
 		{
-			GameObject* go = physics_objects[rigid_actor];
-			if (go == nullptr) return;
-			physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
-			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-			float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
-			Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
-			float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
-			transform->SetPosition(position);
-			transform->SetRotation(rotation);
+			
 		}
-	}
+	}*/
+	GameObject* go = non_blast_objects[rigid_actor];
+	if (go == nullptr) return;
+	physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
+	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
+	float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
+	transform->SetPosition(position);
+	transform->SetRotation(rotation);
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
@@ -535,17 +536,64 @@ void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 		if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
 		{
 			//Call OnTriggerEnter in script module
-
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+			{
+				if (pairs[i].otherActor == it->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairs[i].triggerActor == it2->first)
+						{
+							it2->second->OnTriggerEnter(it->second);
+							it->second->OnTriggerEnter(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
 			trigger_stay_pairs[&pairs[i]] = true;
 		}
 		else if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 		{ 
 			//Call OnTriggerExit in script module
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+			{
+				if (pairs[i].otherActor == it->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairs[i].triggerActor == it2->first)
+						{
+							it2->second->OnTriggerExit(it->second);
+							it->second->OnTriggerExit(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
 			trigger_stay_pairs.erase(&pairs[i]);
 		}
 		else if (trigger_stay_pairs[&pairs[i]] == true)
 		{
 			//Call OnTriggerStay in script module
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
+			{
+				if (pairs[i].otherActor == it->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairs[i].triggerActor == it2->first)
+						{
+							it2->second->OnTriggerStay(it->second);
+							it->second->OnTriggerStay(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
 		}
 	}
 }
@@ -575,7 +623,16 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			{
 				if (pairHeader.actors[0] == it->first)
 				{
-					//it->second->OnCollisionEnter(pairHeader.actors[1]);
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairHeader.actors[1] == it2->first)
+						{
+							it2->second->OnCollisionEnter(it->second);
+							it->second->OnCollisionEnter(it2->second);
+							break;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -586,7 +643,16 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			{
 				if (pairHeader.actors[0] == it->first)
 				{
-					//it->second->OnCollisionStay(pairHeader.actors[1]);
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairHeader.actors[1] == it2->first)
+						{
+							it2->second->OnCollisionStay(it->second);
+							it->second->OnCollisionStay(it2->second);
+							break;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -597,7 +663,16 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 			{
 				if (pairHeader.actors[0] == it->first)
 				{
-					//it->second->OnCollisionExit(pairHeader.actors[1]);
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+					{
+						if (pairHeader.actors[1] == it2->first)
+						{
+							it2->second->OnCollisionExit(it->second);
+							it->second->OnCollisionExit(it2->second);
+							break;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -692,6 +767,20 @@ void ModulePhysics::RemoveActorFromList(physx::PxRigidActor * body)
 {
 	if (body == nullptr) return;
 	physics_objects.erase(body);
+}
+
+void ModulePhysics::AddNonBlastActorToList(physx::PxRigidActor * body, GameObject * gameobject)
+{
+	if (gameobject == nullptr || body == nullptr) return;
+	non_blast_objects.insert(std::pair<physx::PxRigidActor*, GameObject*>(body, gameobject));
+	AddActorToList(body, gameobject);
+}
+
+void ModulePhysics::RemoveNonBlastActorFromList(physx::PxRigidActor * body)
+{
+	if (body == nullptr) return;
+	non_blast_objects.erase(body);
+	RemoveActorFromList(body);
 }
 
 void ModulePhysics::CleanPhysScene()

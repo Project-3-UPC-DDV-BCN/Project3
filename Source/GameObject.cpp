@@ -247,13 +247,31 @@ void GameObject::SetActive(bool active)
 		{
 			//rb->SetToSleep();
 			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
-			App->physics->RemoveActorFromList(rb->GetRigidBody());
+			App->physics->RemoveNonBlastActorFromList(rb->GetRigidBody());
 		}
 		else
 		{
 			//rb->WakeUp();
 			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-			App->physics->AddActorToList(rb->GetRigidBody(), this);
+			App->physics->AddNonBlastActorToList(rb->GetRigidBody(), this);
+		}
+	}
+
+	if (App->IsPlaying())
+	{
+		ComponentScript * comp_script = nullptr;
+		for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+			if ((*it)->GetType() == Component::CompScript) {
+				comp_script = (ComponentScript*)*it;
+				if (active)
+				{
+					comp_script->OnEnable();
+				}
+				else
+				{
+					comp_script->OnDisable();
+				}
+			}
 		}
 	}
 }
@@ -528,6 +546,39 @@ void GameObject::OnCollisionExit(GameObject* other_collider)
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
 			comp_script->OnCollisionExit(other_collider);
+		}
+	}
+}
+
+void GameObject::OnTriggerEnter(GameObject* other_collider)
+{
+	ComponentScript * comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnTriggerEnter(other_collider);
+		}
+	}
+}
+
+void GameObject::OnTriggerStay(GameObject* other_collider)
+{
+	ComponentScript * comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnTriggerStay(other_collider);
+		}
+	}
+}
+
+void GameObject::OnTriggerExit(GameObject* other_collider)
+{
+	ComponentScript * comp_script = nullptr;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+		if ((*it)->GetType() == Component::CompScript) {
+			comp_script = (ComponentScript*)*it;
+			comp_script->OnTriggerExit(other_collider);
 		}
 	}
 }

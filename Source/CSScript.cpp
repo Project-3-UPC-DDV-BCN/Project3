@@ -128,9 +128,32 @@ void CSScript::OnCollisionEnter(GameObject* other_collider)
 {
 	if (on_collision_enter != nullptr)
 	{
-		void* param[1];
-		param[0] = &other_collider;
-		CallFunction(on_collision_enter, param);
+		MonoObject* new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_collision_enter, &param);
 		inside_function = false;
 	}
 }
@@ -139,9 +162,32 @@ void CSScript::OnCollisionStay(GameObject* other_collider)
 {
 	if (on_collision_stay != nullptr)
 	{
-		void* param[1];
-		param[0] = &other_collider;
-		CallFunction(on_collision_enter, param);
+		MonoObject* new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_collision_stay, &param);
 		inside_function = false;
 	}
 }
@@ -150,9 +196,134 @@ void CSScript::OnCollisionExit(GameObject* other_collider)
 {
 	if (on_collision_exit != nullptr)
 	{
-		void* param[1];
-		param[0] = &other_collider;
-		CallFunction(on_collision_enter, param);
+		MonoObject* new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_collision_exit, &param);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnTriggerEnter(GameObject * other_collider)
+{
+	if (on_trigger_enter != nullptr)
+	{
+		MonoObject * new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_trigger_enter, &param);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnTriggerStay(GameObject * other_collider)
+{
+	if (on_trigger_stay != nullptr)
+	{
+		MonoObject * new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_trigger_stay, &param);
+		inside_function = false;
+	}
+}
+
+void CSScript::OnTriggerExit(GameObject * other_collider)
+{
+	if (on_trigger_exit != nullptr)
+	{
+		MonoObject * new_object = nullptr;
+		bool exist = false;
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				new_object = it->first;
+				exist = true;
+				break;
+			}
+		}
+		if (!exist)
+		{
+			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = other_collider;
+				}
+			}
+		}
+
+		void* param = new_object;
+		CallFunction(on_trigger_exit, &param);
 		inside_function = false;
 	}
 }
@@ -895,6 +1066,41 @@ int CSScript::GetGameObjectChildCount(MonoObject * object)
 	return active_gameobject->childs.size();
 }
 
+MonoObject * CSScript::FindGameObject(MonoObject * object, MonoString * gameobject_name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	const char* s_name = mono_string_to_utf8(gameobject_name);
+
+	GameObject* go = App->scene->FindGameObjectByName(s_name);
+
+	for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+	{
+		if (it->second == go) return it->first;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			created_gameobjects[new_object] = go;
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
 MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * type)
 {
 	if (!MonoObjectIsValid(object))
@@ -911,24 +1117,44 @@ MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * typ
 	std::string name = mono_type_get_name(t);
 
 	const char* comp_name = "";
-
-	if (name == "TheEngine.TheTransform")
-	{
-		comp_name = "TheTransform";
-	}
-
 	Component::ComponentType comp_type = Component::CompUnknown;
+
 	if (name == "TheEngine.TheTransform")
 	{
 		CONSOLE_ERROR("Can't add Transform component to %s. GameObjects cannot have more than 1 transform.", active_gameobject->GetName().c_str());
 	}
-	else if (name == "TheEngine.TheFactory") comp_type = Component::CompTransform;
-	else if (name == "TheEngine.TheProgressBar") comp_type = Component::CompProgressBar;
-	else if (name == "TheEngine.TheText") comp_type = Component::CompText;
+	else if (name == "TheEngine.TheFactory")
+	{
+		comp_type = Component::CompTransform;
+		comp_name = "TheTransform";
+	}
+	else if (name == "TheEngine.TheProgressBar")
+	{
+		comp_type = Component::CompProgressBar;
+		comp_name = "TheProgressBar";
+	}
+	else if (name == "TheEngine.TheText")
+	{
+		comp_type = Component::CompText;
+		comp_name = "TheText";
+	}
+	else if (name == "TheEngine.TheRigidBody")
+	{
+		comp_type = Component::CompRigidBody;
+		comp_name = "TheRigidBody";
+	}
 
 	if (comp_type != Component::CompUnknown)
 	{
 		active_gameobject->AddComponent(comp_type);
+
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (it->second == active_gameobject)
+			{
+				return it->first;
+			}
+		}
 
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
 		if (c)
@@ -2639,5 +2865,19 @@ void CSScript::SetBlackboardVariable(MonoString * name, bool value)
 		CONSOLE_WARNING("GOAPAgent not found!");
 	}
 }
-
 // ------
+
+int CSScript::RandomInt(MonoObject * object)
+{
+	return App->RandomNumber().Int();
+}
+
+float CSScript::RandomFloat(MonoObject * object)
+{
+	return App->RandomNumber().Float();
+}
+
+float CSScript::RandomRange(MonoObject * object, float min, float max)
+{
+	return App->RandomNumber().FloatIncl(min, max);;
+}

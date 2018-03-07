@@ -26,7 +26,7 @@ void TextEditorWindow::DrawWindow()
 {
 	auto cpos = editor.GetCursorPosition();
 
-	if (ImGui::BeginDock(window_name.c_str(), false, false, false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
+	if (ImGui::Begin(window_name.c_str(), &active, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::BeginMenuBar();
 		if (ImGui::BeginMenu("File"))
@@ -99,7 +99,7 @@ void TextEditorWindow::DrawWindow()
 		editor.Render("Render...");
 		ImGui::PopFont();
 	}
-	ImGui::EndDock();
+	ImGui::End();
 }
 
 void TextEditorWindow::SetPath(std::string string)

@@ -1161,8 +1161,6 @@
     <ClInclude Include="GOAPEffect.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h" />
-    <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="BlastModel.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
@@ -1735,9 +1733,6 @@
     <ClCompile Include="BlastModel.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentFactory.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
@@ -1789,8 +1784,6 @@
     <ClCompile Include="GOAPEffect.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp" />
-    <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="CSScript.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
