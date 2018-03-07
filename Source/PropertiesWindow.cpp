@@ -856,7 +856,7 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 				text->SetGrowDirection(static_cast<TextGrow>(grow_dir));
 			}
 
-			if (ImGui::DragInt("Font Size", &size, true))
+			if (ImGui::DragInt("Font Size", &size, true, 1, 0, 1000))
 			{
 				text->SetFontSize(size);
 			}
