@@ -242,6 +242,7 @@ public class Slave1Movement {
 		{
 			boosting = true;
 			boost_timer = boost_time;
+			boost_cd_timer = 0.1f; //dont allow to boost continously
 		}
 
 		slowing = false;
@@ -281,6 +282,7 @@ public class Slave1Movement {
 				curr_accel = acceleration;
 				TheConsole.Log("STOOOOP! boooooost");
 				boost_cd_timer = boost_cd_time;
+				TheConsole.Log(boost_cd_timer);
 			}
 
 			if(curr_vel>= target_vel)
@@ -298,6 +300,8 @@ public class Slave1Movement {
 			}
 			else
 				boost_cd_timer -= TheTime.DeltaTime;
+			
+			TheConsole.Log(boost_cd_timer);
 		
 		}
 
