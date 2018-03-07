@@ -212,6 +212,13 @@ void ComponentRectTransform::SetPos(const float2 & _pos)
 	UpdateTransform();
 }
 
+void ComponentRectTransform::AddPos(const float2 & add)
+{
+	pos += add;
+
+	UpdateTransform();
+}
+
 float2 ComponentRectTransform::GetPos() const
 {
 	return pos;

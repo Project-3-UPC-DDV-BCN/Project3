@@ -35,7 +35,8 @@ public:
 	float3 GetOriginGlobalPos();
 	float4x4 GetOriginMatrix() const;
 
-	void SetPos(const float2& size);
+	void SetPos(const float2& pos);
+	void AddPos(const float2& add);
 	float2 GetPos() const;
 	float2 GetScaledPos();
 	float3 GetLocalPos() const;

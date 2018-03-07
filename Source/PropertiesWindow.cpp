@@ -838,11 +838,19 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 			bool underline = text->GetStyleUnderline();
 			bool strikethrough = text->GetStyelStrikethrough();
 
+			int grow_dir = text->GetGrowDirection();
+			const char* grow_dir_names[] = { "Left", "Right", "Center" };
+
 			char buffer[255];
 			strcpy(buffer, text->GetText().c_str());
 			if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
 			{
 				text->SetText(buffer);
+			}
+
+			if (ImGui::Combo("Grow Direction", &grow_dir, grow_dir_names, 3))
+			{
+				text->SetGrowDirection(static_cast<TextGrow>(grow_dir));
 			}
 
 			if (ImGui::DragInt("Font Size", &size, true))

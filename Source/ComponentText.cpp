@@ -27,6 +27,10 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	underline = false;
 	strikethrough = false;
 	font_size = 24.0f;
+	text_size = float2::zero;
+
+	grow_dir = TextGrow::TG_LEFT;
+	text_scale_diff = 0;
 
 	c_rect_trans->SetFixedAspectRatio(true);
 
@@ -117,7 +121,7 @@ void ComponentText::SetFont(Font * _font)
 	{
 		App->font_importer->UnloadFontInstance(font);
 		font = App->font_importer->CreateFontInstance(_font);
-		update_text = true;
+		UpdateText(true);
 	}
 }
 
@@ -160,7 +164,7 @@ void ComponentText::SetFontSize(uint size)
 	{
 		font->SetFontSize(size);
 
-		update_text = true;
+		UpdateText(true);
 	}
 }
 
@@ -278,6 +282,16 @@ bool ComponentText::GetStyelStrikethrough() const
 	return strikethrough;
 }
 
+void ComponentText::SetGrowDirection(TextGrow grow)
+{
+	grow_dir = grow;
+}
+
+TextGrow ComponentText::GetGrowDirection() const
+{
+	return grow_dir;
+}
+
 ComponentCanvas * ComponentText::GetCanvas()
 {
 	ComponentCanvas* ret = nullptr;
@@ -297,10 +311,15 @@ ComponentRectTransform * ComponentText::GetRectTrans()
 	return ret;
 }
 
-void ComponentText::UpdateText()
+void ComponentText::UpdateText(bool font_update)
 {
 	if (font != nullptr)
 	{
+		float2 last_text_size = text_size;
+
+		if (last_text_size.x > 0)
+			text_scale_diff = c_rect_trans->GetSize().x / last_text_size.x;
+
 		if (font_size != font->GetFontSize())
 			font->SetFontSize(font_size);
 		
@@ -316,5 +335,35 @@ void ComponentText::UpdateText()
 		c_rect_trans->SetAspectRatio(text_size.x / text_size.y);
 
 		c_rect_trans->SetSize(float2(c_rect_trans->GetSize().x, c_rect_trans->GetSize().y));
+
+		if (!font_update)
+		{
+			// Move text
+			float2 movement = text_size - last_text_size;
+
+			if (text_size.x > 0)
+				text_scale_diff = c_rect_trans->GetScaledSize().x / text_size.x;
+
+			movement.x *= text_scale_diff;
+
+			switch (grow_dir)
+			{
+			case TextGrow::TG_LEFT:
+			{
+				c_rect_trans->AddPos(float2((movement.x / 2), 0));
+			}
+			break;
+			case TextGrow::TG_RIGHT:
+			{
+				c_rect_trans->AddPos(float2(-(movement.x / 2), 0));
+			}
+			break;
+			case TextGrow::TG_CENTER:
+			{
+
+			}
+			break;
+			}
+		}
 	}
 }
