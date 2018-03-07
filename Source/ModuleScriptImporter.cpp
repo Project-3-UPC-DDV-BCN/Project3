@@ -93,11 +93,16 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 std::string ModuleScriptImporter::ImportScript(std::string path)
 {
 	std::string ret = "";
-	std::string result = CompileScript(path);
+	std::string lib;
+	std::string result = CompileScript(path, lib);
 
 	if (result != "")
 	{
 		CONSOLE_ERROR("%s", result.c_str());
+	}
+	else
+	{
+		return lib;
 	}
 
 	return ret;
@@ -131,12 +136,13 @@ MonoImage * ModuleScriptImporter::GetEngineImage() const
 	return mono_engine_image;
 }
 
-std::string ModuleScriptImporter::CompileScript(std::string assets_path)
+std::string ModuleScriptImporter::CompileScript(std::string assets_path, std::string& lib)
 {
 	std::string script_name = App->file_system->GetFileNameWithoutExtension(assets_path);
 	std::string ret;
 	if (!App->file_system->DirectoryExist(LIBRARY_SCRIPTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCRIPTS_FOLDER_PATH);
 	std::string output_name = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
+	lib = LIBRARY_SCRIPTS_FOLDER + script_name + ".dll";
 
 	MonoClass* compiler_class = mono_class_from_name(mono_compiler_image, "Compiler", "Compiler");
 	if (compiler_class)
@@ -328,6 +334,18 @@ void ModuleScriptImporter::RegisterAPI()
 	//RIGIDBODY
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
 
+	//GOAP
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableB", (const void*)GetBlackboardVariableB);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableF", (const void*)GetBlackboardVariableF);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetNumGoals", (const void*)GetNumGoals);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::SetGoalPriority", (const void*)SetGoalPriority);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalPriority", (const void*)GetGoalPriority);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::CompleteAction", (const void*)CompleteAction);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::FailAction", (const void*)FailAction);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalName", (const void*)GetGoalName);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalConditionName", (const void*)GetGoalConditionName);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, float)", (const void*)SetBlackboardVariable);
+	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, bool)", (const void*)SetBlackboardVariableB);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -747,4 +765,59 @@ void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 {
 	current_script->SetLinearVelocity(object, x, y, z);
+}
+
+mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoString * name)
+{
+	return current_script->GetBlackboardVariableB(name);
+}
+
+float ModuleScriptImporter::GetBlackboardVariableF(MonoString * name)
+{
+	return current_script->GetBlackboardVariableF(name);
+}
+
+int ModuleScriptImporter::GetNumGoals()
+{
+	return current_script->GetNumGoals();
+}
+
+MonoString * ModuleScriptImporter::GetGoalName(int index)
+{
+	return current_script->GetGoalName(index);
+}
+
+MonoString * ModuleScriptImporter::GetGoalConditionName(int index)
+{
+	return current_script->GetGoalConditionName(index);
+}
+
+void ModuleScriptImporter::SetGoalPriority(int index, int priority)
+{
+	current_script->SetGoalPriority(index, priority);
+}
+
+int ModuleScriptImporter::GetGoalPriority(int index)
+{
+	return current_script->GetGoalPriority(index);
+}
+
+void ModuleScriptImporter::CompleteAction()
+{
+	current_script->CompleteAction();
+}
+
+void ModuleScriptImporter::FailAction()
+{
+	current_script->FailAction();
+}
+
+void ModuleScriptImporter::SetBlackboardVariable(MonoString * name, float value)
+{
+	current_script->SetBlackboardVariable(name, value);
+}
+
+void ModuleScriptImporter::SetBlackboardVariableB(MonoString * name, bool value)
+{
+	current_script->SetBlackboardVariable(name, value);
 }

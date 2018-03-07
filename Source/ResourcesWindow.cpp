@@ -12,6 +12,8 @@
 #include "BlastModel.h"
 #include "Shader.h"
 #include "Font.h"
+#include "GOAPAction.h"
+#include "GOAPGoal.h"
 
 ResourcesWindow::ResourcesWindow()
 {
@@ -28,6 +30,8 @@ ResourcesWindow::ResourcesWindow()
 	blast_model_to_return = nullptr;
 	shader_to_return = nullptr;
 	font_to_return = nullptr;
+	action_to_return = nullptr;
+	goal_to_return = nullptr;
 
 	texture_changed = false;
 	mesh_changed = false;
@@ -39,6 +43,8 @@ ResourcesWindow::ResourcesWindow()
 	blast_model_changed = false;
 	shader_changed = false;
 	font_changed = false;
+	action_changed = false;
+	goal_changed = false;
 
 	shader_type = Shader::ShaderType::ST_NULL;
 
@@ -304,6 +310,42 @@ void ResourcesWindow::DrawWindow()
 			}
 		}
 		break;
+	case Resource::GOAPGoalResource:
+		goap_goals_list = App->resources->GetGOAPGoalList();
+		if (ImGui::Selectable("None##GOAPGoal"))
+		{
+			goal_to_return = nullptr;
+			goal_changed = true;
+			break;
+		}
+		for (std::map<uint, GOAPGoal*>::const_iterator it = goap_goals_list.begin(); it != goap_goals_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				goal_to_return = it->second;
+				goal_changed = true;
+				break;
+			}
+		}
+		break;
+	case Resource::GOAPActionResource:
+		goap_actions_list = App->resources->GetGOAPActionList();
+		if (ImGui::Selectable("None##GOAPAction"))
+		{
+			action_to_return = nullptr;
+			action_changed = true;
+			break;
+		}
+		for (std::map<uint, GOAPAction*>::const_iterator it = goap_actions_list.begin(); it != goap_actions_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				action_to_return = it->second;
+				action_changed = true;
+				break;
+			}
+		}
+		break;
 	default:
 		break;
 	}
@@ -366,6 +408,16 @@ Font * ResourcesWindow::GetFont() const
 	return font_to_return;
 }
 
+GOAPGoal * ResourcesWindow::GetGOAPGoal() const
+{
+	return goal_to_return;
+}
+
+GOAPAction * ResourcesWindow::GetGOAPAction() const
+{
+	return action_to_return;
+}
+
 void ResourcesWindow::SetShaderType(Shader::ShaderType type)
 {
 	shader_type = type;
@@ -392,6 +444,8 @@ void ResourcesWindow::Reset()
 	font_changed = false;
 	phys_mat_changed = false;
 	blast_model_changed = false;
+	goal_changed = false;
+	action_changed = false;
 	
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;
@@ -402,6 +456,8 @@ void ResourcesWindow::Reset()
 	font_to_return = nullptr;
 	phys_mat_to_return = nullptr;
 	blast_model_to_return = nullptr;
+	goal_to_return = nullptr;
+	action_to_return = nullptr;
 
 	go_filter = GoFilterNone;
 

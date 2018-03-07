@@ -1099,7 +1099,7 @@ void ModuleRenderer3D::LoadProgramFromBinary(uint program_id, uint buff_size, co
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		CONSOLE_ERROR("Error loading shader program binary %s\n", gluErrorString(error));
+		//CONSOLE_ERROR("Error loading shader program binary %s\n", gluErrorString(error));
 
 	}
 }
