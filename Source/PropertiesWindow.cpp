@@ -599,11 +599,6 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetRotation(rotation);
 				}
 
-				if (ImGui::Checkbox("Interactable", &interactable))
-				{
-					rect_transform->SetInteractable(interactable);
-				}
-
 				if (!is_canvas)
 				{
 					if (ImGui::DragFloat2("Size", (float*)&size, true, 0.1f, 0))
@@ -612,7 +607,10 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					}
 
 					if (rect_transform->GetFixedAspectRatio())
-						ImGui::Text("Fixed aspect ratio");
+					{
+						ImGui::SameLine();
+						ImGui::Text("(Fixed ratio)");
+					}
 
 					if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
 					{
@@ -640,13 +638,18 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						rect_transform->SetSnapRight(snap_right);
 					}
 
+					if (ImGui::Checkbox("Interactable", &interactable))
+					{
+						rect_transform->SetInteractable(interactable);
+					}
 
+					ImGui::Text("Has canvas");
 				}
+				else
+					ImGui::Text("Size is given by canvas");
 			}
 			else
 				ImGui::Text("Values are given by screen space");
-
-			ImGui::Text("Has canvas");
 
 	/*		ImGui::Separator();
 			ImGui::Text("Debug");

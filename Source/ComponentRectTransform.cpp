@@ -790,6 +790,7 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddBool("snap_left", snap_left);
 	data.AddBool("snap_right", snap_right);
 	data.AddFloat("scale", 1.0f);
+	data.AddBool("interactable", interactable);
 }
 
 void ComponentRectTransform::Load(Data & data)
@@ -804,6 +805,7 @@ void ComponentRectTransform::Load(Data & data)
 	SetSnapLeft(data.GetBool("snap_left"));
 	SetSnapRight(data.GetBool("snap_right"));
 	SetScale(data.GetFloat("scale"));
+	SetInteractable(data.GetBool("interactable"));
 }
 
 bool ComponentRectTransform::GetHasParent() const

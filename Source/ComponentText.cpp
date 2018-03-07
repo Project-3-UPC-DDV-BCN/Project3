@@ -29,7 +29,7 @@ ComponentText::ComponentText(GameObject * attached_gameobject)
 	font_size = 24.0f;
 	text_size = float2::zero;
 
-	grow_dir = TextGrow::TG_LEFT;
+	grow_dir = TextGrow::TG_CENTER;
 	text_scale_diff = 0;
 
 	c_rect_trans->SetFixedAspectRatio(true);
@@ -93,6 +93,7 @@ void ComponentText::Save(Data & data) const
 	data.AddBool("strikethrough", strikethrough);
 	data.AddString("text", text);
 	data.AddInt("font_size", font_size);
+	data.AddInt("grow_dir", grow_dir);
 	if (font != nullptr)
 		data.AddString("font", font->GetName());
 }
@@ -107,7 +108,7 @@ void ComponentText::Load(Data & data)
 	SetStyleUnderline(data.GetBool("underline"));
 	SetStyelStrikethrough(data.GetBool("strikethrough"));
 	SetFontSize(data.GetInt("font_size"));
-
+	SetGrowDirection(static_cast<TextGrow>(data.GetInt("grow_dir")));
 	std::string font_name = data.GetString("font");
 	SetFont(App->resources->GetFont(font_name));
 

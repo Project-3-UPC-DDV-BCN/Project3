@@ -26,8 +26,8 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
 	scale_mode = CanvasScaleMode::SCALEMODE_CONSTANT_SIZE;
 	scale = 1.0f;
-
 	
+	c_rect_trans->SetInteractable(false);
 }
 
 ComponentCanvas::~ComponentCanvas()

@@ -306,7 +306,6 @@ void ComponentImage::Load(Data & data)
 		texture = App->resources->GetTexture(data.GetString(text_name.c_str()));
 		AddAnimTexture(texture, i);
 	}
-
 }
 
 ComponentCanvas * ComponentImage::GetCanvas()

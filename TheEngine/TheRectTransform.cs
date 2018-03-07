@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace TheEngine
 {
@@ -51,7 +52,6 @@ namespace TheEngine
                 SetRectAnchor(value);
             }
         }
-
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetRectPosition();
