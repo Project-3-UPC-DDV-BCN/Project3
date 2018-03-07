@@ -92,6 +92,12 @@ void HierarchyWindow::DrawWindow()
 							App->scene->CreateProgressBar(parent);
 						}
 
+						if (ImGui::MenuItem("Radar"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateRadar(parent);
+						}
+
 						ImGui::EndMenu();
 					}
 
@@ -134,6 +140,11 @@ void HierarchyWindow::DrawWindow()
 				if (ImGui::MenuItem("Progress Bar"))
 				{
 					App->scene->CreateProgressBar(nullptr);
+				}
+
+				if (ImGui::MenuItem("Radar"))
+				{
+					App->scene->CreateRadar(nullptr);
 				}
 
 				ImGui::EndMenu();

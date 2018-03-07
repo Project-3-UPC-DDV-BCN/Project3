@@ -42,6 +42,7 @@
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
 #include "ComponentButton.h"
+#include "ComponentRadar.h"
 #include "Texture.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
@@ -58,6 +59,7 @@ PropertiesWindow::PropertiesWindow()
 	colliders_count = 0;
 	distance_joints_count = 0;
 	lights_count = 0;
+
 }
 
 PropertiesWindow::~PropertiesWindow()
@@ -505,6 +507,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompProgressBar:
 		DrawProgressBarPanel((ComponentProgressBar*)component);
 		break;
+	case Component::CompRadar:
+		DrawRadarPanel((ComponentRadar*)component);
+		break;
 	case Component::CompDistanceJoint:
 		DrawJointDistancePanel((ComponentJointDistance*)component);
 		break;
@@ -914,6 +919,60 @@ void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 		if (ImGui::ColorEdit4("Progress", progress_colour, ImGuiColorEditFlags_AlphaBar))
 		{
 			bar->SetProgressColour(float4(progress_colour[0], progress_colour[1], progress_colour[2], progress_colour[3]));
+		}
+	}
+}
+
+void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
+{
+	if (ImGui::CollapsingHeader("Radar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		Texture* background_texture = radar->GetBackgroundTexture();
+		float max_distance = radar->GetMaxDistance();
+		std::vector<RadarMarker> markers = radar->GetMarkers();
+		std::vector<RadarEntity> entities = radar->GetEntities();
+
+		if (ImGui::InputResourceTexture("Background Texture", &background_texture))
+		{
+			radar->SetBackgroundTexture(background_texture);
+		}
+
+		if (ImGui::DragFloat("Max distance", &max_distance, true, 1, 0.0f))
+		{
+			radar->SetMaxDistance(max_distance);
+		}
+
+		if (ImGui::Button("Add Marker"))
+		{
+			std::string marker_name = "Marker_" + std::to_string(markers.size());
+			radar->CreateMarker(marker_name.c_str(), nullptr);
+		}
+		ImGui::SameLine();
+
+		if (markers.size() > 0)
+		{
+			if (ImGui::Button("Add Entity"))
+			{
+				std::string marker_name = "Entity_" + std::to_string(entities.size());
+			/*	radar->AddEntity(nullptr, nullptr);*/
+			}
+		}
+
+
+		ImGui::Text("Markers");
+
+		for (std::vector<RadarMarker>::iterator it = markers.begin(); it != markers.end(); ++it)
+		{
+			ImGui::Text((*it).marker_name.c_str());
+		}
+
+		ImGui::Separator();
+
+		ImGui::Text("Entities");
+
+		for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
+		{
+	/*		ImGui::Text((*it).marker_name.c_str());*/
 		}
 	}
 }

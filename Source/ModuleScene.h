@@ -73,6 +73,7 @@ public:
 	GameObject* CreateText(GameObject* parent = nullptr);
 	GameObject* CreateProgressBar(GameObject* parent = nullptr);
 	GameObject* CreateButton(GameObject* parent = nullptr);
+	GameObject* CreateRadar(GameObject* parent = nullptr);
 
 	void SetParticleSystemsState();
 

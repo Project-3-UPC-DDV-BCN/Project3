@@ -25,6 +25,7 @@ class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
 class ComponentButton;
+class ComponentRadar;
 
 class PropertiesWindow :
 	public Window
@@ -45,6 +46,7 @@ public:
 	void DrawImagePanel(ComponentImage* image);
 	void DrawTextPanel(ComponentText* text);
 	void DrawProgressBarPanel(ComponentProgressBar* progress);
+	void DrawRadarPanel(ComponentRadar* radar);
 	void DrawButtonPanel(ComponentButton* button);
 	void DrawRigidBodyPanel(ComponentRigidBody* rigidbody);
 	void DrawColliderPanel(ComponentCollider* collider);

@@ -619,6 +619,17 @@ GameObject * ModuleScene::CreateButton(GameObject * parent)
 	return ret;
 }
 
+GameObject * ModuleScene::CreateRadar(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompRadar);
+
+	return ret;
+}
+
 void ModuleScene::SetParticleSystemsState()
 {
 	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)

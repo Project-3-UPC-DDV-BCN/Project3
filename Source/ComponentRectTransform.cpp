@@ -246,6 +246,8 @@ float2 ComponentRectTransform::GetScaledPos()
 		ret.y -= size_added.y / 2;
 	}
 
+	ret *= scale;
+
 	return ret;
 }
 
@@ -674,9 +676,10 @@ float3 ComponentRectTransform::GetPreferedPos()
 	float3 ret = float3::zero;
 
 	float3 anchor_pos = GetAnchorLocalPos();
+	float2 scaled_pos = GetScaledPos();
 
-	ret.x = anchor_pos.x + GetScaledPos().x;
-	ret.y = anchor_pos.y + GetScaledPos().y;
+	ret.x = anchor_pos.x + scaled_pos.x;
+	ret.y = anchor_pos.y + scaled_pos.y;
 	ret.z = z_pos;
 
 	return ret;

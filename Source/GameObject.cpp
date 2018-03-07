@@ -26,6 +26,7 @@
 #include "ComponentBlast.h"
 #include "ModulePhysics.h"
 #include "ComponentButton.h"
+#include "ComponentRadar.h"
 
 GameObject::GameObject(GameObject* parent)
 {
@@ -156,6 +157,15 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		{
 			components_list.push_back(component = new ComponentButton(this));
 			SetName("Button");
+			App->scene->RenameDuplicatedGameObject(this);
+		}
+		break;
+	case Component::CompRadar:
+		SetIsUI(true);
+		if (GetComponent(Component::CompRadar) == nullptr)
+		{
+			components_list.push_back(component = new ComponentRadar(this));
+			SetName("Radar");
 			App->scene->RenameDuplicatedGameObject(this);
 		}
 		break;
