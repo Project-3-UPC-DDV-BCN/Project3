@@ -100,7 +100,7 @@ public class Slave1Movement {
 		shields_bar.PercentageProgress = (100 / 8) * shield_energy;
 		energy_bar.PercentageProgress = (100 / 8) * engine_energy;
 
-		speed_bar.PercentageProgress = (curr_vel/200) * 100;
+		speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
 	}
 
 	void SetValuesWithEnergy()
