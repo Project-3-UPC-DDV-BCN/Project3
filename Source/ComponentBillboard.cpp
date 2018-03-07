@@ -61,9 +61,6 @@ bool ComponentBillboard::RotateObject()
 	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
 		return false;
 
-	if (billboarding_type == BILLBOARD_ALL)
-		CONSOLE_LOG("ds"); 
-
 	//Get the director vector which the object/particle is currently pointing at (Z axis)
 	ComponentTransform* object_transform;
 
@@ -127,16 +124,8 @@ bool ComponentBillboard::RotateObject()
 		billboarding_type = BILLBOARD_Y; 
 		RotateObject(); 
 
-		float3 current_z_direction = object_transform->GetMatrix().WorldZ(); 
-		float3 direction = reference->camera_frustum.Pos() - object_transform->GetGlobalPosition(); 
-
-		direction.Normalize(); 
-		current_z_direction.Normalize(); 
-
-		float angle = direction.AngleBetweenNorm(current_z_direction)*RADTODEG;
-		angle *= -1; 
-
-		object_transform->SetRotation({ angle, object_transform->GetGlobalRotation().y, object_transform->GetGlobalRotation().z });
+		billboarding_type = BILLBOARD_X;
+		RotateObject();
 
 		billboarding_type = BILLBOARD_ALL; 
 

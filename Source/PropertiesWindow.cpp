@@ -1644,7 +1644,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (ImGui::TreeNode("Size"))
 				{
 					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
-					CONSOLE_LOG("%f", current_emmiter->data->global_scale); 
 
 					if (ImGui::TreeNode("Interpolation"))
 					{

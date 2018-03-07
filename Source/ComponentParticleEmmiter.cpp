@@ -78,18 +78,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	new_particle->SetEmmisionAngle(data->emision_angle);
 	new_particle->SetMovement();
 
-	CONSOLE_LOG("%f, %f, %f", data->color.r, data->color.g, data->color.b); 
-
-	if (data->change_color_interpolation)
-	{
-		CONSOLE_LOG("true");
-	}		
-	else
-	{
-		CONSOLE_LOG("false");
-	}
-	
-
 	new_particle->SetWorldSpace(data->relative_pos);
 	
 	//Copy Interpolations
