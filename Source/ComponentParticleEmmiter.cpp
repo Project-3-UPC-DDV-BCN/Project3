@@ -263,13 +263,19 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 	if (parent_transform->dirty)
 	{
-
 		//Position increment
 		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
 
-		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1});
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {1,1,1});
 
 		emmit_area.TransformAsAABB(transform_to_apply);
+
+		float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
+		emmit_area.Scale(emmit_area.CenterPoint(), asd);
+
+		data->width_increment = 0; 
+		data->height_increment = 0; 
+		data->depth_increment = 0; 
 
 		parent_transform->dirty = false; 
 	}
