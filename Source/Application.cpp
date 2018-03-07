@@ -65,9 +65,9 @@ Application::Application()
 	// Main Modules
 	AddModule(file_system);
 	AddModule(window);
+	AddModule(input);
 	AddModule(camera);
 	AddModule(renderer3D);
-	AddModule(input);
 	AddModule(audio);
 	AddModule(mesh_importer);
 	AddModule(texture_importer);
