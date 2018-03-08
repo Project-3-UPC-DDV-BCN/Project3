@@ -242,6 +242,11 @@ float3 ComponentTransform::GetRight() const
 	return transform_matrix.WorldX();
 }
 
+bool ComponentTransform::IsParticle()
+{
+	return is_particle;
+}
+
 void ComponentTransform::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());

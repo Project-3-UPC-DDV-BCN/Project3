@@ -1923,7 +1923,6 @@ void ModuleResources::CreateDefaultShaders()
 			"out vec4 color;\n\n"
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
-			"uniform float material_alpha;\n"
 			"uniform bool alpha_interpolation;\n"
 			"uniform float alpha_percentage;\n"
 			"uniform bool has_texture;\n"
@@ -1942,9 +1941,6 @@ void ModuleResources::CreateDefaultShaders()
 
 			"   if(color.a < 0.1f)\n"
 			"		discard;\n"
-
-			"	if (material_alpha != 1)\n"
-			"		color.a = material_alpha;\n"
 
 			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"

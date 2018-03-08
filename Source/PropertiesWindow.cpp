@@ -1650,21 +1650,25 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop(); 
 			}
 
-			float prev_width = current_emmiter->data->emmit_width;
-			float prev_height = current_emmiter->data->emmit_height;
-			float prev_depth = current_emmiter->data->emmit_depth;
-
 			if (ImGui::TreeNode("Emit Area"))
 			{
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);
 				current_emmiter->SetShowEmmisionArea(show);
 
-				ImGui::DragFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
-				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
-				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				float width_cpy = current_emmiter->data->emmit_width; 
+				float height_cpy = current_emmiter->data->emmit_height;
+				float depth_cpy = current_emmiter->data->emmit_depth;
 
-				static int style; 
+				ImGui::InputFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.0f, 2); 
+				ImGui::InputFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.0f, 2);
+
+				current_emmiter->data->width_increment = current_emmiter->data->emmit_width - width_cpy; 
+				current_emmiter->data->height_increment = current_emmiter->data->emmit_height - height_cpy;
+				current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - depth_cpy;
+
+				static int style = 1; 
 				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 
 
 				if (style == 0)
@@ -1672,19 +1676,15 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				else if (style == 1)
 					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
 
+				if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
+				{
+					ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+					trans->dirty = true;
+				}
+
 				ImGui::TreePop();
 			}
 
-			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
-
-			if (current_emmiter->data->width_increment != 0 || current_emmiter->data->height_increment != 0 || current_emmiter->data->depth_increment != 0)
-			{
-				ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-				trans->dirty = true; 
-			}
-				
-			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
-			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
 
 			if (ImGui::TreeNode("Texture"))
 			{
@@ -1739,7 +1739,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (ImGui::TreeNode("Size"))
 				{
 					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
-					CONSOLE_LOG("%f", current_emmiter->data->global_scale); 
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
@@ -1756,9 +1755,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						{
 							current_emmiter->data->change_size_interpolation = true;
 
-							if (init_scale.x == fin_scale.x)
-								current_emmiter->data->change_size_interpolation = false;
-
 							current_emmiter->data->initial_scale = init_scale;
 							current_emmiter->data->final_scale = fin_scale;
 						}
@@ -1768,6 +1764,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						if (ImGui::Button("Delete"))
 						{
 							current_emmiter->data->change_size_interpolation = false;
+
+							current_emmiter->data->initial_scale = { 1,1,1 }; 
+							current_emmiter->data->final_scale = { 1,1,1 };
 						}
 
 						ImGui::TreePop(); 
@@ -1977,6 +1976,10 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 		{
 			billboard->SetBillboardType((BillboardingType)--billboard_type);
 			++billboard_type;
+
+			//Reset transform 
+			ComponentTransform* trans = (ComponentTransform*)billboard->GetGameObject()->GetComponent(Component::CompTransform); 
+			trans->SetRotation(float3::zero); 
 		}
 		else
 			billboard->SetBillboardType(BILLBOARD_NONE);

@@ -83,11 +83,9 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//Copy Interpolations
 	if (data->change_color_interpolation)
 	{
+		new_particle->particle_data->change_color_interpolation = true; 
 		new_particle->particle_data->initial_color = data->initial_color; 
 		new_particle->particle_data->final_color = data->final_color;
-
-		//CONSOLE_LOG("Init: %f %f %f", data->initial_color.r, data->initial_color.g, data->initial_color.b);
-		//CONSOLE_LOG("Final: %f %f %f", data->final_color.r, data->final_color.g, data->final_color.b);
 	}
 	else
 		new_particle->particle_data->change_color_interpolation = false;
@@ -95,6 +93,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	///Size
 	if (data->change_size_interpolation)
 	{
+		new_particle->particle_data->change_size_interpolation = true;
 		new_particle->particle_data->initial_scale = data->initial_scale;
 		new_particle->particle_data->final_scale = data->final_scale; 
 	}
@@ -104,6 +103,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	///Rotation
 	if (data->change_rotation_interpolation)
 	{
+		new_particle->particle_data->change_rotation_interpolation = true;
 		new_particle->particle_data->initial_angular_v = data->initial_angular_v;
 		new_particle->particle_data->final_angular_v = data->final_angular_v;
 	}
@@ -179,6 +179,8 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
+	if (data == nullptr)
+		return false;
 
 	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();
@@ -261,15 +263,19 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 	if (parent_transform->dirty)
 	{
-
 		//Position increment
 		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
 
-		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1});
-
-		CONSOLE_LOG("%f %f %f", data->width_increment, data->height_increment, data->depth_increment);
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {1,1,1});
 
 		emmit_area.TransformAsAABB(transform_to_apply);
+
+		float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
+		emmit_area.Scale(emmit_area.CenterPoint(), asd);
+
+		data->width_increment = 0; 
+		data->height_increment = 0; 
+		data->depth_increment = 0; 
 
 		parent_transform->dirty = false; 
 	}
@@ -295,6 +301,7 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	
 	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
 	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
+	data.AddString("Template", this->data->GetName()); 
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -308,6 +315,9 @@ void ComponentParticleEmmiter::Load(Data & data)
 	float3 pos = data.GetVector3("Position"); 
 	float3 rot = data.GetVector3("Rotation");
 	float3 scale = { 1,1,1 }; 
+
+	//Load Template 
+	this->data = App->resources->GetParticleTemplate(data.GetString("Template")); 
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
