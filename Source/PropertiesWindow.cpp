@@ -107,7 +107,14 @@ void PropertiesWindow::DrawWindow()
 					std::string name = App->tags_and_layers->tags_list[i];
 					if (ImGui::MenuItem(name.c_str()))
 					{
-						if (name == "Main Camera" && App->renderer3D->game_camera == nullptr)
+						if (name == "Main Camera")
+						{
+							if (App->renderer3D->game_camera == nullptr)
+							{
+								selected_gameobject->SetTag(name);
+							}
+						}
+						else
 						{
 							selected_gameobject->SetTag(name);
 						}
