@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "ModuleResources.h"
+#include "ComponentText.h"
 
 ComponentButton::ComponentButton(GameObject * attached_gameobject) : Component()
 {
@@ -22,12 +23,15 @@ ComponentButton::ComponentButton(GameObject * attached_gameobject) : Component()
 
 	idle_texture = nullptr;
 	idle_colour = float4(0.098f, 0.392f, 0.701f, 1.0f);
+	idle_text_colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	over_texture = nullptr;
 	over_colour = float4(0.078f, 0.129f, 0.180f, 1.0f);
+	over_text_colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	pressed_texture = nullptr;
 	pressed_colour = float4(0.078f, 0.329f, 0.380f, 1.0f);
+	pressed_text_colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 ComponentButton::~ComponentButton()
@@ -41,11 +45,30 @@ bool ComponentButton::Update()
 	UpdateState();
 
 	ComponentCanvas* canvas = GetCanvas();
+	ComponentText* text = GetTextChild();
 
 	if (canvas != nullptr)
 	{
 		float4 colour = idle_colour;
 		Texture* texture = nullptr;
+
+		if (text != nullptr)
+		{
+			switch (button_state)
+			{
+			case BS_IDLE:
+				text->SetColour(idle_text_colour);
+				break;
+			case BS_OVER:
+				text->SetColour(over_text_colour);
+				break;
+			case BS_PRESSED:
+				text->SetColour(pressed_text_colour);
+				break;
+			default:
+				break;
+			}
+		}
 
 		switch (button_mode)
 		{
@@ -185,6 +208,41 @@ float4 ComponentButton::GetPressedColour() const
 	return pressed_colour;
 }
 
+void ComponentButton::SetIdleTextColour(float4 set)
+{
+	idle_text_colour = set;
+}
+
+void ComponentButton::SetOverTextColour(float4 set)
+{
+	over_text_colour = set;
+}
+
+void ComponentButton::SetPressedTextColour(float4 set)
+{
+	pressed_text_colour = set;
+}
+
+float4 ComponentButton::GetIdleTextColour() const
+{
+	return idle_text_colour;
+}
+
+float4 ComponentButton::GetOverTextColour() const
+{
+	return over_text_colour;
+}
+
+float4 ComponentButton::GetPressedTextColour() const
+{
+	return pressed_text_colour;
+}
+
+bool ComponentButton::HasTextChild() const
+{
+	return GetTextChild() != nullptr;
+}
+
 void ComponentButton::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());
@@ -194,6 +252,9 @@ void ComponentButton::Save(Data & data) const
 	data.AddVector4("idle_colour", GetIdleColour());
 	data.AddVector4("over_colour", GetOverColour());
 	data.AddVector4("pressed_colour", GetPressedColour());
+	data.AddVector4("text_idle_colour", GetIdleTextColour());
+	data.AddVector4("text_over_colour", GetOverTextColour());
+	data.AddVector4("text_pressed_colour", GetPressedTextColour());
 	if (idle_texture != nullptr)
 		data.AddString("idle_texture", idle_texture->GetName().c_str());
 	if (over_texture != nullptr)
@@ -210,6 +271,9 @@ void ComponentButton::Load(Data & data)
 	SetIdleColour(data.GetVector4("idle_colour"));
 	SetOverColour(data.GetVector4("over_colour"));
 	SetPressedColour(data.GetVector4("pressed_colour"));
+	SetIdleTextColour(data.GetVector4("text_idle_colour"));
+	SetOverTextColour(data.GetVector4("text_over_colour"));
+	SetPressedTextColour(data.GetVector4("text_pressed_colour"));
 	idle_texture = App->resources->GetTexture(data.GetString("idle_texture"));
 	over_texture = App->resources->GetTexture(data.GetString("over_texture"));
 	pressed_texture = App->resources->GetTexture(data.GetString("pressed_texture"));
@@ -232,6 +296,23 @@ ComponentRectTransform * ComponentButton::GetRectTrans()
 	ret = (ComponentRectTransform*)GetGameObject()->GetComponent(Component::CompRectTransform);
 
 	return ret;
+}
+
+ComponentText * ComponentButton::GetTextChild() const
+{
+	ComponentText* text = nullptr;
+
+	for (std::list<GameObject*>::iterator it = GetGameObject()->childs.begin(); it != GetGameObject()->childs.end(); ++it)
+	{
+		text = (ComponentText*)(*it)->GetComponent(Component::CompText);
+
+		if (text != nullptr)
+		{
+			break;
+		}
+	}
+
+	return text;
 }
 
 void ComponentButton::UpdateState()

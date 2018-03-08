@@ -6,6 +6,7 @@
 class ComponentRectTransform;
 class ComponentCanvas;
 class CanvasDrawElement;
+class ComponentText;
 class Texture;
 
 enum ButtonMode
@@ -49,12 +50,23 @@ public:
 	float4 GetOverColour() const;
 	float4 GetPressedColour() const;
 
+	void SetIdleTextColour(float4 set);
+	void SetOverTextColour(float4 set);
+	void SetPressedTextColour(float4 set);
+
+	float4 GetIdleTextColour() const;
+	float4 GetOverTextColour() const;
+	float4 GetPressedTextColour() const;
+
+	bool HasTextChild() const;
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
 private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
+	ComponentText* GetTextChild() const;
 	void UpdateState();
 
 private:
@@ -65,12 +77,15 @@ private:
 
 	Texture*    idle_texture;
 	float4      idle_colour;
-			    
+	float4	    idle_text_colour;
+
 	Texture*    over_texture;
 	float4      over_colour;
+	float4	    over_text_colour;
 			    
 	Texture*    pressed_texture;
 	float4      pressed_colour;
+	float4	    pressed_text_colour;
 };
 
 #endif // !_H_COMPONENT_BUTON__

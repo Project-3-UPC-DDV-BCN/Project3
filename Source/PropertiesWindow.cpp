@@ -981,14 +981,6 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 {
 	if (ImGui::CollapsingHeader("Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		float4 idle_colour = button->GetIdleColour();
-		float4 over_colour = button->GetOverColour();
-		float4 pressed_colour = button->GetPressedColour();
-
-		Texture* idle_texture = button->GetIdleTexture();
-		Texture* over_texture = button->GetOverTexture();
-		Texture* pressed_texture = button->GetPressedTexture();
-
 		const char* mode_names[] = { "Colour", "Image" };
 		int mode = button->GetButtonMode();
 
@@ -996,28 +988,36 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 
 		if (mode == 0)
 		{
+			float idle_colour[4] = { button->GetIdleColour().x,  button->GetIdleColour().y, button->GetIdleColour().z, button->GetIdleColour().w };
+			float over_colour[4] = { button->GetOverColour().x,  button->GetOverColour().y, button->GetOverColour().z,button->GetOverColour().w };
+			float pressed_colour[4] = { button->GetPressedColour().x,  button->GetPressedColour().y, button->GetPressedColour().z,button->GetPressedColour().w };
+
 			button->SetButtonMode(ButtonMode::BM_COLOUR);
 
 			ImGui::Text("Idle Colour");
 			if (ImGui::ColorEdit4("Idle", (float*)&idle_colour, ImGuiColorEditFlags_AlphaBar))
 			{
-				button->SetIdleColour(idle_colour);
+				button->SetIdleColour(float4(idle_colour[0], idle_colour[1], idle_colour[2], idle_colour[3]));
 			}
 
 			ImGui::Text("Over Colour");
 			if (ImGui::ColorEdit4("Over", (float*)&over_colour, ImGuiColorEditFlags_AlphaBar))
 			{
-				button->SetOverColour(over_colour);
+				button->SetOverColour(float4(over_colour[0], over_colour[1], over_colour[2], over_colour[3]));
 			}
 
 			ImGui::Text("Pressed Colour");
 			if (ImGui::ColorEdit4("Pressed", (float*)&pressed_colour, ImGuiColorEditFlags_AlphaBar))
 			{
-				button->SetPressedColour(pressed_colour);
+				button->SetPressedColour(float4(pressed_colour[0], pressed_colour[1], pressed_colour[2], pressed_colour[3]));
 			}
 		}
 		else if (mode == 1)
 		{
+			Texture* idle_texture = button->GetIdleTexture();
+			Texture* over_texture = button->GetOverTexture();
+			Texture* pressed_texture = button->GetPressedTexture();
+
 			button->SetButtonMode(ButtonMode::BM_IMAGE);
 
 			if (ImGui::InputResourceTexture("Idle Texture", &idle_texture))
@@ -1033,6 +1033,31 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 			if (ImGui::InputResourceTexture("Pressed Texture", &pressed_texture))
 			{
 				button->SetPressedTexture(pressed_texture);
+			}
+		}
+
+		if(button->HasTextChild())
+		{
+			float idle_text_colour[4] = { button->GetIdleTextColour().x,  button->GetIdleTextColour().y,  button->GetIdleTextColour().w,  button->GetIdleTextColour().z };
+			float over_text_colour[4] = { button->GetOverTextColour().x,  button->GetOverTextColour().y,  button->GetOverTextColour().w,  button->GetOverTextColour().z };
+			float pressed_text_colour[4] = { button->GetPressedTextColour().x,  button->GetPressedTextColour().y,  button->GetPressedTextColour().w,  button->GetPressedTextColour().z};
+
+			ImGui::Text("Idle Text Colour");
+			if (ImGui::ColorEdit4("Idle text", (float*)&idle_text_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetIdleTextColour(float4(idle_text_colour[0], idle_text_colour[1], idle_text_colour[2], idle_text_colour[3]));
+			}
+
+			ImGui::Text("Over Text Colour");
+			if (ImGui::ColorEdit4("Over text", (float*)&over_text_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetOverTextColour(float4(over_text_colour[0], over_text_colour[1], over_text_colour[2], over_text_colour[3]));
+			}
+
+			ImGui::Text("Pressed Text Colour");
+			if (ImGui::ColorEdit4("Pressed text", (float*)&pressed_text_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetPressedTextColour(float4(pressed_text_colour[0], pressed_text_colour[1], pressed_text_colour[2], pressed_text_colour[3]));
 			}
 		}
 	}
