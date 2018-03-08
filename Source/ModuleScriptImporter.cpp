@@ -694,45 +694,66 @@ void ModuleScriptImporter::RumbleController(int pad, float strength, int ms)
 void ModuleScriptImporter::Log(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
-	MonoString* str = mono_object_to_string(object, &exception);
-	if (exception)
+	if (object != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		MonoString* str = mono_object_to_string(object, &exception);
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+		else
+		{
+			const char* message = mono_string_to_utf8(str);
+			CONSOLE_LOG("%s", message);
+		}
 	}
 	else
 	{
-		const char* message = mono_string_to_utf8(str);
-		CONSOLE_LOG("%s", message);
+		CONSOLE_ERROR("Trying to print a null argument!");
 	}
 }
 
 void ModuleScriptImporter::Warning(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
-	MonoString* str = mono_object_to_string(object, &exception);
-	if (exception)
+	if (object != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		MonoString* str = mono_object_to_string(object, &exception);
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+		else
+		{
+			const char* message = mono_string_to_utf8(str);
+			CONSOLE_WARNING("%s", message);
+		}
 	}
 	else
 	{
-		const char* message = mono_string_to_utf8(str);
-		CONSOLE_WARNING("%s", message);
+		CONSOLE_ERROR("Trying to print a null argument!");
 	}
 }
 
 void ModuleScriptImporter::Error(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
-	MonoString* str2 = mono_object_to_string(object, &exception);
-	if (exception)
+	if (object != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		MonoString* str2 = mono_object_to_string(object, &exception);
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+		else
+		{
+			const char* message = mono_string_to_utf8(str2);
+			CONSOLE_ERROR("%s", message);
+		}
 	}
 	else
 	{
-		const char* message = mono_string_to_utf8(str2);
-		CONSOLE_ERROR("%s", message);
+		CONSOLE_ERROR("Trying to print a null argument!");
 	}
 }
 
