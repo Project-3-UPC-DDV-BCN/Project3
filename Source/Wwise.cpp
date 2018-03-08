@@ -373,6 +373,11 @@ void Wwise::SoundObject::PlayMusic(const char * music_name)
 
 }
 
+void Wwise::SoundObject::SetRTPCvalue(const char * rtpc, float value)
+{
+	AK::SoundEngine::SetRTPCValue(rtpc, value, SoundID);
+}
+
 void Wwise::SoundObject::SetAuxiliarySends(AkReal32 value, const char * target_bus, AkGameObjectID listener_id)
 {
 	AkAuxSendValue reverb;

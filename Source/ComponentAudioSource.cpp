@@ -21,11 +21,7 @@ ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 
 	obj = App->audio->CreateSoundObject(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
 
-	if (App->audio->GetSoundBank() != nullptr) {
-		this->soundbank->SetSoundBank(App->audio->GetSoundBank());
-		GetEvents();
-	}
-
+	volume = DEFAULT_VOLUME;
 }
 
 ComponentAudioSource::~ComponentAudioSource()
@@ -37,7 +33,14 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	
+	if (!muted) {
+		App->audio->SetRTPvalue("Volume", volume);
+		//App->audio->SetRTPvalue("Pitch", pitch);
+	}
+	else {
+		App->audio->SetRTPvalue("Volume", 0);
+	}
+
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 	
 	if (trans)
@@ -118,7 +121,7 @@ bool ComponentAudioSource::SendEvent(const char * name)
 
 AkGameObjectID ComponentAudioSource::GetID() const
 {
-	return obj->GetID();
+	return obj->GetSoundID();
 }
 
 void ComponentAudioSource::GetEvents()

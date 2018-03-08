@@ -49,4 +49,6 @@ public:
 	Wwise::SoundObject* obj = nullptr;
 	bool is_combo = false;
 
+	int volume = 0;
+	bool muted = false;
 };

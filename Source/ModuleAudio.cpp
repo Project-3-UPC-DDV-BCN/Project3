@@ -72,14 +72,6 @@ update_status ModuleAudio::PreUpdate(float dt)
 		stop_all = false;
 	}
 
-	if (!muted) {
-		SetRTPvalue("Volume", volume);
-		SetRTPvalue("Pitch", pitch);
-	}
-	else {
-		SetRTPvalue("Volume", 0);
-	}
-
 	return update_status::UPDATE_CONTINUE;
 }
 
