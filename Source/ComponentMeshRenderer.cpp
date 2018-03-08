@@ -20,6 +20,9 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject* attached_gameobject)
 	material_indices_start = 0;
 	interior_material_indices_number = 0;
 	interior_material_indices_start = 0;
+
+	bounding_box.minPoint = { 0,0,0 };
+	bounding_box.maxPoint = { 0,0,0 };
 }
 
 ComponentMeshRenderer::~ComponentMeshRenderer()
@@ -67,10 +70,9 @@ void ComponentMeshRenderer::UpdateBoundingBox()
 {
 	if (GetMesh() != nullptr)
 	{
-		GetMesh()->box.SetNegativeInfinity();
-		GetMesh()->box.Enclose((float3*)GetMesh()->vertices, GetMesh()->num_vertices);
-		//math::OBB obb = GetMesh()->box.Transform(GetGameObject()->GetGlobalTransfomMatrix());
-		GetMesh()->box.TransformAsAABB(GetGameObject()->GetGlobalTransfomMatrix());
+		bounding_box.SetNegativeInfinity();
+		bounding_box.Enclose((float3*)GetMesh()->vertices, GetMesh()->num_vertices);
+		bounding_box.TransformAsAABB(GetGameObject()->GetGlobalTransfomMatrix());
 	}
 }
 

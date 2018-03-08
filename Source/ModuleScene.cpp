@@ -181,16 +181,12 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->GetComponent(Component::CompMeshRenderer);
 			if (mesh_renderer)
 			{
-				Mesh* mesh = mesh_renderer->GetMesh();
-				if (mesh != nullptr)
-				{
-					if (mesh->box.minPoint.x < camera_pos.minPoint.x) camera_pos.minPoint.x = mesh->box.minPoint.x;
-					if (mesh->box.minPoint.y < camera_pos.minPoint.y) camera_pos.minPoint.y = mesh->box.minPoint.y;
-					if (mesh->box.minPoint.z < camera_pos.minPoint.z) camera_pos.minPoint.z = mesh->box.minPoint.z;
-					if (mesh->box.maxPoint.x > camera_pos.maxPoint.x) camera_pos.maxPoint.x = mesh->box.maxPoint.x;
-					if (mesh->box.maxPoint.y > camera_pos.maxPoint.y) camera_pos.maxPoint.y = mesh->box.maxPoint.y;
-					if (mesh->box.maxPoint.z > camera_pos.maxPoint.z) camera_pos.maxPoint.z = mesh->box.maxPoint.z;
-				}
+				if (mesh_renderer->bounding_box.minPoint.x < camera_pos.minPoint.x) camera_pos.minPoint.x = mesh_renderer->bounding_box.minPoint.x;
+				if (mesh_renderer->bounding_box.minPoint.y < camera_pos.minPoint.y) camera_pos.minPoint.y = mesh_renderer->bounding_box.minPoint.y;
+				if (mesh_renderer->bounding_box.minPoint.z < camera_pos.minPoint.z) camera_pos.minPoint.z = mesh_renderer->bounding_box.minPoint.z;
+				if (mesh_renderer->bounding_box.maxPoint.x > camera_pos.maxPoint.x) camera_pos.maxPoint.x = mesh_renderer->bounding_box.maxPoint.x;
+				if (mesh_renderer->bounding_box.maxPoint.y > camera_pos.maxPoint.y) camera_pos.maxPoint.y = mesh_renderer->bounding_box.maxPoint.y;
+				if (mesh_renderer->bounding_box.maxPoint.z > camera_pos.maxPoint.z) camera_pos.maxPoint.z = mesh_renderer->bounding_box.maxPoint.z;
 				mesh_renderer->LoadToMemory();
 			}
 		}
@@ -288,7 +284,7 @@ update_status ModuleScene::Update(float dt)
 		octree.max_point = float3::zero;
 		for (std::list<ComponentMeshRenderer*>::iterator it = static_meshes.begin(); it != static_meshes.end(); it++)
 		{
-			octree.CalculateNewSize((*it)->GetMesh()->box.minPoint, (*it)->GetMesh()->box.maxPoint);
+			octree.CalculateNewSize((*it)->bounding_box.minPoint, (*it)->bounding_box.maxPoint);
 		}
 		//After calculate the size of the new octree, crete it deleteing the previous
 		octree.Update();

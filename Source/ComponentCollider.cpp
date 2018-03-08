@@ -29,9 +29,9 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
 	AABB box;
 	box.SetFromCenterAndSize({ 0,0,0 }, { 1,1,1 });
-	if (mesh_renderer != nullptr && mesh_renderer->GetMesh() != nullptr)
+	if (mesh_renderer != nullptr)
 	{
-		box = mesh_renderer->GetMesh()->box;
+		box = mesh_renderer->bounding_box;
 	}
 
 	if (rigidbody != nullptr)

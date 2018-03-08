@@ -70,6 +70,8 @@ bool CSScript::LoadScript(std::string script_path)
 	bool ret = false;
 	SetLibraryPath(script_path);
 
+	mono_domain = App->script_importer->GetDomain();
+
 	if (mono_class)
 	{
 		mono_object = mono_object_new(App->script_importer->GetDomain(), mono_class);
