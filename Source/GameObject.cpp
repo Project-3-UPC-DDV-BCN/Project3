@@ -731,24 +731,36 @@ void GameObject::Load(Data & data, bool is_prefab)
 	for (int i = 0; i < componentsCount; i++)
 	{
 		data.EnterSection("Component_" + std::to_string(i));
-		Component* component = GetComponent((Component::ComponentType)data.GetInt("Type"));
-
-		if (component != nullptr) 
+		int comp_type = data.GetInt("Type");
+		uint comp_id = data.GetUInt("UUID");
+		bool exist = false;
+		if (comp_type == 0)
 		{
-			component->Load(data);
+			ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
+			transform->Load(data);
+			data.LeaveSection();
+			continue;
 		}
-		else 
+		if (comp_id > 0)
 		{
-			int type = data.GetInt("Type");
-			if (type != -1)
+			for (Component* comp : components_list)
 			{
-				AddComponent((Component::ComponentType)data.GetInt("Type"));
-				GetComponent((Component::ComponentType)data.GetInt("Type"))->Load(data);
+				if (comp->GetUID() == comp_id)
+				{
+					comp->Load(data);
+					exist = true;
+					break;
+				}
 			}
-			else
+
+			if (!exist)
 			{
-				CONSOLE_ERROR("Could not load component from gameobject: %s (Wrong component id?)", name.c_str());
+				AddComponent((Component::ComponentType)comp_type)->Load(data);
 			}
+		}
+		else
+		{
+			CONSOLE_ERROR("Could not load component from gameobject: %s (Wrong component id?)", name.c_str());
 		}
 		data.LeaveSection();
 	}

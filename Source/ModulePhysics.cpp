@@ -787,7 +787,10 @@ void ModulePhysics::CleanPhysScene()
 {
 	for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
 	{
-		main_scene->removeActor(*it->first);
+		if (it->first)
+		{
+			main_scene->removeActor(*it->first);
+		}
 	}
 	physics_objects.clear();
 }

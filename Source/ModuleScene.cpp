@@ -436,7 +436,7 @@ void ModuleScene::NewScene(bool loading_scene)
 	octree.Create(float3::zero, float3::zero);
 	octree.update_tree = true;
 	App->blast->CleanFamilies();
-	App->physics->CleanPhysScene();
+	//App->physics->CleanPhysScene();
 	if (!loading_scene)
 	{
 		CreateMainCamera();

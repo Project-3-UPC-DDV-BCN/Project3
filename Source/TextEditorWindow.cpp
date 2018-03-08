@@ -26,7 +26,8 @@ void TextEditorWindow::DrawWindow()
 {
 	auto cpos = editor.GetCursorPosition();
 
-	if (ImGui::Begin(window_name.c_str(), &active, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize))
+	ImGui::SetNextWindowSize({ 600,500 }, ImGuiCond_Once);
+	if (ImGui::Begin(window_name.c_str(), &active, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_ShowBorders))
 	{
 		ImGui::BeginMenuBar();
 		if (ImGui::BeginMenu("File"))

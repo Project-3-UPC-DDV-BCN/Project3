@@ -76,14 +76,14 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 		return false;
 	}
 
-	MonoAssembly* compiler_assembly = mono_domain_assembly_open(mono_domain, REFERENCE_ASSEMBLIES_FOLDER"compiler.dll");
+	MonoAssembly* compiler_assembly = mono_domain_assembly_open(mono_domain, REFERENCE_ASSEMBLIES_FOLDER"ScriptCompiler.dll");
 	if (compiler_assembly)
 	{
 		mono_compiler_image = mono_assembly_get_image(compiler_assembly);
 	}
 	else
 	{
-		CONSOLE_ERROR("Can't load 'Compiler.dll'!");
+		CONSOLE_ERROR("Can't load 'ScriptCompiler.dll'!");
 		return false;
 	}
 
@@ -98,7 +98,29 @@ std::string ModuleScriptImporter::ImportScript(std::string path)
 
 	if (result != "")
 	{
-		CONSOLE_ERROR("%s", result.c_str());
+		for (int i = 0; i < result.size(); i++)
+			{
+			std::string message;
+			while (result[i] != '|' && result[i] != '\0')
+			{
+				message += result[i];
+				i++;
+			}
+			if (message.find("[Warning]") != std::string::npos)
+			{
+				message.erase(0, 9);
+				CONSOLE_WARNING("%s", message.c_str());
+			}
+			else if (message.find("[Error]") != std::string::npos)
+			{
+				message.erase(0, 7);
+				CONSOLE_ERROR("%s", message.c_str());
+			}
+			else
+			{
+				CONSOLE_LOG("%s", message.c_str());
+			}
+		}
 	}
 	else
 	{
@@ -439,9 +461,9 @@ int ModuleScriptImporter::GetGameObjectChildCount(MonoObject * object)
 	return current_script->GetGameObjectChildCount(object);
 }
 
-MonoObject * ModuleScriptImporter::FindGameObject(MonoObject* object, MonoString * gameobject_name)
+MonoObject * ModuleScriptImporter::FindGameObject(MonoString * gameobject_name)
 {
-	return current_script->FindGameObject(object, gameobject_name);
+	return current_script->FindGameObject(gameobject_name);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
@@ -449,9 +471,9 @@ MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflecti
 	return current_script->AddComponent(object, type);
 }
 
-MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type)
+MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
-	return current_script->GetComponent(object, type);
+	return current_script->GetComponent(object, type, index);
 }
 
 void ModuleScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)

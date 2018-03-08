@@ -59,6 +59,10 @@ CSScript::CSScript()
 
 CSScript::~CSScript()
 {
+	for (MonoComponent* mono_comp : created_components)
+	{
+		RELEASE(mono_comp);
+	}
 }
 
 bool CSScript::LoadScript(std::string script_path)
@@ -1066,18 +1070,8 @@ int CSScript::GetGameObjectChildCount(MonoObject * object)
 	return active_gameobject->childs.size();
 }
 
-MonoObject * CSScript::FindGameObject(MonoObject * object, MonoString * gameobject_name)
+MonoObject * CSScript::FindGameObject(MonoString * gameobject_name)
 {
-	if (!MonoObjectIsValid(object))
-	{
-		return nullptr;
-	}
-
-	if (!GameObjectIsValid())
-	{
-		return nullptr;
-	}
-
 	const char* s_name = mono_string_to_utf8(gameobject_name);
 
 	GameObject* go = App->scene->FindGameObjectByName(s_name);
@@ -1168,8 +1162,9 @@ MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * typ
 	}
 }
 
-MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * type)
+MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
+
 	if (!MonoObjectIsValid(object))
 	{
 		return nullptr;
@@ -1222,16 +1217,48 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 		comp_name = "TheGOAPAgent";
 	}
 
-	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
-	if (c)
+	Component::ComponentType cpp_type = CsToCppComponent(comp_name);
+
+	if (cpp_type != Component::CompUnknown)
 	{
-		MonoObject* new_object = mono_object_new(mono_domain, c);
-		if (new_object)
+		for (MonoComponent* mono_comp : created_components)
 		{
-			created_gameobjects[new_object] = active_gameobject;
-			return new_object;
+			if (mono_comp->attached_go == active_gameobject)
+			{
+				for (Component* comp : attached_gameobject->components_list)
+				{
+					if (comp->GetType() == cpp_type)
+					{
+						if (index == 0)
+						{
+							return mono_comp->component_object;
+						}
+						else
+						{
+							index--;
+						}
+					}
+				}
+			}
+		}
+
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(mono_domain, c);
+			if (new_object)
+			{
+				MonoComponent* mono_comp = new MonoComponent();
+				mono_comp->component_object = new_object;
+				mono_comp->attached_go = active_gameobject;
+				created_components.push_back(mono_comp);
+				created_gameobjects[new_object] = active_gameobject;
+				return new_object;
+			}
 		}
 	}
+
+	CONSOLE_ERROR("%s component type is unknown...");
 	return nullptr;
 }
 
@@ -2880,4 +2907,52 @@ float CSScript::RandomFloat(MonoObject * object)
 float CSScript::RandomRange(MonoObject * object, float min, float max)
 {
 	return App->RandomNumber().FloatIncl(min, max);;
+}
+
+
+Component::ComponentType CSScript::CsToCppComponent(std::string component_type)
+{
+	Component::ComponentType type;
+
+	if (component_type == "TheTransform")
+	{
+		type = Component::CompTransform;
+	}
+	else if (component_type == "TheFactory")
+	{
+		type = Component::CompFactory;
+	}
+	else if (component_type == "TheRectTransform")
+	{
+		type = Component::CompRectTransform;
+	}
+	else if (component_type == "TheProgressBar")
+	{
+		type = Component::CompProgressBar;
+	}
+	else if (component_type == "TheAudioSource")
+	{
+		type = Component::CompAudioSource;
+	}
+	else if (component_type == "TheParticleEmmiter")
+	{
+		type = Component::CompParticleSystem;
+	}
+	else if (component_type == "TheText")
+	{
+		type = Component::CompText;
+	}
+	else if (component_type == "TheRigidBody")
+	{
+		type = Component::CompRigidBody;
+	}
+	else if (component_type == "TheGOAPAgent")
+	{
+		type = Component::CompGOAPAgent;
+	}
+	else
+	{
+		type = Component::CompUnknown;
+	}
+	return type;
 }

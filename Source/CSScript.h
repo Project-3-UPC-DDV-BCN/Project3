@@ -4,9 +4,18 @@
 #include <map>
 #include <mono/metadata/metadata.h>
 #include <mono/metadata/object.h>
+#include "Component.h"
+
+class GameObject;
+
+struct MonoComponent
+{
+	const char* name;
+	MonoObject* component_object;
+	GameObject* attached_go;
+};
 
 class Data;
-class GameObject;
 
 class CSScript :
 	public Script
@@ -79,11 +88,11 @@ public:
 	MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);
-	MonoObject* FindGameObject(MonoObject* object, MonoString* gameobject_name);
+	MonoObject* FindGameObject(MonoString* gameobject_name);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
-	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type);
+	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
 
 	//TRANSFORM
 	void SetPosition(MonoObject * object, MonoObject * vector3);
@@ -187,6 +196,8 @@ public:
 	float RandomFloat(MonoObject* object);
 	float RandomRange(MonoObject* object, float min, float max);
 
+	Component::ComponentType CsToCppComponent(std::string component_type);
+
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);
@@ -233,6 +244,7 @@ private:
 	std::vector<ScriptField*> script_fields;
 	bool modifying_self;
 	std::map<MonoObject*, GameObject*> created_gameobjects;
+	std::vector<MonoComponent*> created_components;
 	//std::map<MonoObject*, PerfTimer*> created_timers;
 	GameObject* active_gameobject;
 	bool inside_function;

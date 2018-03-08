@@ -50,11 +50,11 @@ private:
 	static MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
-	static MonoObject* FindGameObject(MonoObject* object, MonoString* gameobject_name);
+	static MonoObject* FindGameObject(MonoString* gameobject_name);
 
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
-	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type);
+	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
 
 	//TRANSFORM
 	static void SetPosition(MonoObject * object, MonoObject * vector);

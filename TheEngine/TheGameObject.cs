@@ -113,11 +113,11 @@ namespace TheEngine
         public extern int GetChildCount();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern TheComponent GetComponent(Type type);
+        private extern TheComponent GetComponent(Type type, int index);
 
-        public T GetComponent<T>() where T : TheComponent
+        public T GetComponent<T>(int index = 0) where T : TheComponent
         {
-            return GetComponent(typeof(T)) as T;
+            return GetComponent(typeof(T), index) as T;
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
