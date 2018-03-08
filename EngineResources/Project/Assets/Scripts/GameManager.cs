@@ -8,26 +8,25 @@ public class GameManager
 	public int gametime_seconds; 
 		
 	private float gametime_step; 
-	private float gametime_miliseconds; 
+	private float timer; 
 	private TheText show_gametime; 
 
 	void Start ()
 	{
 	 	show_gametime = show_gametime_go.GetComponent<TheText>();
-		gametime_miliseconds = gametime_seconds * 1000; 
-		gametime_step = 0; 		
+		timer = (float)gametime_seconds; 
+		gametime_step = timer - 1.0f; 		
 		 
 		show_gametime.Text = GetTimeFromSeconds(gametime_seconds); 
 	}
 	
 	void Update () 
 	{
-		gametime_miliseconds -= TheTime.DeltaTime;
-		gametime_step += TheTime.DeltaTime; 
+		timer -= TheTime.DeltaTime; 
 
-		if(gametime_step > 1000)
+		if(timer < gametime_step)
 		{
-			gametime_step = 0;
+			gametime_step = timer - 1.0f;
 			gametime_seconds--;  
 
 			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);	
@@ -42,8 +41,8 @@ public class GameManager
 
 	string GetTimeFromSeconds(int seconds)
 	{
-		int division = (int)gametime_seconds/60; 
-		float reminder = gametime_seconds % 60;
+		int division = seconds/60; 
+		float reminder = seconds % 60;
 
 		string new_time = division.ToString(); 
 		new_time += ":";
