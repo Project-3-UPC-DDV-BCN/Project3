@@ -17,7 +17,7 @@ namespace Compiler
             parameters.OutputAssembly = name;
             parameters.IncludeDebugInformation = true;
             //parameters.GenerateInMemory = true;
-            parameters.ReferencedAssemblies.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\System.dll");
+            //parameters.ReferencedAssemblies.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\System.dll");
             parameters.ReferencedAssemblies.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\TheEngine.dll");
 
 

@@ -200,7 +200,7 @@ void ComponentFactory::CheckLifeTimes()
 		}
 		else
 		{
-			it->second -= 0.016;
+			it->second -= it->second -= App->time->GetGameDt();
 			it++;
 		}
 	}

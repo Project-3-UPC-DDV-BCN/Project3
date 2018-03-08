@@ -37,8 +37,12 @@ public:
 	virtual void OnCollisionEnter(GameObject* gameobject) = 0;
 	virtual void OnCollisionStay(GameObject* gameobject) = 0;
 	virtual void OnCollisionExit(GameObject* gameobject) = 0;
+	virtual void OnTriggerEnter(GameObject* gameobject) = 0;
+	virtual void OnTriggerStay(GameObject* gameobject) = 0;
+	virtual void OnTriggerExit(GameObject* gameobject) = 0;
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;
+
 
 	virtual void SetIntProperty(const char* propertyName, int value) = 0;
 	virtual int GetIntProperty(const char* propertyName) = 0;

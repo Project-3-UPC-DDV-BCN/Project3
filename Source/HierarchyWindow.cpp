@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModuleScene.h"
 #include "ModuleEditor.h"
+#include "ModuleFileSystem.h"
 
 HierarchyWindow::HierarchyWindow()
 {
@@ -13,6 +14,8 @@ HierarchyWindow::HierarchyWindow()
 	show_rename_window = false;
 	show_rename_error = false;
 	open_gameobject_node = nullptr;
+	show_create_prefab_window = false;
+	prefab_to_create = nullptr;
 }
 
 HierarchyWindow::~HierarchyWindow()
@@ -90,7 +93,24 @@ void HierarchyWindow::DrawWindow()
 					}
 
 					if (ImGui::MenuItem("Create prefab")) {
-						App->scene->CreatePrefab(App->scene->selected_gameobjects.front());
+						prefab_to_create = App->scene->selected_gameobjects.front();
+						if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
+						if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
+						std::string assets_path = ASSETS_PREFABS_FOLDER + prefab_to_create->GetName() + ".prefab";
+						std::string library_path = LIBRARY_PREFABS_FOLDER + prefab_to_create->GetName() + ".prefab";
+
+						if (App->file_system->FileExist(library_path) || App->file_system->FileExist(assets_path))
+						{
+							show_create_prefab_window = true;
+							prefab_assets_path_to_create = assets_path;
+							prefab_library_path_to_create = library_path;
+						}
+						else
+						{
+							App->scene->CreatePrefab(prefab_to_create, assets_path, library_path);
+							prefab_to_create = nullptr;
+							prefab_assets_path_to_create.clear();
+						}
 					}
 				}
 				ImGui::Separator();
@@ -129,6 +149,11 @@ void HierarchyWindow::DrawWindow()
 			}
 
 			ImGui::EndPopup();
+		}
+
+		if (show_create_prefab_window)
+		{
+			CreatePrefabWindow();
 		}
 
 		if (show_rename_window) {
@@ -305,4 +330,38 @@ void HierarchyWindow::IsMouseOver(GameObject * gameObject)
 			}
 		}
 	}
+}
+
+void HierarchyWindow::CreatePrefabWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
+	ImGui::SetNextWindowPosCenter();
+	ImGui::Begin("Prefab Alert!", &active,
+		ImGuiWindowFlags_NoFocusOnAppearing |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders |
+		ImGuiWindowFlags_NoTitleBar);
+	ImGui::Spacing();
+
+	ImGui::Text("A prefab with the same name exist in the Assets or Library folder (.fbx are treated as prefabs)!. Want to overwrite the file?");
+
+	if (ImGui::Button("Overwrite"))
+	{
+		App->scene->CreatePrefab(prefab_to_create, prefab_assets_path_to_create, prefab_library_path_to_create);
+		show_create_prefab_window = false;
+		prefab_to_create = nullptr;
+		prefab_assets_path_to_create.clear();
+		prefab_library_path_to_create.clear();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel"))
+	{
+		show_create_prefab_window = false;
+		prefab_to_create = nullptr;
+		prefab_assets_path_to_create.clear();
+		prefab_library_path_to_create.clear();
+	}
+	ImGui::End();
 }

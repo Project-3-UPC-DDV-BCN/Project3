@@ -27,6 +27,7 @@ class ComponentCollider;
 class ComponentJointDistance;
 class ComponentGOAPAgent;
 class GOAPGoal;
+class GameObject;
 
 class PropertiesWindow :
 	public Window
@@ -73,5 +74,6 @@ private:
 	float add_goal_inc_time = 0;
 
 	GOAPGoal* goal_to_add_condition = nullptr;
+	std::map<GameObject*, Component*> components_to_destroy;
 };
 

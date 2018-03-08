@@ -606,15 +606,17 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		uint program = 0;
 		if (material != nullptr)
 		{
-			Material* material = mesh->GetMaterial();
+			/*Material* material = mesh->GetMaterial();
 
 			uint program = 0;
 			if (material != nullptr)
 			{
-				program = material->GetShaderProgramID();
-				UseShaderProgram(program);
-				material->LoadToMemory();
-			}
+				
+			}*/
+
+			program = material->GetShaderProgramID();
+			UseShaderProgram(program);
+			material->LoadToMemory();
 
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());

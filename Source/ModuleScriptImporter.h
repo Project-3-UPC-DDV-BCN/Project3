@@ -50,10 +50,11 @@ private:
 	static MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
+	static MonoObject* FindGameObject(MonoString* gameobject_name);
 
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
-	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type);
+	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
 
 	//TRANSFORM
 	static void SetPosition(MonoObject * object, MonoObject * vector);
@@ -151,6 +152,10 @@ private:
 	static void SetBlackboardVariable(MonoString* name, float value);
 	static void SetBlackboardVariableB(MonoString* name, bool value);
 
+	//RANDOM
+	static int RandomInt(MonoObject* object);
+	static float RandomFloat(MonoObject* object);
+	static float RandomRange(MonoObject* object, float min, float max);
 
 private:
 	std::string mono_path;

@@ -4,9 +4,18 @@
 #include <map>
 #include <mono/metadata/metadata.h>
 #include <mono/metadata/object.h>
+#include "Component.h"
+
+class GameObject;
+
+struct MonoComponent
+{
+	const char* name;
+	MonoObject* component_object;
+	GameObject* attached_go;
+};
 
 class Data;
-class GameObject;
 
 class CSScript :
 	public Script
@@ -23,6 +32,9 @@ public:
 	void OnCollisionEnter(GameObject* other_collider);
 	void OnCollisionStay(GameObject* other_collider);
 	void OnCollisionExit(GameObject* other_collider);
+	void OnTriggerEnter(GameObject* other_collider);
+	void OnTriggerStay(GameObject* other_collider);
+	void OnTriggerExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
 	void OnComplete();
@@ -76,10 +88,11 @@ public:
 	MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);
+	MonoObject* FindGameObject(MonoString* gameobject_name);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
-	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type);
+	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
 
 	//TRANSFORM
 	void SetPosition(MonoObject * object, MonoObject * vector3);
@@ -178,7 +191,12 @@ public:
 	void SetBlackboardVariable(MonoString* name, float value);
 	void SetBlackboardVariable(MonoString* name, bool value);
 	
+	//RANDOM
+	int RandomInt(MonoObject* object);
+	float RandomFloat(MonoObject* object);
+	float RandomRange(MonoObject* object, float min, float max);
 
+	Component::ComponentType CsToCppComponent(std::string component_type);
 
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
@@ -215,6 +233,9 @@ private:
 	MonoMethod* on_collision_enter;
 	MonoMethod* on_collision_stay;
 	MonoMethod* on_collision_exit;
+	MonoMethod* on_trigger_enter;
+	MonoMethod * on_trigger_stay;
+	MonoMethod * on_trigger_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
 	MonoMethod* on_complete;
@@ -223,6 +244,7 @@ private:
 	std::vector<ScriptField*> script_fields;
 	bool modifying_self;
 	std::map<MonoObject*, GameObject*> created_gameobjects;
+	std::vector<MonoComponent*> created_components;
 	//std::map<MonoObject*, PerfTimer*> created_timers;
 	GameObject* active_gameobject;
 	bool inside_function;

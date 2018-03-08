@@ -30,6 +30,7 @@ Material * ModuleMaterialImporter::LoadMaterialFromLibrary(std::string path)
 	Data data;
 	if (data.LoadBinary(path)) {
 		material->Load(data);
+		material->SetLibraryPath(path);
 	}
 
 	return material;

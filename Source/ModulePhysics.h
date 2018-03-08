@@ -48,6 +48,8 @@ public:
 
 	void AddActorToList(physx::PxRigidActor* body, GameObject* gameobject);
 	void RemoveActorFromList(physx::PxRigidActor* body);
+	void AddNonBlastActorToList(physx::PxRigidActor* body, GameObject* gameobject);
+	void RemoveNonBlastActorFromList(physx::PxRigidActor* body);
 
 	void CleanPhysScene();
 
@@ -77,6 +79,7 @@ private:
 	std::map<physx::PxTriggerPair*, bool> trigger_stay_pairs;
 
 	std::map<physx::PxRigidActor*, GameObject*> physics_objects;
+	std::map<physx::PxRigidActor*, GameObject*> non_blast_objects;
 
 	NvFlowContext* flow_context;
 	NvFlowGrid* flow_grid;

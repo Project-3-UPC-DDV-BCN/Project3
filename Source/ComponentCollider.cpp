@@ -29,7 +29,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
 	AABB box;
 	box.SetFromCenterAndSize({ 0,0,0 }, { 1,1,1 });
-	if (mesh_renderer != nullptr)
+	if (mesh_renderer != nullptr && mesh_renderer->GetMesh() != nullptr)
 	{
 		box = mesh_renderer->GetMesh()->box;
 	}
@@ -403,7 +403,7 @@ void ComponentCollider::Save(Data & data) const
 	{
 		data.AddBool("HaveMaterial", true);
 		data.CreateSection("PhysMaterial");
-		phys_material->Save(data);
+		data.AddInt("UUID", phys_material->GetUID());
 		data.CloseSection();
 	}
 	else
@@ -448,10 +448,6 @@ void ComponentCollider::Load(Data & data)
 		data.EnterSection("PhysMaterial");
 		uint mat_id = data.GetUInt("UUID");
 		phys_material = App->resources->GetPhysMaterial(mat_id);
-		if (phys_material)
-		{
-			phys_material->Load(data);
-		}
 		data.LeaveSection();
 	}
 	SetColliderCenter(data.GetVector3("ColliderCenter"));

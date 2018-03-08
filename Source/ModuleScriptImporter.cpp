@@ -76,14 +76,14 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 		return false;
 	}
 
-	MonoAssembly* compiler_assembly = mono_domain_assembly_open(mono_domain, REFERENCE_ASSEMBLIES_FOLDER"compiler.dll");
+	MonoAssembly* compiler_assembly = mono_domain_assembly_open(mono_domain, REFERENCE_ASSEMBLIES_FOLDER"ScriptCompiler.dll");
 	if (compiler_assembly)
 	{
 		mono_compiler_image = mono_assembly_get_image(compiler_assembly);
 	}
 	else
 	{
-		CONSOLE_ERROR("Can't load 'Compiler.dll'!");
+		CONSOLE_ERROR("Can't load 'ScriptCompiler.dll'!");
 		return false;
 	}
 
@@ -98,7 +98,29 @@ std::string ModuleScriptImporter::ImportScript(std::string path)
 
 	if (result != "")
 	{
-		CONSOLE_ERROR("%s", result.c_str());
+		for (int i = 0; i < result.size(); i++)
+			{
+			std::string message;
+			while (result[i] != '|' && result[i] != '\0')
+			{
+				message += result[i];
+				i++;
+			}
+			if (message.find("[Warning]") != std::string::npos)
+			{
+				message.erase(0, 9);
+				CONSOLE_WARNING("%s", message.c_str());
+			}
+			else if (message.find("[Error]") != std::string::npos)
+			{
+				message.erase(0, 7);
+				CONSOLE_ERROR("%s", message.c_str());
+			}
+			else
+			{
+				CONSOLE_LOG("%s", message.c_str());
+			}
+		}
 	}
 	else
 	{
@@ -250,6 +272,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::GetChildCount", (const void*)GetGameObjectChildCount);
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
+	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -323,11 +346,11 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
 	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
-
 	mono_add_internal_call("TheEngine.TheAudioSource::Play", (const void*)Play);
 	mono_add_internal_call("TheEngine.TheAudioSource::Stop", (const void*)Stop);
 	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
 
+	//EMITER
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
 
@@ -346,6 +369,11 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetGoalConditionName", (const void*)GetGoalConditionName);
 	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, float)", (const void*)SetBlackboardVariable);
 	mono_add_internal_call("TheEngine.TheGOAPAgent::SetBlackboardVariable(string, bool)", (const void*)SetBlackboardVariableB);
+
+	//RANDOM
+	mono_add_internal_call("TheEngine.TheRandom::RandomInt", (const void*)RandomInt);
+	mono_add_internal_call("TheEngine.TheRandom::RandomFloat", (const void*)RandomFloat);
+	mono_add_internal_call("TheEngine.TheRandom::RandomRange", (const void*)RandomRange);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -433,14 +461,19 @@ int ModuleScriptImporter::GetGameObjectChildCount(MonoObject * object)
 	return current_script->GetGameObjectChildCount(object);
 }
 
+MonoObject * ModuleScriptImporter::FindGameObject(MonoString * gameobject_name)
+{
+	return current_script->FindGameObject(gameobject_name);
+}
+
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
 {
 	return current_script->AddComponent(object, type);
 }
 
-MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type)
+MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
-	return current_script->GetComponent(object, type);
+	return current_script->GetComponent(object, type, index);
 }
 
 void ModuleScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
@@ -661,45 +694,66 @@ void ModuleScriptImporter::RumbleController(int pad, float strength, int ms)
 void ModuleScriptImporter::Log(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
-	MonoString* str = mono_object_to_string(object, &exception);
-	if (exception)
+	if (object != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		MonoString* str = mono_object_to_string(object, &exception);
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+		else
+		{
+			const char* message = mono_string_to_utf8(str);
+			CONSOLE_LOG("%s", message);
+		}
 	}
 	else
 	{
-		const char* message = mono_string_to_utf8(str);
-		CONSOLE_LOG("%s", message);
+		CONSOLE_ERROR("Trying to print a null argument!");
 	}
 }
 
 void ModuleScriptImporter::Warning(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
-	MonoString* str = mono_object_to_string(object, &exception);
-	if (exception)
+	if (object != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		MonoString* str = mono_object_to_string(object, &exception);
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+		else
+		{
+			const char* message = mono_string_to_utf8(str);
+			CONSOLE_WARNING("%s", message);
+		}
 	}
 	else
 	{
-		const char* message = mono_string_to_utf8(str);
-		CONSOLE_WARNING("%s", message);
+		CONSOLE_ERROR("Trying to print a null argument!");
 	}
 }
 
 void ModuleScriptImporter::Error(MonoObject * object)
 {
 	MonoObject* exception = nullptr;
-	MonoString* str2 = mono_object_to_string(object, &exception);
-	if (exception)
+	if (object != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		MonoString* str2 = mono_object_to_string(object, &exception);
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+		else
+		{
+			const char* message = mono_string_to_utf8(str2);
+			CONSOLE_ERROR("%s", message);
+		}
 	}
 	else
 	{
-		const char* message = mono_string_to_utf8(str2);
-		CONSOLE_ERROR("%s", message);
+		CONSOLE_ERROR("Trying to print a null argument!");
 	}
 }
 
@@ -820,4 +874,19 @@ void ModuleScriptImporter::SetBlackboardVariable(MonoString * name, float value)
 void ModuleScriptImporter::SetBlackboardVariableB(MonoString * name, bool value)
 {
 	current_script->SetBlackboardVariable(name, value);
+}
+
+int ModuleScriptImporter::RandomInt(MonoObject * object)
+{
+	return current_script->RandomInt(object);
+}
+
+float ModuleScriptImporter::RandomFloat(MonoObject * object)
+{
+	return current_script->RandomFloat(object);
+}
+
+float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
+{
+	return current_script->RandomRange(object, min, max);
 }

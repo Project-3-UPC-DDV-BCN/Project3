@@ -89,19 +89,17 @@ void ComponentMeshRenderer::UnloadFromMemory()
 
 void ComponentMeshRenderer::Save(Data & data) const
 {
-
-
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
 	data.CreateSection("Mesh");
-	if(mesh) mesh->Save(data);
+	if (mesh) data.AddString("mesh_name", mesh->GetName());
 	data.CloseSection();
 	data.CreateSection("Material");
-	if(material)material->Save(data);
+	if(material) data.AddString("Name", material->GetName());
 	data.CloseSection();
 	data.CreateSection("Interior_Material");
-	if (interior_material)interior_material->Save(data);
+	if (interior_material) data.AddUInt("UUID", interior_material->GetUID());
 	data.CloseSection();
 	//data.AddInt("Mesh_Type", mesh_type);
 	data.AddInt("Mat_Indices_Number", material_indices_number);
@@ -116,39 +114,18 @@ void ComponentMeshRenderer::Load(Data & data)
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
 	data.EnterSection("Mesh");
-	uint mesh_uid = data.GetUInt("UUID");
-	if (mesh_uid != 0)
-	{
-		mesh = App->resources->GetMesh(mesh_uid);
-		if (!mesh)
-		{
-			mesh = new Mesh();
-			mesh->Load(data);
-		}
-	}
+	std::string mesh_name = data.GetString("mesh_name");
+	mesh = App->resources->GetMesh(mesh_name);
 	data.LeaveSection();
 	data.EnterSection("Material");
-	uint material_uid = data.GetUInt("UUID");
-	if (material_uid != 0)
-	{
-		material = App->resources->GetMaterial(material_uid);
-		if (!material)
-		{
-			material = new Material();
-		}
-		material->Load(data);
-	}
+	std::string material_name = data.GetString("Name");
+	material = App->resources->GetMaterial(material_name);
 	data.LeaveSection();
 	data.EnterSection("Interior_Material");
 	uint int_material_uid = data.GetUInt("UUID");
 	if (int_material_uid != 0)
 	{
 		interior_material = App->resources->GetMaterial(int_material_uid);
-		if (!interior_material)
-		{
-			interior_material = new Material();
-			interior_material->Load(data);
-		}
 	}
 	data.LeaveSection();
 	//mesh_type = (MeshType)data.GetInt("Mesh_Type");

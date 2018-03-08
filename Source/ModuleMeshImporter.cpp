@@ -867,6 +867,8 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 
 			mesh->CreateVerticesFromData();
 			mesh->SetLibraryPath(path);
+			std::string name = App->file_system->GetFileNameWithoutExtension(path);
+			mesh->SetName(name);
 		}
 		else
 		{

@@ -238,6 +238,9 @@ void ModuleResources::FillResourcesLists()
 		case Resource::ParticleFXResource:
 			particle_order.push_back(*it);
 			break;
+		case Resource::PrefabResource:
+
+			break;
 		}
 	}
 
@@ -249,6 +252,16 @@ void ModuleResources::FillResourcesLists()
 
 	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
 		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = blast_mesh_order.begin(); it != blast_mesh_order.end(); ++it)
+		CreateResource(*it);
+
+	std::vector<std::string> meshes_in_mesh_library = App->file_system->GetFilesInDirectory(App->file_system->StringToPathFormat(LIBRARY_MESHES_FOLDER_PATH));
+	for (std::vector<std::string>::iterator it = meshes_in_mesh_library.begin(); it != meshes_in_mesh_library.end(); ++it)
+	{
+		Mesh* m = App->mesh_importer->LoadMeshFromLibrary(*it);
+		AddMesh(m);
+	}
 
 	for (std::vector<string>::iterator it = shader_order.begin(); it != shader_order.end(); ++it)
 		CreateResource(*it);
@@ -265,9 +278,6 @@ void ModuleResources::FillResourcesLists()
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = phys_mat_order.begin(); it != phys_mat_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = blast_mesh_order.begin(); it != blast_mesh_order.end(); ++it)
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = goap_goal_order.begin(); it != goap_goal_order.end(); ++it)
