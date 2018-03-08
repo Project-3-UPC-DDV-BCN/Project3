@@ -23,7 +23,7 @@ public class GameManager
 		
 	}
 
-	void SetTeam(const string team)
+	void SetTeam(string team)
 	{
 		if(team == "Alliance")
 			is_alliance = true; 
@@ -31,7 +31,7 @@ public class GameManager
 			is_alliance = false; 
 	}
 
-	void CreateShips(const string team)
+	void CreateShips(string team)
 	{
 		if(team == "Alliance")
 		{
