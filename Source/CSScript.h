@@ -89,6 +89,7 @@ public:
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);
 	MonoObject* FindGameObject(MonoString* gameobject_name);
+	MonoArray* GetSceneGameObjects(MonoObject* object);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);

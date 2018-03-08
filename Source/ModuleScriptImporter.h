@@ -51,6 +51,7 @@ private:
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
 	static MonoObject* FindGameObject(MonoString* gameobject_name);
+	static MonoArray* GetSceneGameObjects(MonoObject* object);
 
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);

@@ -273,6 +273,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
+	mono_add_internal_call("TheEngine.TheGameObject::GetSceneGameObjects", (const void*)GetSceneGameObjects);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -464,6 +465,11 @@ int ModuleScriptImporter::GetGameObjectChildCount(MonoObject * object)
 MonoObject * ModuleScriptImporter::FindGameObject(MonoString * gameobject_name)
 {
 	return current_script->FindGameObject(gameobject_name);
+}
+
+MonoArray * ModuleScriptImporter::GetSceneGameObjects(MonoObject * object)
+{
+	return current_script->GetSceneGameObjects(object);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)

@@ -59,6 +59,9 @@ namespace TheEngine
         public extern static TheGameObject Find(string gameobject_name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static TheGameObject[] GetSceneGameObjects();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void CreateNewGameObject(TheGameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

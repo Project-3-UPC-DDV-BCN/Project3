@@ -979,7 +979,7 @@ void CSScript::SetGameObjectParent(MonoObject * object, MonoObject * parent)
 		return;
 	}
 
-	GameObject* go_parent = created_gameobjects[parent];
+	GameObject* go_parent = created_gameobjects.at(parent);
 	if (go_parent != nullptr)
 	{
 		active_gameobject->SetParent(go_parent);
@@ -1094,6 +1094,47 @@ MonoObject * CSScript::FindGameObject(MonoString * gameobject_name)
 		}
 	}
 
+	return nullptr;
+}
+
+MonoArray * CSScript::GetSceneGameObjects(MonoObject * object)
+{
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+	std::list<GameObject*> objects = App->scene->scene_gameobjects;
+
+	if (c)
+	{
+		MonoArray* scene_objects = mono_array_new(mono_domain, c, objects.size());
+		if (scene_objects)
+		{
+			int index = 0;
+			for (GameObject* go : objects)
+			{
+				bool exist = false;
+				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+				{
+					if (it->second == go)
+					{
+						mono_array_set(scene_objects, MonoObject*, index, it->first);
+						index++;
+						exist = true;
+						break;
+					}
+				}
+				if (!exist)
+				{
+					MonoObject* new_object = mono_object_new(mono_domain, c);
+					if (new_object)
+					{
+						mono_array_set(scene_objects, MonoObject*, index, new_object);
+						index++;
+						created_gameobjects[new_object] = go;
+					}
+				}
+			}
+			return scene_objects;
+		}
+	}
 	return nullptr;
 }
 
