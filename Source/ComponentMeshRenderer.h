@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "MathGeoLib/AABB.h"
 
 class Mesh;
 class Material;
@@ -38,10 +39,12 @@ public:
 	Material* GetInteriorMaterial() const;
 	void SetInteriorMaterial(Material* material);
 
+public:
 	int material_indices_number;
 	int material_indices_start;
 	int interior_material_indices_number;
 	int interior_material_indices_start;
+	AABB bounding_box;
 	////////////////////////////////////////
 
 private:

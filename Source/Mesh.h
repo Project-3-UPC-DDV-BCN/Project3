@@ -35,6 +35,7 @@ public:
 	float* vertices_data = nullptr;
 	float* vertices = nullptr; //copy of the vertices for animation and aabb enclose
 
+	//Don't use this! This still here waiting for a fix. Use box in MeshRenderer!
 	AABB box;
 
 	uint id_vao = 0;

@@ -269,7 +269,7 @@ bool ModuleAudio::CheckEnvironments(GameObject * go)
 	for (int i = 0; i < environments.size(); i++)
 	{
 		float value = 0.0;
-		if (environments[i]->CheckCollision(meshrend->GetMesh()->box));
+		if (environments[i]->CheckCollision(meshrend->bounding_box));
 		{
 			value = environments[i]->distorsion_value;
 		}
@@ -280,7 +280,7 @@ bool ModuleAudio::CheckEnvironments(GameObject * go)
 		for (int i = 0; i < environments.size(); i++)
 		{
 			float value = 0.0;
-			if (environments[i]->CheckCollision(meshrend->GetMesh()->box));
+			if (environments[i]->CheckCollision(meshrend->bounding_box));
 			{
 				value = environments[i]->distorsion_value;
 			}

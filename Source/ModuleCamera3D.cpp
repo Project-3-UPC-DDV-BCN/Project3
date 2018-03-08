@@ -259,7 +259,7 @@ void ModuleCamera3D::MousePickRay(int mouse_x, int mouse_y)
 			{
 				float dist_near;
 				float dist_far;
-				if (ray.Intersects(mesh_renderer->GetMesh()->box, dist_near, dist_far))//Try intersection with AABB, if it intersects, then try with triangles
+				if (ray.Intersects(mesh_renderer->bounding_box, dist_near, dist_far))//Try intersection with AABB, if it intersects, then try with triangles
 				{
 					float* mesh_vertices = mesh_renderer->GetMesh()->vertices;
 					uint* mesh_indices = mesh_renderer->GetMesh()->indices;

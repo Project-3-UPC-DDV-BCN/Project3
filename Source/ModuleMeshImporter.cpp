@@ -858,10 +858,10 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 			mesh->vertices_data = new float[mesh->num_vertices * 19];
 			memcpy(mesh->vertices_data, cursor, bytes);
 
-			// AABB
-			cursor += bytes;
-			bytes = sizeof(AABB);
-			memcpy(&mesh->box.minPoint.x, cursor, bytes);
+			//// AABB
+			//cursor += bytes;
+			//bytes = sizeof(AABB);
+			//memcpy(&mesh->box.minPoint.x, cursor, bytes);
 
 			RELEASE_ARRAY(buffer);
 
@@ -912,10 +912,10 @@ void ModuleMeshImporter::SaveMeshToLibrary(Mesh& mesh)
 	bytes = sizeof(float) * mesh.num_vertices * 19;
 	memcpy(cursor, mesh.vertices_data, bytes);
 
-	// Store AABB
-	cursor += bytes;
-	bytes = sizeof(AABB);
-	memcpy(cursor, &mesh.box.minPoint.x, bytes);
+	//// Store AABB
+	//cursor += bytes;
+	//bytes = sizeof(AABB);
+	//memcpy(cursor, &mesh.box.minPoint.x, bytes);
 
 	
 	std::string mesh_name = mesh.GetName();

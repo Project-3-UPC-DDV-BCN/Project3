@@ -185,6 +185,8 @@ void ModuleResources::FillResourcesLists()
 	std::vector<std::string> goap_action_order;
 	//ParticleFX
 	std::vector<std::string> particle_order;
+	//prefabs
+	std::vector<std::string> prefab_order;
 
 	// Create lists in order of Drive
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
@@ -239,7 +241,7 @@ void ModuleResources::FillResourcesLists()
 			particle_order.push_back(*it);
 			break;
 		case Resource::PrefabResource:
-
+			prefab_order.push_back(*it);
 			break;
 		}
 	}
@@ -251,7 +253,7 @@ void ModuleResources::FillResourcesLists()
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
-		CreateResource(*it);
+		CreateLibraryFile(Resource::MeshResource ,*it);
 
 	for (std::vector<string>::iterator it = blast_mesh_order.begin(); it != blast_mesh_order.end(); ++it)
 		CreateResource(*it);
@@ -263,13 +265,16 @@ void ModuleResources::FillResourcesLists()
 		AddMesh(m);
 	}
 
+	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
+		CreateResource(*it);
+
+	for (std::vector<string>::iterator it = prefab_order.begin(); it != prefab_order.end(); ++it)
+		CreateResource(*it);
+
 	for (std::vector<string>::iterator it = shader_order.begin(); it != shader_order.end(); ++it)
 		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = shader_program_order.begin(); it != shader_program_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
 		CreateResource(*it);
 
 	// AudioRes

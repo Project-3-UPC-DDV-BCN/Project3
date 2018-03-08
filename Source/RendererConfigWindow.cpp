@@ -25,34 +25,35 @@ void RendererConfigWindow::DrawWindow()
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_ShowBorders);
 
-	bool depth_test = App->renderer3D->GetActiveDepthTest();
-	ImGui::Checkbox("GL_DEPTH_TEST", &depth_test);
-	App->renderer3D->SetActiveDepthTest(depth_test);
+	CONSOLE_LOG("%.3f, %3.f", ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+	//bool depth_test = App->renderer3D->GetActiveDepthTest();
+	//ImGui::Checkbox("GL_DEPTH_TEST", &depth_test);
+	//App->renderer3D->SetActiveDepthTest(depth_test);
 
-	bool cull_test = App->renderer3D->GetActiveCullTest();
-	ImGui::Checkbox("GL_CULL_TEST", &cull_test);
-	App->renderer3D->SetActiveCullTest(cull_test);
+	//bool cull_test = App->renderer3D->GetActiveCullTest();
+	//ImGui::Checkbox("GL_CULL_TEST", &cull_test);
+	//App->renderer3D->SetActiveCullTest(cull_test);
 
-	bool fog = App->renderer3D->GetActiveFog();
-	ImGui::Checkbox("GL_FOG", &fog);
-	App->renderer3D->SetActiveFog(fog);
-	if (fog)
-	{
-		ImGui::TextColored(ImVec4(0, 1, 0, 1), "Test Fog");
-		ImGui::SliderFloat4("Fog Color", fog_color, 0.0, 1.0);
-		glFogfv(GL_FOG_COLOR, fog_color);
-		ImGui::SliderFloat("Fog Density", &fog_density, 0.0f, 1.0f);
-		glFogf(GL_FOG_DENSITY, fog_density);
-		const char* modes[] = { "Linear", "EXP", "EXP2"};
-		static int mode = 1; //1 = EXP Mode. This is the initial mode. 
-		ImGui::Combo("Fog Mode", &mode, modes, IM_ARRAYSIZE(modes));
-		glFogi(GL_FOG_MODE, mode);
-	}
+	//bool fog = App->renderer3D->GetActiveFog();
+	//ImGui::Checkbox("GL_FOG", &fog);
+	//App->renderer3D->SetActiveFog(fog);
+	//if (fog)
+	//{
+	//	//ImGui::TextColored(ImVec4(0, 1, 0, 1), "Test Fog");
+	//	//ImGui::SliderFloat4("Fog Color", fog_color, 0.0, 1.0);
+	//	//glFogfv(GL_FOG_COLOR, fog_color);
+	//	//ImGui::SliderFloat("Fog Density", &fog_density, 0.0f, 1.0f);
+	//	//glFogf(GL_FOG_DENSITY, fog_density);
+	//	//const char* modes[] = { "Linear", "EXP", "EXP2"};
+	//	//static int mode = 1; //1 = EXP Mode. This is the initial mode. 
+	//	//ImGui::Combo("Fog Mode", &mode, modes, IM_ARRAYSIZE(modes));
+	//	//glFogi(GL_FOG_MODE, mode);
+	//}
 
-	if (!active)
-	{
-		SetDefaultValues();
-	}
+	//if (!active)
+	//{
+	//	SetDefaultValues();
+	//}
 
 	ImGui::InputFloat("Skybox Distance##skyboxasdf", &App->scene->skybox_size,1.0f);
 

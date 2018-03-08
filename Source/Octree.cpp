@@ -41,7 +41,7 @@ void OctreeNode::InsertInNode(ComponentMeshRenderer * mesh)
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			if (node_childs[i]->node_box.Intersects(mesh->GetMesh()->box))
+			if (node_childs[i]->node_box.Intersects(mesh->bounding_box))
 			{
 				node_childs[i]->InsertInNode(mesh);
 				break;
@@ -111,7 +111,7 @@ void OctreeNode::DivideNode()
 		{
 			for (int i = 0; i < 8; i++)
 			{
-				if (node_childs[i]->node_box.Intersects((*it)->GetMesh()->box.ToOBB().MinimalEnclosingAABB()))
+				if (node_childs[i]->node_box.Intersects((*it)->bounding_box.ToOBB().MinimalEnclosingAABB()))
 				{
 					node_childs[i]->InsertInNode(*it);
 				}
@@ -149,7 +149,7 @@ void OctreeNode::CollectIntersections(std::list<ComponentMeshRenderer*>& interse
 	for (std::list<ComponentMeshRenderer*>::iterator it = node_contents.begin(); it != node_contents.end(); it++)
 	{
 		if ((*it) == nullptr || (*it)->GetMesh() == nullptr) continue;
-		if ((*it)->GetMesh()->box.Intersects(*bounding_box))
+		if ((*it)->bounding_box.Intersects(*bounding_box))
 		{
 			intersections_list.push_back(*it);
 		}
@@ -211,34 +211,34 @@ void Octree::Insert(ComponentMeshRenderer * mesh)
 	if (root_node != nullptr)
 	{
 		//If the box that we need to insert is out of the octree, we will need to update the octree.
-		if (mesh->GetMesh()->box.minPoint.x < min_point.x)
+		if (mesh->bounding_box.minPoint.x < min_point.x)
 		{
-			min_point.x = mesh->GetMesh()->box.minPoint.x;
+			min_point.x = mesh->bounding_box.minPoint.x;
 			update_tree = true;
 		}
-		if (mesh->GetMesh()->box.minPoint.y < min_point.y)
+		if (mesh->bounding_box.minPoint.y < min_point.y)
 		{
-			min_point.y = mesh->GetMesh()->box.minPoint.y;
+			min_point.y = mesh->bounding_box.minPoint.y;
 			update_tree = true;
 		}
-		if (mesh->GetMesh()->box.minPoint.z < min_point.z)
+		if (mesh->bounding_box.minPoint.z < min_point.z)
 		{ 
-			min_point.z = mesh->GetMesh()->box.minPoint.z;
+			min_point.z = mesh->bounding_box.minPoint.z;
 			update_tree = true;
 		}
-		if (mesh->GetMesh()->box.maxPoint.x > max_point.x)
+		if (mesh->bounding_box.maxPoint.x > max_point.x)
 		{
-			max_point.x = mesh->GetMesh()->box.maxPoint.x;
+			max_point.x = mesh->bounding_box.maxPoint.x;
 			update_tree = true;
 		}
-		if (mesh->GetMesh()->box.maxPoint.y > max_point.y)
+		if (mesh->bounding_box.maxPoint.y > max_point.y)
 		{
-			max_point.y = mesh->GetMesh()->box.maxPoint.y;
+			max_point.y = mesh->bounding_box.maxPoint.y;
 			update_tree = true;
 		}
-		if (mesh->GetMesh()->box.maxPoint.z > max_point.z)
+		if (mesh->bounding_box.maxPoint.z > max_point.z)
 		{
-			max_point.z = mesh->GetMesh()->box.maxPoint.z;
+			max_point.z = mesh->bounding_box.maxPoint.z;
 			update_tree = true;
 		}
 
@@ -255,8 +255,8 @@ void Octree::Erase(ComponentMeshRenderer * mesh)
 	if (root_node != nullptr && mesh != nullptr && mesh->GetMesh() != nullptr)
 	{
 		//If the box that we need to delete is at any corner of the octree, we will need to update the octree.
-		if (mesh->GetMesh()->box.minPoint.x == min_point.x || mesh->GetMesh()->box.minPoint.y == min_point.y || mesh->GetMesh()->box.minPoint.z == min_point.z ||
-			mesh->GetMesh()->box.maxPoint.x == max_point.x || mesh->GetMesh()->box.maxPoint.y == max_point.y || mesh->GetMesh()->box.maxPoint.z == max_point.z)
+		if (mesh->bounding_box.minPoint.x == min_point.x || mesh->bounding_box.minPoint.y == min_point.y || mesh->bounding_box.minPoint.z == min_point.z ||
+			mesh->bounding_box.maxPoint.x == max_point.x || mesh->bounding_box.maxPoint.y == max_point.y || mesh->bounding_box.maxPoint.z == max_point.z)
 		{
 			update_tree = true;
 		}

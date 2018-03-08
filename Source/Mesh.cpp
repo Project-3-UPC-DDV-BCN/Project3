@@ -16,11 +16,10 @@ Mesh::Mesh()
 	id_indices = 0;
 	num_vertices = 0;
 
-	box.minPoint = { 0,0,0 };
-	box.maxPoint = { 0,0,0 };
-
 	SetType(Resource::MeshResource);
 
+	box.minPoint = { 0,0,0 };
+	box.maxPoint = { 0,0,0 };
 }
 
 Mesh::~Mesh()
@@ -111,8 +110,10 @@ void Mesh::UnloadFromMemory()
 	if (GetUsedCount() == 0)
 	{
 		glDeleteBuffers(1, &id_vertices_data);
-
 		id_vertices_data = 0;
+
+		glDeleteBuffers(1, &id_indices);
+		id_indices = 0;
 	}
 }
 
