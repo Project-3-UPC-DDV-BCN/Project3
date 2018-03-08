@@ -22,6 +22,7 @@ public:
 	void SetLayer(int layer);
 
 	void SetPosition(const float2& pos);
+	void SetPosition(const float3& pos);
 	void SetSize(const float2& size);
 	void SetTransform(const float4x4& trans);
 	void SetOrtoTransform(const float4x4& trans);
@@ -49,7 +50,7 @@ private:
 	int			      layer = 0;
 
 	Mesh*			  plane = nullptr;
-	float2			  pos;
+	float3			  pos;
 	float2			  size;
 	float4x4		  transform;
 	float4x4		  orto_transform;

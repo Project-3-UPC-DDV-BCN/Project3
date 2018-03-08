@@ -59,7 +59,8 @@ PropertiesWindow::PropertiesWindow()
 	colliders_count = 0;
 	distance_joints_count = 0;
 	lights_count = 0;
-
+	radar_marker_select = false;
+	marker_to_change = 0;
 }
 
 PropertiesWindow::~PropertiesWindow()
@@ -622,26 +623,26 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						rect_transform->SetAnchor(anchor);
 					}
 
-					if (ImGui::Checkbox("Snap Up", &snap_up))
+				/*	if (ImGui::Checkbox("Snap Up", &snap_up))
 					{
 						rect_transform->SetSnapUp(snap_up);
-					}
+					}*/
 
-					ImGui::SameLine();
-					if (ImGui::Checkbox("Snap Down", &snap_down))
-					{
-						rect_transform->SetSnapDown(snap_down);
-					}
+					//ImGui::SameLine();
+					//if (ImGui::Checkbox("Snap Down", &snap_down))
+					//{
+					//	rect_transform->SetSnapDown(snap_down);
+					//}
 
-					if (ImGui::Checkbox("Snap Left", &snap_left))
-					{
-						rect_transform->SetSnapLeft(snap_left);
-					}
-					ImGui::SameLine();
-					if (ImGui::Checkbox("Snap Right", &snap_right))
-					{
-						rect_transform->SetSnapRight(snap_right);
-					}
+					//if (ImGui::Checkbox("Snap Left", &snap_left))
+					//{
+					//	rect_transform->SetSnapLeft(snap_left);
+					//}
+					//ImGui::SameLine();
+					//if (ImGui::Checkbox("Snap Right", &snap_right))
+					//{
+					//	rect_transform->SetSnapRight(snap_right);
+					//}
 
 					if (ImGui::Checkbox("Interactable", &interactable))
 					{
@@ -745,7 +746,7 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 			Texture* tex = image->GetTexture();
 
 			if (ImGui::InputResourceTexture("Texture", &tex));
-			image->SetTexture(tex);
+				image->SetTexture(tex);
 
 			if (image->GetTexture() != nullptr)
 			{
@@ -929,8 +930,7 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 	{
 		Texture* background_texture = radar->GetBackgroundTexture();
 		float max_distance = radar->GetMaxDistance();
-		std::vector<RadarMarker> markers = radar->GetMarkers();
-		std::vector<RadarEntity> entities = radar->GetEntities();
+		GameObject* center_go = radar->GetCenter();
 
 		if (ImGui::InputResourceTexture("Background Texture", &background_texture))
 		{
@@ -942,37 +942,101 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 			radar->SetMaxDistance(max_distance);
 		}
 
-		if (ImGui::Button("Add Marker"))
+		if (ImGui::InputResourceGameObject("Center Go", &center_go))
 		{
-			std::string marker_name = "Marker_" + std::to_string(markers.size());
-			radar->CreateMarker(marker_name.c_str(), nullptr);
+			radar->SetCenter(center_go);
 		}
-		ImGui::SameLine();
 
-		if (markers.size() > 0)
+		if (center_go != nullptr)
 		{
-			if (ImGui::Button("Add Entity"))
+
+			if (ImGui::Button("Add Marker"))
 			{
-				std::string marker_name = "Entity_" + std::to_string(entities.size());
-			/*	radar->AddEntity(nullptr, nullptr);*/
+				std::string marker_name = "Marker_" + std::to_string(radar->markers.size());
+				radar->CreateMarker(marker_name.c_str(), nullptr);
 			}
-		}
+
+			if (radar->markers.size() > 0)
+			{
+				ImGui::SameLine();
+
+				if (ImGui::Button("Add Entity"))
+				{
+					std::string marker_name = "Entity_" + std::to_string(radar->entities.size());
+					radar->AddEntity(nullptr);
+				}
+			}
 
 
-		ImGui::Text("Markers");
+			ImGui::Text("Markers");
 
-		for (std::vector<RadarMarker>::iterator it = markers.begin(); it != markers.end(); ++it)
-		{
-			ImGui::Text((*it).marker_name.c_str());
-		}
+			int markers_count = 0;
+			for (std::vector<RadarMarker>::iterator it = radar->markers.begin(); it != radar->markers.end(); ++it)
+			{
+				char name[100];
+				strcpy_s(name, 100, (*it).marker_name.c_str());
+				Texture* marker_texture = (*it).marker_texture;
 
-		ImGui::Separator();
+				if (ImGui::InputText("Name", name, 100))
+				{
+					(*it).marker_name = name;
+				}
 
-		ImGui::Text("Entities");
+				ImGui::SameLine();
+				if (ImGui::Button("X"))
+				{
+					radar->markers.erase(it);
+					break;
+				}
 
-		for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
-		{
-	/*		ImGui::Text((*it).marker_name.c_str());*/
+				if (ImGui::InputResourceTexture("Texture", &marker_texture));
+				(*it).marker_texture = marker_texture;
+			}
+
+			ImGui::Separator();
+
+			ImGui::Text("Entities");
+
+			for (int i = 0; i < radar->entities.size(); ++i)
+			{
+				GameObject* curr_go = radar->entities[i].go;
+
+				if (ImGui::InputResourceGameObject("GameObject", &curr_go))
+				{
+					radar->entities[i].go = curr_go;
+				}
+
+				if (radar->entities[i].go != nullptr)
+					ImGui::Text(radar->entities[i].go->GetName().c_str());
+
+				if (radar->entities[i].has_marker)
+				{
+					ImGui::SameLine();
+					ImGui::Text(radar->entities[i].marker.marker_name.c_str());
+				}
+
+				if (ImGui::Button("Add Marker"))
+				{
+					radar_marker_select = true;
+					marker_to_change = i;
+				}
+
+				/*ImGui::SetWindowSize(ImVec2(300, 600));
+				if (ImGui::Begin("Marker Adder", &radar_marker_select))
+				{
+					for (std::vector<RadarMarker>::iterator mar = radar->markers.begin(); mar != radar->markers.end(); ++mar)
+					{
+						if (ImGui::Button((*mar).marker_name.c_str()))
+						{
+							radar->AddMarkerToEntity(i, (*mar));
+							radar_marker_select = false;
+							break;
+						}
+					}
+
+					ImGui::End();
+				}*/
+			}
 		}
 	}
 }

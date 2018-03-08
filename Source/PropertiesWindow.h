@@ -65,5 +65,7 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+	bool radar_marker_select;
+	int marker_to_change;
 };
 

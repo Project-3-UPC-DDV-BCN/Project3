@@ -22,6 +22,7 @@ struct RadarEntity
 {
 	GameObject* go = nullptr;
 	RadarMarker marker;
+	bool has_marker = false;
 };
 
 class ComponentRadar: public Component
@@ -40,11 +41,11 @@ public:
 
 	void CreateMarker(const char* name, Texture* texture);
 	void DeleteMarker(const char* name);
-	std::vector<RadarMarker> GetMarkers() const;
 
-	void AddEntity(GameObject* go, RadarMarker marker);
+	void AddEntity(GameObject* go);
+	void AddMarkerToEntity(int entity_index, RadarMarker marker);
+
 	void RemoveEntity(GameObject* go);
-	std::vector<RadarEntity> GetEntities() const;
 
 	void SetMaxDistance(float distance);
 	float GetMaxDistance() const;
@@ -56,14 +57,16 @@ private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
 
+public:
+	std::vector<RadarMarker> markers;
+	std::vector<RadarEntity> entities;
+
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
 
 	Texture* background_texture;
 
 	GameObject* center_go;
-	std::vector<RadarMarker> markers;
-	std::vector<RadarEntity> entities;
 
 	float max_distance;
 };

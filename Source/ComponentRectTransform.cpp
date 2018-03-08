@@ -788,10 +788,10 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddVector2("pos", pos);
 	data.AddVector2("size", size);
 	data.AddVector2("anchor", anchor);
-	data.AddBool("snap_up", snap_up);
-	data.AddBool("snap_down", snap_down);
-	data.AddBool("snap_left", snap_left);
-	data.AddBool("snap_right", snap_right);
+	//data.AddBool("snap_up", snap_up);
+	//data.AddBool("snap_down", snap_down);
+	//data.AddBool("snap_left", snap_left);
+	//data.AddBool("snap_right", snap_right);
 	data.AddFloat("scale", 1.0f);
 	data.AddBool("interactable", interactable);
 }
@@ -803,10 +803,10 @@ void ComponentRectTransform::Load(Data & data)
 	SetPos(data.GetVector2("pos"));
 	SetSize(data.GetVector2("size"));
 	SetAnchor(data.GetVector2("anchor"));
-	SetSnapUp(data.GetBool("snap_up"));
-	SetSnapDown(data.GetBool("snap_down"));
-	SetSnapLeft(data.GetBool("snap_left"));
-	SetSnapRight(data.GetBool("snap_right"));
+	//SetSnapUp(data.GetBool("snap_up"));
+	//SetSnapDown(data.GetBool("snap_down"));
+	//SetSnapLeft(data.GetBool("snap_left"));
+	//SetSnapRight(data.GetBool("snap_right"));
 	SetScale(data.GetFloat("scale"));
 	SetInteractable(data.GetBool("interactable"));
 }

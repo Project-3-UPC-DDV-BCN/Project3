@@ -4,6 +4,7 @@
 #include "ComponentRectTransform.h"
 #include "Texture.h"
 #include "UsefulFunctions.h"
+#include "ComponentTransform.h"
 
 ComponentRadar::ComponentRadar(GameObject * attached_gameobject)
 {
@@ -17,6 +18,8 @@ ComponentRadar::ComponentRadar(GameObject * attached_gameobject)
 	c_rect_trans->SetSize(float2(100, 100));
 
 	c_rect_trans->SetFixedAspectRatio(true);
+
+	c_rect_trans->SetInteractable(false);
 
 	background_texture = nullptr;
 	center_go = nullptr;
@@ -48,6 +51,75 @@ bool ComponentRadar::Update()
 		}
 
 		canvas->AddDrawElement(de);
+
+		ComponentTransform* center_trans = nullptr;
+		if (center_go != nullptr)
+		{
+			center_trans = (ComponentTransform*)center_go->GetComponent(Component::CompTransform);
+
+			CanvasDrawElement de(canvas, this);
+			de.SetTransform(c_rect_trans->GetMatrix());
+			de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
+			de.SetSize(c_rect_trans->GetScaledSize() * 0.2f);
+			de.SetColour(float4(0.0f, 1.0f, 1.0f, 1.0f));
+			de.SetFlip(false, false);
+
+			if (background_texture != nullptr)
+			{
+				de.SetTextureId(background_texture->GetID());
+			}
+
+			canvas->AddDrawElement(de);
+
+			for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
+			{
+				if ((*it).go != nullptr)
+				{
+					ComponentTransform* entity_trans = (ComponentTransform*)(*it).go->GetComponent(Component::CompTransform);
+
+					float3 distance = entity_trans->GetGlobalPosition() - center_trans->GetGlobalPosition();
+
+					float scaled_size = c_rect_trans->GetScaledSize().x;
+
+					// if max_distance -> scaled_size
+					// distance = -> ?
+
+					if (max_distance > 0)
+					{
+						float4x4 origin_matrix = center_trans->GetMatrix();
+						float3 pos;
+						Quat rot;
+						float3 scal;
+						origin_matrix.Decompose(pos, rot, scal);
+						float3 rotation = rot.ToEulerXYZ();
+
+						float scaled_distance_x = (scaled_size * distance.x) / max_distance;
+						float scaled_distance_y = (scaled_size * distance.y) / max_distance;
+						float scaled_distance_z = (scaled_size * distance.z) / max_distance;
+
+	/*					scaled_distance_x *= cos(rotation.x);
+						scaled_distance_y *= sin(rotation.y);*/
+			/*			scaled_distance_z *= sin(rotation.y);*/
+
+						CanvasDrawElement de(canvas, this);
+						de.SetTransform(c_rect_trans->GetMatrix());
+						de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
+						de.SetSize(c_rect_trans->GetScaledSize() * 0.2f);
+						de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
+						de.SetFlip(false, false);
+						de.SetPosition(float3(-scaled_distance_x, scaled_distance_z, -scaled_distance_y));
+
+						if (background_texture != nullptr)
+						{
+							de.SetTextureId(background_texture->GetID());
+						}
+
+						canvas->AddDrawElement(de);
+					}
+
+				}
+			}
+		}
 	}
 
 	return ret;
@@ -107,12 +179,7 @@ void ComponentRadar::DeleteMarker(const char * name)
 	}
 }
 
-std::vector<RadarMarker> ComponentRadar::GetMarkers() const
-{
-	return markers;
-}
-
-void ComponentRadar::AddEntity(GameObject * go, RadarMarker marker)
+void ComponentRadar::AddEntity(GameObject * go)
 {
 	bool exists = false;
 
@@ -129,8 +196,21 @@ void ComponentRadar::AddEntity(GameObject * go, RadarMarker marker)
 	{
 		RadarEntity entity;
 		entity.go = go;
-		entity.marker = marker;
+		entity.has_marker = false;
 		entities.push_back(entity);
+	}
+}
+
+void ComponentRadar::AddMarkerToEntity(int entity_index, RadarMarker marker)
+{
+	for (int i = 0; i < entities.size(); ++i)
+	{
+		if (i == entity_index)
+		{
+			entities[i].marker = marker;
+			entities[i].has_marker = true;
+			break;
+		}
 	}
 }
 
@@ -144,11 +224,6 @@ void ComponentRadar::RemoveEntity(GameObject * go)
 			break;
 		}
 	}
-}
-
-std::vector<RadarEntity> ComponentRadar::GetEntities() const
-{
-	return entities;
 }
 
 void ComponentRadar::SetMaxDistance(float distance)

@@ -226,7 +226,7 @@ CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas, Component* _cmp)
 	texture_id = 0;
 	transform = float4x4::identity;
 	size = float2::zero;
-	pos = float2::zero;
+	pos = float3::zero;
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertical_flip = false;
 	horizontal_flip = false;
@@ -241,6 +241,11 @@ void CanvasDrawElement::SetLayer(int _layer)
 }
 
 void CanvasDrawElement::SetPosition(const float2& _pos)
+{
+	pos = float3(_pos.x, _pos.y, 0);
+}
+
+void CanvasDrawElement::SetPosition(const float3 & _pos)
 {
 	pos = _pos;
 }
@@ -306,7 +311,7 @@ float4x4 CanvasDrawElement::GetTransform()
 	if (vertical_flip)
 		flip_multiplicator.y = -1;
 
-	size_trans = ret.FromTRS(float3(pos.x, pos.y, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
+	size_trans = ret.FromTRS(float3(pos.x, pos.y, pos.z), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
 
 	ret = transform * size_trans;
 
@@ -327,7 +332,7 @@ float4x4 CanvasDrawElement::GetOrtoTransform() const
 	if (vertical_flip)
 		flip_multiplicator.y = -1;
 
-	size_trans = ret.FromTRS(float3(pos.x, pos.y, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
+	size_trans = ret.FromTRS(float3(pos.x, pos.y, pos.z), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
 
 	ret = orto_transform * size_trans;
 
