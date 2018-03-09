@@ -97,15 +97,13 @@ bool ComponentRadar::Update()
 						float scaled_distance_y = (scaled_size * distance.y) / max_distance;
 						float scaled_distance_z = (scaled_size * distance.z) / max_distance;
 
-						float4x4 rotation_mat = float4x4::FromTRS(float3(0, 0, 0), rot, float3(1, 1, 1));
-
-						//scaled_distance_x = (scaled_distance_x * cos(rotation.y)) - (scaled_distance_z * sin(rotation.y));
+						scaled_distance_x = (scaled_distance_x * cos(rotation.y)) - (scaled_distance_z * sin(rotation.y));
 						////scaled_distance_y *= sin(rotation.y);
-					 //   scaled_distance_z = (scaled_distance_z * cos(rotation.y)) + (scaled_distance_x * sin(rotation.y));
+					    scaled_distance_z = (scaled_distance_z * cos(rotation.y)) + (scaled_distance_x * sin(rotation.y));
 
 						CanvasDrawElement de(canvas, this);
-						de.SetTransform(c_rect_trans->GetMatrix() * rotation_mat);
-						de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix() * rotation_mat);
+						de.SetTransform(c_rect_trans->GetMatrix());
+						de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 						de.SetSize(c_rect_trans->GetScaledSize() * 0.2f);
 						de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
 						de.SetFlip(false, false);
