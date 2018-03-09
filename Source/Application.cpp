@@ -72,7 +72,6 @@ Application::Application()
 	AddModule(audio);
 	AddModule(audio_importer);
 	AddModule(renderer3D);
-	AddModule(audio);
 	AddModule(mesh_importer);
 	AddModule(texture_importer);
 	AddModule(prefab_importer);
