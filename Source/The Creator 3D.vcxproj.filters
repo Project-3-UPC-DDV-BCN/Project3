@@ -1143,23 +1143,31 @@
     <ClInclude Include="ModuleFontImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="GOAPField.h">
       <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="GOAPAction.h">
-      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
     <ClInclude Include="GOAPVariable.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="GOAPEffect.h">
-      <Filter>Sources\Helpers</Filter>
+    <ClInclude Include="ComponentGOAPAgent.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRadar.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="BlastModel.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="GOAPAction.h" />
+    <ClInclude Include="GOAPEffect.h" />
+    <ClInclude Include="GOAPGoal.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="PhysicsMaterial.h" />
+    <ClInclude Include="ComponentButton.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1291,9 +1299,6 @@
     </ClCompile>
     <ClCompile Include="tinyfiledialogs.c">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="TagsAndLayers.cpp">
       <Filter>Sources</Filter>
@@ -1727,6 +1732,11 @@
     <ClCompile Include="MathGeoLib\VectorTests.cpp">
       <Filter>Sources\3d Party\MathGeolib</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
     <ClCompile Include="ComponentRectTransform.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
@@ -1799,13 +1809,45 @@
     <ClCompile Include="CSScript.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="GOAPGoal.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
     <ClCompile Include="GOAPField.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="GOAPAction.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="GOAPVariable.cpp">
       <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentGOAPAgent.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="GOAPEffect.cpp">
+      <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentButton.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRadar.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
