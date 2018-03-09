@@ -61,9 +61,6 @@ bool ComponentBillboard::RotateObject()
 	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
 		return false;
 
-	if (billboarding_type == BILLBOARD_ALL)
-		CONSOLE_LOG("ds"); 
-
 	//Get the director vector which the object/particle is currently pointing at (Z axis)
 	ComponentTransform* object_transform;
 
@@ -85,6 +82,14 @@ bool ComponentBillboard::RotateObject()
 
 	else if (billboarding_type == BILLBOARD_X)
 		direction.x = 0;
+
+	else if (billboarding_type == BILLBOARD_ALL)
+	{
+		direction = { 0,0,1 };
+		object_transform->SetRotation({ 0, 0, 0 });
+		object_z = {0,0,1};
+	}
+		
 
 	direction.Normalize();
 	direction *= -1;
@@ -119,11 +124,11 @@ bool ComponentBillboard::RotateObject()
 		billboarding_type = BILLBOARD_Y; 
 		RotateObject(); 
 
-		billboarding_type = BILLBOARD_X; 
-		RotateObject(); 
+		billboarding_type = BILLBOARD_X;
+		RotateObject();
 
 		billboarding_type = BILLBOARD_ALL; 
-		//object_transform->SetRotation({ angle_xy, angle_xz, object_transform->GetGlobalRotation().z });
+
 		break;
 	}
 		

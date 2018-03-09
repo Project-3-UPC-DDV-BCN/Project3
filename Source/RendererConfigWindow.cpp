@@ -2,6 +2,7 @@
 #include "ModuleRenderer3D.h"
 #include "Application.h"
 #include "OpenGL.h"
+#include "ModuleScene.h"
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -52,6 +53,8 @@ void RendererConfigWindow::DrawWindow()
 	{
 		SetDefaultValues();
 	}
+
+	ImGui::InputFloat("Skybox Distance##skyboxasdf", &App->scene->skybox_size,1.0f);
 
 	ImGui::End();
 }

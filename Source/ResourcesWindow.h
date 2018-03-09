@@ -14,6 +14,8 @@ class Script;
 class Font;
 class PhysicsMaterial;
 class BlastModel;
+class GOAPGoal;
+class GOAPAction;
 
 class ResourcesWindow :
 	public Window
@@ -39,6 +41,8 @@ public:
 	BlastModel* GetBlastModel() const;
 	Shader* GetShader() const;
 	Font* GetFont() const;
+	GOAPGoal* GetGOAPGoal() const;
+	GOAPAction* GetGOAPAction() const;
 	void SetShaderType(Shader::ShaderType type);
 	void SetCurrentInputName(std::string name);
 	std::string GetCurrentInputName() const;
@@ -56,6 +60,8 @@ private:
 	std::map<uint, BlastModel*> blast_models_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, Font*> fonts_list;
+	std::map<uint, GOAPGoal*> goap_goals_list;
+	std::map<uint, GOAPAction*> goap_actions_list;
 
 	Texture* texture_to_return;
 	Mesh* mesh_to_return;
@@ -68,6 +74,8 @@ private:
 	Shader* shader_to_return;
 	Shader::ShaderType shader_type;
 	Font* font_to_return;
+	GOAPGoal* goal_to_return;
+	GOAPAction* action_to_return;
 
 public:
 	bool texture_changed;
@@ -82,6 +90,9 @@ public:
 	GameObjectFilter go_filter;
 	bool shader_changed;
 	bool font_changed;
+
+	bool goal_changed;
+	bool action_changed;
 
 	std::string current_input_name;
 };

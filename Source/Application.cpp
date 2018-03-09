@@ -365,6 +365,11 @@ void Application::UpdateStep()
 	}
 }
 
+float Application::GetDt()
+{
+	return dt;
+}
+
 void Application::Play()
 {
 	if (state == OnStop) {
@@ -418,6 +423,11 @@ bool Application::IsPaused()
 bool Application::IsStopped()
 {
 	return state == OnStop;
+}
+
+Application::EngineState Application::GetEngineState()
+{
+	return state;
 }
 
 void Application::AddModule(Module* mod)
