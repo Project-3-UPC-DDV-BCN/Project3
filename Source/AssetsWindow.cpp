@@ -18,6 +18,8 @@
 #include "BlastModel.h"
 #include "ModuleBlast.h"
 #include "ModuleBlastMeshImporter.h"
+#include "GOAPGoal.h"
+#include "GOAPAction.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -255,6 +257,8 @@ void AssetsWindow::DrawWindow()
 					show_new_shader_window = false;
 					show_new_material_window = false;
 					show_new_phys_mat_window = false;
+					show_new_goap_goal_window = false;
+					show_new_goap_action_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
@@ -268,6 +272,8 @@ void AssetsWindow::DrawWindow()
 					show_new_shader_window = true;
 					show_new_material_window = false;
 					show_new_phys_mat_window = false;
+					show_new_goap_goal_window = false;
+					show_new_goap_action_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
@@ -282,6 +288,8 @@ void AssetsWindow::DrawWindow()
 					show_new_shader_window = true;
 					show_new_material_window = false;
 					show_new_phys_mat_window = false;
+					show_new_goap_goal_window = false;
+					show_new_goap_action_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
@@ -296,6 +304,8 @@ void AssetsWindow::DrawWindow()
 					show_new_shader_window = false;
 					show_new_material_window = true;
 					show_new_phys_mat_window = false;
+					show_new_goap_goal_window = false;
+					show_new_goap_action_window = false;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
@@ -309,6 +319,38 @@ void AssetsWindow::DrawWindow()
 					show_new_shader_window = false;
 					show_new_material_window = false;
 					show_new_phys_mat_window = true;
+					show_new_goap_goal_window = false;
+					show_new_goap_action_window = false;
+
+					show_delete_window = false;
+					show_new_folder_window = false;
+
+					options_is_open = false;
+				}
+
+				if (ImGui::MenuItem("Create GOAP Goal"))
+				{
+					show_new_script_window = false;
+					show_new_shader_window = false;
+					show_new_material_window = false;
+					show_new_phys_mat_window = false;
+					show_new_goap_goal_window = true;
+					show_new_goap_action_window = false;
+
+					show_delete_window = false;
+					show_new_folder_window = false;
+
+					options_is_open = false;
+				}
+
+				if (ImGui::MenuItem("Create GOAP Action"))
+				{
+					show_new_script_window = false;
+					show_new_shader_window = false;
+					show_new_material_window = false;
+					show_new_phys_mat_window = false;
+					show_new_goap_goal_window = false;
+					show_new_goap_action_window = true;
 
 					show_delete_window = false;
 					show_new_folder_window = false;
@@ -428,6 +470,16 @@ void AssetsWindow::DrawWindow()
 		if (show_new_phys_mat_window)
 		{
 			CreateNewPhysMatWindow();
+		}
+		
+		if (show_new_goap_goal_window)
+		{
+			CreateNewGOAPGoalWindow();
+		}
+
+		if (show_new_goap_action_window)
+		{
+			CreateNewGOAPActionWindow();
 		}
 	}
 	ImGui::EndDock();
@@ -734,6 +786,113 @@ void AssetsWindow::CreateMaterial(std::string material_name)
 
 	RELEASE(new_mat);
 	App->resources->CreateResource(selected_folder->path + "\\" + new_file_name);
+}
+
+void AssetsWindow::CreateNewGOAPGoalWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
+	ImGui::SetNextWindowPosCenter();
+	ImGui::Begin("New GOAP Goal", &active,
+		ImGuiWindowFlags_NoFocusOnAppearing |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders |
+		ImGuiWindowFlags_NoTitleBar);
+	ImGui::Spacing();
+	ImGui::Text("New GOAP Goal");
+	static char inputText[30];
+	ImGui::InputText("", inputText, 30);
+	static int priority = 1;
+	ImGui::InputInt("Priority (1 to 100)", &priority);
+	static int increment = 0;
+	ImGui::InputInt("Auto Increment", &increment);
+	static float t_step = 0.0f;
+	ImGui::SameLine();
+	ImGui::InputFloat("TimeStep (0.0 disabled)", &t_step, 0.1f);
+
+	if (ImGui::Button("Create##GOAPGoal"))
+	{
+		CreateGOAPGoal(inputText, priority, increment, t_step);
+		show_new_goap_goal_window = false;
+		strcpy(inputText, "");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel##GOAPGoal")) {
+		strcpy(inputText, "");
+		show_new_goap_goal_window = false;
+	}
+	ImGui::End();
+}
+
+void AssetsWindow::CreateGOAPGoal(std::string name, int priority, int inc_rate, float timestep)
+{
+	std::string file_name = name + "_GOAPGoal";
+	std::string file_path = file_name + ".json";
+
+	GOAPGoal* new_goal = new GOAPGoal();
+	new_goal->SetName(file_name);
+	new_goal->SetPriority(priority);
+	new_goal->SetIncrement(inc_rate, timestep);
+	new_goal->SetAssetsPath(selected_folder->path + "\\" + file_path);
+	std::string lib_path = LIBRARY_GOAP_FOLDER + file_path;
+	new_goal->SetLibraryPath(lib_path);
+	Data d;
+	new_goal->Save(d);
+	d.SaveAsJSON(new_goal->GetAssetsPath());
+	App->file_system->Copy(new_goal->GetAssetsPath(), lib_path);
+	//new_goal->CreateMeta();
+
+	App->resources->AddGOAPGoal(new_goal);
+}
+
+void AssetsWindow::CreateNewGOAPActionWindow()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x / 2, ImGui::GetWindowSize().y / 2));
+	ImGui::SetNextWindowPosCenter();
+	ImGui::Begin("New GOAP Action", &active,
+		ImGuiWindowFlags_NoFocusOnAppearing |
+		ImGuiWindowFlags_AlwaysAutoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_ShowBorders |
+		ImGuiWindowFlags_NoTitleBar);
+	ImGui::Spacing();
+	ImGui::Text("New GOAP Action");
+	static char inputText[30];
+	ImGui::InputText("", inputText, 30);
+	static int cost = 1;
+	ImGui::InputInt("Cost", &cost);
+
+	if (ImGui::Button("Create##GOAPAction"))
+	{
+		CreateGOAPAction(inputText, cost);
+		show_new_goap_action_window = false;
+		strcpy(inputText, "");
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel##GOAPAction")) {
+		strcpy(inputText, "");
+		show_new_goap_action_window = false;
+	}
+	ImGui::End();
+}
+
+void AssetsWindow::CreateGOAPAction(std::string name, int cost)
+{
+	std::string file_name = name + "_GOAPAction";
+	std::string file_path = file_name + ".json";
+
+	GOAPAction* new_action = new GOAPAction(file_name.c_str(),cost);
+
+	new_action->SetAssetsPath(selected_folder->path + "\\" + file_path);
+	std::string lib_path = LIBRARY_GOAP_FOLDER + file_path;
+	new_action->SetLibraryPath(lib_path);
+	Data d;
+	new_action->Save(d);
+	d.SaveAsJSON(new_action->GetAssetsPath());
+	App->file_system->Copy(new_action->GetAssetsPath(), lib_path);
+	//new_goal->CreateMeta();
+
+	App->resources->AddGOAPAction(new_action);
 }
 
 void AssetsWindow::CreateNewPhysMatWindow()

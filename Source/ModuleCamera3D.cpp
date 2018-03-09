@@ -64,6 +64,7 @@ bool ModuleCamera3D::Init(Data * editor_config)
 void ModuleCamera3D::CreateEditorCamera()
 {
 	editor_camera = new ComponentCamera(nullptr);
+	editor_camera->SetFarPlaneDistance(50000.f);
 	App->renderer3D->editor_camera = editor_camera;
 	App->physics->SetCullingBox(editor_camera->camera_frustum.MinimalEnclosingAABB());
 }

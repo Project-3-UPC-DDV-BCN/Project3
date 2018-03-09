@@ -41,9 +41,17 @@
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
+<<<<<<< HEAD
 #include "ComponentButton.h"
 #include "ComponentRadar.h"
 #include "Texture.h"
+=======
+#include "ComponentGOAPAgent.h"
+#include "GOAPAction.h"
+#include "GOAPGoal.h"
+#include "GOAPField.h"	
+#include "GOAPVariable.h"
+>>>>>>> origin/development
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -177,6 +185,16 @@ void PropertiesWindow::DrawWindow()
 					else
 					{
 						CONSOLE_WARNING("GameObject can't have more than 1 Mesh Renderer!");
+					}
+				}
+				if (ImGui::MenuItem("GOAP Agent"))
+				{
+					if (selected_gameobject->GetComponent(Component::CompGOAPAgent) == nullptr) {
+						selected_gameobject->AddComponent(Component::CompGOAPAgent);
+					}
+					else
+					{
+						CONSOLE_WARNING("GameObject can't have more than 1 GOAP Agent!");
 					}
 				}
 				/*if (ImGui::MenuItem("Blast Mesh Renderer")) {
@@ -526,8 +544,13 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
 		break;
+<<<<<<< HEAD
 	case Component::CompButton:
 		DrawButtonPanel((ComponentButton*)component);
+=======
+	case Component::CompGOAPAgent:
+		DrawGOAPAgent((ComponentGOAPAgent*)component);
+>>>>>>> origin/development
 		break;
 	default:
 		break;
@@ -1750,9 +1773,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::Button("PLAY"))
 			{
 				current_emmiter->PlayEmmiter();
-
-				//if(current_emmiter->show_shockwave)
-				//	current_emmiter->CreateShockWave(current_emmiter->data->shock_wave.wave_texture, current_emmiter->data->shock_wave.duration, current_emmiter->data->shock_wave.final_scale);
 			}
 
 			ImGui::SameLine();
@@ -1855,26 +1875,41 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop(); 
 			}
 
-			float prev_width = current_emmiter->data->emmit_width;
-			float prev_height = current_emmiter->data->emmit_height;
-			float prev_depth = current_emmiter->data->emmit_depth;
-
 			if (ImGui::TreeNode("Emit Area"))
 			{
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);
 				current_emmiter->SetShowEmmisionArea(show);
 
-				ImGui::DragFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
-				ImGui::DragFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
-				ImGui::DragFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.1f, 1.0f, 50.0f, "%.2f");
+				float width_cpy = current_emmiter->data->emmit_width; 
+				float height_cpy = current_emmiter->data->emmit_height;
+				float depth_cpy = current_emmiter->data->emmit_depth;
+
+				ImGui::InputFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.0f, 2); 
+				ImGui::InputFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.0f, 2);
+
+				current_emmiter->data->width_increment = current_emmiter->data->emmit_width - width_cpy; 
+				current_emmiter->data->height_increment = current_emmiter->data->emmit_height - height_cpy;
+				current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - depth_cpy;
+
+				static int style = 1; 
+				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 
+
+				if (style == 0)
+					current_emmiter->data->emmit_style = EMMIT_FROM_CENTER; 
+				else if (style == 1)
+					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
+
+				if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
+				{
+					ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+					trans->dirty = true;
+				}
 
 				ImGui::TreePop();
 			}
 
-			current_emmiter->data->width_increment = current_emmiter->data->emmit_width - prev_width;
-			current_emmiter->data->height_increment = current_emmiter->data->emmit_height - prev_height;
-			current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - prev_depth;
 
 			if (ImGui::TreeNode("Texture"))
 			{
@@ -1929,7 +1964,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				if (ImGui::TreeNode("Size"))
 				{
 					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
-					CONSOLE_LOG("%f", current_emmiter->data->global_scale); 
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
@@ -1946,9 +1980,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						{
 							current_emmiter->data->change_size_interpolation = true;
 
-							if (init_scale.x == fin_scale.x)
-								current_emmiter->data->change_size_interpolation = false;
-
 							current_emmiter->data->initial_scale = init_scale;
 							current_emmiter->data->final_scale = fin_scale;
 						}
@@ -1958,6 +1989,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 						if (ImGui::Button("Delete"))
 						{
 							current_emmiter->data->change_size_interpolation = false;
+
+							current_emmiter->data->initial_scale = { 1,1,1 }; 
+							current_emmiter->data->final_scale = { 1,1,1 };
 						}
 
 						ImGui::TreePop(); 
@@ -2055,25 +2089,31 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
-						static int temp_initial_vec[3] = { current_emmiter->data->initial_color.r , current_emmiter->data->initial_color.g , current_emmiter->data->initial_color.b };
+						static float temp_initial_color[4];
+						static float temp_final_color[4];
 
-						ImGui::DragInt3("Initial Color", temp_initial_vec, 1, 1.0f, 0, 255);
-
-						static int temp_final_vec[3] = { current_emmiter->data->final_color.r , current_emmiter->data->final_color.g , current_emmiter->data->final_color.b };
-
-						ImGui::DragInt3("Final Color", temp_final_vec, 1, 1.0f, 0, 255);
+						ImGui::ColorEdit3("Initial Color", temp_initial_color);
+						ImGui::ColorEdit3("Final Color", temp_final_color);
 
 						if (ImGui::Button("Apply Color Interpolation"))
 						{
 							current_emmiter->data->change_color_interpolation = true;
 
-							Color initial(temp_initial_vec[0], temp_initial_vec[1], temp_initial_vec[2], 1);
-							Color final(temp_final_vec[0], temp_final_vec[1], temp_final_vec[2], 1);
+							current_emmiter->data->initial_color.Set(temp_initial_color[0], temp_initial_color[1], temp_initial_color[2], temp_initial_color[3]); 
+							current_emmiter->data->final_color.Set(temp_final_color[0], temp_final_color[1], temp_final_color[2], temp_final_color[3]); 
 
-							current_emmiter->data->initial_color = initial;
-							current_emmiter->data->final_color = final;
 						}
+												
+						ImGui::SameLine(); 
+						if (ImGui::Button("Delete"))
+						{
+							current_emmiter->data->change_color_interpolation = false;
 
+							current_emmiter->data->initial_color = { 1,1,1,1 }; 
+							current_emmiter->data->final_color = { 1,1,1,1 };
+						}
+						
+					
 						ImGui::TreePop();
 					}
 					ImGui::TreePop(); 
@@ -2161,6 +2201,10 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 		{
 			billboard->SetBillboardType((BillboardingType)--billboard_type);
 			++billboard_type;
+
+			//Reset transform 
+			ComponentTransform* trans = (ComponentTransform*)billboard->GetGameObject()->GetComponent(Component::CompTransform); 
+			trans->SetRotation(float3::zero); 
 		}
 		else
 			billboard->SetBillboardType(BILLBOARD_NONE);
@@ -2332,6 +2376,588 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			flags |= ImGuiColorEditFlags_RGB;
 			ImGui::ColorPicker4(("Current Color##" + std::to_string(lights_count)).c_str(), comp_light->GetColorToEdit(), flags);
 		}
+	}
+}
+
+void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
+{
+	static GOAPAction* act_to_add_precon = nullptr;
+	static GOAPAction* act_to_add_effect = nullptr;
+	static ComponentGOAPAgent* goap_to_add_var = nullptr;
+	if (ImGui::CollapsingHeader("GOAP Agent"))
+	{
+		//Goals
+		if (ImGui::TreeNode("Goals##Goap_goal"))
+		{
+			std::vector<GOAPGoal*> goals = goap_agent->goals;
+			if (goals.size() > 0)
+			{
+				for (int i = 0; i < goals.size(); ++i)
+				{
+					std::string name = goals[i]->GetName();
+					name += "##Goal_";
+					name += i;
+					if (ImGui::TreeNode(name.c_str()))
+					{
+						ImGui::Text("Priority:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetPriority());
+						ImGui::Text("Increment Rate:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementRate());
+						ImGui::Text("Increment Timestep:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(255, 255, 0, 255), "\t%d", goals[i]->GetIncrementTime());
+
+						if (goals[i]->GetCondition() == nullptr)
+						{
+							std::string button_name = "Set Condition##";
+							button_name += goals[i]->GetName();
+							button_name += i;
+							if (ImGui::Button(button_name.c_str()))
+							{
+								goal_to_add_condition = goals[i];
+							}
+						}
+						else
+						{
+							GOAPField* f = goals[i]->GetCondition();
+
+							GOAPField::ComparisonMethod cm = f->GetComparisonMethod();
+							ImGui::Text("Var Name: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 255, 0, 255), "%s",f->GetName());
+							ImGui::Text("Comparison Method: "); ImGui::SameLine();
+							switch (cm)
+							{
+							case GOAPField::CM_EQUAL:
+								 ImGui::TextColored(ImVec4(0, 255, 0, 255), "Equal");
+								break;
+							case GOAPField::CM_DIFFERENT:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Different");
+								break;
+							case GOAPField::CM_HIGHER:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Higher");
+								break;
+							case GOAPField::CM_LOWER:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Lower");
+								break;
+							case GOAPField::CM_HIGHER_OR_EQUAL:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Higher or Equal");
+								break;
+							case GOAPField::CM_LOWER_OR_EQUAL:
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "Lower or Equal");
+								break;
+							default:
+								break;
+							}
+							ImGui::Text("Var Value: "); ImGui::SameLine();
+							GOAPVariable::VariableType var_t = f->GetType();
+							switch (var_t)
+							{
+							case GOAPVariable::T_BOOL:
+							{
+								(f->GetValueB()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
+								break;
+							}
+							case GOAPVariable::T_FLOAT:
+							{
+								float var = f->GetValueF();
+								ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", var);
+								break; 
+							}
+							default:
+								break;
+							}
+						}
+						std::string b_name = "Save Goal##GOAPgoal" + std::to_string(i);
+						if (ImGui::Button(b_name.c_str()))
+						{
+							Data d;
+							goals[i]->Save(d);
+							d.SaveAsJSON(goals[i]->GetAssetsPath());
+							d.SaveAsJSON(goals[i]->GetLibraryPath());
+						}
+						ImGui::TreePop();
+					}
+				}
+			}
+			else
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO GOALS ADDED!");
+			
+			static GOAPGoal* g = nullptr;
+			if (ImGui::InputResourceGOAPGoal("Add Goal", &g))
+			{
+				goap_agent->AddGoal(g);
+			}
+
+			ImGui::TreePop();
+		}
+		//Actions
+		if (ImGui::TreeNode("Actions##Goap_actions"))
+		{
+			std::vector<GOAPAction*> actions = goap_agent->actions;
+			if (actions.size() > 0)
+			{
+				for (int i = 0; i < actions.size(); ++i)
+				{
+					std::string name = actions[i]->GetName();
+					name += "##Actions_";
+					name += i;
+					if (ImGui::TreeNode(name.c_str()))
+					{
+						ImGui::Text("Cost: "); ImGui::SameLine();
+						ImGui::TextColored(ImVec4(0, 255, 0, 255), "%d", actions[i]->GetCost());
+						std::string t_name = "Preconditions##GOAPAction_" + std::to_string(i);
+						if (ImGui::TreeNode(t_name.c_str()))
+						{
+							for (int p = 0; p < actions[i]->GetNumPreconditions(); ++p)
+							{
+								GOAPField* pcon = actions[i]->GetPrecondition(p);
+								if (ImGui::TreeNode(pcon->GetName()))
+								{
+									GOAPField::ComparisonMethod cm = pcon->GetComparisonMethod();
+									ImGui::Text("Comparison Method: "); ImGui::SameLine();
+									switch (cm)
+									{
+									case GOAPField::CM_EQUAL:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Equal");
+										break;
+									case GOAPField::CM_DIFFERENT:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Different");
+										break;
+									case GOAPField::CM_HIGHER:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Higher");
+										break;
+									case GOAPField::CM_LOWER:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Lower");
+										break;
+									case GOAPField::CM_HIGHER_OR_EQUAL:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Higher or Equal");
+										break;
+									case GOAPField::CM_LOWER_OR_EQUAL:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Lower or Equal");
+										break;
+									default:
+										break;
+									}
+									ImGui::Text("Var Value: "); ImGui::SameLine();
+									GOAPVariable::VariableType var_t = pcon->GetType();
+									switch (var_t)
+									{
+									case GOAPVariable::T_BOOL:
+									{
+										(pcon->GetValueB()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
+										break;
+									}
+									case GOAPVariable::T_FLOAT:
+									{
+										float var = pcon->GetValueF();
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", var);
+										break;
+									}
+									default:
+										break;
+									}
+									ImGui::TreePop();
+								}
+							}
+
+							std::string b_label = "Add Precondition##GOAPAction_" + std::to_string(i);
+							if (ImGui::Button(b_label.c_str()))
+							{
+								act_to_add_precon = actions[i];
+							}
+
+							ImGui::TreePop();
+						}
+						t_name = "Effects##GOAPAction_" + std::to_string(i);
+						if (ImGui::TreeNode(t_name.c_str()))
+						{
+							for (int e = 0; e < actions[i]->GetNumEffects(); ++e)
+							{
+								GOAPEffect* eff = actions[i]->GetEffect(e);
+								if (ImGui::TreeNode(eff->GetName()))
+								{
+									GOAPEffect::EffectType e_t = eff->GetEffect();
+									ImGui::Text("Effect Type: "); ImGui::SameLine();
+									switch (e_t)
+									{
+									case GOAPEffect::E_DECREASE:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255),"Decrease");
+										break;
+									case GOAPEffect::E_SET:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Set");
+										break;
+									case GOAPEffect::E_INCREASE:
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "Increase");
+										break;
+									default:
+										break;
+									}
+									ImGui::Text("Value: "); ImGui::SameLine();
+									GOAPVariable::VariableType v_t = eff->GetType();
+									switch (v_t)
+									{
+									case GOAPVariable::T_BOOL:
+									{
+										(eff->GetValueB()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
+										break;
+									}
+									case GOAPVariable::T_FLOAT:
+									{
+										float var = eff->GetValueF();
+										ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", var);
+										break;
+									}
+									default:
+										break;
+									}
+									ImGui::TreePop();
+								}
+							}
+							std::string b_label = "Add Effect##GOAPAction_" + std::to_string(i);
+							if (ImGui::Button(b_label.c_str()))
+							{
+								act_to_add_effect = actions[i];
+							}
+							ImGui::TreePop();
+						}
+						t_name ="Save_Action##GOAPAction_" + std::to_string(i);
+						if (ImGui::Button(t_name.c_str()))
+						{
+							Data d;
+							actions[i]->Save(d);
+							d.SaveAsJSON(actions[i]->GetAssetsPath());
+							d.SaveAsJSON(actions[i]->GetLibraryPath());
+						}
+						ImGui::TreePop();
+					}
+				}
+
+			}
+			else
+				ImGui::TextColored(ImVec4(255, 0, 0, 255), "NO ACTIONS ADDED!");
+			
+			static GOAPAction* a = nullptr;
+			if (ImGui::InputResourceGOAPAction("Add Action", &a))
+			{
+				goap_agent->AddAction(a);
+			}
+			
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Blackboard##Goap_blackboard"))
+		{
+			for (int i = 0; i < goap_agent->blackboard.size(); ++i)
+			{
+				GOAPVariable* var = goap_agent->blackboard[i];
+				ImGui::Text(var->GetName()); ImGui::SameLine(); 
+				GOAPVariable::VariableType v_t = var->GetType();
+				switch (v_t)
+				{
+				case GOAPVariable::T_BOOL:
+				{
+					(var->GetValueB()) ? ImGui::TextColored(ImVec4(0, 255, 0, 255), "True") : ImGui::TextColored(ImVec4(0, 255, 0, 255), "False");
+					break;
+				}
+				case GOAPVariable::T_FLOAT:
+				{
+					float var_f = var->GetValueF();
+					ImGui::TextColored(ImVec4(0, 255, 0, 255), "%.3f", var_f);
+					break;
+				}
+				default:
+					break;
+				}
+			}
+			
+			if (ImGui::Button("Add Variable##GOAPAgent_bb"))
+			{
+				goap_to_add_var = goap_agent;
+			}
+			ImGui::TreePop();
+		}
+	}
+
+	if (goal_to_add_condition != nullptr)
+	{
+		ImGui::Begin("AddCondition##GOAP",NULL,ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char add_condition_name[30];
+
+		ImGui::InputText("Name##AddCondition", add_condition_name, 30);
+		static int float_bool = 0;
+		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
+
+		static bool b_value = false;
+		static float f_value = 0.0f;
+		static int cm_chosed = 0;
+		GOAPField::ComparisonMethod cm = GOAPField::CM_NULL;
+		if (float_bool == 0) //float
+		{
+			ImGui::InputFloat("##AddConditionGOAP", &f_value);
+			
+			ImGui::Combo("Comparison Method##AddCondition", &cm_chosed, "Equal\0Different\0Lower\0Higher\0Lower or Equal\0Higher or Equal\0\0");
+			switch (cm_chosed)
+			{
+			case 0:
+				cm = GOAPField::CM_EQUAL;
+				break;
+			case 1:
+				cm = GOAPField::CM_DIFFERENT;
+				break;
+			case 2:
+				cm = GOAPField::CM_LOWER;
+				break;
+			case 3:
+				cm = GOAPField::CM_HIGHER;
+				break;
+			case 4:
+				cm = GOAPField::CM_LOWER_OR_EQUAL;
+				break;
+			case 5:
+				cm = GOAPField::CM_HIGHER_OR_EQUAL;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (float_bool == 1) //bool
+		{
+			ImGui::Checkbox("##AddConditionGOAP", &b_value);
+
+			ImGui::Combo("Comparison Method##AddCondition", &cm_chosed, "Equal\0Different\0\0");
+			switch (cm_chosed)
+			{
+			case 0:
+				cm = GOAPField::CM_EQUAL;
+				break;
+			case 1:
+				cm = GOAPField::CM_DIFFERENT;
+				break;
+			}
+		}
+
+		if (ImGui::Button("Save Condition##AddConditionGOAP"))
+		{
+			if (float_bool == 0)
+			{
+				goal_to_add_condition->AddCondition(std::string(add_condition_name), cm, f_value);
+			}
+			else if (float_bool)
+			{
+				goal_to_add_condition->AddCondition(std::string(add_condition_name), cm, b_value);
+			}
+			goal_to_add_condition = nullptr;
+			add_condition_name[0] = '\0';
+			float_bool = 0;
+			cm_chosed = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##AddConditionGOAP"))
+		{
+			float_bool = 0;
+			goal_to_add_condition = nullptr;
+			add_condition_name[0] = '\0';
+			cm_chosed = 0;
+		}
+
+		ImGui::End();
+	}
+
+	if (act_to_add_precon != nullptr)
+	{
+		ImGui::Begin("AddCondition##GOAP", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char add_condition_name[30];
+
+		ImGui::InputText("Name##AddCondition", add_condition_name, 30);
+		static int float_bool = 0;
+		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
+
+		static bool b_value = false;
+		static float f_value = 0.0f;
+		static int cm_chosed = 0;
+		GOAPField::ComparisonMethod cm = GOAPField::CM_NULL;
+		if (float_bool == 0) //float
+		{
+			ImGui::InputFloat("##AddConditionGOAP", &f_value);
+
+			ImGui::Combo("Comparison Method##AddCondition", &cm_chosed, "Equal\0Different\0Lower\0Higher\0Lower or Equal\0Higher or Equal\0\0");
+			switch (cm_chosed)
+			{
+			case 0:
+				cm = GOAPField::CM_EQUAL;
+				break;
+			case 1:
+				cm = GOAPField::CM_DIFFERENT;
+				break;
+			case 2:
+				cm = GOAPField::CM_LOWER;
+				break;
+			case 3:
+				cm = GOAPField::CM_HIGHER;
+				break;
+			case 4:
+				cm = GOAPField::CM_LOWER_OR_EQUAL;
+				break;
+			case 5:
+				cm = GOAPField::CM_HIGHER_OR_EQUAL;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (float_bool == 1) //bool
+		{
+			ImGui::Checkbox("##AddConditionGOAP", &b_value);
+
+			ImGui::Combo("Comparison Method##AddCondition", &cm_chosed, "Equal\0Different\0\0");
+			switch (cm_chosed)
+			{
+			case 0:
+				cm = GOAPField::CM_EQUAL;
+				break;
+			case 1:
+				cm = GOAPField::CM_DIFFERENT;
+				break;
+			}
+		}
+
+		if (ImGui::Button("Save Condition##AddConditionGOAP"))
+		{
+			if (float_bool == 0)
+			{
+				act_to_add_precon->AddPreCondition(std::string(add_condition_name), cm, f_value);
+			}
+			else if (float_bool)
+			{
+				act_to_add_precon->AddPreCondition(std::string(add_condition_name), cm, b_value);
+			}
+			act_to_add_precon = nullptr;
+			add_condition_name[0] = '\0';
+			float_bool = 0;
+			cm_chosed = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##AddConditionGOAP"))
+		{
+			float_bool = 0;
+			act_to_add_precon = nullptr;
+			add_condition_name[0] = '\0';
+			cm_chosed = 0;
+		}
+
+		ImGui::End();
+	}
+
+	if (act_to_add_effect != nullptr)
+	{
+		ImGui::Begin("AddCondition##GOAP", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char add_condition_name[30];
+
+		ImGui::InputText("Name##AddCondition", add_condition_name, 30);
+		static int float_bool = 0;
+		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
+
+		static bool b_value = false;
+		static float f_value = 0.0f;
+		static int et_chosed = 0;
+		GOAPEffect::EffectType eff_type = GOAPEffect::E_NULL;
+		if (float_bool == 0) //float
+		{
+			ImGui::InputFloat("##AddConditionGOAP", &f_value);
+
+			ImGui::Combo("Comparison Method##AddCondition", &et_chosed, "Decrease\0Set\0Increase\0\0");
+			switch (et_chosed)
+			{
+			case 0:
+				eff_type = GOAPEffect::E_DECREASE;
+				break;
+			case 1:
+				eff_type = GOAPEffect::E_SET;
+				break;
+			case 2:
+				eff_type = GOAPEffect::E_INCREASE;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (float_bool == 1) //bool
+		{
+			ImGui::Checkbox("##AddConditionGOAP", &b_value);
+		}
+
+		if (ImGui::Button("Save Condition##AddConditionGOAP"))
+		{
+			if (float_bool == 0)
+			{
+				act_to_add_effect->AddEffect(std::string(add_condition_name), eff_type, f_value);
+			}
+			else if (float_bool)
+			{
+				act_to_add_effect->AddEffect(std::string(add_condition_name), b_value);
+			}
+			act_to_add_effect = nullptr;
+			add_condition_name[0] = '\0';
+			float_bool = 0;
+			et_chosed = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##AddConditionGOAP"))
+		{
+			float_bool = 0;
+			act_to_add_effect = nullptr;
+			add_condition_name[0] = '\0';
+			et_chosed = 0;
+		}
+
+		ImGui::End();
+	}
+
+	if (goap_to_add_var != nullptr)
+	{
+		ImGui::Begin("AddCondition##GOAP", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char add_condition_name[30];
+
+		ImGui::InputText("Name##AddCondition", add_condition_name, 30);
+		static int float_bool = 0;
+		ImGui::Combo("Type##AddCondition", &float_bool, "Float\0Bool\0\0");
+
+		static bool b_value = false;
+		static float f_value = 0.0f;
+
+		if (float_bool == 0) //float
+		{
+			ImGui::InputFloat("##AddConditionGOAP", &f_value);
+		}
+		if (float_bool == 1) //bool
+		{
+			ImGui::Checkbox("##AddConditionGOAP", &b_value);
+		}
+
+		if (ImGui::Button("Save Condition##AddConditionGOAP"))
+		{
+			if (float_bool == 0)
+			{
+				goap_to_add_var->AddVariable(std::string(add_condition_name), f_value);
+			}
+			else if (float_bool)
+			{
+				goap_to_add_var->AddVariable(std::string(add_condition_name), b_value);
+			}
+			goap_to_add_var = nullptr;
+			add_condition_name[0] = '\0';
+			float_bool = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel##AddConditionGOAP"))
+		{
+			float_bool = 0;
+			goap_to_add_var = nullptr;
+			add_condition_name[0] = '\0';
+		}
+
+		ImGui::End();
 	}
 }
 

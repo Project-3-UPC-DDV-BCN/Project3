@@ -44,6 +44,10 @@ private:
 	void CreateNewMaterialWindow();
 	void CreateShader(Shader::ShaderType type, std::string shader_name);
 	void CreateMaterial(std::string material_name);
+	void CreateNewGOAPGoalWindow();
+	void CreateGOAPGoal(std::string name, int priority, int inc_rate, float timestep);
+	void CreateNewGOAPActionWindow();
+	void CreateGOAPAction(std::string name, int cost);
 	void CheckDirectory(Directory& directory);
 	void FillDirectories(Directory* parent, std::string directory_path);
 	void CleanUp(Directory& directory);
@@ -57,6 +61,8 @@ private:
 	bool show_new_phys_mat_window;
 	bool show_new_shader_window;
 	bool show_new_material_window = false;
+	bool show_new_goap_goal_window = false;
+	bool show_new_goap_action_window = false;
 
 	bool options_is_open;
 
