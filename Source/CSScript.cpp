@@ -2333,10 +2333,10 @@ void CSScript::SetPitch(int pitch)
 	App->audio->SetPitch(pitch);
 }
 
-void CSScript::SetRTPvalue(MonoString* name, float value)
+void CSScript::SetRTPCvalue(MonoString* name, float value)
 {
 	const char* new_name = mono_string_to_utf8(name);
-	App->audio->SetRTPvalue(new_name, value);
+	App->audio->SetRTPCvalue(new_name, value);
 }
 
 bool CSScript::Play(MonoObject * object, MonoString* name)
@@ -2390,6 +2390,42 @@ bool CSScript::Send(MonoObject * object, MonoString* name)
 	const char* event_name = mono_string_to_utf8(name);
 	
 	return as->SendEvent(event_name);
+}
+
+bool CSScript::SetMyRTPCvalue(MonoObject * object, MonoString* name, float value)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	const char* new_name = mono_string_to_utf8(name);
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	return as->obj->SetRTPCvalue(new_name, value);
+}
+
+bool CSScript::SetState(MonoObject* object, MonoString* group, MonoString* state)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	const char* group_name = mono_string_to_utf8(group);
+	const char* state_name = mono_string_to_utf8(state);
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	as->SetState(group_name, state_name);
+	return true;
 }
 
 void CSScript::PlayEmmiter(MonoObject * object)

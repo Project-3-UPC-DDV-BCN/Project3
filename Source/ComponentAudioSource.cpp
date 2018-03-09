@@ -34,11 +34,11 @@ bool ComponentAudioSource::Update()
 	bool ret = true;
 
 	if (!muted) {
-		App->audio->SetRTPvalue("Volume", volume);
-		//App->audio->SetRTPvalue("Pitch", pitch);
+		App->audio->SetRTPCvalue("Volume", volume);
+		//App->audio->SetRTPCvalue("Pitch", pitch);
 	}
 	else {
-		App->audio->SetRTPvalue("Volume", 0);
+		App->audio->SetRTPCvalue("Volume", 0);
 	}
 
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
@@ -180,4 +180,14 @@ void ComponentAudioSource::StopAllEvents()
 	for (int i = 0; i < soundbank->GetSoundBank()->events.size(); i++) {
 		AK::SoundEngine::ExecuteActionOnEvent(soundbank->GetSoundBank()->events[i]->name.c_str(), AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause);
 	}
+}
+
+void ComponentAudioSource::SetState(AkStateGroupID in_stateGroup, AkStateID in_state)
+{
+	obj->SetState(in_stateGroup, in_state);
+}
+
+void ComponentAudioSource::SetState(const char * in_stateGroup, const char * in_state)
+{
+	obj->SetState(in_stateGroup, in_state);
 }

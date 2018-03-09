@@ -44,8 +44,8 @@ public:
 
 	Wwise::SoundObject * GetSoundObject(int obj_id);
 
-	void SetRTPvalue(const char* rtpc, float value);
-	void SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_id);
+	void SetRTPCvalue(const char* rtpc, float value);
+	void SetRTPCvalue(const char * rtpc, float value, AkGameObjectID go_id);
 	void StopAllEvents();
 	void ImGuiDraw();
 

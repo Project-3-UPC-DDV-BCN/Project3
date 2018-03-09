@@ -125,11 +125,13 @@ private:
 	static void SetVolume(int volume);
 	static int GetPitch();
 	static void SetPitch(int pitch);
-	static void SetRTPvalue(MonoString* name, float value);
+	static void SetRTPCvalue(MonoString* name, float value);
 
 	static bool Play(MonoObject * object, MonoString * name);
 	static bool Stop(MonoObject * object, MonoString * name);
 	static bool Send(MonoObject * object, MonoString * name);
+	static bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
+	static void SetState(MonoObject* object, MonoString* group, MonoString* state);
 
 	//PARTICLE EMMITER
 	static void PlayEmmiter(MonoObject * object);

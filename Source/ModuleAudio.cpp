@@ -168,12 +168,12 @@ Wwise::SoundObject* ModuleAudio::GetSoundObject(int obj_id)
 	return nullptr;
 }
 
-void ModuleAudio::SetRTPvalue(const char * rtpc, float value)
+void ModuleAudio::SetRTPCvalue(const char * rtpc, float value)
 {
 	AK::SoundEngine::SetRTPCValue(rtpc, value);
 }
 
-void ModuleAudio::SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_id)
+void ModuleAudio::SetRTPCvalue(const char * rtpc, float value, AkGameObjectID go_id)
 {
 	AK::SoundEngine::SetRTPCValue(rtpc, value, go_id);
 }

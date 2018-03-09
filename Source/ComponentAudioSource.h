@@ -37,6 +37,9 @@ public :
 
 	void StopAllEvents();
 
+	void SetState(const char * in_stateGroup, const char * in_state);
+	void SetState(AkStateGroupID in_stateGroup, AkStateID 	in_state);
+
 public:
 	SoundBankResource* soundbank = nullptr;
 private:
