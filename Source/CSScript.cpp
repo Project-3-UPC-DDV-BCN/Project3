@@ -573,6 +573,7 @@ void CSScript::ConvertMonoType(MonoType * type, ScriptField& script_field)
 		else if (name == "TheEngine.Texture") script_field.propertyType = ScriptField::Texture;
 		else if (name == "TheEngine.Animation") script_field.propertyType = ScriptField::Animation;
 		else if (name == "TheEngine.Audio") script_field.propertyType = ScriptField::Audio;
+		else if (name == "TheEngine.Text") script_field.propertyType = ScriptField::Text;
 		break;
 	case MONO_TYPE_SZARRAY:
 		break;
@@ -1425,6 +1426,28 @@ MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 {
 
 	return nullptr;
+}
+
+void CSScript::OnClick(ComponentRectTransform * rec_trans)
+{
+	if (rec_trans != nullptr)
+	{
+		GameObject* go = rec_trans->GetGameObject();
+
+		MonoObject* object = FindGameObject(go);
+
+		if (!MonoObjectIsValid(object))
+		{
+			return;
+		}
+
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRectTransform");
+
+		if (c)
+		{
+			MonoMethod* new_object = mono_class_get_method_from_name(c, "CallOnClick", 0);
+		}
+	}
 }
 
 void CSScript::SetText(MonoObject * object, MonoString* t)
@@ -2291,6 +2314,25 @@ bool CSScript::MonoObjectIsValid(MonoObject* object)
 		return true;
 	}
 	return false;
+}
+
+MonoObject * CSScript::FindGameObject(GameObject * go)
+{
+	MonoObject* ret = nullptr;
+
+	if (go != nullptr)
+	{
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+		{
+			if ((*it).second == go)
+			{
+				ret = (*it).first;
+				break;
+			}
+		}
+	}
+
+	return ret;
 }
 
 bool CSScript::GameObjectIsValid()

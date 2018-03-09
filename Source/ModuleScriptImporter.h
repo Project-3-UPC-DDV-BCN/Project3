@@ -6,6 +6,7 @@
 
 class Script;
 class CSScript;
+class ComponentRectTransform;
 
 class ModuleScriptImporter :
 	public Module
@@ -76,6 +77,7 @@ private:
 	static MonoObject* GetRectSize(MonoObject * object);
 	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	static MonoObject* GetRectAnchor(MonoObject * object);
+	static void OnClick(ComponentRectTransform* rect_trans);
 
 	// TEXT
 	static void SetText(MonoObject * object, MonoString* text);

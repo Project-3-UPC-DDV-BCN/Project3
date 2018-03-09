@@ -11,7 +11,7 @@ class GameObject;
 
 struct ScriptField {
 	enum PropertyType {
-		Integer, Decimal, Float, Bool, String, GameObject, Animation, Vector2, Vector3, Vector4, Texture, Audio, None
+		Integer, Decimal, Float, Bool, String, GameObject, Animation, Vector2, Vector3, Vector4, Texture, Audio, Text, None
 	};
 	std::string fieldName;
 	PropertyType propertyType = None;
