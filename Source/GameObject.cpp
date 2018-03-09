@@ -24,6 +24,7 @@
 #include "ComponentDistorsionZone.h"
 #include "ComponentLight.h"
 #include "ComponentBlast.h"
+#include "ComponentGOAPAgent.h"
 #include "ModulePhysics.h"
 
 GameObject::GameObject(GameObject* parent)
@@ -158,6 +159,9 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 		break;
 	case Component::CompLight:
 		components_list.push_back(component = new ComponentLight(this));
+		break;
+	case Component::CompGOAPAgent:
+		components_list.push_back(component = new ComponentGOAPAgent(this));
 		break;
 	case Component::CompBlast:
 		components_list.push_back(component = new ComponentBlast(this));

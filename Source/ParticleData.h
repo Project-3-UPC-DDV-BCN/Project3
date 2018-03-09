@@ -18,6 +18,12 @@ enum emmision_behaviour
 	EMMISION_SIMULTANEOUS,
 };
 
+enum emmision_style
+{
+	EMMIT_FROM_CENTER,
+	EMMIT_FROM_RANDOM,
+};
+
 struct ShockWave
 {
 	float duration;
@@ -153,6 +159,7 @@ public:
 
 	//Simultaneous shot 
 	emmision_behaviour emmision_type;
+	emmision_style emmit_style; 
 	float amount_to_emmit;
 	float time_step_sim;
 

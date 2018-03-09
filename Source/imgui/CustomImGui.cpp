@@ -13,6 +13,8 @@
 #include "../PhysicsMaterial.h"
 #include "../BlastModel.h"
 #include "../SoundBankResource.h"
+#include "../GOAPGoal.h"
+#include "../GOAPAction.h"
 
 namespace ImGui
 {
@@ -697,7 +699,7 @@ namespace ImGui
 
 		return false;
 	}
-	
+
 	bool InputResourceAudio(const char * label, SoundBankResource ** soundbank)
 	{
 		ImGuiWindow* window = GetCurrentWindow();
@@ -721,7 +723,7 @@ namespace ImGui
 		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
 		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
 		std::string buf_display;
-
+		
 		SoundBankResource* tmp_soundbank = *soundbank;
 		if (tmp_soundbank != nullptr)
 		{
@@ -731,13 +733,13 @@ namespace ImGui
 		{
 			buf_display = "None(SoundBank)";
 		}
-
+		
 		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
 
 		ItemSize(rect, style.FramePadding.y);
 		if (!ItemAdd(rect, &id))
 			return false;
-
+		
 		if (ImGui::IsItemHovered() && App->editor->drag_data->hasData)
 		{
 			if (App->editor->drag_data->resource->GetType() == Resource::SoundBankResource)
@@ -760,7 +762,7 @@ namespace ImGui
 			App->editor->resources_window->SetActive(true);
 			App->editor->resources_window->SetCurrentInputName(button_id);
 		}
-
+	
 		SoundBankResource* new_soundbank = nullptr;
 
 		if (App->editor->resources_window->active && App->editor->resources_window->soundbank_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
@@ -774,10 +776,142 @@ namespace ImGui
 				return true;
 			}
 		}
+		
+		return false;
+	}
+
+	bool InputResourceGOAPGoal(const char * label, GOAPGoal ** goal)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+
+		GOAPGoal* tmp_goal = *goal;
+		if (tmp_goal != nullptr)
+		{
+			buf_display = tmp_goal->GetName();
+		}
+		else
+		{
+			buf_display = "None(GOAPGoal)";
+		}
+
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+
+		ImGui::SameLine();
+
+		std::string button_id("+##GOAPGoal_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::GOAPGoalResource);
+			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
+		}
+
+		GOAPGoal* new_goal = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->goal_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		{
+			new_goal = App->editor->resources_window->GetGOAPGoal();
+			if (new_goal != tmp_goal)
+			{
+				*goal = new_goal;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
 
 		return false;
 	}
 
+	bool InputResourceGOAPAction(const char * label, GOAPAction ** action)
+	{
+		ImGuiWindow* window = GetCurrentWindow();
+		if (window->SkipItems)
+			return false;
+
+		ImGuiContext& g = *GImGui;
+		const ImGuiStyle& style = g.Style;
+		const ImGuiID id = window->GetID(label);
+		const float w = CalcItemWidth();
+
+		const ImVec2 label_size = CalcTextSize(label, NULL, true);
+		const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f));
+		const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+		const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
+
+		Text(label);
+		ImGui::SameLine();
+		ImRect rect(window->DC.CursorPos, window->DC.CursorPos + ImVec2(100, label_size.y + style.FramePadding.y*2.0f));
+		//window->Flags |= ImGuiWindowFlags_ShowBorders;
+		RenderFrame(rect.Min, rect.Max, GetColorU32(ImGuiCol_FrameBg));
+		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
+		std::string buf_display;
+		GOAPAction* tmp_action = *action;
+		if (tmp_action != nullptr)
+		{
+			buf_display = tmp_action->GetName();
+		}
+		else
+		{
+			buf_display = "None(GOAPAction)";
+		}
+		window->DrawList->AddText(g.Font, g.FontSize, window->DC.CursorPos, GetColorU32(ImGuiCol_Text), buf_display.c_str());
+
+		ItemSize(rect, style.FramePadding.y);
+		if (!ItemAdd(rect, &id))
+			return false;
+		ImGui::SameLine();
+
+		std::string button_id("+##GOAPAction_");
+		button_id += label;
+		if (Button(button_id.c_str(), { 20, 20 }))
+		{
+			App->editor->resources_window->SetResourceType(Resource::GOAPActionResource);
+			App->editor->resources_window->SetActive(true);
+			App->editor->resources_window->SetCurrentInputName(button_id);
+		}
+
+		GOAPAction* new_action = nullptr;
+
+		if (App->editor->resources_window->active && App->editor->resources_window->action_changed && App->editor->resources_window->GetCurrentInputName() == button_id)
+		{
+			new_action = App->editor->resources_window->GetGOAPAction();
+			if (new_action != tmp_action)
+			{
+				*action = new_action;
+				App->editor->resources_window->SetActive(false);
+				App->editor->resources_window->Reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 

@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "ComponentBillboard.h"
+#include "MathGeoLib\MathGeoLib.h"
 #include "Particles.h"
 #include <map>
 
@@ -14,6 +15,7 @@ enum particle_system_state
 	PARTICLE_STATE_PLAY,
 	PARTICLE_STATE_PAUSE,
 };
+
 
 class ComponentParticleEmmiter : public Component
 {
@@ -81,7 +83,12 @@ public:
 	Timer global_timer;									//Global emmiter timer
 		
 	//Emmit area AABB
-	OBB emmit_area_obb; 
+	AABB emmit_area; 
+
+	float prev_emmiter_width;
+	float prev_emmiter_height;
+	float prev_emmiter_depth; 
+
 	string runtime_behaviour; 
 
 	bool show_shockwave;
@@ -96,7 +103,6 @@ private:
 	//Timers
 	Timer spawn_timer;									//Timer to control the emmision rate 
 	
-
 	//Data
 	particle_system_state system_state;					//Inner play & pause 
 	

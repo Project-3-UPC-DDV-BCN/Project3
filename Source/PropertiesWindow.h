@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include <map>
+#include <string>
 
 class ComponentMeshRenderer;
 class ComponentTransform;
@@ -24,7 +25,8 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
-
+class ComponentGOAPAgent;
+class GOAPGoal;
 
 class PropertiesWindow :
 	public Window
@@ -54,6 +56,7 @@ public:
 	void DrawAudioSource(ComponentAudioSource* audio_source);
 	void DrawAudioDistZone(ComponentDistorsionZone* dist_zone);
 	void DrawLightPanel(ComponentLight* light);
+	void DrawGOAPAgent(ComponentGOAPAgent* goap_agent);
 
 private:
 	int scripts_count;
@@ -62,5 +65,13 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+
+	bool add_goal = false;
+	char add_goal_name[256] = "\0";
+	int add_goal_priority = 0;
+	int add_goal_inc_rate = 0;
+	float add_goal_inc_time = 0;
+
+	GOAPGoal* goal_to_add_condition = nullptr;
 };
 

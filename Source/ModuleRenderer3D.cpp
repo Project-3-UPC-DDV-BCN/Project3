@@ -549,14 +549,16 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Particles
 	for (std::list<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
+
 		(*it)->AddaptEmmitAreaAABB();
+
 		if ((*it)->ShowEmmisionArea())
 		{
-			DrawDebugOBB((*it)->emmit_area_obb, active_camera);
+			DrawDebugCube((*it)->emmit_area, active_camera);
 		}
 
 		(*it)->DrawParticles(active_camera); 
-	
+
 	}
 
 	if (is_editor_camera)
@@ -1097,7 +1099,7 @@ void ModuleRenderer3D::LoadProgramFromBinary(uint program_id, uint buff_size, co
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		CONSOLE_ERROR("Error loading shader program binary %s\n", gluErrorString(error));
+		//CONSOLE_ERROR("Error loading shader program binary %s\n", gluErrorString(error));
 
 	}
 }

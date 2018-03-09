@@ -55,6 +55,8 @@ public:
 	void CreateEngineData(Data* data);
 	void UpdateStep();
 
+	float GetDt(); 
+
 	void Play();
 	void Pause();
 	void UnPause();
@@ -66,6 +68,8 @@ public:
 	enum EngineState {
 		OnPlay, OnPause, OnStop
 	};
+
+	EngineState GetEngineState(); 
 
 private:
 
