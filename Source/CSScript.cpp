@@ -1424,36 +1424,171 @@ void CSScript::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 
 MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRectTransform");
+
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 right = transform->GetRight();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &right.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &right.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &right.z);
+
+			return new_object;
+		}
+	}
 
 	return nullptr;
 }
 
-void CSScript::OnClick(ComponentRectTransform * rec_trans)
+mono_bool CSScript::GetOnClick(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
 	if (!GameObjectIsValid())
 	{
-		return;
+		return false;
 	}
 
-	if (rec_trans != nullptr)
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+	
+	if (rect_trans != nullptr)
 	{
-		GameObject* go = rec_trans->GetGameObject();
-
-		MonoObject* object = FindGameObject(go);
-
-		if (!MonoObjectIsValid(object))
-		{
-			return;
-		}
-
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRectTransform");
-
-		if (c)
-		{
-			MonoMethod* new_object = mono_class_get_method_from_name(c, "CallOnClick", 0);
-			CallFunction(new_object, 0);
-		}
+		return rect_trans->GetOnClick();
 	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnClickDown(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnClickDown();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnClickUp(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnClickUp();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnMouseEnter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnMouseEnter();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnMouseOver(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnMouseOver();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnMouseOut(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnMouseOut();
+	}
+
+	return false;
 }
 
 void CSScript::SetText(MonoObject * object, MonoString* t)

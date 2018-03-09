@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace TheEngine
 {
-    class TheRectTransform : TheComponent
+    public class TheRectTransform : TheComponent
     {
         public TheVector3 Position
         {
@@ -54,32 +54,71 @@ namespace TheEngine
             }
         }
 
-        public delegate void MyHandler();
+        public bool OnClick
+        {
+            get
+            {
+                return GetOnClick();
+            }
+        }
 
-        public event MyHandler OnClick;
-        public event MyHandler OnClickDown;
-        public event MyHandler OnClickUp;
-        public event MyHandler OnMouseEnter;
-        public event MyHandler OnMouseOut;
-        public event MyHandler OnMouseOver;
+        public bool OnClickUp
+        {
+            get
+            {
+                return GetOnClickUp();
+            }
+        }
+
+        public bool OnClickDown
+        {
+            get
+            {
+                return GetOnClickDown();
+            }
+        }
+
+        public bool OnMouseOver
+        {
+            get
+            {
+                return GetOnMouseOver();
+            }
+        }
+
+        public bool OnMouseEnter
+        {
+            get
+            {
+                return GetOnMouseEnter();
+            }
+        }
+
+        public bool OnMouseOut
+        {
+            get
+            {
+                return GetOnMouseOut();
+            }
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private void CallOnClick() { OnClick(); }
+        private extern bool GetOnClick();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private void CallOnClickDown() { OnClickDown(); }
+        private extern bool GetOnClickUp();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private void CallOnClickUp() { OnClickUp(); }
+        private extern bool GetOnClickDown();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private void CallOnMouseEnter() { OnMouseEnter(); }
+        private extern bool GetOnMouseOver();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private void CallOnMouseDown() { OnMouseOut(); }
+        private extern bool GetOnMouseEnter();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private void CallOnMouseOver() { OnMouseOver(); }
+        private extern bool GetOnMouseOut();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetRectPosition();

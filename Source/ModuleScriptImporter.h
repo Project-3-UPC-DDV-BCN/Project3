@@ -77,7 +77,12 @@ private:
 	static MonoObject* GetRectSize(MonoObject * object);
 	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	static MonoObject* GetRectAnchor(MonoObject * object);
-	void OnClick(ComponentRectTransform* rect_trans);
+	static mono_bool GetOnClick(MonoObject * object);
+	static mono_bool GetOnClickDown(MonoObject * object);
+	static mono_bool GetOnClickUp(MonoObject * object);
+	static mono_bool GetOnMouseEnter(MonoObject * object);
+	static mono_bool GetOnMouseOver(MonoObject * object);
+	static mono_bool GetOnMouseOut(MonoObject * object);
 
 	// TEXT
 	static void SetText(MonoObject * object, MonoString* text);

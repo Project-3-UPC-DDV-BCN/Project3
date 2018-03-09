@@ -194,6 +194,16 @@ ComponentRectTransform * ComponentCanvas::GetLastRectTransform() const
 	return last_rect_trans;
 }
 
+void ComponentCanvas::SetLastLastRectTransform(ComponentRectTransform * last)
+{
+	last_last_rect_trans = last;
+}
+
+ComponentRectTransform * ComponentCanvas::GetLastLastRectTransform() const
+{
+	return last_last_rect_trans;
+}
+
 void ComponentCanvas::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());

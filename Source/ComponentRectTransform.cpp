@@ -723,11 +723,6 @@ bool ComponentRectTransform::GetInteractable() const
 
 void ComponentRectTransform::SetOnClick(bool set)
 {
-	if (set && on_click)
-	{
-		ComponentScript* comp_script = nullptr;
-	}
-
 	on_click = set;
 }
 

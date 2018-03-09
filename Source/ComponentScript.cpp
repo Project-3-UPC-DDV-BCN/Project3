@@ -71,15 +71,6 @@ void ComponentScript::OnCollisionExit(GameObject* other_collider)
 	}
 }
 
-void ComponentScript::OnClick(ComponentRectTransform * rect_trans)
-{
-	if (script)
-	{
-		App->script_importer->SetCurrentScript((CSScript*)script);
-		script->OnClick(rect_trans);
-	}
-}
-
 void ComponentScript::SetScript(Script * script)
 {
 	this->script = script;

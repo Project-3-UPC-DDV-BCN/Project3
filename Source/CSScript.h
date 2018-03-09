@@ -100,12 +100,12 @@ public:
 	MonoObject* GetRectSize(MonoObject * object);
 	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetRectAnchor(MonoObject * object);
-	void OnClick(ComponentRectTransform* rec_trans);
-	void OnClickDown(ComponentRectTransform* rec_trans);
-	void OnClickUp(ComponentRectTransform* rec_trans);
-	void OnClickEnter(ComponentRectTransform* rec_trans);
-	void OnClickOver(ComponentRectTransform* rec_trans);
-	void OnClickOut(ComponentRectTransform* rec_trans);
+	mono_bool GetOnClick(MonoObject * object);
+	mono_bool GetOnClickDown(MonoObject * object);
+	mono_bool GetOnClickUp(MonoObject * object);
+	mono_bool GetOnMouseEnter(MonoObject * object);
+	mono_bool GetOnMouseOver(MonoObject * object);
+	mono_bool GetOnMouseOut(MonoObject * object);
 
 	//TEXT
 	void SetText(MonoObject * object, MonoString* t);

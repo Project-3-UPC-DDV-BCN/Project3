@@ -108,6 +108,9 @@ public:
 	void SetLastRectTransform(ComponentRectTransform* last);
 	ComponentRectTransform* GetLastRectTransform() const;
 
+	void SetLastLastRectTransform(ComponentRectTransform* last);
+	ComponentRectTransform* GetLastLastRectTransform() const;
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
@@ -128,6 +131,7 @@ private:
 	CanvasScaleMode scale_mode;
 
 	ComponentRectTransform* last_rect_trans = nullptr;
+	ComponentRectTransform* last_last_rect_trans = nullptr;
 
 	float scale;
 };

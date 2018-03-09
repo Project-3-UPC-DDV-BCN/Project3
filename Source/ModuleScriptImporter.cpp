@@ -7,6 +7,7 @@
 #include "CSScript.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "ModuleResources.h"
 
 CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -266,6 +267,12 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectSize", (const void*)GetRectSize);
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectAnchor", (const void*)SetRectAnchor);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectAnchor", (const void*)GetRectAnchor);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClick", (const void*)GetOnClick);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClickDown", (const void*)GetOnClickDown);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClickUp", (const void*)GetOnClickUp);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOver", (const void*)GetOnMouseOver);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseEnter", (const void*)GetOnMouseEnter);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOut", (const void*)GetOnMouseOut);
 
 	//TEXT
 	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
@@ -500,8 +507,34 @@ MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 	return current_script->GetRectAnchor(object);
 }
 
-void ModuleScriptImporter::OnClick(ComponentRectTransform * rect_trans)
+mono_bool ModuleScriptImporter::GetOnClick(MonoObject * object)
 {
+	return current_script->GetOnClick(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnClickDown(MonoObject * object)
+{
+	return current_script->GetOnClickDown(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnClickUp(MonoObject * object)
+{
+	return current_script->GetOnClickUp(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseEnter(MonoObject * object)
+{
+	return current_script->GetOnMouseEnter(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseOver(MonoObject * object)
+{
+	return current_script->GetOnMouseOver(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseOut(MonoObject * object)
+{
+	return current_script->GetOnMouseOut(object);
 }
 
 void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
