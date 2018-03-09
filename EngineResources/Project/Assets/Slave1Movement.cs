@@ -38,6 +38,16 @@ public class Slave1Movement {
 	public float slow_regen = 0.1f;
 	private float slow_timer;
 
+	//HP and Shields
+	public float total_hp = 99.0f;
+	float curr_total_hp;
+	float body_hp;
+	float wings_hp;
+	float engine_hp;
+	public float shield_hp = 25.0f;
+	float curr_shield_hp;
+	public float shield_regen = 10.0f;
+
 	//Energy management
 	public int max_energy = 6;
 	public int shield_energy = 2;
@@ -84,6 +94,11 @@ public class Slave1Movement {
 		
 		curr_max_vel = max_vel;
 		curr_accel = acceleration;
+
+		//HP n shield
+		body_hp = wings_hp = engine_hp = total_hp/3.0f;
+		curr_total_hp = total_hp;
+		curr_shield_hp = shield_hp;
 
 		audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
