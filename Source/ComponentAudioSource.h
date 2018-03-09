@@ -5,6 +5,7 @@
 #include "Wwise.h"
 
 class AudioEvent;
+class SoundBankResource;
 
 class ComponentAudioSource : 
 	public Component 
@@ -31,10 +32,16 @@ public :
 	int* GetPickedEventPtr();
 
 	std::vector<AudioEvent*> GetEventsVector() const;
+	void ClearEventsVector();
 	std::vector<AudioEvent*> GetEventsToPlayVector() const;
 
+	void StopAllEvents();
+
+	void SetState(const char * in_stateGroup, const char * in_state);
+	void SetState(AkStateGroupID in_stateGroup, AkStateID 	in_state);
+
 public:
-	SoundBank* soundbank = nullptr;
+	SoundBankResource* soundbank = nullptr;
 private:
 	std::vector<AudioEvent*>events;
 	std::vector<AudioEvent*>events_to_play;
@@ -45,4 +52,6 @@ public:
 	Wwise::SoundObject* obj = nullptr;
 	bool is_combo = false;
 
+	int volume = 0;
+	bool muted = false;
 };

@@ -3,6 +3,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleAudio.h"
 #include "ModuleCamera3D.h"
+#include "ModuleAudioImporter.h"
 #include "JsonTool.h"
 
 #include "GameObject.h"
@@ -15,8 +16,10 @@
 #include "ComponentDistorsionZone.h"
 #include "ComponentAudioSource.h"
 #include "ComponentListener.h"
+#include "ModuleResources.h"
 
 #include "ModuleScene.h"
+#include "SoundBankResource.h"
 
 #include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
 
@@ -44,8 +47,8 @@ bool ModuleAudio::Init(Data* editor_config)
 
 bool ModuleAudio::Start()
 {
-	LoadSoundBank("Ship_Soundbank.bnk");
-	
+	//App->resources->CreateResource("./Project/Library/SoundBanks/Ship_Soundbank.bnk");
+
 	SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
 	go->SetName("Audio");
@@ -67,14 +70,6 @@ update_status ModuleAudio::PreUpdate(float dt)
 	else if (App->IsPlaying() && stop_all)
 	{
 		stop_all = false;
-	}
-
-	if (!muted) {
-		SetRTPvalue("Volume", volume);
-		SetRTPvalue("Pitch", pitch);
-	}
-	else {
-		SetRTPvalue("Volume", 0);
 	}
 
 	return update_status::UPDATE_CONTINUE;
@@ -106,58 +101,14 @@ bool ModuleAudio::CleanUp()
 	return true;
 }
 
-SoundBank * ModuleAudio::LoadSoundBank(std::string path)
+void ModuleAudio::PushSoundBank(SoundBankResource * sbk)
 {
-	SoundBank* new_bank = new SoundBank();
-	std::string bank_path = ASSETS_SOUNDBANK_FOLDER + path;
-	Wwise::LoadBank(bank_path.c_str());
-
-	std::string json_file = bank_path.substr(0, bank_path.find_last_of('.')) + ".json"; // Changing .bnk with .json
-	GetBankInfo(json_file, new_bank);
-	soundbanks.push_back(new_bank);
-	soundbank = new_bank;
-	return new_bank;
+	soundbanks.push_back(sbk);
 }
 
-unsigned int ModuleAudio::GetBankInfo(std::string path, SoundBank *& bank)
+std::vector<SoundBankResource*> ModuleAudio::GetSoundBanks() const
 {
-	unsigned int ret = 0;
-
-	JSON_File * bank_file = json->LoadJSON(path.c_str());
-	bank_file->RootObject();
-
-	if (bank_file == nullptr) 
-	{
-		CONSOLE_DEBUG("Error reading bank json file");
-	}
-	else 
-	{
-		bank_file->ChangeObject("SoundBanksInfo");
-		int n_banks = bank_file->ArraySize("SoundBanks");
-		for (int i = 0; i < n_banks; i++) {
-			bank_file->RootObject();
-			bank_file->ChangeObject("SoundBanksInfo");
-			bank_file->MoveToInsideArray("SoundBanks", i);
-			ret = bank->id = bank_file->GetNumber("Id");
-			bank->name = bank_file->GetString("ShortName");
-			bank->path = bank_file->GetString("Path");
-
-			//bank_file->RootObject();
-			int n_events = bank_file->ArraySize("IncludedEvents");
-			for (int j = 0; j < n_events; j++) {
-
-				//create new event and load it
-				AudioEvent* new_event = new AudioEvent();
-				bank_file->RootObject();
-				bank_file->ChangeObject("SoundBanksInfo");
-				bank_file->MoveToInsideArray("SoundBanks", i);
-				new_event->Load(bank_file, bank, j);
-				bank->events.push_back(new_event);
-			}
-		}
-	}
-
-	return ret;
+	return soundbanks;
 }
 
 Wwise::SoundObject * ModuleAudio::CreateSoundObject(const char * name, math::float3 position)
@@ -217,21 +168,14 @@ Wwise::SoundObject* ModuleAudio::GetSoundObject(int obj_id)
 	return nullptr;
 }
 
-void ModuleAudio::SetRTPvalue(const char * rtpc, float value)
+void ModuleAudio::SetRTPCvalue(const char * rtpc, float value)
 {
 	AK::SoundEngine::SetRTPCValue(rtpc, value);
 }
 
-void ModuleAudio::SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_id)
+void ModuleAudio::SetRTPCvalue(const char * rtpc, float value, AkGameObjectID go_id)
 {
 	AK::SoundEngine::SetRTPCValue(rtpc, value, go_id);
-}
-
-void ModuleAudio::StopAllEvents()
-{
-	for (int i = 0; i < soundbank->events.size(); i++) {
-		AK::SoundEngine::ExecuteActionOnEvent(soundbank->events[i]->name.c_str(), AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause);
-	}
 }
 
 void ModuleAudio::ImGuiDraw()

@@ -1,7 +1,7 @@
 using TheEngine;
 
 using TheEngine.TheConsole;
-
+using TheEngine.Math;
 
 
 public class StarShipShooting {
@@ -71,8 +71,22 @@ public class StarShipShooting {
 				}
 
 				laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
+				
+				//Calculate the rotation
+				TheVector3 Z = new TheVector3(0,0,1);
+				TheVector3 ship_rot = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
+				
+				float prod = Z.x*ship_rot.x+Z.y*ship_rot.y+Z.z*ship_rot.z;
+				float magnitude_prod = Z.Length*ship_rot.Length;
+				
+				float angle = TheMath.Acos(prod/magnitude_prod);
 
-				//laser_factory.SetSpawnRotation(laser_spawner.GetComponent<TheTransform>().GlobalRotation);
+				/// get the axis of this rotation
+				TheVector3 axis = TheVector3.CrossProduct(Z,ship_rot);
+
+				TheVector3 laser_rot = new TheVector3(0,90 + ship_rot.y,0);
+
+				laser_factory.SetSpawnRotation(laser_rot);
 
 				TheGameObject go = laser_factory.Spawn();
 

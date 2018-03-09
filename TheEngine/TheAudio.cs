@@ -23,9 +23,6 @@ namespace TheEngine
         public static extern void SetPitch(int pitch);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetRTPvalue(string name, float value);
-
-        /*[MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetMyRTPvalue(string name, float value);*/
+        public static extern void SetRTPCvalue(string name, float value);
     }
 }

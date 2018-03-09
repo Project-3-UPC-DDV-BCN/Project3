@@ -14,6 +14,7 @@ class Script;
 class Font;
 class PhysicsMaterial;
 class BlastModel;
+class SoundBankResource;
 class GOAPGoal;
 class GOAPAction;
 
@@ -41,6 +42,7 @@ public:
 	BlastModel* GetBlastModel() const;
 	Shader* GetShader() const;
 	Font* GetFont() const;
+	SoundBankResource* GetSoundBank() const;
 	GOAPGoal* GetGOAPGoal() const;
 	GOAPAction* GetGOAPAction() const;
 	void SetShaderType(Shader::ShaderType type);
@@ -60,6 +62,7 @@ private:
 	std::map<uint, BlastModel*> blast_models_list;
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, Font*> fonts_list;
+	std::map<uint, SoundBankResource*> soundbanks_list;
 	std::map<uint, GOAPGoal*> goap_goals_list;
 	std::map<uint, GOAPAction*> goap_actions_list;
 
@@ -74,6 +77,7 @@ private:
 	Shader* shader_to_return;
 	Shader::ShaderType shader_type;
 	Font* font_to_return;
+	SoundBankResource* soundbank_to_return;
 	GOAPGoal* goal_to_return;
 	GOAPAction* action_to_return;
 
@@ -86,6 +90,7 @@ public:
 	bool script_changed;
 	bool phys_mat_changed;
 	bool blast_model_changed;
+	bool soundbank_changed;
 	
 	GameObjectFilter go_filter;
 	bool shader_changed;

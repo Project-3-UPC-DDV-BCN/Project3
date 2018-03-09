@@ -44,6 +44,7 @@
 #include "ComponentButton.h"
 #include "ComponentRadar.h"
 #include "Texture.h"
+#include "SoundBankResource.h"
 #include "ComponentGOAPAgent.h"
 #include "GOAPAction.h"
 #include "GOAPGoal.h"
@@ -2219,9 +2220,17 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 		audio_source->GetEvents();
 
 	if (ImGui::CollapsingHeader("Audio Source")) {
+		SoundBankResource* sbk = audio_source->soundbank;
+		if (ImGui::InputResourceAudio("SoundBank", &sbk))
+		{
+			if (audio_source->soundbank) audio_source->StopAllEvents();
+			audio_source->soundbank = sbk;
+			audio_source->ClearEventsVector();
+		}
+
 		if (audio_source->soundbank != nullptr) {
 			std::string soundbank_name = "SoundBank: ";
-			soundbank_name += audio_source->soundbank->name.c_str();
+			soundbank_name += audio_source->soundbank->GetName().c_str();
 			if (ImGui::TreeNode(soundbank_name.c_str()))
 			{		
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
@@ -2231,11 +2240,13 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 				}	
 				ImGui::TreePop();
 			}
-			if (ImGui::TreeNode("Settings##Event"))
+			std::string settings_name = "Settings##";
+			settings_name += soundbank_name;
+			if (ImGui::TreeNode(settings_name.c_str()))
 			{
-				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Volume", &audio_source->volume, 0, 100);
 				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
-				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
+				ImGui::Checkbox("Mute", &audio_source->muted);
 
 				ImGui::TreePop();
 			}

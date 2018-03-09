@@ -12,6 +12,7 @@ public class Audio_test {
 	void Start () {
 		audio_source = audio.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
+		audio_source.SetMyRTPCvalue("asdas",5);
 	}
 	
 	void Update () {

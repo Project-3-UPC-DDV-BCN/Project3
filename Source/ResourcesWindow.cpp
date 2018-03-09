@@ -12,6 +12,7 @@
 #include "BlastModel.h"
 #include "Shader.h"
 #include "Font.h"
+#include "SoundBankResource.h"
 #include "GOAPAction.h"
 #include "GOAPGoal.h"
 
@@ -43,6 +44,7 @@ ResourcesWindow::ResourcesWindow()
 	blast_model_changed = false;
 	shader_changed = false;
 	font_changed = false;
+	soundbank_changed = false;
 	action_changed = false;
 	goal_changed = false;
 
@@ -310,6 +312,24 @@ void ResourcesWindow::DrawWindow()
 			}
 		}
 		break;
+	case Resource::SoundBankResource:
+		soundbanks_list = App->resources->GetSoundBanksList();
+		if (ImGui::Selectable("None##SoundBank"))
+		{
+			soundbank_to_return = nullptr;
+			soundbank_changed = true;
+			break;
+		}
+		for (std::map<uint, SoundBankResource*>::const_iterator it = soundbanks_list.begin(); it != soundbanks_list.end(); it++)
+		{
+			if (ImGui::Selectable(it->second->GetName().c_str()))
+			{
+				soundbank_to_return = it->second;
+				soundbank_changed = true;
+				break;
+			}
+		}
+		break;
 	case Resource::GOAPGoalResource:
 		goap_goals_list = App->resources->GetGOAPGoalList();
 		if (ImGui::Selectable("None##GOAPGoal"))
@@ -408,6 +428,11 @@ Font * ResourcesWindow::GetFont() const
 	return font_to_return;
 }
 
+SoundBankResource * ResourcesWindow::GetSoundBank() const
+{
+	return soundbank_to_return;
+}
+
 GOAPGoal * ResourcesWindow::GetGOAPGoal() const
 {
 	return goal_to_return;
@@ -444,6 +469,7 @@ void ResourcesWindow::Reset()
 	font_changed = false;
 	phys_mat_changed = false;
 	blast_model_changed = false;
+	soundbank_changed = false;
 	goal_changed = false;
 	action_changed = false;
 	
@@ -456,6 +482,7 @@ void ResourcesWindow::Reset()
 	font_to_return = nullptr;
 	phys_mat_to_return = nullptr;
 	blast_model_to_return = nullptr;
+	soundbank_to_return = nullptr;
 	goal_to_return = nullptr;
 	action_to_return = nullptr;
 
