@@ -25,13 +25,10 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
-<<<<<<< HEAD
 class ComponentButton;
 class ComponentRadar;
-=======
 class ComponentGOAPAgent;
 class GOAPGoal;
->>>>>>> origin/development
 
 class PropertiesWindow :
 	public Window
@@ -72,10 +69,8 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
-<<<<<<< HEAD
 	bool radar_marker_select;
 	int marker_to_change;
-=======
 
 	bool add_goal = false;
 	char add_goal_name[256] = "\0";
@@ -84,6 +79,5 @@ private:
 	float add_goal_inc_time = 0;
 
 	GOAPGoal* goal_to_add_condition = nullptr;
->>>>>>> origin/development
 };
 

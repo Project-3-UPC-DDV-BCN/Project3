@@ -41,17 +41,14 @@
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
-<<<<<<< HEAD
 #include "ComponentButton.h"
 #include "ComponentRadar.h"
 #include "Texture.h"
-=======
 #include "ComponentGOAPAgent.h"
 #include "GOAPAction.h"
 #include "GOAPGoal.h"
 #include "GOAPField.h"	
 #include "GOAPVariable.h"
->>>>>>> origin/development
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -544,13 +541,11 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
 		break;
-<<<<<<< HEAD
 	case Component::CompButton:
 		DrawButtonPanel((ComponentButton*)component);
-=======
+		break;
 	case Component::CompGOAPAgent:
 		DrawGOAPAgent((ComponentGOAPAgent*)component);
->>>>>>> origin/development
 		break;
 	default:
 		break;
