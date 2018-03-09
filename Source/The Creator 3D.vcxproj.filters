@@ -1188,6 +1188,16 @@
     </ClInclude>
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="SoundBankResource.h">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ModuleAudioImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1833,6 +1843,16 @@
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="SoundBankResource.cpp">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ModuleAudioImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
     <ClCompile Include="GOAPGoal.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>

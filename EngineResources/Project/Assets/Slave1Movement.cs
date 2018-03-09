@@ -102,7 +102,7 @@ public class Slave1Movement {
 
 		audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
-		TheAudio.SetRTPvalue("Speed",vel_percent);
+		TheAudio.SetRTPCvalue("Speed",vel_percent);
 	}
 	
 	void Update () 
@@ -283,7 +283,7 @@ public class Slave1Movement {
 		}
 
 		float target_vel = vel_percent*curr_max_vel;
-		TheAudio.SetRTPvalue("Speed",(curr_vel/curr_max_vel)*100);
+		TheAudio.SetRTPCvalue("Speed",(curr_vel/curr_max_vel)*100);
 		
 		if(boosting)
 		{

@@ -104,6 +104,8 @@ enum update_status
 #define LIBRARY_BMODEL_FOLDER_PATH "./Project/Library/B_Models"
 #define LIBRARY_PARTICLES_FOLDER "./Project/Library/Particles/"
 #define LIBRARY_PARTICLES_FOLDER_PATH "./Project/Library/Particles"
+#define LIBRARY_SOUNDBANK_FOLDER "./Project/Library/SoundBanks/"
+#define LIBRARY_SOUNDBANK_FOLDER_PATH "./Project/Library/SoundBanks"
 #define LIBRARY_GOAP_FOLDER "./Project/Library/GOAP/"
 #define LIBRARY_GOAP_FOLDER_PATH "./Project/Library/GOAP"
 

@@ -151,12 +151,14 @@ public:
 	void SetVolume(int volume);
 	int GetPitch();
 	void SetPitch(int pitch);
-	void SetRTPvalue(MonoString* name, float value);
+	void SetRTPCvalue(MonoString* name, float value);
 
 	//AUDIOSOURCE
 	bool Play(MonoObject * object, MonoString* name);
 	bool Stop(MonoObject * object, MonoString* name);
 	bool Send(MonoObject * object, MonoString* name);
+	bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
+	bool SetState(MonoObject* object, MonoString* group, MonoString* state);
 
 	//PARTICLE EMMITER
 	void PlayEmmiter(MonoObject * object);

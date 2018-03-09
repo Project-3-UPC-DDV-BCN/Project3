@@ -321,12 +321,13 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudio::SetVolume", (const void*)SetVolume);
 	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
-	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
-	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
+	mono_add_internal_call("TheEngine.TheAudio::SetRTPCvalue", (const void*)SetRTPCvalue);
 
 	mono_add_internal_call("TheEngine.TheAudioSource::Play", (const void*)Play);
 	mono_add_internal_call("TheEngine.TheAudioSource::Stop", (const void*)Stop);
 	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
+	mono_add_internal_call("TheEngine.TheAudioSource::SetMyRTPCvalue", (const void*)SetMyRTPCvalue);
+	mono_add_internal_call("TheEngine.TheAudioSource::SetState", (const void*)SetState);
 
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
@@ -733,9 +734,9 @@ void ModuleScriptImporter::SetPitch(int pitch)
 	current_script->SetPitch(pitch);
 }
 
-void ModuleScriptImporter::SetRTPvalue(MonoString* name, float value)
+void ModuleScriptImporter::SetRTPCvalue(MonoString* name, float value)
 {
-	current_script->SetRTPvalue(name, value);
+	current_script->SetRTPCvalue(name, value);
 }
 
 bool ModuleScriptImporter::Play(MonoObject * object, MonoString * name)
@@ -751,6 +752,16 @@ bool ModuleScriptImporter::Stop(MonoObject * object, MonoString * name)
 bool ModuleScriptImporter::Send(MonoObject * object, MonoString * name)
 {
 	return current_script->Send(object, name);
+}
+
+bool ModuleScriptImporter::SetMyRTPCvalue(MonoObject * object, MonoString* name, float value)
+{
+	return current_script->SetMyRTPCvalue(object, name, value);
+}
+
+void ModuleScriptImporter::SetState(MonoObject* object, MonoString* group, MonoString* state)
+{
+	current_script->SetState(object, group, state);
 }
 
 void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
