@@ -502,7 +502,6 @@ MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 
 void ModuleScriptImporter::OnClick(ComponentRectTransform * rect_trans)
 {
-
 }
 
 void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)

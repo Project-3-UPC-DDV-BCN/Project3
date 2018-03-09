@@ -1430,6 +1430,11 @@ MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 
 void CSScript::OnClick(ComponentRectTransform * rec_trans)
 {
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
 	if (rec_trans != nullptr)
 	{
 		GameObject* go = rec_trans->GetGameObject();
@@ -1446,6 +1451,7 @@ void CSScript::OnClick(ComponentRectTransform * rec_trans)
 		if (c)
 		{
 			MonoMethod* new_object = mono_class_get_method_from_name(c, "CallOnClick", 0);
+			CallFunction(new_object, 0);
 		}
 	}
 }

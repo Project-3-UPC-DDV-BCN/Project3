@@ -8,6 +8,7 @@
 
 class Texture;
 class GameObject;
+class ComponentRectTransform;
 
 struct ScriptField {
 	enum PropertyType {
