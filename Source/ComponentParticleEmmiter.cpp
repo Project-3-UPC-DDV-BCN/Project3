@@ -37,20 +37,14 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
-	float3 particle_pos = emmit_area.RandomPointInside(random);
-//	emmit_area.LocalToWorld().TransformPos(emmit_area_obb.CenterPoint());
+	float3 particle_pos = emmit_area_obb.RandomPointInside(random);
+	emmit_area_obb.LocalToWorld().TransformPos(particle_pos);
 
 	Particle* new_particle = new Particle(this);
 
 	//We create its transform
 	new_particle->components.particle_transform = new ComponentTransform(nullptr, true);
-
-	if(data->emmit_style == EMMIT_FROM_CENTER)
-		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
-
-	else if (data->emmit_style == EMMIT_FROM_RANDOM)
-		new_particle->components.particle_transform->SetPosition(particle_pos);
-
+	new_particle->components.particle_transform->SetPosition(particle_pos);
 	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
 
 	//We generate the always squared surface for the particle 
@@ -83,7 +77,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	//Copy Interpolations
 	if (data->change_color_interpolation)
 	{
-		new_particle->particle_data->change_color_interpolation = true; 
 		new_particle->particle_data->initial_color = data->initial_color; 
 		new_particle->particle_data->final_color = data->final_color;
 	}
@@ -93,7 +86,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	///Size
 	if (data->change_size_interpolation)
 	{
-		new_particle->particle_data->change_size_interpolation = true;
 		new_particle->particle_data->initial_scale = data->initial_scale;
 		new_particle->particle_data->final_scale = data->final_scale; 
 	}
@@ -103,7 +95,6 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	///Rotation
 	if (data->change_rotation_interpolation)
 	{
-		new_particle->particle_data->change_rotation_interpolation = true;
 		new_particle->particle_data->initial_angular_v = data->initial_angular_v;
 		new_particle->particle_data->final_angular_v = data->final_angular_v;
 	}
@@ -144,14 +135,14 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 
 	show_shockwave = false; 
 	wave_launched = false; 
-	show_emit_area = true; 
 
 	//Make the aabb enclose a primitive cube
-	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
-	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
-	emmit_area.Scale({ 0,0,0 }, { 1,1,1 });
+	AABB emit_area; 
+	emit_area.minPoint = { -0.5f,-0.5f,-0.5f };
+	emit_area.maxPoint = { 0.5f,0.5f,0.5f };
+	emit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-
+	emmit_area_obb.SetFrom(emit_area);
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -179,8 +170,6 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
-	if (data == nullptr)
-		return false;
 
 	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();
@@ -233,6 +222,19 @@ bool ComponentParticleEmmiter::Update()
 					system_state = PARTICLE_STATE_PAUSE; 
 				}
 			}
+
+			// Shock Wave
+			if (data->shock_wave.active == true)
+			{
+				UpdateShockWave(); 
+				DrawShockWave(App->renderer3D->editor_camera); 
+
+				if (data->shock_wave.done == true)
+				{
+					data->shock_wave.active = false; 
+				}
+			}
+				
 				
 		}
 	}
@@ -261,25 +263,21 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	if (parent_transform->dirty)
-	{
-		//Position increment
-		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
+	//Position increment
+	float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area_obb.CenterPoint();
 
-		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {1,1,1});
+	//Rotation increment
+	float3 parent_eule_rot = parent_transform->GetMatrix().RotatePart().ToEulerXYZ();
+	float3 obb_rot = emmit_area_obb.LocalToWorld().RotatePart().ToEulerXYZ();
 
-		emmit_area.TransformAsAABB(transform_to_apply);
+	float3 inc_angle = parent_eule_rot - obb_rot; 
 
-		float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
-		emmit_area.Scale(emmit_area.CenterPoint(), asd);
+	//Apply
+	float4x4 rot_mat = float4x4::FromEulerXYZ(inc_angle.x, inc_angle.y, inc_angle.z);
 
-		data->width_increment = 0; 
-		data->height_increment = 0; 
-		data->depth_increment = 0; 
+	float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, rot_mat, { data->width_increment + 1,data->height_increment + 1,data->depth_increment + 1 });
 
-		parent_transform->dirty = false; 
-	}
-
+	emmit_area_obb.Transform(transform_to_apply);
 }
 
 void ComponentParticleEmmiter::UpdateCurrentData()
@@ -301,7 +299,6 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	
 	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
 	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
-	data.AddString("Template", this->data->GetName()); 
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -315,9 +312,6 @@ void ComponentParticleEmmiter::Load(Data & data)
 	float3 pos = data.GetVector3("Position"); 
 	float3 rot = data.GetVector3("Rotation");
 	float3 scale = { 1,1,1 }; 
-
-	//Load Template 
-	this->data = App->resources->GetParticleTemplate(data.GetString("Template")); 
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
@@ -391,7 +385,7 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 
 void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
 {
-	data->shock_wave.object = new GameObject(nullptr); 
+	data->shock_wave.object = new GameObject(); 
 
 	data->shock_wave.active = true; 
 	data->shock_wave.done = false; 
@@ -400,41 +394,38 @@ void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration,
 	data->shock_wave.wave_transform = new ComponentTransform(data->shock_wave.object);
 	data->shock_wave.wave_texture = texture; 
 
-	data->shock_wave.duration = duration;
-	data->shock_wave.final_scale = final_scale;
+	data->shock_wave.duration = duration; 
+	data->shock_wave.final_scale = final_scale; 
 	data->shock_wave.wave_timer.Start(); 
 }
 
 void ComponentParticleEmmiter::UpdateShockWave()
 {
-	////We get the number that we have to increment 
-	//float time_ex = data->shock_wave.wave_timer.Read() / 1000;
-	//float time_dec = data->shock_wave.wave_timer.Read() % 1000;
-	//float time = time_ex + time_dec / 1000;
+	//We get the number that we have to increment 
+	float time_ex = data->shock_wave.wave_timer.Read() / 1000;
+	float time_dec = data->shock_wave.wave_timer.Read() % 1000;
+	float time = time_ex + time_dec / 1000;
 
-	//float percentage = (time / (data->shock_wave.duration));
+	float percentage = (time / (data->shock_wave.duration));
 
-	////We get the current scale 
-	//float current_scale = data->shock_wave.final_scale * percentage; 
+	//We get the current scale 
+	float current_scale = data->shock_wave.final_scale * percentage; 
 
-	//data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
+	data->shock_wave.wave_transform->SetScale({ 1, current_scale, current_scale });
+	data->shock_wave.wave_transform->SetScale({ 1, 1, 1 });
 
-	//if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
-	//{
-	//	data->shock_wave.active = false;
-	//	data->shock_wave.done = true; 
-	//	show_shockwave = false; 
-	//}
+	if (data->shock_wave.wave_timer.Read() > data->shock_wave.duration * 1000)
+	{
+		data->shock_wave.active = false;
+		data->shock_wave.done = true; 
+		show_shockwave = false; 
+	}
 		
 }
 
 void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
-
-	if (show_shockwave)
-		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
-
 	Start();
 }
 
@@ -457,7 +448,7 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 	for (int i = 0; i < data->amount_to_emmit; i++)
 	{
 		Particle* new_particle = CreateParticle();
-		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
+		new_particle->components.particle_transform->SetPosition(emmit_area_obb.CenterPoint());
 		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
 	}
 }

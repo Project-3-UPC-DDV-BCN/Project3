@@ -25,8 +25,6 @@ public:
 	void OnCollisionExit(GameObject* other_collider);
 	void OnEnable();
 	void OnDisable();
-	void OnComplete();
-	void OnFail();
 
 	void SetIntProperty(const char* propertyName, int value);
 	int GetIntProperty(const char* propertyName);
@@ -171,21 +169,6 @@ public:
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 
-	//GOAPAGENT
-	mono_bool GetBlackboardVariableB(MonoString* name) const;
-	float GetBlackboardVariableF(MonoString* name);
-	int GetNumGoals();
-	MonoString* GetGoalName(int index);
-	MonoString* GetGoalConditionName(int index);
-	void SetGoalPriority(int index, int priority);
-	int GetGoalPriority(int index);
-	void CompleteAction();
-	void FailAction();
-	void SetBlackboardVariable(MonoString* name, float value);
-	void SetBlackboardVariable(MonoString* name, bool value);
-	
-
-
 private:
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);
@@ -224,8 +207,6 @@ private:
 	MonoMethod* on_collision_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
-	MonoMethod* on_complete;
-	MonoMethod* on_fail;
 
 	std::vector<ScriptField*> script_fields;
 	bool modifying_self;

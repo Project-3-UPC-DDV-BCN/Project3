@@ -49,15 +49,6 @@ ModuleScene::~ModuleScene()
 	RELEASE(tmp_scene_data);
 }
 
-bool ModuleScene::Init(Data * editor_config)
-{
-	float size = editor_config->GetFloat("skybox_size");
-	if (size > skybox_size)
-		skybox_size = size;
-
-	return true;
-}
-
 // Load assets
 bool ModuleScene::Start()
 {
@@ -79,7 +70,7 @@ bool ModuleScene::Start()
 	CreateMainCamera();
 	CreateMainLight();
 
-	skybox = new CubeMap(skybox_size);
+	skybox = new CubeMap(500);
 	skybox->SetCubeMapTopTexture(EDITOR_SKYBOX_FOLDER"top.bmp");
 	skybox->SetCubeMapLeftTexture(EDITOR_SKYBOX_FOLDER"left.bmp");
 	skybox->SetCubeMapFrontTexture(EDITOR_SKYBOX_FOLDER"front.bmp");
@@ -131,11 +122,6 @@ bool ModuleScene::CleanUp()
 
 
 	return true;
-}
-
-void ModuleScene::SaveData(Data * data)
-{
-	data->AddFloat("skybox_size", skybox_size);
 }
 
 GameObject * ModuleScene::CreateGameObject(GameObject * parent)
@@ -227,8 +213,6 @@ update_status ModuleScene::PreUpdate(float dt)
 			it = gameobjects_to_destroy.erase(it);
 		}
 	}
-
-	skybox->SetSize(skybox_size);
 
 	return UPDATE_CONTINUE;
 }

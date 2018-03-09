@@ -26,8 +26,6 @@
 #include "ModuleShaderImporter.h"
 #include "ShaderProgram.h"
 #include "Font.h"
-#include "GOAPGoal.h"
-#include "GOAPAction.h"
 
 ModuleResources::ModuleResources(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -94,13 +92,6 @@ ModuleResources::~ModuleResources()
 		RELEASE(it->second);
 	}
 	shaders_list.clear();
-
-	for (std::map<uint, GOAPGoal*>::iterator it = goap_goals_list.begin(); it != goap_goals_list.end(); ++it)
-	{
-		RELEASE(it->second);
-	}
-	goap_goals_list.clear();
-
 }
 
 bool ModuleResources::Init(Data * editor_config)
@@ -122,7 +113,6 @@ void ModuleResources::FillResourcesLists()
 	if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
 	if (!App->file_system->DirectoryExist(LIBRARY_BMODEL_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_BMODEL_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_GOAP_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_GOAP_FOLDER_PATH);
 
 	CreateDefaultShaders();
 	CreateDefaultMaterial();
@@ -149,137 +139,13 @@ void ModuleResources::FillResourcesLists()
 		}
 	}
 
-	/*for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
+	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); it++)
 	{
 		if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
-		else if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) LoadGOAPGoal(*it);
-		else if (App->file_system->GetFileName(*it).find("_GOAPAction") != std::string::npos) LoadGOAPAction(*it);
-		else CreateResource(*it);
-	}
 		CreateResource(*it);
-	}*/
-
-	// Meshes
-	std::vector<std::string> mesh_order;
-	//Textures
-	std::vector<std::string> texture_order;
-	//Shader
-	std::vector<std::string> shader_order;
-	//ShaderProgram
-	std::vector<std::string> shader_program_order;
-	//Materials
-	std::vector<std::string> material_order;
-	//Scripts
-	std::vector<std::string> script_order;
-	//Audio
-
-	//Font
-	std::vector<std::string> font_order;
-	//PhysicsMat
-	std::vector<std::string> phys_mat_order;
-	//BlastMesh
-	std::vector<std::string> blast_mesh_order;
-	//GOAPGoal
-	std::vector<std::string> goap_goal_order;
-	//GOAPAction
-	std::vector<std::string> goap_action_order;
-	//ParticleFX
-	std::vector<std::string> particle_order;
-
-	// Create lists in order of Drive
-	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
-	{
-		std::string extension = App->file_system->GetFileExtension(*it);
-		Resource::ResourceType type;
-		type = AssetExtensionToResourceType(extension);
-		if (type == Resource::Unknown)
-		{
-			if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) type = Resource::GOAPGoalResource;
-			if (App->file_system->GetFileName(*it).find("_GOAPAction") != std::string::npos) type = Resource::GOAPActionResource;
-		}
-
-		switch (type) {
-		case Resource::MeshResource:
-			if (App->file_system->GetFileName(*it).find("_blast") != std::string::npos) continue;
-			mesh_order.push_back(*it);
-			break;
-		case Resource::TextureResource:
-			texture_order.push_back(*it);
-			break;
-		case Resource::ShaderResource:
-			shader_order.push_back(*it);
-			break;
-		case Resource::ShaderProgramResource:
-			shader_program_order.push_back(*it);
-			break;
-		case Resource::MaterialResource:
-			material_order.push_back(*it);
-			break;
-		case Resource::ScriptResource:
-			script_order.push_back(*it);
-			break;
-		case Resource::AudioResource:
-			break;
-		case Resource::FontResource:
-			font_order.push_back(*it);
-			break;
-		case Resource::PhysicsMatResource:
-			phys_mat_order.push_back(*it);
-			break;
-		case Resource::BlastMeshResource:
-			blast_mesh_order.push_back(*it);
-			break;
-		case Resource::GOAPGoalResource:
-			goap_goal_order.push_back(*it);
-			break;
-		case Resource::GOAPActionResource:
-			goap_action_order.push_back(*it);
-			break;
-		case Resource::ParticleFXResource:
-			particle_order.push_back(*it);
-			break;
-		}
 	}
 
-	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = mesh_order.begin(); it != mesh_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = shader_order.begin(); it != shader_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = shader_program_order.begin(); it != shader_program_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
-		CreateResource(*it);
-
-	// AudioRes
-
-	for (std::vector<string>::iterator it = font_order.begin(); it != font_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = phys_mat_order.begin(); it != phys_mat_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = blast_mesh_order.begin(); it != blast_mesh_order.end(); ++it)
-		CreateResource(*it);
-
-	for (std::vector<string>::iterator it = goap_goal_order.begin(); it != goap_goal_order.end(); ++it)
-		LoadGOAPGoal(*it);
-
-	for (std::vector<string>::iterator it = goap_action_order.begin(); it != goap_action_order.end(); ++it)
-		LoadGOAPAction(*it);
-
-	for (std::vector<string>::iterator it = particle_order.begin(); it != particle_order.end(); ++it)
-		CreateResource(*it);
-
-	if (exist_shprog_meta) //shader meta should be the last thing because it contains the programs
+	if (exist_shprog_meta)
 		LoadShaderProgramMeta(shprog_meta_file);
 }
 
@@ -951,98 +817,6 @@ void ModuleResources::OnShaderUpdate(Shader * shader) const
 			it->second->LinkShaderProgram(); //if the modified shader affects this program, link the program again
 		}
 	}
-}
-
-GOAPGoal * ModuleResources::GetGOAPGoal(std::string name) const
-{
-	GOAPGoal* ret = nullptr;
-	for (std::map<uint, GOAPGoal*>::const_iterator it = goap_goals_list.begin(); it != goap_goals_list.end(); it++)
-	{
-		if (it->second->GetName() == name)
-		{
-			ret = it->second;
-			break;
-		}
-	}
-	return ret;
-}
-
-GOAPGoal * ModuleResources::GetGOAPGoal(UID uid) const
-{
-	if (goap_goals_list.find(uid) != goap_goals_list.end()) return goap_goals_list.at(uid);
-	return nullptr;
-}
-
-void ModuleResources::AddGOAPGoal(GOAPGoal * goal)
-{
-	if (goal != nullptr)
-	{
-		goap_goals_list[goal->GetUID()] = goal;
-	}
-}
-
-void ModuleResources::RemoveGOAPGoal(GOAPGoal * goal)
-{
-	if (goal)
-	{
-		std::map<uint, GOAPGoal*>::iterator it = goap_goals_list.find(goal->GetUID());
-		if (it != goap_goals_list.end())
-		{
-			RELEASE(it->second);
-			goap_goals_list.erase(it);
-		}
-	}
-}
-
-std::map<uint, GOAPGoal*> ModuleResources::GetGOAPGoalList() const
-{
-	return goap_goals_list;
-}
-
-GOAPAction * ModuleResources::GetGOAPAction(std::string name) const
-{
-	GOAPAction* ret = nullptr;
-	for (std::map<uint, GOAPAction*>::const_iterator it = goap_actions_list.begin(); it != goap_actions_list.end(); it++)
-	{
-		if (it->second->GetName() == name)
-		{
-			ret = it->second;
-			break;
-		}
-	}
-	return ret;
-}
-
-GOAPAction * ModuleResources::GetGOAPAction(UID uid) const
-{
-	if (goap_actions_list.find(uid) != goap_actions_list.end()) return goap_actions_list.at(uid);
-	return nullptr;
-}
-
-void ModuleResources::AddGOAPAction(GOAPAction * action)
-{
-	if (action != nullptr)
-	{
-		goap_actions_list[action->GetUID()] = action;
-	}
-}
-
-void ModuleResources::RemoveGOAPGoal(GOAPAction * action)
-{
-	if (action)
-	{
-		std::map<uint, GOAPAction*>::iterator it = goap_actions_list.find(action->GetUID());
-		if (it != goap_actions_list.end())
-		{
-			RELEASE(it->second);
-			goap_actions_list.erase(it);
-		}
-	}
-}
-
-std::map<uint, GOAPAction*> ModuleResources::GetGOAPActionList() const
-{
-	return goap_actions_list;
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)
@@ -1913,7 +1687,10 @@ void ModuleResources::CreateDefaultShaders()
 			"out vec4 color;\n\n"
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
+			"uniform float material_alpha;\n"
 			"uniform bool alpha_interpolation;\n"
+			"uniform bool color_interpolation;\n"
+			"uniform vec3 color_to_show;\n"
 			"uniform float alpha_percentage;\n"
 			"uniform bool has_texture;\n"
 			"uniform sampler2D ourTexture;\n\n"
@@ -1935,6 +1712,8 @@ void ModuleResources::CreateDefaultShaders()
 			"	if(alpha_interpolation)\n"
 			"		color.a = alpha_percentage;\n"
 
+			"	if (material_alpha != 1)\n"
+			"		color.a = material_alpha;\n"
 			"}";
 
 		default_particle_frag->SetContent(shader_text);
@@ -2327,57 +2106,4 @@ bool ModuleResources::CheckResourceName(std::string& name)
 	}
 
 	return ret;
-}
-
-void ModuleResources::LoadGOAPGoal(std::string path)
-{
-	GOAPGoal* goal = new GOAPGoal();
-	Data file;
-	if (HasMetaFile(path))
-	{
-		Data data;
-		if (data.LoadJSON(path + ".meta"))
-		{
-			std::string lib_path = data.GetString("lib_path");
-			if (!App->file_system->FileExist(lib_path))
-				App->file_system->Copy(path, lib_path);
-			file.LoadJSON(lib_path);
-		}	
-		goal->Load(file);
-	}
-	else
-	{
-		file.LoadJSON(path);
-		goal->Load(file);
-		goal->CreateMeta();
-	}
-	AddGOAPGoal(goal);
-}
-
-void ModuleResources::LoadGOAPAction(std::string path)
-{
-	if (App->file_system->GetFileExtension(path) == ".cs" || App->file_system->GetFileExtension(path) == ".meta")
-		return;
-	std::string name = App->file_system->GetFileNameWithoutExtension(path);
-	GOAPAction* action = new GOAPAction(name.c_str(),1,false);
-	Data file;
-	if (HasMetaFile(path))
-	{
-		Data data;
-		if (data.LoadJSON(path + ".meta"))
-		{
-			std::string lib_path = data.GetString("lib_path");
-			if (!App->file_system->FileExist(lib_path))
-				App->file_system->Copy(path, lib_path);
-			file.LoadJSON(lib_path);
-		}
-		action->Load(file);
-	}
-	else
-	{
-		file.LoadJSON(path);
-		action->Load(file);
-		action->CreateMeta();
-	}
-	AddGOAPAction(action);
 }

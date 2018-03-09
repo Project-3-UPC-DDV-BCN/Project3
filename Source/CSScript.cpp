@@ -24,8 +24,6 @@
 #include "AudioEvent.h"
 #include "ComponentText.h"
 #include "ComponentRigidBody.h"
-#include "ComponentGOAPAgent.h"
-#include "GOAPGoal.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -38,14 +36,12 @@ CSScript::CSScript()
 
 	init = nullptr;
 	start = nullptr;
-	update = nullptr; 
+	update = nullptr;
 	on_collision_enter = nullptr;
 	on_collision_stay = nullptr;
 	on_collision_exit = nullptr;
 	on_enable = nullptr;
 	on_disable = nullptr;
-	on_complete = nullptr;
-	on_fail = nullptr;
 
 	active_gameobject = nullptr;
 	attached_gameobject = nullptr;
@@ -82,8 +78,6 @@ bool CSScript::LoadScript(std::string script_path)
 		on_collision_exit = GetFunction("OnCollisionExit", 1);
 		on_enable = GetFunction("OnEnable", 0);
 		on_disable = GetFunction("OnDisable", 0);
-		on_complete = GetFunction("OnComplete", 0);
-		on_fail = GetFunction("OnFail", 0);
 
 		ret = true;
 	}
@@ -171,24 +165,6 @@ void CSScript::OnDisable()
 	if (on_disable != nullptr)
 	{
 		CallFunction(on_disable, nullptr);
-		inside_function = false;
-	}
-}
-
-void CSScript::OnComplete()
-{
-	if (on_complete != nullptr)
-	{
-		CallFunction(on_complete, nullptr);
-		inside_function = false;
-	}
-}
-
-void CSScript::OnFail()
-{
-	if (on_fail != nullptr)
-	{
-		CallFunction(on_fail, nullptr);
 		inside_function = false;
 	}
 }
@@ -991,10 +967,6 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	else if (name == "TheEngine.TheRigidBody")
 	{
 		comp_name = "TheRigidBody";
-	}
-	else if (name == "TheEngine.TheGOAPAgent")
-	{
-		comp_name = "TheGOAPAgent";
 	}
 
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
@@ -2656,171 +2628,3 @@ void CSScript::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 	if (rb != nullptr)
 		rb->SetLinearVelocity({ x,y,z });
 }
-
-// ----- GOAP AGENT -----
-mono_bool CSScript::GetBlackboardVariableB(MonoString * name) const
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		bool var;
-		const char* var_name = mono_string_to_utf8(name);
-		if (goap->GetBlackboardVariable(var_name, var))
-		{
-			return var;
-		}
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-	return false;
-}
-
-float CSScript::GetBlackboardVariableF(MonoString * name)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		float var;
-		const char* var_name = mono_string_to_utf8(name);
-		if (goap->GetBlackboardVariable(var_name, var))
-		{
-			return var;
-		}
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-	return 0.0f;
-}
-
-int CSScript::GetNumGoals()
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		return goap->goals.size();
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-	return 0;
-}
-
-MonoString * CSScript::GetGoalName(int index)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		if (index >= 0 && index < goap->goals.size())
-			mono_string_new(mono_domain, goap->goals[index]->GetName().c_str());
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-	return mono_string_new(mono_domain, "");
-}
-
-MonoString * CSScript::GetGoalConditionName(int index)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		if (index >= 0 && index < goap->goals.size())
-			mono_string_new(mono_domain, goap->goals[index]->GetConditionName());
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-	return mono_string_new(mono_domain, "");
-}
-
-void CSScript::SetGoalPriority(int index, int priority)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		if (index >= 0 && index < goap->goals.size())
-			goap->goals[index]->SetPriority(priority);
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-}
-
-int CSScript::GetGoalPriority(int index)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		if (index >= 0 && index < goap->goals.size())
-			return goap->goals[index]->GetPriority();
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-	return -1;
-}
-
-void CSScript::CompleteAction()
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		goap->CompleteCurrentAction();
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-}
-
-void CSScript::FailAction()
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		goap->FailCurrentAction();
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-}
-
-void CSScript::SetBlackboardVariable(MonoString * name, float value)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		const char* var_name = mono_string_to_utf8(name);
-		goap->SetBlackboardVariable(var_name, value);
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-}
-
-void CSScript::SetBlackboardVariable(MonoString * name, bool value)
-{
-	ComponentGOAPAgent* goap = (ComponentGOAPAgent*)active_gameobject->GetComponent(Component::CompGOAPAgent);
-	if (goap != nullptr)
-	{
-		const char* var_name = mono_string_to_utf8(name);
-		goap->SetBlackboardVariable(var_name, value);
-	}
-	else
-	{
-		CONSOLE_WARNING("GOAPAgent not found!");
-	}
-}
-
-// ------

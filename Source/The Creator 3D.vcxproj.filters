@@ -225,9 +225,6 @@
     <ClInclude Include="tinyfiledialogs.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="TagsAndLayers.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -1149,17 +1146,33 @@
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GOAPField.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="GOAPAction.h">
+    <ClInclude Include="Font.h">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="GOAPVariable.h">
-      <Filter>Sources\Helpers</Filter>
+    <ClInclude Include="BlastModel.h">
+      <Filter>Sources\Helpers\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="GOAPEffect.h">
-      <Filter>Sources\Helpers</Filter>
+    <ClInclude Include="PhysicsMaterial.h">
+      <Filter>Sources\Helpers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentButton.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="ComponentRadar.h">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1291,9 +1304,6 @@
     </ClCompile>
     <ClCompile Include="tinyfiledialogs.c">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="TagsAndLayers.cpp">
       <Filter>Sources</Filter>
@@ -1799,13 +1809,24 @@
     <ClCompile Include="CSScript.cpp">
       <Filter>Sources\Helpers\Resources</Filter>
     </ClCompile>
-      <Filter>Sources\Helpers\Resources</Filter>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="GOAPField.cpp">
-      <Filter>Sources\Helpers</Filter>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentButton.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="GOAPVariable.cpp">
-      <Filter>Sources\Helpers</Filter>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentRadar.cpp">
+      <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

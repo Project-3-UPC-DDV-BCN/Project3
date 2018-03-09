@@ -28,12 +28,8 @@ public:
 	float3 GetUp()const;
 	float3 GetRight()const;
 
-	bool IsParticle(); 
-
 	void Save(Data& data) const;
 	void Load(Data& data);
-
-	bool dirty; 
 
 private:
 	float3 position;

@@ -28,12 +28,10 @@ public:
 	void CreateMainCamera();
 	void CreateMainLight();
 
-	bool Init(Data* editor_config = nullptr);
 	bool Start();
 	update_status Update(float dt);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
-	void SaveData(Data* data);
 
 	GameObject* CreateGameObject(GameObject* parent = nullptr);
 	GameObject* CreateLightObject(GameObject* parent = nullptr);
@@ -106,7 +104,6 @@ public:
 	Data* tmp_scene_data;
 
 	int triangles_count;
-	float skybox_size = 100.f;
 
 private:
 	std::list<GameObject*> gameobjects_to_destroy;

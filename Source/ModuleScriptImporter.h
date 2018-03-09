@@ -24,7 +24,7 @@ public:
 	MonoDomain* GetDomain() const;
 	MonoImage* GetEngineImage() const;
 
-	std::string CompileScript(std::string assets_path, std::string& lib);
+	std::string CompileScript(std::string assets_path);
 	void SetCurrentScript(CSScript* script);
 
 private:
@@ -144,20 +144,6 @@ private:
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
-
-	//GOAP AGENT
-	static mono_bool GetBlackboardVariableB(MonoString* name);
-	static float GetBlackboardVariableF(MonoString* name);
-	static int GetNumGoals();
-	static MonoString* GetGoalName(int index);
-	static MonoString* GetGoalConditionName(int index);
-	static void SetGoalPriority(int index, int priority);
-	static int GetGoalPriority(int index);
-	static void CompleteAction();
-	static void FailAction();
-	static void SetBlackboardVariable(MonoString* name, float value);
-	static void SetBlackboardVariableB(MonoString* name, bool value);
-
 
 private:
 	std::string mono_path;

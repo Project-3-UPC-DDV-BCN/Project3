@@ -135,8 +135,8 @@ void ComponentMeshRenderer::Load(Data & data)
 		if (!material)
 		{
 			material = new Material();
+			material->Load(data);
 		}
-		material->Load(data);
 	}
 	data.LeaveSection();
 	data.EnterSection("Interior_Material");

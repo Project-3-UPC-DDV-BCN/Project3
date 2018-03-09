@@ -6,7 +6,6 @@
 
 ParticleData::ParticleData()
 {
-	
 }
 
 ParticleData::~ParticleData()
@@ -20,9 +19,9 @@ void ParticleData::LoadDefaultData()
 	emmision_rate = 15;
 	max_lifetime = 1;
 	velocity = 5.0f;
+	color = Color(255, 255, 255, 0);
 	billboard_type = BILLBOARD_NONE; 
 	emmision_type = EMMISION_CONTINUOUS; 
-	emmit_style = EMMIT_FROM_RANDOM;
 	billboarding = false;
 	gravity = { 0,0,0 };
 	angular_v = 0;
@@ -91,8 +90,6 @@ void ParticleData::Save(Data & data) const
 	data.AddFloat("Emit_Height", emmit_height);
 	data.AddFloat("Emit_Depth", emmit_depth);
 
-	data.AddInt("Emmision_Style", (int)emmit_style);
-
 	//billboarding 
 	data.AddBool("Billboard", billboarding); 
 
@@ -135,12 +132,6 @@ void ParticleData::Save(Data & data) const
 	if (change_color_interpolation)
 	{
 		data.AddBool("Color_Interpolation", true);
-
-		float3 init_color = { initial_color .r, initial_color .g, initial_color .b};
-		float3 fin_color = { final_color.r, final_color.g, final_color.b };
-
-		data.AddVector3("Initial_Color", init_color);
-		data.AddVector3("Final_Color", fin_color);
 	}
 	else
 		data.AddBool("Color_Interpolation", false);
@@ -157,10 +148,10 @@ void ParticleData::Save(Data & data) const
 
 	if (change_alpha_interpolation)
 	{
-		data.AddBool("Alpha_Interpolation", true);	
+		data.AddBool("Alpha_Interpolation", true);		
 	}
 	else
-		data.AddBool("Alpha_Interpolation", false);
+		data.AddBool("Size_Interpolation", false);
 
 	if (change_rotation_interpolation)
 	{
@@ -196,7 +187,11 @@ void ParticleData::SaveTextures(Data& data)
 		}		
 	}
 
-	data.AddFloat("TimeStep", animation_system.timeStep);
+	if (animation_system.GetNumFrames() > 1)
+	{
+		data.AddFloat("TimeStep", animation_system.timeStep);
+	}
+
 	data.AddInt("Frames_Num", animation_system.GetNumFrames()); 
 
 	data.CloseSection(); 
@@ -208,7 +203,6 @@ void ParticleData::Copy(ParticleData * other)
 	animation_system = other->animation_system;
 
 	emmision_type = other->emmision_type;
-	emmit_style = other->emmit_style;
 	time_step_sim = other->time_step_sim; 
 	amount_to_emmit = other->amount_to_emmit; 
 
@@ -237,8 +231,6 @@ void ParticleData::Copy(ParticleData * other)
 
 	autopause = other->autopause; 
 	time_to_stop = other->time_to_stop; 
-
-	change_alpha_interpolation = other->change_alpha_interpolation;
 									
 	change_size_interpolation = other->change_size_interpolation;
 	initial_scale = other->initial_scale;
@@ -264,7 +256,6 @@ bool ParticleData::Load(Data & _data)
 	_data.EnterSection("Particle");
 	
 	emmision_type = static_cast<emmision_behaviour>(_data.GetInt("Emmision_Type"));
-	emmit_style = static_cast<emmision_style>(_data.GetInt("Emmision_Style"));
 
 	if (emmision_type == EMMISION_SIMULTANEOUS)
 	{
@@ -272,6 +263,7 @@ bool ParticleData::Load(Data & _data)
 		amount_to_emmit = _data.GetInt("SimAmount");
 	}
 		
+
 	string name = _data.GetString("Name");
 	SetName(name.c_str());
 
@@ -296,8 +288,11 @@ bool ParticleData::Load(Data & _data)
 		animation_system.AddToFrameStack(texture); 
 	}
 
-	animation_system.timeStep = _data.GetFloat("TimeStep"); 
-	
+	if (frames_num > 1)
+	{
+		animation_system.timeStep = _data.GetFloat("TimeStep"); 
+	}
+
 	animation_system.rendering_frame = 0; 
 
 	_data.LeaveSection(); 
@@ -357,21 +352,13 @@ bool ParticleData::Load(Data & _data)
 	}
 
 
+
 	if (change_rotation_interpolation)
 	{
 		initial_angular_v = _data.GetFloat("Initial_Rotation");
 		final_angular_v = _data.GetFloat("Final_Rotation");
 	}
-
-	if (change_color_interpolation)
-	{
-		float3 initcolor = _data.GetVector3("Initial_Color");
-		float3 fin_color = _data.GetVector3("Final_Color");
-
-		initial_color.Set(initcolor.x, initcolor.y, initcolor.z);
-		final_color.Set(fin_color.x, fin_color.y, fin_color.z);
-		// ------
-	}
+	// ------
 
 	//Function calling ----
 	width_increment = emmit_width;

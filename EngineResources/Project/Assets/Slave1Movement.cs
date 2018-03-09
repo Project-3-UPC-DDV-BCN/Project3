@@ -15,29 +15,16 @@ public class Slave1Movement {
 	public float slow_vel_percent = 0.02f;
 	public float rotate_rumble_strength = 0.05f;
 	public float accel_max_rumble_strength = 0.3f;
-	public float boost_rumble_strength = 0.3f;
 	public int rotate_rumble_ms = 5;
 	public int accel_rumble_ms = 3;
-	public int boost_rumble_ms = 3;
-
+	
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
 	private float curr_max_vel = 10.0f;
-	private float curr_accel;
 	bool slowing = false;
 	public bool invert_axis = false;
 	
-	private bool boosting = false;
-	public float boost_extra_vel = 25.0f;
-	public float boost_accel_multiplier = 1.5f;
-	private float boost_timer;
-	public float boost_time = 1.5f;
-	public float boost_cd_time = 5.0f;
-	private float boost_cd_timer;
-	public float slow_time = 1.0f;
-	public float slow_regen = 0.1f;
-	private float slow_timer;
-
+	public float slow_time = 2.0f;
 	//Energy management
 	public int max_energy = 6;
 	public int shield_energy = 2;
@@ -48,17 +35,10 @@ public class Slave1Movement {
 	public TheGameObject weapons;
 	public TheGameObject shields;
 	public TheGameObject energy;
-	public TheGameObject speed;
 
 	TheProgressBar weapons_bar = null;
 	TheProgressBar shields_bar = null;
 	TheProgressBar energy_bar = null;
-	TheProgressBar speed_bar = null;
-
-	//audio
-	public TheGameObject audio_emiter;
-	
-	TheAudioSource audio_source;
 	
 	void Start () 
 	{
@@ -70,7 +50,6 @@ public class Slave1Movement {
 		weapons_bar = weapons.GetComponent<TheProgressBar>();
 		shields_bar = shields.GetComponent<TheProgressBar>();
 		energy_bar = energy.GetComponent<TheProgressBar>();
-		speed_bar = speed.GetComponent<TheProgressBar>();
 
 		weapons_bar.PercentageProgress = 100;
 		shields_bar.PercentageProgress = 100;
@@ -83,11 +62,6 @@ public class Slave1Movement {
 		max_energy_on_system *= 2;
 		
 		curr_max_vel = max_vel;
-		curr_accel = acceleration;
-
-		audio_source = audio_emiter.GetComponent<TheAudioSource>();
-		audio_source.Play("Play_Engine");
-		TheAudio.SetRTPvalue("Speed",vel_percent);
 	}
 	
 	void Update () 
@@ -99,8 +73,6 @@ public class Slave1Movement {
 		weapons_bar.PercentageProgress = (100 / 8) * weapon_energy;
 		shields_bar.PercentageProgress = (100 / 8) * shield_energy;
 		energy_bar.PercentageProgress = (100 / 8) * engine_energy;
-
-		speed_bar.PercentageProgress = (curr_vel/200) * 100;
 	}
 
 	void SetValuesWithEnergy()
@@ -238,83 +210,32 @@ public class Slave1Movement {
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
 		}
 		
-		if(TheInput.IsKeyDown("B") && boost_cd_timer <= 0.0f)
-		{
-			boosting = true;
-			boost_timer = boost_time;
-			boost_cd_timer = 0.1f; //dont allow to boost continously
-		}
+		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 1)
+			//slow_timer = Time.time;
 
 		slowing = false;
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
 		{
-			slow_timer+=TheTime.DeltaTime;
-
-			if(slow_timer <= slow_time)
-			{
-				vel_percent = slow_vel_percent;
-				slowing = true;
-			}
-			
-		}
-
-		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 0)
-		{
-			if(slow_timer > 0.0f)
-			{
-				slow_timer-= slow_regen*TheTime.DeltaTime;
-				TheConsole.Log(slow_regen*TheTime.DeltaTime);
-			}
+			//TheConsole.Log(Time.time);
+			//if(Time.time - slow_timer < slow_time)
+			//{
+				//vel_percent = slow_vel_percent;
+				//slowing = true;
+			//}
 		}
 
 		float target_vel = vel_percent*curr_max_vel;
-		TheAudio.SetRTPvalue("Speed",(curr_vel/curr_max_vel)*100);
-		
-		if(boosting)
-		{
-			TheConsole.Log("boooooost");
-			target_vel = curr_max_vel+boost_extra_vel;
-			curr_accel = acceleration*boost_accel_multiplier;
-			TheInput.RumbleController(0,boost_rumble_strength,boost_rumble_ms);
-			if(curr_vel >= target_vel && boost_timer <= 0.0f)
-			{
-				boosting = false;
-				curr_accel = acceleration;
-				TheConsole.Log("STOOOOP! boooooost");
-				boost_cd_timer = boost_cd_time;
-				TheConsole.Log(boost_cd_timer);
-			}
-
-			if(curr_vel>= target_vel)
-				boost_timer -= TheTime.DeltaTime;
-		}
-		else
-		{
-			if(engine_energy > 4)
-			{
-				boost_cd_timer -= TheTime.DeltaTime*(1+(0.5f/4)*(engine_energy-4));
-			}
-			else if(engine_energy < 4)
-			{
-				boost_cd_timer -= TheTime.DeltaTime*(1-(0.75f/4)*(engine_energy));
-			}
-			else
-				boost_cd_timer -= TheTime.DeltaTime;
-			
-			TheConsole.Log(boost_cd_timer);
-		
-		}
 
 		if(curr_vel < target_vel) 
 		{
-			curr_vel += curr_accel*TheTime.DeltaTime;
+			curr_vel += acceleration*TheTime.DeltaTime;
 			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
 			TheInput.RumbleController(0,rumble,accel_rumble_ms);
 		}
 		else if(curr_vel > target_vel)
 		{
 			if(!slowing)
-				curr_vel-=curr_accel*TheTime.DeltaTime;
+				curr_vel-=acceleration*TheTime.DeltaTime;
 			else
 			{
 				curr_vel-=slow_acceleration*TheTime.DeltaTime;

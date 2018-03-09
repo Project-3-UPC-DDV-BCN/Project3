@@ -11,7 +11,6 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_
 	SetName("Transform");
 	SetType(ComponentType::CompTransform);
 	SetGameObject(attached_gameobject);
-	dirty = false; 
 
 	position = float3(0.f, 0.f, 0.f);
 	shown_rotation = float3(0.f, 0.f, 0.f);
@@ -33,7 +32,6 @@ void ComponentTransform::SetPosition(float3 position)
 {
 	this->position = position;
 	UpdateGlobalMatrix();
-	dirty = true;
 }
 
 float3 ComponentTransform::GetGlobalPosition() const
@@ -55,7 +53,6 @@ void ComponentTransform::SetRotation(float3 rotation)
 	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
 	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
-	dirty = true; 
 
 }
 
@@ -73,7 +70,6 @@ void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
-	dirty = true;
 	//ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 	//if (rb)
 	//{
@@ -240,11 +236,6 @@ float3 ComponentTransform::GetUp() const
 float3 ComponentTransform::GetRight() const
 {
 	return transform_matrix.WorldX();
-}
-
-bool ComponentTransform::IsParticle()
-{
-	return is_particle;
 }
 
 void ComponentTransform::Save(Data & data) const
