@@ -6,8 +6,6 @@ using TheEngine.Math;
 
 public class StarShipShooting {
 
-
-
 	TheFactory laser_factory;
 
     public TheGameObject laser_spawner;
@@ -22,9 +20,19 @@ public class StarShipShooting {
 
 	bool used_left_laser = false;
 
+    public TheGameObject weapons_energy;
 
+    TheProgressBar weapons_bar = null;
 
-	void Start () {
+    public float overheat_increment = 0.2f;
+    float curr_overheat_inc;
+    public float overheat_time = 3.0f;
+    float overheat_timer = 0.0f;
+    float overheat = 0.0f; //from 0.0 to 1.0
+    bool overheated = false;
+    public float cooling_rate = 10.0f;
+
+    void Start () {
 
 	    laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
 
@@ -32,42 +40,35 @@ public class StarShipShooting {
 		
 		audio_source = audio_emiter.GetComponent<TheAudioSource>();
 
-	}
+        weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
 
-	
+        curr_overheat_inc = overheat_increment;
+    }	
 
 	void Update () {
 
-		if(timer <= 0)
+        curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
 
+		if(timer <= 0 && !overheated)
 		{
-
 			if(TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000)
-
 			{
-
 				//TheVector3 rot = new TheVector3(0,0,0);
 
 				TheVector3 offset;
 
 				if(used_left_laser)
-
 				{
-
 					offset = new TheVector3(1,2,0);
 
 					used_left_laser = false;
-
 				}
 
 				else
-
 				{
-
 					offset = new TheVector3(-1,2,0);
 
 					used_left_laser = true;
-
 				}
 
 				laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
@@ -96,20 +97,38 @@ public class StarShipShooting {
 
 				timer = spawn_time;
 
-				//TheConsole.Log("Spawner " + laser_spawner.GetComponent<TheTransform>().ForwardDirection);
 				audio_source.Play("Play_shot1");
-			}
+
+                //Add heat
+                overheat += curr_overheat_inc;
+                if(overheat>= 1.0f)
+                {
+                    overheated = true;
+                }
+                overheat_timer = overheat_time;
+            }
 
 		}
 
-		else
-
+		else if(!overheated)
 		{
-
 			timer -= TheTime.DeltaTime;
-
 		}
 
-	}
+        if(overheat_timer<=0.0f)
+        {
+            //start cooling
+            overheat -= cooling_rate * TheTime.DeltaTime;
+            if(overheat<=0.0f)
+            {
+                overheat = 0.0f;
+                overheated = false;
+            }
+        }
 
+        overheat_timer -= TheTime.DeltaTime;
+        TheConsole.Log(overheat);
+    }
+
+    
 }
