@@ -947,18 +947,33 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 {
 	if (ImGui::CollapsingHeader("Radar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		bool transparent = radar->GetTransparent();
 		Texture* background_texture = radar->GetBackgroundTexture();
 		float max_distance = radar->GetMaxDistance();
+		float markers_size = radar->GetMarkersSize();
 		GameObject* center_go = radar->GetCenter();
+		Texture* center_texture = radar->GetCenterTexture();
 
-		if (ImGui::InputResourceTexture("Background Texture", &background_texture))
+		if (ImGui::Checkbox("Transparent", &transparent))
 		{
-			radar->SetBackgroundTexture(background_texture);
+			radar->SetTransparent(transparent);
 		}
 
+		if (!transparent)
+		{
+			if (ImGui::InputResourceTexture("Background Texture", &background_texture))
+			{
+				radar->SetBackgroundTexture(background_texture);
+			}
+		}
 		if (ImGui::DragFloat("Max distance", &max_distance, true, 1, 0.0f))
 		{
 			radar->SetMaxDistance(max_distance);
+		}
+
+		if (ImGui::DragFloat("Markers size", &markers_size, true, 0.01f, 0.0f))
+		{
+			radar->SetMarkersSize(markers_size);
 		}
 
 		if (ImGui::InputResourceGameObject("Center Go", &center_go))
@@ -968,8 +983,12 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 
 		if (center_go != nullptr)
 		{
+			if (ImGui::InputResourceTexture("Center Texture", &center_texture))
+			{
+				radar->SetCenterTexture(center_texture);
+			}
 
-			if (ImGui::Button("Add Marker"))
+			if (ImGui::Button("Create Marker"))
 			{
 				std::string marker_name = "Marker_" + std::to_string(radar->markers.size());
 				radar->CreateMarker(marker_name.c_str(), nullptr);
@@ -986,30 +1005,31 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 				}
 			}
 
+			ImGui::Separator();
 
 			ImGui::Text("Markers");
 
 			int markers_count = 0;
-			for (std::vector<RadarMarker>::iterator it = radar->markers.begin(); it != radar->markers.end(); ++it)
+			for (std::vector<RadarMarker*>::iterator it = radar->markers.begin(); it != radar->markers.end(); ++it)
 			{
 				char name[100];
-				strcpy_s(name, 100, (*it).marker_name.c_str());
-				Texture* marker_texture = (*it).marker_texture;
+				strcpy_s(name, 100, (*it)->marker_name.c_str());
+				Texture* marker_texture = (*it)->marker_texture;
 
 				if (ImGui::InputText("Name", name, 100))
 				{
-					(*it).marker_name = name;
+					(*it)->marker_name = name;
 				}
 
 				ImGui::SameLine();
 				if (ImGui::Button("X"))
 				{
-					radar->markers.erase(it);
+					radar->DeleteMarker((*it));
 					break;
 				}
 
 				if (ImGui::InputResourceTexture("Texture", &marker_texture));
-				(*it).marker_texture = marker_texture;
+					(*it)->marker_texture = marker_texture;
 			}
 
 			ImGui::Separator();
@@ -1020,6 +1040,10 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 			{
 				GameObject* curr_go = radar->entities[i].go;
 
+				string id = std::to_string(i);
+
+				ImGui::PushID(id.c_str());
+				
 				if (ImGui::InputResourceGameObject("GameObject", &curr_go))
 				{
 					radar->entities[i].go = curr_go;
@@ -1028,34 +1052,40 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 				if (radar->entities[i].go != nullptr)
 					ImGui::Text(radar->entities[i].go->GetName().c_str());
 
-				if (radar->entities[i].has_marker)
+				if (radar->entities[i].marker != nullptr)
 				{
 					ImGui::SameLine();
-					ImGui::Text(radar->entities[i].marker.marker_name.c_str());
+					ImGui::Text(radar->entities[i].marker->marker_name.c_str());
 				}
 
-				if (ImGui::Button("Add Marker"))
+				if (ImGui::Button("Select Marker"))
 				{
 					radar_marker_select = true;
 					marker_to_change = i;
 				}
 
-				/*ImGui::SetWindowSize(ImVec2(300, 600));
+				ImGui::PopID();
+			}
+
+			ImGui::SetWindowSize(ImVec2(300, 600));
+			if (radar_marker_select)
+			{
 				if (ImGui::Begin("Marker Adder", &radar_marker_select))
 				{
-					for (std::vector<RadarMarker>::iterator mar = radar->markers.begin(); mar != radar->markers.end(); ++mar)
+					for (std::vector<RadarMarker*>::iterator mar = radar->markers.begin(); mar != radar->markers.end(); ++mar)
 					{
-						if (ImGui::Button((*mar).marker_name.c_str()))
+						if (ImGui::Button((*mar)->marker_name.c_str()))
 						{
-							radar->AddMarkerToEntity(i, (*mar));
+							radar->AddMarkerToEntity(marker_to_change, (*mar));
 							radar_marker_select = false;
 							break;
 						}
 					}
 
 					ImGui::End();
-				}*/
+				}
 			}
+			
 		}
 	}
 }
