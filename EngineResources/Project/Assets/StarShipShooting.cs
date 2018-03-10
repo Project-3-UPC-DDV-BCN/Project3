@@ -35,7 +35,8 @@ public class StarShipShooting {
     float overheat_timer = 0.0f;
     float overheat = 0.0f; //from 0.0 to 1.0
     bool overheated = false;
-    public float cooling_rate = 10.0f;
+    public float w1_cooling_rate = 10.0f;
+    public float w2_cooling_rate = 10.0f;
 
     public int num_weapons = 2;
     public int weapon = 0; //SELECTED WEAPON
@@ -169,7 +170,16 @@ public class StarShipShooting {
         if(overheat_timer<=0.0f)
         {
             //start cooling
-            overheat -= cooling_rate * TheTime.DeltaTime;
+            switch (weapon)
+            {
+                case 0:
+                    overheat -= w1_cooling_rate * TheTime.DeltaTime; ;
+                    break;
+                case 1:
+                    overheat -= w2_cooling_rate * TheTime.DeltaTime; ;
+                    break;
+            }
+            
             if(overheat<=0.0f)
             {
                 overheat = 0.0f;
