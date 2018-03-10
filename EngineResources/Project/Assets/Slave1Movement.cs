@@ -47,6 +47,9 @@ public class Slave1Movement {
 	public float shield_hp = 25.0f;
 	float curr_shield_hp;
 	public float shield_regen = 10.0f;
+    public float shield_regen_time = 10.0f;
+    float shield_regen_energy;
+    float shield_regen_timer;
 
 	//Energy management
 	public int max_energy = 6;
@@ -59,14 +62,18 @@ public class Slave1Movement {
 	public TheGameObject shields;
 	public TheGameObject energy;
 	public TheGameObject speed;
+    public TheGameObject shield_hp_go;
+    public TheGameObject hp;
 
-	TheProgressBar weapons_bar = null;
+    TheProgressBar weapons_bar = null;
 	TheProgressBar shields_bar = null;
 	TheProgressBar energy_bar = null;
 	TheProgressBar speed_bar = null;
+    TheProgressBar shield_hp_bar = null;
+    TheProgressBar hp_bar = null;
 
-	//audio
-	public TheGameObject audio_emiter;
+    //audio
+    public TheGameObject audio_emiter;
 	
 	TheAudioSource audio_source;
 	
@@ -81,8 +88,10 @@ public class Slave1Movement {
 		shields_bar = shields.GetComponent<TheProgressBar>();
 		energy_bar = energy.GetComponent<TheProgressBar>();
 		speed_bar = speed.GetComponent<TheProgressBar>();
+        shield_hp_bar = shield_hp_go.GetComponent<TheProgressBar>();
+        hp_bar = hp.GetComponent<TheProgressBar>();
 
-		weapons_bar.PercentageProgress = 100;
+        weapons_bar.PercentageProgress = 100;
 		shields_bar.PercentageProgress = 100;
 		energy_bar.PercentageProgress = 100;
 		//for halves, consider a point each 2 
@@ -95,14 +104,15 @@ public class Slave1Movement {
 		curr_max_vel = max_vel;
 		curr_accel = acceleration;
 
-		//HP n shield
+		//HP and shield
 		body_hp = wings_hp = engine_hp = total_hp/3.0f;
 		curr_total_hp = total_hp;
 		curr_shield_hp = shield_hp;
+        shield_regen_energy = shield_regen;
 
 		audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
-		TheAudio.SetRTPCvalue("Speed",vel_percent);
+		audio_source.SetMyRTPCvalue("Speed",vel_percent);
 	}
 	
 	void Update () 
@@ -110,18 +120,24 @@ public class Slave1Movement {
 		Movement();
 		EnergyManagement();
 		SetValuesWithEnergy();
+        RegenShield();
 
-		weapons_bar.PercentageProgress = (100 / 8) * weapon_energy;
-		shields_bar.PercentageProgress = (100 / 8) * shield_energy;
-		energy_bar.PercentageProgress = (100 / 8) * engine_energy;
+        //set ui bars
+		weapons_bar.PercentageProgress = (100.0f / 8.0f) * weapon_energy;
+		shields_bar.PercentageProgress = (100.0f / 8.0f) * shield_energy;
+		energy_bar.PercentageProgress = (100.0f / 8.0f) * engine_energy;
+        shield_hp_bar.PercentageProgress = (curr_shield_hp / shield_hp) * 100.0f;
+        hp_bar.PercentageProgress = (curr_total_hp / total_hp) * 100.0f;
 
 		speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
+        curr_total_hp = wings_hp + body_hp + engine_hp;
 	}
 
 	void SetValuesWithEnergy()
 	{
 		curr_max_vel = 0.5f*max_vel + ((12.5f*(float)engine_energy)/100)*max_vel;
-	}
+        shield_regen_energy = 0.5f*shield_regen + ((12.5f * (float)shield_energy) / 100) * shield_regen;
+    }
 
 	void EnergyManagement()
 	{
@@ -178,6 +194,11 @@ public class Slave1Movement {
 			shield_energy = 4;
 			weapon_energy = 4;
 			engine_energy = 4;
+		}
+
+		if(TheInput.IsKeyDown("F1"))
+		{
+			DamageBody(10.0f);
 		}
 	}
 
@@ -283,7 +304,7 @@ public class Slave1Movement {
 		}
 
 		float target_vel = vel_percent*curr_max_vel;
-		TheAudio.SetRTPCvalue("Speed",(curr_vel/curr_max_vel)*100);
+		audio_source.SetMyRTPCvalue("Speed",(curr_vel/curr_max_vel)*100);
 		
 		if(boosting)
 		{
@@ -342,4 +363,67 @@ public class Slave1Movement {
 		new_vel_pos += trans.ForwardDirection*curr_vel*TheTime.DeltaTime;
 		trans.LocalPosition = new_vel_pos;
 	}
+
+    void DamageWings(float damage)
+    {
+        if (curr_shield_hp > 0)
+        {
+            curr_shield_hp -= damage;
+            shield_regen_timer = shield_regen_time;
+        }
+        else
+        {
+            wings_hp -= damage;
+            if (wings_hp <= 0.0f)
+            {
+                //lose
+            }
+        }
+    }
+
+    void DamageBody(float damage)
+    {
+        if (curr_shield_hp > 0)
+        {
+            curr_shield_hp -= damage;
+            shield_regen_timer = shield_regen_time;
+        }
+        else
+        {
+            body_hp -= damage;
+            if (wings_hp <= 0.0f)
+            {
+                //lose
+            }
+        }
+    }
+
+    void DamageEngine(float damage)
+    {
+        if (curr_shield_hp > 0)
+        {
+            curr_shield_hp -= damage;
+            shield_regen_timer = shield_regen_time;
+        }
+        else
+        {
+            engine_hp -= damage;
+            if (wings_hp <= 0.0f)
+            {
+                //lose
+            }
+        }
+    }
+
+    void RegenShield()
+    {
+        if(shield_regen_timer<=0.0f && curr_shield_hp<shield_hp)
+        {
+            curr_shield_hp+=shield_regen_energy* TheTime.DeltaTime;
+            if (curr_shield_hp > shield_hp)
+                curr_shield_hp = shield_hp;
+        }
+        shield_regen_timer -= TheTime.DeltaTime;
+    }
+
 }
