@@ -130,6 +130,7 @@ public class Slave1Movement {
         hp_bar.PercentageProgress = (curr_total_hp / total_hp) * 100.0f;
 
 		speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
+        curr_total_hp = wings_hp + body_hp + engine_hp;
 	}
 
 	void SetValuesWithEnergy()
@@ -365,7 +366,7 @@ public class Slave1Movement {
 
     void DamageWings(float damage)
     {
-        if (shield_hp > 0)
+        if (curr_shield_hp > 0)
         {
             curr_shield_hp -= damage;
             shield_regen_timer = shield_regen_time;
@@ -382,7 +383,7 @@ public class Slave1Movement {
 
     void DamageBody(float damage)
     {
-        if (shield_hp > 0)
+        if (curr_shield_hp > 0)
         {
             curr_shield_hp -= damage;
             shield_regen_timer = shield_regen_time;
@@ -399,7 +400,7 @@ public class Slave1Movement {
 
     void DamageEngine(float damage)
     {
-        if (shield_hp > 0)
+        if (curr_shield_hp > 0)
         {
             curr_shield_hp -= damage;
             shield_regen_timer = shield_regen_time;
