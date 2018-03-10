@@ -117,6 +117,12 @@ public:
 	void SetPercentageProgress(MonoObject * object, float progress);
 	float GetPercentageProgress(MonoObject * object);
 
+	//RADAR
+	void AddEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveAllEntities(MonoObject * object);
+	void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
+
 	//FACTORY
 	void StartFactory(MonoObject * object);
 	MonoObject* Spawn(MonoObject* object);

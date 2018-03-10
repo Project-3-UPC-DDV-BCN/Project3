@@ -1722,6 +1722,49 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 	return progres_barr->GetProgressPercentage();
 }
 
+void CSScript::AddEntity(MonoObject * object, MonoObject * game_object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+}
+
+void CSScript::RemoveEntity(MonoObject * object, MonoObject * game_object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+}
+
+void CSScript::RemoveAllEntities(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+}
+
+void CSScript::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
+{
+}
+
 void CSScript::StartFactory(MonoObject * object)
 {
 	if (!MonoObjectIsValid(object))

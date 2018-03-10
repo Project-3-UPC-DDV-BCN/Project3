@@ -116,7 +116,7 @@ bool ComponentRadar::Update()
 						de.SetSize(c_rect_trans->GetScaledSize() * markers_size);
 						de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
 						de.SetFlip(false, false);
-						de.SetPosition(float3(-scaled_distance_mag * cos((DEGTORAD*angle_x_z)), scaled_distance_mag * sin(DEGTORAD*angle_x_z), scaled_distance_y));
+						de.SetPosition(float3(-scaled_distance_mag * cos((DEGTORAD*angle_x_z)), scaled_distance_mag * sin(DEGTORAD*angle_x_z), -scaled_distance_y));
 
 						if ((*it).marker != nullptr)
 						{
