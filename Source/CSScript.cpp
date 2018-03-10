@@ -1138,6 +1138,82 @@ MonoArray * CSScript::GetSceneGameObjects(MonoObject * object)
 	return nullptr;
 }
 
+MonoArray * CSScript::GetObjectsInFrustum(MonoObject* object, MonoObject * pos, MonoObject * front, MonoObject * up, float nearPlaneDist, float farPlaneDist)
+{
+
+	MonoClass* c_pos = mono_object_get_class(pos);
+	MonoClassField* x_field = mono_class_get_field_from_name(c_pos, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c_pos, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c_pos, "z");
+
+	float3 frustum_pos;
+	if (x_field) mono_field_get_value(pos, x_field, &frustum_pos.x);
+	if (y_field) mono_field_get_value(pos, y_field, &frustum_pos.y);
+	if (z_field) mono_field_get_value(pos, z_field, &frustum_pos.z);
+
+	MonoClass* c_front = mono_object_get_class(front);
+	x_field = mono_class_get_field_from_name(c_front, "x");
+	y_field = mono_class_get_field_from_name(c_front, "y");
+	z_field = mono_class_get_field_from_name(c_front, "z");
+
+	float3 frustum_front;
+	if (x_field) mono_field_get_value(front, x_field, &frustum_front.x);
+	if (y_field) mono_field_get_value(front, y_field, &frustum_front.y);
+	if (z_field) mono_field_get_value(front, z_field, &frustum_front.z);
+
+	MonoClass* c_up = mono_object_get_class(up);
+	x_field = mono_class_get_field_from_name(c_up, "x");
+	y_field = mono_class_get_field_from_name(c_up, "y");
+	z_field = mono_class_get_field_from_name(c_up, "z");
+
+	float3 frustum_up;
+	if (x_field) mono_field_get_value(up, x_field, &frustum_up.x);
+	if (y_field) mono_field_get_value(up, y_field, &frustum_up.y);
+	if (z_field) mono_field_get_value(up, z_field, &frustum_up.z);
+
+	Frustum frustum;
+	frustum.SetPos(frustum_pos);
+	frustum.SetFront(frustum_front);
+	frustum.SetUp(frustum_up);
+
+	frustum.SetKind(math::FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	frustum.SetViewPlaneDistances(nearPlaneDist, farPlaneDist);
+
+	float FOV = 60;
+	float aspect_ratio = 1.3;
+	frustum.SetHorizontalFovAndAspectRatio(FOV*DEGTORAD, aspect_ratio);
+	frustum.ComputeProjectionMatrix();
+
+	std::list<GameObject*> objects = App->scene->scene_gameobjects;
+	std::list<GameObject*> obj_inFrustum;
+
+	for (std::list<GameObject*>::iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
+		if (mesh == nullptr) continue;
+
+		int vertex_num = mesh->bounding_box.NumVertices();
+
+		for (int i = 0; i < 6; i++) //planes of frustum
+		{
+			int points_out = 0;
+			for (int j = 0; j < vertex_num; j++) //vertex number of box
+			{
+				Plane plane = frustum.GetPlane(i);
+				if (plane.IsOnPositiveSide(mesh->bounding_box.CornerPoint(j)))
+				{
+					points_out++;
+				}
+			}
+			//if all the points are outside of a plane, the gameobject is not inside the frustum
+			if (points_out < 8) obj_inFrustum.push_back((*it));
+		}
+	}
+	// return obj_inFrustum; I don't know how to do that :S
+
+	return nullptr;
+}
+
 MonoObject* CSScript::AddComponent(MonoObject * object, MonoReflectionType * type)
 {
 	if (!MonoObjectIsValid(object))

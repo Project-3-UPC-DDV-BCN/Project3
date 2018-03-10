@@ -62,6 +62,9 @@ namespace TheEngine
         public extern static TheGameObject[] GetSceneGameObjects();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static TheGameObject[] GetObjectsInFrustum(TheVector3 pos, TheVector3 front, TheVector3 up, float nearPlaneDist, float farPlaneDist);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void CreateNewGameObject(TheGameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

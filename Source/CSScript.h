@@ -90,6 +90,7 @@ public:
 	int GetGameObjectChildCount(MonoObject* object);
 	MonoObject* FindGameObject(MonoString* gameobject_name);
 	MonoArray* GetSceneGameObjects(MonoObject* object);
+	MonoArray* GetObjectsInFrustum(MonoObject* object, MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);

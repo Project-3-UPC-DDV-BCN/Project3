@@ -274,6 +274,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetSceneGameObjects", (const void*)GetSceneGameObjects);
+	mono_add_internal_call("TheEngine.TheGameObject::GetObjectsInFrustum", (const void*)GetObjectsInFrustum);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -470,6 +471,11 @@ MonoObject * ModuleScriptImporter::FindGameObject(MonoString * gameobject_name)
 MonoArray * ModuleScriptImporter::GetSceneGameObjects(MonoObject * object)
 {
 	return current_script->GetSceneGameObjects(object);
+}
+
+MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject* object, MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist )
+{
+	return current_script->GetObjectsInFrustum(object, pos, front, up, nearPlaneDist, farPlaneDist);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)

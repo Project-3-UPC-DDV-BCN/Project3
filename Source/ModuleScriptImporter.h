@@ -52,6 +52,7 @@ private:
 	static int GetGameObjectChildCount(MonoObject* object);
 	static MonoObject* FindGameObject(MonoString* gameobject_name);
 	static MonoArray* GetSceneGameObjects(MonoObject* object);
+	static MonoArray* GetObjectsInFrustum(MonoObject* object, MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
 
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
