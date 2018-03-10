@@ -194,6 +194,8 @@ void ModuleResources::FillResourcesLists()
 	std::vector<std::string> goap_action_order;
 	//ParticleFX
 	std::vector<std::string> particle_order;
+	//SoundBank
+	std::vector<std::string> soundback_order;
 
 	// Create lists in order of Drive
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
@@ -247,6 +249,9 @@ void ModuleResources::FillResourcesLists()
 		case Resource::ParticleFXResource:
 			particle_order.push_back(*it);
 			break;
+		case Resource::SoundBankResource:
+			soundback_order.push_back(*it);
+			break;
 		}
 	}
 
@@ -268,7 +273,8 @@ void ModuleResources::FillResourcesLists()
 	for (std::vector<string>::iterator it = script_order.begin(); it != script_order.end(); ++it)
 		CreateResource(*it);
 
-	// AudioRes
+	for (std::vector<string>::iterator it = soundback_order.begin(); it != soundback_order.end(); ++it)
+		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = font_order.begin(); it != font_order.end(); ++it)
 		CreateResource(*it);
@@ -1121,7 +1127,8 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".ttf") return Resource::FontResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
-	else if (str == ".bnk") return Resource::SoundBankResource;
+	else if (str == ".bnk")
+		return Resource::SoundBankResource;
 
 	return Resource::Unknown;
 }

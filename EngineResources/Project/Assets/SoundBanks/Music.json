@@ -1,0 +1,45 @@
+{
+    "SoundBanksInfo": {
+        "Platform": "Windows",
+        "BasePlatform": "Windows",
+        "SchemaVersion": "11",
+        "SoundbankVersion": "128",
+        "RootPaths": {
+            "ProjectRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\Music\\",
+            "SourceFilesRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\Music\\.cache\\Windows\\",
+            "SoundBanksRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\Music\\..\\..\\..\\Desktop\\MusicBank\\",
+            "ExternalSourcesInputFile": "",
+            "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Documents\\WwiseProjects\\Music\\GeneratedSoundBanks\\Windows\\"
+        },
+        "SoundBanks": [
+            {
+                "Id": "3991942870",
+                "Language": "SFX",
+                "ObjectPath": "\\SoundBanks\\Default Work Unit\\Music",
+                "ShortName": "Music",
+                "Path": "Music.bnk",
+                "IncludedEvents": [
+                    {
+                        "Id": "2932040671",
+                        "Name": "Play_Music",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Music"
+                    }
+                ],
+                "IncludedMemoryFiles": [
+                    {
+                        "Id": "284944787",
+                        "Language": "SFX",
+                        "ShortName": "Calm_song.wav",
+                        "Path": "SFX\\Calm_song_F17FB28C.wem"
+                    },
+                    {
+                        "Id": "950113381",
+                        "Language": "SFX",
+                        "ShortName": "Combat_song.wav",
+                        "Path": "SFX\\Combat_song_F17FB28C.wem"
+                    }
+                ]
+            }
+        ]
+    }
+}

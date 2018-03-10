@@ -13,11 +13,12 @@ namespace AK
 {
     namespace EVENTS
     {
-        static const AkUniqueID PLAY_DIALOGUE1 = 4285197669U;
-        static const AkUniqueID PLAY_DIALOGUE2 = 4285197670U;
-        static const AkUniqueID PLAY_DIALOGUE3 = 4285197671U;
-        static const AkUniqueID PLAY_DIALOGUE4 = 4285197664U;
-        static const AkUniqueID PLAY_ENEMY_EXPLODE = 4257103008U;
+        static const AkUniqueID PLAY_ACKBAR_DIALOGUE_01 = 1287401009U;
+        static const AkUniqueID PLAY_ACKBAR_DIALOGUE_02 = 1287401010U;
+        static const AkUniqueID PLAY_ACKBAR_DIALOGUE_03 = 1287401011U;
+        static const AkUniqueID PLAY_ACKBAR_DIALOGUE_04 = 1287401012U;
+		static const AkUniqueID PLAY_MUSIC = 2932040671U;
+		static const AkUniqueID PLAY_ENEMY_EXPLODE = 4257103008U;
         static const AkUniqueID PLAY_ENGINE = 639345804U;
         static const AkUniqueID PLAY_LONG_SHATTER = 2233744274U;
         static const AkUniqueID PLAY_PLAYER_HIT = 1864892471U;
@@ -26,6 +27,21 @@ namespace AK
         static const AkUniqueID PLAY_SHOT1 = 3061091135U;
         static const AkUniqueID PLAY_SHOT2 = 3061091132U;
     } // namespace EVENTS
+	
+	namespace STATES
+    {
+        namespace LEVEL
+        {
+            static const AkUniqueID GROUP = 2782712965U;
+
+            namespace STATE
+            {
+                static const AkUniqueID CALM = 3753286132U;
+                static const AkUniqueID COMBAT = 2764240573U;
+            } // namespace STATE
+        } // namespace LEVEL
+
+    } // namespace STATES
 
     namespace GAME_PARAMETERS
     {
@@ -48,7 +64,11 @@ namespace AK
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
+        static const AkUniqueID PLAYER = 1069431850U;
+        static const AkUniqueID REBEL_DIALOGUE = 2045292196U;
         static const AkUniqueID SHIP_SOUNDBANK = 547480325U;
+		static const AkUniqueID ENEMY = 2299321487U;
+		static const AkUniqueID MUSIC = 3991942870U;
     } // namespace BANKS
 
     namespace BUSSES
