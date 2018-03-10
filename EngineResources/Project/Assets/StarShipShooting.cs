@@ -138,13 +138,17 @@ public class StarShipShooting {
 
             if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") < 20000 && weapon == 1)
             {
-                if(overheat>0.0f)
+                if(overheat>0.0f && !cooling)
                 {
                     TheVector3 offset = new TheVector3(0, 2, 0);
 
                     laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
 
                     TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
+
+                    TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
+
+                    laser_factory.SetSpawnScale(size);
 
                     TheGameObject go = laser_factory.Spawn();
 
