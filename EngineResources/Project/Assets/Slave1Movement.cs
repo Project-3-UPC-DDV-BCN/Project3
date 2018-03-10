@@ -194,6 +194,11 @@ public class Slave1Movement {
 			weapon_energy = 4;
 			engine_energy = 4;
 		}
+
+		if(TheInput.IsKeyDown("F1"))
+		{
+			DamageBody(10.0f);
+		}
 	}
 
 	void Movement()
@@ -413,7 +418,7 @@ public class Slave1Movement {
     {
         if(shield_regen_timer<=0.0f && curr_shield_hp<shield_hp)
         {
-            curr_shield_hp+=shield_regen* TheTime.DeltaTime;
+            curr_shield_hp+=shield_regen_energy* TheTime.DeltaTime;
             if (curr_shield_hp > shield_hp)
                 curr_shield_hp = shield_hp;
         }
