@@ -11,7 +11,11 @@ public class StarShipShooting {
     public TheGameObject laser_spawner;
 
 	public TheGameObject audio_emiter;
-	
+	//Heat BAR
+	public TheGameObject overheat_bar_obj;
+	TheProgressBar overheat_bar_bar = null;
+	//-----------------------------------
+
 	TheAudioSource audio_source;	
 
 	public float spawn_time = 0.01f;
@@ -43,12 +47,17 @@ public class StarShipShooting {
         weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
 
         curr_overheat_inc = overheat_increment;
+
+		overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
     }	
 
 	void Update () {
 
         curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
-
+		
+		//Update bar
+		overheat_bar_bar.PercentageProgress = overheat * 100;
+		//
 		if(timer <= 0 && !overheated)
 		{
 			if(TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000)
