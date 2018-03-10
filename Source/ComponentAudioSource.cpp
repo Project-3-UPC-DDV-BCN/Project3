@@ -35,7 +35,8 @@ bool ComponentAudioSource::Update()
 	bool ret = true;
 
 	if (!muted) {
-		App->audio->SetRTPCvalue("Volume", volume);
+		obj->SetRTPCvalue("Volume", volume);
+		//App->audio->SetRTPCvalue("Volume", volume);
 		//App->audio->SetRTPCvalue("Pitch", pitch);
 	}
 	else {
