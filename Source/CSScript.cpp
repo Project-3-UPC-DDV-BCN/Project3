@@ -1138,7 +1138,7 @@ MonoArray * CSScript::GetSceneGameObjects(MonoObject * object)
 	return nullptr;
 }
 
-MonoArray * CSScript::GetObjectsInFrustum(MonoObject* object, MonoObject * pos, MonoObject * front, MonoObject * up, float nearPlaneDist, float farPlaneDist)
+MonoArray * CSScript::GetObjectsInFrustum(MonoObject * pos, MonoObject * front, MonoObject * up, float nearPlaneDist, float farPlaneDist)
 {
 
 	MonoClass* c_pos = mono_object_get_class(pos);
@@ -1210,7 +1210,41 @@ MonoArray * CSScript::GetObjectsInFrustum(MonoObject* object, MonoObject * pos, 
 		}
 	}
 	// return obj_inFrustum; I don't know how to do that :S
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
 
+	if (c)
+	{
+		MonoArray* scene_objects = mono_array_new(mono_domain, c, obj_inFrustum.size());
+		if (scene_objects)
+		{
+			int index = 0;
+			for (GameObject* go : obj_inFrustum)
+			{
+				bool exist = false;
+				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+				{
+					if (it->second == go)
+					{
+						mono_array_set(scene_objects, MonoObject*, index, it->first);
+						index++;
+						exist = true;
+						break;
+					}
+				}
+				if (!exist)
+				{
+					MonoObject* new_object = mono_object_new(mono_domain, c);
+					if (new_object)
+					{
+						mono_array_set(scene_objects, MonoObject*, index, new_object);
+						index++;
+						created_gameobjects[new_object] = go;
+					}
+				}
+			}
+			return scene_objects;
+		}
+	}
 	return nullptr;
 }
 

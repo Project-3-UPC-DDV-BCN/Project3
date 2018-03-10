@@ -473,9 +473,9 @@ MonoArray * ModuleScriptImporter::GetSceneGameObjects(MonoObject * object)
 	return current_script->GetSceneGameObjects(object);
 }
 
-MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject* object, MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist )
+MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist )
 {
-	return current_script->GetObjectsInFrustum(object, pos, front, up, nearPlaneDist, farPlaneDist);
+	return current_script->GetObjectsInFrustum(pos, front, up, nearPlaneDist, farPlaneDist);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
