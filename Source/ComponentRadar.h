@@ -14,6 +14,7 @@ class Timer;
 
 struct RadarMarker
 {
+	RadarMarker() {};
 	Texture* marker_texture = nullptr;
 	std::string marker_name;
 };
@@ -21,8 +22,7 @@ struct RadarMarker
 struct RadarEntity
 {
 	GameObject* go = nullptr;
-	RadarMarker marker;
-	bool has_marker = false;
+	RadarMarker* marker = nullptr;
 };
 
 class ComponentRadar: public Component
@@ -32,23 +32,33 @@ public:
 	virtual ~ComponentRadar();
 
 	bool Update();
+	bool CleanUp();
 
 	void SetBackgroundTexture(Texture* tex);
 	Texture* GetBackgroundTexture() const;
 
+	void SetTransparent(bool transparent);
+	bool GetTransparent() const;
+
 	void SetCenter(GameObject* go);
 	GameObject* GetCenter() const;
 
+	void SetCenterTexture(Texture* tex);
+	Texture* GetCenterTexture() const;
+
 	void CreateMarker(const char* name, Texture* texture);
-	void DeleteMarker(const char* name);
+	void DeleteMarker(RadarMarker* marker);
 
 	void AddEntity(GameObject* go);
-	void AddMarkerToEntity(int entity_index, RadarMarker marker);
+	void AddMarkerToEntity(int entity_index, RadarMarker* marker);
 
 	void RemoveEntity(GameObject* go);
 
 	void SetMaxDistance(float distance);
 	float GetMaxDistance() const;
+
+	void SetMarkersSize(float size);
+	float GetMarkersSize() const;
 
 	void Save(Data& data) const;
 	void Load(Data& data);
@@ -56,19 +66,24 @@ public:
 private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
+	void CleanEntitiesWithMarker(RadarMarker* marker);
 
 public:
-	std::vector<RadarMarker> markers;
+	std::vector<RadarMarker*> markers;
 	std::vector<RadarEntity> entities;
 
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
 
 	Texture* background_texture;
+	bool transparent;
 
 	GameObject* center_go;
+	Texture* center_texture;
 
 	float max_distance;
+
+	float markers_size;
 };
 
 #endif // !_H_COMPONENT_RADAR__

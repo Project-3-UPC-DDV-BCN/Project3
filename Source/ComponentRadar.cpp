@@ -22,8 +22,12 @@ ComponentRadar::ComponentRadar(GameObject * attached_gameobject)
 	c_rect_trans->SetInteractable(false);
 
 	background_texture = nullptr;
+	transparent = false;
 	center_go = nullptr;
+	center_texture = nullptr;
 	max_distance = 50;
+
+	markers_size = 0.2f;
 }
 
 ComponentRadar::~ComponentRadar()
@@ -42,12 +46,19 @@ bool ComponentRadar::Update()
 		de.SetTransform(c_rect_trans->GetMatrix());
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		de.SetSize(c_rect_trans->GetScaledSize());
-		de.SetColour(float4(1.0f, 1.0f, 1.0f, 1.0f));
 		de.SetFlip(false, false);
 
-		if (background_texture != nullptr)
+		if (!transparent)
 		{
-			de.SetTextureId(background_texture->GetID());
+			de.SetColour(float4(1.0f, 1.0f, 1.0f, 1.0f));
+			if (background_texture != nullptr)
+			{
+				de.SetTextureId(background_texture->GetID());
+			}
+		}
+		else
+		{
+			de.SetColour(float4(1.0f, 1.0f, 1.0f, 0.0f));
 		}
 
 		canvas->AddDrawElement(de);
@@ -60,13 +71,13 @@ bool ComponentRadar::Update()
 			CanvasDrawElement de(canvas, this);
 			de.SetTransform(c_rect_trans->GetMatrix());
 			de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-			de.SetSize(c_rect_trans->GetScaledSize() * 0.2f);
+			de.SetSize(c_rect_trans->GetScaledSize() * markers_size);
 			de.SetColour(float4(0.0f, 1.0f, 1.0f, 1.0f));
 			de.SetFlip(false, false);
 
-			if (background_texture != nullptr)
+			if (center_texture != nullptr)
 			{
-				de.SetTextureId(background_texture->GetID());
+				de.SetTextureId(center_texture->GetID());
 			}
 
 			canvas->AddDrawElement(de);
@@ -85,8 +96,6 @@ bool ComponentRadar::Update()
 					float distance_mag = center_pos.Distance(entity_pos);
 					float angle_x_z = AngleFromTwoPoints(center_pos.x, center_pos.z, entity_pos.x, entity_pos.z);
 					angle_x_z += center_rot.y;
-					
-					CONSOLE_LOG("%f", center_rot.y * RADTODEG);
 
 					float scaled_size = c_rect_trans->GetScaledSize().x;
 
@@ -104,14 +113,15 @@ bool ComponentRadar::Update()
 						CanvasDrawElement de(canvas, this);
 						de.SetTransform(c_rect_trans->GetMatrix());
 						de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-						de.SetSize(c_rect_trans->GetScaledSize() * 0.2f);
+						de.SetSize(c_rect_trans->GetScaledSize() * markers_size);
 						de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
 						de.SetFlip(false, false);
 						de.SetPosition(float3(-scaled_distance_mag * cos((DEGTORAD*angle_x_z)), scaled_distance_mag * sin(DEGTORAD*angle_x_z), scaled_distance_y));
 
-						if (background_texture != nullptr)
+						if ((*it).marker != nullptr)
 						{
-							de.SetTextureId(background_texture->GetID());
+							if((*it).marker->marker_texture != nullptr)
+								de.SetTextureId((*it).marker->marker_texture->GetID());
 						}
 
 						canvas->AddDrawElement(de);
@@ -125,6 +135,17 @@ bool ComponentRadar::Update()
 	return ret;
 }
 
+bool ComponentRadar::CleanUp()
+{
+	for (std::vector<RadarMarker*>::iterator it = markers.begin(); it != markers.end();)
+	{
+		RELEASE(*it);
+		it = markers.erase(it);
+	}
+
+	return false;
+}
+
 void ComponentRadar::SetBackgroundTexture(Texture * tex)
 {
 	background_texture = tex;
@@ -133,6 +154,16 @@ void ComponentRadar::SetBackgroundTexture(Texture * tex)
 Texture * ComponentRadar::GetBackgroundTexture() const
 {
 	return background_texture;
+}
+
+void ComponentRadar::SetTransparent(bool _transparent)
+{
+	transparent = _transparent;
+}
+
+bool ComponentRadar::GetTransparent() const
+{
+	return transparent;
 }
 
 void ComponentRadar::SetCenter(GameObject * go)
@@ -145,13 +176,23 @@ GameObject * ComponentRadar::GetCenter() const
 	return center_go;
 }
 
+void ComponentRadar::SetCenterTexture(Texture * tex)
+{
+	center_texture = tex;
+}
+
+Texture * ComponentRadar::GetCenterTexture() const
+{
+	return center_texture;
+}
+
 void ComponentRadar::CreateMarker(const char * name, Texture * texture)
 {
 	bool exists = false;
 
-	for (std::vector<RadarMarker>::iterator it = markers.begin(); it != markers.end(); ++it)
+	for (std::vector<RadarMarker*>::iterator it = markers.begin(); it != markers.end(); ++it)
 	{
-		if (TextCmp(name, (*it).marker_name.c_str()))
+		if (TextCmp(name, (*it)->marker_name.c_str()))
 		{
 			exists = true;
 			break;
@@ -160,19 +201,21 @@ void ComponentRadar::CreateMarker(const char * name, Texture * texture)
 
 	if (!exists)
 	{
-		RadarMarker marker;
-		marker.marker_name = name;
-		marker.marker_texture = texture;
+		RadarMarker* marker = new RadarMarker();
+		marker->marker_name = name;
+		marker->marker_texture = texture;
 		markers.push_back(marker);
 	}
 }
 
-void ComponentRadar::DeleteMarker(const char * name)
+void ComponentRadar::DeleteMarker(RadarMarker* marker)
 {
-	for (std::vector<RadarMarker>::iterator it = markers.begin(); it != markers.end(); ++it)
+	for (std::vector<RadarMarker*>::iterator it = markers.begin(); it != markers.end(); ++it)
 	{
-		if (TextCmp(name, (*it).marker_name.c_str()))
+		if (marker == (*it))
 		{
+			CleanEntitiesWithMarker((*it));
+			RELEASE(*it);
 			markers.erase(it);
 			break;
 		}
@@ -196,19 +239,18 @@ void ComponentRadar::AddEntity(GameObject * go)
 	{
 		RadarEntity entity;
 		entity.go = go;
-		entity.has_marker = false;
+		entity.marker = nullptr;
 		entities.push_back(entity);
 	}
 }
 
-void ComponentRadar::AddMarkerToEntity(int entity_index, RadarMarker marker)
+void ComponentRadar::AddMarkerToEntity(int entity_index, RadarMarker* marker)
 {
 	for (int i = 0; i < entities.size(); ++i)
 	{
 		if (i == entity_index)
 		{
 			entities[i].marker = marker;
-			entities[i].has_marker = true;
 			break;
 		}
 	}
@@ -239,6 +281,19 @@ float ComponentRadar::GetMaxDistance() const
 	return max_distance;
 }
 
+void ComponentRadar::SetMarkersSize(float size)
+{
+	markers_size = size;
+
+	if (markers_size < 0)
+		markers_size = 0;
+}
+
+float ComponentRadar::GetMarkersSize() const
+{
+	return markers_size;
+}
+
 void ComponentRadar::Save(Data & data) const
 {
 }
@@ -264,4 +319,15 @@ ComponentRectTransform * ComponentRadar::GetRectTrans()
 	ret = (ComponentRectTransform*)GetGameObject()->GetComponent(Component::CompRectTransform);
 
 	return ret;
+}
+
+void ComponentRadar::CleanEntitiesWithMarker(RadarMarker * marker)
+{
+	for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
+	{
+		if ((*it).marker == marker)
+		{
+			(*it).marker = nullptr;
+		}
+	}
 }
