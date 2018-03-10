@@ -77,7 +77,16 @@ bool ComponentRadar::Update()
 				{
 					ComponentTransform* entity_trans = (ComponentTransform*)(*it).go->GetComponent(Component::CompTransform);
 
-					float3 distance = entity_trans->GetGlobalPosition() - center_trans->GetGlobalPosition();
+					float3 center_rot = center_trans->GetGlobalRotation();
+					float3 center_pos = center_trans->GetGlobalPosition();
+					float3 entity_pos = entity_trans->GetGlobalPosition();
+
+					float3 distance = center_pos - entity_pos;
+					float distance_mag = center_pos.Distance(entity_pos);
+					float angle_x_z = AngleFromTwoPoints(center_pos.x, center_pos.z, entity_pos.x, entity_pos.z);
+					angle_x_z += center_rot.y;
+					
+					CONSOLE_LOG("%f", center_rot.y * RADTODEG);
 
 					float scaled_size = c_rect_trans->GetScaledSize().x;
 
@@ -86,20 +95,11 @@ bool ComponentRadar::Update()
 
 					if (max_distance > 0)
 					{
-						float4x4 origin_matrix = center_trans->GetMatrix();
-						float3 pos;
-						Quat rot;
-						float3 scal;
-						origin_matrix.Decompose(pos, rot, scal);
-						float3 rotation = rot.ToEulerXYZ();
-
 						float scaled_distance_x = (scaled_size * distance.x) / max_distance;
 						float scaled_distance_y = (scaled_size * distance.y) / max_distance;
 						float scaled_distance_z = (scaled_size * distance.z) / max_distance;
-
-						scaled_distance_x = (scaled_distance_x * cos(rotation.y)) - (scaled_distance_z * sin(rotation.y));
-						////scaled_distance_y *= sin(rotation.y);
-					    scaled_distance_z = (scaled_distance_z * cos(rotation.y)) + (scaled_distance_x * sin(rotation.y));
+						
+						float scaled_distance_mag = (scaled_size * distance_mag) / max_distance;
 
 						CanvasDrawElement de(canvas, this);
 						de.SetTransform(c_rect_trans->GetMatrix());
@@ -107,7 +107,7 @@ bool ComponentRadar::Update()
 						de.SetSize(c_rect_trans->GetScaledSize() * 0.2f);
 						de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
 						de.SetFlip(false, false);
-						de.SetPosition(float3(-scaled_distance_x, scaled_distance_z, -scaled_distance_y));
+						de.SetPosition(float3(-scaled_distance_mag * cos((DEGTORAD*angle_x_z)), scaled_distance_mag * sin(DEGTORAD*angle_x_z), scaled_distance_y));
 
 						if (background_texture != nullptr)
 						{
