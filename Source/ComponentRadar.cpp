@@ -222,6 +222,22 @@ void ComponentRadar::DeleteMarker(RadarMarker* marker)
 	}
 }
 
+RadarMarker * ComponentRadar::GetMarker(const char * name)
+{
+	RadarMarker* ret = nullptr;
+
+	for (std::vector<RadarMarker*>::iterator it = markers.begin(); it != markers.end(); ++it)
+	{
+		if (TextCmp(name, (*it)->marker_name.c_str()))
+		{
+			ret = (*it);
+			break;
+		}
+	}
+
+	return ret;
+}
+
 void ComponentRadar::AddEntity(GameObject * go)
 {
 	bool exists = false;
@@ -244,7 +260,31 @@ void ComponentRadar::AddEntity(GameObject * go)
 	}
 }
 
-void ComponentRadar::AddMarkerToEntity(int entity_index, RadarMarker* marker)
+void ComponentRadar::AddMarkerToEntity(RadarEntity entity, RadarMarker* marker)
+{
+	for (int i = 0; i < entities.size(); ++i)
+	{
+		if (entities[i].go == entity.go)
+		{
+			entities[i].marker = marker;
+			break;
+		}
+	}
+}
+
+void ComponentRadar::AddMarkerToEntity(GameObject * entity, RadarMarker * marker)
+{
+	for (int i = 0; i < entities.size(); ++i)
+	{
+		if (entities[i].go == entity)
+		{
+			entities[i].marker = marker;
+			break;
+		}
+	}
+}
+
+void ComponentRadar::AddMarkerToEntity(int entity_index, RadarMarker * marker)
 {
 	for (int i = 0; i < entities.size(); ++i)
 	{
@@ -266,6 +306,11 @@ void ComponentRadar::RemoveEntity(GameObject * go)
 			break;
 		}
 	}
+}
+
+void ComponentRadar::RemoveAllEntities()
+{
+	entities.clear();
 }
 
 void ComponentRadar::SetMaxDistance(float distance)
@@ -296,6 +341,32 @@ float ComponentRadar::GetMarkersSize() const
 
 void ComponentRadar::Save(Data & data) const
 {
+	data.AddFloat("markers_size", markers_size);
+	data.AddFloat("max_distance", max_distance);
+	data.AddBool("transparent", transparent);
+	if (background_texture != nullptr)
+		data.AddString("background_texture", background_texture->GetName().c_str());
+	if (center_go != nullptr)
+		data.AddUInt("center_go", center_go->GetUID());
+	if(center_texture != nullptr)
+		data.AddString("center_texture", center_texture->GetName().c_str());
+
+
+//	std::vector<RadarMarker*> markers;
+//	std::vector<RadarEntity> entities;
+//
+//private:
+//	ComponentRectTransform * c_rect_trans = nullptr;
+//
+//	Texture* background_texture;
+//	bool transparent;
+//
+//	GameObject* center_go;
+//	Texture* center_texture;
+//
+//	float max_distance;
+//
+//	float markers_size;
 }
 
 void ComponentRadar::Load(Data & data)

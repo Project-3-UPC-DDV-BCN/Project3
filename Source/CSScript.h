@@ -210,7 +210,8 @@ private:
 
 	bool GameObjectIsValid();
 	bool MonoObjectIsValid(MonoObject* object);
-	MonoObject* FindGameObject(GameObject* go);
+	MonoObject* FindMonoObject(GameObject* go);
+	GameObject* FindGameObject(MonoObject* object);
 
 private:
 	MonoDomain* mono_domain;

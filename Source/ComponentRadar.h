@@ -48,11 +48,15 @@ public:
 
 	void CreateMarker(const char* name, Texture* texture);
 	void DeleteMarker(RadarMarker* marker);
+	RadarMarker* GetMarker(const char* name);
 
 	void AddEntity(GameObject* go);
+	void AddMarkerToEntity(RadarEntity entity, RadarMarker* marker);
+	void AddMarkerToEntity(GameObject* entity, RadarMarker* marker);
 	void AddMarkerToEntity(int entity_index, RadarMarker* marker);
 
 	void RemoveEntity(GameObject* go);
+	void RemoveAllEntities();
 
 	void SetMaxDistance(float distance);
 	float GetMaxDistance() const;

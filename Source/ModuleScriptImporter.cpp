@@ -284,9 +284,15 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
 	mono_add_internal_call("TheEngine.TheText::GettText", (const void*)GetText);
 
-	// PROGRESSBAR
+	//PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
 	mono_add_internal_call("TheEngine.TheProgressBar::GetPercentageProgress", (const void*)GetPercentageProgress);
+
+	//RADAR
+	mono_add_internal_call("TheEngine.TheRadar::AddEntity", (const void*)AddEntity);
+	mono_add_internal_call("TheEngine.TheRadar::RemoveEntity", (const void*)RemoveEntity);
+	mono_add_internal_call("TheEngine.TheRadar::RemoveAllEntities", (const void*)RemoveAllEntities);
+	mono_add_internal_call("TheEngine.TheRadar::SetMarkerToEntity", (const void*)SetMarkerToEntity);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
@@ -574,6 +580,26 @@ void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float prog
 float ModuleScriptImporter::GetPercentageProgress(MonoObject * object)
 {
 	return current_script->GetPercentageProgress(object);
+}
+
+void ModuleScriptImporter::AddEntity(MonoObject * object, MonoObject * game_object)
+{
+	current_script->AddEntity(object, game_object);
+}
+
+void ModuleScriptImporter::RemoveEntity(MonoObject * object, MonoObject * game_object)
+{
+	current_script->RemoveEntity(object, game_object);
+}
+
+void ModuleScriptImporter::RemoveAllEntities(MonoObject * object)
+{
+	current_script->RemoveAllEntities(object);
+}
+
+void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
+{
+	current_script->SetMarkerToEntity(object, game_object, marker_name);
 }
 
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)

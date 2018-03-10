@@ -84,13 +84,19 @@ private:
 	static mono_bool GetOnMouseOver(MonoObject * object);
 	static mono_bool GetOnMouseOut(MonoObject * object);
 
-	// TEXT
+	//TEXT
 	static void SetText(MonoObject * object, MonoString* text);
 	static MonoString* GetText(MonoObject * object);
 
 	//PROGRESSBAR
 	static void SetPercentageProgress(MonoObject * object, float progress);
 	static float GetPercentageProgress(MonoObject * object);
+
+	//RADAR
+	static void AddEntity(MonoObject * object, MonoObject * game_object);
+	static void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	static void RemoveAllEntities(MonoObject * object);
+	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);

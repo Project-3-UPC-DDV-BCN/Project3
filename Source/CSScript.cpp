@@ -26,6 +26,7 @@
 #include "ComponentRigidBody.h"
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
+#include "ComponentRadar.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -988,6 +989,10 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheText";
 	}
+	else if (name == "TheEngine.TheRadar")
+	{
+		comp_name = "TheRadar";
+	}
 	else if (name == "TheEngine.TheRigidBody")
 	{
 		comp_name = "TheRigidBody";
@@ -1733,6 +1738,17 @@ void CSScript::AddEntity(MonoObject * object, MonoObject * game_object)
 	{
 		return;
 	}
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+	
+	GameObject* go = FindGameObject(game_object);
+
+	if (radar != nullptr)
+	{
+		if (go != nullptr)
+		{
+			radar->AddEntity(go);
+		}
+	}
 }
 
 void CSScript::RemoveEntity(MonoObject * object, MonoObject * game_object)
@@ -1745,6 +1761,17 @@ void CSScript::RemoveEntity(MonoObject * object, MonoObject * game_object)
 	if (!GameObjectIsValid())
 	{
 		return;
+	}
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+
+	GameObject* go = FindGameObject(game_object);
+
+	if (radar != nullptr)
+	{
+		if (go != nullptr)
+		{
+			radar->RemoveEntity(go);
+		}
 	}
 }
 
@@ -1759,10 +1786,41 @@ void CSScript::RemoveAllEntities(MonoObject * object)
 	{
 		return;
 	}
+
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+
+	if (radar != nullptr)
+	{
+		radar->RemoveAllEntities();
+	}
 }
 
 void CSScript::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+	
+	GameObject* go = FindGameObject(game_object);
+
+	if (radar != nullptr)
+	{
+		if (go != nullptr)
+		{
+			const char* txt = mono_string_to_utf8(marker_name);
+
+			radar->AddMarkerToEntity(go, radar->GetMarker(txt));
+		}
+	}
+
 }
 
 void CSScript::StartFactory(MonoObject * object)
@@ -2528,7 +2586,7 @@ bool CSScript::MonoObjectIsValid(MonoObject* object)
 	return false;
 }
 
-MonoObject * CSScript::FindGameObject(GameObject * go)
+MonoObject * CSScript::FindMonoObject(GameObject * go)
 {
 	MonoObject* ret = nullptr;
 
@@ -2542,6 +2600,18 @@ MonoObject * CSScript::FindGameObject(GameObject * go)
 				break;
 			}
 		}
+	}
+
+	return ret;
+}
+
+GameObject * CSScript::FindGameObject(MonoObject * object)
+{
+	GameObject* ret = nullptr;
+
+	if (object != nullptr)
+	{
+		ret = created_gameobjects[object];
 	}
 
 	return ret;
