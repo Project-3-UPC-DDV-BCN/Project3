@@ -30,7 +30,8 @@ public class StarShipShooting {
 
     public float overheat_increment = 0.2f;
     float curr_overheat_inc;
-    public float overheat_time = 3.0f;
+    public float overheat_time = 2.0f;
+    public float overheated_time = 3.0f;
     float overheat_timer = 0.0f;
     float overheat = 0.0f; //from 0.0 to 1.0
     bool overheated = false;
@@ -113,8 +114,9 @@ public class StarShipShooting {
                 if(overheat>= 1.0f)
                 {
                     overheated = true;
+                    overheat_timer = overheated_time;
                 }
-                overheat_timer = overheat_time;
+                else overheat_timer = overheat_time;
             }
 
 		}
