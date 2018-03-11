@@ -484,7 +484,10 @@ public class Slave1Movement {
 		TheVector3 new_vel_pos = trans.LocalPosition;
 		new_vel_pos += trans.ForwardDirection*curr_vel*TheTime.DeltaTime;
 		trans.LocalPosition = new_vel_pos;
-	}
+
+        camera_go.GetComponent<TheTransform>().LocalPosition = original_cam_pos + cam_pos;
+        camera_go.GetComponent<TheTransform>().LocalRotation = original_cam_rot + cam_rot;
+    }
 
     void DamageWings(float damage)
     {
