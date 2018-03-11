@@ -464,7 +464,7 @@ public class Slave1Movement {
 		}
 
 		float target_vel = vel_percent*curr_max_vel;
-		audio_source.SetMyRTPCvalue("Speed",(curr_vel/curr_max_vel)*100);
+		audio_source.SetMyRTPCvalue("Speed",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
 		
 		if(boosting)
 		{
