@@ -35,7 +35,7 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	if (soundbank != nullptr)
+	if (soundbank->GetSoundBank() != nullptr)
 	{
 		if (!muted) {
 			obj->SetRTPCvalue("Volume", volume);
