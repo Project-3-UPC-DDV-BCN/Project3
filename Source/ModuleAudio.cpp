@@ -49,13 +49,13 @@ bool ModuleAudio::Start()
 {
 	//App->resources->CreateResource("./Project/Library/SoundBanks/Ship_Soundbank.bnk");
 
-	SoundBank* sbk;
+	/*SoundBank* sbk;
 	GameObject* go = App->scene->CreateGameObject();
 	go->SetName("Audio");
 	ComponentAudioSource* as = (ComponentAudioSource*) go->AddComponent(Component::ComponentType::CompAudioSource);
 
 	GameObject* go_ = App->scene->CreateGameObject();
-	go_->AddComponent(Component::ComponentType::CompAudioListener);
+	go_->AddComponent(Component::ComponentType::CompAudioListener);*/
 
 	return true;
 }

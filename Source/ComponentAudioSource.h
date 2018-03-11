@@ -53,5 +53,6 @@ public:
 	bool is_combo = false;
 
 	int volume = 0;
+	int pitch = 0;
 	bool muted = false;
 };

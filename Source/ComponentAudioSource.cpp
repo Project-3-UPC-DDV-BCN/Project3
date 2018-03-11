@@ -23,6 +23,7 @@ ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 	obj = App->audio->CreateSoundObject(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
 
 	volume = DEFAULT_VOLUME;
+	pitch = DEFAULT_PITCH;
 }
 
 ComponentAudioSource::~ComponentAudioSource()
@@ -36,8 +37,7 @@ bool ComponentAudioSource::Update()
 
 	if (!muted) {
 		obj->SetRTPCvalue("Volume", volume);
-		//App->audio->SetRTPCvalue("Volume", volume);
-		//App->audio->SetRTPCvalue("Pitch", pitch);
+		obj->SetRTPCvalue("Speed", pitch);
 	}
 	else {
 		App->audio->SetRTPCvalue("Volume", 0);
