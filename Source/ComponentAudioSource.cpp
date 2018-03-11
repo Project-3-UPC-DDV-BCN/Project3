@@ -161,10 +161,7 @@ void ComponentAudioSource::Load(Data & data)
 	obj_to_load = data.GetInt("Sound ID");
 	Wwise::SoundObject* tmp = App->audio->GetSoundObject(obj_to_load);
 	if (tmp != nullptr)
-	{
 		obj = tmp;
-		RELEASE(tmp);
-	}
 	soundbank = App->resources->GetSoundBank(data.GetString("SoundBank Name"));
 }
 
