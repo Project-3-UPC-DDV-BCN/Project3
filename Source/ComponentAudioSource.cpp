@@ -35,16 +35,17 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	if (soundbank->GetSoundBank() != nullptr)
-	{
-		if (!muted) {
-			obj->SetRTPCvalue("Volume", volume);
-			obj->SetRTPCvalue("Pitch", pitch);
-		}
-		else {
-			obj->SetRTPCvalue("Volume", 0);
-		}
+	if (obj == nullptr)
+		return ret;
+
+	if (!muted) {
+		obj->SetRTPCvalue("Volume", volume);
+		obj->SetRTPCvalue("Pitch", pitch);
 	}
+	else {
+		obj->SetRTPCvalue("Volume", 0);
+	}
+	
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 	
 	if (trans)
@@ -158,7 +159,12 @@ void ComponentAudioSource::Load(Data & data)
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
 	obj_to_load = data.GetInt("Sound ID");
-	obj = App->audio->GetSoundObject(obj_to_load);
+	Wwise::SoundObject* tmp = App->audio->GetSoundObject(obj_to_load);
+	if (tmp != nullptr)
+	{
+		obj = tmp;
+		RELEASE(tmp);
+	}
 	soundbank = App->resources->GetSoundBank(data.GetString("SoundBank Name"));
 }
 
