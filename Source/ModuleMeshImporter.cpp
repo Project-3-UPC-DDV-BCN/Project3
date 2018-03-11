@@ -275,7 +275,8 @@ GameObject* ModuleMeshImporter::LoadMeshNode(GameObject * parent, aiNode * node,
 					if (material == nullptr)
 					{
 						material = new Material();
-						material->SetName(mat_name.C_Str());
+						std::string s_mat_name = mat_name.C_Str();
+						material->SetName(s_mat_name/* + App->file_system->GetFileNameWithoutExtension(path)*/);
 						LoadMaterial(*material, *ai_mat);
 						std::string model_name = App->file_system->GetFileNameWithoutExtension(path);
 						std::string directory = App->file_system->GetFileDirectory(path);

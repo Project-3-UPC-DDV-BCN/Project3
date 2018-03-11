@@ -8,8 +8,8 @@ public class laser {
 	TheScript script;
 	TheScript script2;
 	
-	public TheGameObject Test;
-	public TheGameObject Test2;
+	//public TheGameObject Test;
+	//public TheGameObject Test2;
 	public TheVector3 test3;
 	public string test_s;
 
@@ -27,14 +27,18 @@ public class laser {
 		//TheConsole.Log(TheRandom.RandomRange(5,20));
 		//TheConsole.Log(TheGameObject.Find("Main Camera").name);
 		//Slave1Movement slave = TheGameObject.Self.GetComponent<Slave1Movement>();
-		test_s = "Hi!";
-		script = TheGameObject.Self.GetComponent<TheScript>(0);
-		script2 = Test2.GetComponent<TheScript>(0);
-		script.SetGameObjectField("Test", TheGameObject.Find("Main Camera"));
-		script2.SetGameObjectField("Test", TheGameObject.Find("Main Camera"));
-		script.SetVector3Field("test3",new TheVector3(9,1,2));
-		script2.SetVector3Field("test3",new TheVector3(19,91,22));
-		script2.CallFunction("TestMethod");
+		//test_s = TheGameObject.Self.tag;
+		//script = TheGameObject.Self.GetComponent<TheScript>(0);
+		//script2 = Test2.GetComponent<TheScript>(0);
+		//script.SetGameObjectField("Test", TheGameObject.Find("Main Camera"));
+		//script2.SetGameObjectField("Test", TheGameObject.Find("Main Camera"));
+		//script.SetVector3Field("test3",new TheVector3(9,1,2));
+		//script2.SetVector3Field("test3",new TheVector3(19,91,22));
+		//script2.CallFunction("TestMethod");
+		TheGameObject go = TheGameObject.Self.GetParent();
+		TheConsole.Log(go.name);
+		TheGameObject go2 = TheGameObject.Find("Main Camera").GetParent();
+		TheConsole.Log(go2.name);
 		//TheConsole.Log(script.GetGameObjectField("Test"));
 		//TheConsole.Log(script2.GetGameObjectField("Test"));
 	}
