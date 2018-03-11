@@ -296,15 +296,17 @@ void ComponentImage::Load(Data & data)
 	SetFlip(data.GetBool("flip"));
 	SetLoop(data.GetBool("loop"));
 	SetAnimSpeed(data.GetFloat("anim_speed"));
+	std::string text_name = data.GetString("texture");
+	Texture* t = App->resources->GetTexture(text_name);
+	SetTexture(t);
+
 	int textures_count = data.GetInt("anim_textures_count");
 	SetNumAnimTextures(textures_count);
-	texture = App->resources->GetTexture(data.GetString("texture"));
-
 	for (int i = 0; i < textures_count; ++i)
 	{
 		std::string text_name = "anim_texture_" + std::to_string(i);
-		texture = App->resources->GetTexture(data.GetString(text_name.c_str()));
-		AddAnimTexture(texture, i);
+		Texture* anim_t = App->resources->GetTexture(data.GetString(text_name.c_str()));
+		AddAnimTexture(anim_t, i);
 	}
 }
 
