@@ -39,10 +39,10 @@ bool ComponentAudioSource::Update()
 	{
 		if (!muted) {
 			obj->SetRTPCvalue("Volume", volume);
-			obj->SetRTPCvalue("Speed", pitch);
+			obj->SetRTPCvalue("Pitch", pitch);
 		}
 		else {
-			App->audio->SetRTPCvalue("Volume", 0);
+			obj->SetRTPCvalue("Volume", 0);
 		}
 	}
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
