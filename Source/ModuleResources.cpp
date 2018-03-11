@@ -196,6 +196,8 @@ void ModuleResources::FillResourcesLists()
 	std::vector<std::string> particle_order;
 	//prefabs
 	std::vector<std::string> prefab_order;
+	//SoundBank
+	std::vector<std::string> soundback_order;
 
 	// Create lists in order of Drive
 	for (std::vector<std::string>::iterator it = files_in_assets.begin(); it != files_in_assets.end(); ++it)
@@ -252,6 +254,9 @@ void ModuleResources::FillResourcesLists()
 		case Resource::PrefabResource:
 			prefab_order.push_back(*it);
 			break;
+		case Resource::SoundBankResource:
+			soundback_order.push_back(*it);
+			break;
 		}
 	}
 
@@ -286,7 +291,8 @@ void ModuleResources::FillResourcesLists()
 	for (std::vector<string>::iterator it = shader_program_order.begin(); it != shader_program_order.end(); ++it)
 		CreateResource(*it);
 
-	// AudioRes
+	for (std::vector<string>::iterator it = soundback_order.begin(); it != soundback_order.end(); ++it)
+		CreateResource(*it);
 
 	for (std::vector<string>::iterator it = font_order.begin(); it != font_order.end(); ++it)
 		CreateResource(*it);

@@ -7,6 +7,7 @@
 #include "ComponentTransform.h"
 #include "ComponentListener.h"
 #include "SoundBankResource.h"
+#include "ModuleResources.h"
 
 #include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
 
@@ -34,7 +35,8 @@ bool ComponentAudioSource::Update()
 	bool ret = true;
 
 	if (!muted) {
-		App->audio->SetRTPCvalue("Volume", volume);
+		obj->SetRTPCvalue("Volume", volume);
+		//App->audio->SetRTPCvalue("Volume", volume);
 		//App->audio->SetRTPCvalue("Pitch", pitch);
 	}
 	else {
@@ -144,6 +146,7 @@ void ComponentAudioSource::Save(Data & data) const
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
 	data.AddInt("Sound ID", obj->GetID());
+	data.AddString("SoundBank Name", soundbank->GetName());
 }
 
 void ComponentAudioSource::Load(Data & data)
@@ -153,6 +156,7 @@ void ComponentAudioSource::Load(Data & data)
 	SetUID(data.GetUInt("UUID"));
 	obj_to_load = data.GetInt("Sound ID");
 	obj = App->audio->GetSoundObject(obj_to_load);
+	soundbank = App->resources->GetSoundBank(data.GetString("SoundBank Name"));
 }
 
 int * ComponentAudioSource::GetPickedEventPtr()
