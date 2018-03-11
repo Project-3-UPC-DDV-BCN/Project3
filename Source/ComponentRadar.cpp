@@ -5,6 +5,9 @@
 #include "Texture.h"
 #include "UsefulFunctions.h"
 #include "ComponentTransform.h"
+#include "Application.h"
+#include "ModuleResources.h"
+#include "ModuleScene.h"
 
 ComponentRadar::ComponentRadar(GameObject * attached_gameobject)
 {
@@ -241,7 +244,7 @@ RadarMarker * ComponentRadar::GetMarker(const char * name)
 void ComponentRadar::AddEntity(GameObject * go)
 {
 	bool exists = false;
-
+	
 	for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
 	{
 		if (go == (*it).go)
@@ -341,6 +344,10 @@ float ComponentRadar::GetMarkersSize() const
 
 void ComponentRadar::Save(Data & data) const
 {
+	data.AddInt("Type", GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+
 	data.AddFloat("markers_size", markers_size);
 	data.AddFloat("max_distance", max_distance);
 	data.AddBool("transparent", transparent);
@@ -351,26 +358,69 @@ void ComponentRadar::Save(Data & data) const
 	if(center_texture != nullptr)
 		data.AddString("center_texture", center_texture->GetName().c_str());
 
+	data.AddInt("markers_count", markers.size());
+	data.AddInt("entities_count", entities.size());
 
-//	std::vector<RadarMarker*> markers;
-//	std::vector<RadarEntity> entities;
-//
-//private:
-//	ComponentRectTransform * c_rect_trans = nullptr;
-//
-//	Texture* background_texture;
-//	bool transparent;
-//
-//	GameObject* center_go;
-//	Texture* center_texture;
-//
-//	float max_distance;
-//
-//	float markers_size;
+	for (int i = 0; i < markers.size(); ++i)
+	{
+		std::string marker_name = "marker_name_" + std::to_string(i);
+		std::string marker_texture = "marker_texture_" + std::to_string(i);
+		data.AddString(marker_name.c_str(), markers[i]->marker_name.c_str());
+		if (markers[i]->marker_texture != nullptr)
+			data.AddString(marker_texture.c_str(), markers[i]->marker_texture->GetName().c_str());
+	}
+
+	for (int i = 0; i < entities.size(); ++i)
+	{
+		std::string entity_go = "entity_go_" + std::to_string(i);
+		std::string entity_marker_name = "entity_marker_name_" + std::to_string(i);
+		if(entities[i].go != nullptr)
+			data.AddUInt(entity_go.c_str(), entities[i].go->GetUID());
+		if (entities[i].marker != nullptr)
+			data.AddString(entity_marker_name.c_str(), entities[i].marker->marker_name.c_str());
+	}
 }
 
 void ComponentRadar::Load(Data & data)
 {
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+
+	SetMarkersSize(data.GetFloat("markers_size"));
+	SetMaxDistance(data.GetFloat("max_distance"));
+	SetTransparent(data.GetBool("transparent"));
+
+	Texture* back_texture = App->resources->GetTexture(data.GetString("background_texture"));
+	SetBackgroundTexture(back_texture);
+	
+	GameObject* go = App->scene->FindGameObject(data.GetInt("center_go"));
+	SetCenter(go);
+
+	Texture* center_texture = App->resources->GetTexture(data.GetString("center_texture"));
+	SetCenterTexture(center_texture);
+
+	int markers_count = data.GetInt("markers_count");
+	int entities_count = data.GetInt("entities_count");
+
+	for (int i = 0; i < markers_count; ++i)
+	{
+		std::string marker_name = "marker_name_" + std::to_string(i);
+		std::string marker_texture_name = "marker_texture_" + std::to_string(i);
+
+		Texture* marker_texture = App->resources->GetTexture(data.GetString(marker_texture_name.c_str()));
+		CreateMarker(data.GetString(marker_name.c_str()).c_str(), marker_texture);
+	}
+
+	for (int i = 0; i < entities_count; ++i)
+	{
+		std::string entity_go = "entity_go_" + std::to_string(i);
+		std::string entity_marker_name = "entity_marker_name_" + std::to_string(i);
+
+		GameObject* go = App->scene->FindGameObject(data.GetInt(entity_go.c_str()));
+		RadarMarker* marker = GetMarker(data.GetString(entity_marker_name.c_str()).c_str());
+		AddEntity(go);
+		AddMarkerToEntity(go, marker);
+	}
 }
 
 ComponentCanvas * ComponentRadar::GetCanvas()
