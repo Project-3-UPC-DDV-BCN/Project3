@@ -267,6 +267,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::IsStatic", (const void*)GameObjectIsStatic);
 	mono_add_internal_call("TheEngine.TheGameObject::Duplicate", (const void*)DuplicateGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::SetParent", (const void*)SetGameObjectParent);
+	mono_add_internal_call("TheEngine.TheGameObject::GetParent", (const void*)GetGameObjectParent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetSelf", (const void*)GetSelfGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetChild(int)", (const void*)GetGameObjectChild);
 	mono_add_internal_call("TheEngine.TheGameObject::GetChild(string)", (const void*)GetGameObjectChildString);
@@ -483,6 +484,11 @@ MonoObject * ModuleScriptImporter::DuplicateGameObject(MonoObject * object)
 void ModuleScriptImporter::SetGameObjectParent(MonoObject * object, MonoObject * parent)
 {
 	current_script->SetGameObjectParent(object, parent);
+}
+
+MonoObject* ModuleScriptImporter::GetGameObjectParent(MonoObject * object)
+{
+	return current_script->GetGameObjectParent(object);
 }
 
 MonoObject * ModuleScriptImporter::GetGameObjectChild(MonoObject * object, int index)

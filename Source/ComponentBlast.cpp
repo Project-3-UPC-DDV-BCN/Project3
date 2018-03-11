@@ -61,7 +61,12 @@ void ComponentBlast::Save(Data & data) const
 		data.CloseSection();
 	}
 	data.CreateSection("BlastModel");
-	data.AddString("model_path", blast_model->GetLibraryPath());
+	std::string lib_path = "";
+	if (blast_model)
+	{
+		lib_path = blast_model->GetLibraryPath();
+	}
+	data.AddString("model_path", lib_path);
 	data.CloseSection();
 }
 

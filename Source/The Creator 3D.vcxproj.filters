@@ -1190,6 +1190,7 @@
     <ClInclude Include="SoundBankResource.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1861,6 +1862,8 @@
     <ClCompile Include="ComponentRadar.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
   </ItemGroup>

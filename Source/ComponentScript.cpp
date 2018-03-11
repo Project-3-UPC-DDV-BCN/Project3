@@ -6,11 +6,11 @@
 
 ComponentScript::ComponentScript(GameObject* attached_gameobject)
 {
-	SetActive(true);
 	SetName("Script");
 	SetType(ComponentType::CompScript);
 	SetGameObject(attached_gameobject);
 	script = nullptr;
+	SetActive(true);
 }
 
 ComponentScript::~ComponentScript()
