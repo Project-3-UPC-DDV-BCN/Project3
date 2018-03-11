@@ -97,7 +97,7 @@ public class Ai_Starship_Dflt {
 			TheQuaternion fRot = QuaternionLookRotation((tTrans.GlobalPosition - transform.GlobalPosition) * TheMath.DegToRad, TheVector3.Up); // THIS IS THE FINAL ROTATION QUAT
 			TheQuaternion debugQ = TheQuaternion.Slerp(qGlobalRot, fRot, Mnv * TheTime.DeltaTime);
 			TheConsole.Log(TheQuaternion.Slerp(qGlobalRot, fRot, Mnv * TheTime.DeltaTime));
-			TheConsole.Log(TheQuaternion.Slerp2(qGlobalRot, fRot, Mnv * TheTime.DeltaTime));
+			TheConsole.Log(TheQuaternion.Slerp(qGlobalRot, fRot, Mnv * TheTime.DeltaTime));
 			// THIS IS THE FINAL ROTATIO EULER
 			TheVector3 auxConverter = debugQ.ToEulerAngles();
 			//auxConverter.x = auxConverter.x * TheMath.RadToDeg;
