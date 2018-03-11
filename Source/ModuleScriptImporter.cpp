@@ -412,6 +412,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheScript::GetVector3Field", (const void*)GetVector3Field);
 	mono_add_internal_call("TheEngine.TheScript::SetQuaternionField", (const void*)SetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
+	mono_add_internal_call("TheEngine.TheScript::CallFunction", (const void*)CallFunction);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1092,4 +1093,9 @@ void ModuleScriptImporter::SetQuaternionField(MonoObject * object, MonoString * 
 MonoObject * ModuleScriptImporter::GetQuaternionField(MonoObject * object, MonoString * field_name)
 {
 	return current_script->GetQuaternionField(object, field_name);
+}
+
+void ModuleScriptImporter::CallFunction(MonoObject * object, MonoString * function_name)
+{
+	current_script->CallFunction(object, function_name);
 }

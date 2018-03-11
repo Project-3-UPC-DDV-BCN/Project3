@@ -196,6 +196,7 @@ private:
 	static MonoObject* GetVector3Field(MonoObject* object, MonoString* field_name);
 	static void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	static MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
+	static void CallFunction(MonoObject* object, MonoString* function_name);
 
 private:
 	std::string mono_path;

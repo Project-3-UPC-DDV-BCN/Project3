@@ -51,5 +51,8 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern TheQuaternion GetQuaternionField(string field_name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void CallFunction(string function_name);
     }
 }

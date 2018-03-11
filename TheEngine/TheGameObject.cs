@@ -133,5 +133,10 @@ namespace TheEngine
         {
             return AddComponent(typeof(T)) as T;
         }
+
+        public override string ToString()
+        {
+            return "TheGameObject";
+        }
     }
 }

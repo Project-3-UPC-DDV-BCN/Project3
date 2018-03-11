@@ -235,6 +235,7 @@ public:
 	MonoObject* GetVector3Field(MonoObject* object, MonoString* field_name);
 	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
+	void CallFunction(MonoObject* object, MonoString* function_name);
 
 	Component::ComponentType CsToCppComponent(std::string component_type);
 
