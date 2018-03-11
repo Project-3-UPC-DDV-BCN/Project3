@@ -35,14 +35,16 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	if (!muted) {
-		obj->SetRTPCvalue("Volume", volume);
-		obj->SetRTPCvalue("Speed", pitch);
+	if (soundbank != nullptr)
+	{
+		if (!muted) {
+			obj->SetRTPCvalue("Volume", volume);
+			obj->SetRTPCvalue("Speed", pitch);
+		}
+		else {
+			App->audio->SetRTPCvalue("Volume", 0);
+		}
 	}
-	else {
-		App->audio->SetRTPCvalue("Volume", 0);
-	}
-
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 	
 	if (trans)

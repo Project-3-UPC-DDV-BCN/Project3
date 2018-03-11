@@ -116,7 +116,7 @@ public class StarShipShooting {
 
                             timer = spawn_time;
 
-                            audio_source.Play("Play_shot1");
+                            audio_source.Play("Play_shot");
 
                             //Add heat
                             overheat += curr_overheat_inc;
