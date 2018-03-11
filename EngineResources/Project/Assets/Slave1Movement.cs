@@ -242,7 +242,7 @@ public class Slave1Movement {
                 new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
-                    cam_rot.x -= (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x < -max_camera_rot * move_percentage)
                     {
                         cam_rot.x = -max_camera_rot * move_percentage;
@@ -254,7 +254,7 @@ public class Slave1Movement {
                 new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
-                    cam_rot.x += (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x > max_camera_rot * move_percentage)
                         cam_rot.x = max_camera_rot * move_percentage;
                 }
@@ -268,7 +268,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x < 0.0f)
                 {
-                    cam_rot.x += (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x > 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -277,7 +277,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x > 0.0f)
                 {
-                    cam_rot.x -= (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x < 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -294,7 +294,7 @@ public class Slave1Movement {
                 new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
-                    cam_rot.x += (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x > max_camera_rot * move_percentage)
                         cam_rot.x = max_camera_rot * move_percentage;
                 }
@@ -304,7 +304,7 @@ public class Slave1Movement {
                 new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
-                    cam_rot.x -= (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x < -max_camera_rot * move_percentage)
                     {
                         cam_rot.x = -max_camera_rot * move_percentage;
@@ -319,7 +319,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x > 0.0f)
                 {
-                    cam_rot.x -= (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x < 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -328,7 +328,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x < 0.0f)
                 {
-                    cam_rot.x += (pitch_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
                     if (cam_rot.x > 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -343,7 +343,7 @@ public class Slave1Movement {
 			trans.LocalRotation = new_rot;
             if (cam_rot.y < max_camera_rot * move_percentage && cam_rot.y >= 0.0f)
             {
-                cam_rot.y += (yaw_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.y += camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.y > max_camera_rot * move_percentage)
                     cam_rot.y = max_camera_rot * move_percentage;
             }
@@ -352,7 +352,7 @@ public class Slave1Movement {
         {
             if (cam_rot.y > 0.0f)
             {
-                cam_rot.y -= (yaw_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.y -= camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.y < 0.0f)
                     cam_rot.y = 0.0f;
             }
@@ -366,7 +366,7 @@ public class Slave1Movement {
 			trans.LocalRotation = new_rot;
             if (cam_rot.y > -max_camera_rot * move_percentage && cam_rot.y <= 0.0f)
             {
-                cam_rot.y -= (yaw_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.y -= camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.y < -max_camera_rot * move_percentage)
                     cam_rot.y = -max_camera_rot * move_percentage;
             }
@@ -375,7 +375,7 @@ public class Slave1Movement {
         {
             if (cam_rot.y < 0.0f)
             {
-                cam_rot.y += (yaw_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.y += camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.y > 0.0f)
                     cam_rot.y = 0.0f;
             }
@@ -396,7 +396,7 @@ public class Slave1Movement {
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z > -max_camera_rot && cam_rot.z <= 0.0f)
             {
-                cam_rot.z -= (roll_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.z -= camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.z < -max_camera_rot)
                     cam_rot.z = -max_camera_rot;
             }
@@ -405,7 +405,7 @@ public class Slave1Movement {
         {
             if(cam_rot.z<0.0f)
             {
-                cam_rot.z += (roll_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.z += camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.z > 0.0f)
                     cam_rot.z = 0.0f;
             }
@@ -419,7 +419,7 @@ public class Slave1Movement {
 			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z < max_camera_rot && cam_rot.z >= 0.0f)
             {
-                cam_rot.z += (roll_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.z += camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.z > max_camera_rot)
                     cam_rot.z = max_camera_rot;
             }
@@ -428,7 +428,7 @@ public class Slave1Movement {
         {
             if (cam_rot.z > 0.0f)
             {
-                cam_rot.z -= (roll_rotate_speed + camera_rot_step) * TheTime.DeltaTime;
+                cam_rot.z -= camera_rot_step * TheTime.DeltaTime;
                 if (cam_rot.z < 0.0f)
                     cam_rot.z = 0.0f;
             }
