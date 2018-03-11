@@ -146,7 +146,8 @@ void ComponentAudioSource::Save(Data & data) const
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
 	data.AddInt("Sound ID", obj->GetID());
-	data.AddString("SoundBank Name", soundbank->GetName());
+	if (soundbank != nullptr)
+		data.AddString("SoundBank Name", soundbank->GetName());
 }
 
 void ComponentAudioSource::Load(Data & data)
