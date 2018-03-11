@@ -21,6 +21,7 @@ public class SoftBoundaries {
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>(); 
 		is_counting = false; 
+		show_number_text.Text = "sdgf"; 
 		countdown_timer = countdown_limit * 1000; 
 		countdown_show_numb = countdown_limit; 
 	}

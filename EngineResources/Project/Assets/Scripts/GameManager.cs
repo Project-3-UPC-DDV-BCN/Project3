@@ -1,81 +1,59 @@
 using TheEngine;
+using TheEngine.TheConsole; 
 
 public class GameManager
 {
 
-	public TheGameObject tie_fighter; 
-	public TheGameObject x_wing; 
-	public TheGameObject y_wing; 
-	public TheGameObject sentinel_class; 
-	public TheGameObject landing_class; 
-
-	private bool is_alliance; 
+	public TheGameObject show_gametime_go;
+	public int gametime_seconds; 
+		
+	private float gametime_step; 
+	private float timer; 
+	private TheText show_gametime; 
 
 	void Start ()
 	{
-		if(is_alliance)
-			CreateShips("Alliance"); 
-		else 
-			CreateShips("Empire"); 
+	 	show_gametime = show_gametime_go.GetComponent<TheText>();
+		timer = (float)gametime_seconds; 
+		gametime_step = timer - 1.0f; 		
+		 
+		show_gametime.Text = GetTimeFromSeconds(gametime_seconds); 
 	}
 	
-	void Update () {
-		
-	}
-
-	void SetTeam(const string team)
+	void Update () 
 	{
-		if(team == "Alliance")
-			is_alliance = true; 
-		else
-			is_alliance = false; 
+		timer -= TheTime.DeltaTime; 
+
+		if(timer < gametime_step)
+		{
+			gametime_step = timer - 1.0f;
+			gametime_seconds--;  
+
+			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);	
+		}
+
+		if(gametime_seconds == 0) 
+		{
+			//LOOSE
+		}	 		
+
 	}
 
-	void CreateShips(const string team)
+	string GetTimeFromSeconds(int seconds)
 	{
-		if(team == "Alliance")
-		{
-			// 18 x_wing
-			// 26 tie_fighter
-			// 12 ywing
-			// 14 landing
+		int division = seconds/60; 
+		float reminder = seconds % 60;
 
-			for(int i = 0; i < 18; i++)
-			{
+		string new_time = division.ToString(); 
+		new_time += ":";
 
-			}
+		if(reminder < 10) 
+			new_time += "0";
 
-			for(int i = 0; i < 26; i++)
-			{
-
-			}
-		}
-		else
-		{
-			// 26 x_wing
-			// 18 tie_fighter
-			// 12 y wing
-			// 14 landing
-
-			for(int i = 0; i < 26; i++)
-			{
-
-			}
-
-			for(int i = 0; i < 18; i++)
-			{
-
-			}
-		}
-
-		for(int i = 0; i < 12; i++)
-		{
-
-		}
-
-		for(int i = 0; i < 14; i++)
-		{
-
-		}
+		new_time += reminder.ToString(); 
+		 
+		return new_time; 
 	}
+
+	
 }
