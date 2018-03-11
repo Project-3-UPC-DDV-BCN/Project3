@@ -108,7 +108,7 @@ public class StarShipShooting {
                             TheGameObject go = laser_factory.Spawn();
 
 
-							laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition/* + offset*/);
+							laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
 				
                             TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
 
@@ -197,6 +197,10 @@ public class StarShipShooting {
         {
             weapon++;
             weapon %= num_weapons;
+
+            TheVector3 size = new TheVector3(1, 1, 1);
+
+            laser_factory.SetSpawnScale(size);
         }
     }
 
