@@ -346,6 +346,7 @@ void ComponentText::UpdateText(bool font_update)
 				text_scale_diff = c_rect_trans->GetScaledSize().x / text_size.x;
 
 			movement.x *= text_scale_diff;
+			movement.x /= c_rect_trans->GetScale();
 
 			switch (grow_dir)
 			{
