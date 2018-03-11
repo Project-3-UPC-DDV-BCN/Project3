@@ -10,6 +10,8 @@ public class laser {
 	
 	public TheGameObject Test;
 	public TheGameObject Test2;
+	public TheVector3 test3;
+	public string test_s;
 
 	void Start () {
 		//TheConsole.Log(TheQuaternion.Slerp(new TheQuaternion(19,4,2,0), new TheQuaternion(1,2,3, 0), 1));
@@ -25,11 +27,16 @@ public class laser {
 		//TheConsole.Log(TheRandom.RandomRange(5,20));
 		//TheConsole.Log(TheGameObject.Find("Main Camera").name);
 		//Slave1Movement slave = TheGameObject.Self.GetComponent<Slave1Movement>();
+		test_s = "Hi!";
 		script = TheGameObject.Self.GetComponent<TheScript>(0);
 		script2 = Test2.GetComponent<TheScript>(0);
 		script.SetGameObjectField("Test", TheGameObject.Find("Main Camera"));
 		script2.SetGameObjectField("Test", TheGameObject.Find("Main Camera"));
-		TheConsole.Log(script.GetBoolField("Test"));
+		script.SetVector3Field("test3",new TheVector3(9,1,2));
+		script2.SetVector3Field("test3",new TheVector3(19,91,22));
+		script2.CallFunction("TestMethod");
+		//TheConsole.Log(script.GetGameObjectField("Test"));
+		//TheConsole.Log(script2.GetGameObjectField("Test"));
 	}
 	
 	void Update () {
@@ -43,5 +50,10 @@ public class laser {
 		//TheConsole.Log("Laser " + TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection);
 		//TheConsole.Log(trans);
 		//TheConsole.Log(vec);
+	}
+	
+	void TestMethod()
+	{
+		TheConsole.Log(test_s);
 	}
 }
