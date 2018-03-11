@@ -68,6 +68,28 @@ public class Slave1Movement {
     TheVector3 cam_rot;
     TheVector3 cam_pos;
 
+    //Repair Puzzle
+    int ring_exterior_pos = 0;
+    int ring_center_pos = 0;
+    int ring_interior_pos = 0;
+    int num_ring_pos = 4;
+    int repair_ring = 0;
+    int num_rings = 3;
+    int repair_part = 0;
+    int ship_parts = 3;
+    bool repair_mode = false;
+    public int rand_rotate_pos = 50;
+    public float repair_hp = 5.0f;
+    //public TheGameObject inner_ring;
+    //public TheGameObject center_ring;
+    //public TheGameObject exterior_ring;
+    //public TheGameObject body_part;
+    //public TheGameObject wings_part;
+    //public TheGameObject engines_part;
+    //TheRectTransform inner_ring_trans;
+    //TheRectTransform center_ring_trans;
+    //TheRectTransform exterior_ring_trans;
+
     public TheGameObject weapons;
 	public TheGameObject shields;
 	public TheGameObject energy;
@@ -125,6 +147,11 @@ public class Slave1Movement {
         original_cam_rot = camera_go.GetComponent<TheTransform>().LocalRotation;
         cam_pos = new TheVector3(0, 0, 0);
         cam_rot = new TheVector3(0, 0, 0);
+
+        //Repair Puzzle
+        //inner_ring_trans = inner_ring.GetComponent<TheRectTransform>();
+        //center_ring_trans = center_ring.GetComponent<TheRectTransform>();
+        //exterior_ring_trans = exterior_ring.GetComponent<TheRectTransform>();
 
         audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
@@ -525,6 +552,22 @@ public class Slave1Movement {
         camera_go.GetComponent<TheTransform>().LocalRotation = original_cam_rot + cam_rot;
     }
 
+    public void DamageSlaveOne(float dmg)
+    {
+        switch(TheRandom.RandomInt() % ship_parts)
+        {
+            case 0:
+                DamageBody(dmg);
+                break;
+            case 1:
+                DamageEngine(dmg);
+                break;
+            case 2:
+                DamageWings(dmg);
+                break;
+        }
+    }
+
     void DamageWings(float damage)
     {
         if (curr_shield_hp > 0)
@@ -585,6 +628,151 @@ public class Slave1Movement {
                 curr_shield_hp = shield_hp;
         }
         shield_regen_timer -= TheTime.DeltaTime;
+    }
+
+    void RepairPuzzle()
+    {
+        if(repair_mode)
+        {
+            //inner_ring.SetActive(true);
+            //center_ring.SetActive(true);
+            //exterior_ring.SetActive(true);
+
+            if (TheInput.IsKeyDown("W") && repair_ring > 0)
+            {
+                repair_ring--;
+            }
+            if (TheInput.IsKeyDown("S") && repair_ring < num_rings - 1)
+            {
+                repair_ring++;
+            }
+
+            if (TheInput.IsKeyDown("SPACE"))
+            {
+                switch(repair_ring)
+                {
+                    case 0:
+                        ring_exterior_pos++;
+                        ring_exterior_pos %= num_ring_pos;
+                        break;
+                    case 1:
+                        {
+                            ring_center_pos++;
+                            ring_center_pos %= num_ring_pos;
+
+                            int rand = TheRandom.RandomInt() % 100;
+                            if(rand < rand_rotate_pos)
+                            {
+                                ring_exterior_pos++;
+                                ring_exterior_pos %= num_ring_pos;
+                            }
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            ring_interior_pos++;
+                            ring_interior_pos %= num_ring_pos;
+
+                            int rand = TheRandom.RandomInt() % 100;
+                            if (rand < rand_rotate_pos)
+                            {
+                                ring_exterior_pos++;
+                                ring_exterior_pos %= num_ring_pos;
+                            }
+
+                            rand = TheRandom.RandomInt() % 100;
+                            if (rand < rand_rotate_pos)
+                            {
+                                ring_center_pos++;
+                                ring_center_pos %= num_ring_pos;
+                            }
+                            break;
+                        }
+                }
+            }
+
+            if(ring_exterior_pos == 0 && ring_center_pos == 0 && ring_interior_pos == 0)
+            {
+                switch(repair_part)
+                {
+                    case 0:
+                        wings_hp += repair_hp * TheTime.DeltaTime;
+                        if(wings_hp >= total_hp/3.0f)
+                        {
+                            wings_hp = total_hp / 3.0f;
+                            repair_mode = false;
+                            //inner_ring.SetActive(false);
+                            //center_ring.SetActive(false);
+                            //exterior_ring.SetActive(false);
+                        }
+                        break;
+                    case 1:
+                        body_hp += repair_hp * TheTime.DeltaTime;
+                        if (body_hp >= total_hp / 3.0f)
+                        {
+                            body_hp = total_hp / 3.0f;
+                            repair_mode = false;
+                            //inner_ring.SetActive(false);
+                            //center_ring.SetActive(false);
+                            //exterior_ring.SetActive(false);
+                        }
+                        break;
+                    case 2:
+                        engine_hp += repair_hp * TheTime.DeltaTime;
+                        if (engine_hp >= total_hp / 3.0f)
+                        {
+                            engine_hp = total_hp / 3.0f;
+                            repair_mode = false;
+                            //inner_ring.SetActive(false);
+                            //center_ring.SetActive(false);
+                            //exterior_ring.SetActive(false);
+                        }
+                        break;
+                }
+            }
+        }
+        else
+        {
+            if(TheInput.IsKeyDown("W"))
+            {
+                repair_part--;
+                if (repair_part < 0)
+                    repair_part = ship_parts - 1;
+            }
+            if (TheInput.IsKeyDown("S"))
+            {
+                repair_part++;
+                repair_part %= ship_parts;
+            }
+
+            if(TheInput.IsKeyDown("SPACE"))
+            {
+                repair_mode = true;
+                //wings_part.SetActive(false);
+                //body_part.SetActive(false);
+                //engine_part.SetActive(false);
+            }
+
+            /*switch(repair_part)
+            {
+                case 0:
+                    wings_part.SetActive(true);
+                    body_part.SetActive(false);
+                    engine_part.SetActive(false);
+                    break;
+                case 1:
+                    wings_part.SetActive(false);
+                    body_part.SetActive(true);
+                    engine_part.SetActive(false);
+                    break;
+                case 2:
+                    wings_part.SetActive(false);
+                    body_part.SetActive(false);
+                    engine_part.SetActive(true);
+                    break;
+            }*/
+        }
     }
 
 }
