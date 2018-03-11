@@ -12,7 +12,7 @@ public:
 		CompTransform, CompCamera, CompRigidBody, CompMeshRenderer, CompBoxCollider, CompSphereCollider, CompCapsuleCollider, CompMeshCollider, CompAudioSource, 
 		CompAnimaton, CompScript, CompParticleSystem, CompFactory, CompFixedJoint, CompDistanceJoint, CompSphericalJoint, CompRevoluteJoint, CompPrismaticJoint, 
 		CompD6Joint, CompBlast, CompLight, CompAudioListener, CompAudioDistZone, CompBillboard, CompCanvas, CompRectTransform, CompImage, CompText, CompProgressBar,
-		CompGOAPAgent, CompUnknown,
+		CompButton, CompRadar, CompGOAPAgent, CompUnknown,
 	};
 
 	Component();
@@ -36,8 +36,14 @@ public:
 	virtual bool Update();
 	virtual bool CleanUp();
 
-	virtual void Save(Data& data) const = 0;
-	virtual void Load(Data& data) = 0;
+	virtual void Save(Data& data) const;
+	virtual void Load(Data& data);
+
+	virtual void UIOnClick() {};
+	virtual void UIOnClickDown() {};
+	virtual void UIOnClickUp() {};
+	virtual void UIOnMouseEnter() {};
+	virtual void UIOnMouseOut() {};
 
 private:
 	ComponentType type;

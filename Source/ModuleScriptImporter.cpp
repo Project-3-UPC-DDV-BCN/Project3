@@ -7,6 +7,7 @@
 #include "CSScript.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "ModuleResources.h"
 
 CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -272,14 +273,26 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectSize", (const void*)GetRectSize);
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectAnchor", (const void*)SetRectAnchor);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectAnchor", (const void*)GetRectAnchor);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClick", (const void*)GetOnClick);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClickDown", (const void*)GetOnClickDown);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClickUp", (const void*)GetOnClickUp);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOver", (const void*)GetOnMouseOver);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseEnter", (const void*)GetOnMouseEnter);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOut", (const void*)GetOnMouseOut);
 
 	//TEXT
 	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
 	mono_add_internal_call("TheEngine.TheText::GettText", (const void*)GetText);
 
-	// PROGRESSBAR
+	//PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
 	mono_add_internal_call("TheEngine.TheProgressBar::GetPercentageProgress", (const void*)GetPercentageProgress);
+
+	//RADAR
+	mono_add_internal_call("TheEngine.TheRadar::AddEntity", (const void*)AddEntity);
+	mono_add_internal_call("TheEngine.TheRadar::RemoveEntity", (const void*)RemoveEntity);
+	mono_add_internal_call("TheEngine.TheRadar::RemoveAllEntities", (const void*)RemoveAllEntities);
+	mono_add_internal_call("TheEngine.TheRadar::SetMarkerToEntity", (const void*)SetMarkerToEntity);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
@@ -519,6 +532,36 @@ MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 	return current_script->GetRectAnchor(object);
 }
 
+mono_bool ModuleScriptImporter::GetOnClick(MonoObject * object)
+{
+	return current_script->GetOnClick(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnClickDown(MonoObject * object)
+{
+	return current_script->GetOnClickDown(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnClickUp(MonoObject * object)
+{
+	return current_script->GetOnClickUp(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseEnter(MonoObject * object)
+{
+	return current_script->GetOnMouseEnter(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseOver(MonoObject * object)
+{
+	return current_script->GetOnMouseOver(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseOut(MonoObject * object)
+{
+	return current_script->GetOnMouseOut(object);
+}
+
 void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
 {
 	return current_script->SetText(object, text);
@@ -537,6 +580,26 @@ void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float prog
 float ModuleScriptImporter::GetPercentageProgress(MonoObject * object)
 {
 	return current_script->GetPercentageProgress(object);
+}
+
+void ModuleScriptImporter::AddEntity(MonoObject * object, MonoObject * game_object)
+{
+	current_script->AddEntity(object, game_object);
+}
+
+void ModuleScriptImporter::RemoveEntity(MonoObject * object, MonoObject * game_object)
+{
+	current_script->RemoveEntity(object, game_object);
+}
+
+void ModuleScriptImporter::RemoveAllEntities(MonoObject * object)
+{
+	current_script->RemoveAllEntities(object);
+}
+
+void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
+{
+	current_script->SetMarkerToEntity(object, game_object, marker_name);
 }
 
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)

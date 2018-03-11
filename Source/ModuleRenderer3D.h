@@ -51,6 +51,8 @@ public:
 	void AddMeshToDraw(ComponentMeshRenderer* mesh);
 	void AddCanvasToDraw(ComponentCanvas* canvas);
 	void RemoveCanvasToDraw(ComponentCanvas* canvas);
+	std::list<ComponentCanvas*> GetCanvasToDraw() const;
+
 
 	void BindArrayBuffer(uint id) const;
 	void BindElementArrayBuffer(uint id) const;
@@ -120,7 +122,6 @@ private:
 	void DrawEditorScene();
 	void DrawSceneCameras(ComponentCamera* camera);
 
-	void DrawDebugCube(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
 public:

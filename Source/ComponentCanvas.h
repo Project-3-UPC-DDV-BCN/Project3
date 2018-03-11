@@ -6,17 +6,23 @@
 #include "Component.h"
 #include "MathGeoLib\float4x4.h"
 #include "MathGeoLib\AABB.h"
+#include "MathGeoLib\Ray.h"
 
 class Mesh;
 class ComponentRectTransform;
 class ComponentCamera;
+enum CanvasRenderMode;
+class ComponentCanvas;
 
 class CanvasDrawElement
 {
 public:
-	CanvasDrawElement();
+	CanvasDrawElement(ComponentCanvas* canvas, Component* cmp);
+
+	void SetLayer(int layer);
 
 	void SetPosition(const float2& pos);
+	void SetPosition(const float3& pos);
 	void SetSize(const float2& size);
 	void SetTransform(const float4x4& trans);
 	void SetOrtoTransform(const float4x4& trans);
@@ -24,23 +30,34 @@ public:
 	void SetColour(const float4& colour);
 	void SetFlip(const bool& vertical_flip, const bool& horizontal_flip);
 
+	int GetLayer();
+	Component* GetComponent();
 	float4x4 GetTransform();
 	float4x4 GetOrtoTransform() const;
 	uint GetTextureId() const;
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
-	AABB GetBBox();
+
+	bool CheckRay(LineSegment ray, CanvasRenderMode mode);
 
 private:
-	Mesh*    plane = nullptr;
-	float2   pos;
-	float2   size;
-	float4x4 transform;
-	float4x4 orto_transform;
-	uint	 texture_id;
-	bool	 vertical_flip;
-	bool	 horizontal_flip;
-	float4   colour;
+	AABB GetBBox();
+	AABB GetOrthoBBox();
+
+private:
+	ComponentCanvas * canvas = nullptr;
+	Component*		  cmp = nullptr;
+	int			      layer = 0;
+
+	Mesh*			  plane = nullptr;
+	float3			  pos;
+	float2			  size;
+	float4x4		  transform;
+	float4x4		  orto_transform;
+	uint			  texture_id;
+	bool			  vertical_flip;
+	bool			  horizontal_flip;
+	float4			  colour;
 };
 
 enum CanvasRenderMode
@@ -88,6 +105,12 @@ public:
 	void ClearDrawElements();
 	std::vector<CanvasDrawElement> GetDrawElements();
 
+	void SetLastRectTransform(ComponentRectTransform* last);
+	ComponentRectTransform* GetLastRectTransform() const;
+
+	void SetLastLastRectTransform(ComponentRectTransform* last);
+	ComponentRectTransform* GetLastLastRectTransform() const;
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 
@@ -106,6 +129,9 @@ private:
 
 	CanvasRenderMode render_mode;
 	CanvasScaleMode scale_mode;
+
+	ComponentRectTransform* last_rect_trans = nullptr;
+	ComponentRectTransform* last_last_rect_trans = nullptr;
 
 	float scale;
 };

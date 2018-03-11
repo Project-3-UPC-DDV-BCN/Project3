@@ -2762,7 +2762,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		};
 
 		static const char* const csharpClasses[] = {
-			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText"
+			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText", "TheRadar"
 		};
 		for (auto& k : csharpClasses)
 			langDef.mClasses.insert(k);
@@ -2793,7 +2793,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 
 		langDef.class_static_auto_complete["Math"] = "Abs()_Acos()_Asin()_Atan()_Atan2()_Ceiling()_Clamp()_Cos()_DegToRad_Epsilon_Exp()_Floor()_Infinity_IsPowerOfTwo()_Lerp()_Log()_Max()_Min()_NegativeInfinity_PI_Pow()_RadToDeg_Round()_Sin()_Sqrt()_Tan()";
 		langDef.class_static_auto_complete["TheGameObject"] = "Destroy()_Duplicate()_Self";
-		langDef.class_non_static_auto_complete["TheGameObject"] = "AddComponent<TheFactory>()_GetChild()_GetChildCount()_GetComponent<TheTransform>()_GetComponent<TheFactory>()_GetComponent<TheProgressBar>()_GetComponent<TheText>()_GetComponent<TheAudioSource>()_IsActive()_IsStatic()_layer_name_SetActive()_SetParent()_SetStatic()_tag";
+		langDef.class_non_static_auto_complete["TheGameObject"] = "AddComponent<TheFactory>()_GetChild()_GetChildCount()_GetComponent<TheTransform>()_GetComponent<TheFactory>()_GetComponent<TheProgressBar>()_GetComponent<TheText>()_GetComponent<TheRadar>_GetComponent<TheAudioSource>()_IsActive()_IsStatic()_layer_name_SetActive()_SetParent()_SetStatic()_tag";
 		langDef.class_static_auto_complete["TheConsole"] = "Error()_Log()_Warning()";
 		langDef.class_non_static_auto_complete["TheFactory"] = "SetSpawnPosition()_SetSpawnRotation()_SetSpawnScale()_Spawn()_StartFactory()";
 		langDef.class_static_auto_complete["TheInput"] = "GetMousePosition()_GetMouseXMotion()_GetMouseYMotion()_IsKeyDown()_IsKeyRepeat()_IsKeyUp()_IsMouseButtonDown()_IsMouseButtonRepeat()_IsMouseButtonUp()";
@@ -2807,6 +2807,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.class_static_auto_complete["TheAudioSource"] = "Play()_Stop()_Send()_SetMyRTPCvalue()";
 		langDef.class_static_auto_complete["TheProgressBar"] = "PercentageProgress";
 		langDef.class_static_auto_complete["TheText"] = "Text";
+		langDef.class_static_auto_complete["TheRadar"] = "AddEntity()_RemoveEntity()_RemoveAllEntities()_SetMarkerToEntity()";
 		langDef.functions_info["Abs()"] = "Returns the absolute value of value. \n1. float Abs(float value) \n2. int Abs(int value)";
 		langDef.functions_info["Acos()"] = "Returns the arc-cosine of value. \nfloat Acos(float value)";
 		langDef.functions_info["Asin()"] = "Returns the arc-sine of value. \nfloat Asin(float value)";

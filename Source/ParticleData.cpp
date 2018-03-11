@@ -20,7 +20,6 @@ void ParticleData::LoadDefaultData()
 	emmision_rate = 15;
 	max_lifetime = 1;
 	velocity = 5.0f;
-	color = Color(255, 255, 255, 0);
 	billboard_type = BILLBOARD_NONE; 
 	emmision_type = EMMISION_CONTINUOUS; 
 	emmit_style = EMMIT_FROM_RANDOM;
@@ -136,6 +135,12 @@ void ParticleData::Save(Data & data) const
 	if (change_color_interpolation)
 	{
 		data.AddBool("Color_Interpolation", true);
+
+		float3 init_color = { initial_color .r, initial_color .g, initial_color .b};
+		float3 fin_color = { final_color.r, final_color.g, final_color.b };
+
+		data.AddVector3("Initial_Color", init_color);
+		data.AddVector3("Final_Color", fin_color);
 	}
 	else
 		data.AddBool("Color_Interpolation", false);
@@ -152,10 +157,10 @@ void ParticleData::Save(Data & data) const
 
 	if (change_alpha_interpolation)
 	{
-		data.AddBool("Alpha_Interpolation", true);		
+		data.AddBool("Alpha_Interpolation", true);	
 	}
 	else
-		data.AddBool("Size_Interpolation", false);
+		data.AddBool("Alpha_Interpolation", false);
 
 	if (change_rotation_interpolation)
 	{
@@ -191,11 +196,7 @@ void ParticleData::SaveTextures(Data& data)
 		}		
 	}
 
-	if (animation_system.GetNumFrames() > 1)
-	{
-		data.AddFloat("TimeStep", animation_system.timeStep);
-	}
-
+	data.AddFloat("TimeStep", animation_system.timeStep);
 	data.AddInt("Frames_Num", animation_system.GetNumFrames()); 
 
 	data.CloseSection(); 
@@ -236,6 +237,8 @@ void ParticleData::Copy(ParticleData * other)
 
 	autopause = other->autopause; 
 	time_to_stop = other->time_to_stop; 
+
+	change_alpha_interpolation = other->change_alpha_interpolation;
 									
 	change_size_interpolation = other->change_size_interpolation;
 	initial_scale = other->initial_scale;
@@ -269,7 +272,6 @@ bool ParticleData::Load(Data & _data)
 		amount_to_emmit = _data.GetInt("SimAmount");
 	}
 		
-
 	string name = _data.GetString("Name");
 	SetName(name.c_str());
 
@@ -294,11 +296,8 @@ bool ParticleData::Load(Data & _data)
 		animation_system.AddToFrameStack(texture); 
 	}
 
-	if (frames_num > 1)
-	{
-		animation_system.timeStep = _data.GetFloat("TimeStep"); 
-	}
-
+	animation_system.timeStep = _data.GetFloat("TimeStep"); 
+	
 	animation_system.rendering_frame = 0; 
 
 	_data.LeaveSection(); 
@@ -358,13 +357,21 @@ bool ParticleData::Load(Data & _data)
 	}
 
 
-
 	if (change_rotation_interpolation)
 	{
 		initial_angular_v = _data.GetFloat("Initial_Rotation");
 		final_angular_v = _data.GetFloat("Final_Rotation");
 	}
-	// ------
+
+	if (change_color_interpolation)
+	{
+		float3 initcolor = _data.GetVector3("Initial_Color");
+		float3 fin_color = _data.GetVector3("Final_Color");
+
+		initial_color.Set(initcolor.x, initcolor.y, initcolor.z);
+		final_color.Set(fin_color.x, fin_color.y, fin_color.z);
+		// ------
+	}
 
 	//Function calling ----
 	width_increment = emmit_width;

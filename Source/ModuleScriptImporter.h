@@ -6,6 +6,7 @@
 
 class Script;
 class CSScript;
+class ComponentRectTransform;
 
 class ModuleScriptImporter :
 	public Module
@@ -76,14 +77,26 @@ private:
 	static MonoObject* GetRectSize(MonoObject * object);
 	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	static MonoObject* GetRectAnchor(MonoObject * object);
+	static mono_bool GetOnClick(MonoObject * object);
+	static mono_bool GetOnClickDown(MonoObject * object);
+	static mono_bool GetOnClickUp(MonoObject * object);
+	static mono_bool GetOnMouseEnter(MonoObject * object);
+	static mono_bool GetOnMouseOver(MonoObject * object);
+	static mono_bool GetOnMouseOut(MonoObject * object);
 
-	// TEXT
+	//TEXT
 	static void SetText(MonoObject * object, MonoString* text);
 	static MonoString* GetText(MonoObject * object);
 
 	//PROGRESSBAR
 	static void SetPercentageProgress(MonoObject * object, float progress);
 	static float GetPercentageProgress(MonoObject * object);
+
+	//RADAR
+	static void AddEntity(MonoObject * object, MonoObject * game_object);
+	static void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	static void RemoveAllEntities(MonoObject * object);
+	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);

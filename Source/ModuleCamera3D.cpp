@@ -14,10 +14,13 @@
 #include "Mesh.h"
 #include <vector>
 #include "ModulePhysics.h"
+#include "GameWindow.h"
+#include "ComponentCanvas.h"
+#include "DebugDraw.h"
+#include "ComponentRectTransform.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
-
 	name = "Camera";
 	can_update = false;
 	camera_is_orbital = false;
@@ -43,7 +46,6 @@ bool ModuleCamera3D::Init(Data * editor_config)
 
 	if (editor_config->EnterSection("Camera_Config"))
 	{
-
 		key_speed = App->input->StringToKey(editor_config->GetString("key_speed"));
 		key_forward = App->input->StringToKey(editor_config->GetString("key_forward"));
 		key_backward = App->input->StringToKey(editor_config->GetString("key_backward"));
@@ -90,11 +92,17 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(key_speed) == KEY_REPEAT)
 			speed = 70.0f * dt;
 
-		if (App->input->GetKey(key_up) == KEY_REPEAT) new_pos.y += speed;
-		if (App->input->GetKey(key_down) == KEY_REPEAT) new_pos.y -= speed;
+		if (App->input->GetKey(key_up) == KEY_REPEAT) 
+			new_pos.y += speed;
 
-		if (App->input->GetKey(key_forward) == KEY_REPEAT) new_pos += tmp_camera_frustum->Front() * speed;
-		if (App->input->GetKey(key_backward) == KEY_REPEAT) new_pos -= tmp_camera_frustum->Front() * speed;
+		if (App->input->GetKey(key_down) == KEY_REPEAT) 
+			new_pos.y -= speed;
+
+		if (App->input->GetKey(key_forward) == KEY_REPEAT) 
+			new_pos += tmp_camera_frustum->Front() * speed;
+
+		if (App->input->GetKey(key_backward) == KEY_REPEAT) 
+			new_pos -= tmp_camera_frustum->Front() * speed;
 		//if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed;
 		//if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed;
 
@@ -148,7 +156,12 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
-	
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleCamera3D::PostUpdate(float dt)
+{
 	return UPDATE_CONTINUE;
 }
 
@@ -311,6 +324,42 @@ void ModuleCamera3D::MousePickRay(int mouse_x, int mouse_y)
 			}
 		}
 	}
+}
+
+LineSegment ModuleCamera3D::GetUIMouseRay(ComponentCanvas* cv)
+{
+	LineSegment ret;
+
+	int mouse_x = App->input->GetMouseX();
+	int mouse_y = App->input->GetMouseY();
+
+	float2 window_pos = App->editor->game_window->GetPos();
+	float2 window_size = App->editor->game_window->GetSize();
+
+	ComponentCamera* camera = App->renderer3D->game_camera;
+
+	if (mouse_x > window_pos.x && mouse_x < window_pos.x + window_size.x && mouse_y > window_pos.y && mouse_y < window_pos.y + window_size.y)
+	{
+		//Ray needs x and y between [-1,1]
+		float normalized_mouse_x = (((mouse_x - window_pos.x) / window_size.x) * 2) - 1;
+
+		float normalized_mouse_y = 1 - ((mouse_y - window_pos.y) / window_size.y) * 2;
+		
+		Frustum frustum = camera->camera_frustum;
+
+		if (cv->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
+		{
+			frustum.Transform(float4x4::identity);
+			frustum.SetPos(float3(0, 0, -1));
+			frustum.SetFront(float3::unitZ);
+			frustum.SetUp(float3::unitY);
+			frustum.SetOrthographic(window_size.x, window_size.y);
+		}
+
+		ret = frustum.UnProjectLineSegment(normalized_mouse_x, normalized_mouse_y);
+	}
+
+	return ret;
 }
 
 void ModuleCamera3D::SaveData(Data * data)

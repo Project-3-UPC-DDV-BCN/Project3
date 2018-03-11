@@ -68,6 +68,7 @@ Application::Application()
 	AddModule(file_system);
 	AddModule(window);
 	AddModule(input);
+	AddModule(camera);
 	AddModule(audio);
 	AddModule(audio_importer);
 	AddModule(renderer3D);
@@ -79,7 +80,6 @@ Application::Application()
 	AddModule(phys_mats_importer);
 	AddModule(shader_importer);
 	AddModule(particle_importer); 
-	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
 	AddModule(font_importer);
