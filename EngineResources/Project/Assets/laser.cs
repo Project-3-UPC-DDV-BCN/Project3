@@ -10,10 +10,16 @@ public class laser {
 	
 	//public TheGameObject Test;
 	//public TheGameObject Test2;
-	public TheVector3 test3;
-	public string test_s;
+	//public TheVector3 test3;
+	//public string test_s;
+	
+	TheFactory laser_factory;
+    public TheGameObject laser_spawner;
 
 	void Start () {
+		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+
+        laser_factory.StartFactory();
 		//TheConsole.Log(TheQuaternion.Slerp(new TheQuaternion(19,4,2,0), new TheQuaternion(1,2,3, 0), 1));
 		//rb = TheGameObject.Self.GetComponent<TheRigidBody>();
 		//trans = TheGameObject.Self.GetComponent<TheTransform>();
@@ -35,10 +41,10 @@ public class laser {
 		//script.SetVector3Field("test3",new TheVector3(9,1,2));
 		//script2.SetVector3Field("test3",new TheVector3(19,91,22));
 		//script2.CallFunction("TestMethod");
-		TheGameObject go = TheGameObject.Self.GetParent();
-		TheConsole.Log(go.name);
-		TheGameObject go2 = TheGameObject.Find("Main Camera").GetParent();
-		TheConsole.Log(go2.name);
+		//TheGameObject go = TheGameObject.Self.GetParent();
+		//TheConsole.Log(go.name);
+		//TheGameObject go2 = TheGameObject.Find("Main Camera").GetParent();
+		//TheConsole.Log(go2.name);
 		//TheConsole.Log(script.GetGameObjectField("Test"));
 		//TheConsole.Log(script2.GetGameObjectField("Test"));
 	}
@@ -58,6 +64,6 @@ public class laser {
 	
 	void TestMethod()
 	{
-		TheConsole.Log(test_s);
+		//TheConsole.Log(test_s);
 	}
 }
