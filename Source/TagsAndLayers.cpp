@@ -106,7 +106,7 @@ void TagsAndLayers::Save(Data * data) const
 	data->CloseSection();
 
 	data->CreateSection("Layers");
-	data->AddInt("layers_num", tags_list.size());
+	data->AddInt("layers_num", layers_list.size());
 	for (int i = 0; i < layers_list.size(); i++)
 	{
 		data->AddString("layer_" + std::to_string(i), layers_list[i]);

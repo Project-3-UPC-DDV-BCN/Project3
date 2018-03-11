@@ -86,6 +86,7 @@ public:
 	mono_bool GameObjectIsStatic(MonoObject* object);
 	MonoObject* DuplicateGameObject(MonoObject* object);
 	void SetGameObjectParent(MonoObject* object, MonoObject* parent);
+	MonoObject* GetGameObjectParent(MonoObject* object);
 	MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);

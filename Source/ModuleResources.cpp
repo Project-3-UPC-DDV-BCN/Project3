@@ -1511,6 +1511,15 @@ void ModuleResources::CreateResource(std::string file_path)
 						App->audio_importer->ImportSoundBank(file_path);
 					}
 				}
+				if (extension == ".bmesh")
+				{
+					std::string model_name = App->file_system->GetFileNameWithoutExtension(library_path);
+
+					if (!App->file_system->FileExist(LIBRARY_BMODEL_FOLDER + model_name + ".bmodel"))
+					{
+						library_path = CreateLibraryFile(type, file_path);
+					}
+				}
 			}
 			resource = CreateResourceFromLibrary(library_path);
 			if (resource != nullptr)
@@ -2425,11 +2434,13 @@ void ModuleResources::CreateDefaultMaterial()
 	CONSOLE_DEBUG("-------------- Creating Default Material -------------");
 	if (!App->file_system->DirectoryExist(MATERIAL_DEFAULT_FOLDER_PATH)) App->file_system->Create_Directory(MATERIAL_DEFAULT_FOLDER_PATH);
 
-	std::string default_mat = MATERIAL_DEFAULT_FOLDER "default_material.mat";
+	std::string default_mat = MATERIAL_DEFAULT_FOLDER "engine_default_mat.mat";
 	if (!App->file_system->FileExist(default_mat))
 	{
 		Material* new_mat = new Material();
-		new_mat->SetName("default_material");
+		new_mat->SetName("default_mat");
+		new_mat->SetAssetsPath(MATERIAL_DEFAULT_FOLDER "engine_default_mat.mat");
+		new_mat->SetLibraryPath(LIBRARY_MATERIALS_FOLDER"engine_default_mat.mat");
 		Data d;
 		new_mat->Save(d);
 

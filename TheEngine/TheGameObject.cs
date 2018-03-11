@@ -107,6 +107,9 @@ namespace TheEngine
         public extern void SetParent(TheGameObject new_parent);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheGameObject GetParent();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern TheGameObject GetSelf();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
