@@ -18,6 +18,8 @@ ComponentFactory::ComponentFactory(GameObject* attached_gameobject)
 	object_to_spawn = nullptr;
 	object_count = 0;
 	life_time = 0;
+	spawn_position = float3::zero;
+	spawn_rotation = float3::zero;
 }
 
 ComponentFactory::~ComponentFactory()
@@ -71,14 +73,14 @@ GameObject* ComponentFactory::Spawn()
 		if (transform)
 		{
 			transform->SetPosition(spawn_position);
-			transform->SetRotation(spawn_rotation);
+			//transform->SetRotation(spawn_rotation);
 			transform->SetScale(spawn_scale);
 			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
 				float4x4 m = transform->GetOpenGLMatrix();
 				rb->SetTransform(m.ptr());
-				rb->SetLinearVelocity({ 0,0,0 });
+				//rb->SetLinearVelocity({ 0,0,0 });
 				/*rb->SetPosition(spawn_position);
 				rb->SetRotation(spawn_rotation);*/
 			}
@@ -164,7 +166,7 @@ void ComponentFactory::StartFactory()
 				if (GetGameObject() && i == 0)
 				{
 					go->SetRoot(true);
-					go->SetParent(GetGameObject());
+					//go->SetParent(GetGameObject());
 					spawn_objects_list.push_back(go);
 					go->SetActive(false);
 				}
@@ -200,7 +202,7 @@ void ComponentFactory::CheckLifeTimes()
 		}
 		else
 		{
-			it->second -= it->second -= App->time->GetGameDt();
+			it->second -= App->time->GetGameDt();
 			it++;
 		}
 	}

@@ -13,6 +13,7 @@ struct MonoComponent
 	const char* name;
 	MonoObject* component_object;
 	GameObject* attached_go;
+	Component* component;
 };
 
 class Data;
@@ -179,6 +180,8 @@ public:
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void SetRBPosition(MonoObject * object, float x, float y, float z);
+	void SetRBRotation(MonoObject * object, float x, float y, float z);
 
 	//GOAPAGENT
 	mono_bool GetBlackboardVariableB(MonoString* name) const;
@@ -198,6 +201,27 @@ public:
 	float RandomFloat(MonoObject* object);
 	float RandomRange(MonoObject* object, float min, float max);
 
+	//APPLICATION
+	void LoadScene(MonoString* scene_name);
+
+	//SCRIPT
+	void SetBoolField(MonoObject* object, MonoString* field_name, bool value);
+	bool GetBoolField(MonoObject* object, MonoString* field_name);
+	void SetIntField(MonoObject* object, MonoString* field_name, int value);
+	int GetIntField(MonoObject* object, MonoString* field_name);
+	void SetFloatField(MonoObject* object, MonoString* field_name, float value);
+	float GetFloatField(MonoObject* object, MonoString* field_name);
+	void SetDoubleField(MonoObject* object, MonoString* field_name, double value);
+	double GetDoubleField(MonoObject* object, MonoString* field_name);
+	void SetStringField(MonoObject* object, MonoString* field_name, MonoString* value);
+	MonoString* GetStringField(MonoObject* object, MonoString* field_name);
+	void SetGameObjectField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetGameObjectField(MonoObject* object, MonoString* field_name);
+	void SetVector3Field(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetVector3Field(MonoObject* object, MonoString* field_name);
+	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
+
 	Component::ComponentType CsToCppComponent(std::string component_type);
 
 private:
@@ -216,6 +240,7 @@ private:
 
 	bool GameObjectIsValid();
 	bool MonoObjectIsValid(MonoObject* object);
+	bool MonoComponentIsValid(MonoObject* object);
 
 private:
 	MonoDomain* mono_domain;
@@ -236,8 +261,8 @@ private:
 	MonoMethod* on_collision_stay;
 	MonoMethod* on_collision_exit;
 	MonoMethod* on_trigger_enter;
-	MonoMethod * on_trigger_stay;
-	MonoMethod * on_trigger_exit;
+	MonoMethod* on_trigger_stay;
+	MonoMethod* on_trigger_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
 	MonoMethod* on_complete;
@@ -249,6 +274,7 @@ private:
 	std::vector<MonoComponent*> created_components;
 	//std::map<MonoObject*, PerfTimer*> created_timers;
 	GameObject* active_gameobject;
+	Component* active_component;
 	bool inside_function;
 
 };

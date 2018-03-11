@@ -42,8 +42,8 @@ public class StarShipShooting {
 
 		{
 
-			if(TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000)
-
+			//if(TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000)
+			if(TheInput.IsMouseButtonDown(1))
 			{
 
 				//TheVector3 rot = new TheVector3(0,0,0);
@@ -70,20 +70,25 @@ public class StarShipShooting {
 
 				}
 
-				laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
-
+				laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition/* + offset*/);
+				
+				
 				//laser_factory.SetSpawnRotation(laser_spawner.GetComponent<TheTransform>().GlobalRotation);
 
 				TheGameObject go = laser_factory.Spawn();
 
 				TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection*20000*TheTime.DeltaTime;
-
+				//go.GetComponent<TheTransform>().LookAt(laser_spawner.GetComponent<TheTransform>().ForwardDirection * 1000);
+				//go.GetComponent<TheTransform>().GlobalRotation += laser_spawner.GetComponent<TheTransform>().GlobalRotation;
+				TheVector3 v = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
+				go.GetComponent<TheRigidBody>().SetRotation(v.x,v.y,v.z);
 				go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
 
 				timer = spawn_time;
-
+				TheConsole.Log(go.GetComponent<TheTransform>().GlobalRotation);
+				TheConsole.Log(laser_spawner.GetComponent<TheTransform>().GlobalRotation);
 				//TheConsole.Log("Spawner " + laser_spawner.GetComponent<TheTransform>().ForwardDirection);
-				audio_source.Play("Play_shot1");
+				//audio_source.Play("Play_shot1");
 			}
 
 		}

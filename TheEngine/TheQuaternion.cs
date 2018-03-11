@@ -91,11 +91,46 @@ namespace TheEngine
             return (a * (1 - value) + b * value).Normalized;
         }
 
+        //public static TheQuaternion Slerp(TheQuaternion a, TheQuaternion b, float value)
+        //{
+        //    TheQuaternion v0 = a.Normalized;
+        //    TheQuaternion v1 = b.Normalized;
+
+        //    // Compute the cosine of the angle between the two vectors.
+        //    float dot = DotProduct(v0, v1);
+
+        //    // If the dot product is negative, the quaternions
+        //    // have opposite handed-ness and slerp won't take
+        //    // the shorter path. Fix by reversing one quaternion.
+        //    if (dot < 0.0f)
+        //    {
+        //        v1 = -v1;
+        //        dot = -dot;
+        //    }
+
+        //    const double DOT_THRESHOLD = 0.9995;
+        //    if (dot > DOT_THRESHOLD)
+        //    {
+        //        // If the inputs are too close for comfort, linearly interpolate
+        //        // and normalize the result.
+        //        TheQuaternion result = v0 + value * new TheQuaternion(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z, v1.w - v0.w);
+        //        return result.Normalized;
+        //    }
+
+        //    TheMath.Clamp(dot, -1, 1);           // Robustness: Stay within domain of acos()
+        //    float theta_0 = TheMath.Acos(dot);  // theta_0 = angle between input vectors
+        //    float theta = theta_0 * value;    // theta = angle between v0 and result
+
+        //    float s0 = TheMath.Cos(theta) - dot * TheMath.Sin(theta) / TheMath.Sin(theta_0);  // == sin(theta_0 - theta) / sin(theta_0)
+        //    float s1 = TheMath.Sin(theta) / TheMath.Sin(theta_0);
+
+        //    return (s0 * v0) + (s1 * v1);
+        //}
+
         public static TheQuaternion Slerp(TheQuaternion a, TheQuaternion b, float value)
         {
             TheQuaternion result;
             float dot = DotProduct(a, b);
-
             if (dot < 0)
             {
                 dot = -dot;
@@ -258,6 +293,11 @@ namespace TheEngine
         }
 
         public static TheQuaternion operator *(TheQuaternion a, float value)
+        {
+            return new TheQuaternion(a.x * value, a.y * value, a.z * value, a.w * value);
+        }
+
+        public static TheQuaternion operator *(float value, TheQuaternion a)
         {
             return new TheQuaternion(a.x * value, a.y * value, a.z * value, a.w * value);
         }

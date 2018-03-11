@@ -26,6 +26,7 @@
 #include "ComponentRigidBody.h"
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
+#include "ComponentScript.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -42,6 +43,9 @@ CSScript::CSScript()
 	on_collision_enter = nullptr;
 	on_collision_stay = nullptr;
 	on_collision_exit = nullptr;
+	on_trigger_enter = nullptr;
+	on_trigger_stay = nullptr;
+	on_trigger_exit = nullptr;
 	on_enable = nullptr;
 	on_disable = nullptr;
 	on_complete = nullptr;
@@ -379,6 +383,10 @@ void CSScript::SetIntProperty(const char * propertyName, int value)
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 int CSScript::GetIntProperty(const char * propertyName)
@@ -390,6 +398,10 @@ int CSScript::GetIntProperty(const char * propertyName)
 	if (field)
 	{
 		mono_field_get_value(mono_object, field, &value);
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -404,6 +416,10 @@ void CSScript::SetDoubleProperty(const char * propertyName, double value)
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 double CSScript::GetDoubleProperty(const char * propertyName)
@@ -415,6 +431,10 @@ double CSScript::GetDoubleProperty(const char * propertyName)
 	if (field)
 	{
 		mono_field_get_value(mono_object, field, &value);
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -429,6 +449,10 @@ void CSScript::SetFloatProperty(const char * propertyName, float value)
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 float CSScript::GetFloatProperty(const char * propertyName)
@@ -440,6 +464,10 @@ float CSScript::GetFloatProperty(const char * propertyName)
 	if (field)
 	{
 		mono_field_get_value(mono_object, field, &value);
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -454,17 +482,35 @@ void CSScript::SetBoolProperty(const char * propertyName, bool value)
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 bool CSScript::GetBoolProperty(const char * propertyName)
 {
-	bool value = true;
+	bool value = false;
 
 	MonoClassField* field = mono_class_get_field_from_name(mono_class, propertyName);
 
 	if (field)
 	{
-		mono_field_get_value(mono_object, field, &value);
+		MonoType* type = mono_field_get_type(field);
+		ScriptField property_field;
+		ConvertMonoType(type, property_field);
+		if (property_field.propertyType == property_field.Bool)
+		{
+			mono_field_get_value(mono_object, field, &value);
+		}
+		else
+		{
+			CONSOLE_ERROR("GetBoolProperty: Trying to get a non bool field");
+		}
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -479,6 +525,10 @@ void CSScript::SetStringProperty(const char * propertyName, const char * value)
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 std::string CSScript::GetStringProperty(const char * propertyName)
@@ -490,6 +540,10 @@ std::string CSScript::GetStringProperty(const char * propertyName)
 	if (field)
 	{
 		mono_field_get_value(mono_object, field, &value);
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -511,6 +565,10 @@ void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * val
 		MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
 		created_gameobjects[object] = value;
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 GameObject * CSScript::GetGameObjectProperty(const char * propertyName)
@@ -520,6 +578,10 @@ GameObject * CSScript::GetGameObjectProperty(const char * propertyName)
 	if (field)
 	{
 		mono_field_get_value(mono_object, field, &value);
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -540,6 +602,10 @@ void CSScript::SetVec2Property(const char * propertyName, float2 value)
 
 		mono_field_set_value(mono_object, field, array_value);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 float2 CSScript::GetVec2Property(const char * propertyName)
@@ -558,6 +624,10 @@ float2 CSScript::GetVec2Property(const char * propertyName)
 			value.x = mono_array_get(array_value, float, 0);
 			value.y = mono_array_get(array_value, float, 1);
 		}
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -579,6 +649,10 @@ void CSScript::SetVec3Property(const char * propertyName, float3 value)
 
 		mono_field_set_value(mono_object, field, array_value);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 float3 CSScript::GetVec3Property(const char * propertyName)
@@ -598,6 +672,10 @@ float3 CSScript::GetVec3Property(const char * propertyName)
 			value.y = mono_array_get(array_value, float, 1);
 			value.z = mono_array_get(array_value, float, 2);
 		}
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -620,6 +698,10 @@ void CSScript::SetVec4Property(const char * propertyName, float4 value)
 
 		mono_field_set_value(mono_object, field, array_value);
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 float4 CSScript::GetVec4Property(const char * propertyName)
@@ -641,6 +723,10 @@ float4 CSScript::GetVec4Property(const char * propertyName)
 			value.w = mono_array_get(array_value, float, 3);
 		}
 	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 
 	return value;
 }
@@ -653,7 +739,10 @@ void CSScript::SetTextureProperty(const char * propertyName, Texture * value)
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
 	}
-
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	}
 }
 
 Texture * CSScript::GetTextureProperty(const char * propertyName)
@@ -663,6 +752,10 @@ Texture * CSScript::GetTextureProperty(const char * propertyName)
 	if (Field)
 	{
 		mono_field_get_value(mono_object, Field, &value);
+	}
+	else
+	{
+		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -1369,32 +1462,61 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheGOAPAgent";
 	}
+	else if (name == "TheEngine.TheScript")
+	{
+		comp_name = "TheScript";
+	}
 
 	Component::ComponentType cpp_type = CsToCppComponent(comp_name);
 
+	int temp_index = index;
 	if (cpp_type != Component::CompUnknown)
 	{
-		for (MonoComponent* mono_comp : created_components)
+		int comp_type_count = 0;
+		for (Component* comp : active_gameobject->components_list)
 		{
-			if (mono_comp->attached_go == active_gameobject)
+			if (comp->GetType() == cpp_type)
 			{
-				for (Component* comp : attached_gameobject->components_list)
+				comp_type_count++;
+			}
+		}
+
+		if (comp_type_count <= index)
+		{
+			if (comp_type_count == 0)
+			{
+				CONSOLE_ERROR("GetComponent method: %s does not exist in %s", comp_name, attached_gameobject->GetName().c_str());
+			}
+			else
+			{
+				CONSOLE_ERROR("GetComponent method: %s index is out of bounds", comp_name);
+			}
+			return nullptr;
+		}
+
+		for (Component* comp : active_gameobject->components_list)
+		{
+			if (comp->GetType() == cpp_type)
+			{
+				if (temp_index == 0)
 				{
-					if (comp->GetType() == cpp_type)
+					for (MonoComponent* mono_comp : created_components)
 					{
-						if (index == 0)
+						if (mono_comp->component == comp)
 						{
 							return mono_comp->component_object;
 						}
-						else
-						{
-							index--;
-						}
 					}
+					break;
+				}
+				else
+				{
+					temp_index--;
 				}
 			}
 		}
 
+		temp_index = index;
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
 		if (c)
 		{
@@ -1406,12 +1528,27 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 				mono_comp->attached_go = active_gameobject;
 				created_components.push_back(mono_comp);
 				created_gameobjects[new_object] = active_gameobject;
+				for (Component* comp : active_gameobject->components_list)
+				{
+					if (comp->GetType() == cpp_type)
+					{
+						if (temp_index == 0)
+						{
+							mono_comp->component = comp;
+							break;
+						}
+						else
+						{
+							temp_index--;
+						}
+					}
+				}
 				return new_object;
 			}
 		}
 	}
 
-	CONSOLE_ERROR("%s component type is unknown...");
+	CONSOLE_ERROR("%s component type is unknown...", comp_name);
 	return nullptr;
 }
 
@@ -1876,7 +2013,8 @@ void CSScript::SetText(MonoObject * object, MonoString* t)
 	const char* txt = mono_string_to_utf8(t);
 
 	ComponentText* text = (ComponentText*)active_gameobject->GetComponent(Component::CompText);
-	text->SetText(txt);
+	if(text)
+		text->SetText(txt);
 }
 
 MonoString* CSScript::GetText(MonoObject * object)
@@ -2727,6 +2865,22 @@ bool CSScript::MonoObjectIsValid(MonoObject* object)
 	return false;
 }
 
+bool CSScript::MonoComponentIsValid(MonoObject* object)
+{
+	if (object != nullptr)
+	{
+		for (MonoComponent* mono_comp : created_components)
+		{
+			if (mono_comp->component_object == object)
+			{
+				active_component = mono_comp->component;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool CSScript::GameObjectIsValid()
 {
 	if (active_gameobject == nullptr)
@@ -2878,6 +3032,42 @@ void CSScript::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 
 	if (rb != nullptr)
 		rb->SetLinearVelocity({ x,y,z });
+}
+
+void CSScript::SetRBPosition(MonoObject * object, float x, float y, float z)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)active_gameobject->GetComponent(Component::CompRigidBody);
+
+	if (rb != nullptr)
+		rb->SetPosition({ x,y,z });
+}
+
+void CSScript::SetRBRotation(MonoObject * object, float x, float y, float z)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRigidBody* rb = (ComponentRigidBody*)active_gameobject->GetComponent(Component::CompRigidBody);
+
+	if (rb != nullptr)
+		rb->SetRotation({ x,y,z });
 }
 
 // ----- GOAP AGENT -----
@@ -3063,6 +3253,250 @@ float CSScript::RandomRange(MonoObject * object, float min, float max)
 }
 
 
+void CSScript::LoadScene(MonoString * scene_name)
+{
+	const char* name = mono_string_to_utf8(scene_name);
+	//App->scene->LoadScene(LIBRARY_SCENES_FOLDER + name + ".scene");
+}
+
+void CSScript::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			script->SetBoolProperty(name, value);
+		}
+	}
+}
+
+bool CSScript::GetBoolField(MonoObject * object, MonoString * field_name)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return false;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			return script->GetBoolProperty(name);
+		}
+	}
+}
+
+void CSScript::SetIntField(MonoObject * object, MonoString * field_name, int value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			script->SetIntProperty(name, value);
+		}
+	}
+}
+
+int CSScript::GetIntField(MonoObject * object, MonoString * field_name)
+{
+	return 0;
+}
+
+void CSScript::SetFloatField(MonoObject * object, MonoString * field_name, float value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			script->SetFloatProperty(name, value);
+		}
+	}
+}
+
+float CSScript::GetFloatField(MonoObject * object, MonoString * field_name)
+{
+	return 0.0f;
+}
+
+void CSScript::SetDoubleField(MonoObject * object, MonoString * field_name, double value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			script->SetDoubleProperty(name, value);
+		}
+	}
+}
+
+double CSScript::GetDoubleField(MonoObject * object, MonoString * field_name)
+{
+	return 0.0;
+}
+
+void CSScript::SetStringField(MonoObject * object, MonoString * field_name, MonoString * value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		const char* value_to_string = mono_string_to_utf8(value);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			script->SetStringProperty(name, value_to_string);
+		}
+	}
+}
+
+MonoString * CSScript::GetStringField(MonoObject * object, MonoString * field_name)
+{
+	return nullptr;
+}
+
+void CSScript::SetGameObjectField(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			GameObject* go_to_set = nullptr;
+			for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+			{
+				if (it->first == value)
+				{
+					go_to_set = it->second;
+					break;
+				}
+			}
+			script->SetGameObjectProperty(name, go_to_set);
+		}
+	}
+}
+
+MonoObject * CSScript::GetGameObjectField(MonoObject * object, MonoString * field_name)
+{
+	return nullptr;
+}
+
+void CSScript::SetVector3Field(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			MonoClass* c_pos = mono_object_get_class(value);
+			MonoClassField* x_field = mono_class_get_field_from_name(c_pos, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c_pos, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c_pos, "z");
+
+			float3 vector;
+			if (x_field) mono_field_get_value(value, x_field, &vector.x);
+			if (y_field) mono_field_get_value(value, y_field, &vector.y);
+			if (z_field) mono_field_get_value(value, z_field, &vector.z);
+
+			script->SetVec3Property(name, vector);
+		}
+	}
+}
+
+MonoObject * CSScript::GetVector3Field(MonoObject * object, MonoString * field_name)
+{
+	return nullptr;
+}
+
+void CSScript::SetQuaternionField(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	if (!MonoComponentIsValid(object))
+	{
+		return;
+	}
+
+	if (active_component && active_component->GetType() == Component::CompScript)
+	{
+		ComponentScript* comp_script = (ComponentScript*)active_component;
+		const char* name = mono_string_to_utf8(field_name);
+		CSScript* script = (CSScript*)comp_script->GetScript();
+		if (script)
+		{
+			MonoClass* c_pos = mono_object_get_class(value);
+			MonoClassField* x_field = mono_class_get_field_from_name(c_pos, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c_pos, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c_pos, "z");
+			MonoClassField* w_field = mono_class_get_field_from_name(c_pos, "w");
+
+			float4 quat;
+			if (x_field) mono_field_get_value(value, x_field, &quat.x);
+			if (y_field) mono_field_get_value(value, y_field, &quat.y);
+			if (z_field) mono_field_get_value(value, z_field, &quat.z);
+			if (w_field) mono_field_get_value(value, w_field, &quat.w);
+
+			script->SetVec4Property(name, quat);
+		}
+	}
+}
+
+MonoObject * CSScript::GetQuaternionField(MonoObject * object, MonoString * field_name)
+{
+	return nullptr;
+}
+
 Component::ComponentType CSScript::CsToCppComponent(std::string component_type)
 {
 	Component::ComponentType type;
@@ -3102,6 +3536,10 @@ Component::ComponentType CSScript::CsToCppComponent(std::string component_type)
 	else if (component_type == "TheGOAPAgent")
 	{
 		type = Component::CompGOAPAgent;
+	}
+	else if (component_type == "TheScript")
+	{
+		type = Component::CompScript;
 	}
 	else
 	{

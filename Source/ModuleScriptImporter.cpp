@@ -358,6 +358,8 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//RIGIDBODY
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetPosition", (const void*)SetRBPosition);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetRotation", (const void*)SetRBRotation);
 
 	//GOAP
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableB", (const void*)GetBlackboardVariableB);
@@ -376,6 +378,24 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRandom::RandomInt", (const void*)RandomInt);
 	mono_add_internal_call("TheEngine.TheRandom::RandomFloat", (const void*)RandomFloat);
 	mono_add_internal_call("TheEngine.TheRandom::RandomRange", (const void*)RandomRange);
+
+	//SCRIPT
+	mono_add_internal_call("TheEngine.TheScript::SetBoolField", (const void*)SetBoolField);
+	mono_add_internal_call("TheEngine.TheScript::GetBoolField", (const void*)GetBoolField);
+	mono_add_internal_call("TheEngine.TheScript::SetIntField", (const void*)SetIntField);
+	mono_add_internal_call("TheEngine.TheScript::GetIntField", (const void*)GetIntField);
+	mono_add_internal_call("TheEngine.TheScript::SetFloatField", (const void*)SetFloatField);
+	mono_add_internal_call("TheEngine.TheScript::GetFloatField", (const void*)GetFloatField);
+	mono_add_internal_call("TheEngine.TheScript::SetDoubleField", (const void*)SetDoubleField);
+	mono_add_internal_call("TheEngine.TheScript::GetDoubleField", (const void*)GetDoubleField);
+	mono_add_internal_call("TheEngine.TheScript::SetStringField", (const void*)SetStringField);
+	mono_add_internal_call("TheEngine.TheScript::GetStringField", (const void*)GetStringField);
+	mono_add_internal_call("TheEngine.TheScript::SetGameObjectField", (const void*)SetGameObjectField);
+	mono_add_internal_call("TheEngine.TheScript::GetGameObjectField", (const void*)GetGameObjectField);
+	mono_add_internal_call("TheEngine.TheScript::SetVector3Field", (const void*)SetVector3Field);
+	mono_add_internal_call("TheEngine.TheScript::GetVector3Field", (const void*)GetVector3Field);
+	mono_add_internal_call("TheEngine.TheScript::SetQuaternionField", (const void*)SetQuaternionField);
+	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -833,6 +853,16 @@ void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float
 	current_script->SetLinearVelocity(object, x, y, z);
 }
 
+void ModuleScriptImporter::SetRBPosition(MonoObject * object, float x, float y, float z)
+{
+	current_script->SetRBPosition(object, x, y, z);
+}
+
+void ModuleScriptImporter::SetRBRotation(MonoObject * object, float x, float y, float z)
+{
+	current_script->SetRBRotation(object, x, y, z);
+}
+
 mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoString * name)
 {
 	return current_script->GetBlackboardVariableB(name);
@@ -901,4 +931,89 @@ float ModuleScriptImporter::RandomFloat(MonoObject * object)
 float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
 {
 	return current_script->RandomRange(object, min, max);
+}
+
+void ModuleScriptImporter::LoadScene(MonoString * scene_name)
+{
+	current_script->LoadScene(scene_name);
+}
+
+void ModuleScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
+{
+	current_script->SetBoolField(object, field_name, value);
+}
+
+bool ModuleScriptImporter::GetBoolField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetBoolField(object, field_name);
+}
+
+void ModuleScriptImporter::SetIntField(MonoObject * object, MonoString * field_name, int value)
+{
+	current_script->SetIntField(object, field_name, value);
+}
+
+int ModuleScriptImporter::GetIntField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetIntField(object, field_name);
+}
+
+void ModuleScriptImporter::SetFloatField(MonoObject * object, MonoString * field_name, float value)
+{
+	current_script->SetFloatField(object, field_name, value);
+}
+
+float ModuleScriptImporter::GetFloatField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetFloatField(object, field_name);
+}
+
+void ModuleScriptImporter::SetDoubleField(MonoObject * object, MonoString * field_name, double value)
+{
+	current_script->SetDoubleField(object, field_name, value);
+}
+
+double ModuleScriptImporter::GetDoubleField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetDoubleField(object, field_name);
+}
+
+void ModuleScriptImporter::SetStringField(MonoObject * object, MonoString * field_name, MonoString * value)
+{
+	current_script->SetStringField(object, field_name, value);
+}
+
+MonoString * ModuleScriptImporter::GetStringField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetStringField(object, field_name);
+}
+
+void ModuleScriptImporter::SetGameObjectField(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	current_script->SetGameObjectField(object, field_name, value);
+}
+
+MonoObject * ModuleScriptImporter::GetGameObjectField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetGameObjectField(object, field_name);
+}
+
+void ModuleScriptImporter::SetVector3Field(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	current_script->SetVector3Field(object, field_name, value);
+}
+
+MonoObject * ModuleScriptImporter::GetVector3Field(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetVector3Field(object, field_name);
+}
+
+void ModuleScriptImporter::SetQuaternionField(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	current_script->SetQuaternionField(object, field_name, value);
+}
+
+MonoObject * ModuleScriptImporter::GetQuaternionField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetQuaternionField(object, field_name);
 }
