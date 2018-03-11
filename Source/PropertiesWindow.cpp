@@ -2352,7 +2352,7 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 			if (ImGui::TreeNode(settings_name.c_str()))
 			{
 				ImGui::SliderInt("Volume", &audio_source->volume, 0, 100);
-				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
+				ImGui::SliderInt("Pitch", &audio_source->pitch, 0, 100);
 				ImGui::Checkbox("Mute", &audio_source->muted);
 
 				ImGui::TreePop();

@@ -795,12 +795,16 @@ void ComponentRectTransform::Save(Data & data) const
 	//data.AddBool("snap_right", snap_right);
 	data.AddFloat("scale", 1.0f);
 	data.AddBool("interactable", interactable);
+	data.AddBool("fixed_aspect_ratio", fixed_aspect_ratio);
+	data.AddFloat("fixed_ratio", aspect_ratio);
 }
 
 void ComponentRectTransform::Load(Data & data)
 {
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
+	SetFixedAspectRatio(data.GetBool("fixed_aspect_ratio"));
+	SetAspectRatio(data.GetFloat("fixed_ratio"));
 	SetPos(data.GetVector2("pos"));
 	SetSize(data.GetVector2("size"));
 	SetAnchor(data.GetVector2("anchor"));
