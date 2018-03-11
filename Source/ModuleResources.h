@@ -16,6 +16,7 @@ class ParticleData;
 class Shader;
 class ShaderProgram;
 class Font;
+class SoundBankResource;
 class GOAPGoal;
 class GOAPAction;
 
@@ -80,6 +81,12 @@ public:
 	void AddBlastModel(BlastModel* mesh);
 	void RemoveBlastModel(BlastModel* mesh);
 	std::map<uint, BlastModel*> GetBlastModelsList() const;
+
+	SoundBankResource* GetSoundBank(std::string name) const;
+	SoundBankResource* GetSoundBank(UID uid) const;
+	void AddSoundBank(SoundBankResource* sbk);
+	void RemoveSoundBank(SoundBankResource* sbk);
+	std::map<uint, SoundBankResource*> GetSoundBanksList() const;
 
 	Shader* GetShader(std::string name) const;
 	Shader* GetShader(UID uid) const;
@@ -157,6 +164,7 @@ private:
 	std::map<uint, Shader*> shaders_list;
 	std::map<uint, ShaderProgram*> shader_programs_list;
 	std::map<uint, Font*> fonts_list;
+	std::map<uint, SoundBankResource*> soundbanks_list;
 	std::map<uint, GOAPGoal*> goap_goals_list;
 	std::map<uint, GOAPAction*> goap_actions_list;
 };

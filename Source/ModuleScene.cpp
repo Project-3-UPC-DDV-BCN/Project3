@@ -31,6 +31,7 @@
 #include "ComponentParticleEmmiter.h"
 #include "ComponentLight.h"
 #include "ComponentTransform.h"
+#include "ComponentRectTransform.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -234,7 +235,6 @@ update_status ModuleScene::Update(float dt)
 	ms_timer.Start();
 
 	Shader * shady = App->resources->GetShader(0);
-
 
 	HandleInput();
 
@@ -595,6 +595,9 @@ GameObject * ModuleScene::CreateText(GameObject * parent)
 
 	ret->AddComponent(Component::CompText);
 
+	ComponentRectTransform* rt = (ComponentRectTransform*)ret->GetComponent(Component::CompRectTransform);
+	rt->SetInteractable(false);
+
 	return ret;
 }
 
@@ -605,6 +608,30 @@ GameObject * ModuleScene::CreateProgressBar(GameObject * parent)
 	ret = CreateGameObject(parent);
 
 	ret->AddComponent(Component::CompProgressBar);
+
+	return ret;
+}
+
+GameObject * ModuleScene::CreateButton(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompButton);
+
+	CreateText(ret);
+
+	return ret;
+}
+
+GameObject * ModuleScene::CreateRadar(GameObject * parent)
+{
+	GameObject* ret = nullptr;
+
+	ret = CreateGameObject(parent);
+
+	ret->AddComponent(Component::CompRadar);
 
 	return ret;
 }

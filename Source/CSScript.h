@@ -13,6 +13,7 @@ struct MonoComponent
 	const char* name;
 	MonoObject* component_object;
 	GameObject* attached_go;
+	Component* component;
 };
 
 class Data;
@@ -89,6 +90,8 @@ public:
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);
 	MonoObject* FindGameObject(MonoString* gameobject_name);
+	MonoArray* GetSceneGameObjects(MonoObject* object);
+	MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
@@ -115,6 +118,12 @@ public:
 	MonoObject* GetRectSize(MonoObject * object);
 	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetRectAnchor(MonoObject * object);
+	mono_bool GetOnClick(MonoObject * object);
+	mono_bool GetOnClickDown(MonoObject * object);
+	mono_bool GetOnClickUp(MonoObject * object);
+	mono_bool GetOnMouseEnter(MonoObject * object);
+	mono_bool GetOnMouseOver(MonoObject * object);
+	mono_bool GetOnMouseOut(MonoObject * object);
 
 	//TEXT
 	void SetText(MonoObject * object, MonoString* t);
@@ -123,6 +132,12 @@ public:
 	//PROGRESSBAR
 	void SetPercentageProgress(MonoObject * object, float progress);
 	float GetPercentageProgress(MonoObject * object);
+
+	//RADAR
+	void AddEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveAllEntities(MonoObject * object);
+	void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);
@@ -164,12 +179,14 @@ public:
 	void SetVolume(int volume);
 	int GetPitch();
 	void SetPitch(int pitch);
-	void SetRTPvalue(MonoString* name, float value);
+	void SetRTPCvalue(MonoString* name, float value);
 
 	//AUDIOSOURCE
 	bool Play(MonoObject * object, MonoString* name);
 	bool Stop(MonoObject * object, MonoString* name);
 	bool Send(MonoObject * object, MonoString* name);
+	bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
+	bool SetState(MonoObject* object, MonoString* group, MonoString* state);
 
 	//PARTICLE EMMITER
 	void PlayEmmiter(MonoObject * object);
@@ -177,6 +194,8 @@ public:
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void SetRBPosition(MonoObject * object, float x, float y, float z);
+	void SetRBRotation(MonoObject * object, float x, float y, float z);
 
 	//GOAPAGENT
 	mono_bool GetBlackboardVariableB(MonoString* name) const;
@@ -196,6 +215,27 @@ public:
 	float RandomFloat(MonoObject* object);
 	float RandomRange(MonoObject* object, float min, float max);
 
+	//APPLICATION
+	void LoadScene(MonoString* scene_name);
+
+	//SCRIPT
+	void SetBoolField(MonoObject* object, MonoString* field_name, bool value);
+	bool GetBoolField(MonoObject* object, MonoString* field_name);
+	void SetIntField(MonoObject* object, MonoString* field_name, int value);
+	int GetIntField(MonoObject* object, MonoString* field_name);
+	void SetFloatField(MonoObject* object, MonoString* field_name, float value);
+	float GetFloatField(MonoObject* object, MonoString* field_name);
+	void SetDoubleField(MonoObject* object, MonoString* field_name, double value);
+	double GetDoubleField(MonoObject* object, MonoString* field_name);
+	void SetStringField(MonoObject* object, MonoString* field_name, MonoString* value);
+	MonoString* GetStringField(MonoObject* object, MonoString* field_name);
+	void SetGameObjectField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetGameObjectField(MonoObject* object, MonoString* field_name);
+	void SetVector3Field(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetVector3Field(MonoObject* object, MonoString* field_name);
+	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
+
 	Component::ComponentType CsToCppComponent(std::string component_type);
 
 private:
@@ -214,6 +254,9 @@ private:
 
 	bool GameObjectIsValid();
 	bool MonoObjectIsValid(MonoObject* object);
+	bool MonoComponentIsValid(MonoObject* object);
+	MonoObject* FindMonoObject(GameObject* go);
+	GameObject* FindGameObject(MonoObject* object);
 
 private:
 	MonoDomain* mono_domain;
@@ -234,8 +277,8 @@ private:
 	MonoMethod* on_collision_stay;
 	MonoMethod* on_collision_exit;
 	MonoMethod* on_trigger_enter;
-	MonoMethod * on_trigger_stay;
-	MonoMethod * on_trigger_exit;
+	MonoMethod* on_trigger_stay;
+	MonoMethod* on_trigger_exit;
 	MonoMethod* on_enable;
 	MonoMethod* on_disable;
 	MonoMethod* on_complete;
@@ -247,6 +290,7 @@ private:
 	std::vector<MonoComponent*> created_components;
 	//std::map<MonoObject*, PerfTimer*> created_timers;
 	GameObject* active_gameobject;
+	Component* active_component;
 	bool inside_function;
 
 };

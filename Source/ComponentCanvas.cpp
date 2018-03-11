@@ -8,6 +8,7 @@
 #include "ModuleResources.h"
 #include "ModuleRenderer3D.h"
 #include "Mesh.h"
+#include "MathGeoLib\LineSegment.h"
 
 ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 {
@@ -25,6 +26,8 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	render_mode = CanvasRenderMode::RENDERMODE_SCREEN_SPACE;
 	scale_mode = CanvasScaleMode::SCALEMODE_CONSTANT_SIZE;
 	scale = 1.0f;
+	
+	c_rect_trans->SetInteractable(false);
 }
 
 ComponentCanvas::~ComponentCanvas()
@@ -181,6 +184,26 @@ std::vector<CanvasDrawElement> ComponentCanvas::GetDrawElements()
 	return draws;
 }
 
+void ComponentCanvas::SetLastRectTransform(ComponentRectTransform * last)
+{
+	last_rect_trans = last;
+}
+
+ComponentRectTransform * ComponentCanvas::GetLastRectTransform() const
+{
+	return last_rect_trans;
+}
+
+void ComponentCanvas::SetLastLastRectTransform(ComponentRectTransform * last)
+{
+	last_last_rect_trans = last;
+}
+
+ComponentRectTransform * ComponentCanvas::GetLastLastRectTransform() const
+{
+	return last_last_rect_trans;
+}
+
 void ComponentCanvas::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());
@@ -204,19 +227,35 @@ void ComponentCanvas::Load(Data & data)
 	SetScale(data.GetFloat("scale"));
 }
 
-CanvasDrawElement::CanvasDrawElement()
+CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas, Component* _cmp)
 {
+	canvas = _canvas;
+	cmp = _cmp;
+
 	plane = App->resources->GetMesh("PrimitivePlane");
 	texture_id = 0;
 	transform = float4x4::identity;
 	size = float2::zero;
-	pos = float2::zero;
+	pos = float3::zero;
 	colour = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertical_flip = false;
 	horizontal_flip = false;
+
+	plane->box.SetNegativeInfinity();
+	plane->box.Enclose((vec*)plane->vertices, plane->num_vertices);
+}
+
+void CanvasDrawElement::SetLayer(int _layer)
+{
+	layer = _layer;
 }
 
 void CanvasDrawElement::SetPosition(const float2& _pos)
+{
+	pos = float3(_pos.x, _pos.y, 0);
+}
+
+void CanvasDrawElement::SetPosition(const float3 & _pos)
 {
 	pos = _pos;
 }
@@ -252,6 +291,16 @@ void CanvasDrawElement::SetFlip(const bool& _vertical_flip, const bool& _horizon
 	horizontal_flip = _horizontal_flip;
 }
 
+int CanvasDrawElement::GetLayer()
+{
+	return layer;
+}
+
+Component * CanvasDrawElement::GetComponent()
+{
+	return cmp;
+}
+
 float4x4 CanvasDrawElement::GetTransform()
 {
 	float4x4 ret = float4x4::identity;
@@ -272,7 +321,7 @@ float4x4 CanvasDrawElement::GetTransform()
 	if (vertical_flip)
 		flip_multiplicator.y = -1;
 
-	size_trans = ret.FromTRS(float3(pos.x, pos.y, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
+	size_trans = ret.FromTRS(float3(pos.x, pos.y, pos.z), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
 
 	ret = transform * size_trans;
 
@@ -293,7 +342,7 @@ float4x4 CanvasDrawElement::GetOrtoTransform() const
 	if (vertical_flip)
 		flip_multiplicator.y = -1;
 
-	size_trans = ret.FromTRS(float3(pos.x, pos.y, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
+	size_trans = ret.FromTRS(float3(pos.x, pos.y, pos.z), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0), float3(size.x * flip_multiplicator.x, -1, -size.y * flip_multiplicator.y));
 
 	ret = orto_transform * size_trans;
 
@@ -315,8 +364,62 @@ Mesh * CanvasDrawElement::GetPlane() const
 	return plane;
 }
 
+bool CanvasDrawElement::CheckRay(LineSegment ray, CanvasRenderMode mode)
+{
+	bool ret = false;
+
+	AABB box;
+
+	if(mode == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+	{
+		float4x4 trans = GetTransform();
+		trans[0][3] += 3;
+		trans[1][3] -= 3;
+
+		box = GetBBox();
+		ray.Transform(trans.Inverted());
+	}
+	else 
+	{
+		float4x4 canvas_matrix = canvas->GetCompRectTransform()->GetMatrix();
+
+		float3 pos;
+		Quat rot;
+		float3 scal;
+		canvas_matrix.Decompose(pos, rot, scal);
+
+		scal.x *= canvas->GetSize().x;
+		scal.y *= canvas->GetSize().y;
+
+		scal.x /= 2;
+		scal.y /= 2;
+
+		float4x4 trans = GetTransform();
+
+		float4x4 ortho_trans = GetOrtoTransform();
+		ortho_trans[0][3] = -ortho_trans[0][3] + scal.x - 7;
+		ortho_trans[1][3] += scal.y - 7;
+		
+		box = GetOrthoBBox();
+		ray.Transform(ortho_trans.Inverted());
+	}
+
+	if (ray.Intersects(box))
+	{
+		ret = true;
+	}
+
+	return ret;
+}
+
 AABB CanvasDrawElement::GetBBox()
 {
 	plane->box.Transform(GetTransform());
+	return plane->box;
+}
+
+AABB CanvasDrawElement::GetOrthoBBox()
+{
+	plane->box.Transform(GetOrtoTransform());
 	return plane->box;
 }

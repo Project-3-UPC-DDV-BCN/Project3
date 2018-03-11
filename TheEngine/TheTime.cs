@@ -22,10 +22,10 @@ namespace TheEngine
             {
                 return GetDeltaTime();
             }
-            set
-            {
-                SetDeltaTime(value);
-            }
+            //set
+            //{
+            //    SetDeltaTime(value);
+            //}
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -37,7 +37,7 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetDeltaTime();
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float SetDeltaTime(float delta_time);
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //private static extern float SetDeltaTime(float delta_time);
     }
 }

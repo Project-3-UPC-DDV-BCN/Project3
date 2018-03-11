@@ -8,6 +8,7 @@
 
 #include <string>
 #include <list>
+#include <vector>
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 #define DEFAULT_VOLUME 50
@@ -18,6 +19,7 @@ class GameObject;
 class SoundBank;
 class ComponentDistorsionZone;
 class JSONTool;
+class SoundBankResource;
 
 class ModuleAudio : public Module
 {
@@ -32,8 +34,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	SoundBank* LoadSoundBank(std::string path);
-	unsigned int GetBankInfo(std::string path, SoundBank* &bank);
+	void PushSoundBank(SoundBankResource* sbk);
+	std::vector<SoundBankResource*> GetSoundBanks() const;
 
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
@@ -42,8 +44,8 @@ public:
 
 	Wwise::SoundObject * GetSoundObject(int obj_id);
 
-	void SetRTPvalue(const char* rtpc, float value);
-	void SetRTPvalue(const char * rtpc, float value, AkGameObjectID go_id);
+	void SetRTPCvalue(const char* rtpc, float value);
+	void SetRTPCvalue(const char * rtpc, float value, AkGameObjectID go_id);
 	void StopAllEvents();
 	void ImGuiDraw();
 
@@ -77,7 +79,7 @@ private:
 
 	Wwise::SoundObject* camera_listener = nullptr;
 	std::list <Wwise::SoundObject*> sound_obj;
-	std::list<SoundBank*> soundbanks;
+	std::vector<SoundBankResource*> soundbanks;
 	std::vector<ComponentDistorsionZone*> environments;
 
 	ComponentListener* default_listener = nullptr;

@@ -77,12 +77,12 @@ std::string ModuleMeshImporter::ImportMesh(std::string path)
 
 		ret = library_path;
 
-		CONSOLE_DEBUG("Object succesfully loaded from, %s", path);
+		CONSOLE_DEBUG("Object succesfully loaded from, %s", path.c_str());
 		aiReleaseImport(scene);
 	}
 	else
 	{
-		CONSOLE_ERROR("Cannot load object from %s", path);
+		CONSOLE_ERROR("Cannot load object from %s", path.c_str());
 	}
 
 	return ret;

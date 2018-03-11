@@ -13,7 +13,7 @@ public:
 	{
 		TextureResource, MeshResource, SceneResource, AnimationResource, PrefabResource, ScriptResource, 
 		AudioResource, ParticleFXResource, FontResource, RenderTextureResource, GameObjectResource, MaterialResource,
-		PhysicsMatResource, BlastMeshResource, ShaderResource, ShaderProgramResource, GOAPGoalResource, GOAPActionResource, FBX_Prefab, Unknown
+		PhysicsMatResource, BlastMeshResource, ShaderResource, ShaderProgramResource, SoundBankResource, GOAPGoalResource, GOAPActionResource, Unknown
 	};
 
 	Resource();

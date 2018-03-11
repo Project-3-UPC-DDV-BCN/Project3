@@ -6,6 +6,7 @@
 
 class Script;
 class CSScript;
+class ComponentRectTransform;
 
 class ModuleScriptImporter :
 	public Module
@@ -51,6 +52,8 @@ private:
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
 	static MonoObject* FindGameObject(MonoString* gameobject_name);
+	static MonoArray* GetSceneGameObjects(MonoObject* object);
+	static MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
 
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
@@ -77,14 +80,26 @@ private:
 	static MonoObject* GetRectSize(MonoObject * object);
 	static void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	static MonoObject* GetRectAnchor(MonoObject * object);
+	static mono_bool GetOnClick(MonoObject * object);
+	static mono_bool GetOnClickDown(MonoObject * object);
+	static mono_bool GetOnClickUp(MonoObject * object);
+	static mono_bool GetOnMouseEnter(MonoObject * object);
+	static mono_bool GetOnMouseOver(MonoObject * object);
+	static mono_bool GetOnMouseOut(MonoObject * object);
 
-	// TEXT
+	//TEXT
 	static void SetText(MonoObject * object, MonoString* text);
 	static MonoString* GetText(MonoObject * object);
 
 	//PROGRESSBAR
 	static void SetPercentageProgress(MonoObject * object, float progress);
 	static float GetPercentageProgress(MonoObject * object);
+
+	//RADAR
+	static void AddEntity(MonoObject * object, MonoObject * game_object);
+	static void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	static void RemoveAllEntities(MonoObject * object);
+	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);
@@ -126,11 +141,13 @@ private:
 	static void SetVolume(int volume);
 	static int GetPitch();
 	static void SetPitch(int pitch);
-	static void SetRTPvalue(MonoString* name, float value);
+	static void SetRTPCvalue(MonoString* name, float value);
 
 	static bool Play(MonoObject * object, MonoString * name);
 	static bool Stop(MonoObject * object, MonoString * name);
 	static bool Send(MonoObject * object, MonoString * name);
+	static bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
+	static void SetState(MonoObject* object, MonoString* group, MonoString* state);
 
 	//PARTICLE EMMITER
 	static void PlayEmmiter(MonoObject * object);
@@ -138,6 +155,8 @@ private:
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	static void SetRBPosition(MonoObject * object, float x, float y, float z);
+	static void SetRBRotation(MonoObject * object, float x, float y, float z);
 
 	//GOAP AGENT
 	static mono_bool GetBlackboardVariableB(MonoString* name);
@@ -156,6 +175,27 @@ private:
 	static int RandomInt(MonoObject* object);
 	static float RandomFloat(MonoObject* object);
 	static float RandomRange(MonoObject* object, float min, float max);
+
+	//APPLICATION
+	static void LoadScene(MonoString* scene_name);
+
+	//SCRIPT
+	static void SetBoolField(MonoObject* object, MonoString* field_name, bool value);
+	static bool GetBoolField(MonoObject* object, MonoString* field_name);
+	static void SetIntField(MonoObject* object, MonoString* field_name, int value);
+	static int GetIntField(MonoObject* object, MonoString* field_name);
+	static void SetFloatField(MonoObject* object, MonoString* field_name, float value);
+	static float GetFloatField(MonoObject* object, MonoString* field_name);
+	static void SetDoubleField(MonoObject* object, MonoString* field_name, double value);
+	static double GetDoubleField(MonoObject* object, MonoString* field_name);
+	static void SetStringField(MonoObject* object, MonoString* field_name, MonoString* value);
+	static MonoString* GetStringField(MonoObject* object, MonoString* field_name);
+	static void SetGameObjectField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	static MonoObject* GetGameObjectField(MonoObject* object, MonoString* field_name);
+	static void SetVector3Field(MonoObject* object, MonoString* field_name, MonoObject* value);
+	static MonoObject* GetVector3Field(MonoObject* object, MonoString* field_name);
+	static void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	static MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 
 private:
 	std::string mono_path;

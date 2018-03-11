@@ -7,6 +7,7 @@
 #include "CSScript.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "ModuleResources.h"
 
 CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -273,6 +274,8 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
+	mono_add_internal_call("TheEngine.TheGameObject::GetSceneGameObjects", (const void*)GetSceneGameObjects);
+	mono_add_internal_call("TheEngine.TheGameObject::GetObjectsInFrustum", (const void*)GetObjectsInFrustum);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -295,14 +298,26 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectSize", (const void*)GetRectSize);
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectAnchor", (const void*)SetRectAnchor);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetRectAnchor", (const void*)GetRectAnchor);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClick", (const void*)GetOnClick);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClickDown", (const void*)GetOnClickDown);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnClickUp", (const void*)GetOnClickUp);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOver", (const void*)GetOnMouseOver);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseEnter", (const void*)GetOnMouseEnter);
+	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOut", (const void*)GetOnMouseOut);
 
 	//TEXT
 	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
 	mono_add_internal_call("TheEngine.TheText::GettText", (const void*)GetText);
 
-	// PROGRESSBAR
+	//PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);
 	mono_add_internal_call("TheEngine.TheProgressBar::GetPercentageProgress", (const void*)GetPercentageProgress);
+
+	//RADAR
+	mono_add_internal_call("TheEngine.TheRadar::AddEntity", (const void*)AddEntity);
+	mono_add_internal_call("TheEngine.TheRadar::RemoveEntity", (const void*)RemoveEntity);
+	mono_add_internal_call("TheEngine.TheRadar::RemoveAllEntities", (const void*)RemoveAllEntities);
+	mono_add_internal_call("TheEngine.TheRadar::SetMarkerToEntity", (const void*)SetMarkerToEntity);
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
@@ -344,11 +359,14 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudio::SetVolume", (const void*)SetVolume);
 	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
-	mono_add_internal_call("TheEngine.TheAudio::SetRTPvalue", (const void*)SetRTPvalue);
-	///mono_add_internal_call("TheEngine.TheAudio::SetMyRTPvalue", (const void*)SetMyRTPvalue);
+
+	mono_add_internal_call("TheEngine.TheAudio::SetRTPCvalue", (const void*)SetRTPCvalue);
+
 	mono_add_internal_call("TheEngine.TheAudioSource::Play", (const void*)Play);
 	mono_add_internal_call("TheEngine.TheAudioSource::Stop", (const void*)Stop);
 	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
+	mono_add_internal_call("TheEngine.TheAudioSource::SetMyRTPCvalue", (const void*)SetMyRTPCvalue);
+	mono_add_internal_call("TheEngine.TheAudioSource::SetState", (const void*)SetState);
 
 	//EMITER
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
@@ -356,6 +374,8 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//RIGIDBODY
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetPosition", (const void*)SetRBPosition);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetRotation", (const void*)SetRBRotation);
 
 	//GOAP
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableB", (const void*)GetBlackboardVariableB);
@@ -374,6 +394,24 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRandom::RandomInt", (const void*)RandomInt);
 	mono_add_internal_call("TheEngine.TheRandom::RandomFloat", (const void*)RandomFloat);
 	mono_add_internal_call("TheEngine.TheRandom::RandomRange", (const void*)RandomRange);
+
+	//SCRIPT
+	mono_add_internal_call("TheEngine.TheScript::SetBoolField", (const void*)SetBoolField);
+	mono_add_internal_call("TheEngine.TheScript::GetBoolField", (const void*)GetBoolField);
+	mono_add_internal_call("TheEngine.TheScript::SetIntField", (const void*)SetIntField);
+	mono_add_internal_call("TheEngine.TheScript::GetIntField", (const void*)GetIntField);
+	mono_add_internal_call("TheEngine.TheScript::SetFloatField", (const void*)SetFloatField);
+	mono_add_internal_call("TheEngine.TheScript::GetFloatField", (const void*)GetFloatField);
+	mono_add_internal_call("TheEngine.TheScript::SetDoubleField", (const void*)SetDoubleField);
+	mono_add_internal_call("TheEngine.TheScript::GetDoubleField", (const void*)GetDoubleField);
+	mono_add_internal_call("TheEngine.TheScript::SetStringField", (const void*)SetStringField);
+	mono_add_internal_call("TheEngine.TheScript::GetStringField", (const void*)GetStringField);
+	mono_add_internal_call("TheEngine.TheScript::SetGameObjectField", (const void*)SetGameObjectField);
+	mono_add_internal_call("TheEngine.TheScript::GetGameObjectField", (const void*)GetGameObjectField);
+	mono_add_internal_call("TheEngine.TheScript::SetVector3Field", (const void*)SetVector3Field);
+	mono_add_internal_call("TheEngine.TheScript::GetVector3Field", (const void*)GetVector3Field);
+	mono_add_internal_call("TheEngine.TheScript::SetQuaternionField", (const void*)SetQuaternionField);
+	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -466,6 +504,16 @@ MonoObject * ModuleScriptImporter::FindGameObject(MonoString * gameobject_name)
 	return current_script->FindGameObject(gameobject_name);
 }
 
+MonoArray * ModuleScriptImporter::GetSceneGameObjects(MonoObject * object)
+{
+	return current_script->GetSceneGameObjects(object);
+}
+
+MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist )
+{
+	return current_script->GetObjectsInFrustum(pos, front, up, nearPlaneDist, farPlaneDist);
+}
+
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
 {
 	return current_script->AddComponent(object, type);
@@ -551,6 +599,36 @@ MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 	return current_script->GetRectAnchor(object);
 }
 
+mono_bool ModuleScriptImporter::GetOnClick(MonoObject * object)
+{
+	return current_script->GetOnClick(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnClickDown(MonoObject * object)
+{
+	return current_script->GetOnClickDown(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnClickUp(MonoObject * object)
+{
+	return current_script->GetOnClickUp(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseEnter(MonoObject * object)
+{
+	return current_script->GetOnMouseEnter(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseOver(MonoObject * object)
+{
+	return current_script->GetOnMouseOver(object);
+}
+
+mono_bool ModuleScriptImporter::GetOnMouseOut(MonoObject * object)
+{
+	return current_script->GetOnMouseOut(object);
+}
+
 void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
 {
 	return current_script->SetText(object, text);
@@ -569,6 +647,26 @@ void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float prog
 float ModuleScriptImporter::GetPercentageProgress(MonoObject * object)
 {
 	return current_script->GetPercentageProgress(object);
+}
+
+void ModuleScriptImporter::AddEntity(MonoObject * object, MonoObject * game_object)
+{
+	current_script->AddEntity(object, game_object);
+}
+
+void ModuleScriptImporter::RemoveEntity(MonoObject * object, MonoObject * game_object)
+{
+	current_script->RemoveEntity(object, game_object);
+}
+
+void ModuleScriptImporter::RemoveAllEntities(MonoObject * object)
+{
+	current_script->RemoveAllEntities(object);
+}
+
+void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
+{
+	current_script->SetMarkerToEntity(object, game_object, marker_name);
 }
 
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
@@ -787,9 +885,9 @@ void ModuleScriptImporter::SetPitch(int pitch)
 	current_script->SetPitch(pitch);
 }
 
-void ModuleScriptImporter::SetRTPvalue(MonoString* name, float value)
+void ModuleScriptImporter::SetRTPCvalue(MonoString* name, float value)
 {
-	current_script->SetRTPvalue(name, value);
+	current_script->SetRTPCvalue(name, value);
 }
 
 bool ModuleScriptImporter::Play(MonoObject * object, MonoString * name)
@@ -807,6 +905,16 @@ bool ModuleScriptImporter::Send(MonoObject * object, MonoString * name)
 	return current_script->Send(object, name);
 }
 
+bool ModuleScriptImporter::SetMyRTPCvalue(MonoObject * object, MonoString* name, float value)
+{
+	return current_script->SetMyRTPCvalue(object, name, value);
+}
+
+void ModuleScriptImporter::SetState(MonoObject* object, MonoString* group, MonoString* state)
+{
+	current_script->SetState(object, group, state);
+}
+
 void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
 {
 	current_script->PlayEmmiter(object); 
@@ -819,6 +927,16 @@ void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 {
 	current_script->SetLinearVelocity(object, x, y, z);
+}
+
+void ModuleScriptImporter::SetRBPosition(MonoObject * object, float x, float y, float z)
+{
+	current_script->SetRBPosition(object, x, y, z);
+}
+
+void ModuleScriptImporter::SetRBRotation(MonoObject * object, float x, float y, float z)
+{
+	current_script->SetRBRotation(object, x, y, z);
 }
 
 mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoString * name)
@@ -889,4 +1007,89 @@ float ModuleScriptImporter::RandomFloat(MonoObject * object)
 float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
 {
 	return current_script->RandomRange(object, min, max);
+}
+
+void ModuleScriptImporter::LoadScene(MonoString * scene_name)
+{
+	current_script->LoadScene(scene_name);
+}
+
+void ModuleScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
+{
+	current_script->SetBoolField(object, field_name, value);
+}
+
+bool ModuleScriptImporter::GetBoolField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetBoolField(object, field_name);
+}
+
+void ModuleScriptImporter::SetIntField(MonoObject * object, MonoString * field_name, int value)
+{
+	current_script->SetIntField(object, field_name, value);
+}
+
+int ModuleScriptImporter::GetIntField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetIntField(object, field_name);
+}
+
+void ModuleScriptImporter::SetFloatField(MonoObject * object, MonoString * field_name, float value)
+{
+	current_script->SetFloatField(object, field_name, value);
+}
+
+float ModuleScriptImporter::GetFloatField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetFloatField(object, field_name);
+}
+
+void ModuleScriptImporter::SetDoubleField(MonoObject * object, MonoString * field_name, double value)
+{
+	current_script->SetDoubleField(object, field_name, value);
+}
+
+double ModuleScriptImporter::GetDoubleField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetDoubleField(object, field_name);
+}
+
+void ModuleScriptImporter::SetStringField(MonoObject * object, MonoString * field_name, MonoString * value)
+{
+	current_script->SetStringField(object, field_name, value);
+}
+
+MonoString * ModuleScriptImporter::GetStringField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetStringField(object, field_name);
+}
+
+void ModuleScriptImporter::SetGameObjectField(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	current_script->SetGameObjectField(object, field_name, value);
+}
+
+MonoObject * ModuleScriptImporter::GetGameObjectField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetGameObjectField(object, field_name);
+}
+
+void ModuleScriptImporter::SetVector3Field(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	current_script->SetVector3Field(object, field_name, value);
+}
+
+MonoObject * ModuleScriptImporter::GetVector3Field(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetVector3Field(object, field_name);
+}
+
+void ModuleScriptImporter::SetQuaternionField(MonoObject * object, MonoString * field_name, MonoObject * value)
+{
+	current_script->SetQuaternionField(object, field_name, value);
+}
+
+MonoObject * ModuleScriptImporter::GetQuaternionField(MonoObject * object, MonoString * field_name)
+{
+	return current_script->GetQuaternionField(object, field_name);
 }

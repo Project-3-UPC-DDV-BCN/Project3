@@ -16,10 +16,9 @@ namespace Compiler
             parameters.GenerateExecutable = false;
             parameters.OutputAssembly = name;
             parameters.IncludeDebugInformation = true;
-            //parameters.GenerateInMemory = true;
-            //parameters.ReferencedAssemblies.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\System.dll");
+            parameters.GenerateInMemory = true;
+            parameters.ReferencedAssemblies.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\System.dll");
             parameters.ReferencedAssemblies.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\TheEngine.dll");
-
 
             CompilerResults results = cSharpCodeProvider.CompileAssemblyFromFile(parameters, path);
 
@@ -37,7 +36,7 @@ namespace Compiler
                     {
                         errors++;
                     }
-                    result += error_type + CompErr.FileName + " at (" + CompErr.Line + "," + CompErr.Column + "), Error Number: " + CompErr.ErrorNumber + ", " + CompErr.ErrorText + "|";
+                    result += error_type + CompErr.FileName + " at (" + CompErr.Line + "," + CompErr.Column + ")," + (CompErr.IsWarning ? "Warning: " : " Error: ") + CompErr.ErrorNumber + ", " + CompErr.ErrorText + "|";
                 }
                 if(errors == 0)
                 {

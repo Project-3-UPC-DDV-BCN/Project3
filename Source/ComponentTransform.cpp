@@ -137,26 +137,28 @@ void ComponentTransform::UpdateGlobalMatrix()
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
 
-		if (!App->IsPlaying())
+		ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+		if (rb)
 		{
-			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-			if (rb)
+			rb->SetTransform(transform_matrix.Transposed().ptr());
+			//rb->SetPosition(global_pos);
+			//rb->SetRotation(global_rot);
+		}
+		else
+		{
+			ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
+			if (blast)
 			{
-				//rb->SetTransform(transform_matrix.Transposed().ptr());
-				rb->SetPosition(global_pos);
-				rb->SetRotation(global_rot);
-			}
-			else
-			{
-				ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
-				if (blast)
-				{
-					blast->SetTransform(transform_matrix.Transposed().ptr());
-					//blast->SetPosition(global_pos);
-					//blast->SetRotation(global_rot);
-				}
+				blast->SetTransform(transform_matrix.Transposed().ptr());
+				//blast->SetPosition(global_pos);
+				//blast->SetRotation(global_rot);
 			}
 		}
+
+		/*if (!App->IsPlaying())
+		{
+			
+		}*/
 	}
 		
 //POSSIBLEEE
@@ -172,19 +174,13 @@ void ComponentTransform::UpdateGlobalMatrix()
 
 void ComponentTransform::UpdateLocals()
 {
-	float4x4 local_transform = float4x4::identity;
-
 	if(!this->GetGameObject()->IsRoot())
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
-		local_transform = transform_matrix * parent_transform->transform_matrix.Inverted();
-	}
-	else
-	{
-		local_transform = transform_matrix;
+		transform_matrix = transform_matrix * parent_transform->transform_matrix;
 	}
 
-	local_transform.Decompose(position, rotation, scale);
+	//local_transform.Decompose(position, rotation, scale);
 
 	float3 _pos, _scale;
 	Quat _rot;

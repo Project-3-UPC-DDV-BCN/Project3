@@ -13,6 +13,7 @@ class Script;
 class Font;
 class PhysicsMaterial;
 class BlastModel;
+class SoundBankResource;
 class GOAPGoal;
 class GOAPAction;
 
@@ -29,6 +30,7 @@ namespace ImGui
 	bool InputResourceBlastModel(const char* label, BlastModel** mesh);
 	bool InputResourceShader(const char* label, Shader** shader, Shader::ShaderType type);
 	bool InputResourceFont(const char* label, Font** font);
+	bool InputResourceAudio(const char* label, SoundBankResource** soundbank);
 	bool InputResourceGOAPGoal(const char* label, GOAPGoal** goal);
 	bool InputResourceGOAPAction(const char* label, GOAPAction** action);
 }

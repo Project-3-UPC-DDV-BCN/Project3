@@ -34,7 +34,7 @@ namespace TheEngine
         {
             get
             {
-                return new TheVector3(); ;
+                return new TheVector3();
             }
         }
 
@@ -171,7 +171,7 @@ namespace TheEngine
 
         public static float AngleBetween(TheVector3 a, TheVector3 b)
         {
-            return TheMath.Acos(DotProduct(a, b) / DotProduct(a.Normalized, b.Normalized)) * TheMath.RadToDeg;
+            return TheMath.Acos(DotProduct(a, b) / (Magnitude(a) * Magnitude(b))) * TheMath.RadToDeg;
         }
 
         public static float Distance(TheVector3 a, TheVector3 b)

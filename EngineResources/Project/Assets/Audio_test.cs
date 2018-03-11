@@ -11,17 +11,17 @@ public class Audio_test {
 
 	void Start () {
 		audio_source = audio.GetComponent<TheAudioSource>();
-		audio_source.Play("Play_Engine");
+		audio_source.Play("Play_Music");
 	}
 	
 	void Update () {
 		if (TheInput.IsKeyDown("1"))
 		{
-			audio_source.Play(audio_dub1);
+			audio_source.SetState("Level", "Calm");
 		}
 		if (TheInput.IsKeyDown("2"))
 		{
-			audio_source.Play(audio_dub2);
+			audio_source.SetState("Level", "Combat");
 		}
 		if (TheInput.IsKeyDown("3"))
 		{

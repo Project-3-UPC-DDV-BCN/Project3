@@ -221,6 +221,8 @@ std::string ModuleFileSystem::ChangeFileExtension(std::string file_path, std::st
 
 std::string ModuleFileSystem::GetFullPath(std::string file_name)
 {
+	if (file_name[0] == '.') file_name.erase(file_name.begin());
+	if (file_name[0] == '\\') file_name.erase(file_name.begin());
 	fs::path path(file_name);
 	fs::path full_path = fs::system_complete(path);
 	return full_path.string();

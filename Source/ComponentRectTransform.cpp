@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "DebugDraw.h"
+#include "ComponentScript.h"
 
 ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 {
@@ -15,6 +16,8 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 
 	c_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
+	layer = 0;
+	interactable = true;
 	pos = float2::zero;
 	z_pos = 0;
 	size = float2::zero;
@@ -24,6 +27,14 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	snap_down = true;
 	snap_left = true;
 	snap_right = true;
+	on_click = false;
+	on_click_down = false;
+	on_click_up = false;
+	on_mouse_enter = false;
+	on_mouse_over = false;
+	on_mouse_out = false;
+	fixed_aspect_ratio = false;
+	aspect_ratio = 1.0f;
 
 	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
@@ -38,6 +49,7 @@ bool ComponentRectTransform::Update()
 	bool ret = true;
 
 	bool is_canvas;
+
 	ComponentCanvas* cv = GetCanvas(is_canvas);
 	if (cv != nullptr && !is_canvas && scale != cv->GetScale())
 	{
@@ -45,17 +57,20 @@ bool ComponentRectTransform::Update()
 		UpdateTransformAndChilds();
 	}
 
-	float4x4 global_anchor_trans = GetAnchorTransform(); global_anchor_trans.RemoveScale();
-	float4x4 global_origin_trans = GetOriginMatrix(); global_origin_trans.RemoveScale();
+	if (GetGameObject()->IsSelected() || is_canvas)
+	{
+		float4x4 global_anchor_trans = GetAnchorTransform(); global_anchor_trans.RemoveScale();
+		float4x4 global_origin_trans = GetOriginMatrix(); global_origin_trans.RemoveScale();
 
-	if(!is_canvas)
-		App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(0.0f, 0.5f, 1.0f, 1.0f));
-	else
-		App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(1.0f, 1.0f, 1.0f, 1.0f));
+		if (!is_canvas)
+			App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(0.0f, 0.5f, 1.0f, 1.0f));
+		else
+			App->renderer3D->GetDebugDraw()->Quad(GetMatrix(), GetScaledSize(), float4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	App->renderer3D->GetDebugDraw()->Circle(global_anchor_trans, 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
-	App->renderer3D->GetDebugDraw()->Circle(global_origin_trans, 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
-	App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
+		App->renderer3D->GetDebugDraw()->Circle(global_anchor_trans, 8, float4(0.0f, 0.8f, 0.0f, 1.0f));
+		App->renderer3D->GetDebugDraw()->Circle(global_origin_trans, 1, float4(1, 0.0f, 0.0f, 1.0f), 5);
+		App->renderer3D->GetDebugDraw()->Line(GetAnchorGlobalPos(), GetGlobalPos(), float4(0.0f, 0.8f, 0.0f, 1.0f));
+	}
 
 	return ret;
 }
@@ -198,6 +213,13 @@ void ComponentRectTransform::SetPos(const float2 & _pos)
 	UpdateTransform();
 }
 
+void ComponentRectTransform::AddPos(const float2 & add)
+{
+	pos += add;
+
+	UpdateTransform();
+}
+
 float2 ComponentRectTransform::GetPos() const
 {
 	return pos;
@@ -224,6 +246,8 @@ float2 ComponentRectTransform::GetScaledPos()
 	{
 		ret.y -= size_added.y / 2;
 	}
+
+	ret *= scale;
 
 	return ret;
 }
@@ -264,8 +288,20 @@ float3 ComponentRectTransform::GetLocalRotation() const
 	return c_transform->GetLocalRotation();
 }
 
-void ComponentRectTransform::SetSize(const float2 & _size)
+void ComponentRectTransform::SetSize(float2 _size, bool use_fixed_ratio)
 {
+	if (fixed_aspect_ratio && use_fixed_ratio)
+	{
+		if (_size.x != size.x)
+		{
+			_size.y = _size.x / aspect_ratio;
+		}
+		else if (_size.y != size.y || _size.x == size.x)
+		{
+			_size.x = _size.y * aspect_ratio;
+		}
+	}
+
 	float2 scaled_pos = GetScaledPos();
 
 	size = _size;
@@ -332,6 +368,26 @@ float2 ComponentRectTransform::GetScaledSize() const
 	ret.y *= GetScaleAxis().y;
 
 	return ret;
+}
+
+void ComponentRectTransform::SetFixedAspectRatio(bool set)
+{
+	fixed_aspect_ratio = set;
+}
+
+bool ComponentRectTransform::GetFixedAspectRatio() const
+{
+	return fixed_aspect_ratio;
+}
+
+void ComponentRectTransform::SetAspectRatio(float _aspect_ratio)
+{
+	aspect_ratio = _aspect_ratio;
+}
+
+float ComponentRectTransform::GetAspectRatio() const
+{
+	return aspect_ratio;
 }
 
 void ComponentRectTransform::SetAnchor(const float2 & _anchor)
@@ -467,7 +523,7 @@ void ComponentRectTransform::SetSnapUp(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -481,7 +537,7 @@ void ComponentRectTransform::SetSnapUp(bool set)
 		snap_up = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -502,7 +558,7 @@ void ComponentRectTransform::SetSnapDown(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -516,7 +572,7 @@ void ComponentRectTransform::SetSnapDown(bool set)
 		snap_down = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -537,7 +593,7 @@ void ComponentRectTransform::SetSnapLeft(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -551,7 +607,7 @@ void ComponentRectTransform::SetSnapLeft(bool set)
 		snap_left = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -572,7 +628,7 @@ void ComponentRectTransform::SetSnapRight(bool set)
 
 		float2 new_scaled_size = GetScaledSize();
 		float2 new_size = last_scaled_size - new_scaled_size + size;
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -586,7 +642,7 @@ void ComponentRectTransform::SetSnapRight(bool set)
 		snap_right = set;
 
 		float2 new_size = float2(last_scaled_size.x / GetScaleAxis().x, last_scaled_size.y / GetScaleAxis().y);
-		SetSize(new_size);
+		SetSize(new_size, false);
 
 		float2 new_scaled_pos = GetScaledPos();
 		float2 new_pos = last_scaled_pos - new_scaled_pos + pos;
@@ -621,12 +677,108 @@ float3 ComponentRectTransform::GetPreferedPos()
 	float3 ret = float3::zero;
 
 	float3 anchor_pos = GetAnchorLocalPos();
+	float2 scaled_pos = GetScaledPos();
 
-	ret.x = anchor_pos.x + GetScaledPos().x;
-	ret.y = anchor_pos.y + GetScaledPos().y;
+	ret.x = anchor_pos.x + scaled_pos.x;
+	ret.y = anchor_pos.y + scaled_pos.y;
 	ret.z = z_pos;
 
 	return ret;
+}
+
+void ComponentRectTransform::SetLayer(int layer)
+{
+}
+
+int ComponentRectTransform::GetLayer()
+{
+	int ret = 0;
+
+	ComponentCanvas* cv = GetCanvas();
+
+	if (cv != nullptr)
+	{
+		if(cv->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
+		{
+			ret = layer;
+		}
+		else
+		{
+			ret = 0;
+		}
+	}
+
+	return ret;
+}
+
+void ComponentRectTransform::SetInteractable(bool set)
+{
+	interactable = set;
+}
+
+bool ComponentRectTransform::GetInteractable() const
+{
+	return interactable;
+}
+
+void ComponentRectTransform::SetOnClick(bool set)
+{
+	on_click = set;
+}
+
+void ComponentRectTransform::SetOnClickDown(bool set)
+{
+	on_click_down = set;
+}
+
+void ComponentRectTransform::SetOnClickUp(bool set)
+{
+	on_click_up = set;
+}
+
+void ComponentRectTransform::SetOnMouseEnter(bool set)
+{
+	on_mouse_enter = set;
+}
+
+void ComponentRectTransform::SetOnMouseOver(bool set)
+{
+	on_mouse_over = set;
+}
+
+void ComponentRectTransform::SetOnMouseOut(bool set)
+{
+	on_mouse_out = set;
+}
+
+bool ComponentRectTransform::GetOnClick() const
+{
+	return on_click;
+}
+
+bool ComponentRectTransform::GetOnClickDown() const
+{
+	return on_click_down;
+}
+
+bool ComponentRectTransform::GetOnClickUp() const
+{
+	return on_click_up;
+}
+
+bool ComponentRectTransform::GetOnMouseEnter() const
+{
+	return on_mouse_enter;
+}
+
+bool ComponentRectTransform::GetOnMouseOver() const
+{
+	return on_mouse_over;
+}
+
+bool ComponentRectTransform::GetOnMouseOut() const
+{
+	return on_mouse_out;
 }
 
 void ComponentRectTransform::Save(Data & data) const
@@ -637,11 +789,12 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddVector2("pos", pos);
 	data.AddVector2("size", size);
 	data.AddVector2("anchor", anchor);
-	data.AddBool("snap_up", snap_up);
-	data.AddBool("snap_down", snap_down);
-	data.AddBool("snap_left", snap_left);
-	data.AddBool("snap_right", snap_right);
+	//data.AddBool("snap_up", snap_up);
+	//data.AddBool("snap_down", snap_down);
+	//data.AddBool("snap_left", snap_left);
+	//data.AddBool("snap_right", snap_right);
 	data.AddFloat("scale", 1.0f);
+	data.AddBool("interactable", interactable);
 }
 
 void ComponentRectTransform::Load(Data & data)
@@ -651,11 +804,12 @@ void ComponentRectTransform::Load(Data & data)
 	SetPos(data.GetVector2("pos"));
 	SetSize(data.GetVector2("size"));
 	SetAnchor(data.GetVector2("anchor"));
-	SetSnapUp(data.GetBool("snap_up"));
-	SetSnapDown(data.GetBool("snap_down"));
-	SetSnapLeft(data.GetBool("snap_left"));
-	SetSnapRight(data.GetBool("snap_right"));
+	//SetSnapUp(data.GetBool("snap_up"));
+	//SetSnapDown(data.GetBool("snap_down"));
+	//SetSnapLeft(data.GetBool("snap_left"));
+	//SetSnapRight(data.GetBool("snap_right"));
 	SetScale(data.GetFloat("scale"));
+	SetInteractable(data.GetBool("interactable"));
 }
 
 bool ComponentRectTransform::GetHasParent() const
