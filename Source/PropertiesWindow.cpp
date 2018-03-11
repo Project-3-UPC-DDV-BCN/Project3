@@ -41,6 +41,10 @@
 #include "ComponentLight.h"
 #include "ComponentProgressBar.h"
 #include "ModulePhysics.h"
+#include "ComponentButton.h"
+#include "ComponentRadar.h"
+#include "Texture.h"
+#include "SoundBankResource.h"
 #include "ComponentGOAPAgent.h"
 #include "GOAPAction.h"
 #include "GOAPGoal.h"
@@ -59,6 +63,8 @@ PropertiesWindow::PropertiesWindow()
 	colliders_count = 0;
 	distance_joints_count = 0;
 	lights_count = 0;
+	radar_marker_select = false;
+	marker_to_change = 0;
 }
 
 PropertiesWindow::~PropertiesWindow()
@@ -532,6 +538,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 	case Component::CompProgressBar:
 		DrawProgressBarPanel((ComponentProgressBar*)component);
 		break;
+	case Component::CompRadar:
+		DrawRadarPanel((ComponentRadar*)component);
+		break;
 	case Component::CompDistanceJoint:
 		DrawJointDistancePanel((ComponentJointDistance*)component);
 		break;
@@ -546,6 +555,9 @@ void PropertiesWindow::DrawComponent(Component * component)
 		break;
 	case Component::CompLight:
 		DrawLightPanel((ComponentLight*)component);
+		break;
+	case Component::CompButton:
+		DrawButtonPanel((ComponentButton*)component);
 		break;
 	case Component::CompGOAPAgent:
 		DrawGOAPAgent((ComponentGOAPAgent*)component);
@@ -601,6 +613,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				float2 position = rect_transform->GetPos();
 				float z_position = rect_transform->GetZPos();
 				float3 rotation = rect_transform->GetLocalRotation();
+				bool interactable = rect_transform->GetInteractable();
 				float2 anchor = rect_transform->GetAnchor();
 				float2 size = rect_transform->GetSize();
 				float scale = rect_transform->GetScale();
@@ -632,37 +645,50 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						rect_transform->SetSize(size);
 					}
 
+					if (rect_transform->GetFixedAspectRatio())
+					{
+						ImGui::SameLine();
+						ImGui::Text("(Fixed ratio)");
+					}
+
 					if (ImGui::DragFloat2("Anchor", (float*)&anchor, true, 0.01f, 0, 1))
 					{
 						rect_transform->SetAnchor(anchor);
 					}
 
-					if (ImGui::Checkbox("Snap Up", &snap_up))
+				/*	if (ImGui::Checkbox("Snap Up", &snap_up))
 					{
 						rect_transform->SetSnapUp(snap_up);
+					}*/
+
+					//ImGui::SameLine();
+					//if (ImGui::Checkbox("Snap Down", &snap_down))
+					//{
+					//	rect_transform->SetSnapDown(snap_down);
+					//}
+
+					//if (ImGui::Checkbox("Snap Left", &snap_left))
+					//{
+					//	rect_transform->SetSnapLeft(snap_left);
+					//}
+					//ImGui::SameLine();
+					//if (ImGui::Checkbox("Snap Right", &snap_right))
+					//{
+					//	rect_transform->SetSnapRight(snap_right);
+					//}
+
+					if (ImGui::Checkbox("Interactable", &interactable))
+					{
+						rect_transform->SetInteractable(interactable);
 					}
 
-					ImGui::SameLine();
-					if (ImGui::Checkbox("Snap Down", &snap_down))
-					{
-						rect_transform->SetSnapDown(snap_down);
-					}
-
-					if (ImGui::Checkbox("Snap Left", &snap_left))
-					{
-						rect_transform->SetSnapLeft(snap_left);
-					}
-					ImGui::SameLine();
-					if (ImGui::Checkbox("Snap Right", &snap_right))
-					{
-						rect_transform->SetSnapRight(snap_right);
-					}
+					ImGui::Text("Has canvas");
 				}
+				else
+					ImGui::Text("Size is given by canvas");
 			}
 			else
 				ImGui::Text("Values are given by screen space");
-
-			ImGui::Text("Has canvas");
 
 	/*		ImGui::Separator();
 			ImGui::Text("Debug");
@@ -701,7 +727,7 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 			canvas->SetRenderMode(CanvasRenderMode::RENDERMODE_WORLD_SPACE);
 
 			float2 size = canvas->GetSize();
-			if (ImGui::DragFloat2("Canvas Size", (float*)&size, true, 0.25f))
+			if (ImGui::DragFloat2("Canvas Size", (float*)&size, true, 0.25f, 0))
 			{
 				canvas->SetSize(size);
 			}
@@ -741,33 +767,94 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 {
 	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		Texture* tex = image->GetTexture();
+		const char* mode_names[] = { "Single", "Animation" };
+		int mode = image->GetMode();
 
-		if(ImGui::InputResourceTexture("Texture", &tex));
-			image->SetTexture(tex);
+		ImGui::Combo("Image mode", &mode, mode_names, 2);
 
-		if (image->GetTexture() != nullptr)
+		if (mode == 0)
 		{
-			image->SetTexture(tex);
+			image->SetMode(ImageMode::IM_SINGLE);
 
-			if(ImGui::Button("Set native size"))
+			Texture* tex = image->GetTexture();
+
+			if (ImGui::InputResourceTexture("Texture", &tex));
+				image->SetTexture(tex);
+
+			if (image->GetTexture() != nullptr)
 			{
-				image->SetNativeSize();
+				image->SetTexture(tex);
+
+				if (ImGui::Button("Set native size"))
+				{
+					image->SetNativeSize();
+				}
+			}
+
+			float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().z, image->GetColour().w };
+
+			ImGui::Text("Colour");
+			if (ImGui::ColorEdit4("", colour))
+			{
+				image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
 			}
 		}
+		else if (mode == 1)
+		{
+			image->SetMode(ImageMode::IM_ANIMATION);
+
+			float animation_speed = image->GetAnimSpeed();
+			int animation_images = image->GetNumAnimTextures();
+			bool preview_play = image->GetAnimationPreviewPlay();
+			bool loop = image->GetLoop();
+
+			std::string preview = "Preview: ";
+
+			if (preview_play)
+				preview += "ON";
+			else
+				preview += "OFF";
+
+			if (ImGui::Checkbox(preview.c_str(), &preview_play))
+			{
+				image->SetAnimationPreviewPlay(preview_play);
+			}
+
+			if (ImGui::Checkbox("Loop", &loop))
+			{
+				image->SetLoop(loop);
+			}
+
+			if (ImGui::DragFloat("Speed", &animation_speed, true, 0.01f, 0.0f))
+			{
+				image->SetAnimSpeed(animation_speed);
+			}
+
+			if (ImGui::DragInt("Size", &animation_images, true, 1, 0, 100))
+			{
+				image->SetNumAnimTextures(animation_images);
+			}
+
+			std::vector<Texture*> textures = image->GetAnimTextures();
+			
+			for (int i = 0; i < textures.size(); ++i)
+			{
+				Texture* curr_text = textures[i];
+
+				std::string name = "Texture" + std::to_string(i);
+				if (ImGui::InputResourceTexture(name.c_str(), &curr_text));
+				{
+					image->AddAnimTexture(curr_text, i);
+				}
+			}
+		}
+
+		ImGui::Separator();
 
 		bool flip = image->GetFlip();
 		if (ImGui::Checkbox("Flip", &flip))
 		{
 			image->SetFlip(flip);
-		}
-
-		float colour[4] = { image->GetColour().x, image->GetColour().y, image->GetColour().z, image->GetColour().w };
-
-		ImGui::Text("Colour");
-		if(ImGui::ColorEdit4("", colour))
-		{
-			image->SetColour(float4(colour[0], colour[1], colour[2], colour[3]));
 		}
 	}
 }
@@ -793,6 +880,9 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 			bool underline = text->GetStyleUnderline();
 			bool strikethrough = text->GetStyelStrikethrough();
 
+			int grow_dir = text->GetGrowDirection();
+			const char* grow_dir_names[] = { "Left", "Right", "Center" };
+
 			char buffer[255];
 			strcpy(buffer, text->GetText().c_str());
 			if (ImGui::InputTextMultiline("Show Text", buffer, 255, ImVec2(310, 100)))
@@ -800,7 +890,12 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 				text->SetText(buffer);
 			}
 
-			if (ImGui::DragInt("Font Size", &size, true))
+			if (ImGui::Combo("Grow Direction", &grow_dir, grow_dir_names, 3))
+			{
+				text->SetGrowDirection(static_cast<TextGrow>(grow_dir));
+			}
+
+			if (ImGui::DragInt("Font Size", &size, true, 1, 0, 1000))
 			{
 				text->SetFontSize(size);
 			}
@@ -840,7 +935,7 @@ void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 	if (ImGui::CollapsingHeader("Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		float progress = bar->GetProgressPercentage();
-		if (ImGui::DragFloat("Progress %", &progress))
+		if (ImGui::DragFloat("Progress %", &progress, true, 1, 0, 100))
 		{
 			bar->SetProgressPercentage(progress);
 		}
@@ -858,6 +953,239 @@ void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 		if (ImGui::ColorEdit4("Progress", progress_colour, ImGuiColorEditFlags_AlphaBar))
 		{
 			bar->SetProgressColour(float4(progress_colour[0], progress_colour[1], progress_colour[2], progress_colour[3]));
+		}
+	}
+}
+
+void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
+{
+	if (ImGui::CollapsingHeader("Radar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool transparent = radar->GetTransparent();
+		Texture* background_texture = radar->GetBackgroundTexture();
+		float max_distance = radar->GetMaxDistance();
+		float markers_size = radar->GetMarkersSize();
+		GameObject* center_go = radar->GetCenter();
+		Texture* center_texture = radar->GetCenterTexture();
+
+		if (ImGui::Checkbox("Transparent", &transparent))
+		{
+			radar->SetTransparent(transparent);
+		}
+
+		if (!transparent)
+		{
+			if (ImGui::InputResourceTexture("Background Texture", &background_texture))
+			{
+				radar->SetBackgroundTexture(background_texture);
+			}
+		}
+		if (ImGui::DragFloat("Max distance", &max_distance, true, 1, 0.0f))
+		{
+			radar->SetMaxDistance(max_distance);
+		}
+
+		if (ImGui::DragFloat("Markers size", &markers_size, true, 0.01f, 0.0f))
+		{
+			radar->SetMarkersSize(markers_size);
+		}
+
+		if (ImGui::InputResourceGameObject("Center Go", &center_go))
+		{
+			radar->SetCenter(center_go);
+		}
+
+		if (center_go != nullptr)
+		{
+			if (ImGui::InputResourceTexture("Center Texture", &center_texture))
+			{
+				radar->SetCenterTexture(center_texture);
+			}
+
+			if (ImGui::Button("Create Marker"))
+			{
+				std::string marker_name = "Marker_" + std::to_string(radar->markers.size());
+				radar->CreateMarker(marker_name.c_str(), nullptr);
+			}
+
+			if (radar->markers.size() > 0)
+			{
+				ImGui::SameLine();
+
+				if (ImGui::Button("Add Entity"))
+				{
+					std::string marker_name = "Entity_" + std::to_string(radar->entities.size());
+					radar->AddEntity(nullptr);
+				}
+			}
+
+			ImGui::Separator();
+
+			ImGui::Text("Markers");
+
+			int markers_count = 0;
+			for (std::vector<RadarMarker*>::iterator it = radar->markers.begin(); it != radar->markers.end(); ++it)
+			{
+				char name[100];
+				strcpy_s(name, 100, (*it)->marker_name.c_str());
+				Texture* marker_texture = (*it)->marker_texture;
+
+				if (ImGui::InputText("Name", name, 100))
+				{
+					(*it)->marker_name = name;
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("X"))
+				{
+					radar->DeleteMarker((*it));
+					break;
+				}
+
+				if (ImGui::InputResourceTexture("Texture", &marker_texture));
+					(*it)->marker_texture = marker_texture;
+			}
+
+			ImGui::Separator();
+
+			ImGui::Text("Entities");
+
+			for (int i = 0; i < radar->entities.size(); ++i)
+			{
+				GameObject* curr_go = radar->entities[i].go;
+
+				string id = std::to_string(i);
+
+				ImGui::PushID(id.c_str());
+				
+				if (ImGui::InputResourceGameObject("GameObject", &curr_go))
+				{
+					radar->entities[i].go = curr_go;
+				}
+
+				if (radar->entities[i].go != nullptr)
+					ImGui::Text(radar->entities[i].go->GetName().c_str());
+
+				if (radar->entities[i].marker != nullptr)
+				{
+					ImGui::SameLine();
+					ImGui::Text(radar->entities[i].marker->marker_name.c_str());
+				}
+
+				if (ImGui::Button("Select Marker"))
+				{
+					radar_marker_select = true;
+					marker_to_change = i;
+				}
+
+				ImGui::PopID();
+			}
+
+			ImGui::SetWindowSize(ImVec2(300, 600));
+			if (radar_marker_select)
+			{
+				if (ImGui::Begin("Marker Adder", &radar_marker_select))
+				{
+					for (std::vector<RadarMarker*>::iterator mar = radar->markers.begin(); mar != radar->markers.end(); ++mar)
+					{
+						if (ImGui::Button((*mar)->marker_name.c_str()))
+						{
+							radar->AddMarkerToEntity(marker_to_change, (*mar));
+							radar_marker_select = false;
+							break;
+						}
+					}
+
+					ImGui::End();
+				}
+			}
+			
+		}
+	}
+}
+
+void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
+{
+	if (ImGui::CollapsingHeader("Button", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		const char* mode_names[] = { "Colour", "Image" };
+		int mode = button->GetButtonMode();
+
+		ImGui::Combo("Button Mode", &mode, mode_names, 2);
+
+		if (mode == 0)
+		{
+			float idle_colour[4] = { button->GetIdleColour().x,  button->GetIdleColour().y, button->GetIdleColour().z, button->GetIdleColour().w };
+			float over_colour[4] = { button->GetOverColour().x,  button->GetOverColour().y, button->GetOverColour().z,button->GetOverColour().w };
+			float pressed_colour[4] = { button->GetPressedColour().x,  button->GetPressedColour().y, button->GetPressedColour().z,button->GetPressedColour().w };
+
+			button->SetButtonMode(ButtonMode::BM_COLOUR);
+
+			ImGui::Text("Idle Colour");
+			if (ImGui::ColorEdit4("Idle", (float*)&idle_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetIdleColour(float4(idle_colour[0], idle_colour[1], idle_colour[2], idle_colour[3]));
+			}
+
+			ImGui::Text("Over Colour");
+			if (ImGui::ColorEdit4("Over", (float*)&over_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetOverColour(float4(over_colour[0], over_colour[1], over_colour[2], over_colour[3]));
+			}
+
+			ImGui::Text("Pressed Colour");
+			if (ImGui::ColorEdit4("Pressed", (float*)&pressed_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetPressedColour(float4(pressed_colour[0], pressed_colour[1], pressed_colour[2], pressed_colour[3]));
+			}
+		}
+		else if (mode == 1)
+		{
+			Texture* idle_texture = button->GetIdleTexture();
+			Texture* over_texture = button->GetOverTexture();
+			Texture* pressed_texture = button->GetPressedTexture();
+
+			button->SetButtonMode(ButtonMode::BM_IMAGE);
+
+			if (ImGui::InputResourceTexture("Idle Texture", &idle_texture))
+			{
+				button->SetIdleTexture(idle_texture);
+			}
+
+			if (ImGui::InputResourceTexture("Over Texture", &over_texture))
+			{
+				button->SetOverTexture(over_texture);
+			}
+
+			if (ImGui::InputResourceTexture("Pressed Texture", &pressed_texture))
+			{
+				button->SetPressedTexture(pressed_texture);
+			}
+		}
+
+		if(button->HasTextChild())
+		{
+			float idle_text_colour[4] = { button->GetIdleTextColour().x,  button->GetIdleTextColour().y,  button->GetIdleTextColour().w,  button->GetIdleTextColour().z };
+			float over_text_colour[4] = { button->GetOverTextColour().x,  button->GetOverTextColour().y,  button->GetOverTextColour().w,  button->GetOverTextColour().z };
+			float pressed_text_colour[4] = { button->GetPressedTextColour().x,  button->GetPressedTextColour().y,  button->GetPressedTextColour().w,  button->GetPressedTextColour().z};
+
+			ImGui::Text("Idle Text Colour");
+			if (ImGui::ColorEdit4("Idle text", (float*)&idle_text_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetIdleTextColour(float4(idle_text_colour[0], idle_text_colour[1], idle_text_colour[2], idle_text_colour[3]));
+			}
+
+			ImGui::Text("Over Text Colour");
+			if (ImGui::ColorEdit4("Over text", (float*)&over_text_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetOverTextColour(float4(over_text_colour[0], over_text_colour[1], over_text_colour[2], over_text_colour[3]));
+			}
+
+			ImGui::Text("Pressed Text Colour");
+			if (ImGui::ColorEdit4("Pressed text", (float*)&pressed_text_colour, ImGuiColorEditFlags_AlphaBar))
+			{
+				button->SetPressedTextColour(float4(pressed_text_colour[0], pressed_text_colour[1], pressed_text_colour[2], pressed_text_colour[3]));
+			}
 		}
 	}
 }
@@ -1999,9 +2327,17 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 		audio_source->GetEvents();
 
 	if (ImGui::CollapsingHeader("Audio Source")) {
+		SoundBankResource* sbk = audio_source->soundbank;
+		if (ImGui::InputResourceAudio("SoundBank", &sbk))
+		{
+			if (audio_source->soundbank) audio_source->StopAllEvents();
+			audio_source->soundbank = sbk;
+			audio_source->ClearEventsVector();
+		}
+
 		if (audio_source->soundbank != nullptr) {
 			std::string soundbank_name = "SoundBank: ";
-			soundbank_name += audio_source->soundbank->name.c_str();
+			soundbank_name += audio_source->soundbank->GetName().c_str();
 			if (ImGui::TreeNode(soundbank_name.c_str()))
 			{		
 				for (int i = 0; i < audio_source->GetEventsVector().size(); i++) 
@@ -2011,11 +2347,13 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 				}	
 				ImGui::TreePop();
 			}
-			if (ImGui::TreeNode("Settings##Event"))
+			std::string settings_name = "Settings##";
+			settings_name += soundbank_name;
+			if (ImGui::TreeNode(settings_name.c_str()))
 			{
-				ImGui::SliderInt("Volume", App->audio->GetVolumePtr(), 0, 100);
+				ImGui::SliderInt("Volume", &audio_source->volume, 0, 100);
 				ImGui::SliderInt("Pitch", App->audio->GetPitchPtr(), 0, 100);
-				ImGui::Checkbox("Mute", App->audio->IsMutedPtr());
+				ImGui::Checkbox("Mute", &audio_source->muted);
 
 				ImGui::TreePop();
 			}

@@ -83,10 +83,22 @@ void HierarchyWindow::DrawWindow()
 							App->scene->CreateText(parent);
 						}
 
+						if (ImGui::MenuItem("Button"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateButton(parent);
+						}
+
 						if (ImGui::MenuItem("Progress Bar"))
 						{
 							GameObject* parent = App->scene->selected_gameobjects.front();
 							App->scene->CreateProgressBar(parent);
+						}
+
+						if (ImGui::MenuItem("Radar"))
+						{
+							GameObject* parent = App->scene->selected_gameobjects.front();
+							App->scene->CreateRadar(parent);
 						}
 
 						ImGui::EndMenu();
@@ -140,9 +152,19 @@ void HierarchyWindow::DrawWindow()
 					App->scene->CreateText(nullptr);
 				}
 
+				if (ImGui::MenuItem("Button"))
+				{
+					App->scene->CreateButton(nullptr);
+				}
+
 				if (ImGui::MenuItem("Progress Bar"))
 				{
 					App->scene->CreateProgressBar(nullptr);
+				}
+
+				if (ImGui::MenuItem("Radar"))
+				{
+					App->scene->CreateRadar(nullptr);
 				}
 
 				ImGui::EndMenu();

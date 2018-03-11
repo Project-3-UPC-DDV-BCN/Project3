@@ -370,7 +370,19 @@ void Wwise::SoundObject::PlayMusic(unsigned long music_id)
 void Wwise::SoundObject::PlayMusic(const char * music_name)
 {
 	AK::SoundEngine::PostEvent(music_name, SoundID, AK_EnableGetMusicPlayPosition);
+}
 
+bool Wwise::SoundObject::SetRTPCvalue(const char * rtpc, float value)
+{
+	AKRESULT res = AK::SoundEngine::SetRTPCValue(rtpc, value, SoundID);
+
+	if (res != AK_Success)
+	{
+		CONSOLE_DEBUG("RTPC value could not be set!");
+		return false;
+	}
+
+	return true;
 }
 
 void Wwise::SoundObject::SetAuxiliarySends(AkReal32 value, const char * target_bus, AkGameObjectID listener_id)
@@ -381,4 +393,14 @@ void Wwise::SoundObject::SetAuxiliarySends(AkReal32 value, const char * target_b
 	reverb.fControlValue = value;
 
 	AKRESULT res = AK::SoundEngine::SetGameObjectAuxSendValues(SoundID, &reverb, 1);
+}
+
+void Wwise::SoundObject::SetState(AkStateGroupID in_stateGroup, AkStateID in_state)
+{
+	AK::SoundEngine::SetState(in_stateGroup, in_state);
+}
+
+void Wwise::SoundObject::SetState(const char* in_stateGroup, const char* in_state)
+{
+	AK::SoundEngine::SetState(in_stateGroup, in_state);
 }

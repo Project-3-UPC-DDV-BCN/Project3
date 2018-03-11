@@ -32,6 +32,8 @@
 #include "GameWindow.h"
 #include "ComponentParticleEmmiter.h"
 #include "ModuleMeshImporter.h"
+#include "ComponentRectTransform.h"
+#include "ModuleInput.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -306,14 +308,38 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 	{
-		std::vector<CanvasDrawElement> to_draw = (*cv)->GetDrawElements();
+		ComponentCanvas* canvas = (*cv);
+
+		ComponentRectTransform* last_rect_trans = canvas->GetLastRectTransform();
+		ComponentRectTransform* last_last_rect_trans = canvas->GetLastLastRectTransform();
+
+		std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
 
 		ShaderProgram* program = App->resources->GetShaderProgram("default_shader_program");
 
 		UseShaderProgram(program->GetProgramID());
 
+		LineSegment segment = App->camera->GetUIMouseRay(*cv);
+
+		CanvasDrawElement* top_element = nullptr;
+		int highest_layer = -9999999999;
+
 		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 		{
+			ComponentRectTransform* rect_trans = (ComponentRectTransform*)(*it).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+
+			if (rect_trans != nullptr)
+			{
+				// Mouse Input
+				if ((*it).GetLayer() >= highest_layer)
+				{
+					if (rect_trans->GetInteractable() && (*it).CheckRay(segment, canvas->GetRenderMode()))
+					{
+						top_element = &(*it);
+					}
+				}
+				// -----------
+			}
 			// WORLD
 			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 			{
@@ -340,7 +366,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				float ortho_projection[4][4] =
 				{
 				{ 2.0f / win_size.x,       0.0f,               0.0f,			   0.0f },
-				{ 0.0f,                    2.0f / win_size.y, 0.0f,			   0.0f },
+				{ 0.0f,                    2.0f / win_size.y,  0.0f,			   0.0f },
 				{ 0.0f,                    0.0f,              -2/(far_p - near_p), -((far_p + near_p)/(far_p - near_p)) },
 				{ -1.0f,                   1.0f,               0.0f,			   1.0f },
 				};
@@ -372,6 +398,70 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 			UnbindVertexArrayObject();
+		}
+
+		// Event managing
+
+		if (!editor_camera)
+		{
+			ComponentRectTransform* rect_trans = nullptr;
+
+			if (top_element != nullptr)
+				rect_trans = (ComponentRectTransform*)top_element->GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+
+			if (last_last_rect_trans != nullptr)
+			{
+				if (last_last_rect_trans->GetOnMouseOut())
+					last_last_rect_trans->SetOnMouseOut(false);
+			}
+
+			if (last_rect_trans != nullptr)
+			{
+				if (last_rect_trans->GetOnClickDown())
+					last_rect_trans->SetOnClickDown(false);
+
+				if (last_rect_trans->GetOnClickUp())
+					last_rect_trans->SetOnClickUp(false);
+
+				if (last_rect_trans != rect_trans)
+				{
+					last_rect_trans->SetOnMouseOut(true);
+					last_rect_trans->SetOnMouseOver(false);
+
+					last_rect_trans->SetOnClickDown(false);
+					last_rect_trans->SetOnClickUp(false);
+					last_rect_trans->SetOnClick(false);
+				}
+			}
+
+			if (top_element != nullptr)
+			{
+				if (rect_trans->GetOnMouseEnter())
+					rect_trans->SetOnMouseEnter(false);
+
+				if (!rect_trans->GetOnMouseOver())
+					rect_trans->SetOnMouseEnter(true);
+
+				rect_trans->SetOnMouseOver(true);
+
+				if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+				{
+					rect_trans->SetOnClickUp(false);
+					rect_trans->SetOnClickDown(true);
+					rect_trans->SetOnClick(true);
+				}
+
+				if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+				{
+					rect_trans->SetOnClickUp(true);
+					rect_trans->SetOnClickDown(false);
+					rect_trans->SetOnClick(false);
+				}
+
+			}
+
+			canvas->SetLastLastRectTransform(last_rect_trans);
+			canvas->SetLastRectTransform(rect_trans);
 		}
 	}
 
@@ -705,6 +795,11 @@ void ModuleRenderer3D::RemoveCanvasToDraw(ComponentCanvas * canvas)
 			break;
 		}
 	}
+}
+
+std::list<ComponentCanvas*> ModuleRenderer3D::GetCanvasToDraw() const
+{
+	return canvas_to_draw;
 }
 
 void ModuleRenderer3D::ResetRender()

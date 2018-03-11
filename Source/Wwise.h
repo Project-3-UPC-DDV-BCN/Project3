@@ -32,7 +32,11 @@ namespace Wwise
 
 		void PlayMusic(unsigned long music_id);
 		void PlayMusic(const char* music_name);
+		bool SetRTPCvalue(const char * rtpc, float value);
 		void SetAuxiliarySends(AkReal32 value, const char * target_bus, AkGameObjectID listener_id);
+
+		void SetState(AkStateGroupID in_stateGroup, AkStateID 	in_state);
+		void SetState(const char * in_stateGroup, const char * in_state);
 
 	private:
 		AkGameObjectID SoundID;

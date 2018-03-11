@@ -25,6 +25,7 @@
 #include "ModuleShaderImporter.h"
 #include "ModuleFontImporter.h"
 #include "ModuleBlast.h"
+#include "ModuleAudioImporter.h"
 
 
 Application::Application()
@@ -38,6 +39,7 @@ Application::Application()
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
+	audio_importer = new ModuleAudioImporter(this);
 	scene = new ModuleScene(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
@@ -66,7 +68,9 @@ Application::Application()
 	AddModule(file_system);
 	AddModule(window);
 	AddModule(input);
+	AddModule(camera);
 	AddModule(audio);
+	AddModule(audio_importer);
 	AddModule(renderer3D);
 	AddModule(mesh_importer);
 	AddModule(texture_importer);
@@ -76,7 +80,6 @@ Application::Application()
 	AddModule(phys_mats_importer);
 	AddModule(shader_importer);
 	AddModule(particle_importer); 
-	AddModule(camera);
 	AddModule(scene);
 	AddModule(editor);
 	AddModule(font_importer);
@@ -101,6 +104,7 @@ Application::~Application()
 	window = nullptr;
 	input = nullptr;
 	audio = nullptr;
+	audio_importer = nullptr;
 	scene = nullptr;
 	renderer3D = nullptr;
 	camera = nullptr;

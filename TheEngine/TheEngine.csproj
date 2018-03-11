@@ -47,7 +47,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="TheScript.cs" />
     <Compile Include="TheGOAPAgent.cs" />
-    <Compile Include="TheProgressBar.cs" />
+    <Compile Include="Components\TheProgressBar.cs" />
     <Compile Include="TheAudio.cs" />
     <Compile Include="TheParticleEmmiter.cs" />
     <Compile Include="TheAudioSource.cs" />
@@ -59,9 +59,10 @@
     <Compile Include="TheGameObject.cs" />
     <Compile Include="TheConsole.cs" />
     <Compile Include="TheRandom.cs" />
-    <Compile Include="TheRectTransform.cs" />
+    <Compile Include="Components\TheRadar.cs" />
+    <Compile Include="Components\TheRectTransform.cs" />
     <Compile Include="TheRigidBody.cs" />
-    <Compile Include="TheText.cs" />
+    <Compile Include="Components\TheText.cs" />
     <Compile Include="TheTimer.cs" />
     <Compile Include="TheTransform.cs" />
     <Compile Include="TheVector3.cs" />

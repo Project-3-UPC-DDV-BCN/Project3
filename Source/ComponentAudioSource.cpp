@@ -5,8 +5,8 @@
 #include "AudioEvent.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
-
 #include "ComponentListener.h"
+#include "SoundBankResource.h"
 
 #include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
 
@@ -21,11 +21,7 @@ ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 
 	obj = App->audio->CreateSoundObject(attached_gameobject->GetName().c_str(), trans->GetGlobalPosition());
 
-	if (App->audio->GetSoundBank() != nullptr) {
-		this->soundbank = App->audio->GetSoundBank();
-		GetEvents();
-	}
-
+	volume = DEFAULT_VOLUME;
 }
 
 ComponentAudioSource::~ComponentAudioSource()
@@ -37,7 +33,14 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	
+	if (!muted) {
+		App->audio->SetRTPCvalue("Volume", volume);
+		//App->audio->SetRTPCvalue("Pitch", pitch);
+	}
+	else {
+		App->audio->SetRTPCvalue("Volume", 0);
+	}
+
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 	
 	if (trans)
@@ -118,14 +121,14 @@ bool ComponentAudioSource::SendEvent(const char * name)
 
 AkGameObjectID ComponentAudioSource::GetID() const
 {
-	return obj->GetID();
+	return obj->GetSoundID();
 }
 
 void ComponentAudioSource::GetEvents()
 {
 	if (soundbank != nullptr) {
-		for (int i = 0; i < soundbank->events.size(); i++) {
-			events.push_back(soundbank->events[i]);
+		for (int i = 0; i < soundbank->GetSoundBank()->events.size(); i++) {
+			events.push_back(soundbank->GetSoundBank()->events[i]);
 		}
 	}
 }
@@ -162,8 +165,29 @@ std::vector<AudioEvent*> ComponentAudioSource::GetEventsVector() const
 	return events;
 }
 
+void ComponentAudioSource::ClearEventsVector()
+{
+	events.clear();
+}
+
 std::vector<AudioEvent*> ComponentAudioSource::GetEventsToPlayVector() const
 {
 	return events_to_play;
 }
 
+void ComponentAudioSource::StopAllEvents()
+{
+	for (int i = 0; i < soundbank->GetSoundBank()->events.size(); i++) {
+		AK::SoundEngine::ExecuteActionOnEvent(soundbank->GetSoundBank()->events[i]->name.c_str(), AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause);
+	}
+}
+
+void ComponentAudioSource::SetState(AkStateGroupID in_stateGroup, AkStateID in_state)
+{
+	obj->SetState(in_stateGroup, in_state);
+}
+
+void ComponentAudioSource::SetState(const char * in_stateGroup, const char * in_state)
+{
+	obj->SetState(in_stateGroup, in_state);
+}

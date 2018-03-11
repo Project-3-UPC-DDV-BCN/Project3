@@ -3,6 +3,7 @@
 
 class Script;
 struct ScriptField;
+class ComponentRectTransform;
 
 class ComponentScript :
 	public Component

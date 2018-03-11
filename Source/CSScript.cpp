@@ -27,6 +27,7 @@
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
+#include "ComponentRadar.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -397,7 +398,17 @@ int CSScript::GetIntProperty(const char * propertyName)
 
 	if (field)
 	{
-		mono_field_get_value(mono_object, field, &value);
+		MonoType* type = mono_field_get_type(field);
+		ScriptField property_field;
+		ConvertMonoType(type, property_field);
+		if (property_field.propertyType == property_field.Integer)
+		{
+			mono_field_get_value(mono_object, field, &value);
+		}
+		else
+		{
+			CONSOLE_ERROR("GetIntProperty: Trying to get a non int field");
+		}
 	}
 	else
 	{
@@ -430,7 +441,17 @@ double CSScript::GetDoubleProperty(const char * propertyName)
 
 	if (field)
 	{
-		mono_field_get_value(mono_object, field, &value);
+		MonoType* type = mono_field_get_type(field);
+		ScriptField property_field;
+		ConvertMonoType(type, property_field);
+		if (property_field.propertyType == property_field.Decimal)
+		{
+			mono_field_get_value(mono_object, field, &value);
+		}
+		else
+		{
+			CONSOLE_ERROR("GetDoubleProperty: Trying to get a non double field");
+		}
 	}
 	else
 	{
@@ -463,7 +484,17 @@ float CSScript::GetFloatProperty(const char * propertyName)
 
 	if (field)
 	{
-		mono_field_get_value(mono_object, field, &value);
+		MonoType* type = mono_field_get_type(field);
+		ScriptField property_field;
+		ConvertMonoType(type, property_field);
+		if (property_field.propertyType == property_field.Float)
+		{
+			mono_field_get_value(mono_object, field, &value);
+		}
+		else
+		{
+			CONSOLE_ERROR("GetFloatProperty: Trying to get a non float field");
+		}
 	}
 	else
 	{
@@ -539,7 +570,17 @@ std::string CSScript::GetStringProperty(const char * propertyName)
 
 	if (field)
 	{
-		mono_field_get_value(mono_object, field, &value);
+		MonoType* type = mono_field_get_type(field);
+		ScriptField property_field;
+		ConvertMonoType(type, property_field);
+		if (property_field.propertyType == property_field.String)
+		{
+			mono_field_get_value(mono_object, field, &value);
+		}
+		else
+		{
+			CONSOLE_ERROR("GetStringProperty: Trying to get a non string field");
+		}
 	}
 	else
 	{
@@ -577,7 +618,17 @@ GameObject * CSScript::GetGameObjectProperty(const char * propertyName)
 	MonoClassField* field = mono_class_get_field_from_name(mono_class, propertyName);
 	if (field)
 	{
-		mono_field_get_value(mono_object, field, &value);
+		MonoType* type = mono_field_get_type(field);
+		ScriptField property_field;
+		ConvertMonoType(type, property_field);
+		if (property_field.propertyType == property_field.GameObject)
+		{
+			mono_field_get_value(mono_object, field, &value);
+		}
+		else
+		{
+			CONSOLE_ERROR("GetGameObjectProperty: Trying to get a non GameObject field");
+		}
 	}
 	else
 	{
@@ -867,6 +918,7 @@ void CSScript::ConvertMonoType(MonoType * type, ScriptField& script_field)
 		else if (name == "TheEngine.Texture") script_field.propertyType = ScriptField::Texture;
 		else if (name == "TheEngine.Animation") script_field.propertyType = ScriptField::Animation;
 		else if (name == "TheEngine.Audio") script_field.propertyType = ScriptField::Audio;
+		else if (name == "TheEngine.Text") script_field.propertyType = ScriptField::Text;
 		break;
 	case MONO_TYPE_SZARRAY:
 		break;
@@ -1454,6 +1506,10 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheText";
 	}
+	else if (name == "TheEngine.TheRadar")
+	{
+		comp_name = "TheRadar";
+	}
 	else if (name == "TheEngine.TheRigidBody")
 	{
 		comp_name = "TheRigidBody";
@@ -1994,8 +2050,171 @@ void CSScript::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 
 MonoObject * CSScript::GetRectAnchor(MonoObject * object)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRectTransform");
+
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+			float3 right = transform->GetRight();
+
+			if (x_field) mono_field_set_value(new_object, x_field, &right.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &right.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &right.z);
+
+			return new_object;
+		}
+	}
 
 	return nullptr;
+}
+
+mono_bool CSScript::GetOnClick(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+	
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnClick();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnClickDown(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnClickDown();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnClickUp(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnClickUp();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnMouseEnter(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnMouseEnter();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnMouseOver(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnMouseOver();
+	}
+
+	return false;
+}
+
+mono_bool CSScript::GetOnMouseOut(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	ComponentRectTransform* rect_trans = (ComponentRectTransform*)active_gameobject->GetComponent(Component::CompRectTransform);
+
+	if (rect_trans != nullptr)
+	{
+		return rect_trans->GetOnMouseOut();
+	}
+
+	return false;
 }
 
 void CSScript::SetText(MonoObject * object, MonoString* t)
@@ -2100,6 +2319,102 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 
 	ComponentProgressBar* progres_barr = (ComponentProgressBar*)active_gameobject->GetComponent(Component::CompProgressBar);
 	return progres_barr->GetProgressPercentage();
+}
+
+void CSScript::AddEntity(MonoObject * object, MonoObject * game_object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+	
+	GameObject* go = FindGameObject(game_object);
+
+	if (radar != nullptr)
+	{
+		if (go != nullptr)
+		{
+			radar->AddEntity(go);
+		}
+	}
+}
+
+void CSScript::RemoveEntity(MonoObject * object, MonoObject * game_object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+
+	GameObject* go = FindGameObject(game_object);
+
+	if (radar != nullptr)
+	{
+		if (go != nullptr)
+		{
+			radar->RemoveEntity(go);
+		}
+	}
+}
+
+void CSScript::RemoveAllEntities(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+
+	if (radar != nullptr)
+	{
+		radar->RemoveAllEntities();
+	}
+}
+
+void CSScript::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentRadar* radar = (ComponentRadar*)active_gameobject->GetComponent(Component::CompRadar);
+	
+	GameObject* go = FindGameObject(game_object);
+
+	if (radar != nullptr)
+	{
+		if (go != nullptr)
+		{
+			const char* txt = mono_string_to_utf8(marker_name);
+
+			radar->AddMarkerToEntity(go, radar->GetMarker(txt));
+		}
+	}
+
 }
 
 void CSScript::StartFactory(MonoObject * object)
@@ -2881,6 +3196,37 @@ bool CSScript::MonoComponentIsValid(MonoObject* object)
 	return false;
 }
 
+MonoObject * CSScript::FindMonoObject(GameObject * go)
+{
+	MonoObject* ret = nullptr;
+
+	if (go != nullptr)
+	{
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+		{
+			if ((*it).second == go)
+			{
+				ret = (*it).first;
+				break;
+			}
+		}
+	}
+
+	return ret;
+}
+
+GameObject * CSScript::FindGameObject(MonoObject * object)
+{
+	GameObject* ret = nullptr;
+
+	if (object != nullptr)
+	{
+		ret = created_gameobjects[object];
+	}
+
+	return ret;
+}
+
 bool CSScript::GameObjectIsValid()
 {
 	if (active_gameobject == nullptr)
@@ -2921,10 +3267,10 @@ void CSScript::SetPitch(int pitch)
 	App->audio->SetPitch(pitch);
 }
 
-void CSScript::SetRTPvalue(MonoString* name, float value)
+void CSScript::SetRTPCvalue(MonoString* name, float value)
 {
 	const char* new_name = mono_string_to_utf8(name);
-	App->audio->SetRTPvalue(new_name, value);
+	App->audio->SetRTPCvalue(new_name, value);
 }
 
 bool CSScript::Play(MonoObject * object, MonoString* name)
@@ -2978,6 +3324,42 @@ bool CSScript::Send(MonoObject * object, MonoString* name)
 	const char* event_name = mono_string_to_utf8(name);
 	
 	return as->SendEvent(event_name);
+}
+
+bool CSScript::SetMyRTPCvalue(MonoObject * object, MonoString* name, float value)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	const char* new_name = mono_string_to_utf8(name);
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	return as->obj->SetRTPCvalue(new_name, value);
+}
+
+bool CSScript::SetState(MonoObject* object, MonoString* group, MonoString* state)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return false;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return false;
+	}
+
+	const char* group_name = mono_string_to_utf8(group);
+	const char* state_name = mono_string_to_utf8(state);
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	as->SetState(group_name, state_name);
+	return true;
 }
 
 void CSScript::PlayEmmiter(MonoObject * object)

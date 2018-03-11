@@ -2762,7 +2762,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		};
 
 		static const char* const csharpClasses[] = {
-			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText"
+			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText", "TheRadar"
 		};
 		for (auto& k : csharpClasses)
 			langDef.mClasses.insert(k);
@@ -2793,7 +2793,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 
 		langDef.class_static_auto_complete["Math"] = "Abs()_Acos()_Asin()_Atan()_Atan2()_Ceiling()_Clamp()_Cos()_DegToRad_Epsilon_Exp()_Floor()_Infinity_IsPowerOfTwo()_Lerp()_Log()_Max()_Min()_NegativeInfinity_PI_Pow()_RadToDeg_Round()_Sin()_Sqrt()_Tan()";
 		langDef.class_static_auto_complete["TheGameObject"] = "Destroy()_Duplicate()_Self";
-		langDef.class_non_static_auto_complete["TheGameObject"] = "AddComponent<TheFactory>()_GetChild()_GetChildCount()_GetComponent<TheTransform>()_GetComponent<TheFactory>()_GetComponent<TheProgressBar>()_GetComponent<TheText>()_GetComponent<TheAudioSource>()_IsActive()_IsStatic()_layer_name_SetActive()_SetParent()_SetStatic()_tag";
+		langDef.class_non_static_auto_complete["TheGameObject"] = "AddComponent<TheFactory>()_GetChild()_GetChildCount()_GetComponent<TheTransform>()_GetComponent<TheFactory>()_GetComponent<TheProgressBar>()_GetComponent<TheText>()_GetComponent<TheRadar>_GetComponent<TheAudioSource>()_IsActive()_IsStatic()_layer_name_SetActive()_SetParent()_SetStatic()_tag";
 		langDef.class_static_auto_complete["TheConsole"] = "Error()_Log()_Warning()";
 		langDef.class_non_static_auto_complete["TheFactory"] = "SetSpawnPosition()_SetSpawnRotation()_SetSpawnScale()_Spawn()_StartFactory()";
 		langDef.class_static_auto_complete["TheInput"] = "GetMousePosition()_GetMouseXMotion()_GetMouseYMotion()_IsKeyDown()_IsKeyRepeat()_IsKeyUp()_IsMouseButtonDown()_IsMouseButtonRepeat()_IsMouseButtonUp()";
@@ -2803,10 +2803,11 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.class_static_auto_complete["TheVector3"] = "AngleBetween()_BackWard_CrossProduct()_Distance()_DotProduct()_Down_Forward_Left_Lerp()_Magnitude()_MoveTowards()_NLerp()_Normalize()_Project()_Reflect()_Right_Scale()_SLerp()_Up_Zero";
 		langDef.class_non_static_auto_complete["TheVector3"] = "Length_LengthSquared_Normalized_Scale()_Set()_ToQuaternion()_ToString()_x_y_z";
 		langDef.class_static_auto_complete["Time"] = "TimeScale_DeltaTime";
-		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()_GetVolume()_SetVolume()_GetPitch()_SetPitch()_SetRTPvalue()_SetMyRTPvalue()";
-		langDef.class_static_auto_complete["TheAudioSource"] = "Play()_Stop()_Send()";
+		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()_GetVolume()_SetVolume()_GetPitch()_SetPitch()_SetRTPCvalue()";
+		langDef.class_static_auto_complete["TheAudioSource"] = "Play()_Stop()_Send()_SetMyRTPCvalue()";
 		langDef.class_static_auto_complete["TheProgressBar"] = "PercentageProgress";
 		langDef.class_static_auto_complete["TheText"] = "Text";
+		langDef.class_static_auto_complete["TheRadar"] = "AddEntity()_RemoveEntity()_RemoveAllEntities()_SetMarkerToEntity()";
 		langDef.functions_info["Abs()"] = "Returns the absolute value of value. \n1. float Abs(float value) \n2. int Abs(int value)";
 		langDef.functions_info["Acos()"] = "Returns the arc-cosine of value. \nfloat Acos(float value)";
 		langDef.functions_info["Asin()"] = "Returns the arc-sine of value. \nfloat Asin(float value)";
@@ -2930,11 +2931,11 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.functions_info["SetVolume()"] = "Set the volume to the specified value. (Recomended:  0 to 100). \nvoid SetVolume(int volume)";
 		langDef.functions_info["GetPitch()"] = "Get the global pitch as an integer from 0 to 100. \nint GetPitch()";
 		langDef.functions_info["SetPitch()"] = "Set the pitch to the specified value. (Recomended:  0 to 100). \nvoid SetPitch(int pitch)";
-		langDef.functions_info["SetRTPvalue()"] = "Set a value to the property with the specified name. \nvoid SetRTPvalue(string name, float value)";
-		langDef.functions_info["SetMyRTPvalue()"] = "Set a value to the property with the specified name from this gameobject. \nvoid SetMyRTPvalue(string name, float value)";
+		langDef.functions_info["SetRTPCvalue()"] = "Set a value to the property with the specified name. \nvoid SetRTPCvalue(string name, float value)";
 		langDef.functions_info["Play()"] = "Plays an event of the AudioSource. Return true if done correctly, and false if there was an error. \nbool Play(string name)";
 		langDef.functions_info["Stop()"] = "Stops an event of the AudioSource. Return true if done correctly, and false if there was an error. \nbool Stop(string name)";
 		langDef.functions_info["Send()"] = "Sends an event of the AudioSource. Return true if done correctly, and false if there was an error. \nbool Send(string name)";
+		langDef.functions_info["SetMyRTPCvalue()"] = "Set a value to the property with the specified name from this audio source. \nbool SetMyRTPCvalue(string name, float value)";
 
 		variables["Duplicate()"] = "TheGameObject";
 		variables["GetChild()"] = "TheGameObject";

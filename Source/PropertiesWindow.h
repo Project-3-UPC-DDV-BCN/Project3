@@ -25,6 +25,8 @@ class GameObject;
 class ComponentRigidBody;
 class ComponentCollider;
 class ComponentJointDistance;
+class ComponentButton;
+class ComponentRadar;
 class ComponentGOAPAgent;
 class GOAPGoal;
 class GameObject;
@@ -47,7 +49,9 @@ public:
 	void DrawCanvasPanel(ComponentCanvas* canvas);
 	void DrawImagePanel(ComponentImage* image);
 	void DrawTextPanel(ComponentText* text);
-	void DrawProgressBarPanel(ComponentProgressBar* text);
+	void DrawProgressBarPanel(ComponentProgressBar* progress);
+	void DrawRadarPanel(ComponentRadar* radar);
+	void DrawButtonPanel(ComponentButton* button);
 	void DrawRigidBodyPanel(ComponentRigidBody* rigidbody);
 	void DrawColliderPanel(ComponentCollider* collider);
 	void DrawJointDistancePanel(ComponentJointDistance* joint);
@@ -66,6 +70,8 @@ private:
 	int distance_joints_count;
 	bool rename_template; 
 	int lights_count;
+	bool radar_marker_select;
+	int marker_to_change;
 
 	bool add_goal = false;
 	char add_goal_name[256] = "\0";

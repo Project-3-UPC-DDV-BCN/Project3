@@ -35,7 +35,7 @@ bool ComponentProgressBar::Update()
 
 	if (canvas != nullptr)
 	{
-		CanvasDrawElement base;
+		CanvasDrawElement base(canvas, this);
 		base.SetTransform(c_rect_trans->GetMatrix());
 		base.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		base.SetSize(c_rect_trans->GetScaledSize());
@@ -44,7 +44,7 @@ bool ComponentProgressBar::Update()
 		canvas->AddDrawElement(base);
 
 
-		CanvasDrawElement progres;
+		CanvasDrawElement progres(canvas, this);
 		
 		float2 pos = float2::zero;
 		pos.x = -(c_rect_trans->GetScaledSize().x / 2);

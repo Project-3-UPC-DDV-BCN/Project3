@@ -118,6 +118,12 @@ public:
 	MonoObject* GetRectSize(MonoObject * object);
 	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetRectAnchor(MonoObject * object);
+	mono_bool GetOnClick(MonoObject * object);
+	mono_bool GetOnClickDown(MonoObject * object);
+	mono_bool GetOnClickUp(MonoObject * object);
+	mono_bool GetOnMouseEnter(MonoObject * object);
+	mono_bool GetOnMouseOver(MonoObject * object);
+	mono_bool GetOnMouseOut(MonoObject * object);
 
 	//TEXT
 	void SetText(MonoObject * object, MonoString* t);
@@ -126,6 +132,12 @@ public:
 	//PROGRESSBAR
 	void SetPercentageProgress(MonoObject * object, float progress);
 	float GetPercentageProgress(MonoObject * object);
+
+	//RADAR
+	void AddEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveAllEntities(MonoObject * object);
+	void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
 	//FACTORY
 	void StartFactory(MonoObject * object);
@@ -167,12 +179,14 @@ public:
 	void SetVolume(int volume);
 	int GetPitch();
 	void SetPitch(int pitch);
-	void SetRTPvalue(MonoString* name, float value);
+	void SetRTPCvalue(MonoString* name, float value);
 
 	//AUDIOSOURCE
 	bool Play(MonoObject * object, MonoString* name);
 	bool Stop(MonoObject * object, MonoString* name);
 	bool Send(MonoObject * object, MonoString* name);
+	bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
+	bool SetState(MonoObject* object, MonoString* group, MonoString* state);
 
 	//PARTICLE EMMITER
 	void PlayEmmiter(MonoObject * object);
@@ -241,6 +255,8 @@ private:
 	bool GameObjectIsValid();
 	bool MonoObjectIsValid(MonoObject* object);
 	bool MonoComponentIsValid(MonoObject* object);
+	MonoObject* FindMonoObject(GameObject* go);
+	GameObject* FindGameObject(MonoObject* object);
 
 private:
 	MonoDomain* mono_domain;

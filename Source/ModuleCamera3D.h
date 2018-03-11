@@ -5,6 +5,7 @@
 #include "MathGeoLib\MathGeoLib.h"
 
 class ComponentCamera;
+class ComponentCanvas;
 
 class ModuleCamera3D : public Module
 {
@@ -14,6 +15,7 @@ public:
 
 	bool Init(Data* editor_config);
 	update_status Update(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	void CreateEditorCamera();
@@ -31,6 +33,8 @@ public:
 	float GetCameraSensitivity() const;
 	void MousePickRay(int mouse_x, int mouse_y);
 	void SaveData(Data* data);
+
+	LineSegment GetUIMouseRay(ComponentCanvas* cv);
 
 private:
 	bool isPlaying = false;

@@ -11,6 +11,13 @@ class ComponentCanvas;
 class CanvasDrawElement;
 class Texture;
 
+enum TextGrow
+{
+	TG_LEFT,
+	TG_RIGHT,
+	TG_CENTER,
+};
+
 class ComponentText : public Component
 {
 public:
@@ -47,10 +54,13 @@ public:
 	bool GetStyleUnderline() const;
 	bool GetStyelStrikethrough() const;
 
+	void SetGrowDirection(TextGrow grow);
+	TextGrow GetGrowDirection() const;
+
 private:
 	ComponentCanvas * GetCanvas();
 	ComponentRectTransform * GetRectTrans();
-	void UpdateText();
+	void UpdateText(bool font_update = false);
 
 private:
 	ComponentRectTransform * c_rect_trans = nullptr;
@@ -67,6 +77,9 @@ private:
 	bool italic;
 	bool underline;
 	bool strikethrough;
+
+	TextGrow grow_dir;
+	float text_scale_diff;
 };
 
 #endif // !_H_COMPONENT_TEXT__

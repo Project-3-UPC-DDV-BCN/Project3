@@ -98,6 +98,7 @@
     <ClInclude Include="AppWindowConfigWindow.h" />
     <ClInclude Include="BlastModel.h" />
     <ClInclude Include="ComponentBillboard.h" />
+    <ClInclude Include="ComponentButton.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentCanvas.h" />
     <ClInclude Include="ComponentFactory.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="ComponentJointSpherical.h" />
     <ClInclude Include="ComponentJointPrismatic.h" />
     <ClInclude Include="ComponentProgressBar.h" />
+    <ClInclude Include="ComponentRadar.h" />
     <ClInclude Include="ComponentRectTransform.h" />
     <ClInclude Include="ComponentRigidBody.h" />
     <ClInclude Include="ComponentLight.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="MathGeoLib\Triangle.h" />
     <ClInclude Include="MathGeoLib\TriangleMesh.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ModuleAudioImporter.h" />
     <ClInclude Include="ModuleBlast.h" />
     <ClInclude Include="ModuleBlastMeshImporter.h" />
     <ClInclude Include="ModuleCamera3D.h" />
@@ -286,6 +289,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SkyDome.h" />
     <ClInclude Include="SoundBank.h" />
+    <ClInclude Include="SoundBankResource.h" />
     <ClInclude Include="TagsAndLayers.h" />
     <ClInclude Include="TagsAndLayersWindow.h" />
     <ClInclude Include="TextEditorWindow.h" />
@@ -467,6 +471,7 @@
     <ClCompile Include="AppWindowConfigWindow.cpp" />
     <ClCompile Include="BlastModel.cpp" />
     <ClCompile Include="ComponentBillboard.cpp" />
+    <ClCompile Include="ComponentButton.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentCanvas.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
@@ -486,6 +491,7 @@
     <ClCompile Include="ComponentJointSpherical.cpp" />
     <ClCompile Include="ComponentJointPrismatic.cpp" />
     <ClCompile Include="ComponentProgressBar.cpp" />
+    <ClCompile Include="ComponentRadar.cpp" />
     <ClCompile Include="ComponentRectTransform.cpp" />
     <ClCompile Include="ComponentRigidBody.cpp" />
     <ClCompile Include="ComponentLight.cpp" />
@@ -601,6 +607,7 @@
     <ClCompile Include="MathGeoLib\VectorTests.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
+    <ClCompile Include="ModuleAudioImporter.cpp" />
     <ClCompile Include="ModuleBlast.cpp" />
     <ClCompile Include="ModuleBlastMeshImporter.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
@@ -640,6 +647,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SkyDome.cpp" />
     <ClCompile Include="SoundBank.cpp" />
+    <ClCompile Include="SoundBankResource.cpp" />
     <ClCompile Include="TagsAndLayers.cpp" />
     <ClCompile Include="TagsAndLayersWindow.cpp" />
     <ClCompile Include="TextEditorWindow.cpp" />
