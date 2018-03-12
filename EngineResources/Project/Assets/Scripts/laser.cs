@@ -5,9 +5,6 @@ public class laser
 {
 	private TheScript game_manager_scpt; 
 	string team; 
-	
-	TheFactory laser_factory;
-    public TheGameObject laser_spawner;
 
 	private TheScript ship_hit_scpt; 
 	
@@ -15,10 +12,6 @@ public class laser
 	{
 		team =  TheGameObject.Find("Slave1").tag; 
 		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0); 
-
-		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
-
-        laser_factory.StartFactory();
 	}
 	
 	void Update () 

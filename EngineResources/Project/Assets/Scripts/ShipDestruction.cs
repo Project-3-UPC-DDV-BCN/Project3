@@ -1,4 +1,5 @@
 using TheEngine;
+using System.Collections.Generic; 
 using TheEngine.Math;
 
 public class ShipDestruction 
@@ -6,7 +7,8 @@ public class ShipDestruction
 
 	public float explosion_v; 
 
-	TheGameObject[] ship_parts; 
+	List<TheGameObject> ship_parts; 
+
 	TheTransform transform; 
 	string ship_tag; 
 
@@ -26,6 +28,7 @@ public class ShipDestruction
 		
 		if(need_boom == true && exploted == false) 
 		{			
+			FillPartList(); 
 			SetPartsDirection(); 
 			exploted = true; 
 		}
@@ -35,33 +38,31 @@ public class ShipDestruction
 	void FillPartList()
 	{
 
+		TheGameObject[] ship_parts_tmp = null; 
+
 		if(ship_tag == "TIEFIGHTER") 
-		{
-			for (int i = 0; i < TheGameObject.Self.GetChildCount(); i++) 
-			{
-				TheGameObject[] objects_to_explote; 
-				objects_to_explote = TheGameObject.Self.GetAllChilds(); 
-			}
+		{	 		
+			ship_parts_tmp = TheGameObject.Self.GetAllChilds(); 			
 		}
 			
 
 		if(ship_tag == "TIEFIGHTER") 
-			ship_parts.push_back(TheGameObject.Find("Sphere"));
+			//ship_parts.push_back(TheGameObject.Find("Sphere"));
 
 		
 		if(ship_tag == "TIEFIGHTER") 
-			ship_parts.push_back(TheGameObject.Find("Sphere"));
+			//ship_parts.push_back(TheGameObject.Find("Sphere"));
 
 		
 		if(ship_tag == "TIEFIGHTER") 
-			ship_parts.push_back(TheGameObject.Find("Sphere"));
+			//ship_parts.push_back(TheGameObject.Find("Sphere"));
 
 
 		//Clean it: we only need to disperse object with a mesh renderer on it 
-		for(int i = 0; i < objects_to_explote.size;i++)
+		for(int i = 0; i < ship_parts_tmp.Length ; i++)
 		{
-			if(objects_to_explote[i].GetComponent<TheMeshRenderer>() == null)
-				delete(objects_to_explote[i]); 
+			if(ship_parts[i].GetComponent<TheMeshRenderer>() != null)
+				ship_parts.Add(ship_parts_tmp[i]); 
 		}
 	
 	}
@@ -72,21 +73,21 @@ public class ShipDestruction
 
 		TheVector3 direction = transform.ForwardDirection.Normalized; 
 
-		for(int i = 0; i < objects_to_explote.size;i++)
+		for(int i = 0; i < ship_parts.Count ;i++)
 		{
 			//Random Angle in XZ from 0 to 360 (guess 22)
-			int angle_in_xz = 22; 
+			float angle_in_xz = 22 * TheMath.DegToRad; 
 			
 			//Angle in YX from 0 to 360 (guess 78) 
-			int angle_in_yz = 78; 
+			float angle_in_yz = 78 * TheMath.DegToRad; 
 
-			TheQuaternion fRot; 
-			fRot.Set(22,78,0,1);
+			TheQuaternion fRot = null; 
+			fRot.Set(angle_in_xz,angle_in_yz,0,1);
 
 			//Set the velocity
-			TheRigidBody piece_rb = objects_to_explote.GetComponent<TheRigidBody>();
+			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>();
 		
-			TheQuaternion global_rot = transform.GlobalRotation; 
+			TheQuaternion global_rot = transform.GlobalRotation.ToQuaternion();
 			TheQuaternion debugQ = TheQuaternion.Slerp(global_rot, fRot, 0);
 
 			TheVector3 converter = debugQ.ToEulerAngles(); 
@@ -97,7 +98,7 @@ public class ShipDestruction
 
 			direction = direction.Normalized * explosion_v; 
 
-			piece_rb.SetVelocity(direction);		
+			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);		
 		}
 	}
 }
