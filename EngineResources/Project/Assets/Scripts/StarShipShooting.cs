@@ -15,7 +15,9 @@ public class StarShipShooting {
 	public TheGameObject overheat_bar_obj;
 	TheProgressBar overheat_bar_bar = null;
 	//-----------------------------------
-
+	public TheGameObject crosshair_1;
+	public TheGameObject crosshair_2;
+	
 	TheAudioSource audio_source;	
 
 	public float spawn_time = 0.01f;
@@ -55,6 +57,8 @@ public class StarShipShooting {
         curr_overheat_inc = overheat_increment;
 
 		overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
+		
+		crosshair_2.SetActive(false);
     }	
 
 	void Update () {
@@ -201,6 +205,16 @@ public class StarShipShooting {
             TheVector3 size = new TheVector3(1, 1, 1);
 
             laser_factory.SetSpawnScale(size);
+			if(crosshair_1.IsActive())
+			{
+				crosshair_1.SetActive(false);
+				crosshair_2.SetActive(true);
+			}
+			else
+			{
+				crosshair_1.SetActive(true);
+				crosshair_2.SetActive(false);
+			}
         }
     }
 
