@@ -30,7 +30,7 @@ public class ShipProperties
 	
 	void Update () 
 	{
-		if(hp <= 0)
+		if(hp <= 0 && is_dead == false)
 		{
 			slave_properties.CallFunction("AddKill"); 
 

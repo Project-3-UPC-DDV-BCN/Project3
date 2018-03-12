@@ -30,7 +30,7 @@ public class laser
 	{
 		string enemy_tag = other_ship.tag; 
 		TheConsole.Log("Collided"); 
-		TheConsole.Log(team); 
+		TheConsole.Log(other_ship.name); 
 
 		ship_hit_scpt = other_ship.GetComponent<TheScript>(0); //Num has to be change for the order  
 
