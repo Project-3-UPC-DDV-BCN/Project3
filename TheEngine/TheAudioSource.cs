@@ -18,5 +18,8 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetState(string group, string state);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetVolume(int value);
     }
 }

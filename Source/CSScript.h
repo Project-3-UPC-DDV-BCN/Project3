@@ -178,7 +178,7 @@ public:
 	bool IsMuted();
 	void SetMute(bool set);
 	int GetVolume();
-	void SetVolume(int volume);
+	void SetVolume(MonoObject* obj, int volume);
 	int GetPitch();
 	void SetPitch(int pitch);
 	void SetRTPCvalue(MonoString* name, float value);

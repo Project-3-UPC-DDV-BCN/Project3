@@ -3353,9 +3353,20 @@ int CSScript::GetVolume()
 	return App->audio->GetVolume();
 }
 
-void CSScript::SetVolume(int volume)
+void CSScript::SetVolume(MonoObject* obj, int volume)
 {
-	App->audio->SetVolume(volume);
+	if (!MonoObjectIsValid(obj))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	ComponentAudioSource* as = (ComponentAudioSource*)active_gameobject->GetComponent(Component::CompAudioSource);
+	as->volume = volume;
 }
 
 int CSScript::GetPitch()

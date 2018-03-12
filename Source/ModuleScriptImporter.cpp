@@ -358,7 +358,6 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudio::IsMuted", (const void*)IsMuted);
 	mono_add_internal_call("TheEngine.TheAudio::SetMute", (const void*)SetMute);
 	mono_add_internal_call("TheEngine.TheAudio::GetVolume", (const void*)GetVolume);
-	mono_add_internal_call("TheEngine.TheAudio::SetVolume", (const void*)SetVolume);
 	mono_add_internal_call("TheEngine.TheAudio::GetPitch", (const void*)GetPitch);
 	mono_add_internal_call("TheEngine.TheAudio::SetPitch", (const void*)SetPitch);
 
@@ -369,6 +368,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheAudioSource::Send", (const void*)Send);
 	mono_add_internal_call("TheEngine.TheAudioSource::SetMyRTPCvalue", (const void*)SetMyRTPCvalue);
 	mono_add_internal_call("TheEngine.TheAudioSource::SetState", (const void*)SetState);
+	mono_add_internal_call("TheEngine.TheAudioSource::SetVolume", (const void*)SetVolume);
 
 	//EMITER
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
@@ -887,11 +887,6 @@ int ModuleScriptImporter::GetVolume()
 	return current_script->GetVolume();
 }
 
-void ModuleScriptImporter::SetVolume(int volume)
-{
-	current_script->SetVolume(volume);
-}
-
 int ModuleScriptImporter::GetPitch()
 {
 	return current_script->GetPitch();
@@ -930,6 +925,11 @@ bool ModuleScriptImporter::SetMyRTPCvalue(MonoObject * object, MonoString* name,
 void ModuleScriptImporter::SetState(MonoObject* object, MonoString* group, MonoString* state)
 {
 	current_script->SetState(object, group, state);
+}
+
+void ModuleScriptImporter::SetVolume(MonoObject* object, int value)
+{
+	current_script->SetVolume(object, value);
 }
 
 void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)

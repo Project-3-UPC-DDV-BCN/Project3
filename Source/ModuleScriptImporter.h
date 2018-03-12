@@ -140,7 +140,6 @@ private:
 	static bool IsMuted();
 	static void SetMute(bool set);
 	static int GetVolume();
-	static void SetVolume(int volume);
 	static int GetPitch();
 	static void SetPitch(int pitch);
 	static void SetRTPCvalue(MonoString* name, float value);
@@ -150,6 +149,7 @@ private:
 	static bool Send(MonoObject * object, MonoString * name);
 	static bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
 	static void SetState(MonoObject* object, MonoString* group, MonoString* state);
+	static void SetVolume(MonoObject* object, int value);
 
 	//PARTICLE EMMITER
 	static void PlayEmmiter(MonoObject * object);
