@@ -470,7 +470,7 @@ void ModuleResources::ImportFile(std::string path)
 			exist = true;
 			break;
 		}
-		//App->file_system->Copy(path, ASSETS_SOUNDBANK_FOLDER + file_name);
+		App->file_system->Copy(path, ASSETS_SOUNDBANK_FOLDER + file_name);
 		path = ASSETS_SOUNDBANK_FOLDER + file_name;
 		break;
 	default:
