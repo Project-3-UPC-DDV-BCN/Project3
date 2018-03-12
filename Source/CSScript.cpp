@@ -143,7 +143,7 @@ void CSScript::OnCollisionEnter(GameObject* other_collider)
 		bool exist = false;
 		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (it->second == active_gameobject)
+			if (it->second == other_collider)
 			{
 				new_object = it->first;
 				exist = true;
@@ -4178,16 +4178,20 @@ void CSScript::CallFunction(MonoObject * object, MonoString * function_name)
 		CSScript* script = (CSScript*)comp_script->GetScript();
 		if (script)
 		{
+			/*CSScript* last_script = App->script_importer->GetCurrentSctipt();
+			App->script_importer->SetCurrentScript(script);*/
+			CONSOLE_LOG("function %s called from %s", name, script->GetName().c_str());
 			MonoMethod* method = script->GetFunction(name, 0);
 			if (method)
 			{
-				App->script_importer->SetCurrentScript(script);
 				script->CallFunction(method, nullptr);
 			}
 			else
 			{
 				CONSOLE_ERROR("Function %s in script %s does not exist", name, script->GetName().c_str());
 			}
+			/*CONSOLE_LOG("Going back to %s", last_script->GetName().c_str());
+			App->script_importer->SetCurrentScript(last_script);*/
 		}
 	}
 }

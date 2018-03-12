@@ -204,6 +204,11 @@ void ModuleScriptImporter::SetCurrentScript(CSScript * script)
 	current_script = script;
 }
 
+CSScript * ModuleScriptImporter::GetCurrentSctipt() const
+{
+	return current_script;
+}
+
 CSScript* ModuleScriptImporter::DumpAssemblyInfo(MonoAssembly * assembly)
 {
 	MonoImage* mono_image = mono_assembly_get_image(assembly);

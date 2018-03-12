@@ -26,6 +26,7 @@ public:
 
 	std::string CompileScript(std::string assets_path, std::string& lib);
 	void SetCurrentScript(CSScript* script);
+	CSScript* GetCurrentSctipt() const;
 
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);

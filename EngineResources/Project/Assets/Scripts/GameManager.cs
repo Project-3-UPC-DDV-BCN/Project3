@@ -53,7 +53,7 @@ public class GameManager
 			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);	
 		}
 
-		TheConsole.Log(gametime_seconds.ToString()); 
+		//TheConsole.Log(gametime_seconds.ToString()); 
 
 		if(gametime_seconds <= 0) 
 		{
