@@ -28,38 +28,45 @@ public class laser
 
 	void OnCollisionEnter(TheGameObject other_ship)
 	{
-		string enemy_tag = other_ship.tag; 
-		TheConsole.Log("Collided"); 
-		TheConsole.Log(other_ship.name); 
-
-		ship_hit_scpt = other_ship.GetComponent<TheScript>(0); //Num has to be change for the order  
-
-
-		if(team == "Alliance") 
+		if(other_ship != null)
 		{
-			TheConsole.Log("You are alliance"); 
+			other_ship.SetActive(false);
+		}
+			TheConsole.Log("Collision");
+		/*if(other_ship != null)
+		{	
+			string enemy_tag = other_ship.tag; 
+			TheConsole.Log("Collided"); 
+			TheConsole.Log(other_ship.name); 
 
-			if(enemy_tag == "Empire")
+			ship_hit_scpt = other_ship.GetComponent<TheScript>(); //Num has to be change for the order  
+
+			if(team == "Alliance") 
 			{
-				game_manager_scpt.SetIntField("score_to_inc", 20);
-				game_manager_scpt.CallFunction("AddToScore"); 
-				game_manager_scpt.SetIntField("score_to_inc", 0);
+				TheConsole.Log("You are alliance"); 
 
-				//ENEMY HP
-				ship_hit_scpt.SetIntField("hp_inc", 20);
-				ship_hit_scpt.CallFunction("SubstractHP"); 
-				ship_hit_scpt.SetIntField("hp_inc", 0); 
-			}
-			else
-			{
-				game_manager_scpt.SetIntField("score_to_inc", 10);
-				game_manager_scpt.CallFunction("SubstractToScore"); 
-				game_manager_scpt.SetIntField("score_to_inc", 0);
+				if(enemy_tag == "Empire")
+				{
+					game_manager_scpt.SetIntField("score_to_inc", 20);
+					game_manager_scpt.CallFunction("AddToScore"); 
+					game_manager_scpt.SetIntField("score_to_inc", 0);
 
-				ship_hit_scpt.SetIntField("hp_inc", 10);
-				ship_hit_scpt.CallFunction("SubstractHP"); 
-				ship_hit_scpt.SetIntField("hp_inc", 0); 
-			}				
-		} 
+					//ENEMY HP
+					ship_hit_scpt.SetIntField("hp_inc", 20);
+					ship_hit_scpt.CallFunction("SubstractHP"); 
+					ship_hit_scpt.SetIntField("hp_inc", 0); 
+				}
+				else
+				{
+					game_manager_scpt.SetIntField("score_to_inc", 10);
+					game_manager_scpt.CallFunction("SubstractToScore"); 
+					game_manager_scpt.SetIntField("score_to_inc", 0);
+
+					ship_hit_scpt.SetIntField("hp_inc", 10);
+					ship_hit_scpt.CallFunction("SubstractHP"); 
+					ship_hit_scpt.SetIntField("hp_inc", 0); 
+				}				
+			} 
+		}*/
 	}
 }

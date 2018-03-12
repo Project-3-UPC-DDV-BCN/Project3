@@ -486,7 +486,6 @@ public class Slave1Movement {
 			if(slow_timer > 0.0f)
 			{
 				slow_timer-= slow_regen*TheTime.DeltaTime;
-				TheConsole.Log(slow_regen*TheTime.DeltaTime);
 			}
 		}
 
@@ -495,7 +494,6 @@ public class Slave1Movement {
 		
 		if(boosting)
 		{
-			TheConsole.Log("boooooost");
 			target_vel = curr_max_vel+boost_extra_vel;
 			curr_accel = acceleration*boost_accel_multiplier;
 			TheInput.RumbleController(0,boost_rumble_strength,boost_rumble_ms);
@@ -503,9 +501,7 @@ public class Slave1Movement {
 			{
 				boosting = false;
 				curr_accel = acceleration;
-				TheConsole.Log("STOOOOP! boooooost");
 				boost_cd_timer = boost_cd_time;
-				TheConsole.Log(boost_cd_timer);
 			}
 
 			if(curr_vel>= target_vel)
