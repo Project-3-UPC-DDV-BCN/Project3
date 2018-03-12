@@ -30,6 +30,7 @@ public class laser
 	{
 		string enemy_tag = other_ship.tag; 
 		TheConsole.Log("Collided"); 
+		TheConsole.Log(team); 
 
 		ship_hit_scpt = other_ship.GetComponent<TheScript>(0); //Num has to be change for the order  
 
@@ -38,10 +39,8 @@ public class laser
 		{
 			TheConsole.Log("You are alliance"); 
 
-
 			if(enemy_tag == "Empire")
 			{
-
 				game_manager_scpt.SetIntField("score_to_inc", 20);
 				game_manager_scpt.CallFunction("AddToScore"); 
 				game_manager_scpt.SetIntField("score_to_inc", 0);
