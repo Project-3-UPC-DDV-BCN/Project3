@@ -787,6 +787,7 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
 	data.AddVector2("pos", pos);
+	data.AddFloat("z_pos", z_pos);
 	data.AddVector2("size", size);
 	data.AddVector2("anchor", anchor);
 	//data.AddBool("snap_up", snap_up);
@@ -806,6 +807,7 @@ void ComponentRectTransform::Load(Data & data)
 	SetFixedAspectRatio(data.GetBool("fixed_aspect_ratio"));
 	SetAspectRatio(data.GetFloat("fixed_ratio"));
 	SetPos(data.GetVector2("pos"));
+	SetZPos(data.GetFloat("z_pos"));
 	SetSize(data.GetVector2("size"));
 	SetAnchor(data.GetVector2("anchor"));
 	//SetSnapUp(data.GetBool("snap_up"));
