@@ -31,6 +31,9 @@ public class GameManager
 
 	public TheGameObject background_music;
 	TheAudioSource audio_source;
+	
+	public TheGameObject slave1;
+	TheAudioSource slave1_audio;
 
 	void Init ()
 	{
@@ -54,6 +57,7 @@ public class GameManager
 		audio_source = background_music.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Calm_song");
 		audio_source.SetVolume(calm_volume);
+		slave1_audio = slave1.GetComponent<TheAudioSource>();
 	}
 	
 	
@@ -95,6 +99,7 @@ public class GameManager
 		{
 			audio_source.Stop("Play_Calm_song");
 			audio_source.Stop("Play_Combat_song");
+			slave1_audio.Stop("Play_Engine");
 			TheApplication.LoadScene("VS2-UI");	
 		}	 		
 
