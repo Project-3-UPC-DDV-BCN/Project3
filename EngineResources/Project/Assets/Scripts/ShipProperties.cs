@@ -1,9 +1,11 @@
 using TheEngine;
+using TheEngine.TheConsole; 
 
 public class ShipProperties 
 {
 
-	private TheScript self_destructor_scpt; 
+	private TheScript self_destructor_scpt;
+	private TheScript slave_properties; 
 	
 	int hp; 
 	int hp_inc; 
@@ -21,6 +23,8 @@ public class ShipProperties
 		hp_inc = 0; 
 		is_dead = false; 
 	
+		slave_properties = TheGameObject.Find("Sleve1").GetComponent<TheScript>(); 
+
 		self_destructor_scpt = TheGameObject.Self.GetComponent<TheScript>(0);   //The number has to be changed by order
 	}
 	
@@ -28,11 +32,18 @@ public class ShipProperties
 	{
 		if(hp <= 0)
 		{
+			slave_properties.CallFunction("AddKill"); 
+
 			self_destructor_scpt.SetBoolField("need_boom", true); 
 			kills++; 
 			is_dead = true; 
 		}
 			
+	}
+
+	void AddKill()
+	{
+		kills++; 
 	}
 
 	int GetKills()
@@ -48,5 +59,10 @@ public class ShipProperties
 	void AddHP()
 	{
 		hp += hp_inc;
+	}
+
+	void OnCollisionEnter()
+	{
+		hp = 0; 
 	}
 }

@@ -61,7 +61,7 @@ public class MainMenuVS2
 				menu_audio_source.Play("Play_click");
 				menu_audio_source.Stop("Play_Menu_song");
 				
-				TheApplication.LoadScene("VerticalSlice_NoPanelUIGood_guillemdominguez");
+				TheApplication.LoadScene("VerticalSlice_NoPanelUIGood_guillemdominguez_");
 				return;
 			}
 

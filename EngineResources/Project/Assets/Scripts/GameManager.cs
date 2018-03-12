@@ -90,10 +90,12 @@ public class GameManager
 
 			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);	
 		}
-		
-		if(gametime_seconds == 0) 
+
+		if(gametime_seconds <= 0) 
 		{
-			//LOOSE
+			audio_source.Stop("Play_Calm_song");
+			audio_source.Stop("Play_Combat_song");
+			TheApplication.LoadScene("VS2-UI");	
 		}	 		
 
 	}
@@ -106,11 +108,11 @@ public class GameManager
 
 	void SubstractToScore()
 	{
-		score -= score_to_inc;
-		TheConsole.Log("Score substracted");  
-
-		TheConsole.Log(score.ToString()); 
-		show_score.Text = score.ToString(); 
+		if(score - score_to_inc > 0)
+		{
+			score -= score_to_inc; 
+			show_score.Text = score.ToString(); 	
+		}
 	}
 
 	string GetTimeFromSeconds(int seconds)
