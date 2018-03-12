@@ -888,15 +888,18 @@ MonoMethod * CSScript::GetFunction(const char * functionName, int parameters_cou
 
 void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 {
-	inside_function = true;
-	MonoObject* exception = nullptr;
-	MonoMarshalSpec* spec;
-
-	MonoObject* obj = mono_runtime_invoke(function, mono_object, parameter, &exception);
-
-	if (exception)
+	if (function != nullptr)
 	{
-		mono_print_unhandled_exception(exception);
+		inside_function = true;
+		MonoObject* exception = nullptr;
+		MonoMarshalSpec* spec;
+
+		MonoObject* obj = mono_runtime_invoke(function, mono_object, parameter, &exception);
+
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
 	}
 }
 

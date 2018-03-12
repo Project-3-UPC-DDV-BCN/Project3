@@ -7,6 +7,7 @@ public class MainMenuVS2
 	public TheGameObject settings_button_go;
 	public TheGameObject exit_button_go;
 	public TheGameObject explanation_text_go;
+	public TheGameObject loading_text_go;
 
 	TheRectTransform campaign_rect = null;
 	TheRectTransform settings_rect = null;
@@ -37,6 +38,9 @@ public class MainMenuVS2
 			if(explanation_text != null)
 				explanation_text.Text = "";
 		}
+
+		if(loading_text_go != null)
+			loading_text_go.SetActive(false);
 	}
 	
 	void Update ()
@@ -45,7 +49,11 @@ public class MainMenuVS2
 		{
 			if(campaign_rect.OnClickUp)
 			{
-				TheApplication.LoadScene("VerticalSlice_OneEweToRuleThemAll");
+				if(loading_text_go != null)
+					loading_text_go.SetActive(true);
+				
+				TheApplication.LoadScene("VerticalSlice_NoPanelUIGood_guillemdominguez");
+				return;
 			}
 
 			if(campaign_rect.OnMouseOver)
@@ -74,6 +82,7 @@ public class MainMenuVS2
 			if(exit_rect.OnClickUp)
 			{
 				TheApplication.Quit();
+				return;
 			}
 
 			if(exit_rect.OnMouseOver)

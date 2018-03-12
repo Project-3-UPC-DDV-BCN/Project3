@@ -229,6 +229,65 @@ update_status ModuleScene::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_status ModuleScene::PostUpdate(float dt)
+{
+	if (to_load_scene)
+	{
+		Data data;
+		if (data.LoadBinary(scene_to_load.c_str()))
+		{
+			NewScene(true);
+			scene_name = data.GetString("Scene Name");
+			App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
+			int gameObjectsCount = data.GetInt("GameObjects_Count");
+			for (int i = 0; i < gameObjectsCount; i++) {
+				data.EnterSection("GameObject_" + std::to_string(i));
+				GameObject* game_object = new GameObject();
+				game_object->Load(data);
+				data.LeaveSection();
+				AddGameObjectToScene(game_object);
+				App->resources->AddGameObject(game_object);
+				//ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
+				//if (transform) transform->UpdateGlobalMatrix();
+				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
+				if (mesh_renderer) mesh_renderer->LoadToMemory();
+				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
+				if (camera)
+				{
+					if (game_object->GetTag() == "Main Camera")
+					{
+						App->renderer3D->game_camera = camera;
+						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+					}
+				}
+			}
+			data.ClearData();
+			if (data.LoadBinary(scene_to_load.c_str())) {
+				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
+				for (int i = 0; i < gameObjectsCount; i++) {
+					data.EnterSection("GameObject_" + std::to_string(i));
+					GameObject* game_object = *it;
+					game_object->Load(data);
+					data.LeaveSection();
+					it++;
+				}
+			}
+			saving_index = 0;
+		}
+		else
+		{
+			CONSOLE_ERROR("Cannot load %s scene", scene_to_load.c_str());
+		}
+
+		to_load_scene = false;
+	}
+	bool loading_scene = false;
+	bool to_load_scene = false;
+	std::string scene_to_load;
+
+	return UPDATE_CONTINUE;
+}
+
 // Update
 update_status ModuleScene::Update(float dt)
 {
@@ -458,50 +517,10 @@ void ModuleScene::NewScene(bool loading_scene)
 
 void ModuleScene::LoadScene(std::string path)
 {
-	Data data;
-	if (data.LoadBinary(path)) 
+	if (!to_load_scene)
 	{
-		NewScene(true);
-		scene_name = data.GetString("Scene Name");
-		App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
-		int gameObjectsCount = data.GetInt("GameObjects_Count");
-		for (int i = 0; i < gameObjectsCount; i++) {
-			data.EnterSection("GameObject_" + std::to_string(i));
-			GameObject* game_object = new GameObject();
-			game_object->Load(data);
-			data.LeaveSection();
-			AddGameObjectToScene(game_object);
-			App->resources->AddGameObject(game_object);
-			//ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
-			//if (transform) transform->UpdateGlobalMatrix();
-			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
-			if (mesh_renderer) mesh_renderer->LoadToMemory();
-			ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
-			if (camera)
-			{
-				if (game_object->GetTag() == "Main Camera")
-				{
-					App->renderer3D->game_camera = camera;
-					App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
-				}
-			}
-		}
-		data.ClearData();
-		if (data.LoadBinary(path)) {
-			std::list<GameObject*>::iterator it = scene_gameobjects.begin();
-			for (int i = 0; i < gameObjectsCount; i++) {
-				data.EnterSection("GameObject_" + std::to_string(i));
-				GameObject* game_object = *it;
-				game_object->Load(data);
-				data.LeaveSection();
-				it++;
-			}
-		}
-		saving_index = 0;
-	}
-	else
-	{
-		CONSOLE_ERROR("Cannot load %s scene", path.c_str());
+		to_load_scene = true;
+		scene_to_load = path;
 	}
 }
 

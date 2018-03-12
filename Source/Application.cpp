@@ -226,6 +226,16 @@ void Application::FinishUpdate()
 		SDL_Delay(capped_ms - last_frame_ms);
 	}
 
+	if (to_stop)
+	{
+		if (state == OnPlay || state == OnPause)
+		{
+			state = OnStop;
+			App->scene->LoadScene(TMP_FOLDER"tmp_scene");
+			App->scene->is_game = false;
+			to_stop = false;
+		}
+	}
 	if (!is_game_mode)
 	{
 		editor->AddData_Editor(last_frame_ms, last_fps);
@@ -442,9 +452,7 @@ void Application::UnPause()
 void Application::Stop()
 {
 	if (state == OnPlay || state == OnPause) {
-		state = OnStop;
-		App->scene->LoadScene(TMP_FOLDER"tmp_scene");
-		App->scene->is_game = false;
+		to_stop = true;
 	}
 }
 

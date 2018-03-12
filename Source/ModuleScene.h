@@ -32,6 +32,7 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	update_status PreUpdate(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 	void SaveData(Data* data);
 
@@ -111,5 +112,8 @@ public:
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;
+
+	bool to_load_scene = false;
+	std::string scene_to_load;
 
 };

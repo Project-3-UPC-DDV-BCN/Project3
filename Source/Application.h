@@ -128,6 +128,8 @@ private:
 	SDL_Surface* cursor_add;
 	bool is_game_mode;
 	std::string starting_scene_path;
+
+	bool to_stop = false;
 };
 
 // Give App pointer access everywhere
