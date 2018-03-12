@@ -50,8 +50,8 @@ public class MainMenuVS2
 			if(campaign_rect.OnClickUp)
 			{
 				if(loading_text_go != null)
-					loading_text_go.SetActive(false);
-
+					loading_text_go.SetActive(true);
+				
 				TheApplication.LoadScene("VerticalSlice_NoPanelUIGood_guillemdominguez");
 				return;
 			}
