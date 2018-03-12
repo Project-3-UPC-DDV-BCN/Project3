@@ -209,6 +209,12 @@ void ModuleResources::FillResourcesLists()
 		{
 			if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) type = Resource::GOAPGoalResource;
 			if (App->file_system->GetFileName(*it).find("_GOAPAction") != std::string::npos) type = Resource::GOAPActionResource;
+			if (extension == ".scene")
+			{
+				std::string scene_name = App->file_system->GetFileName(*it);
+				App->file_system->Copy(*it, LIBRARY_SCENES_FOLDER + scene_name);
+				scene_list.push_back(LIBRARY_SCENES_FOLDER + scene_name);
+			}
 		}
 
 		switch (type) {
@@ -1124,6 +1130,11 @@ void ModuleResources::RemoveGOAPGoal(GOAPAction * action)
 std::map<uint, GOAPAction*> ModuleResources::GetGOAPActionList() const
 {
 	return goap_actions_list;
+}
+
+std::vector<std::string> ModuleResources::GetSceneList() const
+{
+	return scene_list;
 }
 
 Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string str)

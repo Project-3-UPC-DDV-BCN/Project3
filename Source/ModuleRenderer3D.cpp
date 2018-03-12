@@ -851,9 +851,12 @@ void ModuleRenderer3D::SaveData(Data * data)
 {
 	data->CreateSection("Renderer_Config");
 	data->AddBool("Vsync", use_vsync);
-	if(editor_camera->GetViewportTexture() == nullptr)
-		data->AddInt("MSAA_Level", 2);
-	else data->AddInt("MSAA_Level", editor_camera->GetViewportTexture()->GetCurrentMSAALevel());
+	if (editor_camera)
+	{
+		if (editor_camera->GetViewportTexture() == nullptr)
+			data->AddInt("MSAA_Level", 2);
+		else data->AddInt("MSAA_Level", editor_camera->GetViewportTexture()->GetCurrentMSAALevel());
+	}
 	
 
 	data->CloseSection();

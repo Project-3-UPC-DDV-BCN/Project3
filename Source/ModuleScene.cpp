@@ -514,6 +514,7 @@ void ModuleScene::SaveScene(std::string path) const
 		(*it)->Save(data);
 	}
 	data.SaveAsBinary(path);
+	data.SaveAsBinary(LIBRARY_SCENES_FOLDER + scene_name + ".scene");
 }
 
 void ModuleScene::LoadPrefab(Prefab* prefab)
@@ -666,68 +667,71 @@ bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 
 void ModuleScene::HandleInput()
 {
-	if (App->editor->scene_window->IsWindowFocused() && App->editor->scene_window->IsMouseHoveringWindow())
+	if (!App->IsGame())
 	{
-		//Rotate camera or zomm in/out
-		if (App->input->GetMouseButton(3) == KEY_REPEAT || App->input->GetMouseZ() > 0 || App->input->GetMouseZ() < 0)
+		if (App->editor->scene_window->IsWindowFocused() && App->editor->scene_window->IsMouseHoveringWindow())
 		{
-			App->camera->can_update = true;
-		}
-		if (App->input->GetMouseButton(3) == KEY_UP)
-		{
-			App->camera->can_update = false;
-		}
-		if (App->input->GetMouseButton(3) == KEY_IDLE && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_IDLE && 
-			App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE && App->input->GetMouseZ() == 0)
-		{
-			App->camera->can_update = false;
-		}
-		//Gizmo
-		if (App->camera->can_update == false)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && !ImGuizmo::IsUsing())
+			//Rotate camera or zomm in/out
+			if (App->input->GetMouseButton(3) == KEY_REPEAT || App->input->GetMouseZ() > 0 || App->input->GetMouseZ() < 0)
 			{
-				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-			}
-			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && !ImGuizmo::IsUsing())
-			{
-				mCurrentGizmoOperation = ImGuizmo::ROTATE;
-			}
-			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && !ImGuizmo::IsUsing())
-			{
-				mCurrentGizmoOperation = ImGuizmo::SCALE;
-			}
-		}
-		//Focus on first selected object
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		{
-			if (!selected_gameobjects.empty())
-			{
-				ComponentTransform* transform = (ComponentTransform*)selected_gameobjects.front()->GetComponent(Component::CompTransform);
 				App->camera->can_update = true;
-				App->camera->LookAt(transform->GetGlobalPosition());
+			}
+			if (App->input->GetMouseButton(3) == KEY_UP)
+			{
 				App->camera->can_update = false;
 			}
-		} 
-		//Use orbital camera
-		else if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
-		{			
-			if (!App->camera->IsOrbital())
+			if (App->input->GetMouseButton(3) == KEY_IDLE && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_IDLE &&
+				App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE && App->input->GetMouseZ() == 0)
+			{
+				App->camera->can_update = false;
+			}
+			//Gizmo
+			if (App->camera->can_update == false)
+			{
+				if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && !ImGuizmo::IsUsing())
+				{
+					mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+				}
+				if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN && !ImGuizmo::IsUsing())
+				{
+					mCurrentGizmoOperation = ImGuizmo::ROTATE;
+				}
+				if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN && !ImGuizmo::IsUsing())
+				{
+					mCurrentGizmoOperation = ImGuizmo::SCALE;
+				}
+			}
+			//Focus on first selected object
+			if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 			{
 				if (!selected_gameobjects.empty())
 				{
 					ComponentTransform* transform = (ComponentTransform*)selected_gameobjects.front()->GetComponent(Component::CompTransform);
 					App->camera->can_update = true;
 					App->camera->LookAt(transform->GetGlobalPosition());
-					App->camera->SetOrbital(true);
+					App->camera->can_update = false;
 				}
 			}
-		}
-		//Disable orbital camera
-		if (App->camera->IsOrbital() && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP))
-		{
-			App->camera->can_update = false;
-			App->camera->SetOrbital(false);
+			//Use orbital camera
+			else if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
+				if (!App->camera->IsOrbital())
+				{
+					if (!selected_gameobjects.empty())
+					{
+						ComponentTransform* transform = (ComponentTransform*)selected_gameobjects.front()->GetComponent(Component::CompTransform);
+						App->camera->can_update = true;
+						App->camera->LookAt(transform->GetGlobalPosition());
+						App->camera->SetOrbital(true);
+					}
+				}
+			}
+			//Disable orbital camera
+			if (App->camera->IsOrbital() && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP))
+			{
+				App->camera->can_update = false;
+				App->camera->SetOrbital(false);
+			}
 		}
 	}
 }

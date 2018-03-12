@@ -1140,41 +1140,41 @@ void CSScript::SetGameObjectParent(MonoObject * object, MonoObject * parent)
 	
 	active_gameobject->SetParent(go_parent);
 }
-//
-//MonoObject* CSScript::GetGameObjectParent(MonoObject * object)
-//{
-//	if (!MonoObjectIsValid(object))
-//	{
-//		return nullptr;
-//	}
-//
-//	if (!GameObjectIsValid())
-//	{
-//		return nullptr;
-//	}
-//
-//	GameObject* parent = active_gameobject->GetParent();
-//	if (parent)
-//	{
-//		MonoObject* parent_mono_object = FindMonoObject(parent);
-//		if (!parent_mono_object)
-//		{
-//			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-//			if (c)
-//			{
-//				MonoObject* new_object = mono_object_new(mono_domain, c);
-//				if (new_object)
-//				{
-//					created_gameobjects[new_object] = parent;
-//					return new_object;
-//				}
-//			}
-//		}
-//		return parent_mono_object;
-//	}
-//
-//	return nullptr;
-//}
+
+MonoObject* CSScript::GetGameObjectParent(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	GameObject* parent = active_gameobject->GetParent();
+	if (parent)
+	{
+		MonoObject* parent_mono_object = FindMonoObject(parent);
+		if (!parent_mono_object)
+		{
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				MonoObject* new_object = mono_object_new(mono_domain, c);
+				if (new_object)
+				{
+					created_gameobjects[new_object] = parent;
+					return new_object;
+				}
+			}
+		}
+		return parent_mono_object;
+	}
+
+	return nullptr;
+}
 
 MonoObject * CSScript::GetGameObjectChild(MonoObject * object, int index)
 {
@@ -1409,6 +1409,59 @@ MonoArray * CSScript::GetObjectsInFrustum(MonoObject * pos, MonoObject * front, 
 		{
 			int index = 0;
 			for (GameObject* go : obj_inFrustum)
+			{
+				bool exist = false;
+				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+				{
+					if (it->second == go)
+					{
+						mono_array_set(scene_objects, MonoObject*, index, it->first);
+						index++;
+						exist = true;
+						break;
+					}
+				}
+				if (!exist)
+				{
+					MonoObject* new_object = mono_object_new(mono_domain, c);
+					if (new_object)
+					{
+						mono_array_set(scene_objects, MonoObject*, index, new_object);
+						index++;
+						created_gameobjects[new_object] = go;
+					}
+				}
+			}
+			return scene_objects;
+		}
+	}
+	return nullptr;
+}
+
+MonoArray * CSScript::GetAllChilds(MonoObject * object)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return nullptr;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+	std::vector<GameObject*> objects;
+
+	active_gameobject->GetAllChilds(objects);
+
+	if (c)
+	{
+		MonoArray* scene_objects = mono_array_new(mono_domain, c, objects.size());
+		if (scene_objects)
+		{
+			int index = 0;
+			for (GameObject* go : objects)
 			{
 				bool exist = false;
 				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
@@ -3683,7 +3736,33 @@ float CSScript::RandomRange(MonoObject * object, float min, float max)
 void CSScript::LoadScene(MonoString * scene_name)
 {
 	const char* name = mono_string_to_utf8(scene_name);
-	//App->scene->LoadScene(LIBRARY_SCENES_FOLDER + name + ".scene");
+	std::vector<std::string> scenes = App->resources->GetSceneList();
+	for (std::string scene : scenes)
+	{
+		std::string scene_name = App->file_system->GetFileNameWithoutExtension(scene);
+		if (scene_name == name)
+		{
+			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".scene");
+			return;
+		}
+	}
+
+	CONSOLE_ERROR("LoadScene: Scene %s does not exist", name);
+}
+
+void CSScript::Quit()
+{
+	if (App->IsGame())
+	{
+		App->quit = true;
+	}
+	else
+	{
+		if (!App->IsStopped())
+		{
+			App->Stop();
+		}
+	}
 }
 
 void CSScript::SetBoolField(MonoObject * object, MonoString * field_name, bool value)

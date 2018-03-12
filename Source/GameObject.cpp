@@ -461,6 +461,15 @@ void GameObject::GetAllChildsMeshesNames(std::vector<std::string>& names)
 	}
 }
 
+void GameObject::GetAllChilds(std::vector<GameObject*>& childs_list) const
+{
+	for (std::list<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
+	{
+		(*it)->GetAllChilds(childs_list);
+		childs_list.push_back(*it);
+	}
+}
+
 void GameObject::UpdateBoundingBox()
 {
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)GetComponent(Component::CompMeshRenderer);

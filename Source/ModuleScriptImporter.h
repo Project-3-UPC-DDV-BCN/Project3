@@ -48,13 +48,14 @@ private:
 	static mono_bool GameObjectIsStatic(MonoObject* object);
 	static MonoObject* DuplicateGameObject(MonoObject* object);
 	static void SetGameObjectParent(MonoObject* object, MonoObject* parent);
-	//static MonoObject* GetGameObjectParent(MonoObject* object);
+	static MonoObject* GetGameObjectParent(MonoObject* object);
 	static MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
 	static MonoObject* FindGameObject(MonoString* gameobject_name);
 	static MonoArray* GetSceneGameObjects(MonoObject* object);
 	static MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
+	static MonoArray* GetAllChilds(MonoObject* object);
 
 	//COMPONENT
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
@@ -179,6 +180,7 @@ private:
 
 	//APPLICATION
 	static void LoadScene(MonoString* scene_name);
+	static void Quit();
 
 	//SCRIPT
 	static void SetBoolField(MonoObject* object, MonoString* field_name, bool value);

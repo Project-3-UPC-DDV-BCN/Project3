@@ -2,9 +2,12 @@
 
 namespace TheEngine
 {
-    public class Application
+    public class TheApplication
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void LoadScene(string scene_name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void Quit();
     }
 }

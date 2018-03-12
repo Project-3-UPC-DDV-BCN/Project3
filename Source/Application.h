@@ -4,6 +4,7 @@
 #include "MathGeoLib/LCG.h"
 #include <list>
 #include "Timer.h"
+#include <string>
 
 class Module;
 class ModuleWindow;
@@ -64,6 +65,7 @@ public:
 	bool IsPlaying();
 	bool IsPaused();
 	bool IsStopped();
+	bool IsGame();
 
 	enum EngineState {
 		OnPlay, OnPause, OnStop
@@ -103,6 +105,8 @@ public:
 	ModuleFontImporter* font_importer;
 	ModuleBlast* blast;
 
+	bool quit;
+
 private:
 
 	Timer	ms_timer;
@@ -122,7 +126,8 @@ private:
 	EngineState state = EngineState::OnStop;
 
 	SDL_Surface* cursor_add;
-
+	bool is_game_mode;
+	std::string starting_scene_path;
 };
 
 // Give App pointer access everywhere

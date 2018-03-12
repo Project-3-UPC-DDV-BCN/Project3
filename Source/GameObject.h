@@ -41,6 +41,7 @@ public:
 	int GetAllChildsCount() const;
 	void GetAllChildsName(std::vector<std::string>& names);
 	void GetAllChildsMeshesNames(std::vector<std::string>& names);
+	void GetAllChilds(std::vector<GameObject*>& childs_list) const;
 
 	void UpdateBoundingBox();
 	math::float4x4 GetGlobalTransfomMatrix();

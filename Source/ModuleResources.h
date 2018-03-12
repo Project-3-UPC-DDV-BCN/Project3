@@ -2,6 +2,7 @@
 #include "Module.h"
 #include <map>
 #include "Resource.h"
+#include <vector>
 
 class Texture;
 class Mesh;
@@ -129,6 +130,8 @@ public:
 	void RemoveGOAPGoal(GOAPAction* action);
 	std::map<uint, GOAPAction*> GetGOAPActionList() const;
 
+	std::vector<std::string> GetSceneList() const;
+
 	Resource::ResourceType AssetExtensionToResourceType(std::string str);
 	Resource::ResourceType LibraryExtensionToResourceType(std::string str);
 	std::string ResourceTypeToLibraryExtension(Resource::ResourceType type);
@@ -167,5 +170,6 @@ private:
 	std::map<uint, SoundBankResource*> soundbanks_list;
 	std::map<uint, GOAPGoal*> goap_goals_list;
 	std::map<uint, GOAPAction*> goap_actions_list;
+	std::vector<std::string> scene_list;
 };
 

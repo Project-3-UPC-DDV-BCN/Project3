@@ -62,6 +62,9 @@ namespace TheEngine
         public extern static TheGameObject[] GetSceneGameObjects();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheGameObject[] GetAllChilds();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static TheGameObject[] GetObjectsInFrustum(TheVector3 pos, TheVector3 front, TheVector3 up, float nearPlaneDist, float farPlaneDist);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -85,9 +88,6 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern string GetTag();
 
-        //[MethodImpl(MethodImplOptions.InternalCall)]
-        //private extern TheGameObject GetParent();
-
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void SetLayer(string value);
 
@@ -108,6 +108,9 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetParent(TheGameObject new_parent);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern TheGameObject GetParent();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern TheGameObject GetSelf();

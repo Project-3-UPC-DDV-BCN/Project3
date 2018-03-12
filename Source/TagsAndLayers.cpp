@@ -76,20 +76,22 @@ void TagsAndLayers::Load(Data * data)
 {
 	if (data->EnterSection("Tags"))
 	{
+		tags_list.clear();
 		int tags_num = data->GetInt("tags_num");
 		for (int i = 0; i < tags_num; i++)
 		{
-			tags_list[i] = data->GetString("tag_" + std::to_string(i));
+			tags_list.push_back(data->GetString("tag_" + std::to_string(i)));
 		}
 		data->LeaveSection();
 	}
 	
 	if (data->EnterSection("Layers"))
 	{
+		layers_list.clear();
 		int layers_num = data->GetInt("layers_num");
 		for (int i = 0; i < layers_num; i++)
 		{
-			layers_list[i] = data->GetString("layer_" + std::to_string(i));
+			layers_list.push_back(data->GetString("layer_" + std::to_string(i)));
 		}
 		data->LeaveSection();
 	}

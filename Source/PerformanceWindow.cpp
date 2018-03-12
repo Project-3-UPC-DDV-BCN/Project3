@@ -69,6 +69,7 @@ void PerformanceWindow::AddData(float ms, float fps)
 
 void PerformanceWindow::AddModuleData(std::string name, float ms)
 {
+	if (!this) return;
 	std::map<std::string, std::vector<float>>::iterator it;
 	it = module_data.find(name);
 

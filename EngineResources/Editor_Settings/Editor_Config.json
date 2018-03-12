@@ -1,32 +1,35 @@
 {
     "Engine_Settings": {
+        "Application": {
+            "Is_Game": "0",
+            "Starting_Scene": ""
+        },
         "Window_Config": {
-            "screen_width": "1914",
-            "screen_height": "1017",
+            "screen_width": "1536",
+            "screen_height": "801",
             "Fullscreen": "0",
             "Window_Resizable": "1",
             "Window_Borderless": "0",
             "Window_Full_Desktop": "0"
         },
         "Camera_Config": {
-            "key_speed": "L_SHIFT",
-            "key_forward": "W",
-            "key_backward": "S",
-            "key_up": "Q",
-            "key_down": "CONTROLLER_R3",
-            "key_left": "A",
-            "key_right": "CONTROLLER_L3"
+            "key_speed": "CONTROLLER_A",
+            "key_forward": "CONTROLLER_A",
+            "key_backward": "CONTROLLER_A",
+            "key_up": "CONTROLLER_A",
+            "key_down": "CONTROLLER_A",
+            "key_left": "CONTROLLER_A",
+            "key_right": "CONTROLLER_A"
         },
         "Renderer_Config": {
-            "Vsync": "0",
+            "Vsync": "1",
             "MSAA_Level": "2"
         },
         "skybox_size": "100.000000",
         "Tags": {
             "tags_num": "2",
             "tag_0": "Default",
-            "tag_1": "Main Camera",
-            "tag_2": "TIEFIGHTER"
+            "tag_1": "Main Camera"
         },
         "Layers": {
             "layers_num": "3",

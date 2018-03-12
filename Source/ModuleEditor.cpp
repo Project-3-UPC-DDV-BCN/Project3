@@ -44,42 +44,45 @@ bool ModuleEditor::Init(Data* editor_config)
 {
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
-	// (there is a default font, this is only if you want to change it. see extra_fonts/README.txt for more details)
-	ImGuiIO& io = ImGui::GetIO();
-	io.Fonts->AddFontDefault();
-	io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"Cousine-Regular.ttf", 15.0f);
-	io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"DroidSans.ttf", 16.0f);
-	io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"ProggyClean.ttf", 13.0f);
-	io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"ProggyTiny.ttf", 10.0f);
-	font = io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"OpenSans-Semibold.ttf", 16.0f);
+	if (!App->IsGame())
+	{
+		// (there is a default font, this is only if you want to change it. see extra_fonts/README.txt for more details)
+		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontDefault();
+		io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"Cousine-Regular.ttf", 15.0f);
+		io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"DroidSans.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"ProggyClean.ttf", 13.0f);
+		io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"ProggyTiny.ttf", 10.0f);
+		font = io.Fonts->AddFontFromFileTTF(EDITOR_FONTS_FOLDER"OpenSans-Semibold.ttf", 16.0f);
 
-	LoadEditorStyle();
+		LoadEditorStyle();
+
+		editor_windows.push_back(scene_window = new SceneWindow());
+		editor_windows.push_back(assets_window = new AssetsWindow());
+		editor_windows.push_back(hierarchy_window = new HierarchyWindow());
+		editor_windows.push_back(properties_window = new PropertiesWindow());
+		editor_windows.push_back(console_window = new ConsoleWindow());
+		editor_windows.push_back(hardware_window = new HardwareWindow());
+		editor_windows.push_back(performance_window = new PerformanceWindow());
+		editor_windows.push_back(about_window = new AboutWindow());
+		editor_windows.push_back(config_window = new AppWindowConfigWindow());
+		editor_windows.push_back(style_editor_window = new EditorStyleWindow());
+		editor_windows.push_back(renderer_config_window = new RendererConfigWindow());
+		editor_windows.push_back(input_config_window = new InputConfigWindow());
+		editor_windows.push_back(tags_and_layers_window = new TagsAndLayersWindow());
+		editor_windows.push_back(import_window = new ImportWindow());
+		editor_windows.push_back(resources_window = new ResourcesWindow());
+		editor_windows.push_back(resources_config_window = new ResourcesConfigWindow());
+		editor_windows.push_back(text_editor_window = new TextEditorWindow());
+		editor_windows.push_back(audio_window = new AudioWindow());
+
+		//editor_panels.push_back(animator_panel = new PanelAnimator());
+		//editor_panels.push_back(particle_editor_panel = new PanelParticleEditor());
+		ImGui::LoadDocks();
+		drag_data = new DragData();
+	}
 	
-	editor_windows.push_back(scene_window = new SceneWindow());
-	editor_windows.push_back(assets_window = new AssetsWindow());
-	editor_windows.push_back(hierarchy_window = new HierarchyWindow());
-	editor_windows.push_back(properties_window = new PropertiesWindow());
-	editor_windows.push_back(console_window = new ConsoleWindow());
-	editor_windows.push_back(hardware_window = new HardwareWindow());
-	editor_windows.push_back(performance_window = new PerformanceWindow());
-	editor_windows.push_back(about_window = new AboutWindow());
-	editor_windows.push_back(config_window = new AppWindowConfigWindow());
-	editor_windows.push_back(style_editor_window = new EditorStyleWindow());
-	editor_windows.push_back(renderer_config_window = new RendererConfigWindow());
-	editor_windows.push_back(input_config_window = new InputConfigWindow());
-	editor_windows.push_back(tags_and_layers_window = new TagsAndLayersWindow());
-	editor_windows.push_back(import_window = new ImportWindow());
-	editor_windows.push_back(resources_window = new ResourcesWindow());
 	editor_windows.push_back(game_window = new GameWindow());
-	editor_windows.push_back(resources_config_window = new ResourcesConfigWindow());
-	editor_windows.push_back(text_editor_window = new TextEditorWindow());
-	editor_windows.push_back(audio_window = new AudioWindow());
-
-	//editor_panels.push_back(animator_panel = new PanelAnimator());
-	//editor_panels.push_back(particle_editor_panel = new PanelParticleEditor());
-	ImGui::LoadDocks();
-
-	drag_data = new DragData();
 
 	return true;
 }
@@ -93,187 +96,197 @@ update_status ModuleEditor::PreUpdate(float delta_time)
 
 update_status ModuleEditor::Update(float deltaTime)
 {
-	ms_timer.Start();
 	bool ret = true;
-	ImGui::PushFont(font);
-	if (ImGui::BeginMainMenuBar())
+	if (!App->IsGame())
 	{
-		bool selected = false;
-		ImGuiStyle& style = ImGui::GetStyle();
-		ImVec4 previous_color = style.Colors[ImGuiCol_Text];
-		style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-		if (ImGui::BeginMenu("File"))
+		ms_timer.Start();
+		ImGui::PushFont(font);
+		if (ImGui::BeginMainMenuBar())
 		{
-			style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-
-			if (ImGui::MenuItem("New Scene"))
-			{
-				App->scene->NewScene(false);
-			}
-			if (ImGui::MenuItem("Load Scene"))
-			{
-				char const * lFilterPatterns[1] = { "*.scene" };
-				const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
-				if (path != NULL) {
-					App->scene->LoadScene(path);
-				}
-			}
-			if (ImGui::MenuItem("Save Scene"))
-			{
-				char const * lFilterPatterns[1] = { "*.scene" };
-				const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name + ".scene").c_str(), 1, lFilterPatterns, NULL);
-				if (path != NULL) {
-					std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
-					App->scene->scene_name = new_scene_name;
-					App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
-					std::string s_path;
-					s_path = App->file_system->ChangeFileExtension(std::string(path), "scene");
-					App->scene->SaveScene(s_path);
-					App->scene->saving_index = 0;
-				}
-			}
-			ImGui::Separator();
-			if (ImGui::MenuItem("Exit")) {
-				return UPDATE_STOP;
-			}
-
-			ImGui::EndMenu();
+			bool selected = false;
+			ImGuiStyle& style = ImGui::GetStyle();
+			ImVec4 previous_color = style.Colors[ImGuiCol_Text];
 			style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-		}
-
-		if (ImGui::BeginMenu("Windows"))
-		{
-			style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-			if (ImGui::BeginMenu("Configuration"))
+			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Window Config"))
+				style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+
+				if (ImGui::MenuItem("New Scene"))
 				{
-					config_window->active = !config_window->active;
+					App->scene->NewScene(false);
 				}
-				if (ImGui::MenuItem("Renderer Config"))
+				if (ImGui::MenuItem("Load Scene"))
 				{
-					renderer_config_window->active = !renderer_config_window->active;
+					char const * lFilterPatterns[1] = { "*.scene" };
+					const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
+					if (path != NULL) {
+						App->scene->LoadScene(path);
+					}
 				}
-				if (ImGui::MenuItem("Input Config"))
+				if (ImGui::MenuItem("Save Scene"))
 				{
-					input_config_window->active = !input_config_window->active;
+					char const * lFilterPatterns[1] = { "*.scene" };
+					const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name + ".scene").c_str(), 1, lFilterPatterns, NULL);
+					if (path != NULL) {
+						std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
+						App->scene->scene_name = new_scene_name;
+						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
+						std::string s_path;
+						s_path = App->file_system->ChangeFileExtension(std::string(path), "scene");
+						App->scene->SaveScene(s_path);
+						App->scene->saving_index = 0;
+					}
 				}
-				if (ImGui::MenuItem("Tags & Layers"))
-				{
-					tags_and_layers_window->active = !tags_and_layers_window->active;
+				ImGui::Separator();
+				if (ImGui::MenuItem("Exit")) {
+					return UPDATE_STOP;
 				}
-				if (ImGui::MenuItem("Resource Management"))
+
+				ImGui::EndMenu();
+				style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+			}
+
+			if (ImGui::BeginMenu("Windows"))
+			{
+				style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+				if (ImGui::BeginMenu("Configuration"))
 				{
-					resources_config_window->active = !resources_config_window->active;
+					if (ImGui::MenuItem("Window Config"))
+					{
+						config_window->active = !config_window->active;
+					}
+					if (ImGui::MenuItem("Renderer Config"))
+					{
+						renderer_config_window->active = !renderer_config_window->active;
+					}
+					if (ImGui::MenuItem("Input Config"))
+					{
+						input_config_window->active = !input_config_window->active;
+					}
+					if (ImGui::MenuItem("Tags & Layers"))
+					{
+						tags_and_layers_window->active = !tags_and_layers_window->active;
+					}
+					if (ImGui::MenuItem("Resource Management"))
+					{
+						resources_config_window->active = !resources_config_window->active;
+					}
+					ImGui::EndMenu();
+				}
+				if (ImGui::MenuItem("Hardware"))
+				{
+					hardware_window->active = !hardware_window->active;
+				}
+				if (ImGui::MenuItem("Performance"))
+				{
+					performance_window->active = !performance_window->active;
+				}
+				if (ImGui::MenuItem("Editor Style"))
+				{
+					style_editor_window->active = !style_editor_window->active;
+				}
+				if (ImGui::MenuItem("Audio Engine"))
+				{
+					audio_window->active = !audio_window->active;
+				}
+
+				ImGui::EndMenu();
+				style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+			}
+
+			if (ImGui::BeginMenu("Help"))
+			{
+				style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+				if (ImGui::MenuItem("About..."))
+				{
+					about_window->active = !about_window->active;
+				}
+				if (ImGui::MenuItem("Documentation"))
+				{
+					OpenBrowserPage("https://github.com/sergipa/The-Creator-3D/wiki");
+				}
+				if (ImGui::MenuItem("Download Latest"))
+				{
+					OpenBrowserPage("https://github.com/sergipa/The-Creator-3D/releases");
+				}
+				if (ImGui::MenuItem("Report a bug"))
+				{
+					OpenBrowserPage("https://github.com/sergipa/The-Creator-3D/issues");
 				}
 				ImGui::EndMenu();
+				style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 			}
-			if (ImGui::MenuItem("Hardware"))
-			{
-				hardware_window->active = !hardware_window->active;
-			}
-			if (ImGui::MenuItem("Performance"))
-			{
-				performance_window->active = !performance_window->active;
-			}
-			if (ImGui::MenuItem("Editor Style"))
-			{
-				style_editor_window->active = !style_editor_window->active;
-			}
-			if (ImGui::MenuItem("Audio Engine"))
-			{
-				audio_window->active = !audio_window->active;
-			}
-
-			ImGui::EndMenu();
-			style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+			ImGui::EndMainMenuBar();
+			style.Colors[ImGuiCol_Text] = previous_color;
 		}
 
-		if (ImGui::BeginMenu("Help"))
-		{
-			style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-			if (ImGui::MenuItem("About..."))
-			{
-				about_window->active = !about_window->active;
-			}
-			if (ImGui::MenuItem("Documentation"))
-			{
-				OpenBrowserPage("https://github.com/sergipa/The-Creator-3D/wiki");
-			}
-			if (ImGui::MenuItem("Download Latest"))
-			{
-				OpenBrowserPage("https://github.com/sergipa/The-Creator-3D/releases");
-			}
-			if (ImGui::MenuItem("Report a bug"))
-			{
-				OpenBrowserPage("https://github.com/sergipa/The-Creator-3D/issues");
-			}
-			ImGui::EndMenu();
-			style.Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-		}
-		ImGui::EndMainMenuBar();
-		style.Colors[ImGuiCol_Text] = previous_color;
-	}
+		ImVec2 display_size = ImGui::GetIO().DisplaySize;
+		display_size.y -= 10;
+		ImGui::SetNextWindowSize(display_size);
+		ImGui::SetNextWindowPos(ImVec2(0, 20));
+		ImGui::Begin("PanelEditor", NULL, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
 
-	ImVec2 display_size = ImGui::GetIO().DisplaySize;
-	display_size.y -= 10;
-	ImGui::SetNextWindowSize(display_size);
-	ImGui::SetNextWindowPos(ImVec2(0, 20));
-	ImGui::Begin("PanelEditor", NULL, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoMove |
-		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
-
-	ImGui::SameLine(ImGui::GetIO().DisplaySize.x / 2 - 75);
-	if (!App->IsPlaying())
-	{
-		if (App->IsPaused())
+		ImGui::SameLine(ImGui::GetIO().DisplaySize.x / 2 - 75);
+		if (!App->IsPlaying())
 		{
-			if (ImGui::Button("Paused", { 50,40 })) {
-				App->UnPause();
-				App->time->time_scale = 1.0f;
+			if (App->IsPaused())
+			{
+				if (ImGui::Button("Paused", { 50,40 })) {
+					App->UnPause();
+					App->time->time_scale = 1.0f;
+				}
+			}
+			else
+			{
+				if (ImGui::Button("Play", { 50,40 })) {
+					App->Play();
+					App->time->time_scale = 1.0f;
+				}
 			}
 		}
 		else
 		{
-			if (ImGui::Button("Play", { 50,40 })) {
-				App->Play();
-				App->time->time_scale = 1.0f;
+			if (ImGui::Button("Pause", { 50,40 })) {
+				App->Pause();
+				App->time->time_scale = 0.0f;
 			}
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop", { 50,40 })) {
+			App->Stop();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Step", { 50,40 })) {
+			App->UpdateStep();
+		}
+
+		ImGui::Separator();
+		ImGui::BeginDockspace();
+		for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); it++) {
+			if ((*it)->IsActive())
+			{
+				(*it)->DrawWindow();
+			}
+		}
+		ImGui::EndDockspace();
+		ImGui::End();
+		ImGui::PopFont();
+		if (ImGui::IsMouseReleased(0) && drag_data->hasData)
+		{
+			drag_data->clearData();
+			App->SetCustomCursor(App->ENGINE_CURSOR_ARROW);
+		}
+		performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 	}
 	else
 	{
-		if (ImGui::Button("Pause", { 50,40 })) {
-			App->Pause();
-			App->time->time_scale = 0.0f;
-		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Stop", { 50,40 })) {
-		App->Stop();
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Step", { 50,40 })) {
-		App->UpdateStep();
-	}
-
-	ImGui::Separator();
-	ImGui::BeginDockspace();
-	for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); it++) {
-		if ((*it)->IsActive())
+		if (game_window)
 		{
-			(*it)->DrawWindow();
+			game_window->DrawWindow();
 		}
 	}
-	ImGui::EndDockspace();
-	ImGui::End();
-	ImGui::PopFont();
-	if (ImGui::IsMouseReleased(0) && drag_data->hasData)
-	{
-		drag_data->clearData();
-		App->SetCustomCursor(App->ENGINE_CURSOR_ARROW);
-	}
-	performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 	return UPDATE_CONTINUE;
 }
 

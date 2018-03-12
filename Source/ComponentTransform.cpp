@@ -48,7 +48,6 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
-
 	float3 diff = rotation - shown_rotation;
 	shown_rotation = rotation;
 
@@ -56,7 +55,6 @@ void ComponentTransform::SetRotation(float3 rotation)
 	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();
 	dirty = true; 
-
 }
 
 float3 ComponentTransform::GetGlobalRotation() const

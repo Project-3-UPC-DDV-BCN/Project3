@@ -267,7 +267,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::IsStatic", (const void*)GameObjectIsStatic);
 	mono_add_internal_call("TheEngine.TheGameObject::Duplicate", (const void*)DuplicateGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::SetParent", (const void*)SetGameObjectParent);
-	//mono_add_internal_call("TheEngine.TheGameObject::GetParent", (const void*)GetGameObjectParent);
+	mono_add_internal_call("TheEngine.TheGameObject::GetParent", (const void*)GetGameObjectParent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetSelf", (const void*)GetSelfGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetChild(int)", (const void*)GetGameObjectChild);
 	mono_add_internal_call("TheEngine.TheGameObject::GetChild(string)", (const void*)GetGameObjectChildString);
@@ -277,6 +277,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetSceneGameObjects", (const void*)GetSceneGameObjects);
 	mono_add_internal_call("TheEngine.TheGameObject::GetObjectsInFrustum", (const void*)GetObjectsInFrustum);
+	mono_add_internal_call("TheEngine.TheGameObject::GetAllChilds", (const void*)GetAllChilds);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -414,6 +415,10 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheScript::SetQuaternionField", (const void*)SetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::CallFunction", (const void*)CallFunction);
+
+	//APPLICATION
+	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
+	mono_add_internal_call("TheEngine.TheApplication::Quit", (const void*)Quit);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -486,10 +491,10 @@ void ModuleScriptImporter::SetGameObjectParent(MonoObject * object, MonoObject *
 	current_script->SetGameObjectParent(object, parent);
 }
 
-//MonoObject* ModuleScriptImporter::GetGameObjectParent(MonoObject * object)
-//{
-//	return current_script->GetGameObjectParent(object);
-//}
+MonoObject* ModuleScriptImporter::GetGameObjectParent(MonoObject * object)
+{
+	return current_script->GetGameObjectParent(object);
+}
 
 MonoObject * ModuleScriptImporter::GetGameObjectChild(MonoObject * object, int index)
 {
@@ -519,6 +524,11 @@ MonoArray * ModuleScriptImporter::GetSceneGameObjects(MonoObject * object)
 MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist )
 {
 	return current_script->GetObjectsInFrustum(pos, front, up, nearPlaneDist, farPlaneDist);
+}
+
+MonoArray * ModuleScriptImporter::GetAllChilds(MonoObject * object)
+{
+	return current_script->GetSceneGameObjects(object);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
@@ -1019,6 +1029,11 @@ float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float ma
 void ModuleScriptImporter::LoadScene(MonoString * scene_name)
 {
 	current_script->LoadScene(scene_name);
+}
+
+void ModuleScriptImporter::Quit()
+{
+	current_script->Quit();
 }
 
 void ModuleScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)

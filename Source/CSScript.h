@@ -90,9 +90,10 @@ public:
 	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	int GetGameObjectChildCount(MonoObject* object);
 	MonoObject* FindGameObject(MonoString* gameobject_name);
-	MonoObject* GetParent(MonoObject* object);
+	MonoObject* GetGameObjectParent(MonoObject* object);
 	MonoArray* GetSceneGameObjects(MonoObject* object);
 	MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
+	MonoArray* GetAllChilds(MonoObject* object);
 
 	//COMPONENT
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
@@ -218,6 +219,7 @@ public:
 
 	//APPLICATION
 	void LoadScene(MonoString* scene_name);
+	void Quit();
 
 	//SCRIPT
 	void SetBoolField(MonoObject* object, MonoString* field_name, bool value);
