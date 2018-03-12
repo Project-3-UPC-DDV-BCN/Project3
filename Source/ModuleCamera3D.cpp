@@ -81,6 +81,7 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
+	if (App->IsGame()) return UPDATE_CONTINUE;
 	ms_timer.Start();
 	if (can_update)
 	{

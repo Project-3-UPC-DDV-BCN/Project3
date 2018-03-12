@@ -50,7 +50,15 @@ void SoundBankResource::CreateMeta() const
 
 void SoundBankResource::LoadToMemory()
 {
-	std::string bank_path = ASSETS_SOUNDBANK_FOLDER + GetName();
+	std::string bank_path;
+	if (!App->IsGame())
+	{
+		bank_path = ASSETS_SOUNDBANK_FOLDER + GetName();
+	}
+	else
+	{
+		bank_path = LIBRARY_SOUNDBANK_FOLDER + GetName();
+	}
 	Wwise::LoadBank(bank_path.c_str());
 
 	std::string json_file = bank_path.substr(0, bank_path.find_last_of('.')) + ".json"; // Changing .bnk with .json
