@@ -23,7 +23,7 @@ public class ShipProperties
 		hp_inc = 0; 
 		is_dead = false; 
 	
-		slave_properties = TheGameObject.Find("Sleve1").GetComponent<TheScript>(); 
+		slave_properties = TheGameObject.Find("Slave1").GetComponent<TheScript>(); 
 
 		self_destructor_scpt = TheGameObject.Self.GetComponent<TheScript>(0);   //The number has to be changed by order
 	}
