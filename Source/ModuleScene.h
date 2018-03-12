@@ -58,7 +58,7 @@ public:
 	void GetOctreeIntersects(std::list<ComponentMeshRenderer*>& list, AABB& box);
 
 	void NewScene(bool loading_scene);
-	void LoadScene(std::string path);
+	void LoadScene(std::string path, bool runtime = false);
 	void SaveScene(Data & data) const;
 
 	void LoadPrefab(Prefab* prefab);
@@ -115,5 +115,6 @@ private:
 
 	bool to_load_scene = false;
 	std::string scene_to_load;
+	bool load_scene_runtime = false;
 
 };

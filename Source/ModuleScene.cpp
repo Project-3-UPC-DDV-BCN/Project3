@@ -205,32 +205,6 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
-	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) {
-		if (*it != nullptr)
-		{
-			if (!(*it)->GetIsUsedInPrefab()) {
-				(*it)->OnDestroy();
-				if ((*it)->IsRoot()) {
-					root_gameobjects.remove(*it);
-				}
-				CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
-				RELEASE(*it);
-			}
-			else
-			{
-				RemoveWithoutDelete(*it);
-			}
-			it = gameobjects_to_destroy.erase(it);
-		}
-	}
-
-	skybox->SetSize(skybox_size);
-
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleScene::PostUpdate(float dt)
-{
 	if (to_load_scene)
 	{
 		Data data;
@@ -273,6 +247,9 @@ update_status ModuleScene::PostUpdate(float dt)
 				}
 			}
 			saving_index = 0;
+
+			if (load_scene_runtime)
+				InitScripts();
 		}
 		else
 		{
@@ -281,9 +258,33 @@ update_status ModuleScene::PostUpdate(float dt)
 
 		to_load_scene = false;
 	}
-	bool loading_scene = false;
-	bool to_load_scene = false;
-	std::string scene_to_load;
+
+	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) {
+		if (*it != nullptr)
+		{
+			if (!(*it)->GetIsUsedInPrefab()) {
+				(*it)->OnDestroy();
+				if ((*it)->IsRoot()) {
+					root_gameobjects.remove(*it);
+				}
+				CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
+				RELEASE(*it);
+			}
+			else
+			{
+				RemoveWithoutDelete(*it);
+			}
+			it = gameobjects_to_destroy.erase(it);
+		}
+	}
+
+	skybox->SetSize(skybox_size);
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleScene::PostUpdate(float dt)
+{
 
 	return UPDATE_CONTINUE;
 }
@@ -515,12 +516,13 @@ void ModuleScene::NewScene(bool loading_scene)
 	}
 }
 
-void ModuleScene::LoadScene(std::string path)
+void ModuleScene::LoadScene(std::string path, bool runtime)
 {
 	if (!to_load_scene)
 	{
 		to_load_scene = true;
 		scene_to_load = path;
+		load_scene_runtime = runtime;
 	}
 }
 

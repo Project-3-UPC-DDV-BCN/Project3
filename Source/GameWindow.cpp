@@ -79,5 +79,8 @@ float2 GameWindow::GetPos() const
 
 float2 GameWindow::GetSize() const
 {
-	return float2(game_scene_width, game_scene_height);
+	if (!App->IsGame())
+		return float2(game_scene_width, game_scene_height);
+	else
+		return float2(App->window->GetWidth(), App->window->GetHeight());
 }
