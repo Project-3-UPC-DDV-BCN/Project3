@@ -486,10 +486,10 @@ void ModuleScriptImporter::SetGameObjectParent(MonoObject * object, MonoObject *
 	current_script->SetGameObjectParent(object, parent);
 }
 
-MonoObject* ModuleScriptImporter::GetGameObjectParent(MonoObject * object)
-{
-	return current_script->GetGameObjectParent(object);
-}
+//MonoObject* ModuleScriptImporter::GetGameObjectParent(MonoObject * object)
+//{
+//	return current_script->GetGameObjectParent(object);
+//}
 
 MonoObject * ModuleScriptImporter::GetGameObjectChild(MonoObject * object, int index)
 {

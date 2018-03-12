@@ -1140,41 +1140,41 @@ void CSScript::SetGameObjectParent(MonoObject * object, MonoObject * parent)
 	
 	active_gameobject->SetParent(go_parent);
 }
-
-MonoObject* CSScript::GetGameObjectParent(MonoObject * object)
-{
-	if (!MonoObjectIsValid(object))
-	{
-		return nullptr;
-	}
-
-	if (!GameObjectIsValid())
-	{
-		return nullptr;
-	}
-
-	GameObject* parent = active_gameobject->GetParent();
-	if (parent)
-	{
-		MonoObject* parent_mono_object = FindMonoObject(parent);
-		if (!parent_mono_object)
-		{
-			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				MonoObject* new_object = mono_object_new(mono_domain, c);
-				if (new_object)
-				{
-					created_gameobjects[new_object] = parent;
-					return new_object;
-				}
-			}
-		}
-		return parent_mono_object;
-	}
-
-	return nullptr;
-}
+//
+//MonoObject* CSScript::GetGameObjectParent(MonoObject * object)
+//{
+//	if (!MonoObjectIsValid(object))
+//	{
+//		return nullptr;
+//	}
+//
+//	if (!GameObjectIsValid())
+//	{
+//		return nullptr;
+//	}
+//
+//	GameObject* parent = active_gameobject->GetParent();
+//	if (parent)
+//	{
+//		MonoObject* parent_mono_object = FindMonoObject(parent);
+//		if (!parent_mono_object)
+//		{
+//			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+//			if (c)
+//			{
+//				MonoObject* new_object = mono_object_new(mono_domain, c);
+//				if (new_object)
+//				{
+//					created_gameobjects[new_object] = parent;
+//					return new_object;
+//				}
+//			}
+//		}
+//		return parent_mono_object;
+//	}
+//
+//	return nullptr;
+//}
 
 MonoObject * CSScript::GetGameObjectChild(MonoObject * object, int index)
 {
