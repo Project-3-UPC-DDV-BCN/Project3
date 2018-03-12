@@ -58,7 +58,7 @@ public:
 
 	void NewScene(bool loading_scene);
 	void LoadScene(std::string path);
-	void SaveScene(std::string path) const;
+	void SaveScene(Data & data) const;
 
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);
