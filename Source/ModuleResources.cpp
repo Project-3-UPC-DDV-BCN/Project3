@@ -135,8 +135,6 @@ void ModuleResources::FillResourcesLists()
 		if (!App->file_system->DirectoryExist(LIBRARY_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SOUNDBANK_FOLDER_PATH);
 		if (!App->file_system->DirectoryExist(LIBRARY_GOAP_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_GOAP_FOLDER_PATH);
 
-		
-		CreateDefaultMaterial();
 	}
 	else
 	{
@@ -144,6 +142,7 @@ void ModuleResources::FillResourcesLists()
 	}
 
 	CreateDefaultShaders();
+	CreateDefaultMaterial();
 	
 	std::vector<std::string> files_in_assets = App->file_system->GetAllFilesRecursively(resources_folder_path);
 	
