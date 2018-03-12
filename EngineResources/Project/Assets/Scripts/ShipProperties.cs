@@ -64,5 +64,6 @@ public class ShipProperties
 	void OnCollisionEnter()
 	{
 		hp = 0; 
+		TheConsole.Log("Collision");
 	}
 }

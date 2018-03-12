@@ -228,7 +228,8 @@ void ComponentCamera::Save(Data & data) const
 	rect_to_float.w = camera_viewport.bottom;
 	data.AddVector4("viewport_rect", rect_to_float);
 	data.AddInt("render_order", render_order);
-
+	data.AddFloat("far_plane", GetFarPlanceDistance());
+	data.AddFloat("near_plane", GetNearPlaneDistance());
 }
 
 void ComponentCamera::Load(Data & data)
@@ -248,6 +249,8 @@ void ComponentCamera::Load(Data & data)
 	camera_viewport.right = float_to_rect.z;
 	camera_viewport.bottom = float_to_rect.w;
 	render_order = data.GetInt("render_order");
+	SetFarPlaneDistance(data.GetFloat("far_plane"));
+	SetNearPlaneDistance(data.GetFloat("near_plane"));
 	
 	//UpdateProjection();
 }
