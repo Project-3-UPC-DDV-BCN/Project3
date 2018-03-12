@@ -45,7 +45,7 @@ public class MainMenuVS2
 		{
 			if(campaign_rect.OnClickUp)
 			{
-				//Application.LoadScene("VerticalSlice_OneEweToRuleThemAll");
+				TheApplication.LoadScene("VerticalSlice_OneEweToRuleThemAll");
 			}
 
 			if(campaign_rect.OnMouseOver)
@@ -73,7 +73,7 @@ public class MainMenuVS2
 		{
 			if(exit_rect.OnClickUp)
 			{
-				TheConsole.Log("Exit");
+				TheApplication.Quit();
 			}
 
 			if(exit_rect.OnMouseOver)
