@@ -72,7 +72,7 @@ void ResourcesWindow::DrawWindow()
 	ImGui::Text("Resource Filter: ");
 	ImGui::SameLine();
 	ImGui::TextColored({ 0,1,1,1 }, "*case sensitive!");
-	ImGui::InputText("", input_text, 256);
+	ImGui::InputText("Fil", input_text, 256);
 	ImGui::Spacing();
 
 	switch (type)

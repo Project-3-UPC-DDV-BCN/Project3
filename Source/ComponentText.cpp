@@ -316,6 +316,11 @@ void ComponentText::UpdateText(bool font_update)
 {
 	if (font != nullptr)
 	{
+		std::string t = text;
+
+		if (TextCmp("", text.c_str()))
+			t = " ";
+
 		float2 last_text_size = text_size;
 
 		if (last_text_size.x > 0)
@@ -329,9 +334,9 @@ void ComponentText::UpdateText(bool font_update)
 
 		float4 colour255 = float4(colour.x * 255, colour.y * 255, colour.z * 255, colour.w * 255);
 
-		text_size = App->font_importer->CalcTextSize(text.c_str(), font, bold, italic, underline, strikethrough);
+		text_size = App->font_importer->CalcTextSize(t.c_str(), font, bold, italic, underline, strikethrough);
 
-		texture = App->font_importer->LoadText(text.c_str(), font, colour255, bold, italic, underline, strikethrough);
+		texture = App->font_importer->LoadText(t.c_str(), font, colour255, bold, italic, underline, strikethrough);
 
 		c_rect_trans->SetAspectRatio(text_size.x / text_size.y);
 
