@@ -16,6 +16,8 @@ public class GameManager
 	//Score Management
 	private int score;
 	private int score_to_inc; 
+	
+	private string team; 
 
 	private TheText show_gametime; 
 	private TheText show_score; 
@@ -27,7 +29,9 @@ public class GameManager
 		score = 0; 
 
 		timer = (float)gametime_seconds; 
-		gametime_step = timer - 1.0f; 		
+		gametime_step = timer - 1.0f; 	
+
+		team = TheGameObject.Find("Slave1").tag; 	
 		 
 		show_gametime.Text = GetTimeFromSeconds(gametime_seconds); 
 		show_score.Text = score.ToString(); 
