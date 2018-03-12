@@ -554,6 +554,7 @@ public class Slave1Movement {
 
     public void DamageSlaveOne(float dmg)
     {
+		audio_source.Play("Play_Player_hit");
         switch(TheRandom.RandomInt() % ship_parts)
         {
             case 0:

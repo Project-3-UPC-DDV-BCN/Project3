@@ -407,13 +407,18 @@ void Application::Play()
 {
 	if (state == OnStop) {
 		state = OnPlay;
-		if (!App->file_system->DirectoryExist(TMP_FOLDER_PATH))
+		if (!is_game_mode)
 		{
-			App->file_system->Create_Directory(TMP_FOLDER_PATH);
+			if (!App->file_system->DirectoryExist(TMP_FOLDER_PATH))
+			{
+				App->file_system->Create_Directory(TMP_FOLDER_PATH);
+			}
+			Data data;
+			App->scene->SaveScene(data);
+			App->scene->saving_index = 0;
+			data.SaveAsBinary(TMP_FOLDER"tmp_scene");
 		}
-
-		App->scene->SaveScene(TMP_FOLDER"tmp_scene");
-		App->scene->saving_index = 0;
+		
 		App->scene->is_game = true;
 		App->scene->InitScripts();
 		App->scene->SetParticleSystemsState(); 

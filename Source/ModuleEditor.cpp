@@ -133,8 +133,12 @@ update_status ModuleEditor::Update(float deltaTime)
 						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
 						std::string s_path;
 						s_path = App->file_system->ChangeFileExtension(std::string(path), "scene");
-						App->scene->SaveScene(s_path);
+						Data data;
+						App->scene->SaveScene(data);
 						App->scene->saving_index = 0;
+						data.SaveAsBinary(s_path);
+						if (!App->file_system->DirectoryExist(LIBRARY_SCENES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCENES_FOLDER_PATH);
+						data.SaveAsBinary(LIBRARY_SCENES_FOLDER + new_scene_name + ".scene");
 					}
 				}
 				ImGui::Separator();

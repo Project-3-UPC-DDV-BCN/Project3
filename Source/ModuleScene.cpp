@@ -505,16 +505,13 @@ void ModuleScene::LoadScene(std::string path)
 	}
 }
 
-void ModuleScene::SaveScene(std::string path) const
+void ModuleScene::SaveScene(Data & data) const
 {
-	Data data;
 	data.AddString("Scene Name", scene_name);
 	data.AddInt("GameObjects_Count", scene_gameobjects.size());
 	for (std::list<GameObject*>::const_iterator it = root_gameobjects.begin(); it != root_gameobjects.end(); it++) {
 		(*it)->Save(data);
 	}
-	data.SaveAsBinary(path);
-	data.SaveAsBinary(LIBRARY_SCENES_FOLDER + scene_name + ".scene");
 }
 
 void ModuleScene::LoadPrefab(Prefab* prefab)
