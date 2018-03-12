@@ -11,7 +11,7 @@ public class laser
 	void Start ()
 	{
 		team =  TheGameObject.Find("Slave1").tag; 
-		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0); 
+		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
 	}
 	
 	void Update () 
@@ -27,7 +27,6 @@ public class laser
 
 	void OnCollisionEnter(TheGameObject other_ship)
 	{
-		
 		string enemy_tag = "TIEFIGHTER"; 
 		TheConsole.Log("Collided"); 
 
