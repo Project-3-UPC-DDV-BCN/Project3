@@ -48,7 +48,7 @@ private:
 	static mono_bool GameObjectIsStatic(MonoObject* object);
 	static MonoObject* DuplicateGameObject(MonoObject* object);
 	static void SetGameObjectParent(MonoObject* object, MonoObject* parent);
-	static MonoObject* GetGameObjectParent(MonoObject* object);
+	//static MonoObject* GetGameObjectParent(MonoObject* object);
 	static MonoObject* GetGameObjectChild(MonoObject* object, int index);
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
