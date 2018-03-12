@@ -31,7 +31,7 @@ Shader * ModuleShaderImporter::LoadShaderFromLibrary(std::string path)
 	if (App->file_system->FileExist(path))
 	{
 		Data data;
-		if (data.LoadBinary(path))
+		if (data.LoadBinary(path))	
 		{
 			std::string extension = App->file_system->GetFileExtension(path);
 			Shader* shader = new Shader();

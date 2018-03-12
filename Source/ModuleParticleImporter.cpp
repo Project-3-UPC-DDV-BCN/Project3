@@ -60,7 +60,11 @@ std::string ModuleParticleImporter::ImportTemplate(std::string path)
 {
 	std::string file_name = App->file_system->GetFileName(path);
 	std::string library_path = LIBRARY_PARTICLES_FOLDER + file_name;
-	App->file_system->Copy(path, library_path);
+	if (!App->file_system->FileExist(path))
+	{
+		App->file_system->Copy(path, library_path);
+	}
+	
 	return library_path;
 }
 

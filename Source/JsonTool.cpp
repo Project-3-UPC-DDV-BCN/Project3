@@ -21,27 +21,25 @@ JSON_File* JSONTool::LoadJSON(const char * path)
 	if (!App->file_system->DirectoryExist(path))
 	{
 		CreateJSON(path);
-		CONSOLE_DEBUG("File Does not Exist");
+		CONSOLE_DEBUG("File %s Does not Exist. Creating a new one");
+	}
+
+	JSON_Value *user_data = json_parse_file(path);
+	JSON_Object *root_object = json_value_get_object(user_data);
+
+	if (user_data == nullptr)
+	{
+		CONSOLE_DEBUG("Error loading %s", path);
 	}
 	else
 	{
-		JSON_Value *user_data = json_parse_file(path);
-		JSON_Object *root_object = json_value_get_object(user_data);
+		CONSOLE_DEBUG("Succes loading %s", path);
 
-		if (user_data == nullptr)
-		{
-			CONSOLE_DEBUG("Error loading %s", path);
-		}
-		else
-		{
-			CONSOLE_DEBUG("Succes loading %s", path);
+		JSON_File* new_doc = new JSON_File(user_data, root_object, path);
+		files.push_back(new_doc);
 
-			JSON_File* new_doc = new JSON_File(user_data, root_object, path);
-			files.push_back(new_doc);
-
-			ret = new_doc;
-			ret->Save();
-		}
+		ret = new_doc;
+		ret->Save();
 	}
 	return ret;
 }

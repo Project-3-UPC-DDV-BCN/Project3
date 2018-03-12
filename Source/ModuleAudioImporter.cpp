@@ -34,6 +34,11 @@ std::string ModuleAudioImporter::ImportSoundBank(std::string path)
 		App->file_system->Copy(path, LIBRARY_SOUNDBANK_FOLDER + name_without_path);
 	}
 
+	if (App->file_system->FileExist(ASSETS_SOUNDBANK_FOLDER + name_without_extension + ".json"))
+	{
+		App->file_system->Copy(ASSETS_SOUNDBANK_FOLDER + name_without_extension + ".json", LIBRARY_SOUNDBANK_FOLDER + name_without_extension + ".json");
+	}
+
 	return (LIBRARY_SOUNDBANK_FOLDER + name_without_path);
 }
 

@@ -9,7 +9,7 @@
 #include "SoundBankResource.h"
 #include "ModuleResources.h"
 
-#include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
+#include "../EngineResources/Editor_Settings/Wwise_IDs.h"
 
 ComponentAudioSource::ComponentAudioSource(GameObject* attached_gameobject)
 {

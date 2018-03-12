@@ -21,7 +21,7 @@
 #include "ModuleScene.h"
 #include "SoundBankResource.h"
 
-#include "../EngineResources/Project/Assets/SoundBanks/Wwise_IDs.h"
+#include "../EngineResources/Editor_Settings/Wwise_IDs.h"
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 

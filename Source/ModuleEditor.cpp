@@ -307,7 +307,10 @@ bool ModuleEditor::CleanUp()
 	}
 	RELEASE(drag_data);
 	editor_windows.clear();
-	ImGui::SaveDocks();
+	if (!App->IsGame())
+	{
+		ImGui::SaveDocks();
+	}
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
 }

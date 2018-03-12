@@ -119,22 +119,33 @@ bool ModuleResources::Init(Data * editor_config)
 
 void ModuleResources::FillResourcesLists()
 {
-	std::string assets_folder_path = App->file_system->StringToPathFormat(ASSETS_FOLDER_PATH);
-	std::vector<std::string> files_in_assets = App->file_system->GetAllFilesRecursively(assets_folder_path);
+	std::string resources_folder_path;
+	if (!App->IsGame())
+	{
+		resources_folder_path = App->file_system->StringToPathFormat(ASSETS_FOLDER_PATH);
 
-	if (!App->file_system->DirectoryExist(LIBRARY_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_TEXTURES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_TEXTURES_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_BMODEL_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_BMODEL_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SOUNDBANK_FOLDER_PATH);
-	if (!App->file_system->DirectoryExist(LIBRARY_GOAP_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_GOAP_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_TEXTURES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_TEXTURES_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_MESHES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MESHES_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_MATERIALS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_MATERIALS_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_FONTS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_FONTS_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_SHADERS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SHADERS_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_BMODEL_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_BMODEL_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_SOUNDBANK_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SOUNDBANK_FOLDER_PATH);
+		if (!App->file_system->DirectoryExist(LIBRARY_GOAP_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_GOAP_FOLDER_PATH);
+
+		
+		CreateDefaultMaterial();
+	}
+	else
+	{
+		resources_folder_path = App->file_system->StringToPathFormat(LIBRARY_FOLDER_PATH);
+	}
 
 	CreateDefaultShaders();
-	CreateDefaultMaterial();
+	
+	std::vector<std::string> files_in_assets = App->file_system->GetAllFilesRecursively(resources_folder_path);
 	
 	std::string shprog_meta_file;
 	bool exist_shprog_meta = false;
@@ -204,7 +215,14 @@ void ModuleResources::FillResourcesLists()
 	{
 		std::string extension = App->file_system->GetFileExtension(*it);
 		Resource::ResourceType type;
-		type = AssetExtensionToResourceType(extension);
+		if (!App->IsGame())
+		{
+			type = AssetExtensionToResourceType(extension);
+		}
+		else
+		{
+			type = LibraryExtensionToResourceType(extension);
+		}
 		if (type == Resource::Unknown)
 		{
 			if (App->file_system->GetFileName(*it).find("_GOAPGoal") != std::string::npos) type = Resource::GOAPGoalResource;
@@ -258,10 +276,17 @@ void ModuleResources::FillResourcesLists()
 			soundback_order.push_back(*it);
 			break;
 		case Resource::SceneResource:
-			if (!App->file_system->DirectoryExist(LIBRARY_SCENES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCENES_FOLDER_PATH);
-			std::string scene_name = App->file_system->GetFileName(*it);
-			App->file_system->Copy(*it, LIBRARY_SCENES_FOLDER + scene_name);
-			scene_list.push_back(LIBRARY_SCENES_FOLDER + scene_name);
+			if (!App->IsGame())
+			{
+				if (!App->file_system->DirectoryExist(LIBRARY_SCENES_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_SCENES_FOLDER_PATH);
+				std::string scene_name = App->file_system->GetFileName(*it);
+				App->file_system->Copy(*it, LIBRARY_SCENES_FOLDER + scene_name);
+				scene_list.push_back(LIBRARY_SCENES_FOLDER + scene_name);
+			}
+			else
+			{
+				scene_list.push_back(*it);
+			}
 			break;
 		}
 	}
@@ -1542,32 +1567,39 @@ void ModuleResources::CreateResource(std::string file_path)
 	else if (GetLibraryFile(file_path) != "")
 	{
 		std::string path = GetLibraryFile(file_path);
-		if (extension == ".cs")
+		if (!App->IsGame())
 		{
-			if (App->file_system->CompareFilesTime(file_path, path))
+			if (extension == ".cs")
 			{
-				App->script_importer->ImportScript(file_path);
+				if (App->file_system->CompareFilesTime(file_path, path))
+				{
+					App->script_importer->ImportScript(file_path);
+				}
 			}
-		}
-		if (extension == ".vshader" || extension == ".fshader")
-		{
-			if (App->file_system->CompareFilesTime(file_path, path))
+			if (extension == ".vshader" || extension == ".fshader")
 			{
-				App->shader_importer->ImportShader(file_path);
+				if (App->file_system->CompareFilesTime(file_path, path))
+				{
+					App->shader_importer->ImportShader(file_path);
+				}
 			}
-		}
-		if (extension == ".bnk")
-		{
-			if (App->file_system->CompareFilesTime(file_path, library_path))
+			if (extension == ".bnk")
 			{
-				App->audio_importer->ImportSoundBank(file_path);
+				if (App->file_system->CompareFilesTime(file_path, library_path))
+				{
+					App->audio_importer->ImportSoundBank(file_path);
+				}
 			}
 		}
 		resource = CreateResourceFromLibrary(path);
-		if (resource != nullptr)
+
+		if (!App->IsGame())
 		{
-			resource->SetAssetsPath(file_path);
-			if (!HasMetaFile(file_path)) resource->CreateMeta();
+			if (resource != nullptr)
+			{
+				resource->SetAssetsPath(file_path);
+				if (!HasMetaFile(file_path)) resource->CreateMeta();
+			}
 		}
 	}
 	else
@@ -2456,6 +2488,7 @@ void ModuleResources::CreateDefaultMaterial()
 		new_mat->Save(d);
 
 		d.SaveAsBinary(default_mat);
+		d.SaveAsBinary(LIBRARY_MATERIALS_FOLDER"engine_default_mat.mat");
 
 		RELEASE(new_mat);
 	}
@@ -2505,7 +2538,8 @@ void ModuleResources::LoadGOAPGoal(std::string path)
 
 void ModuleResources::LoadGOAPAction(std::string path)
 {
-	if (App->file_system->GetFileExtension(path) == ".cs" || App->file_system->GetFileExtension(path) == ".meta")
+	//if (App->file_system->GetFileExtension(path) == ".cs" || App->file_system->GetFileExtension(path) == ".meta")
+	if(App->file_system->GetFileExtension(path) != ".json")
 		return;
 	std::string name = App->file_system->GetFileNameWithoutExtension(path);
 	GOAPAction* action = new GOAPAction(name.c_str(),1,false);
