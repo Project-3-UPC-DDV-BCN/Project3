@@ -170,6 +170,8 @@ void ComponentFactory::StartFactory()
 					spawn_objects_list.push_back(go);
 					go->SetActive(false);
 				}
+				go->InitScripts();
+				go->StartScripts();
 				App->scene->AddGameObjectToScene(go);
 				App->resources->AddGameObject(go);
 				data.LeaveSection();

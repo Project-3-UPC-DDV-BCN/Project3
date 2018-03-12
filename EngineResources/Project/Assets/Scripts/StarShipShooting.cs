@@ -45,20 +45,21 @@ public class StarShipShooting {
     bool cooling = false;
 
     void Start () {
-
-	    laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+		
+		TheConsole.Log("Before Audio source");
+		audio_source = audio_emiter.GetComponent<TheAudioSource>();
+		if(audio_source == null) TheConsole.Log("Audio source");
+        weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
+		if(weapons_bar == null) TheConsole.Log("weapons_bar");
+        curr_overheat_inc = overheat_increment;
+		if(curr_overheat_inc == null) TheConsole.Log("curr_overheat_inc");
+		overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
+		if(overheat_bar_bar == null) TheConsole.Log("overheat_bar_bar");
+		crosshair_2.SetActive(false);
+		
+		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
 
         laser_factory.StartFactory();
-		
-		audio_source = audio_emiter.GetComponent<TheAudioSource>();
-
-        weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
-
-        curr_overheat_inc = overheat_increment;
-
-		overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
-		
-		crosshair_2.SetActive(false);
     }	
 
 	void Update () {

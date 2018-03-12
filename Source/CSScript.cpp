@@ -4181,6 +4181,7 @@ void CSScript::CallFunction(MonoObject * object, MonoString * function_name)
 			MonoMethod* method = script->GetFunction(name, 0);
 			if (method)
 			{
+				App->script_importer->SetCurrentScript(script);
 				script->CallFunction(method, nullptr);
 			}
 			else

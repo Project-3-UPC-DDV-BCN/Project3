@@ -281,7 +281,7 @@ void GameObject::SetActive(bool active)
 		}
 	}
 
-	if (App->IsPlaying())
+	/*if (App->IsPlaying())
 	{
 		ComponentScript * comp_script = nullptr;
 		for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
@@ -297,7 +297,7 @@ void GameObject::SetActive(bool active)
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void GameObject::SetStatic(bool is_static)
