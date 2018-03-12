@@ -231,7 +231,14 @@ void Application::FinishUpdate()
 		if (state == OnPlay || state == OnPause)
 		{
 			state = OnStop;
-			App->scene->LoadScene(TMP_FOLDER"tmp_scene");
+			if (!App->IsGame())
+			{
+				App->scene->LoadScene(TMP_FOLDER"tmp_scene");
+			}
+			else
+			{
+				App->scene->LoadScene(starting_scene_path);
+			}
 			App->scene->is_game = false;
 			to_stop = false;
 		}
@@ -308,6 +315,10 @@ bool Application::CleanUp()
 		ret = (*it)->CleanUp();
 	}
 
+	if (App->file_system->DirectoryExist(SHADER_DEFAULT_FOLDER_PATH))
+	{
+		App->file_system->DeleteDirectory(SHADER_DEFAULT_FOLDER_PATH);
+	}
 	return ret;
 }
 

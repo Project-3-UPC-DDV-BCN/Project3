@@ -135,28 +135,28 @@ void ComponentTransform::UpdateGlobalMatrix()
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
 
-		ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-		if (rb)
+		
+
+		if (!App->IsPlaying())
 		{
-			rb->SetTransform(transform_matrix.Transposed().ptr());
-			//rb->SetPosition(global_pos);
-			//rb->SetRotation(global_rot);
-		}
-		else
-		{
-			ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
-			if (blast)
+			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+			if (rb)
 			{
-				blast->SetTransform(transform_matrix.Transposed().ptr());
-				//blast->SetPosition(global_pos);
-				//blast->SetRotation(global_rot);
+				rb->SetTransform(transform_matrix.Transposed().ptr());
+				//rb->SetPosition(global_pos);
+				//rb->SetRotation(global_rot);
+			}
+			else
+			{
+				ComponentBlast* blast = (ComponentBlast*)GetGameObject()->GetComponent(Component::CompBlast);
+				if (blast)
+				{
+					blast->SetTransform(transform_matrix.Transposed().ptr());
+					//blast->SetPosition(global_pos);
+					//blast->SetRotation(global_rot);
+				}
 			}
 		}
-
-		/*if (!App->IsPlaying())
-		{
-			
-		}*/
 	}
 		
 //POSSIBLEEE

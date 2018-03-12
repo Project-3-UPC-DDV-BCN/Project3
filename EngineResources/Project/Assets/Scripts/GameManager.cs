@@ -22,6 +22,11 @@ public class GameManager
 	private TheText show_gametime; 
 	private TheText show_score; 
 
+	void Init ()
+	{
+		team = TheGameObject.Find("Slave1").tag; 	
+	}
+
 	void Start ()
 	{
 	 	show_gametime = show_gametime_go.GetComponent<TheText>();
@@ -31,8 +36,7 @@ public class GameManager
 		timer = (float)gametime_seconds; 
 		gametime_step = timer - 1.0f; 	
 
-		team = TheGameObject.Find("Slave1").tag; 	
-		 
+			 
 		show_gametime.Text = GetTimeFromSeconds(gametime_seconds); 
 		show_score.Text = score.ToString(); 
 	}
@@ -59,11 +63,16 @@ public class GameManager
 	void AddToScore()
 	{
 		score += score_to_inc; 
+		
 	}
 
 	void SubstractToScore()
 	{
-		score -= score_to_inc; 
+		score -= score_to_inc;
+		TheConsole.Log("Score substracted");  
+
+		TheConsole.Log(score.ToString()); 
+		show_score.Text = score.ToString(); 
 	}
 
 	string GetTimeFromSeconds(int seconds)
