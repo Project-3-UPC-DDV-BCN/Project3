@@ -13,6 +13,8 @@ public class MainMenuVS2
 	TheRectTransform settings_rect = null;
 	TheRectTransform exit_rect = null;
 	TheText	explanation_text = null;	
+	
+	TheAudioSource menu_audio_source = null;
 
 	void Start () 
 	{
@@ -30,7 +32,7 @@ public class MainMenuVS2
 		{
 			exit_rect = exit_button_go.GetComponent<TheRectTransform>();
 		}
-
+		
 		if(explanation_text_go != null)
 		{
 			explanation_text = explanation_text_go.GetComponent<TheText>();
@@ -41,6 +43,10 @@ public class MainMenuVS2
 
 		if(loading_text_go != null)
 			loading_text_go.SetActive(false);
+
+		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+
+		menu_audio_source.Play("Play_Menu_song");
 	}
 	
 	void Update ()
@@ -52,6 +58,9 @@ public class MainMenuVS2
 				if(loading_text_go != null)
 					loading_text_go.SetActive(true);
 				
+				menu_audio_source.Play("Play_click");
+				menu_audio_source.Stop("Play_Menu_song");
+				
 				TheApplication.LoadScene("VerticalSlice_NoPanelUIGood_guillemdominguez");
 				return;
 			}
@@ -61,6 +70,10 @@ public class MainMenuVS2
 				if(explanation_text != null)
 					explanation_text.Text = "Play the campaign";
 			}
+			
+			if(campaign_rect.OnMouseEnter)
+				menu_audio_source.Play("Play_hover");
+			
 		}
 
 		if(settings_rect != null)
@@ -68,6 +81,7 @@ public class MainMenuVS2
 			if(settings_rect.OnClickUp)
 			{
 				TheConsole.Log("Settings");
+				menu_audio_source.Play("Play_click");
 			}
 
 			if(settings_rect.OnMouseOver)
@@ -75,12 +89,17 @@ public class MainMenuVS2
 				if(explanation_text != null)
 					explanation_text.Text = "Change the game settings";
 			}
+
+			if(settings_rect.OnMouseEnter)
+				menu_audio_source.Play("Play_hover");
+			
 		}
 
 		if(exit_rect != null)
 		{
 			if(exit_rect.OnClickUp)
 			{
+				menu_audio_source.Play("Play_click");
 				TheApplication.Quit();
 				return;
 			}
@@ -90,6 +109,9 @@ public class MainMenuVS2
 				if(explanation_text != null)
 					explanation_text.Text = "Exit the game";
 			}
+
+			if(exit_rect.OnMouseEnter)
+				menu_audio_source.Play("Play_hover");
 		}
 
 		if(exit_rect != null && campaign_rect != null && settings_rect != null)

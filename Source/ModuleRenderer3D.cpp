@@ -330,12 +330,15 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 			if (rect_trans != nullptr)
 			{
-				// Mouse Input
-				if ((*it).GetLayer() >= highest_layer)
+				if (!editor_camera)
 				{
-					if (rect_trans->GetInteractable() && (*it).CheckRay(segment, canvas->GetRenderMode()))
+					// Mouse Input
+					if ((*it).GetLayer() >= highest_layer)
 					{
-						top_element = &(*it);
+						if (rect_trans->GetInteractable() && (*it).CheckRay(segment, canvas->GetRenderMode()))
+						{
+							top_element = &(*it);
+						}
 					}
 				}
 				// -----------
@@ -423,6 +426,9 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				if (last_rect_trans->GetOnClickUp())
 					last_rect_trans->SetOnClickUp(false);
 
+				if (last_rect_trans->GetOnMouseEnter())
+					last_rect_trans->SetOnMouseEnter(false);
+
 				if (last_rect_trans != rect_trans)
 				{
 					last_rect_trans->SetOnMouseOut(true);
@@ -436,9 +442,6 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 			if (top_element != nullptr)
 			{
-				if (rect_trans->GetOnMouseEnter())
-					rect_trans->SetOnMouseEnter(false);
-
 				if (!rect_trans->GetOnMouseOver())
 					rect_trans->SetOnMouseEnter(true);
 
@@ -667,7 +670,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		//App->scene->octree.DebugDraw();
 	}
 	
-	DrawCanvas(active_camera, is_editor_camera);
+	if(active_camera == game_camera)
+		DrawCanvas(active_camera, false);
 
 	// Debug Draw render
 	if(is_editor_camera)
