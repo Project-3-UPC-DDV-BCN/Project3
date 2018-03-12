@@ -46,6 +46,7 @@ public class MainMenuVS2
 			if(campaign_rect.OnClickUp)
 			{
 				TheApplication.LoadScene("VerticalSlice_OneEweToRuleThemAll");
+				return;
 			}
 
 			if(campaign_rect.OnMouseOver)
@@ -74,6 +75,7 @@ public class MainMenuVS2
 			if(exit_rect.OnClickUp)
 			{
 				TheApplication.Quit();
+				return;
 			}
 
 			if(exit_rect.OnMouseOver)
