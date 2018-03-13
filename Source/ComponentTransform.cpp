@@ -51,6 +51,8 @@ void ComponentTransform::SetRotation(float3 rotation)
 	float3 diff = rotation - shown_rotation;
 	shown_rotation = rotation;
 
+	//this->rotation = Quat::RotateX(rotation.x * DEGTORAD)/* * Quat::RotateY(rotation.y * DEGTORAD) * Quat::RotateZ(rotation.z * DEGTORAD)*/;
+	
 	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
 	this->rotation = this->rotation * mod;
 	UpdateGlobalMatrix();

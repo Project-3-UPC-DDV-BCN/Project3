@@ -164,7 +164,7 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 	if (gameObject != nullptr) {
 		Data data;
 		gameObject->Save(data, true);
-		AABB camera_pos(float3::zero, float3::zero);
+		ComponentTransform* transform = nullptr;
 
 		for (int i = 0; i < saving_index; i++) 
 		{
@@ -177,17 +177,11 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 			}
 			AddGameObjectToScene(go);
 			App->resources->AddGameObject(go);
-			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+			transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 			if (transform) transform->UpdateGlobalMatrix();
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->GetComponent(Component::CompMeshRenderer);
 			if (mesh_renderer)
 			{
-				if (mesh_renderer->bounding_box.minPoint.x < camera_pos.minPoint.x) camera_pos.minPoint.x = mesh_renderer->bounding_box.minPoint.x;
-				if (mesh_renderer->bounding_box.minPoint.y < camera_pos.minPoint.y) camera_pos.minPoint.y = mesh_renderer->bounding_box.minPoint.y;
-				if (mesh_renderer->bounding_box.minPoint.z < camera_pos.minPoint.z) camera_pos.minPoint.z = mesh_renderer->bounding_box.minPoint.z;
-				if (mesh_renderer->bounding_box.maxPoint.x > camera_pos.maxPoint.x) camera_pos.maxPoint.x = mesh_renderer->bounding_box.maxPoint.x;
-				if (mesh_renderer->bounding_box.maxPoint.y > camera_pos.maxPoint.y) camera_pos.maxPoint.y = mesh_renderer->bounding_box.maxPoint.y;
-				if (mesh_renderer->bounding_box.maxPoint.z > camera_pos.maxPoint.z) camera_pos.maxPoint.z = mesh_renderer->bounding_box.maxPoint.z;
 				mesh_renderer->LoadToMemory();
 			}
 		}
@@ -196,7 +190,7 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 
 		//Focus the camera on the mesh
 		App->camera->can_update = true;
-		App->camera->FocusOnObject(camera_pos);
+		App->camera->FocusOnObject(transform->GetGlobalPosition() + float3(0,20,10), transform->GetGlobalPosition());
 		App->camera->can_update = false;
 	}
 
@@ -726,7 +720,7 @@ void ModuleScene::HandleInput()
 				{
 					ComponentTransform* transform = (ComponentTransform*)selected_gameobjects.front()->GetComponent(Component::CompTransform);
 					App->camera->can_update = true;
-					App->camera->LookAt(transform->GetGlobalPosition());
+					App->camera->FocusOnObject(transform->GetGlobalPosition() + float3(0, 20, 10), transform->GetGlobalPosition());
 					App->camera->can_update = false;
 				}
 			}
