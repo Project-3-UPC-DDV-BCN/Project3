@@ -107,7 +107,8 @@ public class GameManager
 
 	void AddToScore()
 	{
-		score += score_to_inc; 
+		score += 1; 
+		show_score.Text = score.ToString();
 		
 	}
 
