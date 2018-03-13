@@ -32,6 +32,7 @@ public class laser
 		{
 			game_manager_scpt.CallFunction("AddToScore");
 			other_ship.SetActive(false);
+			TheGameObject.Self.SetActive(false;)
 		}
 			TheConsole.Log("Collision");
 		/*if(other_ship != null)
