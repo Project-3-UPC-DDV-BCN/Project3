@@ -159,6 +159,9 @@ void ComponentCollider::SetTrigger(bool trigger)
 		is_trigger = trigger;
 		collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !trigger);
 		collider_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, trigger);
+		bool a = collider_shape->getFlags().isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
+		bool b = collider_shape->getFlags().isSet(physx::PxShapeFlag::eSIMULATION_SHAPE);
+		int i = 0;
 	}
 }
 
@@ -358,6 +361,7 @@ ComponentCollider::CapsuleDirection ComponentCollider::GetCapsuleDirection() con
 
 void ComponentCollider::ChangeMeshToConvex(bool set_convex)
 {
+	if (collider_type != MeshCollider) return;
 	ComponentRigidBody* rigidbody = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 	if (rigidbody)
 	{
@@ -396,8 +400,8 @@ void ComponentCollider::Save(Data & data) const
 	data.AddInt("Type", GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
-	data.AddBool("IsTrigger", is_trigger);
 	data.AddBool("IsConvex", is_convex);
+	data.AddBool("IsTrigger", is_trigger);
 	data.AddInt("CapsuleDir", capsule_direction);
 	if (phys_material)
 	{
@@ -440,9 +444,9 @@ void ComponentCollider::Load(Data & data)
 	SetType((ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
-	is_trigger = data.GetInt("IsTrigger");
-	is_convex = data.GetInt("IsConvex");
-	capsule_direction = (CapsuleDirection)data.GetInt("CapsuleDir");
+	ChangeMeshToConvex(data.GetBool("IsConvex"));
+	SetTrigger(data.GetBool("IsTrigger"));
+	SetCapsuleDirection((CapsuleDirection)data.GetInt("CapsuleDir"));
 	if (data.GetBool("HaveMaterial"))
 	{
 		data.EnterSection("PhysMaterial");

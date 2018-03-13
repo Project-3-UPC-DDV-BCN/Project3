@@ -91,6 +91,9 @@ bool CSScript::LoadScript(std::string script_path)
 		on_collision_enter = GetFunction("OnCollisionEnter", 1);
 		on_collision_stay = GetFunction("OnCollisionStay", 1);
 		on_collision_exit = GetFunction("OnCollisionExit", 1);
+ 		on_trigger_enter = GetFunction("OnTriggerEnter", 1);
+		on_trigger_stay = GetFunction("OnTriggerStay", 1);
+		on_trigger_exit = GetFunction("OnTriggerExit", 1);
 		on_enable = GetFunction("OnEnable", 0);
 		on_disable = GetFunction("OnDisable", 0);
 		on_complete = GetFunction("OnComplete", 0);
@@ -177,7 +180,7 @@ void CSScript::OnCollisionStay(GameObject* other_collider)
 		bool exist = false;
 		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (it->second == active_gameobject)
+			if (it->second == other_collider)
 			{
 				new_object = it->first;
 				exist = true;
@@ -211,7 +214,7 @@ void CSScript::OnCollisionExit(GameObject* other_collider)
 		bool exist = false;
 		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (it->second == active_gameobject)
+			if (it->second == other_collider)
 			{
 				new_object = it->first;
 				exist = true;
@@ -245,7 +248,7 @@ void CSScript::OnTriggerEnter(GameObject * other_collider)
 		bool exist = false;
 		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (it->second == active_gameobject)
+			if (it->second == other_collider)
 			{
 				new_object = it->first;
 				exist = true;
@@ -279,7 +282,7 @@ void CSScript::OnTriggerStay(GameObject * other_collider)
 		bool exist = false;
 		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (it->second == active_gameobject)
+			if (it->second == other_collider)
 			{
 				new_object = it->first;
 				exist = true;
@@ -313,7 +316,7 @@ void CSScript::OnTriggerExit(GameObject * other_collider)
 		bool exist = false;
 		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (it->second == active_gameobject)
+			if (it->second == other_collider)
 			{
 				new_object = it->first;
 				exist = true;
