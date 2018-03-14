@@ -1058,7 +1058,9 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 
 				ImGui::PushID(id.c_str());
 				
-				if (ImGui::InputResourceGameObject("GameObject", &curr_go))
+				string input_res = "GameObject" + id;
+
+				if (ImGui::InputResourceGameObject(input_res.c_str(), &curr_go))
 				{
 					radar->entities[i].go = curr_go;
 				}

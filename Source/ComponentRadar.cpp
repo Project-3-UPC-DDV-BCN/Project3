@@ -245,12 +245,15 @@ void ComponentRadar::AddEntity(GameObject * go)
 {
 	bool exists = false;
 	
-	for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
+	if (go != nullptr)
 	{
-		if (go == (*it).go)
+		for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
 		{
-			exists = true;
-			break;
+			if (go == (*it).go)
+			{
+				exists = true;
+				break;
+			}
 		}
 	}
 

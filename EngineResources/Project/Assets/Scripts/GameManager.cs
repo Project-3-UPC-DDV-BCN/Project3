@@ -44,6 +44,7 @@ public class GameManager
 	{
 	 	show_gametime = show_gametime_go.GetComponent<TheText>();
 		show_score = show_score_go.GetComponent<TheText>();
+		//show_score = TheGameObject.Self.GetComponent<TheText>();
 		score = 0; 
 		
 		timer = (float)gametime_seconds; 
@@ -92,7 +93,8 @@ public class GameManager
 			gametime_step = timer - 1.0f;
 			gametime_seconds--;  
 
-			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);	
+			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);
+
 		}
 
 		if(gametime_seconds <= 0) 
@@ -102,14 +104,19 @@ public class GameManager
 			slave1_audio.Stop("Play_Engine");
 			TheApplication.LoadScene("VS2-UI");	
 		}	 		
-
+		show_score.Text = UpdateScore();
 	}
 
 	void AddToScore()
 	{
+		TheConsole.Log("Ewe");
 		score += 1; 
-		show_score.Text = score.ToString();
+		//show_score.Text = score.ToString();
 		
+	}
+	string UpdateScore()
+	{
+		return score.ToString();
 	}
 
 	void SubstractToScore()

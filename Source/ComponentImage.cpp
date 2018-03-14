@@ -31,7 +31,7 @@ ComponentImage::ComponentImage(GameObject * attached_gameobject)
 
 	c_rect_trans->SetSize(float2(100, 100));
 
-	was_in_play_mode = true;
+	was_in_play_mode = false;
 }
 
 ComponentImage::~ComponentImage()
@@ -61,7 +61,7 @@ bool ComponentImage::Update()
 
 		case ImageMode::IM_ANIMATION:
 		{
-			if ((App->IsPlaying() && animation_play) || (!App->IsPlaying() && animation_preview_play))
+			if ((App->IsPlaying()) || (!App->IsPlaying() && animation_preview_play))
 			{
 				if (animation_timer.Read() > (animation_speed * 1000))
 				{
