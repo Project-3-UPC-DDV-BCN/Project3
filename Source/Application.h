@@ -74,10 +74,10 @@ public:
 	EngineState GetEngineState(); 
 
 private:
-
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+	void StopNow();
 
 public:
 	ModuleWindow* window;

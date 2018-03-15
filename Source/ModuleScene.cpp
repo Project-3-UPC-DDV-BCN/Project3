@@ -205,78 +205,9 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
-	if (to_load_scene)
-	{
-		Data data;
-		if (data.LoadBinary(scene_to_load.c_str()))
-		{
-			NewScene(true);
-			scene_name = data.GetString("Scene Name");
-			App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
-			int gameObjectsCount = data.GetInt("GameObjects_Count");
-			for (int i = 0; i < gameObjectsCount; i++) {
-				data.EnterSection("GameObject_" + std::to_string(i));
-				GameObject* game_object = new GameObject();
-				game_object->Load(data);
-				data.LeaveSection();
-				AddGameObjectToScene(game_object);
-				App->resources->AddGameObject(game_object);
-				//ComponentTransform* transform = (ComponentTransform*)game_object->GetComponent(Component::CompTransform);
-				//if (transform) transform->UpdateGlobalMatrix();
-				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
-				if (mesh_renderer) mesh_renderer->LoadToMemory();
-				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
-				if (camera)
-				{
-					if (game_object->GetTag() == "Main Camera")
-					{
-						App->renderer3D->game_camera = camera;
-						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
-					}
-				}
-			}
-			data.ClearData();
-			if (data.LoadBinary(scene_to_load.c_str())) {
-				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
-				for (int i = 0; i < gameObjectsCount; i++) {
-					data.EnterSection("GameObject_" + std::to_string(i));
-					GameObject* game_object = *it;
-					game_object->Load(data);
-					data.LeaveSection();
-					it++;
-				}
-			}
-			saving_index = 0;
+	LoadSceneNow();
 
-			if (load_scene_runtime)
-				InitScripts();
-		}
-		else
-		{
-			CONSOLE_ERROR("Cannot load %s scene", scene_to_load.c_str());
-		}
-
-		to_load_scene = false;
-	}
-
-	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) {
-		if (*it != nullptr)
-		{
-			if (!(*it)->GetIsUsedInPrefab()) {
-				(*it)->OnDestroy();
-				if ((*it)->IsRoot()) {
-					root_gameobjects.remove(*it);
-				}
-				CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
-				RELEASE(*it);
-			}
-			else
-			{
-				RemoveWithoutDelete(*it);
-			}
-			it = gameobjects_to_destroy.erase(it);
-		}
-	}
+	DestroyGameObjectNow();
 
 	skybox->SetSize(skybox_size);
 
@@ -516,13 +447,12 @@ void ModuleScene::NewScene(bool loading_scene)
 	}
 }
 
-void ModuleScene::LoadScene(std::string path, bool runtime)
+void ModuleScene::LoadScene(std::string path)
 {
 	if (!to_load_scene)
 	{
 		to_load_scene = true;
 		scene_to_load = path;
-		load_scene_runtime = runtime;
 	}
 }
 
@@ -750,6 +680,99 @@ void ModuleScene::HandleInput()
 				App->camera->can_update = false;
 				App->camera->SetOrbital(false);
 			}
+		}
+	}
+}
+
+void ModuleScene::LoadSceneNow()
+{
+	if (to_load_scene)
+	{
+		bool can_load = false;
+
+		Data data;
+
+		can_load = data.LoadBinary(scene_to_load.c_str());
+
+		if (!can_load)
+			can_load = data.LoadJSON(scene_to_load.c_str());
+
+		if (can_load)
+		{
+			NewScene(true);
+
+			scene_name = data.GetString("Scene Name");
+			App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
+
+			int gameObjectsCount = data.GetInt("GameObjects_Count");
+			for (int i = 0; i < gameObjectsCount; i++) 
+			{
+				data.EnterSection("GameObject_" + std::to_string(i));
+				GameObject* game_object = new GameObject();
+				game_object->Load(data);
+				data.LeaveSection();
+				AddGameObjectToScene(game_object);
+				App->resources->AddGameObject(game_object);
+
+				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
+				if (mesh_renderer) mesh_renderer->LoadToMemory();
+				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
+				if (camera)
+				{
+					if (game_object->GetTag() == "Main Camera")
+					{
+						App->renderer3D->game_camera = camera;
+						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+					}
+				}
+			}
+
+			data.ClearData();
+
+			if (data.LoadBinary(scene_to_load.c_str())) 
+			{
+				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
+				for (int i = 0; i < gameObjectsCount; i++) 
+				{
+					data.EnterSection("GameObject_" + std::to_string(i));
+					GameObject* game_object = *it;
+					game_object->Load(data);
+					data.LeaveSection();
+					it++;
+				}
+			}
+			saving_index = 0;
+
+			if (App->IsPlaying())
+				InitScripts();
+		}
+		else
+		{
+			CONSOLE_ERROR("Cannot load %s scene", scene_to_load.c_str());
+		}
+
+		to_load_scene = false;
+	}
+}
+
+void ModuleScene::DestroyGameObjectNow()
+{
+	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) {
+		if (*it != nullptr)
+		{
+			if (!(*it)->GetIsUsedInPrefab()) {
+				(*it)->OnDestroy();
+				if ((*it)->IsRoot()) {
+					root_gameobjects.remove(*it);
+				}
+				CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
+				RELEASE(*it);
+			}
+			else
+			{
+				RemoveWithoutDelete(*it);
+			}
+			it = gameobjects_to_destroy.erase(it);
 		}
 	}
 }

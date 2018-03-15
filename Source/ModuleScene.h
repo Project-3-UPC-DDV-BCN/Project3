@@ -58,7 +58,7 @@ public:
 	void GetOctreeIntersects(std::list<ComponentMeshRenderer*>& list, AABB& box);
 
 	void NewScene(bool loading_scene);
-	void LoadScene(std::string path, bool runtime = false);
+	void LoadScene(std::string path);
 	void SaveScene(Data & data) const;
 
 	void LoadPrefab(Prefab* prefab);
@@ -84,6 +84,9 @@ public:
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
 	void HandleInput();
+
+	void LoadSceneNow();
+	void DestroyGameObjectNow();
 
 public:
 	std::list<GameObject*> selected_gameobjects;
@@ -115,6 +118,4 @@ private:
 
 	bool to_load_scene = false;
 	std::string scene_to_load;
-	bool load_scene_runtime = false;
-
 };

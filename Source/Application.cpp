@@ -209,6 +209,8 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	StopNow();
+
 	frames++;
 	num_fps++;
 
@@ -226,6 +228,21 @@ void Application::FinishUpdate()
 		SDL_Delay(capped_ms - last_frame_ms);
 	}
 
+	if (!is_game_mode)
+	{
+		editor->AddData_Editor(last_frame_ms, last_fps);
+	}
+	else
+	{
+		if (IsStopped())
+		{
+			Play();
+		}
+	}
+}
+
+void Application::StopNow()
+{
 	if (to_stop)
 	{
 		if (state == OnPlay || state == OnPause)
@@ -241,17 +258,6 @@ void Application::FinishUpdate()
 			}
 			App->scene->is_game = false;
 			to_stop = false;
-		}
-	}
-	if (!is_game_mode)
-	{
-		editor->AddData_Editor(last_frame_ms, last_fps);
-	}
-	else
-	{
-		if (IsStopped())
-		{
-			Play();
 		}
 	}
 }
@@ -462,9 +468,9 @@ void Application::UnPause()
 
 void Application::Stop()
 {
-	if (state == OnPlay || state == OnPause) {
+	if (state == OnPlay || state == OnPause) 
 		to_stop = true;
-	}
+	
 }
 
 bool Application::IsPlaying()
