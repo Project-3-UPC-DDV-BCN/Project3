@@ -456,12 +456,29 @@ void ModuleScene::LoadScene(std::string path)
 	}
 }
 
-void ModuleScene::SaveScene(Data & data) const
+void ModuleScene::SaveScene(std::string path, SceneFileType type) const
 {
+	Data data;
 	data.AddString("Scene Name", scene_name);
 	data.AddInt("GameObjects_Count", scene_gameobjects.size());
-	for (std::list<GameObject*>::const_iterator it = root_gameobjects.begin(); it != root_gameobjects.end(); it++) {
+
+	for (std::list<GameObject*>::const_iterator it = root_gameobjects.begin(); it != root_gameobjects.end(); it++) 
+	{
 		(*it)->Save(data);
+	}
+
+	switch (type)
+	{
+	case SF_JSON:
+		App->file_system->ChangeFileExtension(std::string(path), "json");
+		data.SaveAsJSON(path.c_str());
+		CONSOLE_LOG("Scene saved as JSON to: %s", path.c_str());
+		break;
+	case SF_BINARY:
+		App->file_system->ChangeFileExtension(std::string(path), "scene");
+		data.SaveAsBinary(path.c_str());
+		CONSOLE_LOG("Scene saved as BINARY to: %s", path.c_str());
+		break;
 	}
 }
 
@@ -692,10 +709,19 @@ void ModuleScene::LoadSceneNow()
 
 		Data data;
 
-		can_load = data.LoadBinary(scene_to_load.c_str());
+		if (data.CanLoadAsJSON(scene_to_load.c_str()))
+		{
+			CONSOLE_LOG("Loading scene as JSON: %s", scene_to_load.c_str());
+			data.LoadJSON(scene_to_load.c_str());
+			can_load = true;
+		}
 
-		if (!can_load)
-			can_load = data.LoadJSON(scene_to_load.c_str());
+		if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
+		{
+			CONSOLE_LOG("Loading scene as BINARY: %s", scene_to_load.c_str());
+			data.LoadBinary(scene_to_load.c_str());
+			can_load = true;
+		}
 
 		if (can_load)
 		{
@@ -728,11 +754,24 @@ void ModuleScene::LoadSceneNow()
 			}
 
 			data.ClearData();
+			can_load = false;
 
-			if (data.LoadBinary(scene_to_load.c_str())) 
+			if (data.CanLoadAsJSON(scene_to_load.c_str()))
+			{
+				data.LoadJSON(scene_to_load.c_str());
+				can_load = true;
+			}
+
+			if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
+			{
+				data.LoadBinary(scene_to_load.c_str());
+				can_load = true;
+			}
+
+			if (can_load)
 			{
 				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
-				for (int i = 0; i < gameObjectsCount; i++) 
+				for (int i = 0; i < gameObjectsCount; i++)
 				{
 					data.EnterSection("GameObject_" + std::to_string(i));
 					GameObject* game_object = *it;
@@ -740,11 +779,12 @@ void ModuleScene::LoadSceneNow()
 					data.LeaveSection();
 					it++;
 				}
-			}
-			saving_index = 0;
 
-			if (App->IsPlaying())
-				InitScripts();
+				saving_index = 0;
+
+				if (App->IsPlaying())
+					InitScripts();
+			}
 		}
 		else
 		{

@@ -19,6 +19,9 @@ public:
 	Data();
 	~Data();
 
+	bool CanLoadAsJSON(std::string path);
+	bool CanLoadAsBinary(std::string path, std::string binary_extension);
+
 	void SaveAsXML(std::string path);
 	bool LoadXML(std::string path);
 	void SaveAsJSON(std::string path);

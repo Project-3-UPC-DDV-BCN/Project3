@@ -440,10 +440,8 @@ void Application::Play()
 			{
 				App->file_system->Create_Directory(TMP_FOLDER_PATH);
 			}
-			Data data;
-			App->scene->SaveScene(data);
-			App->scene->saving_index = 0;
-			data.SaveAsBinary(TMP_FOLDER"tmp_scene");
+	
+			App->scene->SaveScene(TMP_FOLDER"tmp_scene");
 		}
 		
 		App->scene->is_game = true;

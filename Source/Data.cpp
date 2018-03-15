@@ -10,6 +10,26 @@ Data::~Data()
 {
 }
 
+bool Data::CanLoadAsJSON(std::string path)
+{
+	bool ret = false;
+
+	if (path.find(".json") != std::string::npos)
+		ret = true;
+
+	return ret;
+}
+
+bool Data::CanLoadAsBinary(std::string path, std::string binary_extension)
+{
+	bool ret = false;
+
+	if (path.find(binary_extension.c_str()) != std::string::npos)
+		ret = true;
+
+	return ret;
+}
+
 void Data::SaveAsXML(std::string path)
 {
 	if (path.find(".xml") == std::string::npos) { //xml extension is not especified
