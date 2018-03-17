@@ -4,10 +4,9 @@ using TheEngine.TheConsole;
 public class laser 
 {
 	private TheScript game_manager_scpt; 
+	private TheScript enemy_properties_scpt; 
 	string team; 
 
-	private TheScript ship_hit_scpt; 
-	
 	void Start ()
 	{
 		
@@ -28,13 +27,18 @@ public class laser
 
 	void OnCollisionEnter(TheGameObject other_ship)
 	{
+
+		//TheGameObject parent = other_ship.GetParent(); 	
+		TheGameObject parent = TheGameObject.Find("X_WING(4)"); 
+		enemy_properties_scpt = parent.GetComponent<TheScript>(0); 
+
 		if(other_ship != null)
 		{
-			game_manager_scpt.CallFunction("AddToScore");
-			other_ship.SetActive(false);
-			TheGameObject.Self.SetActive(false);
+			enemy_properties_scpt.SetIntField("hp_inc", 20);
+			enemy_properties_scpt.CallFunction("SubstractHP"); 
+			enemy_properties_scpt.SetIntField("hp_inc", 0); 
 		}
-			TheConsole.Log("Collision");
+
 		/*if(other_ship != null)
 		{	
 			string enemy_tag = other_ship.tag; 
