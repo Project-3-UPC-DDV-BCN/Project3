@@ -5,6 +5,7 @@ public class ShipProperties
 {
 
 	private TheScript destruction_scpt;
+	private TheScript game_manager;
 	
 	int hp; 
 	int hp_inc; 
@@ -17,6 +18,7 @@ public class ShipProperties
 		hp_inc = 0; 
 		is_dead = false; 
 
+		game_manager = TheGameObject.Find("Game_Manager").GetComponent<TheScript>(0);
 		destruction_scpt = TheGameObject.Self.GetChild(0).GetComponent<TheScript>(0);   //The number has to be changed by order
 	}
 	
@@ -25,7 +27,12 @@ public class ShipProperties
 		if(hp <= 0 && is_dead == false)
 		{
 
-			destruction_scpt.SetBoolField("need_boom", true); 
+			destruction_scpt.SetBoolField("need_boom", true);
+
+			game_manager.SetIntField("score_to_inc", 100); 
+			game_manager.CallFunction("AddScore");  
+			game_manager.SetIntField("score_to_inc", 0);
+
 			TheConsole.Log("YOU MADE IT"); 
 			is_dead = true; 
 		}

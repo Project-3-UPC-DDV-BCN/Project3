@@ -41,20 +41,26 @@ public class ShipDestruction
 	void FillPartList()
 	{
 
-			foreach (TheGameObject curr in TheGameObject.Self.GetAllChilds())
-			{
+		TheGameObject[] childs = TheGameObject.Self.GetAllChilds(); 
+
+		int i = 0; 
+		foreach (TheGameObject curr in childs)
+		{
+
+			childs[i].SetActive(false); 
+			i++; 
 				//TheMeshCollider col = curr.GetComponent<TheMeshCollider>(); 
 				//col.SetActive(false); 
 
 				//ship_parts.Add(curr);
-			}
+		}
 	}
 
 
 	void SetPartsDirection()
 	{
 
-		TheVector3 direction = transform.ForwardDirection.Normalized; 
+		/*TheVector3 direction = transform.ForwardDirection.Normalized; 
 
 		for(int i = 0; i < ship_parts.Count ;i++)
 		{
@@ -82,6 +88,6 @@ public class ShipDestruction
 			direction = direction.Normalized * explosion_v; 
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);		
-		}
+		}*/
 	}
 }

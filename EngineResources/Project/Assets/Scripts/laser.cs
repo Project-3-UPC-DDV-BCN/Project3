@@ -39,6 +39,8 @@ public class laser
 			enemy_properties_scpt.SetIntField("hp_inc", 0); 
 		}
 
+		TheGameObject.Self.SetActive(false); 
+
 		/*if(other_ship != null)
 		{	
 			string enemy_tag = other_ship.tag; 
