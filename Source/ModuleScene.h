@@ -65,6 +65,7 @@ public:
 
 	void NewScene(bool loading_scene);
 	void LoadScene(std::string path);
+	void LoadSceneWithoutDestroying(std::string path);
 	void SaveScene(std::string path, SceneFileType type = SceneFileType::SF_JSON) const;
 
 	void LoadPrefab(Prefab* prefab);
@@ -124,4 +125,5 @@ private:
 
 	bool to_load_scene = false;
 	std::string scene_to_load;
+	bool destroy_current = false;
 };

@@ -453,6 +453,17 @@ void ModuleScene::LoadScene(std::string path)
 	{
 		to_load_scene = true;
 		scene_to_load = path;
+		destroy_current = true;
+	}
+}
+
+void ModuleScene::LoadSceneWithoutDestroying(std::string path)
+{
+	if (!to_load_scene)
+	{
+		to_load_scene = true;
+		scene_to_load = path;
+		destroy_current = false;
 	}
 }
 
@@ -497,8 +508,8 @@ void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path,
 	prefab->SetAssetsPath(assets_path);
 	prefab->SetName(gameobject->GetName());
 	prefab->Save(data);
-	data.SaveAsBinary(assets_path);
-	data.SaveAsBinary(library_path);
+	data.SaveAsJSON(assets_path);
+	data.SaveAsJSON(library_path);
 	
 	//Won't use this prefab, instead create a new resource from this prefab
 	delete prefab;
@@ -617,14 +628,18 @@ void ModuleScene::SetParticleSystemsState()
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
 	bool ret = true;
-	if (gameobject->GetParent() != nullptr)
+
+	if (gameobject != nullptr)
 	{
-		if (gameobject->GetParent()->IsActive())
+		if (gameobject->GetParent() != nullptr)
 		{
-			ret = RecursiveCheckActiveParents(gameobject->GetParent());
-		}
-		else {
-			ret = false;
+			if (gameobject->GetParent()->IsActive())
+			{
+				ret = RecursiveCheckActiveParents(gameobject->GetParent());
+			}
+			else {
+				ret = false;
+			}
 		}
 	}
 	return ret;
@@ -725,7 +740,8 @@ void ModuleScene::LoadSceneNow()
 
 		if (can_load)
 		{
-			NewScene(true);
+			if(destroy_current)
+				NewScene(true);
 
 			scene_name = data.GetString("Scene Name");
 			App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
