@@ -508,8 +508,8 @@ void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path,
 	prefab->SetAssetsPath(assets_path);
 	prefab->SetName(gameobject->GetName());
 	prefab->Save(data);
-	data.SaveAsJSON(assets_path);
-	data.SaveAsJSON(library_path);
+	data.SaveAsBinary(assets_path);
+	data.SaveAsBinary(library_path);
 	
 	//Won't use this prefab, instead create a new resource from this prefab
 	delete prefab;

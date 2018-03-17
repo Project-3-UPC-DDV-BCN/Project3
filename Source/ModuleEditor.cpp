@@ -123,7 +123,7 @@ update_status ModuleEditor::Update(float deltaTime)
 						App->scene->LoadScene(path);
 					
 				}
-				if (ImGui::MenuItem("Load Scene on current"))
+				if (ImGui::MenuItem("Load Scene into current (EXPERIMENTAL)"))
 				{
 					char const * lFilterPatterns[2] = { "*.scene; *.json" };
 					const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
