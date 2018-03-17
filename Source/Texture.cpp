@@ -94,6 +94,12 @@ std::string Texture::GetTypeString() const
 	return types[type];
 }
 
+std::string Texture::GetModeString() const
+{
+	const char* modes[] = { "Expand", "Tile" };
+	return modes[mode];
+}
+
 void Texture::SetFormat(TextureFormat format)
 {
 	this->format = format;
@@ -104,6 +110,10 @@ Texture::TextureFormat Texture::GetFormat() const
 	return format;
 }
 
+TextureMode Texture::GetMode() const
+{
+	return mode;
+}
 void Texture::SetCompression(int compression_format)
 {
 	compression = (CompressionFormat)compression_format;
@@ -168,6 +178,13 @@ std::string Texture::GetFormatString() const
 {
 	const char* formats[] = {"bmp", "jpg", "png", "tga", "dds", "Unknown"};
 	return formats[format];
+}
+
+void Texture::SetTextureMode(TextureMode mode)
+{
+	UnloadFromMemory();
+	this->mode = mode;
+	LoadToMemory();
 }
 
 void Texture::Save(Data & data) const
