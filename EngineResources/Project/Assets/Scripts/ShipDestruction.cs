@@ -38,33 +38,13 @@ public class ShipDestruction
 	void FillPartList()
 	{
 
-		TheGameObject[] ship_parts_tmp = null; 
+			foreach (TheGameObject curr in TheGameObject.Self.GetAllChilds())
+			{
+				TheMeshCollider col = curr.GetComponent<TheMeshCollider>(); 
+				col.SetActive(false); 
 
-		if(ship_tag == "TIEFIGHTER") 
-		{	 		
-			ship_parts_tmp = TheGameObject.Self.GetAllChilds(); 			
-		}
-			
-
-		if(ship_tag == "TIEFIGHTER") 
-			//ship_parts.push_back(TheGameObject.Find("Sphere"));
-
-		
-		if(ship_tag == "TIEFIGHTER") 
-			//ship_parts.push_back(TheGameObject.Find("Sphere"));
-
-		
-		if(ship_tag == "TIEFIGHTER") 
-			//ship_parts.push_back(TheGameObject.Find("Sphere"));
-
-
-		//Clean it: we only need to disperse object with a mesh renderer on it 
-		for(int i = 0; i < ship_parts_tmp.Length ; i++)
-		{
-			if(ship_parts[i].GetComponent<TheMeshRenderer>() != null)
-				ship_parts.Add(ship_parts_tmp[i]); 
-		}
-	
+				ship_parts.Add(curr);
+			}
 	}
 
 
