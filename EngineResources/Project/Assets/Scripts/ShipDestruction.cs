@@ -1,4 +1,5 @@
 using TheEngine;
+using TheEngine.TheConsole; 
 using System.Collections.Generic; 
 using TheEngine.Math;
 
@@ -28,8 +29,10 @@ public class ShipDestruction
 		
 		if(need_boom == true && exploted == false) 
 		{			
+			TheConsole.Log("ExploteNow"); 
 			FillPartList(); 
 			SetPartsDirection(); 
+			
 			exploted = true; 
 		}
 				 	
@@ -40,10 +43,10 @@ public class ShipDestruction
 
 			foreach (TheGameObject curr in TheGameObject.Self.GetAllChilds())
 			{
-				TheMeshCollider col = curr.GetComponent<TheMeshCollider>(); 
-				col.SetActive(false); 
+				//TheMeshCollider col = curr.GetComponent<TheMeshCollider>(); 
+				//col.SetActive(false); 
 
-				ship_parts.Add(curr);
+				//ship_parts.Add(curr);
 			}
 	}
 

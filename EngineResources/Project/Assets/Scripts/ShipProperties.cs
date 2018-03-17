@@ -35,6 +35,7 @@ public class ShipProperties
 	void SubstractHP()
 	{
 		hp -= hp_inc; 
+		TheConsole.Log(hp.ToString());
 	}
 
 	void AddHP()
