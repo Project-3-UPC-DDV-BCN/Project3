@@ -28,6 +28,7 @@
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
 #include "ComponentRadar.h"
+#include "Data.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 

@@ -335,6 +335,9 @@ void ModuleScriptImporter::RegisterAPI()
 
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
 
+	//DATA SAVE/LOAD
+	mono_add_internal_call("TheEngine.TheData::AddString", (const void*)AddString);
+
 	//TIME
 	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
 	mono_add_internal_call("TheEngine.TheTime::GetTimeScale", (const void*)GetTimeScale);
@@ -689,6 +692,50 @@ void ModuleScriptImporter::RemoveAllEntities(MonoObject * object)
 void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
 {
 	current_script->SetMarkerToEntity(object, game_object, marker_name);
+}
+
+void ModuleScriptImporter::AddString(MonoString * name, MonoString * string)
+{
+	const char* c_name = mono_string_to_utf8(name);
+	const char* c_string = mono_string_to_utf8(string);
+
+	std::string path = LIBRARY_FOLDER + std::string("game_data.json");
+
+	if (c_name != nullptr && c_string != nullptr)
+	{
+		//Data data;
+		//if (!data.LoadJSON(path))
+		//{
+		//	data.ClearData();
+		//}
+		//data.DeleteValue(c_name);
+		//data.AddString(c_name, c_string);
+
+		//data.SaveAsJSON(path);
+	}
+}
+
+void ModuleScriptImporter::AddInt(MonoString * name, int value)
+{
+}
+
+void ModuleScriptImporter::AddFloat(MonoString * name, int value)
+{
+}
+
+MonoString * ModuleScriptImporter::GetString(MonoString * name)
+{
+	return nullptr;
+}
+
+int ModuleScriptImporter::GetInt(MonoString * name)
+{
+	return 0;
+}
+
+float ModuleScriptImporter::GetFloat(MonoString * name)
+{
+	return 0.0f;
 }
 
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
