@@ -1,4 +1,5 @@
 using TheEngine;
+using System.Collections.Generic; 
 using TheEngine.TheConsole; 
 
 public class GameManager
@@ -34,6 +35,11 @@ public class GameManager
 	
 	public TheGameObject slave1;
 	TheAudioSource slave1_audio;
+
+	//Ships managagement
+	List<TheGameObject> alliance_ships;
+    List<TheGameObject> empire_ships; 
+	TheGameObject ship_to_insert_tmp; 
 
 	void Init ()
 	{
@@ -142,6 +148,16 @@ public class GameManager
 		new_time += reminder.ToString(); 
 		 
 		return new_time; 
+	}
+
+	void AddToAlliance()
+	{
+		alliance_ships.Add(ship_to_insert_tmp); 
+	}
+
+	void AddToEmpire()
+	{
+		empire_ships.Add(ship_to_insert_tmp); 
 	}
 
 	
