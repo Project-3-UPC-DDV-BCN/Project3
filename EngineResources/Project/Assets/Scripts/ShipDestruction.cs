@@ -1,4 +1,5 @@
 using TheEngine;
+using TheEngine.TheConsole; 
 using System.Collections.Generic; 
 using TheEngine.Math;
 
@@ -28,8 +29,10 @@ public class ShipDestruction
 		
 		if(need_boom == true && exploted == false) 
 		{			
+			TheConsole.Log("ExploteNow"); 
 			FillPartList(); 
 			SetPartsDirection(); 
+			
 			exploted = true; 
 		}
 				 	
@@ -38,40 +41,26 @@ public class ShipDestruction
 	void FillPartList()
 	{
 
-		TheGameObject[] ship_parts_tmp = null; 
+		TheGameObject[] childs = TheGameObject.Self.GetAllChilds(); 
 
-		if(ship_tag == "TIEFIGHTER") 
-		{	 		
-			ship_parts_tmp = TheGameObject.Self.GetAllChilds(); 			
-		}
-			
-
-		if(ship_tag == "TIEFIGHTER") 
-			//ship_parts.push_back(TheGameObject.Find("Sphere"));
-
-		
-		if(ship_tag == "TIEFIGHTER") 
-			//ship_parts.push_back(TheGameObject.Find("Sphere"));
-
-		
-		if(ship_tag == "TIEFIGHTER") 
-			//ship_parts.push_back(TheGameObject.Find("Sphere"));
-
-
-		//Clean it: we only need to disperse object with a mesh renderer on it 
-		for(int i = 0; i < ship_parts_tmp.Length ; i++)
+		int i = 0; 
+		foreach (TheGameObject curr in childs)
 		{
-			if(ship_parts[i].GetComponent<TheMeshRenderer>() != null)
-				ship_parts.Add(ship_parts_tmp[i]); 
+
+			childs[i].SetActive(false); 
+			i++; 
+				//TheMeshCollider col = curr.GetComponent<TheMeshCollider>(); 
+				//col.SetActive(false); 
+
+				//ship_parts.Add(curr);
 		}
-	
 	}
 
 
 	void SetPartsDirection()
 	{
 
-		TheVector3 direction = transform.ForwardDirection.Normalized; 
+		/*TheVector3 direction = transform.ForwardDirection.Normalized; 
 
 		for(int i = 0; i < ship_parts.Count ;i++)
 		{
@@ -99,6 +88,6 @@ public class ShipDestruction
 			direction = direction.Normalized * explosion_v; 
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);		
-		}
+		}*/
 	}
 }
