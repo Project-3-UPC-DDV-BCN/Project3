@@ -1098,16 +1098,14 @@ mono_bool CSScript::GameObjectIsStatic(MonoObject * object)
 
 MonoObject * CSScript::DuplicateGameObject(MonoObject * object)
 {
-	if (!MonoObjectIsValid(object))
+	GameObject* go = FindGameObject(object);
+	if (!go)
 	{
+		CONSOLE_ERROR("Trying to instantiate a null object");
 		return nullptr;
 	}
 
-	if (!GameObjectIsValid())
-	{
-		return nullptr;
-	}
-	GameObject* duplicated = App->scene->DuplicateGameObject(active_gameobject);
+	GameObject* duplicated = App->scene->DuplicateGameObject(go);
 	if (duplicated)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
@@ -1121,7 +1119,7 @@ MonoObject * CSScript::DuplicateGameObject(MonoObject * object)
 			}
 		}
 	}
-	
+
 	return nullptr;
 }
 
