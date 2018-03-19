@@ -264,7 +264,8 @@ namespace ImGui
 		//window->Flags ^= ImGuiWindowFlags_ShowBorders;
 		std::string buf_display;
 		GameObject* tmp_gameobject = *gameobject;
-		if (tmp_gameobject != nullptr)
+		
+		if (tmp_gameobject != nullptr && !tmp_gameobject->is_on_destroy)
 		{
 			buf_display = tmp_gameobject->GetName();
 		}

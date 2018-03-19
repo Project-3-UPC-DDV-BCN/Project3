@@ -1630,7 +1630,7 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	Component::ComponentType cpp_type = CsToCppComponent(comp_name);
 
 	int temp_index = index;
-	if (cpp_type != Component::CompUnknown)
+	if (cpp_type != Component::CompUnknown && active_gameobject->components_list.size() > 0)
 	{
 		int comp_type_count = 0;
 		for (Component* comp : active_gameobject->components_list)
