@@ -20,20 +20,20 @@ RenderTexture::~RenderTexture()
 bool RenderTexture::Create(uint width, uint height)
 {
 	//Creates Framebuffer Object
-	glGenFramebuffers(1, &fbo_id);
+	/*glGenFramebuffers(1, &fbo_id);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
 
 	//Create Color texture
-	glGenTextures(1, &color_texture_id);
+	/*glGenTextures(1, &color_texture_id);
 	glBindTexture(GL_TEXTURE_2D, color_texture_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);*/
 
 	//Create Depth Texture
-	glGenTextures(1, &depth_texture_id);
+	/*glGenTextures(1, &depth_texture_id);
 	glBindTexture(GL_TEXTURE_2D, depth_texture_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -55,7 +55,7 @@ bool RenderTexture::Create(uint width, uint height)
 		return false;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 
 	return true;
 }
