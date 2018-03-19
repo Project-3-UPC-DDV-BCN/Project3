@@ -1,7 +1,5 @@
 using TheEngine;
-using TheEngine.Math;
-using TheEngine.TheConsole;
-
+using TheEngine.TheMath;
 public class Ai_Starship_Dflt {
 
 	public float maxSpd = 50.0f;
@@ -22,6 +20,8 @@ public class Ai_Starship_Dflt {
 	public float yangle = 0;
 	public float zangle = 0;
 	public float wangle = 0;
+
+	public bool Interpolate = false;
 
 	void Start () {
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
@@ -47,7 +47,8 @@ public class Ai_Starship_Dflt {
 			currSpd = maxSpd;
 		}
 
-		transform.LocalPosition += transform.ForwardDirection * currSpd * TheTime.DeltaTime;
+		// UNCOMMENT THIS TO MAKE THE SHIP MOVE 
+		//transform.LocalPosition += transform.ForwardDirection.Normalized * currSpd * TheTime.DeltaTime;
 
 		// AlignToTarget
 
@@ -93,22 +94,49 @@ public class Ai_Starship_Dflt {
 
 			// Quaternion approach
 
-			TheQuaternion qGlobalRot = transform.LocalRotation.ToQuaternion();
-			TheQuaternion fRot = QuaternionLookRotation((tTrans.GlobalPosition - transform.GlobalPosition) * TheMath.DegToRad, TheVector3.Up); // THIS IS THE FINAL ROTATION QUAT
-			TheQuaternion debugQ = TheQuaternion.Slerp(qGlobalRot, fRot, Mnv * TheTime.DeltaTime);
-			TheConsole.Log(TheQuaternion.Slerp(qGlobalRot, fRot, Mnv * TheTime.DeltaTime));
-			TheConsole.Log(TheQuaternion.Slerp(qGlobalRot, fRot, Mnv * TheTime.DeltaTime));
-			// THIS IS THE FINAL ROTATIO EULER
-			TheVector3 auxConverter = debugQ.ToEulerAngles();
-			//auxConverter.x = auxConverter.x * TheMath.RadToDeg;
-			//auxConverter.y = auxConverter.y * TheMath.RadToDeg;
-			//auxConverter.z = auxConverter.z * TheMath.RadToDeg;
-			transform.GlobalRotation = auxConverter * TheMath.RadToDeg;
+			TheQuaternion fRot = QuaternionLookRotation(tTrans.GlobalPosition - transform.GlobalPosition, TheVector3.Up); // THIS IS THE FINAL ROTATION QUAT
+			TheVector3 fQuat = fRot.ToEulerAngles();
+			fQuat.x = fQuat.x * TheMath.RadToDeg;
+			fQuat.y = fQuat.y * TheMath.RadToDeg;
+			fQuat.z = fQuat.z * TheMath.RadToDeg;
+			//TheQuaternion debugQ = TheQuaternion.Slerp(TheQuaternion.FromEulerAngles(transform.GlobalRotation), fRot, Mnv); // THIS IS THE FINAL ROTATIO EULER
+			if(Interpolate == true) {
+				TheVector3 convertedGlobalRotation = TheVector3.Zero;
+				convertedGlobalRotation.x = transform.GlobalRotation.x * TheMath.DegToRad;
+				convertedGlobalRotation.y = transform.GlobalRotation.y * TheMath.DegToRad;
+				convertedGlobalRotation.z = transform.GlobalRotation.z * TheMath.DegToRad;
+				TheQuaternion debugQ = TheQuaternion.Slerp(TheQuaternion.FromEulerAngles(convertedGlobalRotation), fRot, Mnv * TheTime.DeltaTime);
+				TheVector3 auxConverter = debugQ.ToEulerAngles();
+				auxConverter.z = auxConverter.z * TheMath.RadToDeg;
+				auxConverter.y = auxConverter.y * TheMath.RadToDeg;
+				auxConverter.x = auxConverter.x * TheMath.RadToDeg;
+				xangle = 2;
+				if(transform.GlobalPosition.z > tTrans.GlobalPosition.z) {
+						auxConverter.y = -auxConverter.y;
+				}
+
+					transform.GlobalRotation = auxConverter;
+				}
+			else {
+				//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z)
+				//	fQuat.y = -fQuat.y;
+				xangle = 1;
+				transform.GlobalRotation = fQuat;
+			}
+			//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z) {
+			//	TheVector3 aux = TheVector3.Zero;
+			//	aux.x = transform.GlobalRotation.x;
+			//	aux.y = -transform.GlobalRotation.y;
+			//	aux.z = transform.GlobalRotation.z;
+			//	transform.GlobalRotation = aux;
+			//}
+			
+			//transform.GlobalRotation = VecPerQuat(transform.GlobalRotation, debugQ);
 			//transform.GlobalRotation = TheQuaternion.RotateTowards(qGlobalRot, fRot, Mnv * TheTime.DeltaTime).ToEulerAngles();
-			xangle = debugQ.x;
-			yangle = debugQ.y;
-			zangle = debugQ.z;
-			wangle = debugQ.w;
+			xangle = fQuat.x;
+			yangle = fQuat.y;
+			zangle = fQuat.z;
+			//wangle = -auxConverter.y;
 			// Take02
 			//transform.LookAt(transform.GlobalPosition + auxConverter * 10.0f);
 		}
@@ -119,7 +147,7 @@ public class Ai_Starship_Dflt {
 		}
 	}
 
-	/*TheVector3 EulerAnglesFromDir(TheVector3 dir) {
+	TheVector3 EulerAnglesFromDir(TheVector3 dir) {
 		TheVector3 ret = TheVector3.Zero;		
 
 		ret.x = dir.x - TheVector3.DotProduct(dir.Normalized, TheVector3.Right);
@@ -144,13 +172,25 @@ public class Ai_Starship_Dflt {
 		return TheMath.Atan2(v2.y - v1.y, v1.x - v2.y);
 	}
 
+	TheVector3 VecPerQuat(TheVector3 v, TheQuaternion q) {
+		TheVector3 u = TheVector3.Zero;
+		u.x = q.x;
+		u.y = q.y;
+		u.z = q.z;
+		float s = q.w;
+		TheVector3 vp = 2.0f * TheVector3.DotProduct(u, v) * u
+			+ (s * s - TheVector3.DotProduct(u, u)) * v
+			+ 2.0f * s * TheVector3.CrossProduct(u, v);
+		return vp;
+	}
+
 	float AngleBetween3D(TheVector3 v1, TheVector3 v2) {
 		return TheMath.Acos(Dot(v1, v2) / (TheVector3.Magnitude(v1) * TheVector3.Magnitude(v2))) * TheMath.RadToDeg;
-	}*/
+	}
 
 	public TheQuaternion QuaternionLookRotation(TheVector3 forward, TheVector3 up)
  	{
-     	TheVector3.Normalize(forward);
+     	forward = TheVector3.Normalize(forward);
  
      	TheVector3 vector = forward.Normalized;
      	TheVector3 vector2 = TheVector3.CrossProduct(up, vector).Normalized;
@@ -259,7 +299,7 @@ public class Ai_Starship_Dflt {
 		
  	}
 	
-	/*float Dot(TheVector3 a, TheVector3 b) {
+	float Dot(TheVector3 a, TheVector3 b) {
 		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
 
@@ -305,10 +345,10 @@ public class Ai_Starship_Dflt {
             num3 = (TheMath.Sin(((1f - num) * num5))) * num6;
        		num2 = flag ? ((-TheMath.Sin((num * num5))) * num6) : ((TheMath.Sin((num * num5))) * num6);
         }
-        quaternion.x = (num3 * quaternion1.x) + (num2 * quaternion2.x);
-        quaternion.y = (num3 * quaternion1.y) + (num2 * quaternion2.y);
-        quaternion.z = (num3 * quaternion1.z) + (num2 * quaternion2.z);
-        quaternion.w = (num3 * quaternion1.w) + (num2 * quaternion2.w);
+        quaternion.x = TheMath.Abs((num3 * quaternion1.x) + (num2 * quaternion2.x));
+        quaternion.y = TheMath.Abs((num3 * quaternion1.y) + (num2 * quaternion2.y));
+        quaternion.z = TheMath.Abs((num3 * quaternion1.z) + (num2 * quaternion2.z));
+        quaternion.w = TheMath.Abs((num3 * quaternion1.w) + (num2 * quaternion2.w));
     	return quaternion;
 	}
 
@@ -353,6 +393,6 @@ public class Ai_Starship_Dflt {
 		v.y = TheMath.Asin(2f*(q.x * q.z - q.w * q.y));
 		v.z = TheMath.Atan((2f*(q.x*q.w + q.y*q.z)) / (1 - 2f*(q.z * q.z + q.w * q.w)));
 		return v;
-	}*/
+	}
 
 }

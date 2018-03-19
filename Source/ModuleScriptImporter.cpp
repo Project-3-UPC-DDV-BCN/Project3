@@ -295,6 +295,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::GetForward", (const void*)GetForward);
 	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
 	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
+	mono_add_internal_call("TheEngine.TheTransform::RotateAroundAxis", (const void*)RotateAroundAxis);
 
 	//RECTTRANSFORM
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectPosition", (const void*)SetRectPosition);
@@ -333,7 +334,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnRotation", (const void*)SetSpawnRotation);
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnScale", (const void*)SetSpawnScale);
 
+	//VECTOR/QUATERNION
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
+	mono_add_internal_call("TheEngine.TheQuaternion::ToEulerAngles", (const void*)ToEulerAngles);
 
 	//TIME
 	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
@@ -533,7 +536,7 @@ MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObje
 
 MonoArray * ModuleScriptImporter::GetAllChilds(MonoObject * object)
 {
-	return current_script->GetSceneGameObjects(object);
+	return current_script->GetAllChilds(object);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
@@ -706,6 +709,11 @@ MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
 	return current_script->GetUp(object);
 }
 
+void ModuleScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
+{
+	current_script->RotateAroundAxis(object, axis, angle);
+}
+
 void ModuleScriptImporter::StartFactory(MonoObject * object)
 {
 	current_script->StartFactory(object);
@@ -734,6 +742,11 @@ void ModuleScriptImporter::SetSpawnScale(MonoObject * object, MonoObject * vecto
 MonoObject * ModuleScriptImporter::ToQuaternion(MonoObject * object)
 {
 	return current_script->ToQuaternion(object);
+}
+
+MonoObject * ModuleScriptImporter::ToEulerAngles(MonoObject * object)
+{
+	return current_script->ToEulerAngles(object);
 }
 
 void ModuleScriptImporter::SetTimeScale(MonoObject * object, float scale)

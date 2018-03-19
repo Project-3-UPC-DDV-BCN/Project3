@@ -82,5 +82,8 @@ private:
 	bool is_kinematic;
 
 	physx::PxRigidDynamic* rigidbody;
+
+	float3 curr_rot;
+	//Quat curr_rot_quat;
 };
 

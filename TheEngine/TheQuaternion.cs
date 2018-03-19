@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using TheEngine.Math;
+using TheEngine.TheMath;
 
 namespace TheEngine
 {
@@ -47,26 +47,18 @@ namespace TheEngine
             return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
         }
 
-        public TheVector3 ToEulerAngles()
-        {
-            TheVector3 ret = new TheVector3
-            {
-                x = TheMath.Atan2(2 * (x * y + w * z), w * w + x * x - y * y - z * z),
-                y = TheMath.Asin(-2 * (x * z - w * y)),
-                z = TheMath.Atan2(2 * (y * z + w * x), w * w - x * x - y * y + z * z)
-            };
-            return ret;
-        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheVector3 ToEulerAngles();
 
         public static TheQuaternion FromEulerAngles(TheVector3 angles)
         {
-            float cos_z_2 = TheMath.Cos(0.5f * angles.z);
-            float cos_y_2 = TheMath.Cos(0.5f * angles.y);
-            float cos_x_2 = TheMath.Cos(0.5f * angles.x);
+            float cos_z_2 = TheMath.TheMath.Cos(0.5f * angles.z);
+            float cos_y_2 = TheMath.TheMath.Cos(0.5f * angles.y);
+            float cos_x_2 = TheMath.TheMath.Cos(0.5f * angles.x);
 
-            float sin_z_2 = TheMath.Sin(0.5f * angles.z);
-            float sin_y_2 = TheMath.Sin(0.5f * angles.y);
-            float sin_x_2 = TheMath.Sin(0.5f * angles.x);
+            float sin_z_2 = TheMath.TheMath.Sin(0.5f * angles.z);
+            float sin_y_2 = TheMath.TheMath.Sin(0.5f * angles.y);
+            float sin_x_2 = TheMath.TheMath.Sin(0.5f * angles.x);
 
             TheQuaternion ret = new TheQuaternion
             {
@@ -82,7 +74,7 @@ namespace TheEngine
         public static float AngleBetween(TheQuaternion a, TheQuaternion b)
         {
             float dot = DotProduct(a, b);
-            return TheMath.Acos(TheMath.Min(TheMath.Abs(dot), 1f)) * 2f * TheMath.RadToDeg;
+            return TheMath.TheMath.Acos(TheMath.TheMath.Min(TheMath.TheMath.Abs(dot), 1f)) * 2f * TheMath.TheMath.RadToDeg;
         }
 
         public static TheQuaternion Lerp(TheQuaternion a, TheQuaternion b, float value)
@@ -143,8 +135,8 @@ namespace TheEngine
 
             if (dot < 0.95f)
             {
-                float angle = TheMath.Acos(dot);
-                return (a * TheMath.Sin(angle * (1 - value)) + result * TheMath.Sin(angle * value)) / TheMath.Sin(angle);
+                float angle = TheMath.TheMath.Acos(dot);
+                return (a * TheMath.TheMath.Sin(angle * (1 - value)) + result * TheMath.TheMath.Sin(angle * value)) / TheMath.TheMath.Sin(angle);
             }
             else
             {
@@ -162,7 +154,7 @@ namespace TheEngine
             }
             else
             {
-                float value = TheMath.Min(1f, step / angle);
+                float value = TheMath.TheMath.Min(1f, step / angle);
                 result = Slerp(from, to, value);
             }
             return result;
@@ -170,13 +162,13 @@ namespace TheEngine
 
         public static TheQuaternion FromAngleAxis(float angle, TheVector3 axis)
         {
-            TheVector3 tmp = axis * TheMath.Sin(angle / 2);
+            TheVector3 tmp = axis * TheMath.TheMath.Sin(angle / 2);
             TheQuaternion ret = new TheQuaternion
             {
                 x = tmp.x,
                 y = tmp.y,
                 z = tmp.z,
-                w = TheMath.Cos(angle / 2)
+                w = TheMath.TheMath.Cos(angle / 2)
             };
 
             return ret;
@@ -190,9 +182,9 @@ namespace TheEngine
 
         public static void ToAngleAxis(TheQuaternion a, out float angle, out TheVector3 axis)
         {
-            angle = TheMath.Acos(a.w);
+            angle = TheMath.TheMath.Acos(a.w);
 
-            float sin_theta_inv = 1.0f / TheMath.Sin(angle);
+            float sin_theta_inv = 1.0f / TheMath.TheMath.Sin(angle);
 
             axis = new TheVector3
             {
@@ -204,14 +196,14 @@ namespace TheEngine
             angle *= 2;
         }
 
-        public static TheQuaternion LookRotation(TheVector3 direction)
-        {
-            TheVector3 up = TheVector3.Up;
-            return lookRotation(direction, up);
-        }
+        //public static TheQuaternion LookRotation(TheVector3 direction)
+        //{
+        //    TheVector3 up = TheVector3.Up;
+        //    return lookRotation(direction, up);
+        //}
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern TheQuaternion lookRotation(TheVector3 direction, TheVector3 up);
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //private static extern TheQuaternion lookRotation(TheVector3 direction, TheVector3 up);
 
         public float Length
         {
@@ -231,7 +223,7 @@ namespace TheEngine
 
         public static float Magnitude(TheQuaternion quaternion)
         {
-            return TheMath.Sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w);
+            return TheMath.TheMath.Sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w);
         }
 
         public TheQuaternion Normalized
@@ -282,13 +274,14 @@ namespace TheEngine
             return new TheQuaternion(-a.x, -a.y, -a.z, -a.w);
         }
 
-        public static TheQuaternion operator *(TheQuaternion a, TheQuaternion b)
+        public static TheQuaternion operator *(TheQuaternion lhs, TheQuaternion rhs)
         {
             return new TheQuaternion(
-                a.x * b.w + a.y * b.z - a.z * b.y + a.w * b.x,
-                a.x * b.z + a.y * b.w + a.z * b.x + a.w * b.y,
-                a.x * b.y - a.y * b.x + a.z * b.w + a.w * b.z,
-                a.x * b.x - a.y * b.y - a.z * b.z + a.w * b.w
+                //a.x * b.w + a.y * b.z - a.z * b.y + a.w * b.x,
+                //a.x * b.z + a.y * b.w + a.z * b.x + a.w * b.y,
+                //a.x * b.y - a.y * b.x + a.z * b.w + a.w * b.z,
+                //a.x * b.x - a.y * b.y - a.z * b.z + a.w * b.w
+                lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y, lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z, lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x, lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z
             );
         }
 
@@ -360,7 +353,7 @@ namespace TheEngine
 
         public override string ToString()
         {
-            return string.Format("({0:F1}, {1:F1}, {2:F1}, {3:F1})", new object[] { x, y, z, w});
+            return string.Format("({0:F4}, {1:F4}, {2:F4}, {3:F4})", new object[] { x, y, z, w});
         }
     }
 }

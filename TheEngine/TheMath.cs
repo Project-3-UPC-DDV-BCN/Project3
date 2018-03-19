@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace TheEngine.Math
+namespace TheEngine.TheMath
 {
     public class TheMath
     {
