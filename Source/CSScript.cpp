@@ -2426,6 +2426,22 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 	return progres_barr->GetProgressPercentage();
 }
 
+MonoString* CSScript::GetString(MonoString* name)
+{
+	const char* c_name = mono_string_to_utf8(name);
+
+	if (c_name != nullptr)
+	{
+		Data data;
+		if (data.LoadJSON(LIBRARY_GAME_DATA))
+		{
+			return mono_string_new(mono_domain, data.GetString(c_name).c_str());
+		}
+	}
+
+	return mono_string_new(mono_domain, "");
+}
+
 void CSScript::AddEntity(MonoObject * object, MonoObject * game_object)
 {
 	if (!MonoObjectIsValid(object))

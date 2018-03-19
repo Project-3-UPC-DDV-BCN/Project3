@@ -107,7 +107,7 @@ private:
 	//DATA SAVE/LOAD
 	static void AddString(MonoString* name, MonoString* string);
 	static void AddInt(MonoString* name, int value);
-	static void AddFloat(MonoString* name, int value);
+	static void AddFloat(MonoString* name, float value);
 	static MonoString* GetString(MonoString* name);
 	static int GetInt(MonoString* name);
 	static float GetFloat(MonoString* name);

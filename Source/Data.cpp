@@ -133,8 +133,8 @@ void Data::SaveAsJSON(std::string path)
 				archive(cereal::make_nvp(data_names[i], data_values[i]));
 			}
 		}
-		file.close();
 	}
+	file.close();
 }
 
 bool Data::LoadJSON(std::string path)
@@ -149,7 +149,8 @@ bool Data::LoadJSON(std::string path)
 	if (file.is_open()) 
 	{
 		cereal::JSONInputArchive archive(file);
-		while (true) {
+		while (true) 
+		{
 			std::string nodeName;
 			std::string nodeValue;
 			if (archive.isObject()) {
@@ -207,6 +208,11 @@ bool Data::LoadJSON(std::string path)
 			}
 		}
 		ret = true;
+
+		if (data_names.size() > 0)
+			data_names.pop_back();
+		if (data_values.size() > 0)
+			data_values.pop_back();
 
 		file.close();
 	}

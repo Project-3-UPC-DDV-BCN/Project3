@@ -82,7 +82,14 @@ public class MainMenuVS2
 			{
 				TheConsole.Log("Settings");
 				menu_audio_source.Play("Play_click");
-				TheData.AddString("pene", "pene2");
+				TheData.AddString("string", "pene2");
+				TheData.AddInt("int", 23);
+				TheData.AddFloat("float", 2.3f);
+				string str = TheData.GetString("string");
+				int i = TheData.GetInt("int");
+				float f = TheData.GetFloat("float");
+				TheConsole.Log(str + " " + i.ToString() + " " + f.ToString());
+
 			}
 
 			if(settings_rect.OnMouseOver)
