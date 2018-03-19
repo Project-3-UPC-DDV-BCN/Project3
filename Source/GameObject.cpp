@@ -788,7 +788,10 @@ void GameObject::Load(Data & data, bool is_prefab)
 
 			if (!exist)
 			{
-				AddComponent((Component::ComponentType)comp_type)->Load(data);
+				Component* new_comp = AddComponent((Component::ComponentType)comp_type);
+
+				if (new_comp != nullptr)
+					new_comp->Load(data);
 			}
 		}
 		else
@@ -857,7 +860,6 @@ void GameObject::Load(Data & data, bool is_prefab)
 		}
 		name = tempName;
 	}
-
 }
 
 bool GameObject::Update()

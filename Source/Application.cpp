@@ -209,6 +209,8 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	StopNow();
+
 	frames++;
 	num_fps++;
 
@@ -226,23 +228,6 @@ void Application::FinishUpdate()
 		SDL_Delay(capped_ms - last_frame_ms);
 	}
 
-	if (to_stop)
-	{
-		if (state == OnPlay || state == OnPause)
-		{
-			state = OnStop;
-			if (!App->IsGame())
-			{
-				App->scene->LoadScene(TMP_FOLDER"tmp_scene");
-			}
-			else
-			{
-				App->scene->LoadScene(starting_scene_path);
-			}
-			App->scene->is_game = false;
-			to_stop = false;
-		}
-	}
 	if (!is_game_mode)
 	{
 		editor->AddData_Editor(last_frame_ms, last_fps);
@@ -252,6 +237,27 @@ void Application::FinishUpdate()
 		if (IsStopped())
 		{
 			Play();
+		}
+	}
+}
+
+void Application::StopNow()
+{
+	if (to_stop)
+	{
+		if (state == OnPlay || state == OnPause)
+		{
+			state = OnStop;
+			if (!App->IsGame())
+			{
+				App->scene->LoadScene(TMP_FOLDER"tmp_scene.scene");
+			}
+			else
+			{
+				App->scene->LoadScene(starting_scene_path);
+			}
+			App->scene->is_game = false;
+			to_stop = false;
 		}
 	}
 }
@@ -434,10 +440,8 @@ void Application::Play()
 			{
 				App->file_system->Create_Directory(TMP_FOLDER_PATH);
 			}
-			Data data;
-			App->scene->SaveScene(data);
-			App->scene->saving_index = 0;
-			data.SaveAsBinary(TMP_FOLDER"tmp_scene");
+	
+			App->scene->SaveScene(TMP_FOLDER"tmp_scene", SceneFileType::SF_BINARY);
 		}
 		
 		App->scene->is_game = true;
@@ -462,9 +466,9 @@ void Application::UnPause()
 
 void Application::Stop()
 {
-	if (state == OnPlay || state == OnPause) {
+	if (state == OnPlay || state == OnPause) 
 		to_stop = true;
-	}
+	
 }
 
 bool Application::IsPlaying()

@@ -19,6 +19,12 @@ class CubeMap;
 class SkyDome;
 class BlastModel;
 
+enum SceneFileType
+{
+	SF_JSON,
+	SF_BINARY,
+};
+
 class ModuleScene : public Module
 {
 public:
@@ -58,8 +64,9 @@ public:
 	void GetOctreeIntersects(std::list<ComponentMeshRenderer*>& list, AABB& box);
 
 	void NewScene(bool loading_scene);
-	void LoadScene(std::string path, bool runtime = false);
-	void SaveScene(Data & data) const;
+	void LoadScene(std::string path);
+	void LoadSceneWithoutDestroying(std::string path);
+	void SaveScene(std::string path, SceneFileType type = SceneFileType::SF_JSON) const;
 
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);
@@ -84,6 +91,9 @@ public:
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
 	void HandleInput();
+
+	void LoadSceneNow();
+	void DestroyGameObjectNow();
 
 public:
 	std::list<GameObject*> selected_gameobjects;
@@ -115,6 +125,5 @@ private:
 
 	bool to_load_scene = false;
 	std::string scene_to_load;
-	bool load_scene_runtime = false;
-
+	bool destroy_current = false;
 };

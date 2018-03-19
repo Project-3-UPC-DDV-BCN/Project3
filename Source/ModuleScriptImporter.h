@@ -105,6 +105,14 @@ private:
 	static void RemoveAllEntities(MonoObject * object);
 	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
+	//DATA SAVE/LOAD
+	static void AddString(MonoString* name, MonoString* string);
+	static void AddInt(MonoString* name, int value);
+	static void AddFloat(MonoString* name, int value);
+	static MonoString* GetString(MonoString* name);
+	static int GetInt(MonoString* name);
+	static float GetFloat(MonoString* name);
+
 	//FACTORY
 	static void StartFactory(MonoObject * object);
 	static MonoObject* Spawn(MonoObject* object);

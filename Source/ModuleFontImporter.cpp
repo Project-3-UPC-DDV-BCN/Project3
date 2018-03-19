@@ -66,7 +66,7 @@ std::string ModuleFontImporter::ImportFont(std::string path)
 	std::string file_name = App->file_system->GetFileName(path);
 	std::string library_path = LIBRARY_FONTS_FOLDER + file_name;
 
-	if (!App->file_system->FileExist(path))
+	if (!App->file_system->FileExist(library_path))
 	{
 		App->file_system->Copy(path, library_path);
 	}

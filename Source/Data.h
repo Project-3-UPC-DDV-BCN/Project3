@@ -19,6 +19,9 @@ public:
 	Data();
 	~Data();
 
+	bool CanLoadAsJSON(std::string path);
+	bool CanLoadAsBinary(std::string path, std::string binary_extension);
+
 	void SaveAsXML(std::string path);
 	bool LoadXML(std::string path);
 	void SaveAsJSON(std::string path);
@@ -61,6 +64,8 @@ public:
 	void AddImVector3(std::string valueName, ImVec3 value);
 	void AddImVector4(std::string valueName, ImVec4 value);
 
+	void DeleteValue(std::string valueName);
+	
 private:
 
 	friend class cereal::access;

@@ -10,6 +10,26 @@ Data::~Data()
 {
 }
 
+bool Data::CanLoadAsJSON(std::string path)
+{
+	bool ret = false;
+
+	if (path.find(".json") != std::string::npos)
+		ret = true;
+
+	return ret;
+}
+
+bool Data::CanLoadAsBinary(std::string path, std::string binary_extension)
+{
+	bool ret = false;
+
+	if (path.find(binary_extension.c_str()) != std::string::npos)
+		ret = true;
+
+	return ret;
+}
+
 void Data::SaveAsXML(std::string path)
 {
 	if (path.find(".xml") == std::string::npos) { //xml extension is not especified
@@ -43,6 +63,7 @@ bool Data::LoadXML(std::string path)
 	std::ifstream file(path);
 	if (file.is_open()) {
 		cereal::XMLInputArchive archive(file);
+
 		while (true) {
 			std::string nodeName;
 			std::string nodeValue;
@@ -93,20 +114,26 @@ void Data::SaveAsJSON(std::string path)
 		path += ".json";
 	}
 	std::ofstream file(path);
-	cereal::JSONOutputArchive archive(file);
-	for (int i = 0; i < data_names.size(); i++) {
-		if (data_names[i] == "New_Section") {
-			std::replace(data_names[i + 1].begin(), data_names[i + 1].end(), ' ', '_');
-			archive.setNextName(data_names[i + 1].c_str());
-			archive.startNode();
-			i++;
+	if (file.is_open())
+	{
+		cereal::JSONOutputArchive archive(file);
+		for (int i = 0; i < data_names.size(); i++) {
+			if (data_names[i] == "New_Section") {
+				std::replace(data_names[i + 1].begin(), data_names[i + 1].end(), ' ', '_');
+				archive.setNextName(data_names[i + 1].c_str());
+				archive.startNode();
+				i++;
+			}
+			else if (data_names[i] == "Section_Close") 
+			{
+				archive.finishNode();
+			}
+			else 
+			{
+				archive(cereal::make_nvp(data_names[i], data_values[i]));
+			}
 		}
-		else if (data_names[i] == "Section_Close") {
-			archive.finishNode();
-		}
-		else {
-			archive(cereal::make_nvp(data_names[i], data_values[i]));
-		}
+		file.close();
 	}
 }
 
@@ -117,8 +144,10 @@ bool Data::LoadJSON(std::string path)
 	int sectionsOpen = 0;
 	data_names.clear();
 	data_values.clear();
-	std::ifstream file(path);
-	if (file.is_open()) {
+	std::ifstream file;
+	file.open(path);
+	if (file.is_open()) 
+	{
 		cereal::JSONInputArchive archive(file);
 		while (true) {
 			std::string nodeName;
@@ -178,6 +207,8 @@ bool Data::LoadJSON(std::string path)
 			}
 		}
 		ret = true;
+
+		file.close();
 	}
 	return ret;
 }
@@ -729,4 +760,35 @@ void Data::AddImVector4(std::string valueName, ImVec4 value)
 	f4.z = value.z;
 	f4.w = value.w;
 	AddVector4(valueName, f4);
+}
+
+void Data::DeleteValue(std::string valueName)
+{
+	int counter = -1;
+	bool found = false;
+	for (std::vector<std::string>::iterator it = data_names.begin(); it != data_names.end(); ++it)
+	{
+		++counter;
+		if (valueName == (*it))
+		{
+			data_names.erase(it);
+			found = true;
+			break;
+		}
+	}
+
+	if (found)
+	{
+		int counter2 = -1;
+		for (std::vector<std::string>::iterator it = data_values.begin(); it != data_values.end(); ++it)
+		{
+			++counter2;
+
+			if (counter == counter2)
+			{
+				data_values.erase(it);
+				break;
+			}
+		}
+	}
 }

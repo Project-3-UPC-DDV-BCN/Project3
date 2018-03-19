@@ -82,6 +82,7 @@ public class MainMenuVS2
 			{
 				TheConsole.Log("Settings");
 				menu_audio_source.Play("Play_click");
+				TheData.AddString("pene", "pene2");
 			}
 
 			if(settings_rect.OnMouseOver)

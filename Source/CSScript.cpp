@@ -28,6 +28,7 @@
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
 #include "ComponentRadar.h"
+#include "Data.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -3826,7 +3827,7 @@ void CSScript::LoadScene(MonoString * scene_name)
 		std::string scene_name = App->file_system->GetFileNameWithoutExtension(scene);
 		if (scene_name == name)
 		{
-			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".scene", true);
+			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".scene");
 			return;
 		}
 	}
