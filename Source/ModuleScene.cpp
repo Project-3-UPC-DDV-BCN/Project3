@@ -481,12 +481,12 @@ void ModuleScene::SaveScene(std::string path, SceneFileType type) const
 	switch (type)
 	{
 	case SF_JSON:
-		App->file_system->ChangeFileExtension(std::string(path), "json");
+		path = App->file_system->ChangeFileExtension(std::string(path), "json");
 		data.SaveAsJSON(path.c_str());
 		CONSOLE_LOG("Scene saved as JSON to: %s", path.c_str());
 		break;
 	case SF_BINARY:
-		App->file_system->ChangeFileExtension(std::string(path), "scene");
+		path = App->file_system->ChangeFileExtension(std::string(path), "scene");
 		data.SaveAsBinary(path.c_str());
 		CONSOLE_LOG("Scene saved as BINARY to: %s", path.c_str());
 		break;
