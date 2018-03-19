@@ -1626,6 +1626,10 @@ MonoObject* CSScript::GetComponent(MonoObject * object, MonoReflectionType * typ
 	{
 		comp_name = "TheScript";
 	}
+	else if (name == "TheEngine.TheMeshRenderer")
+	{
+		comp_name = "TheMeshRenderer";
+	}
 
 	Component::ComponentType cpp_type = CsToCppComponent(comp_name);
 
