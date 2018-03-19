@@ -33,6 +33,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled, bool is_gam
 	key_down = 4;//DEFAULT E
 	key_left = 0;//DEFAULT A
 	key_right = 3;//DEFAULT D
+	speed = 70;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -89,29 +90,30 @@ update_status ModuleCamera3D::Update(float dt)
 		// Now we can make this movememnt frame rate independant!
 		math::Frustum* tmp_camera_frustum = &editor_camera->camera_frustum;
 		float3 new_pos(0, 0, 0);
-		float speed = 20.0f * dt;
+		float tmp_speed = speed * dt;
+
 		if (App->input->GetKey(key_speed) == KEY_REPEAT)
-			speed = 70.0f * dt;
+			tmp_speed = speed * 2 * dt;
 
 		if (App->input->GetKey(key_up) == KEY_REPEAT) 
-			new_pos.y += speed;
+			new_pos.y += tmp_speed;
 
 		if (App->input->GetKey(key_down) == KEY_REPEAT) 
-			new_pos.y -= speed;
+			new_pos.y -= tmp_speed;
 
 		if (App->input->GetKey(key_forward) == KEY_REPEAT) 
-			new_pos += tmp_camera_frustum->Front() * speed;
+			new_pos += tmp_camera_frustum->Front() * tmp_speed;
 
 		if (App->input->GetKey(key_backward) == KEY_REPEAT) 
-			new_pos -= tmp_camera_frustum->Front() * speed;
-		//if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * speed;
-		//if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * speed;
+			new_pos -= tmp_camera_frustum->Front() * tmp_speed;
+		//if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->front * tmp_speed;
+		//if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->front * tmp_speed;
 
 		// TEMPORAL FOR LIGHT TESTING
-		if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->Front() * speed * 4;
-		if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->Front() * speed * 4;
-		if (App->input->GetKey(key_left) == KEY_REPEAT) new_pos -= tmp_camera_frustum->WorldRight() * speed;
-		if (App->input->GetKey(key_right) == KEY_REPEAT) new_pos += tmp_camera_frustum->WorldRight() * speed;
+		if (App->input->GetMouseZ() > 0) new_pos += tmp_camera_frustum->Front() * tmp_speed * 4;
+		if (App->input->GetMouseZ() < 0) new_pos -= tmp_camera_frustum->Front() * tmp_speed * 4;
+		if (App->input->GetKey(key_left) == KEY_REPEAT) new_pos -= tmp_camera_frustum->WorldRight() * tmp_speed;
+		if (App->input->GetKey(key_right) == KEY_REPEAT) new_pos += tmp_camera_frustum->WorldRight() * tmp_speed;
 
 		if (!new_pos.IsZero())
 		{
@@ -182,19 +184,11 @@ void ModuleCamera3D::OrbitAt(const float3 & spot)
 
 }
 
-void ModuleCamera3D::FocusOnObject(AABB& box)
+void ModuleCamera3D::FocusOnObject(float3 obj_position, float3 look_at)
 {
-	editor_camera->camera_frustum.SetPos({ box.maxPoint.x, box.maxPoint.y + 20,  box.maxPoint.z });
-	//editor_camera->camera_frustum.Pos().y = ;
-	//editor_camera->camera_frustum.Pos().z =;
+	editor_camera->camera_frustum.SetPos(obj_position);
 
-	float3 look_at_pos;
-
-	look_at_pos.x = box.CenterPoint().x;
-	look_at_pos.y = box.CenterPoint().y;
-	look_at_pos.z = box.CenterPoint().z;
-
-	LookAt(look_at_pos);
+	LookAt(look_at);
 }
 
 // -----------------------------------------------------------------

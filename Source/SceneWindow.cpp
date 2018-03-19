@@ -228,6 +228,12 @@ void SceneWindow::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Camera Speed"))
+		{
+			ImGui::DragFloat("##camera speed", &App->camera->speed);
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMenuBar();
 	}
 

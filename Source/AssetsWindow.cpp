@@ -397,7 +397,7 @@ void AssetsWindow::DrawWindow()
 						}
 						else
 						{
-							CONSOLE_ERROR("Cannot load %s. It's null", file_name);
+							CONSOLE_ERROR("Cannot load %s. It's null", file_name.c_str());
 						}
 						options_is_open = false;
 					}

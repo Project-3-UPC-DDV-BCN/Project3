@@ -73,6 +73,7 @@ private:
 	static MonoObject* GetForward(MonoObject* object);
 	static MonoObject* GetRight(MonoObject* object);
 	static MonoObject* GetUp(MonoObject* object);
+	static void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
 
 	//RECTTRANSFORM
 	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -119,7 +120,9 @@ private:
 	static void SetSpawnRotation(MonoObject * object, MonoObject * vector3);
 	static void SetSpawnScale(MonoObject * object, MonoObject * vector3);
 
+	//VECTOR/QUATERNION
 	static MonoObject* ToQuaternion(MonoObject * object);
+	static MonoObject* ToEulerAngles(MonoObject * object);
 
 	//TIME
 	static void SetTimeScale(MonoObject* object, float scale);

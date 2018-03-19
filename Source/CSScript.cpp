@@ -1099,16 +1099,14 @@ mono_bool CSScript::GameObjectIsStatic(MonoObject * object)
 
 MonoObject * CSScript::DuplicateGameObject(MonoObject * object)
 {
-	if (!MonoObjectIsValid(object))
+	GameObject* go = FindGameObject(object);
+	if (!go)
 	{
+		CONSOLE_ERROR("Trying to instantiate a null object");
 		return nullptr;
 	}
 
-	if (!GameObjectIsValid())
-	{
-		return nullptr;
-	}
-	GameObject* duplicated = App->scene->DuplicateGameObject(active_gameobject);
+	GameObject* duplicated = App->scene->DuplicateGameObject(go);
 	if (duplicated)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
@@ -2393,6 +2391,33 @@ MonoObject * CSScript::GetUp(MonoObject * object)
 	return nullptr;
 }
 
+void CSScript::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(axis);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 rot_axis;
+
+	if (x_field) mono_field_get_value(axis, x_field, &rot_axis.x);
+	if (y_field) mono_field_get_value(axis, y_field, &rot_axis.y);
+	if (z_field) mono_field_get_value(axis, z_field, &rot_axis.z);
+
+	ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+	transform->RotateAroundAxis(rot_axis, angle);
+}
+
 void CSScript::SetPercentageProgress(MonoObject * object, float progress)
 {
 	if (!MonoObjectIsValid(object))
@@ -2705,6 +2730,48 @@ MonoObject * CSScript::ToQuaternion(MonoObject * object)
 			if (y_field) mono_field_set_value(new_object, y_field, &quat.y);
 			if (z_field) mono_field_set_value(new_object, z_field, &quat.z);
 			if (w_field) mono_field_set_value(new_object, w_field, &quat.w);
+
+			return new_object;
+		}
+	}
+	return nullptr;
+}
+
+MonoObject * CSScript::ToEulerAngles(MonoObject * object)
+{
+	if (!object)
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_object_get_class(object);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+	MonoClassField* w_field = mono_class_get_field_from_name(c, "w");
+
+	Quat rotation;
+
+	if (x_field) mono_field_get_value(object, x_field, &rotation.x);
+	if (y_field) mono_field_get_value(object, y_field, &rotation.y);
+	if (z_field) mono_field_get_value(object, z_field, &rotation.z);
+	if (w_field) mono_field_get_value(object, w_field, &rotation.w);
+
+	math::float3 euler = rotation.ToEulerXYZ() * RADTODEG;
+
+	MonoClass* vector = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (vector)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, vector);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(vector, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(vector, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(vector, "z");
+
+			if (x_field) mono_field_set_value(new_object, x_field, &euler.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &euler.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &euler.z);
 
 			return new_object;
 		}

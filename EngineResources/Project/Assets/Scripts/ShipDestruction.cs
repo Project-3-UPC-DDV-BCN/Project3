@@ -1,7 +1,7 @@
 using TheEngine;
 using TheEngine.TheConsole; 
 using System.Collections.Generic; 
-using TheEngine.Math;
+using TheEngine.TheMath;
 
 public class ShipDestruction 
 {

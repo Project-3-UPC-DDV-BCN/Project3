@@ -4,6 +4,7 @@
 #include "ComponentLight.h"
 #include "Application.h"
 #include "ComponentBlast.h"
+#include "PerfTimer.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
@@ -22,7 +23,7 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_
 	global_scale = float3(1.f, 1.f, 1.f);
 	transform_matrix.SetIdentity();
 
-	this->is_particle = is_particle; 
+	this->is_particle = is_particle;
 }
 
 ComponentTransform::~ComponentTransform()
@@ -49,10 +50,23 @@ float3 ComponentTransform::GetLocalPosition() const
 void ComponentTransform::SetRotation(float3 rotation)
 {
 	float3 diff = rotation - shown_rotation;
-	shown_rotation = rotation;
 
-	Quat mod = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
-	this->rotation = this->rotation * mod;
+	/*this->rotation = this->rotation * Quat::RotateX(rotation.x).Normalized();
+	this->rotation = this->rotation * Quat::RotateY(rotation.y).Normalized();
+	this->rotation = this->rotation * Quat::RotateZ(rotation.z).Normalized();*/
+
+	this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
+
+	/*Quat cc = Quat::FromEulerXYZ(-44 * DEGTORAD, 257 * DEGTORAD, 0 * DEGTORAD);
+	Quat ccc = Quat::FromEulerXYZ(0 * DEGTORAD, 90 * DEGTORAD, 0 * DEGTORAD);
+
+	Quat r = ccc * cc;
+	float3 f = r.ToEulerXYZ() * RADTODEG;*/
+
+	/*Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+	this->rotation = this->rotation * q;*/
+
+	shown_rotation = rotation;
 	UpdateGlobalMatrix();
 	dirty = true; 
 }
@@ -67,16 +81,16 @@ float3 ComponentTransform::GetLocalRotation() const
 	return shown_rotation; //If it's the parent. local rotation = global rotation
 }
 
+Quat ComponentTransform::GetQuatRotation() const
+{
+	return rotation;
+}
+
 void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
 	dirty = true;
-	//ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-	//if (rb)
-	//{
-	//	rb->SetColliderScale(scale);
-	//}
 }
 
 float3 ComponentTransform::GetGlobalScale() const
@@ -104,12 +118,9 @@ void ComponentTransform::UpdateGlobalMatrix()
 			child_transform->UpdateGlobalMatrix();
 		}
 
-		float3 _pos, _scale;
-		Quat _rot;
-		transform_matrix.Decompose(_pos, _rot, _scale);
-		global_pos = _pos;
-		global_rot = _rot.ToEulerXYZ() * RADTODEG;
-		global_scale = _scale;
+		global_pos = parent_transform->GetGlobalPosition() + position;
+		global_rot = (parent_transform->GetQuatRotation() * rotation).ToEulerXYZ() * RADTODEG;
+		global_scale = parent_transform->GetGlobalScale().Mul(scale);
 	}
 	else
 	{
@@ -135,16 +146,14 @@ void ComponentTransform::UpdateGlobalMatrix()
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
 
-		
-
 		if (!App->IsPlaying())
 		{
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
-				rb->SetTransform(transform_matrix.Transposed().ptr());
-				//rb->SetPosition(global_pos);
-				//rb->SetRotation(global_rot);
+				//rb->SetTransform(transform_matrix.Transposed().ptr());
+				rb->SetPosition(global_pos);
+				rb->SetRotation(global_rot);
 			}
 			else
 			{
@@ -158,16 +167,6 @@ void ComponentTransform::UpdateGlobalMatrix()
 			}
 		}
 	}
-		
-//POSSIBLEEE
-
-	//ComponentLight* light = (ComponentLight*)GetGameObject()->GetComponent(Component::CompLight);
-	//if (light)
-	//{
-	//	//light->SetPositionFromGO(global_pos);
-	//	light->SetDirectionFromGO(global_rot);
-	//}
-
 }
 
 void ComponentTransform::UpdateLocals()
@@ -219,6 +218,14 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 			child_transform->UpdateGlobalMatrix();
 		}
 	}
+}
+
+void ComponentTransform::RotateAroundAxis(float3 axis, float angle)
+{
+	this->rotation = this->rotation * Quat::RotateAxisAngle(axis, angle * DEGTORAD);
+	shown_rotation = this->rotation.ToEulerXYZ() * RADTODEG;
+	UpdateGlobalMatrix();
+	dirty = true;
 }
 
 float3 ComponentTransform::GetForward() const
