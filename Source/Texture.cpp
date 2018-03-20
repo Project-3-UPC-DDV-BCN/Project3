@@ -14,7 +14,7 @@ Texture::Texture()
 	height = 0;
 	format = UnknownFormat;
 	type = UnknownType;
-	mode = tile;
+	mode = clamp;
 
 	SetType(Resource::TextureResource);
 	image_data = nullptr;

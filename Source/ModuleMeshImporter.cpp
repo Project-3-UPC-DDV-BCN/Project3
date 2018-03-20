@@ -870,6 +870,7 @@ Mesh * ModuleMeshImporter::LoadMeshFromLibrary(std::string path)
 			mesh->SetLibraryPath(path);
 			std::string name = App->file_system->GetFileNameWithoutExtension(path);
 			mesh->SetName(name);
+			mesh->FillVerticesList();
 		}
 		else
 		{

@@ -1,5 +1,6 @@
 #pragma once
-
+#include "Module.h"
+#include "MathGeoLib\MathGeoLib.h"
 
 class Vertex
 {
@@ -32,6 +33,12 @@ public:
 	float* GetTangentPtr() const;
 	float* GetBitangentPtr() const;
 
+	float3 GetPosition() const;
+	float3 GetUV() const;
+	float4 GetColor() const;
+	float3 GetNormal() const;
+	float3 GetTangent() const;
+	float3 GetBitangent() const;
 
 private:
 	float* position = nullptr;

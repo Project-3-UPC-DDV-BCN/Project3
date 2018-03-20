@@ -226,8 +226,8 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 					mesh_renderer->SetMeshType(ComponentMeshRenderer::NormalMesh);
 					mesh_renderer->SetMesh(mesh);
 					App->mesh_importer->SaveMeshToLibrary(*mesh);
+					mesh->FillVerticesList();
 
-					// aqui JOSEP
 					//uint data_count = 0;
 
 					//for (uint i = 0; i < indices_count; i += 3) // CreateTriangles

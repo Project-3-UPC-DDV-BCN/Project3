@@ -1285,6 +1285,8 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 					material->SetNormalMapTexture(normalmap);
 				}
 
+
+
 				// DIFFUSE
 				ImGui::Text("Diffuse: "); ImGui::SameLine();
 				if (mesh_renderer->GetMaterial()->GetDiffuseTexture() != nullptr)
@@ -1320,6 +1322,21 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 						ImGui::EndPopup();
 					}
 				}
+
+				//OPACITY
+				ImGui::Text("Opacity: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetOpacityTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetOpacityTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* opacity = material->GetOpacityTexture();
+				if (ImGui::InputResourceTexture("Change Opacity Map", &opacity))
+				{
+					material->SetOpacityTexture(opacity);
+				}
+
 				if (ImGui::Button("Save Material"))
 				{
 					Data data;

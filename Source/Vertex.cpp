@@ -126,3 +126,33 @@ float * Vertex::GetBitangentPtr() const
 {
 	return bitangent;
 }
+
+float3 Vertex::GetPosition() const
+{
+	return float3(position[0], position[1], position[2]);
+}
+
+float3 Vertex::GetUV() const
+{
+	return float3(UV[0], UV[1], UV[2]);
+}
+
+float4 Vertex::GetColor() const
+{
+	return float4(UV[0], UV[1], UV[2], color[3]);
+}
+
+float3 Vertex::GetNormal() const
+{
+	return float3(normal[0], normal[1], normal[2]);
+}
+
+float3 Vertex::GetTangent() const
+{
+	return float3(tangent[0], tangent[1], tangent[2]);
+}
+
+float3 Vertex::GetBitangent() const
+{
+	return float3(bitangent[0], bitangent[1], bitangent[2]);
+}

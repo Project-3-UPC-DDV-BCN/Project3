@@ -20,7 +20,7 @@ public:
 	void UnloadFromMemory();
 
 	void CreateVerticesFromData();
-	//void FillVerticesList();
+	void FillVerticesList();
 private:
 	//Must be call after setting the values to the mesh!!!
 	void InitializeMesh();
