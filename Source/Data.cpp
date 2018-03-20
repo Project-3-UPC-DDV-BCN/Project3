@@ -114,27 +114,21 @@ void Data::SaveAsJSON(std::string path)
 		path += ".json";
 	}
 	std::ofstream file(path);
-	if (file.is_open())
-	{
-		cereal::JSONOutputArchive archive(file);
-		for (int i = 0; i < data_names.size(); i++) {
-			if (data_names[i] == "New_Section") {
-				std::replace(data_names[i + 1].begin(), data_names[i + 1].end(), ' ', '_');
-				archive.setNextName(data_names[i + 1].c_str());
-				archive.startNode();
-				i++;
-			}
-			else if (data_names[i] == "Section_Close") 
-			{
-				archive.finishNode();
-			}
-			else 
-			{
-				archive(cereal::make_nvp(data_names[i], data_values[i]));
-			}
+	cereal::JSONOutputArchive archive(file);
+	for (int i = 0; i < data_names.size(); i++) {
+		if (data_names[i] == "New_Section") {
+			std::replace(data_names[i + 1].begin(), data_names[i + 1].end(), ' ', '_');
+			archive.setNextName(data_names[i + 1].c_str());
+			archive.startNode();
+			i++;
+		}
+		else if (data_names[i] == "Section_Close") {
+			archive.finishNode();
+		}
+		else {
+			archive(cereal::make_nvp(data_names[i], data_values[i]));
 		}
 	}
-	file.close();
 }
 
 bool Data::LoadJSON(std::string path)
@@ -144,13 +138,10 @@ bool Data::LoadJSON(std::string path)
 	int sectionsOpen = 0;
 	data_names.clear();
 	data_values.clear();
-	std::ifstream file;
-	file.open(path);
-	if (file.is_open()) 
-	{
+	std::ifstream file(path);
+	if (file.is_open()) {
 		cereal::JSONInputArchive archive(file);
-		while (true) 
-		{
+		while (true) {
 			std::string nodeName;
 			std::string nodeValue;
 			if (archive.isObject()) {
@@ -208,13 +199,6 @@ bool Data::LoadJSON(std::string path)
 			}
 		}
 		ret = true;
-
-		//if (data_names.size() > 0)
-		//	data_names.pop_back();
-		//if (data_values.size() > 0)
-		//	data_values.pop_back();
-
-		file.close();
 	}
 	return ret;
 }
