@@ -463,6 +463,8 @@ void ModuleScene::LoadSceneWithoutDestroying(std::string path)
 
 void ModuleScene::SaveScene(std::string path, SceneFileType type) const
 {
+	App->scene->saving_index = 0;
+
 	Data data;
 	data.AddString("Scene Name", scene_name);
 	data.AddInt("GameObjects_Count", scene_gameobjects.size());
