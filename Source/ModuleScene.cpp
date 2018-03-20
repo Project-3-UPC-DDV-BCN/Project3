@@ -770,14 +770,14 @@ void ModuleScene::LoadSceneNow()
 
 			if (data.CanLoadAsJSON(scene_to_load.c_str()))
 			{
-				data.LoadJSON(scene_to_load.c_str());
-				can_load = true;
+				if(data.LoadJSON(scene_to_load.c_str()))
+					can_load = true;
 			}
 
 			if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
 			{
-				data.LoadBinary(scene_to_load.c_str());
-				can_load = true;
+				if(data.LoadBinary(scene_to_load.c_str()))
+					can_load = true;
 			}
 
 			if (can_load)
@@ -791,8 +791,6 @@ void ModuleScene::LoadSceneNow()
 					data.LeaveSection();
 					it++;
 				}
-
-				saving_index = 0;
 
 				if (App->IsPlaying())
 					InitScripts();
