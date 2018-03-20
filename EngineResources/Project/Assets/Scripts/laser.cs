@@ -28,8 +28,7 @@ public class laser
 	void OnCollisionEnter(TheGameObject other_ship)
 	{
 
-		//TheGameObject parent = other_ship.GetParent(); 	
-		TheGameObject parent = TheGameObject.Find("X_WING(4)"); 
+		TheGameObject parent = other_ship.GetParent(); 	
 		enemy_properties_scpt = parent.GetComponent<TheScript>(0); 
 
 		if(other_ship != null)
@@ -38,8 +37,6 @@ public class laser
 			enemy_properties_scpt.CallFunction("SubstractHP"); 
 			enemy_properties_scpt.SetIntField("hp_inc", 0); 
 		}
-
-		TheGameObject.Self.SetActive(false); 
 
 		/*if(other_ship != null)
 		{	

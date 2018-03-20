@@ -1120,7 +1120,7 @@ MonoObject * CSScript::DuplicateGameObject(MonoObject * object)
 			}
 		}
 	}
-	
+
 	return nullptr;
 }
 
