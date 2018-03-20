@@ -3,6 +3,7 @@
 #include <string>
 #include "MathGeoLib/GeometryAll.h"
 #include "Resource.h"
+#include "Vertex.h"
 
 class Data;
 
@@ -19,7 +20,7 @@ public:
 	void UnloadFromMemory();
 
 	void CreateVerticesFromData();
-
+	//void FillVerticesList();
 private:
 	//Must be call after setting the values to the mesh!!!
 	void InitializeMesh();
@@ -39,5 +40,7 @@ public:
 	AABB box;
 
 	uint id_vao = 0;
+
+	std::vector<Vertex> vertices_list;
 };
 

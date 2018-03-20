@@ -3,8 +3,9 @@
 
 class Vertex
 {
+public:
 	Vertex();
-	virtual ~Vertex();
+	~Vertex();
 
 	void SetPosition(float x, float y, float z);
 	void SetPosition(float* position);
@@ -12,17 +13,24 @@ class Vertex
 	void SetUV(float v1, float v2, float v3);
 	void SetUV(float* UV);
 
-	void SetColor(float x, float y, float z);
-	void SetColor(float* position);
+	void SetColor(float r, float g, float b, float a);
+	void SetColor(float* color);
 
-	void SetNormal(float v1, float v2, float v3);
-	void SetNormal(float* UV);
+	void SetNormal(float x, float y, float z);
+	void SetNormal(float* normal);
 
-	void SetTangent(float v1, float v2, float v3);
-	void SetTangent(float* UV);
+	void SetTangent(float x, float y, float z);
+	void SetTangent(float* tangent);
 
-	void SetBitangent(float v1, float v2, float v3);
-	void SetBitangent(float* UV);
+	void SetBitangent(float x, float y, float z);
+	void SetBitangent(float* bitanegnt);
+
+	float* GetPositionPtr() const;
+	float* GetUVPtr() const;
+	float* GetColorPtr() const;
+	float* GetNormalPtr() const;
+	float* GetTangentPtr() const;
+	float* GetBitangentPtr() const;
 
 
 private:
