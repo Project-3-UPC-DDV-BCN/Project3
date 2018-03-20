@@ -704,7 +704,7 @@ void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * g
 
 void ModuleScriptImporter::AddString(MonoString * name, MonoString * string)
 {
-	/*const char* c_name = mono_string_to_utf8(name);
+	const char* c_name = mono_string_to_utf8(name);
 	const char* c_string = mono_string_to_utf8(string);
 
 	if (c_name != nullptr && c_string != nullptr)
@@ -716,30 +716,30 @@ void ModuleScriptImporter::AddString(MonoString * name, MonoString * string)
 		data.AddString(c_name, c_string);
 
 		data.SaveAsJSON(LIBRARY_GAME_DATA);
-	*//*}*/
+	}
 }
 
 void ModuleScriptImporter::AddInt(MonoString * name, int value)
 {
-	//const char* c_name = mono_string_to_utf8(name);
+	const char* c_name = mono_string_to_utf8(name);
 
-	//if (c_name != nullptr)
-	//{
-	//	Data data;
-	//	data.LoadJSON(LIBRARY_GAME_DATA);
+	if (c_name != nullptr)
+	{
+		Data data;
+		data.LoadJSON(LIBRARY_GAME_DATA);
 
-	//	data.DeleteValue(c_name);
-	//	data.AddInt(c_name, value);
+		data.DeleteValue(c_name);
+		data.AddInt(c_name, value);
 
-	//	data.SaveAsJSON(LIBRARY_GAME_DATA);
-	//}
+		data.SaveAsJSON(LIBRARY_GAME_DATA);
+	}
 }
 
 void ModuleScriptImporter::AddFloat(MonoString * name, float value)
 {
-	//const char* c_name = mono_string_to_utf8(name);
+	const char* c_name = mono_string_to_utf8(name);
 
-	/*if (c_name != nullptr)
+	if (c_name != nullptr)
 	{
 		Data data;
 		data.LoadJSON(LIBRARY_GAME_DATA);
@@ -748,7 +748,7 @@ void ModuleScriptImporter::AddFloat(MonoString * name, float value)
 		data.AddFloat(c_name, value);
 
 		data.SaveAsJSON(LIBRARY_GAME_DATA);
-	}*/
+	}
 }
 
 MonoString* ModuleScriptImporter::GetString(MonoString * name)
@@ -758,7 +758,7 @@ MonoString* ModuleScriptImporter::GetString(MonoString * name)
 
 int ModuleScriptImporter::GetInt(MonoString * name)
 {
-	/*const char* c_name = mono_string_to_utf8(name);
+	const char* c_name = mono_string_to_utf8(name);
 
 	if (c_name != nullptr)
 	{
@@ -767,14 +767,14 @@ int ModuleScriptImporter::GetInt(MonoString * name)
 		{
 			return data.GetInt(c_name);
 		}
-	}*/
+	}
 
 	return 0;
 }
 
 float ModuleScriptImporter::GetFloat(MonoString * name)
 {
-	/*const char* c_name = mono_string_to_utf8(name);
+	const char* c_name = mono_string_to_utf8(name);
 
 	if (c_name != nullptr)
 	{
@@ -784,7 +784,7 @@ float ModuleScriptImporter::GetFloat(MonoString * name)
 			return data.GetFloat(c_name);
 		}
 	}
-*/
+
 	return 0.0f;
 }
 
