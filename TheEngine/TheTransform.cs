@@ -101,6 +101,9 @@ namespace TheEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void RotateAroundAxis(TheVector3 axis, float angle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetPosition(bool is_global);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

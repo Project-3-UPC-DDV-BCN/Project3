@@ -121,7 +121,6 @@ update_status ModulePhysics::Update(float dt)
 				scene->simulate(dt);
 				App->blast->ApplyDamage();
 				scene->fetchResults(true);
-				//App->blast->ProcessGroup();
 
 				physx::PxU32 active_actors_num;
 				physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
@@ -522,6 +521,7 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
 	transform->SetPosition(position);
 	transform->SetRotation(rotation);
+	CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)

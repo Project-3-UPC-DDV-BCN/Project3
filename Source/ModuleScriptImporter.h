@@ -73,6 +73,7 @@ private:
 	static MonoObject* GetForward(MonoObject* object);
 	static MonoObject* GetRight(MonoObject* object);
 	static MonoObject* GetUp(MonoObject* object);
+	static void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
 
 	//RECTTRANSFORM
 	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -104,6 +105,14 @@ private:
 	static void RemoveAllEntities(MonoObject * object);
 	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
+	//DATA SAVE/LOAD
+	static void AddString(MonoString* name, MonoString* string);
+	static void AddInt(MonoString* name, int value);
+	static void AddFloat(MonoString* name, float value);
+	static MonoString* GetString(MonoString* name);
+	static int GetInt(MonoString* name);
+	static float GetFloat(MonoString* name);
+
 	//FACTORY
 	static void StartFactory(MonoObject * object);
 	static MonoObject* Spawn(MonoObject* object);
@@ -111,7 +120,9 @@ private:
 	static void SetSpawnRotation(MonoObject * object, MonoObject * vector3);
 	static void SetSpawnScale(MonoObject * object, MonoObject * vector3);
 
+	//VECTOR/QUATERNION
 	static MonoObject* ToQuaternion(MonoObject * object);
+	static MonoObject* ToEulerAngles(MonoObject * object);
 
 	//TIME
 	static void SetTimeScale(MonoObject* object, float scale);

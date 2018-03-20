@@ -68,18 +68,22 @@ bool BlastModel::Load(Data & data)
 	chunks.resize(gameObjectsCount - 1);
 	for (int i = 0; i < gameObjectsCount; i++) {
 		GameObject* go = new GameObject();
-		data.EnterSection("GameObject_" + std::to_string(i));
-		go->Load(data, true);
-		data.LeaveSection();
-		if (i == 0)
+		if (data.EnterSection("GameObject_" + std::to_string(i)))
 		{
-			root = go;
-			root->SetNewUID();
-		}
-		else
-		{
-			chunks[i - 1] = go;
-			go->SetParent(root);
+			go->Load(data, true);
+
+			if (i == 0)
+			{
+				root = go;
+				root->SetNewUID();
+			}
+			else
+			{
+				chunks[i - 1] = go;
+				go->SetParent(root);
+			}
+
+			data.LeaveSection();
 		}
 		
 	}

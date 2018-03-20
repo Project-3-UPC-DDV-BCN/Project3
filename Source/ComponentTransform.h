@@ -15,6 +15,7 @@ public:
 	void SetRotation(float3 rotation);
 	float3 GetGlobalRotation() const;
 	float3 GetLocalRotation() const;
+	Quat GetQuatRotation() const;
 	void SetScale(float3 scale);
 	float3 GetGlobalScale() const;
 	float3 GetLocalScale() const;
@@ -23,6 +24,8 @@ public:
 	const float4x4 GetMatrix() const;
 	const float4x4 GetOpenGLMatrix() const;
 	void SetMatrix(const float4x4 &matrix);
+
+	void RotateAroundAxis(float3 axis, float angle);
 
 	float3 GetForward()const;
 	float3 GetUp()const;
@@ -47,6 +50,6 @@ private:
 
 	float4x4 transform_matrix;
 
-	bool is_particle; 
+	bool is_particle;
 };
 

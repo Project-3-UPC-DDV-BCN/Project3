@@ -295,6 +295,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::GetForward", (const void*)GetForward);
 	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
 	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
+	mono_add_internal_call("TheEngine.TheTransform::RotateAroundAxis", (const void*)RotateAroundAxis);
 
 	//RECTTRANSFORM
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectPosition", (const void*)SetRectPosition);
@@ -333,7 +334,17 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnRotation", (const void*)SetSpawnRotation);
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnScale", (const void*)SetSpawnScale);
 
+	//VECTOR/QUATERNION
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
+	mono_add_internal_call("TheEngine.TheQuaternion::ToEulerAngles", (const void*)ToEulerAngles);
+
+	//DATA SAVE/LOAD
+	mono_add_internal_call("TheEngine.TheData::AddString", (const void*)AddString);
+	mono_add_internal_call("TheEngine.TheData::AddInt", (const void*)AddInt);
+	mono_add_internal_call("TheEngine.TheData::AddFloat", (const void*)AddFloat);
+	mono_add_internal_call("TheEngine.TheData::GetString", (const void*)GetString);
+	mono_add_internal_call("TheEngine.TheData::GetInt", (const void*)GetInt);
+	mono_add_internal_call("TheEngine.TheData::GetFloat", (const void*)GetFloat);
 
 	//TIME
 	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
@@ -533,7 +544,7 @@ MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObje
 
 MonoArray * ModuleScriptImporter::GetAllChilds(MonoObject * object)
 {
-	return current_script->GetSceneGameObjects(object);
+	return current_script->GetAllChilds(object);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
@@ -691,6 +702,92 @@ void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * g
 	current_script->SetMarkerToEntity(object, game_object, marker_name);
 }
 
+void ModuleScriptImporter::AddString(MonoString * name, MonoString * string)
+{
+	const char* c_name = mono_string_to_utf8(name);
+	const char* c_string = mono_string_to_utf8(string);
+
+	if (c_name != nullptr && c_string != nullptr)
+	{
+		Data data;
+		data.LoadJSON(LIBRARY_GAME_DATA);
+
+		data.DeleteValue(c_name);
+		data.AddString(c_name, c_string);
+
+		data.SaveAsJSON(LIBRARY_GAME_DATA);
+	}
+}
+
+void ModuleScriptImporter::AddInt(MonoString * name, int value)
+{
+	const char* c_name = mono_string_to_utf8(name);
+
+	if (c_name != nullptr)
+	{
+		Data data;
+		data.LoadJSON(LIBRARY_GAME_DATA);
+
+		data.DeleteValue(c_name);
+		data.AddInt(c_name, value);
+
+		data.SaveAsJSON(LIBRARY_GAME_DATA);
+	}
+}
+
+void ModuleScriptImporter::AddFloat(MonoString * name, float value)
+{
+	const char* c_name = mono_string_to_utf8(name);
+
+	if (c_name != nullptr)
+	{
+		Data data;
+		data.LoadJSON(LIBRARY_GAME_DATA);
+
+		data.DeleteValue(c_name);
+		data.AddFloat(c_name, value);
+
+		data.SaveAsJSON(LIBRARY_GAME_DATA);
+	}
+}
+
+MonoString* ModuleScriptImporter::GetString(MonoString * name)
+{
+	return current_script->GetString(name);
+}
+
+int ModuleScriptImporter::GetInt(MonoString * name)
+{
+	const char* c_name = mono_string_to_utf8(name);
+
+	if (c_name != nullptr)
+	{
+		Data data;
+		if (data.LoadJSON(LIBRARY_GAME_DATA))
+		{
+			return data.GetInt(c_name);
+		}
+	}
+
+	return 0;
+}
+
+float ModuleScriptImporter::GetFloat(MonoString * name)
+{
+	const char* c_name = mono_string_to_utf8(name);
+
+	if (c_name != nullptr)
+	{
+		Data data;
+		if (data.LoadJSON(LIBRARY_GAME_DATA))
+		{
+			return data.GetFloat(c_name);
+		}
+	}
+
+	return 0.0f;
+}
+
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
 {
 	return current_script->GetForward(object);
@@ -704,6 +801,11 @@ MonoObject * ModuleScriptImporter::GetRight(MonoObject * object)
 MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
 {
 	return current_script->GetUp(object);
+}
+
+void ModuleScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
+{
+	current_script->RotateAroundAxis(object, axis, angle);
 }
 
 void ModuleScriptImporter::StartFactory(MonoObject * object)
@@ -734,6 +836,11 @@ void ModuleScriptImporter::SetSpawnScale(MonoObject * object, MonoObject * vecto
 MonoObject * ModuleScriptImporter::ToQuaternion(MonoObject * object)
 {
 	return current_script->ToQuaternion(object);
+}
+
+MonoObject * ModuleScriptImporter::ToEulerAngles(MonoObject * object)
+{
+	return current_script->ToEulerAngles(object);
 }
 
 void ModuleScriptImporter::SetTimeScale(MonoObject * object, float scale)

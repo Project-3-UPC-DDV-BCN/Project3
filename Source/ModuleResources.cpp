@@ -1011,45 +1011,47 @@ void ModuleResources::LoadShaderProgramMeta(std::string path) const
 	for (int i = 0; i < sections; ++i)
 	{
 		std::string section_name = "shprogram_" + std::to_string(i);
-		d.EnterSection(section_name);
-		UID program = d.GetUInt("uuid");
-		ShaderProgram* shprog = GetShaderProgram(program);
-		if (shprog != nullptr)
+		if (d.EnterSection(section_name))
 		{
-			UID vert_uid = d.GetUInt("vertex_shader");
-			if (vert_uid != 0)
+			UID program = d.GetUInt("uuid");
+			ShaderProgram* shprog = GetShaderProgram(program);
+			if (shprog != nullptr)
 			{
-				Shader* vert_shader = GetShader(vert_uid);
-				if (vert_shader != nullptr)
+				UID vert_uid = d.GetUInt("vertex_shader");
+				if (vert_uid != 0)
 				{
-					shprog->SetVertexShader(vert_shader);
+					Shader* vert_shader = GetShader(vert_uid);
+					if (vert_shader != nullptr)
+					{
+						shprog->SetVertexShader(vert_shader);
+					}
+					else
+					{
+						CONSOLE_WARNING("Vertex shader %d not found for %s", vert_uid, section_name.c_str());
+					}
 				}
-				else
+
+				UID frag_uid = d.GetUInt("fragment_shader");
+				if (frag_uid != 0)
 				{
-					CONSOLE_WARNING("Vertex shader %d not found for %s", vert_uid, section_name.c_str());
+					Shader* frag_shader = GetShader(frag_uid);
+					if (frag_shader != nullptr)
+					{
+						shprog->SetFragmentShader(frag_shader);
+					}
+					else
+					{
+						CONSOLE_WARNING("Fragment shader %d not found for %s", frag_uid, section_name.c_str());
+					}
 				}
 			}
-
-			UID frag_uid = d.GetUInt("fragment_shader");
-			if (frag_uid != 0)
+			else
 			{
-				Shader* frag_shader = GetShader(frag_uid);
-				if (frag_shader != nullptr)
-				{
-					shprog->SetFragmentShader(frag_shader);
-				}
-				else
-				{
-					CONSOLE_WARNING("Fragment shader %d not found for %s", frag_uid, section_name.c_str());
-				}
+				CONSOLE_WARNING("%s not found!", section_name.c_str());
 			}
-		}
-		else
-		{
-			CONSOLE_WARNING("%s not found!", section_name.c_str());
-		}
 
-		d.LeaveSection();
+			d.LeaveSection();
+		}
 	}
 }
 

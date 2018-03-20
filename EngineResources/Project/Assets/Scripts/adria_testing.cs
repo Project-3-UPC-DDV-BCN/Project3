@@ -1,13 +1,29 @@
 using TheEngine;
 using TheEngine.TheConsole;
+using TheEngine.TheMath;
 
 public class adria_testing {
-
+	
+	public TheGameObject objective;
+	TheTransform trans;
+	TheTransform obj;
+	TheQuaternion rot;
+	
 	void Start () {
-		TheConsole.Log(TheQuaternion.Slerp(new TheQuaternion (0.2f, 0.4f, 0.1f, 1f), new TheQuaternion (0.7f, 0.6f, 0.2f, 1f), 1));
+		trans = TheGameObject.Self.GetComponent<TheTransform>();
+		obj = objective.GetComponent<TheTransform>();
+		rot = new TheQuaternion();
 	}
 	
 	void Update () {
-		
+		rot = TheVector3.RotationToTarget(trans.GlobalPosition, obj.GlobalPosition).Conjugate();
+		trans.GlobalPosition = TheVector3.Lerp(trans.GlobalPosition, obj.GlobalPosition, 1 * TheTime.DeltaTime);
+		TheQuaternion q = new TheQuaternion();
+		TheConsole.Log(rot);
+		TheConsole.Log(TheQuaternion.FromEulerAngles(trans.GlobalRotation * TheMath.DegToRad));
+		q = rot * TheQuaternion.FromEulerAngles(trans.GlobalRotation * TheMath.DegToRad);
+		TheConsole.Log(q);
+		//TheConsole.Log(q.ToEulerAngles() * TheMath.RadToDeg);
+		trans.GlobalRotation = q.ToEulerAngles() * TheMath.RadToDeg;
 	}
 }

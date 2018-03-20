@@ -64,6 +64,8 @@ public:
 	void AddImVector3(std::string valueName, ImVec3 value);
 	void AddImVector4(std::string valueName, ImVec4 value);
 
+	void DeleteValue(std::string valueName);
+	
 private:
 
 	friend class cereal::access;

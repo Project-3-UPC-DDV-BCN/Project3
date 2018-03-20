@@ -110,6 +110,7 @@ public:
 	MonoObject* GetForward(MonoObject* object);
 	MonoObject* GetRight(MonoObject* object);
 	MonoObject* GetUp(MonoObject* object);
+	void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
 
 	//RECTTRANSFORM
 	void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -135,6 +136,9 @@ public:
 	void SetPercentageProgress(MonoObject * object, float progress);
 	float GetPercentageProgress(MonoObject * object);
 
+	//DATA SAVE/LOAD
+	MonoString* GetString(MonoString* name);
+
 	//RADAR
 	void AddEntity(MonoObject * object, MonoObject * game_object);
 	void RemoveEntity(MonoObject * object, MonoObject * game_object);
@@ -148,7 +152,9 @@ public:
 	void SetSpawnRotation(MonoObject * object, MonoObject * vector3);
 	void SetSpawnScale(MonoObject * object, MonoObject * vector3);
 
+	//VECTOR/QUATERNION
 	MonoObject* ToQuaternion(MonoObject * object);
+	MonoObject* ToEulerAngles(MonoObject * object);
 
 	//TIME
 	void SetTimeScale(MonoObject* object, float scale);

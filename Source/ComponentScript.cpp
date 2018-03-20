@@ -179,17 +179,19 @@ void ComponentScript::Load(Data & data)
 	SetType((Component::ComponentType)data.GetInt("Type"));
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
-	data.EnterSection("Script");
-	std::string script_name = data.GetString("script_name");
-	script = new CSScript();
-	if (!script->Load(data))
+	if (data.EnterSection("Script"))
 	{
-		CONSOLE_ERROR("Cannot find %s. Script not loaded", script_name.c_str());
-		RELEASE(script);
+		std::string script_name = data.GetString("script_name");
+		script = new CSScript();
+		if (!script->Load(data))
+		{
+			CONSOLE_ERROR("Cannot find %s. Script not loaded", script_name.c_str());
+			RELEASE(script);
+		}
+		else
+		{
+			script->SetAttachedGameObject(GetGameObject());
+		}
+		data.LeaveSection();
 	}
-	else
-	{
-		script->SetAttachedGameObject(GetGameObject());
-	}
-	data.LeaveSection();
 }

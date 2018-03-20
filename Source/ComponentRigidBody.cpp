@@ -22,6 +22,8 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	physx::PxTransform phys_transform(mat);
 	rigidbody->setGlobalPose(phys_transform);
 
+	curr_rot = float3(0.f, 0.f, 0.f);
+
 	SetInitValues();
 }
 
@@ -232,16 +234,35 @@ float3 ComponentRigidBody::GetPosition() const
 
 void ComponentRigidBody::SetRotation(float3 new_rotation)
 {
-	math::Quat q = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
-	physx::PxQuat rotation(q.x, q.y, q.z, q.w);
+	/*Quat rot_q = math::Quat::FromEulerXYZ(curr_rot.x * DEGTORAD, curr_rot.y * DEGTORAD, curr_rot.z * DEGTORAD);
+	float3 diff = new_rotation - curr_rot;
+
+	Quat q = math::Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+
+	Quat final_rot = rot_q * q;*/
+
+	Quat final_rot = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
+
+	physx::PxQuat rotation(final_rot.x, final_rot.y, final_rot.z, final_rot.w);
+
 	physx::PxTransform transform(rigidbody->getGlobalPose().p ,rotation);
+
 	rigidbody->setGlobalPose(transform);
+	curr_rot = new_rotation;
+
+	/*float3 a = Quat(final_rot.x, final_rot.y, final_rot.z, final_rot.w).ToEulerXYZ() * RADTODEG;
+	CONSOLE_LOG("RB Set rot: %.3f,%.3f,%.3f", a.x, a.y, a.z);
+
+	Quat rot_q2 = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
+	float3 a2 = rot_q2.ToEulerXYZ() * RADTODEG;
+	CONSOLE_LOG("RB Set rot2: %.3f,%.3f,%.3f", a2.x, a2.y, a2.z);*/
 }
 
 float3 ComponentRigidBody::GetRotation() const
 {
 	physx::PxTransform phys_rotation = rigidbody->getGlobalPose();
-	float3 rotation(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z);
+	Quat q(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z, phys_rotation.q.w);
+	float3 rotation = q.ToEulerXYZ() * RADTODEG;
 	return rotation;
 }
 
@@ -360,6 +381,8 @@ void ComponentRigidBody::SetTransform(float * transform)
 	physx::PxMat44 mat(transform);
 	physx::PxTransform phys_transform(mat);
 	rigidbody->setGlobalPose(phys_transform);
+	//float3 a = Quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w).ToEulerXYZ() * RADTODEG;
+	//CONSOLE_LOG("Set transform: %.3f,%.3f,%.3f", a.x, a.y, a.z);
 }
 
 void ComponentRigidBody::SetColliderScale(float3 scale)
@@ -496,8 +519,8 @@ void ComponentRigidBody::Save(Data & data) const
 	data.AddFloat("MaxAngularVelocity", GetMaxAngularVelocity());
 	data.AddFloat("LinearDamping", GetLinearDamping());
 	data.AddFloat("AngularDamping", GetAngularDamping());
-	data.AddVector3("Position", GetPosition());
-	data.AddVector3("Rotation", GetRotation());
+	//data.AddVector3("Position", GetPosition());
+	//data.AddVector3("Rotation", GetRotation());
 	data.AddVector3("CenterMass", GetCenterOfMass());
 	data.AddVector3("InertiaTensor", GetInertiaTensor());
 	data.AddFloat("SleepThreshold", GetSleepThreshold());

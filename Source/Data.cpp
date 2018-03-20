@@ -207,6 +207,7 @@ void Data::SaveAsBinary(std::string path)
 	std::ofstream file(path);
 	cereal::BinaryOutputArchive archive(file);
 	archive(*this);
+	file.close();
 }
 
 bool Data::LoadBinary(std::string path)
@@ -217,17 +218,20 @@ bool Data::LoadBinary(std::string path)
 	data_names.clear();
 	data_values.clear();
 	std::ifstream file(path);
-	if (file.is_open()) {
+	if (file.is_open()) 
+	{
 		cereal::BinaryInputArchive archive(file);
 		archive(*this);
-		for (int i = 0; i < data_names.size(); i++) {
+		for (int i = 0; i < data_names.size(); i++) 
+		{
 			if (data_names[i] == "New_Section") {
 				data_names.erase(data_names.begin() + i);
 				data_values.erase(data_values.begin() + i);
 				outsideSection = false;
 				sectionsOpen++;
 			}
-			else if (data_names[i] == "Section_Close") {
+			else if (data_names[i] == "Section_Close") 
+			{
 				sectionsOpen--;
 				if (sectionsOpen == 0) {
 					outsideSection = true;
@@ -241,6 +245,8 @@ bool Data::LoadBinary(std::string path)
 			}
 		}
 		ret = true;
+
+		file.close();
 	}
 	return ret;
 }
@@ -343,22 +349,21 @@ bool Data::EnterSection(std::string sectionName)
 	return ret;
 }
 
-void Data::LeaveSection() 
+void Data::LeaveSection()
 {
 	in_section_values.clear();
 	in_section_names.clear();
 
-
 	sections_open--;
 
-	if (sections_open <= 0) 
+	if (sections_open <= 0)
 	{
 		getting_from_section = false;
 		sections_open = 0;
 	}
-	else 
+	else
 	{
-		if (!last_index.empty() && !last_index_name.empty()) 
+		if (!last_index.empty() && !last_index_name.empty())
 		{
 			last_index.pop_back();
 			last_index_name.pop_back();
@@ -593,8 +598,8 @@ float4 Data::GetVector4(std::string valueName)
 			vec_names = in_section_names;
 			vec_values = in_section_values;
 		}
-		
-		if(vec_names.size() == 4)
+
+		if (vec_names.size() == 4)
 		{
 			ret.x = stof(vec_values[0]);
 			ret.y = stof(vec_values[1]);
@@ -609,7 +614,7 @@ float4 Data::GetVector4(std::string valueName)
 		ret.z = -1.0f;
 		ret.w = -1.0f;
 	}
-	
+
 	return ret;
 }
 
@@ -749,4 +754,36 @@ void Data::AddImVector4(std::string valueName, ImVec4 value)
 	f4.z = value.z;
 	f4.w = value.w;
 	AddVector4(valueName, f4);
+}
+
+
+void Data::DeleteValue(std::string valueName)
+{
+	int counter = -1;
+	bool found = false;
+	for (std::vector<std::string>::iterator it = data_names.begin(); it != data_names.end(); ++it)
+	{
+		++counter;
+		if (valueName == (*it))
+		{
+			data_names.erase(it);
+			found = true;
+			break;
+		}
+	}
+
+	if (found)
+	{
+		int counter2 = -1;
+		for (std::vector<std::string>::iterator it = data_values.begin(); it != data_values.end(); ++it)
+		{
+			++counter2;
+
+			if (counter == counter2)
+			{
+				data_values.erase(it);
+				break;
+			}
+		}
+	}
 }

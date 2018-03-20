@@ -164,30 +164,26 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 	if (gameObject != nullptr) {
 		Data data;
 		gameObject->Save(data, true);
-		AABB camera_pos(float3::zero, float3::zero);
+		ComponentTransform* transform = nullptr;
 
 		for (int i = 0; i < saving_index; i++) 
 		{
 			GameObject* go = new GameObject();
-			data.EnterSection("GameObject_" + std::to_string(i));
-			go->Load(data, true);
-			data.LeaveSection();
+			if (data.EnterSection("GameObject_" + std::to_string(i)))
+			{
+				go->Load(data, true);
+				data.LeaveSection();
+			}
 			if (i == 0) { //return the first object (parent)
 				ret = go;
 			}
 			AddGameObjectToScene(go);
 			App->resources->AddGameObject(go);
-			ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+			transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 			if (transform) transform->UpdateGlobalMatrix();
 			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->GetComponent(Component::CompMeshRenderer);
 			if (mesh_renderer)
 			{
-				if (mesh_renderer->bounding_box.minPoint.x < camera_pos.minPoint.x) camera_pos.minPoint.x = mesh_renderer->bounding_box.minPoint.x;
-				if (mesh_renderer->bounding_box.minPoint.y < camera_pos.minPoint.y) camera_pos.minPoint.y = mesh_renderer->bounding_box.minPoint.y;
-				if (mesh_renderer->bounding_box.minPoint.z < camera_pos.minPoint.z) camera_pos.minPoint.z = mesh_renderer->bounding_box.minPoint.z;
-				if (mesh_renderer->bounding_box.maxPoint.x > camera_pos.maxPoint.x) camera_pos.maxPoint.x = mesh_renderer->bounding_box.maxPoint.x;
-				if (mesh_renderer->bounding_box.maxPoint.y > camera_pos.maxPoint.y) camera_pos.maxPoint.y = mesh_renderer->bounding_box.maxPoint.y;
-				if (mesh_renderer->bounding_box.maxPoint.z > camera_pos.maxPoint.z) camera_pos.maxPoint.z = mesh_renderer->bounding_box.maxPoint.z;
 				mesh_renderer->LoadToMemory();
 			}
 		}
@@ -196,7 +192,7 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 
 		//Focus the camera on the mesh
 		App->camera->can_update = true;
-		App->camera->FocusOnObject(camera_pos);
+		App->camera->FocusOnObject(transform->GetGlobalPosition() + float3(0,20,10), transform->GetGlobalPosition());
 		App->camera->can_update = false;
 	}
 
@@ -469,6 +465,8 @@ void ModuleScene::LoadSceneWithoutDestroying(std::string path)
 
 void ModuleScene::SaveScene(std::string path, SceneFileType type) const
 {
+	App->scene->saving_index = 0;
+
 	Data data;
 	data.AddString("Scene Name", scene_name);
 	data.AddInt("GameObjects_Count", scene_gameobjects.size());
@@ -481,12 +479,12 @@ void ModuleScene::SaveScene(std::string path, SceneFileType type) const
 	switch (type)
 	{
 	case SF_JSON:
-		App->file_system->ChangeFileExtension(std::string(path), "json");
+		path = App->file_system->ChangeFileExtension(std::string(path), "json");
 		data.SaveAsJSON(path.c_str());
 		CONSOLE_LOG("Scene saved as JSON to: %s", path.c_str());
 		break;
 	case SF_BINARY:
-		App->file_system->ChangeFileExtension(std::string(path), "scene");
+		path = App->file_system->ChangeFileExtension(std::string(path), "scene");
 		data.SaveAsBinary(path.c_str());
 		CONSOLE_LOG("Scene saved as BINARY to: %s", path.c_str());
 		break;
@@ -688,7 +686,7 @@ void ModuleScene::HandleInput()
 				{
 					ComponentTransform* transform = (ComponentTransform*)selected_gameobjects.front()->GetComponent(Component::CompTransform);
 					App->camera->can_update = true;
-					App->camera->LookAt(transform->GetGlobalPosition());
+					App->camera->FocusOnObject(transform->GetGlobalPosition() + float3(0, 20, 10), transform->GetGlobalPosition());
 					App->camera->can_update = false;
 				}
 			}
@@ -727,15 +725,15 @@ void ModuleScene::LoadSceneNow()
 		if (data.CanLoadAsJSON(scene_to_load.c_str()))
 		{
 			CONSOLE_LOG("Loading scene as JSON: %s", scene_to_load.c_str());
-			data.LoadJSON(scene_to_load.c_str());
-			can_load = true;
+			if(data.LoadJSON(scene_to_load.c_str()))
+				can_load = true;
 		}
 
 		if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
 		{
 			CONSOLE_LOG("Loading scene as BINARY: %s", scene_to_load.c_str());
-			data.LoadBinary(scene_to_load.c_str());
-			can_load = true;
+			if(data.LoadBinary(scene_to_load.c_str()))
+				can_load = true;
 		}
 
 		if (can_load)
@@ -749,23 +747,25 @@ void ModuleScene::LoadSceneNow()
 			int gameObjectsCount = data.GetInt("GameObjects_Count");
 			for (int i = 0; i < gameObjectsCount; i++) 
 			{
-				data.EnterSection("GameObject_" + std::to_string(i));
-				GameObject* game_object = new GameObject();
-				game_object->Load(data);
-				data.LeaveSection();
-				AddGameObjectToScene(game_object);
-				App->resources->AddGameObject(game_object);
-
-				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
-				if (mesh_renderer) mesh_renderer->LoadToMemory();
-				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
-				if (camera)
+				if (data.EnterSection("GameObject_" + std::to_string(i)))
 				{
-					if (game_object->GetTag() == "Main Camera")
+					GameObject* game_object = new GameObject();
+					game_object->Load(data);
+					AddGameObjectToScene(game_object);
+					App->resources->AddGameObject(game_object);
+
+					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
+					if (mesh_renderer) mesh_renderer->LoadToMemory();
+					ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
+					if (camera)
 					{
-						App->renderer3D->game_camera = camera;
-						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+						if (game_object->GetTag() == "Main Camera")
+						{
+							App->renderer3D->game_camera = camera;
+							App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+						}
 					}
+					data.LeaveSection();
 				}
 			}
 
@@ -774,14 +774,14 @@ void ModuleScene::LoadSceneNow()
 
 			if (data.CanLoadAsJSON(scene_to_load.c_str()))
 			{
-				data.LoadJSON(scene_to_load.c_str());
-				can_load = true;
+				if(data.LoadJSON(scene_to_load.c_str()))
+					can_load = true;
 			}
 
 			if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
 			{
-				data.LoadBinary(scene_to_load.c_str());
-				can_load = true;
+				if(data.LoadBinary(scene_to_load.c_str()))
+					can_load = true;
 			}
 
 			if (can_load)
@@ -789,14 +789,14 @@ void ModuleScene::LoadSceneNow()
 				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
 				for (int i = 0; i < gameObjectsCount; i++)
 				{
-					data.EnterSection("GameObject_" + std::to_string(i));
-					GameObject* game_object = *it;
-					game_object->Load(data);
-					data.LeaveSection();
+					if (data.EnterSection("GameObject_" + std::to_string(i)))
+					{
+						GameObject* game_object = *it;
+						game_object->Load(data);
+						data.LeaveSection();
+					}
 					it++;
 				}
-
-				saving_index = 0;
 
 				if (App->IsPlaying())
 					InitScripts();

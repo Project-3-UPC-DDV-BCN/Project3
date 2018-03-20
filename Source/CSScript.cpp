@@ -28,6 +28,7 @@
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
 #include "ComponentRadar.h"
+#include "Data.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -2390,6 +2391,33 @@ MonoObject * CSScript::GetUp(MonoObject * object)
 	return nullptr;
 }
 
+void CSScript::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
+{
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(axis);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 rot_axis;
+
+	if (x_field) mono_field_get_value(axis, x_field, &rot_axis.x);
+	if (y_field) mono_field_get_value(axis, y_field, &rot_axis.y);
+	if (z_field) mono_field_get_value(axis, z_field, &rot_axis.z);
+
+	ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+	transform->RotateAroundAxis(rot_axis, angle);
+}
+
 void CSScript::SetPercentageProgress(MonoObject * object, float progress)
 {
 	if (!MonoObjectIsValid(object))
@@ -2421,6 +2449,22 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 
 	ComponentProgressBar* progres_barr = (ComponentProgressBar*)active_gameobject->GetComponent(Component::CompProgressBar);
 	return progres_barr->GetProgressPercentage();
+}
+
+MonoString* CSScript::GetString(MonoString* name)
+{
+	const char* c_name = mono_string_to_utf8(name);
+
+	if (c_name != nullptr)
+	{
+		Data data;
+		if (data.LoadJSON(LIBRARY_GAME_DATA))
+		{
+			return mono_string_new(mono_domain, data.GetString(c_name).c_str());
+		}
+	}
+
+	return mono_string_new(mono_domain, "");
 }
 
 void CSScript::AddEntity(MonoObject * object, MonoObject * game_object)
@@ -2686,6 +2730,48 @@ MonoObject * CSScript::ToQuaternion(MonoObject * object)
 			if (y_field) mono_field_set_value(new_object, y_field, &quat.y);
 			if (z_field) mono_field_set_value(new_object, z_field, &quat.z);
 			if (w_field) mono_field_set_value(new_object, w_field, &quat.w);
+
+			return new_object;
+		}
+	}
+	return nullptr;
+}
+
+MonoObject * CSScript::ToEulerAngles(MonoObject * object)
+{
+	if (!object)
+	{
+		return nullptr;
+	}
+
+	MonoClass* c = mono_object_get_class(object);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+	MonoClassField* w_field = mono_class_get_field_from_name(c, "w");
+
+	Quat rotation;
+
+	if (x_field) mono_field_get_value(object, x_field, &rotation.x);
+	if (y_field) mono_field_get_value(object, y_field, &rotation.y);
+	if (z_field) mono_field_get_value(object, z_field, &rotation.z);
+	if (w_field) mono_field_get_value(object, w_field, &rotation.w);
+
+	math::float3 euler = rotation.ToEulerXYZ() * RADTODEG;
+
+	MonoClass* vector = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (vector)
+	{
+		MonoObject* new_object = mono_object_new(mono_domain, vector);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(vector, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(vector, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(vector, "z");
+
+			if (x_field) mono_field_set_value(new_object, x_field, &euler.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &euler.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &euler.z);
 
 			return new_object;
 		}
@@ -3147,105 +3233,141 @@ bool CSScript::Load(Data & data)
 		on_disable = text->on_disable;
 
 		int fields_count = data.GetInt("int_fields_count");
-		data.EnterSection("int_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("int_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			int field_value = data.GetInt("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					int field_value = data.GetInt("field_value");
+					SetIntProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetIntProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("double_fields_count");
-		data.EnterSection("double_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("double_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			double field_value = data.GetDouble("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					double field_value = data.GetDouble("field_value");
+					SetDoubleProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetDoubleProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("float_fields_count");
-		data.EnterSection("float_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("float_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float field_value = data.GetFloat("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float field_value = data.GetFloat("field_value");
+					SetFloatProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetFloatProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("bool_fields_count");
-		data.EnterSection("bool_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("bool_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			bool field_value = data.GetBool("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					bool field_value = data.GetBool("field_value");
+					SetBoolProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetBoolProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("string_fields_count");
-		data.EnterSection("string_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("string_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			std::string field_value = data.GetString("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					std::string field_value = data.GetString("field_value");
+					SetStringProperty(field_name.c_str(), field_value.c_str());
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetStringProperty(field_name.c_str(), field_value.c_str());
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("gameobject_fields_count");
-		data.EnterSection("gameobject_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("gameobject_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			uint field_value = data.GetInt("field_value");
-			GameObject* go = App->scene->FindGameObject(field_value);
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					uint field_value = data.GetInt("field_value");
+					GameObject* go = App->scene->FindGameObject(field_value);
+					SetGameObjectProperty(field_name.c_str(), go);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetGameObjectProperty(field_name.c_str(), go);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("vec2_fields_count");
-		data.EnterSection("vec2_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("vec2_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float2 field_value = data.GetVector2("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float2 field_value = data.GetVector2("field_value");
+					SetVec2Property(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetVec2Property(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("vec3_fields_count");
-		data.EnterSection("vec3_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("vec3_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float3 field_value = data.GetVector3("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float3 field_value = data.GetVector3("field_value");
+					SetVec3Property(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetVec3Property(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("vec4_fields_count");
-		data.EnterSection("vec4_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("vec4_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float4 field_value = data.GetVector4("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float4 field_value = data.GetVector4("field_value");
+					SetVec4Property(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetVec4Property(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 	}
 	GetScriptFields();
 	return ret;
