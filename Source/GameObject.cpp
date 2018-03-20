@@ -774,48 +774,52 @@ void GameObject::Load(Data & data, bool is_prefab)
 	tag = data.GetString("Tag");
 	layer = data.GetString("Layer");
 	active = data.GetBool("Active");
-	data.EnterSection("Components");
-	int componentsCount = data.GetInt("Components_Count");
-	for (int i = 0; i < componentsCount; i++)
+	if (data.EnterSection("Components"))
 	{
-		data.EnterSection("Component_" + std::to_string(i));
-		int comp_type = data.GetInt("Type");
-		uint comp_id = data.GetUInt("UUID");
-		bool exist = false;
-		if (comp_type == 0)
+		int componentsCount = data.GetInt("Components_Count");
+		for (int i = 0; i < componentsCount; i++)
 		{
-			ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
-			transform->Load(data);
-			data.LeaveSection();
-			continue;
-		}
-		if (comp_id > 0)
-		{
-			for (Component* comp : components_list)
+			if (data.EnterSection("Component_" + std::to_string(i)))
 			{
-				if (comp->GetUID() == comp_id)
+				int comp_type = data.GetInt("Type");
+				uint comp_id = data.GetUInt("UUID");
+				bool exist = false;
+				if (comp_type == 0)
 				{
-					comp->Load(data);
-					exist = true;
-					break;
+					ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
+					transform->Load(data);
+					data.LeaveSection();
+					continue;
 				}
-			}
+				if (comp_id > 0)
+				{
+					for (Component* comp : components_list)
+					{
+						if (comp->GetUID() == comp_id)
+						{
+							comp->Load(data);
+							exist = true;
+							break;
+						}
+					}
 
-			if (!exist)
-			{
-				Component* new_comp = AddComponent((Component::ComponentType)comp_type);
+					if (!exist)
+					{
+						Component* new_comp = AddComponent((Component::ComponentType)comp_type);
 
-				if (new_comp != nullptr)
-					new_comp->Load(data);
+						if (new_comp != nullptr)
+							new_comp->Load(data);
+					}
+				}
+				else
+				{
+					CONSOLE_ERROR("Could not load component from gameobject: %s (Wrong component id?)", name.c_str());
+				}
+				data.LeaveSection();
 			}
-		}
-		else
-		{
-			CONSOLE_ERROR("Could not load component from gameobject: %s (Wrong component id?)", name.c_str());
 		}
 		data.LeaveSection();
 	}
-	data.LeaveSection();
 
 	UID parent_id = data.GetUInt("ParentID");
 	if (parent_id != 0) 

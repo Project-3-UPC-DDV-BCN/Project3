@@ -113,45 +113,49 @@ bool GOAPAction::Load(Data & data)
 	int preconditions_num = data.GetInt("preconditions_num");
 	for (int i = 0; i < preconditions_num; ++i)
 	{
-		data.EnterSection("precondition_" + std::to_string(i));
-		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
-		GOAPField::ComparisonMethod cm = (GOAPField::ComparisonMethod)data.GetInt("comparison");
-		std::string name = data.GetString("name");
-		switch (type)
+		if (data.EnterSection("precondition_" + std::to_string(i)))
 		{
-		case GOAPVariable::T_NULL:
-			break;
-		case GOAPVariable::T_BOOL:
-			AddPreCondition(name, cm, data.GetBool("value"));
-			break;
-		case GOAPVariable::T_FLOAT:
-			AddPreCondition(name, cm, data.GetFloat("value"));
-			break;
-		default:
-			break;
+			GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
+			GOAPField::ComparisonMethod cm = (GOAPField::ComparisonMethod)data.GetInt("comparison");
+			std::string name = data.GetString("name");
+			switch (type)
+			{
+			case GOAPVariable::T_NULL:
+				break;
+			case GOAPVariable::T_BOOL:
+				AddPreCondition(name, cm, data.GetBool("value"));
+				break;
+			case GOAPVariable::T_FLOAT:
+				AddPreCondition(name, cm, data.GetFloat("value"));
+				break;
+			default:
+				break;
+			}
+			data.LeaveSection();
 		}
-		data.LeaveSection();
 	}
 	int effects_num = data.GetInt("effects_num");
 	for (int i = 0; i < effects_num; ++i)
 	{
-		data.EnterSection("effect_" + std::to_string(i));
-		std::string name = data.GetString("name");
-		GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
-		switch (type)
+		if (data.EnterSection("effect_" + std::to_string(i)))
 		{
-		case GOAPVariable::T_NULL:
-			break;
-		case GOAPVariable::T_BOOL:
-			AddEffect(name, data.GetBool("value"));
-			break;
-		case GOAPVariable::T_FLOAT:
-			AddEffect(name, (GOAPEffect::EffectType)data.GetInt("effect"),data.GetFloat("value"));
-			break;
-		default:
-			break;
+			std::string name = data.GetString("name");
+			GOAPVariable::VariableType type = (GOAPVariable::VariableType)data.GetInt("type");
+			switch (type)
+			{
+			case GOAPVariable::T_NULL:
+				break;
+			case GOAPVariable::T_BOOL:
+				AddEffect(name, data.GetBool("value"));
+				break;
+			case GOAPVariable::T_FLOAT:
+				AddEffect(name, (GOAPEffect::EffectType)data.GetInt("effect"), data.GetFloat("value"));
+				break;
+			default:
+				break;
+			}
+			data.LeaveSection();
 		}
-		data.LeaveSection();
 	}
 
 	return true;

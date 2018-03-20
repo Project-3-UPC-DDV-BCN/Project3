@@ -169,9 +169,11 @@ GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
 		for (int i = 0; i < saving_index; i++) 
 		{
 			GameObject* go = new GameObject();
-			data.EnterSection("GameObject_" + std::to_string(i));
-			go->Load(data, true);
-			data.LeaveSection();
+			if (data.EnterSection("GameObject_" + std::to_string(i)))
+			{
+				go->Load(data, true);
+				data.LeaveSection();
+			}
 			if (i == 0) { //return the first object (parent)
 				ret = go;
 			}
@@ -745,23 +747,25 @@ void ModuleScene::LoadSceneNow()
 			int gameObjectsCount = data.GetInt("GameObjects_Count");
 			for (int i = 0; i < gameObjectsCount; i++) 
 			{
-				data.EnterSection("GameObject_" + std::to_string(i));
-				GameObject* game_object = new GameObject();
-				game_object->Load(data);
-				data.LeaveSection();
-				AddGameObjectToScene(game_object);
-				App->resources->AddGameObject(game_object);
-
-				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
-				if (mesh_renderer) mesh_renderer->LoadToMemory();
-				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
-				if (camera)
+				if (data.EnterSection("GameObject_" + std::to_string(i)))
 				{
-					if (game_object->GetTag() == "Main Camera")
+					GameObject* game_object = new GameObject();
+					game_object->Load(data);
+					AddGameObjectToScene(game_object);
+					App->resources->AddGameObject(game_object);
+
+					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
+					if (mesh_renderer) mesh_renderer->LoadToMemory();
+					ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
+					if (camera)
 					{
-						App->renderer3D->game_camera = camera;
-						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+						if (game_object->GetTag() == "Main Camera")
+						{
+							App->renderer3D->game_camera = camera;
+							App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+						}
 					}
+					data.LeaveSection();
 				}
 			}
 
@@ -785,10 +789,12 @@ void ModuleScene::LoadSceneNow()
 				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
 				for (int i = 0; i < gameObjectsCount; i++)
 				{
-					data.EnterSection("GameObject_" + std::to_string(i));
-					GameObject* game_object = *it;
-					game_object->Load(data);
-					data.LeaveSection();
+					if (data.EnterSection("GameObject_" + std::to_string(i)))
+					{
+						GameObject* game_object = *it;
+						game_object->Load(data);
+						data.LeaveSection();
+					}
 					it++;
 				}
 

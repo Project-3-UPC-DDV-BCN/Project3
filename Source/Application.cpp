@@ -163,17 +163,18 @@ bool Application::Init()
 
 	if (data.EnterSection("Engine_Settings"))
 	{
-		data.EnterSection("Application");
-		is_game_mode = data.GetBool("Is_Game");
-		starting_scene_path = data.GetString("Starting_Scene");
-		data.CloseSection();
-
-		while (item != list_modules.end() && ret == true)
+		if (data.EnterSection("Application"))
 		{
-			ret = (*item)->Init(&data);
-			++item;
+			is_game_mode = data.GetBool("Is_Game");
+			starting_scene_path = data.GetString("Starting_Scene");
+
+			while (item != list_modules.end() && ret == true)
+			{
+				ret = (*item)->Init(&data);
+				++item;
+			}
+			data.LeaveSection();
 		}
-		data.LeaveSection();
 	}
 
 	// After all Init calls we call Start() in all modules

@@ -3233,105 +3233,141 @@ bool CSScript::Load(Data & data)
 		on_disable = text->on_disable;
 
 		int fields_count = data.GetInt("int_fields_count");
-		data.EnterSection("int_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("int_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			int field_value = data.GetInt("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					int field_value = data.GetInt("field_value");
+					SetIntProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetIntProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("double_fields_count");
-		data.EnterSection("double_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("double_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			double field_value = data.GetDouble("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					double field_value = data.GetDouble("field_value");
+					SetDoubleProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetDoubleProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("float_fields_count");
-		data.EnterSection("float_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("float_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float field_value = data.GetFloat("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float field_value = data.GetFloat("field_value");
+					SetFloatProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetFloatProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("bool_fields_count");
-		data.EnterSection("bool_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("bool_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			bool field_value = data.GetBool("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					bool field_value = data.GetBool("field_value");
+					SetBoolProperty(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetBoolProperty(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("string_fields_count");
-		data.EnterSection("string_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("string_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			std::string field_value = data.GetString("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					std::string field_value = data.GetString("field_value");
+					SetStringProperty(field_name.c_str(), field_value.c_str());
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetStringProperty(field_name.c_str(), field_value.c_str());
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("gameobject_fields_count");
-		data.EnterSection("gameobject_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("gameobject_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			uint field_value = data.GetInt("field_value");
-			GameObject* go = App->scene->FindGameObject(field_value);
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					uint field_value = data.GetInt("field_value");
+					GameObject* go = App->scene->FindGameObject(field_value);
+					SetGameObjectProperty(field_name.c_str(), go);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetGameObjectProperty(field_name.c_str(), go);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("vec2_fields_count");
-		data.EnterSection("vec2_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("vec2_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float2 field_value = data.GetVector2("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float2 field_value = data.GetVector2("field_value");
+					SetVec2Property(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetVec2Property(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("vec3_fields_count");
-		data.EnterSection("vec3_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("vec3_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float3 field_value = data.GetVector3("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float3 field_value = data.GetVector3("field_value");
+					SetVec3Property(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetVec3Property(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 		fields_count = data.GetInt("vec4_fields_count");
-		data.EnterSection("vec4_fields");
-		for (int i = 0; i < fields_count; i++)
+		if (data.EnterSection("vec4_fields"))
 		{
-			data.EnterSection("field_" + std::to_string(i));
-			std::string field_name = data.GetString("field_name");
-			float4 field_value = data.GetVector4("field_value");
+			for (int i = 0; i < fields_count; i++)
+			{
+				if (data.EnterSection("field_" + std::to_string(i)))
+				{
+					std::string field_name = data.GetString("field_name");
+					float4 field_value = data.GetVector4("field_value");
+					SetVec4Property(field_name.c_str(), field_value);
+					data.LeaveSection();
+				}
+			}
 			data.LeaveSection();
-			SetVec4Property(field_name.c_str(), field_value);
 		}
-		data.LeaveSection();
 	}
 	GetScriptFields();
 	return ret;
