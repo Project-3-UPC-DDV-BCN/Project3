@@ -19,12 +19,6 @@ class CubeMap;
 class SkyDome;
 class BlastModel;
 
-enum SceneFileType
-{
-	SF_JSON,
-	SF_BINARY,
-};
-
 class ModuleScene : public Module
 {
 public:
@@ -66,7 +60,7 @@ public:
 	void NewScene(bool loading_scene);
 	void LoadScene(std::string path);
 	void LoadSceneWithoutDestroying(std::string path);
-	void SaveScene(std::string path, SceneFileType type = SceneFileType::SF_JSON) const;
+	void SaveScene(std::string path) const;
 
 	void LoadPrefab(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);

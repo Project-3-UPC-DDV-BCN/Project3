@@ -141,20 +141,7 @@ update_status ModuleEditor::Update(float deltaTime)
 						App->scene->scene_name = new_scene_name;
 						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
 						std::string final_path = App->file_system->ChangeFileExtension(path, "json");
-						App->scene->SaveScene(final_path, SceneFileType::SF_JSON);
-					}
-				}
-				if (ImGui::MenuItem("Save Scene (BINARY) -> (SAVE YOUR SCENES AS JSON NOW)"))
-				{
-					char const * lFilterPatterns[1] = { "*.scene" };
-					const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name).c_str(), 1, lFilterPatterns, NULL);
-					if (path != NULL) 
-					{
-						std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
-						App->scene->scene_name = new_scene_name;
-						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
-						std::string final_path = App->file_system->ChangeFileExtension(path, "scene");
-						App->scene->SaveScene(final_path, SceneFileType::SF_BINARY);
+						App->scene->SaveScene(final_path);
 					}
 				}
 				ImGui::Separator();

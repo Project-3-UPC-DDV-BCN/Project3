@@ -421,7 +421,7 @@ void AssetsWindow::DrawWindow()
 					}
 				}
 
-				if (extension == ".scene")
+				if (extension == ".scene" || extension == ".json")
 				{
 					if (ImGui::MenuItem("Load")) {
 						App->scene->LoadScene(selected_file_path);
