@@ -21,8 +21,10 @@ void ComponentScript::InitScript()
 {
 	if (script)
 	{
-		//App->script_importer->SetCurrentScript((CSScript*)script);
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
+		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->InitScript();
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -30,8 +32,10 @@ void ComponentScript::StartScript()
 {
 	if (script)
 	{
-		//App->script_importer->SetCurrentScript((CSScript*)script);
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
+		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->StartScript();
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -39,8 +43,10 @@ void ComponentScript::UpdateScript()
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->UpdateScript();
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -48,8 +54,10 @@ void ComponentScript::OnCollisionEnter(GameObject* other_collider)
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnCollisionEnter(other_collider);
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -57,8 +65,10 @@ void ComponentScript::OnCollisionStay(GameObject* other_collider)
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnCollisionStay(other_collider);
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -66,8 +76,10 @@ void ComponentScript::OnCollisionExit(GameObject* other_collider)
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnCollisionExit(other_collider);
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -75,8 +87,10 @@ void ComponentScript::OnTriggerEnter(GameObject * other_collider)
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnTriggerEnter(other_collider);
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -84,8 +98,10 @@ void ComponentScript::OnTriggerStay(GameObject * other_collider)
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnTriggerStay(other_collider);
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -93,8 +109,10 @@ void ComponentScript::OnTriggerExit(GameObject * other_collider)
 {
 	if (script)
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnTriggerExit(other_collider);
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -102,8 +120,10 @@ void ComponentScript::OnEnable()
 {
 	if (script && App->IsPlaying())
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnEnable();
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
@@ -111,8 +131,10 @@ void ComponentScript::OnDisable()
 {
 	if (script && App->IsPlaying())
 	{
+		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
 		script->OnDisable();
+		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 

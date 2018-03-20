@@ -499,6 +499,28 @@ bool ComponentRigidBody::IsCCDMode() const
 	return flag.isSet(physx::PxRigidBodyFlag::eENABLE_CCD);
 }
 
+void ComponentRigidBody::EnableShapes()
+{
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	}
+}
+
+void ComponentRigidBody::DisableShapes()
+{
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+	}
+}
+
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
 {
 	rigidbody->release();
@@ -606,6 +628,11 @@ void ComponentRigidBody::Load(Data & data)
 			break;
 		}
 	}*/
+}
+
+void ComponentRigidBody::DrawColliders()
+{
+
 }
 
 

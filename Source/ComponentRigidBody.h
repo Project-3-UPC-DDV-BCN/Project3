@@ -72,10 +72,15 @@ public:
 	void SetCCDMode(bool ccd);
 	bool IsCCDMode() const;
 
+	void EnableShapes();
+	void DisableShapes();
+
 	void SetNewRigidBody(physx::PxRigidDynamic* new_rigid);
 
 	void Save(Data& data) const;
 	void Load(Data& data);
+
+	void DrawColliders();
 	
 private:
 	bool use_gravity;
