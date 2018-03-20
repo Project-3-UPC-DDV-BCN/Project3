@@ -3,10 +3,209 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <vector>
+#include <map>
+#include "Component.h"
 
 class Script;
 class CSScript;
 class ComponentRectTransform;
+class GameObject;
+
+class NSScriptImporter
+{
+public:
+	NSScriptImporter() { current_script = nullptr; };
+	~NSScriptImporter() {};
+
+	void AddCreatedGameObjectToList(MonoObject* object, GameObject* go);
+	GameObject* GetGameObjectFromMonoObject(MonoObject* object);
+	Component* GetComponentFromMonoObject(MonoObject* object);
+	MonoObject* GetMonoObjectFromGameObject(GameObject* go);
+	MonoObject* GetMonoObjectFromComponent(Component* component);
+	Component::ComponentType CsToCppComponent(std::string component_type);
+
+	//GAMEOBJECT
+	void SetGameObjectName(MonoObject * object, MonoString* name);
+	MonoString* GetGameObjectName(MonoObject* object);
+	void CreateGameObject(MonoObject * object);
+	MonoObject* GetSelfGameObject();
+	void SetGameObjectActive(MonoObject * object, mono_bool active);
+	mono_bool GetGameObjectIsActive(MonoObject* object);
+	void SetGameObjectTag(MonoObject * object, MonoString* tag);
+	MonoString* GetGameObjectTag(MonoObject* object);
+	void SetGameObjectLayer(MonoObject * object, MonoString* layer);
+	MonoString* GetGameObjectLayer(MonoObject* object);
+	void SetGameObjectStatic(MonoObject * object, mono_bool value);
+	mono_bool GameObjectIsStatic(MonoObject* object);
+	MonoObject* DuplicateGameObject(MonoObject* object);
+	void SetGameObjectParent(MonoObject* object, MonoObject* parent);
+	MonoObject* GetGameObjectChild(MonoObject* object, int index);
+	MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
+	int GetGameObjectChildCount(MonoObject* object);
+	MonoObject* FindGameObject(MonoString* gameobject_name);
+	MonoObject* GetGameObjectParent(MonoObject* object);
+	MonoArray* GetSceneGameObjects(MonoObject* object);
+	MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
+	MonoArray* GetAllChilds(MonoObject* object);
+
+	//COMPONENT
+	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
+	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+
+	//TRANSFORM
+	void SetPosition(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetPosition(MonoObject* object, mono_bool is_global);
+	void SetRotation(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRotation(MonoObject* object, mono_bool is_global);
+	void SetScale(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetScale(MonoObject* object, mono_bool is_global);
+	void LookAt(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetForward(MonoObject* object);
+	MonoObject* GetRight(MonoObject* object);
+	MonoObject* GetUp(MonoObject* object);
+	void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
+
+	//RECTTRANSFORM
+	void SetRectPosition(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectPosition(MonoObject * object);
+	void SetRectRotation(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectRotation(MonoObject * object);
+	void SetRectSize(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectSize(MonoObject * object);
+	void SetRectAnchor(MonoObject * object, MonoObject * vector3);
+	MonoObject* GetRectAnchor(MonoObject * object);
+	mono_bool GetOnClick(MonoObject * object);
+	mono_bool GetOnClickDown(MonoObject * object);
+	mono_bool GetOnClickUp(MonoObject * object);
+	mono_bool GetOnMouseEnter(MonoObject * object);
+	mono_bool GetOnMouseOver(MonoObject * object);
+	mono_bool GetOnMouseOut(MonoObject * object);
+
+	//TEXT
+	void SetText(MonoObject * object, MonoString* t);
+	MonoString* GetText(MonoObject * object);
+
+	//PROGRESSBAR
+	void SetPercentageProgress(MonoObject * object, float progress);
+	float GetPercentageProgress(MonoObject * object);
+
+	//RADAR
+	void AddEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveEntity(MonoObject * object, MonoObject * game_object);
+	void RemoveAllEntities(MonoObject * object);
+	void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
+
+	//FACTORY
+	void StartFactory(MonoObject * object);
+	MonoObject* Spawn(MonoObject* object);
+	void SetSpawnPosition(MonoObject * object, MonoObject * vector3);
+	void SetSpawnRotation(MonoObject * object, MonoObject * vector3);
+	void SetSpawnScale(MonoObject * object, MonoObject * vector3);
+
+	//VECTOR/QUATERNION
+	MonoObject* ToQuaternion(MonoObject * object);
+	MonoObject* ToEulerAngles(MonoObject * object);
+
+	//TIME
+	void SetTimeScale(MonoObject* object, float scale);
+	float GetTimeScale();
+	float GetDeltaTime();
+
+	//TIMER
+	void CreateTimer(MonoObject* object, float time);
+	float ReadTime(MonoObject* object);
+	void ResetTime(MonoObject* object);
+
+	//INPUT
+	mono_bool IsKeyDown(MonoString * key_name);
+	mono_bool IsKeyUp(MonoString* key_name);
+	mono_bool IsKeyRepeat(MonoString* key_name);
+	mono_bool IsMouseDown(int mouse_button);
+	mono_bool IsMouseUp(int mouse_button);
+	mono_bool IsMouseRepeat(int mouse_button);
+	MonoObject* GetMousePosition();
+	int GetMouseXMotion();
+	int GetMouseYMotion();
+	int GetControllerJoystickMove(int pad, MonoString* axis);
+	int GetControllerButton(int pad, MonoString* button);
+	void RumbleController(int pad, float strength, int ms);
+
+	//AUDIO
+	bool IsMuted();
+	void SetMute(bool set);
+	int GetVolume();
+	void SetVolume(MonoObject* obj, int volume);
+	int GetPitch();
+	void SetPitch(int pitch);
+	void SetRTPCvalue(MonoString* name, float value);
+
+	//AUDIOSOURCE
+	bool Play(MonoObject * object, MonoString* name);
+	bool Stop(MonoObject * object, MonoString* name);
+	bool Send(MonoObject * object, MonoString* name);
+	bool SetMyRTPCvalue(MonoObject * object, MonoString* name, float value);
+	bool SetState(MonoObject* object, MonoString* group, MonoString* state);
+
+	//PARTICLE EMMITER
+	void PlayEmmiter(MonoObject * object);
+	void StopEmmiter(MonoObject * object);
+
+	//RIGIDBODY
+	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void SetRBPosition(MonoObject * object, float x, float y, float z);
+	void SetRBRotation(MonoObject * object, float x, float y, float z);
+
+	//GOAPAGENT
+	mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
+	float GetBlackboardVariableF(MonoObject * object, MonoString* name);
+	int GetNumGoals(MonoObject * object);
+	MonoString* GetGoalName(MonoObject * object, int index);
+	MonoString* GetGoalConditionName(MonoObject * object, int index);
+	void SetGoalPriority(MonoObject * object, int index, int priority);
+	int GetGoalPriority(MonoObject * object, int index);
+	void CompleteAction(MonoObject * object);
+	void FailAction(MonoObject * object);
+	void SetBlackboardVariable(MonoObject * object, MonoString* name, float value);
+	void SetBlackboardVariable(MonoObject * object, MonoString* name, bool value);
+
+	//RANDOM
+	int RandomInt(MonoObject* object);
+	float RandomFloat(MonoObject* object);
+	float RandomRange(MonoObject* object, float min, float max);
+
+	//APPLICATION
+	void LoadScene(MonoString* scene_name);
+	void Quit();
+
+	//SCRIPT
+	void SetBoolField(MonoObject* object, MonoString* field_name, bool value);
+	bool GetBoolField(MonoObject* object, MonoString* field_name);
+	void SetIntField(MonoObject* object, MonoString* field_name, int value);
+	int GetIntField(MonoObject* object, MonoString* field_name);
+	void SetFloatField(MonoObject* object, MonoString* field_name, float value);
+	float GetFloatField(MonoObject* object, MonoString* field_name);
+	void SetDoubleField(MonoObject* object, MonoString* field_name, double value);
+	double GetDoubleField(MonoObject* object, MonoString* field_name);
+	void SetStringField(MonoObject* object, MonoString* field_name, MonoString* value);
+	MonoString* GetStringField(MonoObject* object, MonoString* field_name);
+	void SetGameObjectField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetGameObjectField(MonoObject* object, MonoString* field_name);
+	void SetVector3Field(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetVector3Field(MonoObject* object, MonoString* field_name);
+	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
+	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
+	void CallFunction(MonoObject* object, MonoString* function_name);
+
+	std::map<MonoObject*, GameObject*> created_gameobjects;
+	std::map<MonoObject*, Component*> created_components;
+	CSScript* current_script;
+
+private:
+	
+	//std::map<MonoObject*, PerfTimer*> created_timers;
+	/*GameObject* active_gameobject;
+	Component* active_component;*/
+};
 
 class ModuleScriptImporter :
 	public Module
@@ -25,8 +224,10 @@ public:
 	MonoImage* GetEngineImage() const;
 
 	std::string CompileScript(std::string assets_path, std::string& lib);
-	void SetCurrentScript(CSScript* script);
-	CSScript* GetCurrentSctipt() const;
+	/*void SetCurrentScript(CSScript* script);
+	CSScript* GetCurrentSctipt() const;*/
+
+	static NSScriptImporter* ns_importer;
 
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
@@ -105,14 +306,6 @@ private:
 	static void RemoveAllEntities(MonoObject * object);
 	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
 
-	//DATA SAVE/LOAD
-	static void AddString(MonoString* name, MonoString* string);
-	static void AddInt(MonoString* name, int value);
-	static void AddFloat(MonoString* name, int value);
-	static MonoString* GetString(MonoString* name);
-	static int GetInt(MonoString* name);
-	static float GetFloat(MonoString* name);
-
 	//FACTORY
 	static void StartFactory(MonoObject * object);
 	static MonoObject* Spawn(MonoObject* object);
@@ -173,17 +366,17 @@ private:
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
 
 	//GOAP AGENT
-	static mono_bool GetBlackboardVariableB(MonoString* name);
-	static float GetBlackboardVariableF(MonoString* name);
-	static int GetNumGoals();
-	static MonoString* GetGoalName(int index);
-	static MonoString* GetGoalConditionName(int index);
-	static void SetGoalPriority(int index, int priority);
-	static int GetGoalPriority(int index);
-	static void CompleteAction();
-	static void FailAction();
-	static void SetBlackboardVariable(MonoString* name, float value);
-	static void SetBlackboardVariableB(MonoString* name, bool value);
+	static mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
+	static float GetBlackboardVariableF(MonoObject * object, MonoString* name);
+	static int GetNumGoals(MonoObject * object);
+	static MonoString* GetGoalName(MonoObject * object, int index);
+	static MonoString* GetGoalConditionName(MonoObject * object, int index);
+	static void SetGoalPriority(MonoObject * object, int index, int priority);
+	static int GetGoalPriority(MonoObject * object, int index);
+	static void CompleteAction(MonoObject * object);
+	static void FailAction(MonoObject * object);
+	static void SetBlackboardVariable(MonoObject * object, MonoString* name, float value);
+	static void SetBlackboardVariableB(MonoObject * object, MonoString* name, bool value);
 
 	//RANDOM
 	static int RandomInt(MonoObject* object);
