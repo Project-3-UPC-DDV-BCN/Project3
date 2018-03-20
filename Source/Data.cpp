@@ -209,10 +209,10 @@ bool Data::LoadJSON(std::string path)
 		}
 		ret = true;
 
-		if (data_names.size() > 0)
-			data_names.pop_back();
-		if (data_values.size() > 0)
-			data_values.pop_back();
+		//if (data_names.size() > 0)
+		//	data_names.pop_back();
+		//if (data_values.size() > 0)
+		//	data_values.pop_back();
 
 		file.close();
 	}

@@ -366,19 +366,34 @@ void GameObject::SetParent(GameObject * parent)
 	if (this->parent != nullptr)
 	{
 		this->parent->childs.push_back(this);
+		is_root = false;
 	}
+	else
+		is_root = true;
 
 	if (is_root)
 	{
-		is_root = false;
-		App->scene->root_gameobjects.remove(this);
+		bool found = false;
+		for (std::list<GameObject*>::iterator it = App->scene->root_gameobjects.begin(); it != App->scene->root_gameobjects.end(); ++it)
+		{
+			if ((*it) == this)
+			{
+				found = true;
+				break;
+			}
+		}
+		if(!found)
+			App->scene->root_gameobjects.push_back(this);
 	}
 	else
 	{
-		if (this->parent == nullptr)
+		for (std::list<GameObject*>::iterator it = App->scene->root_gameobjects.begin(); it != App->scene->root_gameobjects.end(); ++it)
 		{
-			is_root = true;
-			App->scene->root_gameobjects.push_back(this);
+			if ((*it) == this)
+			{
+				App->scene->root_gameobjects.erase(it);
+				break;
+			}
 		}
 	}
 }

@@ -105,7 +105,7 @@ float3 ComponentTransform::GetLocalScale() const
 
 void ComponentTransform::UpdateGlobalMatrix()
 {
-	if (!is_particle && !this->GetGameObject()->IsRoot())
+	if (!is_particle && !(this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
