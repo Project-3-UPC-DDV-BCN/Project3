@@ -125,7 +125,7 @@ update_status ModulePhysics::Update(float dt)
 
 				physx::PxU32 active_actors_num;
 				physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
-
+				 
 				for (physx::PxU32 i = 0; i < active_actors_num; ++i)
 				{
 					physx::PxActorType::Enum type = active_actors[i]->getType();

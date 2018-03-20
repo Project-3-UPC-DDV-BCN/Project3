@@ -199,5 +199,5 @@ void ComponentAudioSource::SetState(AkStateGroupID in_stateGroup, AkStateID in_s
 
 void ComponentAudioSource::SetState(const char * in_stateGroup, const char * in_state)
 {
-	obj->SetState(in_stateGroup, in_state);
+	Wwise::ChangeState(in_stateGroup, in_state);
 }
