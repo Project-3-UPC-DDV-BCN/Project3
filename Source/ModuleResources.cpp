@@ -1827,10 +1827,16 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform bool has_opacity;"
 			"uniform bool has_light;\n"
 
+			"uniform bool own_uvs_diffuse;\n"
+			"uniform bool own_uvs_normalmap;\n"
+
 			"uniform sampler2D Tex_Diffuse;\n\n"
 			"uniform sampler2D Tex_NormalMap;\n\n"
 			"uniform sampler2D Tex_Opacity;\n"
 
+			"uniform vec2 Tex_Diffuse_UV;\n"
+			"uniform vec2 Tex_NormalMap_UV;\n"
+			"uniform vec2 Tex_Opacity_UV;\n"
 
 			"struct DirLight {\n"
 			"	vec3 direction;\n\n"
@@ -1894,7 +1900,10 @@ void ModuleResources::CreateDefaultShaders()
 			"{\n"
 			"	if (has_texture)\n"
 			"	{\n"
+			"		if (own_uvs_diffuse == false)\n"	
 			"		color = texture(Tex_Diffuse, TexCoord);\n"
+			"		else\n"
+			"		color = texture(Tex_Diffuse, TexCoord * Tex_Diffuse_UV);\n"
 			"	}\n"
 			"	else if (has_material_color)\n"
 			"	color = material_color;\n"
@@ -1907,7 +1916,10 @@ void ModuleResources::CreateDefaultShaders()
 
 			"		if (has_normalmap)\n"
 			"		{\n"
+			"			if (own_uvs_normalmap == false)\n"
 			"			normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);\n"
+			"			else\n"
+			"			normal = normalize(texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV.x).rgb * 2.0 - 1.0);\n"
 			"			vec3 TangentViewPos = TBN * viewPos;\n"
 			"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
 			"			fragPosarg = TangentFragPos;\n"

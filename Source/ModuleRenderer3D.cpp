@@ -1332,6 +1332,20 @@ void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float da
 	}
 }
 
+void ModuleRenderer3D::SetUniformVector2(uint program, const char * name, float2 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform2f(modelLoc, data.x, data.y);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
 void ModuleRenderer3D::SetUniformVector3(uint program, const char * name, float3 data)
 {
 	GLint modelLoc = glGetUniformLocation(program, name);

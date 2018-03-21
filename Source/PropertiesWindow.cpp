@@ -1292,7 +1292,23 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				{
 					material->SetNormalMapTexture(normalmap);
 				}
+				if (normalmap)
+				{
+					bool normal_uvs = material->own_normal_uvs;
 
+					if (ImGui::Checkbox("Edit Normal UVs", &normal_uvs))
+					{
+						material->own_normal_uvs = normal_uvs;
+					}
+					if (material->own_normal_uvs == true)
+					{
+						float2 normalUV = material->normalmap_UV;
+						if (ImGui::DragFloat2("Normal Map UV (X/Y)", (float*)&normalUV, 0.25, 0.05)) {
+							material->normalmap_UV.x = normalUV.x;
+							material->normalmap_UV.y = normalUV.y;
+						}
+					}
+				}
 
 
 				// DIFFUSE
@@ -1328,6 +1344,25 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 							diffuse->SetTextureMode(TextureMode::tile);
 						}
 						ImGui::EndPopup();
+					}
+				}
+				if (diffuse)
+				{
+					bool diffuse_uvs = material->own_diffuse_uvs;
+
+					if (ImGui::Checkbox("Edit Diffuse UVs", &diffuse_uvs))
+					{
+						material->own_diffuse_uvs = diffuse_uvs;
+					}
+
+					if (material->own_diffuse_uvs == true)
+					{
+						float2 diffuseUV(material->diffuse_UV);
+						if (ImGui::DragFloat2("Diffuse UV (X,Y)", (float*)&diffuseUV, 0.25, 0.05))
+						{
+							material->diffuse_UV.x = diffuseUV.x;
+							material->diffuse_UV.y = diffuseUV.y;
+						}
 					}
 				}
 
