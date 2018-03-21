@@ -1922,6 +1922,29 @@ MonoObject * CSScript::GetScale(MonoObject * object, mono_bool is_global)
 
 void CSScript::LookAt(MonoObject * object, MonoObject * vector)
 {
+	if (!MonoObjectIsValid(object))
+	{
+		return;
+	}
+
+	if (!GameObjectIsValid())
+	{
+		return;
+	}
+
+	MonoClass* c = mono_object_get_class(vector);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 new_rot;
+	
+	if (x_field) mono_field_get_value(vector, x_field, &new_rot.x);
+	if (y_field) mono_field_get_value(vector, y_field, &new_rot.y);
+	if (z_field) mono_field_get_value(vector, z_field, &new_rot.z);
+
+	ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+	transform->SetRotation(new_rot);
 }
 
 void CSScript::SetRectPosition(MonoObject * object, MonoObject * vector3)

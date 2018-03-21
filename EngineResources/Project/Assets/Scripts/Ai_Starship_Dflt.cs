@@ -17,6 +17,11 @@ public class Ai_Starship_Dflt {
 
 	TheTransform transform;
 
+	public float roll_rotate_speed = 40.0f;
+	public float pitch_rotate_speed = 40.0f;
+	public float yaw_rotate_speed = 40.0f;
+	public float max_angle = 10.0f;
+
     TheGameObject gameobject;
 
 	public float xangle = 0;
@@ -156,91 +161,86 @@ public class Ai_Starship_Dflt {
 
 		if(target != null) { // YOU NEED A TARGET (USE 'New GameObject(4)')
 			TheTransform tTrans = target.GetComponent<TheTransform>();
-			//TheVector3 fdir = (tTrans.GlobalPosition - transform.GlobalPosition).Normalized;
-			//TheVector3 fwd = transform.ForwardDirection.Normalized;
-			//TheVector3 hfwd = TheVector3.Zero;
-			//hfwd.x = fwd.x;
-			//hfwd.z = fwd.z;
-			//TheVector3 vfwd = TheVector3.Zero;
-			//vfwd.y = fwd.y;
-			//vfwd.z = fwd.z;
-			//TheVector3 hfdir = TheVector3.Zero;
-			//hfdir.x = fdir.x;
-			//hfdir.z = fdir.z;
-			//TheVector3 vfdir = TheVector3.Zero;
-			//vfdir.y = fdir.y;
-			//vfdir.z = fdir.z;
-			//float vAngle = TheVector3.AngleBetween(hfwd, hfdir);
-			//float vAngle = AngleBetween3D(vfwd, vfdir);
-			//float hAngle = TheVector3.AngleBetween(vfwd, vfdir);
-			//float hAngle = AngleBetween3D(hfwd, hfdir);
-			//xangle = hAngle;
-			//yangle = vAngle;
-			//TheVector3 comparingV = transform.GlobalPosition + fwd;
-			//TheVector3 enemyV = transform.GlobalPosition + fdir;
-			//if(vAngle > capAngle) {
-			//	if(comparingV.x > enemyV.x)
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x + Mnv * TheTime.DeltaTime, transform.GlobalRotation.y, transform.LocalRotation.z);
-			//	else {
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x - Mnv * TheTime.DeltaTime, transform.GlobalRotation.y, transform.LocalRotation.z);
-			//	}
-			//}			
-			//if(hAngle > capAngle) {
-			//	if(comparingV.y > enemyV.y)
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x, transform.LocalRotation.y + Mnv * TheTime.DeltaTime, transform.LocalRotation.z);
-			//	else
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x, transform.LocalRotation.y - Mnv * TheTime.DeltaTime, transform.LocalRotation.z);
-			//}
-
-			// Quaternion approach
-
-			//TheQuaternion fRot = QuaternionLookRotation(tTrans.GlobalPosition - transform.GlobalPosition, TheVector3.Up); // THIS IS THE FINAL ROTATION QUAT
-			//TheVector3 fQuat = fRot.ToEulerAngles();
-			//fQuat.x = fQuat.x * TheMath.RadToDeg;
-			//fQuat.y = fQuat.y * TheMath.RadToDeg;
-			//fQuat.z = fQuat.z * TheMath.RadToDeg;
-			//TheQuaternion debugQ = TheQuaternion.Slerp(TheQuaternion.FromEulerAngles(transform.GlobalRotation), fRot, Mnv); // THIS IS THE FINAL ROTATIO EULER
-			//if(Interpolate == true) {
-			//	TheVector3 convertedGlobalRotation = TheVector3.Zero;
-			//	convertedGlobalRotation.x = transform.GlobalRotation.x * TheMath.DegToRad;
-			//	convertedGlobalRotation.y = transform.GlobalRotation.y * TheMath.DegToRad;
-			//	convertedGlobalRotation.z = transform.GlobalRotation.z * TheMath.DegToRad;
-			//	TheQuaternion debugQ = TheQuaternion.Slerp(TheQuaternion.FromEulerAngles(convertedGlobalRotation), fRot, Mnv * TheTime.DeltaTime);
-			//	TheVector3 auxConverter = debugQ.ToEulerAngles();
-			//	auxConverter.z = auxConverter.z * TheMath.RadToDeg;
-			//	auxConverter.y = auxConverter.y * TheMath.RadToDeg;
-			//	auxConverter.x = auxConverter.x * TheMath.RadToDeg;
-
-				//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z) {
-				//		auxConverter.y = -auxConverter.y;
-				//}
-
-				//	transform.GlobalRotation = auxConverter;
-				//}
-			//else {
-				//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z)
-				//	fQuat.y = -fQuat.y;
-				//transform.GlobalRotation = fQuat;
-			//}
-			//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z) {
-			//	TheVector3 aux = TheVector3.Zero;
-			//	aux.x = transform.GlobalRotation.x;
-			//	aux.y = -transform.GlobalRotation.y;
-			//	aux.z = transform.GlobalRotation.z;
-			//	transform.GlobalRotation = aux;
-			//}
 			
-			//transform.GlobalRotation = VecPerQuat(transform.GlobalRotation, debugQ);
-			//transform.GlobalRotation = TheQuaternion.RotateTowards(qGlobalRot, fRot, Mnv * TheTime.DeltaTime).ToEulerAngles();
-			//xangle = fQuat.x;
-			//yangle = fQuat.y;
-			//zangle = fQuat.z;
-			//wangle = -auxConverter.y;
-			// Take02
-			//transform.LookAt(transform.GlobalPosition + auxConverter * 10.0f);
-
 			// No Rotations Baby
 			toTDir = tTrans.GlobalPosition - transform.GlobalPosition;
+			
+			TheVector3 direction = toTDir;
+		
+			transform = transform.LookAt(tTrans.GlobalPosition);
+			/*float angle_between = TheVector3.AngleBetween(transform.ForwardDirection, direction);
+			if (angle_between != 0)
+			{
+				
+			}*/
+			/*
+			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.y < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			if (direction.z > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.z < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			*/
+			/*if (TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				if (direction.x > 0)
+				{
+					TheVector3 new_rot = transform.LocalRotation;
+					new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
+					transform.LocalRotation = new_rot;
+				}
+				else if (direction.x < 0)
+				{
+					TheVector3 new_rot = transform.LocalRotation;
+					new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
+					transform.LocalRotation = new_rot;
+				}
+			}*/		
+			/*
+			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.y < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			if (direction.z > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.z < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			*/
+			
 
             // Separation
             if(Separation)
