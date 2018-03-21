@@ -41,8 +41,6 @@ JSON_File* JSONTool::LoadJSON(const char * path)
 		}
 		else
 		{
-			CONSOLE_LOG("Succes loading %s", path);
-
 			JSON_File* new_doc = new JSON_File(user_data, root_object, path);
 			jsons.push_back(new_doc);
 

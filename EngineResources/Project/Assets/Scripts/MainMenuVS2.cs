@@ -21,6 +21,9 @@ public class MainMenuVS2
 	
 	TheAudioSource menu_audio_source = null;
 
+	bool pressed_sound = false;
+	bool over_sound = false;
+
 	void Start () 
 	{
 		if(menu_go != null)
@@ -97,14 +100,6 @@ public class MainMenuVS2
 			{
 				TheConsole.Log("Settings");
 				menu_audio_source.Play("Play_click");
-				TheData.AddString("string", "pene2");
-				TheData.AddInt("int", 23);
-				TheData.AddFloat("float", 2.3f);
-				string str = TheData.GetString("string");
-				int i = TheData.GetInt("int");
-				float f = TheData.GetFloat("float");
-				TheConsole.Log(str + " " + i.ToString() + " " + f.ToString());
-
 			}
 
 			if(settings_rect.OnMouseOver)
@@ -162,6 +157,12 @@ public class MainMenuVS2
 				menu_audio_source.Play("Play_click");
 				TheApplication.LoadScene("VerticalSlice_2_TrueStory");
 			}
+		}
+
+		if(pressed_sound)
+		{
+			menu_audio_source.Play("Play_click");
+			pressed_sound = false;
 		}
 	}
 }

@@ -572,9 +572,14 @@ void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::
 	std::list<GameObject*> gos_to_check;
 	std::list<GameObject*> gos_to_save;
 
+	std::vector<GameObject*> parents;
+	std::vector<int> uids;
+
 	for (std::list<GameObject*>::const_iterator it = gos.begin(); it != gos.end(); it++)
 	{
+		parents.push_back((*it)->GetParent());
 		(*it)->SetParent(nullptr);
+
 		gos_to_check.push_back((*it));
 	}
 
@@ -582,6 +587,9 @@ void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::
 	{
 		std::list<GameObject*>::const_iterator it = gos_to_check.begin();
 		gos_to_save.push_back((*it));
+
+		uids.push_back((*it)->GetUID());
+		(*it)->SetNewUID();
 
 		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
 		{
@@ -593,15 +601,6 @@ void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::
 
 	data.AddInt("GameObjects_Count", gos_to_save.size());
 
-	std::vector<int> uids;
-
-	for (std::list<GameObject*>::const_iterator it = gos_to_save.begin(); it != gos_to_save.end(); ++it)
-	{
-		uids.push_back((*it)->GetUID());
-
-		(*it)->SetNewUID();
-	}
-
 	for (std::list<GameObject*>::const_iterator it = gos_to_save.begin(); it != gos_to_save.end(); ++it)
 	{
 		(*it)->Save(data, false);
@@ -611,6 +610,14 @@ void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::
 	for (std::list<GameObject*>::const_iterator it = gos_to_save.begin(); it != gos_to_save.end(); ++it)
 	{
 		(*it)->SetUID(uids[counter]);
+
+		++counter;
+	}
+
+	counter = 0;
+	for (std::list<GameObject*>::const_iterator it = gos.begin(); it != gos.end(); it++)
+	{
+		(*it)->SetParent(parents[counter]);
 
 		++counter;
 	}
