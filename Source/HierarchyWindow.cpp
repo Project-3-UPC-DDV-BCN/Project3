@@ -183,7 +183,8 @@ void HierarchyWindow::DrawWindow()
 			CreatePrefabWindow();
 		}
 
-		if (show_rename_window) {
+		if (show_rename_window) 
+		{
 			ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x + 20, rename_window_y));
 			bool windowActive = true;
 			ImGui::Begin("Rename Game Object", &windowActive,
