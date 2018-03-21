@@ -32,6 +32,7 @@
 #include "ComponentLight.h"
 #include "ComponentTransform.h"
 #include "ComponentRectTransform.h"
+#include "ModuleScriptImporter.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -780,6 +781,9 @@ void ModuleScene::LoadSceneNow()
 
 			if (can_load)
 			{
+				App->script_importer->ns_importer->created_gameobjects.clear();
+				App->script_importer->ns_importer->created_components.clear();
+
 				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
 				for (int i = 0; i < gameObjectsCount; i++)
 				{

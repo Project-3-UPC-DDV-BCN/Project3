@@ -13,6 +13,7 @@ public:
 	float3 GetGlobalPosition() const;
 	float3 GetLocalPosition() const;
 	void SetRotation(float3 rotation);
+	void SetIncrementalRotation(float3 rotation);
 	float3 GetGlobalRotation() const;
 	float3 GetLocalRotation() const;
 	Quat GetQuatRotation() const;

@@ -112,6 +112,8 @@ void CSScript::SetAttachedGameObject(GameObject * gameobject)
 
 void CSScript::InitScript()
 {
+	AddFieldsToMonoObjectList();
+
 	if (init != nullptr)
 	{
 		CallFunction(init, nullptr);
@@ -608,16 +610,16 @@ void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * val
 	MonoClassField* field = mono_class_get_field_from_name(mono_class, propertyName);
 	if (field)
 	{
-		MonoObject* last_object = mono_field_get_value_object(mono_domain, field, mono_object);
-		if (last_object)
-		{
-			std::map<MonoObject*, GameObject*>::iterator it = App->script_importer->ns_importer->created_gameobjects.find(last_object);
-			App->script_importer->ns_importer->created_gameobjects.erase(it);
-		}
 		void* params = value;
 		mono_field_set_value(mono_object, field, params);
-		MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
-		App->script_importer->ns_importer->created_gameobjects[object] = value;
+		if (App->IsPlaying())
+		{
+			MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
+			if (object && value)
+			{
+				App->script_importer->ns_importer->created_gameobjects[object] = value;
+			}
+		}
 	}
 	else
 	{
@@ -907,6 +909,26 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 		if (exception)
 		{
 			mono_print_unhandled_exception(exception);
+		}
+	}
+}
+
+void CSScript::AddFieldsToMonoObjectList()
+{
+	std::vector<ScriptField*> script_fields = GetScriptFields();
+
+	for (std::vector<ScriptField*>::iterator it = script_fields.begin(); it != script_fields.end(); it++)
+	{
+
+		if ((*it)->propertyType == ScriptField::GameObject)
+		{
+			GameObject* gameobject = GetGameObjectProperty((*it)->fieldName.c_str());
+			MonoClassField* field = mono_class_get_field_from_name(mono_class, (*it)->fieldName.c_str());
+			MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
+			if (object && gameobject)
+			{
+				App->script_importer->ns_importer->created_gameobjects[object] = gameobject;
+			}
 		}
 	}
 }

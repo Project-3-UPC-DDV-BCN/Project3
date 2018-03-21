@@ -234,28 +234,10 @@ float3 ComponentRigidBody::GetPosition() const
 
 void ComponentRigidBody::SetRotation(float3 new_rotation)
 {
-	/*Quat rot_q = math::Quat::FromEulerXYZ(curr_rot.x * DEGTORAD, curr_rot.y * DEGTORAD, curr_rot.z * DEGTORAD);
-	float3 diff = new_rotation - curr_rot;
-
-	Quat q = math::Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
-
-	Quat final_rot = rot_q * q;*/
-
 	Quat final_rot = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
-
 	physx::PxQuat rotation(final_rot.x, final_rot.y, final_rot.z, final_rot.w);
-
 	physx::PxTransform transform(rigidbody->getGlobalPose().p ,rotation);
-
 	rigidbody->setGlobalPose(transform);
-	curr_rot = new_rotation;
-
-	/*float3 a = Quat(final_rot.x, final_rot.y, final_rot.z, final_rot.w).ToEulerXYZ() * RADTODEG;
-	CONSOLE_LOG("RB Set rot: %.3f,%.3f,%.3f", a.x, a.y, a.z);
-
-	Quat rot_q2 = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
-	float3 a2 = rot_q2.ToEulerXYZ() * RADTODEG;
-	CONSOLE_LOG("RB Set rot2: %.3f,%.3f,%.3f", a2.x, a2.y, a2.z);*/
 }
 
 float3 ComponentRigidBody::GetRotation() const

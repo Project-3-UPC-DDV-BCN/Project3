@@ -49,26 +49,22 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
-	float3 diff = rotation - shown_rotation;
-
-	/*this->rotation = this->rotation * Quat::RotateX(rotation.x).Normalized();
-	this->rotation = this->rotation * Quat::RotateY(rotation.y).Normalized();
-	this->rotation = this->rotation * Quat::RotateZ(rotation.z).Normalized();*/
-
 	this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
-
-	/*Quat cc = Quat::FromEulerXYZ(-44 * DEGTORAD, 257 * DEGTORAD, 0 * DEGTORAD);
-	Quat ccc = Quat::FromEulerXYZ(0 * DEGTORAD, 90 * DEGTORAD, 0 * DEGTORAD);
-
-	Quat r = ccc * cc;
-	float3 f = r.ToEulerXYZ() * RADTODEG;*/
-
-	/*Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
-	this->rotation = this->rotation * q;*/
 
 	shown_rotation = rotation;
 	UpdateGlobalMatrix();
 	dirty = true; 
+}
+
+void ComponentTransform::SetIncrementalRotation(float3 rotation)
+{
+	float3 diff = rotation - shown_rotation;
+	Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+	this->rotation = this->rotation * q;
+
+	shown_rotation = rotation;
+	UpdateGlobalMatrix();
+	dirty = true;
 }
 
 float3 ComponentTransform::GetGlobalRotation() const

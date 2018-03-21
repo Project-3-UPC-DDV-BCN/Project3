@@ -155,7 +155,7 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 	
-	//DrawColliders();
+	DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -521,7 +521,7 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
 	transform->SetPosition(position);
 	transform->SetRotation(rotation);
-	CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
+	//CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
