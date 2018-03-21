@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "Data.h"
+#include "ModuleScene.h"
 
 ModulePrefabImporter::ModulePrefabImporter(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -25,8 +26,15 @@ Prefab * ModulePrefabImporter::LoadPrefabFromLibrary(std::string path)
 	Prefab* prefab = new Prefab();
 
 	Data data;
-	if (data.LoadBinary(path)) {
-		prefab->Load(data);
+	if (data.CanLoadAsJSON(path, ".jprefab"))
+	{
+		if (data.LoadJSON(path))
+		{
+			prefab->SetUID(data.GetUInt("UUID"));
+			prefab->SetAssetsPath(data.GetString("assets_path"));
+			prefab->SetLibraryPath(data.GetString("library_path"));
+			prefab->SetName(data.GetString("prefab_name"));
+		}
 	}
 	return prefab;
 }

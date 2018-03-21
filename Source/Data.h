@@ -19,12 +19,12 @@ public:
 	Data();
 	~Data();
 
-	bool CanLoadAsJSON(std::string path);
+	bool CanLoadAsJSON(std::string path, std::string extension = "json");
 	bool CanLoadAsBinary(std::string path, std::string binary_extension);
 
 	void SaveAsXML(std::string path);
 	bool LoadXML(std::string path);
-	void SaveAsJSON(std::string path);
+	void SaveAsJSON(std::string path, std::string extension = "json");
 	bool LoadJSON(std::string path);
 	void SaveAsBinary(std::string path);
 	bool LoadBinary(std::string path);

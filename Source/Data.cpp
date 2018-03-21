@@ -10,11 +10,11 @@ Data::~Data()
 {
 }
 
-bool Data::CanLoadAsJSON(std::string path)
+bool Data::CanLoadAsJSON(std::string path, std::string extension)
 {
 	bool ret = false;
 
-	if (path.find(".json") != std::string::npos)
+	if (path.find(extension) != std::string::npos)
 		ret = true;
 
 	return ret;
@@ -107,10 +107,12 @@ bool Data::LoadXML(std::string path)
 	return ret;
 }
 
-void Data::SaveAsJSON(std::string path)
+void Data::SaveAsJSON(std::string path, std::string extension)
 {
-	if (path.find(".json") == std::string::npos) { //json extension is not especified
-		path += ".json";
+	extension = '.' + extension;
+
+	if (path.find(extension) == std::string::npos) { //json extension is not especified
+		path += extension;
 	}
 	std::ofstream file(path);
 	cereal::JSONOutputArchive archive(file);

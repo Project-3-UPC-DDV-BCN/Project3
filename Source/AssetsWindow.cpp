@@ -20,6 +20,7 @@
 #include "ModuleBlastMeshImporter.h"
 #include "GOAPGoal.h"
 #include "GOAPAction.h"
+#include "Prefab.h"
 
 AssetsWindow::AssetsWindow()
 {
@@ -386,14 +387,16 @@ void AssetsWindow::DrawWindow()
 				}
 
 				std::string extension = App->file_system->GetFileExtension(selected_file_path);
-				if (extension == ".prefab" || extension == ".fbx" || extension == ".FBX")
+				if (extension == ".jprefab" || extension == ".fbx" || extension == ".FBX")
 				{
-					if (ImGui::MenuItem("Load to scene")) {
+					if (ImGui::MenuItem("Load to scene")) 
+					{
 						std::string file_name = App->file_system->GetFileNameWithoutExtension(selected_file_path);
 						Prefab* prefab = App->resources->GetPrefab(file_name);
 						if (prefab)
 						{
-							App->scene->LoadPrefab(prefab);
+							Data data;
+							App->scene->LoadPrefabToScene(prefab);
 						}
 						else
 						{
@@ -403,7 +406,7 @@ void AssetsWindow::DrawWindow()
 					}
 				}
 
-				if (extension == ".cs" || extension == ".vshader" || extension == ".fshader")
+				else if (extension == ".cs" || extension == ".vshader" || extension == ".fshader")
 				{
 					if (ImGui::MenuItem("Edit")) {
 						App->editor->text_editor_window->SetPath(selected_file_path);
@@ -421,7 +424,7 @@ void AssetsWindow::DrawWindow()
 					}
 				}
 
-				if (extension == ".scene" || extension == ".json")
+				else if (extension == ".scene" || extension == ".jscene")
 				{
 					if (ImGui::MenuItem("Load")) {
 						App->scene->LoadScene(selected_file_path);
@@ -429,7 +432,7 @@ void AssetsWindow::DrawWindow()
 					}
 				}
 
-				if (extension == ".bmesh")
+				else if (extension == ".bmesh")
 				{
 					if (ImGui::MenuItem("Load to scene##bmesh")) {
 						std::string file_name = App->file_system->GetFileNameWithoutExtension(selected_file_path);

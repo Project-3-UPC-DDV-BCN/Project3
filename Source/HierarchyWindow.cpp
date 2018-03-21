@@ -104,12 +104,17 @@ void HierarchyWindow::DrawWindow()
 						ImGui::EndMenu();
 					}
 
-					if (ImGui::MenuItem("Create prefab")) {
+					if (ImGui::MenuItem("Create prefab")) 
+					{
 						prefab_to_create = App->scene->selected_gameobjects.front();
-						if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
-						if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
-						std::string assets_path = ASSETS_PREFABS_FOLDER + prefab_to_create->GetName() + ".prefab";
-						std::string library_path = LIBRARY_PREFABS_FOLDER + prefab_to_create->GetName() + ".prefab";
+						if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) 
+							App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
+
+						if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) 
+							App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
+
+						std::string assets_path = ASSETS_PREFABS_FOLDER + prefab_to_create->GetName() + ".jprefab";
+						std::string library_path = LIBRARY_PREFABS_FOLDER + prefab_to_create->GetName() + ".jprefab";
 
 						if (App->file_system->FileExist(library_path) || App->file_system->FileExist(assets_path))
 						{

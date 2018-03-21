@@ -157,44 +157,24 @@ GameObject * ModuleScene::CreateLightObject(GameObject * parent)
 	return ret;
 }
 
-GameObject * ModuleScene::DuplicateGameObject(GameObject * gameObject)
+GameObject* ModuleScene::DuplicateGameObject(GameObject * gameObject)
 {
+	std::string path = TMP_FOLDER + std::string("tmp_prefab.jprefab");
+
+	std::list<GameObject*> gos;
+	std::list<GameObject*> new_gos;
+	gos.push_back(gameObject);
+
+	Data data;
+	SavePrefab(gos, path, "jprefab", data);
+	data.ClearData();
+
+	LoadPrefab(path, "jprefab", data, false, true, new_gos);
+
 	GameObject* ret = nullptr;
-
-	if (gameObject != nullptr) {
-		Data data;
-		gameObject->Save(data, true);
-		ComponentTransform* transform = nullptr;
-
-		for (int i = 0; i < saving_index; i++) 
-		{
-			GameObject* go = new GameObject();
-			if (data.EnterSection("GameObject_" + std::to_string(i)))
-			{
-				go->Load(data, true);
-				data.LeaveSection();
-			}
-			if (i == 0) { //return the first object (parent)
-				ret = go;
-			}
-			AddGameObjectToScene(go);
-			App->resources->AddGameObject(go);
-			transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-			if (transform) transform->UpdateGlobalMatrix();
-			ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)go->GetComponent(Component::CompMeshRenderer);
-			if (mesh_renderer)
-			{
-				mesh_renderer->LoadToMemory();
-			}
-		}
-		data.ClearData();
-		saving_index = 0;
-
-		//Focus the camera on the mesh
-		App->camera->can_update = true;
-		App->camera->FocusOnObject(transform->GetGlobalPosition() + float3(0,20,10), transform->GetGlobalPosition());
-		App->camera->can_update = false;
-	}
+	
+	if (new_gos.size() > 0)
+		ret = *new_gos.begin();
 
 	return ret;
 }
@@ -463,43 +443,201 @@ void ModuleScene::LoadSceneWithoutDestroying(std::string path)
 	}
 }
 
-void ModuleScene::SaveScene(std::string path) const
+void ModuleScene::SaveScene(std::string path)
 {
 	App->scene->saving_index = 0;
 
 	Data data;
 	data.AddString("Scene Name", scene_name);
-	data.AddInt("GameObjects_Count", scene_gameobjects.size());
 
-	for (std::list<GameObject*>::const_iterator it = root_gameobjects.begin(); it != root_gameobjects.end(); it++) 
-	{
-		(*it)->Save(data);
-	}
-
-	path = App->file_system->ChangeFileExtension(std::string(path), "json");
-	data.SaveAsJSON(path.c_str());
-	CONSOLE_LOG("Scene saved as JSON to: %s", path.c_str());
+	SavePrefab(root_gameobjects, path, "jscene", data);
 }
 
-void ModuleScene::LoadPrefab(Prefab* prefab)
+bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data, bool destroy_scene, bool duplicate, std::list<GameObject*>& new_gos)
 {
-	GameObject* prefab_root = prefab->GetRootGameObject();
+	bool can_load = false;
 
-	DuplicateGameObject(prefab_root);
+	extension = '.' + extension;
+
+	if (data.CanLoadAsJSON(path.c_str(), extension))
+	{
+		CONSOLE_LOG("Loading scene as JSON: %s", path.c_str());
+		if (data.LoadJSON(path.c_str()))
+			can_load = true;
+	}
+
+	if (data.CanLoadAsBinary(path.c_str(), ".scene"))
+	{
+		CONSOLE_LOG("Loading scene as BINARY: %s", path.c_str());
+		if (data.LoadBinary(path.c_str()))
+			can_load = true;
+	}
+
+	if (can_load)
+	{
+		if (destroy_scene)
+			NewScene(true);
+
+		int gameObjectsCount = data.GetInt("GameObjects_Count");
+		for (int i = 0; i < gameObjectsCount; i++)
+		{
+			if (data.EnterSection("GameObject_" + std::to_string(i)))
+			{
+				GameObject* game_object = new GameObject();
+				game_object->Load(data);
+
+				AddGameObjectToScene(game_object);
+
+				App->resources->AddGameObject(game_object);
+
+				new_gos.push_back(game_object);
+
+				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
+				if (mesh_renderer) mesh_renderer->LoadToMemory();
+				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
+				if (camera)
+				{
+					if (game_object->GetTag() == "Main Camera")
+					{
+						App->renderer3D->game_camera = camera;
+						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+					}
+				}
+				data.LeaveSection();
+			}
+		}
+
+		data.ClearData();
+		can_load = false;
+
+		if (data.CanLoadAsJSON(path.c_str(), extension))
+		{
+			if (data.LoadJSON(path.c_str()))
+				can_load = true;
+		}
+
+		if (data.CanLoadAsBinary(path.c_str(), ".scene"))
+		{
+			if (data.LoadBinary(path.c_str()))
+				can_load = true;
+		}
+
+		if (can_load)
+		{
+			std::list<GameObject*>::iterator it = new_gos.begin();
+			for (int i = 0; i < gameObjectsCount; i++)
+			{
+				if (data.EnterSection("GameObject_" + std::to_string(i)))
+				{
+					GameObject* game_object = *it;
+					game_object->Load(data);
+
+					RenameDuplicatedGameObject(game_object);
+
+					data.LeaveSection();
+
+					++it;
+				}
+			}
+
+			if (App->IsPlaying())
+				InitScripts();
+		}
+	}
+	else
+	{
+		CONSOLE_ERROR("Cannot load %s prefab", scene_to_load.c_str());
+	}
+
+	return can_load;
+}
+
+void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::string extension, Data data)
+{
+	App->scene->saving_index = 0;
+
+	std::list<GameObject*> gos_to_check;
+	std::list<GameObject*> gos_to_save;
+
+	for (std::list<GameObject*>::const_iterator it = gos.begin(); it != gos.end(); it++)
+	{
+		(*it)->SetParent(nullptr);
+		gos_to_check.push_back((*it));
+	}
+
+	while (gos_to_check.size() > 0)
+	{
+		std::list<GameObject*>::const_iterator it = gos_to_check.begin();
+		gos_to_save.push_back((*it));
+
+		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
+		{
+			gos_to_check.push_back((*ch));
+		}
+
+		gos_to_check.erase(it);
+	}
+
+	data.AddInt("GameObjects_Count", gos_to_save.size());
+
+	std::vector<int> uids;
+
+	for (std::list<GameObject*>::const_iterator it = gos_to_save.begin(); it != gos_to_save.end(); ++it)
+	{
+		uids.push_back((*it)->GetUID());
+
+		(*it)->SetNewUID();
+	}
+
+	for (std::list<GameObject*>::const_iterator it = gos_to_save.begin(); it != gos_to_save.end(); ++it)
+	{
+		(*it)->Save(data, false);
+	}
+
+	int counter = 0;
+	for (std::list<GameObject*>::const_iterator it = gos_to_save.begin(); it != gos_to_save.end(); ++it)
+	{
+		(*it)->SetUID(uids[counter]);
+
+		++counter;
+	}
+
+	path = App->file_system->ChangeFileExtension(std::string(path), extension);
+	data.SaveAsJSON(path.c_str(), extension);
+
+	CONSOLE_LOG("Prefab saved to: %s", path.c_str());
+}
+
+void ModuleScene::LoadPrefabToScene(Prefab* prefab)
+{
+	prefab->GetRootGameObject();
+
+	Data data;
+	LoadPrefab(prefab->GetLibraryPath(), "jprefab", data, false);
 }
 
 void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path, std::string library_path)
 {
-	Data data;
 	Prefab* prefab = new Prefab();
 	prefab->SetRootGameObject(gameobject);
 	prefab->SetAssetsPath(assets_path);
+	prefab->SetLibraryPath(library_path);
 	prefab->SetName(gameobject->GetName());
-	prefab->Save(data);
-	data.SaveAsBinary(assets_path);
-	data.SaveAsBinary(library_path);
 	
-	//Won't use this prefab, instead create a new resource from this prefab
+	std::list<GameObject*> gos;
+	gos.push_back(gameobject);
+
+	Data data;
+
+	data.AddUInt("UUID", prefab->GetUID());
+	data.AddString("assets_path", prefab->GetAssetsPath());
+	data.AddString("library_path", prefab->GetLibraryPath());
+	data.AddString("prefab_name", prefab->GetName());
+
+	SavePrefab(gos, assets_path, "jprefab", data);
+	SavePrefab(gos, library_path, "jprefab", data);
+
+	////Won't use this prefab, instead create a new resource from this prefab
 	delete prefab;
 	App->resources->CreateResource(assets_path);
 }
@@ -708,93 +846,11 @@ void ModuleScene::LoadSceneNow()
 {
 	if (to_load_scene)
 	{
-		bool can_load = false;
-
 		Data data;
-
-		if (data.CanLoadAsJSON(scene_to_load.c_str()))
+		if (LoadPrefab(scene_to_load, "jscene", data, destroy_current))
 		{
-			CONSOLE_LOG("Loading scene as JSON: %s", scene_to_load.c_str());
-			if(data.LoadJSON(scene_to_load.c_str()))
-				can_load = true;
-		}
-
-		if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
-		{
-			CONSOLE_LOG("Loading scene as BINARY: %s", scene_to_load.c_str());
-			if(data.LoadBinary(scene_to_load.c_str()))
-				can_load = true;
-		}
-
-		if (can_load)
-		{
-			if(destroy_current)
-				NewScene(true);
-
 			scene_name = data.GetString("Scene Name");
 			App->window->SetTitle((SCENE_TITLE_PREFIX + scene_name).c_str());
-
-			int gameObjectsCount = data.GetInt("GameObjects_Count");
-			for (int i = 0; i < gameObjectsCount; i++) 
-			{
-				if (data.EnterSection("GameObject_" + std::to_string(i)))
-				{
-					GameObject* game_object = new GameObject();
-					game_object->Load(data);
-					AddGameObjectToScene(game_object);
-					App->resources->AddGameObject(game_object);
-
-					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
-					if (mesh_renderer) mesh_renderer->LoadToMemory();
-					ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
-					if (camera)
-					{
-						if (game_object->GetTag() == "Main Camera")
-						{
-							App->renderer3D->game_camera = camera;
-							App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
-						}
-					}
-					data.LeaveSection();
-				}
-			}
-
-			data.ClearData();
-			can_load = false;
-
-			if (data.CanLoadAsJSON(scene_to_load.c_str()))
-			{
-				if(data.LoadJSON(scene_to_load.c_str()))
-					can_load = true;
-			}
-
-			if (data.CanLoadAsBinary(scene_to_load.c_str(), ".scene"))
-			{
-				if(data.LoadBinary(scene_to_load.c_str()))
-					can_load = true;
-			}
-
-			if (can_load)
-			{
-				std::list<GameObject*>::iterator it = scene_gameobjects.begin();
-				for (int i = 0; i < gameObjectsCount; i++)
-				{
-					if (data.EnterSection("GameObject_" + std::to_string(i)))
-					{
-						GameObject* game_object = *it;
-						game_object->Load(data);
-						data.LeaveSection();
-					}
-					it++;
-				}
-
-				if (App->IsPlaying())
-					InitScripts();
-			}
-		}
-		else
-		{
-			CONSOLE_ERROR("Cannot load %s scene", scene_to_load.c_str());
 		}
 
 		to_load_scene = false;

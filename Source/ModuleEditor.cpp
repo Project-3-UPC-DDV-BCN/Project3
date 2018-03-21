@@ -117,30 +117,23 @@ update_status ModuleEditor::Update(float deltaTime)
 				}
 				if (ImGui::MenuItem("Load Scene"))
 				{
-					char const * lFilterPatterns[2] = { "*.scene; *.json"};
+					char const * lFilterPatterns[2] = { "*.scene; *.jscene"};
 					const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
 					if (path != NULL) 
 						App->scene->LoadScene(path);
 					
 				}
-				if (ImGui::MenuItem("Load Scene into current (EXPERIMENTAL)"))
-				{
-					char const * lFilterPatterns[2] = { "*.scene; *.json" };
-					const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
-					if (path != NULL)
-						App->scene->LoadSceneWithoutDestroying(path);
-				}
 
 				if (ImGui::MenuItem("Save Scene (JSON)"))
 				{
-					char const * lFilterPatterns[1] = { "*.json" };
+					char const * lFilterPatterns[1] = { "*.jscene" };
 					const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name).c_str(), 1, lFilterPatterns, NULL);
 					if (path != NULL)
 					{
 						std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
 						App->scene->scene_name = new_scene_name;
 						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
-						std::string final_path = App->file_system->ChangeFileExtension(path, "json");
+						std::string final_path = App->file_system->ChangeFileExtension(path, "jscene");
 						App->scene->SaveScene(final_path);
 					}
 				}
