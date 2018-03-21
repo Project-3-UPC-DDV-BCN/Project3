@@ -685,31 +685,6 @@ float3 ComponentRectTransform::GetPreferedPos()
 	return ret;
 }
 
-void ComponentRectTransform::SetLayer(int layer)
-{
-}
-
-int ComponentRectTransform::GetLayer()
-{
-	int ret = 0;
-
-	ComponentCanvas* cv = GetCanvas();
-
-	if (cv != nullptr)
-	{
-		if(cv->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
-		{
-			ret = layer;
-		}
-		else
-		{
-			ret = 0;
-		}
-	}
-
-	return ret;
-}
-
 void ComponentRectTransform::SetInteractable(bool set)
 {
 	interactable = set;

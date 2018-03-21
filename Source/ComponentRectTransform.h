@@ -84,9 +84,6 @@ public:
 
 	float3 GetPreferedPos();
 
-	void SetLayer(int layer);
-	int GetLayer();
-
 	void SetInteractable(bool set);
 	bool GetInteractable() const;
 
