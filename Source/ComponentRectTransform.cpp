@@ -16,7 +16,6 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 
 	c_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
-	layer = 0;
 	interactable = true;
 	pos = float2::zero;
 	z_pos = 0;

@@ -128,7 +128,6 @@ private:
 	bool				snap_left;
 	bool				snap_right;
 
-	int					layer;
 	bool				interactable;
 
 	bool				on_click;
