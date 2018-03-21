@@ -32,6 +32,7 @@
 #include "ComponentLight.h"
 #include "ComponentTransform.h"
 #include "ComponentRectTransform.h"
+#include "UsefulFunctions.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -433,13 +434,20 @@ void ModuleScene::LoadScene(std::string path)
 	}
 }
 
-void ModuleScene::LoadSceneWithoutDestroying(std::string path)
+void ModuleScene::LoadSceneIntoCurrent(std::string path)
 {
-	if (!to_load_scene)
+	if (!TextCmp(path.c_str(), current_scene_path.c_str()))
 	{
-		to_load_scene = true;
-		scene_to_load = path;
-		destroy_current = false;
+		if (!to_load_scene)
+		{
+			to_load_scene = true;
+			scene_to_load = path;
+			destroy_current = false;
+		}
+	}
+	else
+	{
+		CONSOLE_ERROR("Cannot load the same scene that is currently loaded");
 	}
 }
 
@@ -542,6 +550,8 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 
 			if (App->IsPlaying())
 				InitScripts();
+
+			current_scene_path = path;
 		}
 	}
 	else

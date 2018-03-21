@@ -59,7 +59,7 @@ public:
 
 	void NewScene(bool loading_scene);
 	void LoadScene(std::string path);
-	void LoadSceneWithoutDestroying(std::string path);
+	void LoadSceneIntoCurrent(std::string path);
 	void SaveScene(std::string path);
 
 	bool LoadPrefab(std::string path, std::string extension, Data& data, bool destroy_scene = false, bool duplicate = false, std::list<GameObject*>& new_gos = std::list<GameObject*>());
@@ -122,4 +122,5 @@ private:
 	bool to_load_scene = false;
 	std::string scene_to_load;
 	bool destroy_current = false;
+	std::string current_scene_path;
 };

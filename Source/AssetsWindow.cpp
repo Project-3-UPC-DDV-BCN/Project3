@@ -426,8 +426,15 @@ void AssetsWindow::DrawWindow()
 
 				else if (extension == ".scene" || extension == ".jscene")
 				{
-					if (ImGui::MenuItem("Load")) {
+					if (ImGui::MenuItem("Load")) 
+					{
 						App->scene->LoadScene(selected_file_path);
+						options_is_open = false;
+					}
+
+					if (ImGui::MenuItem("Load into current"))
+					{
+						App->scene->LoadSceneIntoCurrent(selected_file_path);
 						options_is_open = false;
 					}
 				}
