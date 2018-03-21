@@ -714,6 +714,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			UseShaderProgram(program);
 			material->LoadToMemory();
 
+			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
@@ -744,6 +745,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			UseShaderProgram(program);
 			material->LoadToMemory();
 
+			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
@@ -765,6 +767,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			UseShaderProgram(program);
 			interior_material->LoadToMemory();
 
+			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());

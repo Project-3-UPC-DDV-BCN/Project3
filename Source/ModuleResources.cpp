@@ -1825,6 +1825,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform bool is_ui;\n"
 			"uniform bool has_normalmap;\n\n"
 			"uniform bool has_opacity;"
+			"uniform bool has_light;\n"
 
 			"uniform sampler2D Tex_Diffuse;\n\n"
 			"uniform sampler2D Tex_NormalMap;\n\n"
@@ -1924,8 +1925,9 @@ void ModuleResources::CreateDefaultShaders()
 			"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
 			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
 			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
-
-			"			color = vec4((color.rgb * AMBIENT_LIGHT + result), 1.0);  \n"	
+			"			if (has_light)\n"
+			"				color = vec4((color.rgb * AMBIENT_LIGHT + result), 1.0);  \n"	
+			"			else color = vec4((color.rgb), 1.0);\n"
 			"			if (has_opacity)"
 			"			{\n"
 			"				ApplyOpacity();\n"

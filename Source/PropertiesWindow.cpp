@@ -1221,6 +1221,13 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			mesh_renderer->SetMaterial(material);
 		}
 
+		bool has_light = mesh_renderer->has_light;
+
+		if (ImGui::Checkbox("Receive Lighting", &has_light))
+		{
+			mesh_renderer->has_light = has_light;
+		}
+
 		if(ImGui::TreeNodeEx("Mesh Info", ImGuiTreeNodeFlags_OpenOnArrow))
 		{
 			if (mesh_renderer->GetMesh() == nullptr)
@@ -1237,6 +1244,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			ImGui::Text("UV: "); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
 			ImGui::TreePop();
 		}
+
 		if (ImGui::TreeNodeEx("Material", ImGuiTreeNodeFlags_OpenOnArrow))
 		{
 			if (mesh_renderer->GetMaterial() == nullptr)
