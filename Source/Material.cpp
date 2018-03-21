@@ -137,6 +137,10 @@ void Material::Save(Data & data) const
 	data.AddFloat("reflection_UVx", reflection_UV.x);
 	data.AddFloat("reflection_UVy", reflection_UV.y);
 
+	data.AddBool("own_diffuse_uvs", own_diffuse_uvs);
+	data.AddBool("own_normal_uvs", own_normal_uvs);
+
+
 	if (shader_program != nullptr)
 	{
 		data.AddInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
@@ -276,7 +280,8 @@ bool Material::Load(Data & data)
 	SetLibraryPath(data.GetString("library_path"));
 	SetName(data.GetString("material_name"));
 
-
+	own_diffuse_uvs = data.GetBool("own_diffuse_uvs");
+	own_normal_uvs = data.GetBool("own_normal_uvs");
 	//Shader* vert = App->resources->GetShader(data.GetInt("vertex_shader"));
 	//Shader* frag = App->resources->GetShader(data.GetInt("fragment_shader"));
 	//
@@ -330,6 +335,10 @@ void Material::CreateMeta() const
 
 	data.AddFloat("reflection_UVx", reflection_UV.x);
 	data.AddFloat("reflection_UVy", reflection_UV.y);
+
+	data.AddBool("own_diffuse_uvs", own_diffuse_uvs);
+	data.AddBool("own_normal_uvs", own_normal_uvs);
+
 }
 
 void Material::LoadToMemory()

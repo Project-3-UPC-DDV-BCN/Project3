@@ -1324,28 +1324,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				{
 					material->SetDiffuseTexture(diffuse);
 				}
-				
-				if (diffuse != nullptr)
-				{
-					ImGui::Text("Diffuse Mode:");
-					ImGui::SameLine();
-				std:string tmp = diffuse->GetModeString() + "##modes";
-					if (ImGui::SmallButton(tmp.c_str())) {
-						ImGui::OpenPopup("Modes##diffuse");
-					}
-					if (ImGui::BeginPopup("Modes##diffuse")) {
-						if (diffuse->GetMode() != TextureMode::clamp && ImGui::MenuItem("Expand##"))
-						{
-							diffuse->SetTextureMode(TextureMode::clamp);
 
-						}
-						if (diffuse->GetMode() != TextureMode::tile && ImGui::MenuItem("Tile##"))
-						{
-							diffuse->SetTextureMode(TextureMode::tile);
-						}
-						ImGui::EndPopup();
-					}
-				}
 				if (diffuse)
 				{
 					bool diffuse_uvs = material->own_diffuse_uvs;

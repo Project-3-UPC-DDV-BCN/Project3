@@ -5,10 +5,6 @@
 
 class Data;
 
-enum TextureMode
-{
-	clamp, tile
-};
 
 class Texture : public Resource
 {
@@ -47,13 +43,11 @@ public:
 	std::string Texture::GetModeString() const;
 	void SetFormat(TextureFormat format);
 	TextureFormat GetFormat() const;
-	TextureMode GetMode() const;
 	void SetCompression(int compression_format);
 	CompressionFormat GetCompression() const;
 	std::string CompressionToString() const;
 
 	std::string GetFormatString() const;
-	void SetTextureMode(TextureMode mode);
 	void Save(Data& data) const;
 	bool Load(Data& data);
 	void CreateMeta() const;
@@ -69,7 +63,6 @@ private:
 	TextureFormat format;
 	TextureType type;
 	CompressionFormat compression;
-	TextureMode mode;
 	byte* image_data;
 };
 

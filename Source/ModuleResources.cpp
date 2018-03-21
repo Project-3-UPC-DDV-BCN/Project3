@@ -1919,7 +1919,7 @@ void ModuleResources::CreateDefaultShaders()
 			"			if (own_uvs_normalmap == false)\n"
 			"			normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);\n"
 			"			else\n"
-			"			normal = normalize(texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV.x).rgb * 2.0 - 1.0);\n"
+			"			normal = normalize(texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0);\n"
 			"			vec3 TangentViewPos = TBN * viewPos;\n"
 			"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
 			"			fragPosarg = TangentFragPos;\n"

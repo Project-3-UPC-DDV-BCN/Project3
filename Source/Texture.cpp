@@ -14,7 +14,6 @@ Texture::Texture()
 	height = 0;
 	format = UnknownFormat;
 	type = UnknownType;
-	mode = clamp;
 
 	SetType(Resource::TextureResource);
 	image_data = nullptr;
@@ -94,12 +93,6 @@ std::string Texture::GetTypeString() const
 	return types[type];
 }
 
-std::string Texture::GetModeString() const
-{
-	const char* modes[] = { "Expand", "Tile" };
-	return modes[mode];
-}
-
 void Texture::SetFormat(TextureFormat format)
 {
 	this->format = format;
@@ -110,10 +103,6 @@ Texture::TextureFormat Texture::GetFormat() const
 	return format;
 }
 
-TextureMode Texture::GetMode() const
-{
-	return mode;
-}
 void Texture::SetCompression(int compression_format)
 {
 	compression = (CompressionFormat)compression_format;
@@ -180,13 +169,6 @@ std::string Texture::GetFormatString() const
 	return formats[format];
 }
 
-void Texture::SetTextureMode(TextureMode mode)
-{
-	UnloadFromMemory();
-	this->mode = mode;
-	LoadToMemory();
-}
-
 void Texture::Save(Data & data) const
 {
 	data.AddString("library_path", GetLibraryPath());
@@ -250,7 +232,7 @@ void Texture::CreateMeta() const
 	data.AddString("Texture_Type", GetTypeString());
 	data.AddString("Format", GetFormatString());
 	data.AddString("Compression", CompressionToString());
-	
+
 	data.SaveAsMeta(GetAssetsPath());
 }
 
@@ -261,27 +243,11 @@ void Texture::LoadToMemory()
 		glGenTextures(1, &texture_id);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 
-		switch (mode)
-		{
-		case tile:		
-			//glTexParameterf(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-			/*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		case clamp:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		}
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
