@@ -24,10 +24,12 @@ public class MainMenuVS2
 	public TheGameObject rebels_selected_image_go;
 	public TheGameObject empire_idle_image_go;
 	public TheGameObject empire_selected_image_go;
+	public TheGameObject side_selection_back_go;
 
 	TheRectTransform continue_rect = null;
 	TheRectTransform rebels_idle_rect = null;
 	TheRectTransform empire_idle_rect = null;
+	TheRectTransform side_selection_back_rect = null;
 
 	string faction = "no_faction";
 	
@@ -84,6 +86,9 @@ public class MainMenuVS2
 
 		if(side_selection_continue_go != null)
 			side_selection_continue_go.SetActive(false);
+
+		if(side_selection_back_go != null)
+			side_selection_back_rect = side_selection_back_go.GetComponent<TheRectTransform>();
 
 		// Audio
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
@@ -181,6 +186,25 @@ public class MainMenuVS2
 					loading_text_go.SetActive(true);
 
 				TheApplication.LoadScene("VerticalSlice_2_TrueStory");
+			}
+		}
+
+		// Back sideselection rect
+		if(side_selection_back_rect != null)
+		{
+			if(side_selection_back_rect.OnMouseEnter)
+				over_sound = true;
+
+			if(side_selection_back_rect.OnClickUp)
+			{
+				pressed_sound = true;
+				faction = "";
+
+				if(side_selection_go != null)
+					side_selection_go.SetActive(false);
+
+				if(menu_go != null)
+					menu_go.SetActive(true);
 			}
 		}
 

@@ -216,7 +216,8 @@ void HierarchyWindow::DrawWindow()
 						break;
 					}
 				}
-				if (!isBlankString) {
+				if (!isBlankString && App->scene->selected_gameobjects.size() > 0)
+				{				
 					App->scene->selected_gameobjects.front()->SetName(inputText);
 					App->scene->RenameDuplicatedGameObject(App->scene->selected_gameobjects.front());
 					show_rename_error = false;
