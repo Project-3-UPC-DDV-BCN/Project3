@@ -145,8 +145,5 @@ private:
 	float bump_scaling;
 
 	ShaderProgram* shader_program = nullptr;
-
-	public:
-	//Objects with this material will receive light ot not
 };
 

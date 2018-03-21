@@ -25,6 +25,7 @@ Material::Material()
 	refraction = 1;
 	reflectivity = 0;
 	bump_scaling = 1;
+
 	diffuse_color = { 0.6f,0.6f,0.0f };
 
 	SetDefaultShaders();
@@ -112,7 +113,7 @@ bool Material::Load(Data & data)
 	refraction = data.GetFloat("refraction");
 	reflectivity = data.GetFloat("reflectivity");
 	bump_scaling = data.GetFloat("bump_scaling");
-
+	
 	std::string library_path = data.GetString("diffuse_texture");
 	if (library_path != "value not found")
 	{
