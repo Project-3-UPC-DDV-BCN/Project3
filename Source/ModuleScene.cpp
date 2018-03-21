@@ -56,6 +56,8 @@ bool ModuleScene::Init(Data * editor_config)
 	if (size > skybox_size)
 		skybox_size = size;
 
+	json_tool = new JSONTool();
+
 	return true;
 }
 
@@ -129,7 +131,8 @@ bool ModuleScene::CleanUp()
 {
 	CONSOLE_DEBUG("Unloading Scene");
 
-
+	json_tool->CleanUp();
+	RELEASE(json_tool);
 
 	return true;
 }
@@ -747,6 +750,11 @@ GameObject * ModuleScene::CreateRadar(GameObject * parent)
 	ret->AddComponent(Component::CompRadar);
 
 	return ret;
+}
+
+JSONTool * ModuleScene::GetJSONTool() const
+{
+	return json_tool;
 }
 
 void ModuleScene::SetParticleSystemsState()

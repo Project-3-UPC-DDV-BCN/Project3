@@ -2451,20 +2451,107 @@ float CSScript::GetPercentageProgress(MonoObject * object)
 	return progres_barr->GetProgressPercentage();
 }
 
+void CSScript::AddString(MonoString * name, MonoString * string)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+		const char* c_string = mono_string_to_utf8(string);
+
+		json->SetString(c_name, c_string);
+		
+		json->Save();
+	}
+}
+
+void CSScript::AddInt(MonoString * name, int value)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		json->SetNumber(c_name, value);
+
+		json->Save();
+	}
+}
+
+void CSScript::AddFloat(MonoString * name, float value)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		json->SetNumber(c_name, value);
+
+		json->Save();
+	}
+}
+
 MonoString* CSScript::GetString(MonoString* name)
 {
-	const char* c_name = mono_string_to_utf8(name);
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
 
-	if (c_name != nullptr)
+	if (json != nullptr)
 	{
-		Data data;
-		if (data.LoadJSON(LIBRARY_GAME_DATA))
-		{
-			return mono_string_new(mono_domain, data.GetString(c_name).c_str());
-		}
+		const char* c_name = mono_string_to_utf8(name);
+
+		const char* ret = json->GetString(c_name, "no_str");
+
+		return mono_string_new(mono_domain, ret);
 	}
 
-	return mono_string_new(mono_domain, "");
+	return mono_string_new(mono_domain, "no_str");
+}
+
+int CSScript::GetInt(MonoString * name)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		int ret = json->GetNumber(c_name, 0);
+
+		return ret;
+	}
+
+	return 0;
+}
+
+float CSScript::GetFloat(MonoString * name)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		int ret = json->GetNumber(c_name, 0.0f);
+
+		return ret;
+	}
+
+	return 0;
 }
 
 void CSScript::AddEntity(MonoObject * object, MonoObject * game_object)

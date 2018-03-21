@@ -8,7 +8,7 @@
 #include <string>
 #include "Octree.h"
 #include "imgui\ImGuizmo\ImGuizmo.h"
-
+#include "JsonTool.h"
 
 class GameObject;
 class Texture;
@@ -82,6 +82,8 @@ public:
 	GameObject* CreateButton(GameObject* parent = nullptr);
 	GameObject* CreateRadar(GameObject* parent = nullptr);
 
+	JSONTool* GetJSONTool() const;
+
 	void SetParticleSystemsState();
 
 private:
@@ -123,4 +125,6 @@ private:
 	std::string scene_to_load;
 	bool destroy_current = false;
 	std::string current_scene_path;
+
+	JSONTool* json_tool = nullptr;
 };

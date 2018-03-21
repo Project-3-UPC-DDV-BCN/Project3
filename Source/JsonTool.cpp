@@ -5,6 +5,7 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "UsefulFunctions.h"
 
 JSONTool::JSONTool()
 {
@@ -18,40 +19,58 @@ JSON_File* JSONTool::LoadJSON(const char * path)
 {
 	JSON_File* ret = nullptr;
 
-	if (!App->file_system->DirectoryExist(path))
+	bool exists = false;
+	for (std::list<JSON_File*>::iterator it = jsons.begin(); it != jsons.end(); it++)
 	{
-		CreateJSON(path);
-		CONSOLE_DEBUG("File %s Does not Exist. Creating a new one");
+		if (TextCmp(path, (*it)->GetPath()))
+		{
+			ret = (*it);
+			exists = true;
+			break;
+		}
 	}
 
-	JSON_Value *user_data = json_parse_file(path);
-	JSON_Object *root_object = json_value_get_object(user_data);
-
-	if (user_data == nullptr)
+	if (!exists)
 	{
-		CONSOLE_DEBUG("Error loading %s", path);
-	}
-	else
-	{
-		CONSOLE_DEBUG("Succes loading %s", path);
+		JSON_Value *user_data = json_parse_file(path);
+		JSON_Object *root_object = json_value_get_object(user_data);
 
-		JSON_File* new_doc = new JSON_File(user_data, root_object, path);
-		files.push_back(new_doc);
+		if (user_data == nullptr || root_object == nullptr)
+		{
+			CONSOLE_LOG("Error loading %s", path);
+		}
+		else
+		{
+			CONSOLE_LOG("Succes loading %s", path);
 
-		ret = new_doc;
-		ret->Save();
+			JSON_File* new_doc = new JSON_File(user_data, root_object, path);
+			jsons.push_back(new_doc);
+
+			ret = new_doc;
+		}
 	}
+
+	return ret;
 	return ret;
 }
-
 
 JSON_File* JSONTool::CreateJSON(const char * path)
 {
 	JSON_File* ret = nullptr;
 
-	if (App->file_system->DirectoryExist(path))
+	bool exists = false;
+	for (std::list<JSON_File*>::iterator it = jsons.begin(); it != jsons.end(); it++)
 	{
-		CONSOLE_DEBUG("Error creating %s. There is already a file with this path/name", path);
+		if (TextCmp(path, (*it)->GetPath()))
+		{
+			exists = true;
+			break;
+		}
+	}
+
+	if (exists)
+	{
+		CONSOLE_LOG("Error creating %s. There is already a file with this path/name", path);
 	}
 	else
 	{
@@ -59,22 +78,42 @@ JSON_File* JSONTool::CreateJSON(const char * path)
 
 		if (root_value == nullptr)
 		{
-			CONSOLE_DEBUG("Error creating %s. Wrong path?", path);
+			CONSOLE_LOG("Error creating %s. Wrong path?", path);
 		}
 		else
 		{
-
 			JSON_Object* root_object = json_value_get_object(root_value);
 
 			JSON_File* new_doc = new JSON_File(root_value, root_object, path);
-			files.push_back(new_doc);
+			jsons.push_back(new_doc);
+
+			new_doc->Save();
 
 			ret = new_doc;
-			ret->Save();
 		}
 	}
 
 	return ret;
+}
+
+void JSONTool::UnloadJSON(JSON_File * son)
+{
+	if (son != nullptr)
+	{
+		for (std::list<JSON_File*>::iterator it = jsons.begin(); it != jsons.end();)
+		{
+			if ((*it) == son)
+			{
+				(*it)->CleanUp();
+				RELEASE(*it);
+
+				it = jsons.erase(it);
+				break;
+			}
+			else
+				++it;
+		}
+	}
 }
 
 bool JSONTool::CleanUp()
@@ -83,12 +122,12 @@ bool JSONTool::CleanUp()
 
 	CONSOLE_DEBUG("Unloading JSON Module");
 
-	for (std::list<JSON_File*>::iterator it = files.begin(); it != files.end();)
+	for (std::list<JSON_File*>::iterator it = jsons.begin(); it != jsons.end();)
 	{
 		(*it)->CleanUp();
 		delete (*it);
 
-		it = files.erase(it);
+		it = jsons.erase(it);
 	}
 
 	return ret;
@@ -96,10 +135,18 @@ bool JSONTool::CleanUp()
 
 JSON_File::JSON_File(JSON_Value * _value, JSON_Object * _object, const char* _path)
 {
-	this->val = _value;
-	this->obj = _object;
-	this->root = _object;
-	this->path = _path;
+	val = _value;
+	obj = _object;
+	root = _object;
+	path = _path;
+}
+
+JSON_File::JSON_File(JSON_File & file)
+{
+	val = file.val;
+	obj = file.obj;
+	path = file.path;
+	root = obj;
 }
 
 JSON_File::~JSON_File()
@@ -133,7 +180,6 @@ const char* JSON_File::GetString(const char * name, const char * fallback)
 		return json_object_dotget_string(obj, name);
 	else
 		return fallback;
-
 }
 
 bool JSON_File::GetBool(const char * name)
@@ -365,12 +411,12 @@ void JSON_File::RootObject()
 
 const char * JSON_File::GetPath()
 {
-	return path;
+	return path.c_str();
 }
 
 void JSON_File::Save()
 {
-	json_serialize_to_file_pretty(val, path);
+	json_serialize_to_file_pretty(val, path.c_str());
 }
 
 void JSON_File::CleanUp()

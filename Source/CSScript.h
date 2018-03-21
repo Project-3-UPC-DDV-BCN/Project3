@@ -137,7 +137,12 @@ public:
 	float GetPercentageProgress(MonoObject * object);
 
 	//DATA SAVE/LOAD
+	void AddString(MonoString* name, MonoString* string);
+	void AddInt(MonoString* name, int value);
+	void AddFloat(MonoString* name, float value);
 	MonoString* GetString(MonoString* name);
+	int GetInt(MonoString* name);
+	float GetFloat(MonoString* name);
 
 	//RADAR
 	void AddEntity(MonoObject * object, MonoObject * game_object);

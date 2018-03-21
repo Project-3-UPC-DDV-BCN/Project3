@@ -98,6 +98,9 @@ bool ModuleAudio::CleanUp()
 	}
 	return Wwise::CloseWwise();
 
+	json->CleanUp();
+	RELEASE(json);
+
 	return true;
 }
 
