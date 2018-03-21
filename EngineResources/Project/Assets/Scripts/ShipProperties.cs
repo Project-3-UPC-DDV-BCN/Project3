@@ -19,7 +19,7 @@ public class ShipProperties
 		is_dead = false; 
 
 		game_manager = TheGameObject.Find("Game_Manager").GetComponent<TheScript>(0);
-		destruction_scpt = TheGameObject.Self.GetChild(0).GetComponent<TheScript>(0);   //The number has to be changed by order
+		destruction_scpt = TheGameObject.Self.GetComponent<TheScript>(1);   //The number has to be changed by order
 	}
 	
 	void Update () 
