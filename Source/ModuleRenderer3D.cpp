@@ -34,6 +34,7 @@
 #include "ModuleMeshImporter.h"
 #include "ComponentRectTransform.h"
 #include "ModuleInput.h"
+#include "ComponentRigidBody.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */

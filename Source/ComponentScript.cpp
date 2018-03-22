@@ -203,7 +203,10 @@ void ComponentScript::Load(Data & data)
 	SetUID(data.GetUInt("UUID"));
 	data.EnterSection("Script");
 	std::string script_name = data.GetString("script_name");
-	script = new CSScript();
+	if (!script)
+	{
+		script = new CSScript();
+	}
 	if (!script->Load(data))
 	{
 		CONSOLE_ERROR("Cannot find %s. Script not loaded", script_name.c_str());

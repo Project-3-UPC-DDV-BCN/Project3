@@ -51,6 +51,8 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	ComponentRigidBody* GetRigidBody() const;
+
 private:
 	ColliderType collider_type;
 	physx::PxMaterial* collider_material;

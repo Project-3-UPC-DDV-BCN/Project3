@@ -71,6 +71,8 @@ public:
 	bool GetDynamicLocks(DynamicLocks lock_type) const;
 	void SetCCDMode(bool ccd);
 	bool IsCCDMode() const;
+	void SetTransformsGo(bool transforms);
+	bool GetTransformsGo() const;
 
 	void EnableShapes();
 	void DisableShapes();
@@ -87,8 +89,6 @@ private:
 	bool is_kinematic;
 
 	physx::PxRigidDynamic* rigidbody;
-
-	float3 curr_rot;
-	//Quat curr_rot_quat;
+	bool transforms_go;
 };
 

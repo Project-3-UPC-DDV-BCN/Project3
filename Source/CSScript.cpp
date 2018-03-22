@@ -3239,8 +3239,13 @@ bool CSScript::Load(Data & data)
 		on_collision_enter = text->on_collision_enter;
 		on_collision_stay = text->on_collision_stay;
 		on_collision_exit = text->on_collision_exit;
+		on_trigger_enter = text->on_trigger_enter;
+		on_trigger_stay = text->on_trigger_stay;
+		on_trigger_exit = text->on_trigger_exit;
 		on_enable = text->on_enable;
 		on_disable = text->on_disable;
+		on_complete = text->on_complete;
+		on_fail = text->on_fail;
 
 		int fields_count = data.GetInt("int_fields_count");
 		data.EnterSection("int_fields");

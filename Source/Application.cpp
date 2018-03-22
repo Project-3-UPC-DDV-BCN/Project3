@@ -166,7 +166,7 @@ bool Application::Init()
 		data.EnterSection("Application");
 		is_game_mode = data.GetBool("Is_Game");
 		starting_scene_path = data.GetString("Starting_Scene");
-		data.CloseSection();
+		data.LeaveSection();
 
 		while (item != list_modules.end() && ret == true)
 		{

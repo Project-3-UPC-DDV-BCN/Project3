@@ -2469,6 +2469,70 @@ void ModuleResources::CreateDefaultShaders()
 	depthdebugprog->LinkShaderProgram();
 
 	AddResource(depthdebugprog);
+
+	// outline shader
+	std::string outline_vert_path = SHADER_DEFAULT_FOLDER "outline_vertex.vshader";
+	if (!App->file_system->FileExist(outline_vert_path))
+	{
+		Shader* outline_vert = new Shader();
+		outline_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n\n"
+			"out vec3 TexCoord;\n\n"
+			"uniform mat4 Model; \n"
+			"uniform mat4 view; \n"
+			"uniform mat4 projection;\n\n "
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	TexCoord = texCoord;\n"
+			"}";
+
+		outline_vert->SetContent(shader_text);
+		std::ofstream outfile(outline_vert_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(outline_vert);
+	}
+	CreateResource(outline_vert_path);
+
+	std::string outline_frag_path = SHADER_DEFAULT_FOLDER "outline_fragment.fshader";
+	if (!App->file_system->FileExist(outline_frag_path))
+	{
+		Shader* outline_frag = new Shader();
+		outline_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"out vec4 color;\n\n"
+			"void main()\n"
+			"{\n"
+			"	color = vec4(0.4, 0.28, 0.26, 1.0);\n"
+			"}";
+
+		outline_frag->SetContent(shader_text);
+		std::ofstream outfile(outline_frag_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(outline_frag);
+	}
+	CreateResource(outline_frag_path);
+
+	ShaderProgram* outline_prog = new ShaderProgram();
+	outline_prog->SetName("outline_shader_program");
+
+	Shader* outline_vertex = GetShader("outline_vertex");
+	outline_prog->SetVertexShader(outline_vertex);
+
+	Shader* outline_fragment = GetShader("outline_fragment");
+	outline_prog->SetFragmentShader(outline_fragment);
+
+	outline_prog->LinkShaderProgram();
+
+	AddResource(outline_prog);
 }
 
 void ModuleResources::CreateDefaultMaterial()
