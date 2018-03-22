@@ -51,18 +51,19 @@ void Prefab::Save(Data & data) const
 
 bool Prefab::Load(Data & data)
 {
-	std::list<GameObject*> created_objects;
-	int gameObjectsCount = data.GetInt("GameObjectsCount");
-	for (int i = 0; i < gameObjectsCount; i++) {
-		GameObject* go = new GameObject();
-		data.EnterSection("GameObject_" + std::to_string(i));
-		go->Load(data, true);
-		data.LeaveSection();
-		AddGameObject(go);
-		App->resources->AddGameObject(go);
-		go->SetIsUsedInPrefab(true);
-		if (i == 0) root_gameobject = go;
-	}
+	//std::list<GameObject*> created_objects;
+	//int gameObjectsCount = data.GetInt("GameObjectsCount");
+	//for (int i = 0; i < gameObjectsCount; i++) {
+	//	GameObject* go = new GameObject();
+	//	data.EnterSection("GameObject_" + std::to_string(i));
+	//	go->Load(data, true);
+	//	data.LeaveSection();
+	//	AddGameObject(go);
+	//	App->resources->AddGameObject(go);
+	//	go->SetIsUsedInPrefab(true);
+	//	if (i == 0) root_gameobject = go;
+	//}
+
 	SetUID(data.GetUInt("UUID"));
 	SetAssetsPath(data.GetString("assets_path"));
 	SetLibraryPath(data.GetString("library_path"));

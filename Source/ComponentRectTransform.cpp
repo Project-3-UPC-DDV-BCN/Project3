@@ -16,7 +16,6 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 
 	c_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
-	layer = 0;
 	interactable = true;
 	pos = float2::zero;
 	z_pos = 0;
@@ -50,10 +49,10 @@ bool ComponentRectTransform::Update()
 
 	bool is_canvas;
 
-	ComponentCanvas* cv = GetCanvas(is_canvas);
-	if (cv != nullptr && !is_canvas && scale != cv->GetScale())
+	ComponentCanvas* c_canvas = GetCanvas(is_canvas);
+	if (c_canvas != nullptr && !is_canvas && scale != c_canvas->GetScale())
 	{
-		scale = cv->GetScale();
+		scale = c_canvas->GetScale();
 		UpdateTransformAndChilds();
 	}
 
@@ -686,31 +685,6 @@ float3 ComponentRectTransform::GetPreferedPos()
 	return ret;
 }
 
-void ComponentRectTransform::SetLayer(int layer)
-{
-}
-
-int ComponentRectTransform::GetLayer()
-{
-	int ret = 0;
-
-	ComponentCanvas* cv = GetCanvas();
-
-	if (cv != nullptr)
-	{
-		if(cv->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
-		{
-			ret = layer;
-		}
-		else
-		{
-			ret = 0;
-		}
-	}
-
-	return ret;
-}
-
 void ComponentRectTransform::SetInteractable(bool set)
 {
 	interactable = set;
@@ -751,33 +725,51 @@ void ComponentRectTransform::SetOnMouseOut(bool set)
 	on_mouse_out = set;
 }
 
-bool ComponentRectTransform::GetOnClick() const
+bool ComponentRectTransform::GetOnClick()
 {
+	if (GetHasParentInactive())
+		on_click = false;
+
 	return on_click;
 }
 
-bool ComponentRectTransform::GetOnClickDown() const
+bool ComponentRectTransform::GetOnClickDown() 
 {
+	if (GetHasParentInactive())
+		on_click_down = false;
+
 	return on_click_down;
 }
 
-bool ComponentRectTransform::GetOnClickUp() const
+bool ComponentRectTransform::GetOnClickUp() 
 {
+	if (GetHasParentInactive())
+		on_click_up = false;
+
 	return on_click_up;
 }
 
-bool ComponentRectTransform::GetOnMouseEnter() const
+bool ComponentRectTransform::GetOnMouseEnter() 
 {
+	if (GetHasParentInactive())
+		on_mouse_enter = false;
+
 	return on_mouse_enter;
 }
 
-bool ComponentRectTransform::GetOnMouseOver() const
+bool ComponentRectTransform::GetOnMouseOver() 
 {
+	if (GetHasParentInactive())
+		on_mouse_over = false;
+
 	return on_mouse_over;
 }
 
-bool ComponentRectTransform::GetOnMouseOut() const
+bool ComponentRectTransform::GetOnMouseOut()
 {
+	if (GetHasParentInactive())
+		on_mouse_out = false;
+
 	return on_mouse_out;
 }
 
@@ -821,6 +813,27 @@ void ComponentRectTransform::Load(Data & data)
 bool ComponentRectTransform::GetHasParent() const
 {
 	return GetGameObject()->GetParent() != nullptr;
+}
+
+bool ComponentRectTransform::GetHasParentInactive() const
+{
+	bool ret = false;
+
+	GameObject* parent = GetGameObject()->GetParent();
+
+	while (parent != nullptr)
+	{
+		if (!parent->IsActive())
+		{
+			ret = true;
+			break;
+		}
+
+		parent = parent->GetParent();
+	}
+
+
+	return ret;
 }
 
 void ComponentRectTransform::UpdateTransform()

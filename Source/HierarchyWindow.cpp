@@ -104,12 +104,17 @@ void HierarchyWindow::DrawWindow()
 						ImGui::EndMenu();
 					}
 
-					if (ImGui::MenuItem("Create prefab")) {
+					if (ImGui::MenuItem("Create prefab")) 
+					{
 						prefab_to_create = App->scene->selected_gameobjects.front();
-						if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
-						if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
-						std::string assets_path = ASSETS_PREFABS_FOLDER + prefab_to_create->GetName() + ".prefab";
-						std::string library_path = LIBRARY_PREFABS_FOLDER + prefab_to_create->GetName() + ".prefab";
+						if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) 
+							App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
+
+						if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) 
+							App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
+
+						std::string assets_path = ASSETS_PREFABS_FOLDER + prefab_to_create->GetName() + ".jprefab";
+						std::string library_path = LIBRARY_PREFABS_FOLDER + prefab_to_create->GetName() + ".jprefab";
 
 						if (App->file_system->FileExist(library_path) || App->file_system->FileExist(assets_path))
 						{
@@ -178,7 +183,8 @@ void HierarchyWindow::DrawWindow()
 			CreatePrefabWindow();
 		}
 
-		if (show_rename_window) {
+		if (show_rename_window) 
+		{
 			ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowSize().x + 20, rename_window_y));
 			bool windowActive = true;
 			ImGui::Begin("Rename Game Object", &windowActive,
@@ -210,7 +216,8 @@ void HierarchyWindow::DrawWindow()
 						break;
 					}
 				}
-				if (!isBlankString) {
+				if (!isBlankString && App->scene->selected_gameobjects.size() > 0)
+				{				
 					App->scene->selected_gameobjects.front()->SetName(inputText);
 					App->scene->RenameDuplicatedGameObject(App->scene->selected_gameobjects.front());
 					show_rename_error = false;

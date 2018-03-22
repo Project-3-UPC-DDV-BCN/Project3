@@ -70,7 +70,7 @@ bool BlastModel::Load(Data & data)
 		GameObject* go = new GameObject();
 		if (data.EnterSection("GameObject_" + std::to_string(i)))
 		{
-			go->Load(data, true);
+			go->Load(data);
 
 			if (i == 0)
 			{

@@ -10,6 +10,7 @@ class JSON_File
 {
 public:
 	JSON_File(JSON_Value* value, JSON_Object* object, const char* path);
+	JSON_File(JSON_File& file);
 	~JSON_File();
 
 	void SetString(const char* name, const char* str);
@@ -50,11 +51,8 @@ public:
 	void ArrayAddNumber(const char* array, double num);
 	void ArrayAddObject(const char* array);
 
-
 	const char* ArrayGetString(const char* array, unsigned int index, const char* fallback = "Invalid");
-
 	bool ArrayGetBool(const char* array, unsigned int index, bool fallback = false);
-
 	double ArrayGetNumber(const char* array, unsigned int index, double fallback = 0);
 
 
@@ -67,7 +65,7 @@ private:
 	JSON_Value * val = nullptr;
 	JSON_Object* obj = nullptr;
 	JSON_Object* root = nullptr;
-	const char*  path;
+	std::string  path;
 };
 
 class JSONTool
@@ -80,9 +78,10 @@ public:
 
 	JSON_File* LoadJSON(const char* path);
 	JSON_File* CreateJSON(const char* path);
+	void UnloadJSON(JSON_File * son);
 
 private:
-	std::list<JSON_File*> files;
+	std::list<JSON_File*> jsons;
 };
 
 

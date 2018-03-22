@@ -251,7 +251,7 @@ void Application::StopNow()
 			state = OnStop;
 			if (!App->IsGame())
 			{
-				App->scene->LoadScene(TMP_FOLDER"tmp_scene.scene");
+				App->scene->LoadScene(TMP_FOLDER"tmp_scene.jscene");
 			}
 			else
 			{
@@ -442,7 +442,7 @@ void Application::Play()
 				App->file_system->Create_Directory(TMP_FOLDER_PATH);
 			}
 	
-			App->scene->SaveScene(TMP_FOLDER"tmp_scene", SceneFileType::SF_BINARY);
+			App->scene->SaveScene(TMP_FOLDER"tmp_scene");
 		}
 		
 		App->scene->is_game = true;
