@@ -24,6 +24,7 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_
 	transform_matrix.SetIdentity();
 
 	this->is_particle = is_particle;
+	rb_transforms_go = false;
 }
 
 ComponentTransform::~ComponentTransform()
@@ -31,6 +32,20 @@ ComponentTransform::~ComponentTransform()
 }
 
 void ComponentTransform::SetPosition(float3 position)
+{
+	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
+	{
+		this->position = position;
+		UpdateGlobalMatrix();
+		dirty = true;
+	}
+	else
+	{
+		CONSOLE_ERROR("SetPosition: RigidBody is in charge of transforms");
+	}
+}
+
+void ComponentTransform::SetPositionFromRB(float3 position)
 {
 	this->position = position;
 	UpdateGlobalMatrix();
@@ -49,26 +64,45 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rotation)
 {
-	float3 diff = rotation - shown_rotation;
+	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
+	{
+		this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
 
-	/*this->rotation = this->rotation * Quat::RotateX(rotation.x).Normalized();
-	this->rotation = this->rotation * Quat::RotateY(rotation.y).Normalized();
-	this->rotation = this->rotation * Quat::RotateZ(rotation.z).Normalized();*/
+		shown_rotation = rotation;
+		UpdateGlobalMatrix();
+		dirty = true; 
+	}
+	else
+	{
+		CONSOLE_ERROR("SetRotation: RigidBody is in charge of transforms");
+	}
+}
 
+void ComponentTransform::SetRotationFromRB(float3 rotation)
+{
 	this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
-
-	/*Quat cc = Quat::FromEulerXYZ(-44 * DEGTORAD, 257 * DEGTORAD, 0 * DEGTORAD);
-	Quat ccc = Quat::FromEulerXYZ(0 * DEGTORAD, 90 * DEGTORAD, 0 * DEGTORAD);
-
-	Quat r = ccc * cc;
-	float3 f = r.ToEulerXYZ() * RADTODEG;*/
-
-	/*Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
-	this->rotation = this->rotation * q;*/
 
 	shown_rotation = rotation;
 	UpdateGlobalMatrix();
-	dirty = true; 
+	dirty = true;
+}
+
+void ComponentTransform::SetIncrementalRotation(float3 rotation)
+{
+	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
+	{
+		float3 diff = rotation - shown_rotation;
+		Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+		this->rotation = this->rotation * q;
+
+		shown_rotation = rotation;
+		UpdateGlobalMatrix();
+		dirty = true;
+	}
+	else
+	{
+		CONSOLE_ERROR("SetIncrementalRotation: RigidBody is in charge of transforms");
+	}
 }
 
 float3 ComponentTransform::GetGlobalRotation() const
@@ -87,6 +121,20 @@ Quat ComponentTransform::GetQuatRotation() const
 }
 
 void ComponentTransform::SetScale(float3 scale)
+{
+	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
+	{
+		this->scale = scale;
+		UpdateGlobalMatrix();
+		dirty = true;
+	}
+	else
+	{
+		CONSOLE_ERROR("SetScale: RigidBody is in charge of transforms");
+	}
+}
+
+void ComponentTransform::SetScaleFromRB(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
@@ -146,7 +194,7 @@ void ComponentTransform::UpdateGlobalMatrix()
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
 
-		if (!App->IsPlaying())
+		if (!rb_transforms_go)
 		{
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 			if (rb)
@@ -166,6 +214,7 @@ void ComponentTransform::UpdateGlobalMatrix()
 				}
 			}
 		}
+		
 	}
 }
 
@@ -218,6 +267,16 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 			child_transform->UpdateGlobalMatrix();
 		}
 	}
+}
+
+void ComponentTransform::SetTransformedFromRB(bool transformed)
+{
+	rb_transforms_go = transformed;
+}
+
+bool ComponentTransform::GetTransformedFromRB() const
+{
+	return rb_transforms_go;
 }
 
 void ComponentTransform::RotateAroundAxis(float3 axis, float angle)

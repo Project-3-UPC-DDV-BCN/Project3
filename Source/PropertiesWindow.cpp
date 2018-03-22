@@ -1597,6 +1597,7 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 			}
 			else
 			{
+				rigidbody->SetTransformsGo(false);
 				components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
 				rigidbody = nullptr;
 				return;
@@ -1637,6 +1638,11 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		if (ImGui::Checkbox("CCD", &is_ccd))
 		{
 			rigidbody->SetCCDMode(is_ccd);
+		}
+		bool transforms_go = rigidbody->GetTransformsGo();
+		if (ImGui::Checkbox("Transforms GO", &transforms_go))
+		{
+			rigidbody->SetTransformsGo(transforms_go);
 		}
 
 		ImGui::Text("Axis Lock");
@@ -1694,6 +1700,7 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
 		{
+			comp_collider->GetRigidBody()->RemoveShape(*comp_collider->GetColliderShape());
 			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_collider->GetGameObject(), comp_collider));
 			comp_collider = nullptr;
 			return;

@@ -358,7 +358,7 @@ void DebugDraw::Render(ComponentCamera* camera)
 
 		glGenBuffers(1, &id_vertices_data);
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (*it).GetNumVertices() * 3, (*it).GetVertices(), GL_STREAM_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * (*it).GetNumVertices() * 3, (*it).GetVertices(), GL_DYNAMIC_DRAW);
 
 		App->renderer3D->BindVertexArrayObject(vao);
 		App->renderer3D->SetVertexAttributePointer(0, 3, 0, 0);
@@ -366,7 +366,7 @@ void DebugDraw::Render(ComponentCamera* camera)
 
 		glGenBuffers(1, &id_indices);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * (*it).GetNumIndices(), (*it).GetIndices(), GL_STREAM_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * (*it).GetNumIndices(), (*it).GetIndices(), GL_DYNAMIC_DRAW);
 
 		glDrawElements(mode, (*it).GetNumIndices(), GL_UNSIGNED_INT, nullptr);
 

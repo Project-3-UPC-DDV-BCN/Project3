@@ -99,14 +99,14 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 
 ComponentCollider::~ComponentCollider()
 {
-	if (triangle_mesh)
+	/*if (triangle_mesh)
 	{
 		triangle_mesh->release();
 	}
 	if (convex_mesh)
 	{
 		convex_mesh->release();
-	}
+	}*/
 	RELEASE(geo_triangle_mesh);
 	RELEASE(geo_convex_mesh);
 }
@@ -157,11 +157,22 @@ void ComponentCollider::SetTrigger(bool trigger)
 	if (can_change)
 	{
 		is_trigger = trigger;
-		collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !trigger);
-		collider_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, trigger);
-		bool a = collider_shape->getFlags().isSet(physx::PxShapeFlag::eTRIGGER_SHAPE);
-		bool b = collider_shape->getFlags().isSet(physx::PxShapeFlag::eSIMULATION_SHAPE);
-		int i = 0;
+		if (is_trigger)
+		{
+			if (collider_shape->getFlags().isSet(physx::PxShapeFlag::eSIMULATION_SHAPE))
+			{
+				collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !trigger);
+				collider_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, trigger);
+			}
+		}
+		else
+		{
+			if (collider_shape->getFlags().isSet(physx::PxShapeFlag::eTRIGGER_SHAPE))
+			{
+				collider_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, trigger);
+				collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !trigger);
+			}
+		}
 	}
 }
 
@@ -471,6 +482,11 @@ void ComponentCollider::Load(Data & data)
 		SetCapsuleHeight(data.GetFloat("CapsuleHeight"));
 		data.LeaveSection();
 	}
+}
+
+ComponentRigidBody * ComponentCollider::GetRigidBody() const
+{
+	return rigidbody;
 }
 
 

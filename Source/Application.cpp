@@ -175,6 +175,7 @@ bool Application::Init()
 			}
 			data.LeaveSection();
 		}
+		data.LeaveSection();
 	}
 
 	// After all Init calls we call Start() in all modules
