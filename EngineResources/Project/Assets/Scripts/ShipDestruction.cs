@@ -19,7 +19,7 @@ public class ShipDestruction
 	void Start () 
 	{
 		transform = TheGameObject.Self.GetComponent<TheTransform>(); 
-
+		TheGameObject.Self.SetActive(false); 
 		need_boom = false; 
 		exploted = false; 
 	}
@@ -27,7 +27,7 @@ public class ShipDestruction
 	void Update ()
 	{
 		
-		if(need_boom == true && exploted == false) 
+		if(exploted == false)
 		{			
 			TheConsole.Log("ExploteNow"); 
 			FillPartList(); 
