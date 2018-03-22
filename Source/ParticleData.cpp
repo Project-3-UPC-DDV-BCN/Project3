@@ -261,124 +261,126 @@ void ParticleData::Copy(ParticleData * other)
 bool ParticleData::Load(Data & _data)
 {
 	// Emmit area -----
-	_data.EnterSection("Particle");
-	
-	emmision_type = static_cast<emmision_behaviour>(_data.GetInt("Emmision_Type"));
-	emmit_style = static_cast<emmision_style>(_data.GetInt("Emmision_Style"));
-
-	if (emmision_type == EMMISION_SIMULTANEOUS)
+	if (_data.EnterSection("Particle"))
 	{
-		time_step_sim = _data.GetFloat("TimeStepSim");
-		amount_to_emmit = _data.GetInt("SimAmount");
-	}
-		
-	string name = _data.GetString("Name");
-	SetName(name.c_str());
+		emmision_type = static_cast<emmision_behaviour>(_data.GetInt("Emmision_Type"));
+		emmit_style = static_cast<emmision_style>(_data.GetInt("Emmision_Style"));
 
-	emmit_width = _data.GetFloat("Emit_Width");
-	emmit_height = _data.GetFloat("Emit_Height");
-	emmit_depth = _data.GetFloat("Emit_Depth");
-	
-	// Textures ----
+		if (emmision_type == EMMISION_SIMULTANEOUS)
+		{
+			time_step_sim = _data.GetFloat("TimeStepSim");
+			amount_to_emmit = _data.GetInt("SimAmount");
+		}
 
-	_data.EnterSection("Particle_Anim"); 
+		string name = _data.GetString("Name");
+		SetName(name.c_str());
 
-	int frames_num = _data.GetInt("Frames_Num");
+		emmit_width = _data.GetFloat("Emit_Width");
+		emmit_height = _data.GetFloat("Emit_Height");
+		emmit_depth = _data.GetFloat("Emit_Depth");
 
-	for (int i = 0; i < frames_num; i++)
-	{
-		string tex_name("Frame_");
-		tex_name += to_string(i + 1);
+		// Textures ----
 
-		string path = _data.GetString(tex_name); 
+		if (_data.EnterSection("Particle_Anim"))
+		{
+			int frames_num = _data.GetInt("Frames_Num");
 
-		Texture* texture = App->texture_importer->LoadTextureFromLibrary(path);
-		animation_system.AddToFrameStack(texture); 
-	}
+			for (int i = 0; i < frames_num; i++)
+			{
+				string tex_name("Frame_");
+				tex_name += to_string(i + 1);
 
-	animation_system.timeStep = _data.GetFloat("TimeStep"); 
-	
-	animation_system.rendering_frame = 0; 
+				string path = _data.GetString(tex_name);
 
-	_data.LeaveSection(); 
+				Texture* texture = App->texture_importer->LoadTextureFromLibrary(path);
+				animation_system.AddToFrameStack(texture);
+			}
 
-	//AutoPause
-	autopause = _data.GetBool("AutoPause"); 
+			animation_system.timeStep = _data.GetFloat("TimeStep");
 
-	if(autopause)
-		time_to_stop = _data.GetFloat("Time_To_Stop"); 
-	
-	// Colors -----
-	float4 col = _data.GetVector4("Color");
+			animation_system.rendering_frame = 0;
 
-	color.r = col.x; 
-	color.g = col.y;
-	color.b = col.z;
-	color.a = col.w;
+			_data.LeaveSection();
+		}
 
-	//Billboard
-	billboarding = _data.GetBool("Billboard");
+		//AutoPause
+		autopause = _data.GetBool("AutoPause");
 
-	string billboard_axis = _data.GetString("Billboard_Axis"); 
+		if (autopause)
+			time_to_stop = _data.GetFloat("Time_To_Stop");
 
-	if (billboard_axis == "X")
-		billboard_type = BILLBOARD_X; 
-		
-	else if (billboard_axis == "Y")
-		billboard_type = BILLBOARD_Y;
+		// Colors -----
+		float4 col = _data.GetVector4("Color");
 
-	else if (billboard_axis == "ALL")
-		billboard_type = BILLBOARD_ALL;
+		color.r = col.x;
+		color.g = col.y;
+		color.b = col.z;
+		color.a = col.w;
 
-	// Motion -----
+		//Billboard
+		billboarding = _data.GetBool("Billboard");
 
-	relative_pos = _data.GetBool("Relative_Pos");
-	emmision_rate = _data.GetFloat("Emmision_Rate");
-	max_lifetime = _data.GetFloat("Lifetime");
-	velocity = _data.GetFloat("Initial_Velocity");
-	gravity = _data.GetVector3("Gravity");
-	angular_v = _data.GetFloat("Angular_Velocity");
-	emision_angle = _data.GetFloat("Emmision_Angle");
+		string billboard_axis = _data.GetString("Billboard_Axis");
 
-	// ------
+		if (billboard_axis == "X")
+			billboard_type = BILLBOARD_X;
 
-	// Interpolation -----
-	change_color_interpolation = _data.GetBool("Color_Interpolation");
-	change_size_interpolation = _data.GetBool("Size_Interpolation");
-	change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
-	change_alpha_interpolation = _data.GetBool("Alpha_Interpolation");
+		else if (billboard_axis == "Y")
+			billboard_type = BILLBOARD_Y;
 
-	global_scale = _data.GetFloat("Global_Scale");
+		else if (billboard_axis == "ALL")
+			billboard_type = BILLBOARD_ALL;
 
-	if (change_size_interpolation)
-	{
-		initial_scale = _data.GetVector3("Initial_Size");
-		final_scale = _data.GetVector3("Final_Size");
-	}
+		// Motion -----
 
+		relative_pos = _data.GetBool("Relative_Pos");
+		emmision_rate = _data.GetFloat("Emmision_Rate");
+		max_lifetime = _data.GetFloat("Lifetime");
+		velocity = _data.GetFloat("Initial_Velocity");
+		gravity = _data.GetVector3("Gravity");
+		angular_v = _data.GetFloat("Angular_Velocity");
+		emision_angle = _data.GetFloat("Emmision_Angle");
 
-	if (change_rotation_interpolation)
-	{
-		initial_angular_v = _data.GetFloat("Initial_Rotation");
-		final_angular_v = _data.GetFloat("Final_Rotation");
-	}
-
-	if (change_color_interpolation)
-	{
-		float3 initcolor = _data.GetVector3("Initial_Color");
-		float3 fin_color = _data.GetVector3("Final_Color");
-
-		initial_color.Set(initcolor.x, initcolor.y, initcolor.z);
-		final_color.Set(fin_color.x, fin_color.y, fin_color.z);
 		// ------
+
+		// Interpolation -----
+		change_color_interpolation = _data.GetBool("Color_Interpolation");
+		change_size_interpolation = _data.GetBool("Size_Interpolation");
+		change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
+		change_alpha_interpolation = _data.GetBool("Alpha_Interpolation");
+
+		global_scale = _data.GetFloat("Global_Scale");
+
+		if (change_size_interpolation)
+		{
+			initial_scale = _data.GetVector3("Initial_Size");
+			final_scale = _data.GetVector3("Final_Size");
+		}
+
+
+		if (change_rotation_interpolation)
+		{
+			initial_angular_v = _data.GetFloat("Initial_Rotation");
+			final_angular_v = _data.GetFloat("Final_Rotation");
+		}
+
+		if (change_color_interpolation)
+		{
+			float3 initcolor = _data.GetVector3("Initial_Color");
+			float3 fin_color = _data.GetVector3("Final_Color");
+
+			initial_color.Set(initcolor.x, initcolor.y, initcolor.z);
+			final_color.Set(fin_color.x, fin_color.y, fin_color.z);
+			// ------
+		}
+
+		//Function calling ----
+		width_increment = emmit_width;
+		height_increment = emmit_height;
+		depth_increment = emmit_depth;
+
+		_data.LeaveSection();
 	}
-
-	//Function calling ----
-	width_increment = emmit_width;
-	height_increment = emmit_height;
-	depth_increment =emmit_depth;
-
-	_data.LeaveSection();
 
 	return true;
 }

@@ -8,7 +8,7 @@
 #include <string>
 #include "Octree.h"
 #include "imgui\ImGuizmo\ImGuizmo.h"
-
+#include "JsonTool.h"
 
 class GameObject;
 class Texture;
@@ -18,12 +18,6 @@ class Prefab;
 class CubeMap;
 class SkyDome;
 class BlastModel;
-
-enum SceneFileType
-{
-	SF_JSON,
-	SF_BINARY,
-};
 
 class ModuleScene : public Module
 {
@@ -65,15 +59,17 @@ public:
 
 	void NewScene(bool loading_scene);
 	void LoadScene(std::string path);
-	void LoadSceneWithoutDestroying(std::string path);
-	void SaveScene(std::string path, SceneFileType type = SceneFileType::SF_JSON) const;
+	void LoadSceneIntoCurrent(std::string path);
+	void SaveScene(std::string path);
 
-	void LoadPrefab(Prefab* prefab);
+	bool LoadPrefab(std::string path, std::string extension, Data& data, bool destroy_scene = false, bool duplicate = false, std::list<GameObject*>& new_gos = std::list<GameObject*>());
+	void SavePrefab(std::list<GameObject*> gos, std::string path, std::string extension, Data data);
+
+	void LoadPrefabToScene(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);
 
 	void LoadBlastModel(BlastModel* model);
 
-	void DrawSkyBox(float3 pos);
 	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);
 
 	void InitScripts();
@@ -85,6 +81,8 @@ public:
 	GameObject* CreateProgressBar(GameObject* parent = nullptr);
 	GameObject* CreateButton(GameObject* parent = nullptr);
 	GameObject* CreateRadar(GameObject* parent = nullptr);
+
+	JSONTool* GetJSONTool() const;
 
 	void SetParticleSystemsState();
 
@@ -126,4 +124,7 @@ private:
 	bool to_load_scene = false;
 	std::string scene_to_load;
 	bool destroy_current = false;
+	std::string current_scene_path;
+
+	JSONTool* json_tool = nullptr;
 };

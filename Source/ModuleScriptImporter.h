@@ -102,6 +102,14 @@ public:
 	void SetSpawnRotation(MonoObject * object, MonoObject * vector3);
 	void SetSpawnScale(MonoObject * object, MonoObject * vector3);
 
+	//DATA SAVE/LOAD
+	void AddString(MonoString* name, MonoString* string);
+	void AddInt(MonoString* name, int value);
+	void AddFloat(MonoString* name, float value);
+	MonoString* GetString(MonoString* name);
+	int GetInt(MonoString* name);
+	float GetFloat(MonoString* name);
+
 	//VECTOR/QUATERNION
 	MonoObject* ToQuaternion(MonoObject * object);
 	MonoObject* ToEulerAngles(MonoObject * object);
@@ -305,6 +313,14 @@ private:
 	static void RemoveEntity(MonoObject * object, MonoObject * game_object);
 	static void RemoveAllEntities(MonoObject * object);
 	static void SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString* marker_name);
+
+	//DATA SAVE/LOAD
+	static void AddString(MonoString* name, MonoString* string);
+	static void AddInt(MonoString* name, int value);
+	static void AddFloat(MonoString* name, float value);
+	static MonoString* GetString(MonoString* name);
+	static int GetInt(MonoString* name);
+	static float GetFloat(MonoString* name);
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);

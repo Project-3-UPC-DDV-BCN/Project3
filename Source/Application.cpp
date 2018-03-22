@@ -163,15 +163,17 @@ bool Application::Init()
 
 	if (data.EnterSection("Engine_Settings"))
 	{
-		data.EnterSection("Application");
-		is_game_mode = data.GetBool("Is_Game");
-		starting_scene_path = data.GetString("Starting_Scene");
-		data.LeaveSection();
-
-		while (item != list_modules.end() && ret == true)
+		if (data.EnterSection("Application"))
 		{
-			ret = (*item)->Init(&data);
-			++item;
+			is_game_mode = data.GetBool("Is_Game");
+			starting_scene_path = data.GetString("Starting_Scene");
+
+			while (item != list_modules.end() && ret == true)
+			{
+				ret = (*item)->Init(&data);
+				++item;
+			}
+			data.LeaveSection();
 		}
 		data.LeaveSection();
 	}
@@ -250,7 +252,7 @@ void Application::StopNow()
 			state = OnStop;
 			if (!App->IsGame())
 			{
-				App->scene->LoadScene(TMP_FOLDER"tmp_scene.scene");
+				App->scene->LoadScene(TMP_FOLDER"tmp_scene.jscene");
 			}
 			else
 			{
@@ -441,7 +443,7 @@ void Application::Play()
 				App->file_system->Create_Directory(TMP_FOLDER_PATH);
 			}
 	
-			App->scene->SaveScene(TMP_FOLDER"tmp_scene", SceneFileType::SF_BINARY);
+			App->scene->SaveScene(TMP_FOLDER"tmp_scene");
 		}
 		
 		App->scene->is_game = true;

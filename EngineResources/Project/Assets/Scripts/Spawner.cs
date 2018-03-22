@@ -14,12 +14,12 @@ public class Spawner
 	void Start () 
 	{
 		spawn_position = TheGameObject.Self.GetComponent<TheTransform>().GlobalPosition; 
-		//TheGameObject.Self.SetActive(false); 
+		TheGameObject.Self.SetActive(false); 
 
 		if(TheGameObject.Self.tag == "XWING")
 		{
-			//Instantiate "XWING" at position
-			TheGameObject.Self = xwing_prf; 
+			TheGameObject go = TheGameObject.Duplicate(xwing_prf); 
+			go.GetComponent<TheTransform>().GlobalPosition = spawn_position; 
 		} 
 				
 		else if(TheGameObject.Self.tag == "TIEFIGHTER") 

@@ -10,11 +10,11 @@ Data::~Data()
 {
 }
 
-bool Data::CanLoadAsJSON(std::string path)
+bool Data::CanLoadAsJSON(std::string path, std::string extension)
 {
 	bool ret = false;
 
-	if (path.find(".json") != std::string::npos)
+	if (path.find(extension) != std::string::npos)
 		ret = true;
 
 	return ret;
@@ -63,7 +63,6 @@ bool Data::LoadXML(std::string path)
 	std::ifstream file(path);
 	if (file.is_open()) {
 		cereal::XMLInputArchive archive(file);
-
 		while (true) {
 			std::string nodeName;
 			std::string nodeValue;
@@ -108,32 +107,28 @@ bool Data::LoadXML(std::string path)
 	return ret;
 }
 
-void Data::SaveAsJSON(std::string path)
+void Data::SaveAsJSON(std::string path, std::string extension)
 {
-	if (path.find(".json") == std::string::npos) { //json extension is not especified
-		path += ".json";
+	extension = '.' + extension;
+
+	if (path.find(extension) == std::string::npos) { //json extension is not especified
+		path += extension;
 	}
 	std::ofstream file(path);
-	if (file.is_open())
-	{
-		cereal::JSONOutputArchive archive(file);
-		for (int i = 0; i < data_names.size(); i++) {
-			if (data_names[i] == "New_Section") {
-				std::replace(data_names[i + 1].begin(), data_names[i + 1].end(), ' ', '_');
-				archive.setNextName(data_names[i + 1].c_str());
-				archive.startNode();
-				i++;
-			}
-			else if (data_names[i] == "Section_Close") 
-			{
-				archive.finishNode();
-			}
-			else 
-			{
-				archive(cereal::make_nvp(data_names[i], data_values[i]));
-			}
+	cereal::JSONOutputArchive archive(file);
+	for (int i = 0; i < data_names.size(); i++) {
+		if (data_names[i] == "New_Section") {
+			std::replace(data_names[i + 1].begin(), data_names[i + 1].end(), ' ', '_');
+			archive.setNextName(data_names[i + 1].c_str());
+			archive.startNode();
+			i++;
 		}
-		file.close();
+		else if (data_names[i] == "Section_Close") {
+			archive.finishNode();
+		}
+		else {
+			archive(cereal::make_nvp(data_names[i], data_values[i]));
+		}
 	}
 }
 
@@ -144,10 +139,8 @@ bool Data::LoadJSON(std::string path)
 	int sectionsOpen = 0;
 	data_names.clear();
 	data_values.clear();
-	std::ifstream file;
-	file.open(path);
-	if (file.is_open()) 
-	{
+	std::ifstream file(path);
+	if (file.is_open()) {
 		cereal::JSONInputArchive archive(file);
 		while (true) {
 			std::string nodeName;
@@ -207,8 +200,6 @@ bool Data::LoadJSON(std::string path)
 			}
 		}
 		ret = true;
-
-		file.close();
 	}
 	return ret;
 }
@@ -218,6 +209,7 @@ void Data::SaveAsBinary(std::string path)
 	std::ofstream file(path);
 	cereal::BinaryOutputArchive archive(file);
 	archive(*this);
+	file.close();
 }
 
 bool Data::LoadBinary(std::string path)
@@ -228,17 +220,20 @@ bool Data::LoadBinary(std::string path)
 	data_names.clear();
 	data_values.clear();
 	std::ifstream file(path);
-	if (file.is_open()) {
+	if (file.is_open()) 
+	{
 		cereal::BinaryInputArchive archive(file);
 		archive(*this);
-		for (int i = 0; i < data_names.size(); i++) {
+		for (int i = 0; i < data_names.size(); i++) 
+		{
 			if (data_names[i] == "New_Section") {
 				data_names.erase(data_names.begin() + i);
 				data_values.erase(data_values.begin() + i);
 				outsideSection = false;
 				sectionsOpen++;
 			}
-			else if (data_names[i] == "Section_Close") {
+			else if (data_names[i] == "Section_Close") 
+			{
 				sectionsOpen--;
 				if (sectionsOpen == 0) {
 					outsideSection = true;
@@ -252,6 +247,8 @@ bool Data::LoadBinary(std::string path)
 			}
 		}
 		ret = true;
+
+		file.close();
 	}
 	return ret;
 }
@@ -354,22 +351,21 @@ bool Data::EnterSection(std::string sectionName)
 	return ret;
 }
 
-void Data::LeaveSection() 
+void Data::LeaveSection()
 {
 	in_section_values.clear();
 	in_section_names.clear();
 
-
 	sections_open--;
 
-	if (sections_open <= 0) 
+	if (sections_open <= 0)
 	{
 		getting_from_section = false;
 		sections_open = 0;
 	}
-	else 
+	else
 	{
-		if (!last_index.empty() && !last_index_name.empty()) 
+		if (!last_index.empty() && !last_index_name.empty())
 		{
 			last_index.pop_back();
 			last_index_name.pop_back();
@@ -604,8 +600,8 @@ float4 Data::GetVector4(std::string valueName)
 			vec_names = in_section_names;
 			vec_values = in_section_values;
 		}
-		
-		if(vec_names.size() == 4)
+
+		if (vec_names.size() == 4)
 		{
 			ret.x = stof(vec_values[0]);
 			ret.y = stof(vec_values[1]);
@@ -620,7 +616,7 @@ float4 Data::GetVector4(std::string valueName)
 		ret.z = -1.0f;
 		ret.w = -1.0f;
 	}
-	
+
 	return ret;
 }
 
@@ -761,6 +757,7 @@ void Data::AddImVector4(std::string valueName, ImVec4 value)
 	f4.w = value.w;
 	AddVector4(valueName, f4);
 }
+
 
 void Data::DeleteValue(std::string valueName)
 {

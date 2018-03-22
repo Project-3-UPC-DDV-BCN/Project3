@@ -163,7 +163,7 @@ void ComponentFactory::StartFactory()
 			for (int i = 0; i < App->scene->saving_index; i++) {
 				GameObject* go = new GameObject();
 				data.EnterSection("GameObject_" + std::to_string(i));
-				go->Load(data, true);
+				go->Load(data);
 				if (GetGameObject() && i == 0)
 				{
 					go->SetRoot(true);

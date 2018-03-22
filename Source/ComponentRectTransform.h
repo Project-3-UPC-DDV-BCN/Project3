@@ -84,9 +84,6 @@ public:
 
 	float3 GetPreferedPos();
 
-	void SetLayer(int layer);
-	int GetLayer();
-
 	void SetInteractable(bool set);
 	bool GetInteractable() const;
 
@@ -97,18 +94,19 @@ public:
 	void SetOnMouseOver(bool set);
 	void SetOnMouseOut(bool set);
 
-	bool GetOnClick() const;
-	bool GetOnClickDown() const;
-	bool GetOnClickUp() const;
-	bool GetOnMouseEnter() const;
-	bool GetOnMouseOver() const;
-	bool GetOnMouseOut() const;
+	bool GetOnClick();
+	bool GetOnClickDown();
+	bool GetOnClickUp();
+	bool GetOnMouseEnter();
+	bool GetOnMouseOver();
+	bool GetOnMouseOut();
 
 	void Save(Data& data) const;
 	void Load(Data& data);
 
 private:
 	bool GetHasParent() const;
+	bool GetHasParentInactive() const;
 
 private:
 	ComponentTransform* c_transform = nullptr;
@@ -127,7 +125,6 @@ private:
 	bool				snap_left;
 	bool				snap_right;
 
-	int					layer;
 	bool				interactable;
 
 	bool				on_click;

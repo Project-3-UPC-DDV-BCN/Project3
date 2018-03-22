@@ -356,6 +356,14 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
 	mono_add_internal_call("TheEngine.TheQuaternion::ToEulerAngles", (const void*)ToEulerAngles);
 
+	//DATA SAVE/LOAD
+	mono_add_internal_call("TheEngine.TheData::AddString", (const void*)AddString);
+	mono_add_internal_call("TheEngine.TheData::AddInt", (const void*)AddInt);
+	mono_add_internal_call("TheEngine.TheData::AddFloat", (const void*)AddFloat);
+	mono_add_internal_call("TheEngine.TheData::GetString", (const void*)GetString);
+	mono_add_internal_call("TheEngine.TheData::GetInt", (const void*)GetInt);
+	mono_add_internal_call("TheEngine.TheData::GetFloat", (const void*)GetFloat);
+
 	//TIME
 	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
 	mono_add_internal_call("TheEngine.TheTime::GetTimeScale", (const void*)GetTimeScale);
@@ -710,6 +718,36 @@ void ModuleScriptImporter::RemoveAllEntities(MonoObject * object)
 void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
 {
 	ns_importer->SetMarkerToEntity(object, game_object, marker_name);
+}
+
+void ModuleScriptImporter::AddString(MonoString * name, MonoString * string)
+{
+	ns_importer->AddString(name, string);
+}
+
+void ModuleScriptImporter::AddInt(MonoString * name, int value)
+{
+	ns_importer->AddInt(name, value);
+}
+
+void ModuleScriptImporter::AddFloat(MonoString * name, float value)
+{
+	ns_importer->AddFloat(name, value);
+}
+
+MonoString* ModuleScriptImporter::GetString(MonoString * name)
+{
+	return ns_importer->GetString(name);
+}
+
+int ModuleScriptImporter::GetInt(MonoString * name)
+{
+	return ns_importer->GetInt(name);
+}
+
+float ModuleScriptImporter::GetFloat(MonoString * name)
+{
+	return ns_importer->GetFloat(name);
 }
 
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
@@ -2669,6 +2707,109 @@ void NSScriptImporter::SetSpawnScale(MonoObject * object, MonoObject * vector3)
 		ComponentFactory* factory = (ComponentFactory*)comp;
 		if (factory) factory->SetSpawnScale(new_scale);
 	}
+}
+
+void NSScriptImporter::AddString(MonoString * name, MonoString * string)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+		const char* c_string = mono_string_to_utf8(string);
+
+		json->SetString(c_name, c_string);
+
+		json->Save();
+	}
+}
+
+void NSScriptImporter::AddInt(MonoString * name, int value)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		json->SetNumber(c_name, value);
+
+		json->Save();
+	}
+}
+
+void NSScriptImporter::AddFloat(MonoString * name, float value)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		json->SetNumber(c_name, value);
+
+		json->Save();
+	}
+}
+
+MonoString* NSScriptImporter::GetString(MonoString* name)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		const char* ret = json->GetString(c_name, "no_str");
+
+		return mono_string_new(App->script_importer->GetDomain(), ret);
+	}
+
+	return mono_string_new(App->script_importer->GetDomain(), "no_str");
+}
+
+int NSScriptImporter::GetInt(MonoString * name)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		int ret = json->GetNumber(c_name, 0);
+
+		return ret;
+	}
+
+	return 0;
+}
+
+float NSScriptImporter::GetFloat(MonoString * name)
+{
+	JSON_File* json = App->scene->GetJSONTool()->LoadJSON(LIBRARY_GAME_DATA);
+	if (json == nullptr)
+		json = App->scene->GetJSONTool()->CreateJSON(LIBRARY_GAME_DATA);
+
+	if (json != nullptr)
+	{
+		const char* c_name = mono_string_to_utf8(name);
+
+		int ret = json->GetNumber(c_name, 0.0f);
+
+		return ret;
+	}
+
+	return 0;
 }
 
 MonoObject * NSScriptImporter::ToQuaternion(MonoObject * object)

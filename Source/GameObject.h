@@ -37,6 +37,7 @@ public:
 	void SetIsUsedInPrefab(bool used);
 	bool GetIsUsedInPrefab()const;
 	void SetNewUID();
+	void SetUID(uint uid);
 
 	int GetAllChildsCount() const;
 	void GetAllChildsName(std::vector<std::string>& names);
@@ -77,8 +78,8 @@ public:
 
 	UID GetUID() const;
 
-	void Save(Data& data, bool isDuplicated = false);
-	void Load(Data & data, bool isPrefab = false);
+	void Save(Data& data, bool save_children = true);
+	void Load(Data & data);
 
 	bool Update();
 

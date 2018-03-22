@@ -332,14 +332,10 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			if (rect_trans != nullptr)
 			{
 				if (!editor_camera)
-				{
-					// Mouse Input
-					if ((*it).GetLayer() >= highest_layer)
+				{					
+					if (rect_trans->GetInteractable() && rect_trans->GetGameObject()->IsActive() && (*it).CheckRay(segment, canvas->GetRenderMode()))
 					{
-						if (rect_trans->GetInteractable() && (*it).CheckRay(segment, canvas->GetRenderMode()))
-						{
-							top_element = &(*it);
-						}
+						top_element = &(*it);
 					}
 				}
 				// -----------
