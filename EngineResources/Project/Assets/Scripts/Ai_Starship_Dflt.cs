@@ -166,13 +166,19 @@ public class Ai_Starship_Dflt {
 			toTDir = tTrans.GlobalPosition - transform.GlobalPosition;
 			
 			TheVector3 direction = toTDir;
-		
-			transform = transform.LookAt(tTrans.GlobalPosition);
-			/*float angle_between = TheVector3.AngleBetween(transform.ForwardDirection, direction);
-			if (angle_between != 0)
+			float x_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(toTDir.x, 0, toTDir.z));
+			if (x_ > 2 )
 			{
-				
-			}*/
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (x_ < -2)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
 			/*
 			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
 			{
@@ -199,21 +205,7 @@ public class Ai_Starship_Dflt {
 				transform.LocalRotation = new_rot;
 			}
 			*/
-			/*if (TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
-			{
-				if (direction.x > 0)
-				{
-					TheVector3 new_rot = transform.LocalRotation;
-					new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
-					transform.LocalRotation = new_rot;
-				}
-				else if (direction.x < 0)
-				{
-					TheVector3 new_rot = transform.LocalRotation;
-					new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
-					transform.LocalRotation = new_rot;
-				}
-			}*/		
+			
 			/*
 			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
 			{
