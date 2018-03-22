@@ -25,7 +25,8 @@ HierarchyWindow::~HierarchyWindow()
 
 void HierarchyWindow::DrawWindow()
 {
-	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) {
+	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) 
+	{
 		if (ImGui::IsMouseClicked(1) && ImGui::IsMouseHoveringWindow() && !App->IsPlaying()) {
 			ImGui::SetNextWindowPos(ImGui::GetMousePos());
 			ImGui::OpenPopup("GameObject Options");
@@ -33,7 +34,8 @@ void HierarchyWindow::DrawWindow()
 
 		if (ImGui::BeginPopup("GameObject Options"))
 		{
-			if (!App->scene->selected_gameobjects.empty()) {
+			if (!App->scene->selected_gameobjects.empty()) 
+			{
 				if (ImGui::MenuItem("Duplicate")) {
 					for (std::list<GameObject*>::iterator it = App->scene->selected_gameobjects.begin(); it != App->scene->selected_gameobjects.end(); it++) {
 						if ((*it)->GetParent() != nullptr) {
@@ -44,13 +46,22 @@ void HierarchyWindow::DrawWindow()
 						App->scene->DuplicateGameObject(*it);
 					}
 				}
-				if (ImGui::MenuItem("Delete")) {
-					for (std::list<GameObject*>::iterator it = App->scene->selected_gameobjects.begin(); it != App->scene->selected_gameobjects.end(); it++) {
-						(*it)->Destroy();
+
+				if (ImGui::MenuItem("Delete")) 
+				{
+					if (App->scene->selected_gameobjects.size() > 0)
+					{
+						for (std::list<GameObject*>::iterator it = App->scene->selected_gameobjects.begin(); it != App->scene->selected_gameobjects.end();)
+						{
+							(*it)->Destroy();
+							it = App->scene->selected_gameobjects.erase(it);
+						}
 					}
 				}
-				if (App->scene->selected_gameobjects.size() == 1) {
-					if (ImGui::MenuItem("Rename")) {
+				if (App->scene->selected_gameobjects.size() == 1) 
+				{
+					if (ImGui::MenuItem("Rename")) 
+					{
 						show_rename_window = true;
 						gameobject_to_rename = App->scene->selected_gameobjects.front();
 						rename_window_y = ImGui::GetMousePos().y;
@@ -236,7 +247,8 @@ void HierarchyWindow::DrawWindow()
 			ImGui::End();
 		}
 
-		for (std::list<GameObject*>::iterator it = App->scene->root_gameobjects.begin(); it != App->scene->root_gameobjects.end(); it++) {
+		for (std::list<GameObject*>::iterator it = App->scene->root_gameobjects.begin(); it != App->scene->root_gameobjects.end(); it++) 
+		{
 			DrawSceneGameObjects(*it);
 		}
 
@@ -258,35 +270,40 @@ void HierarchyWindow::DrawSceneGameObjects(GameObject * gameObject)
 {
 	uint flag = 0;
 
-	if (gameObject->childs.empty()) {
-		flag |= ImGuiTreeNodeFlags_Leaf;
-	}
-
-	for (std::list<GameObject*>::iterator it = App->scene->selected_gameobjects.begin(); it != App->scene->selected_gameobjects.end(); it++) {
-		if (gameObject == *it) {
-			flag |= ImGuiTreeNodeFlags_Selected;
-			break;
-		}
-	}
-
-	flag |= ImGuiTreeNodeFlags_OpenOnArrow;
-
-	if (open_gameobject_node == gameObject) {
-		ImGui::SetNextTreeNodeOpen(true);
-		open_gameobject_node = nullptr;
-	}
-
-	if (ImGui::TreeNodeEx(gameObject->GetName().c_str(), flag))
+	if (gameObject != nullptr)
 	{
-		IsMouseOver(gameObject);
-		for (std::list<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); ++it) {
-			DrawSceneGameObjects(*it);
+		if (gameObject->childs.empty()) {
+			flag |= ImGuiTreeNodeFlags_Leaf;
 		}
-		ImGui::TreePop();
-	}
-	else 
-	{
-		IsMouseOver(gameObject);
+
+		for (std::list<GameObject*>::iterator it = App->scene->selected_gameobjects.begin(); it != App->scene->selected_gameobjects.end(); it++) {
+			if (gameObject == *it) 
+			{
+				flag |= ImGuiTreeNodeFlags_Selected;
+				break;
+			}
+		}
+
+		flag |= ImGuiTreeNodeFlags_OpenOnArrow;
+
+		if (open_gameobject_node == gameObject) {
+			ImGui::SetNextTreeNodeOpen(true);
+			open_gameobject_node = nullptr;
+		}
+
+		if (ImGui::TreeNodeEx(gameObject->GetName().c_str(), flag))
+		{
+			IsMouseOver(gameObject);
+			for (std::list<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); ++it) 
+			{
+				DrawSceneGameObjects(*it);
+			}
+			ImGui::TreePop();
+		}
+		else
+		{
+			IsMouseOver(gameObject);
+		}
 	}
 }
 
