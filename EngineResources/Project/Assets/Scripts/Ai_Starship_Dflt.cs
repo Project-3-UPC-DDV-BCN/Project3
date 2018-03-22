@@ -167,6 +167,7 @@ public class Ai_Starship_Dflt {
 			
 			TheVector3 direction = toTDir;
 			float x_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(toTDir.x, 0, toTDir.z));
+			float y_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(0, toTDir.y, toTDir.z));
 			if (x_ > 2 )
 			{
 				TheVector3 new_rot = transform.LocalRotation;
@@ -179,6 +180,18 @@ public class Ai_Starship_Dflt {
 				new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
 				transform.LocalRotation = new_rot;
 			}
+			/*if (y_ > 2 )
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (y_ < -2)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}*/
 			/*
 			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
 			{
