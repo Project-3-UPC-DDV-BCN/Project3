@@ -10,8 +10,9 @@
 #include "ModuleTime.h"
 #include "Primitive.h"
 #include "ModuleBlast.h"
-#include "DebugDraw.h"
+#include "ComponentRigidBody.h"
 #include "ModuleRenderer3D.h"
+#include "DebugDraw.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3DEBUG_x86.lib")
@@ -68,7 +69,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game)
 		else
 		{
 			physx::PxCookingParams cooking_params(scale);
-			cooking_params.buildGPUData = true;
+			//cooking_params.buildGPUData = true;
 			cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
 			if (!cooking)
 			{
@@ -155,7 +156,7 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 	
-	//DrawColliders();
+	DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -352,7 +353,7 @@ physx::PxTriangleMesh * ModulePhysics::CreateTriangleMesh(Mesh * mesh)
 	physx::PxDefaultMemoryOutputStream writeBuffer;
 	physx::PxTriangleMeshCookingResult::Enum result;
 	physx::PxCookingParams params = cooking->getParams();
-	params.buildGPUData = true;
+	//params.buildGPUData = true;
 	cooking->setParams(params);
 	bool status = cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
 	if (!status)
@@ -514,14 +515,18 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	}*/
 	GameObject* go = non_blast_objects[rigid_actor];
 	if (go == nullptr) return;
-	physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
+
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
-	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
-	float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
-	transform->SetPosition(position);
-	transform->SetRotation(rotation);
-	CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
+	if (transform->GetTransformedFromRB())
+	{
+		physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
+		float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+		Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
+		float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
+		transform->SetPositionFromRB(position);
+		transform->SetRotationFromRB(rotation);
+		//CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
+	}
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
@@ -730,7 +735,7 @@ void ModulePhysics::DrawColliders()
 			for (uint i = 0; i < rb.getNbLines(); i++)
 			{
 				const physx::PxDebugLine& line = rb.getLines()[i];
-				App->renderer3D->debug_draw->Line({ line.pos0.x, line.pos0.y, line.pos0.z }, { line.pos1.x, line.pos1.y, line.pos1.z });
+				App->renderer3D->debug_draw->Line({ line.pos0.x, line.pos0.y, line.pos0.z }, { line.pos1.x, line.pos1.y, line.pos1.z }, float4(0,1,0,1));
 			}
 			
 			/*glBegin(GL_TRIANGLES);
@@ -793,4 +798,7 @@ void ModulePhysics::CleanPhysScene()
 		}
 	}
 	physics_objects.clear();
+	non_blast_objects.clear();
+	trigger_stay_pairs.clear();
+
 }

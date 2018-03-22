@@ -32,6 +32,7 @@
 #include "ComponentLight.h"
 #include "ComponentTransform.h"
 #include "ComponentRectTransform.h"
+#include "ModuleScriptImporter.h"
 #include "UsefulFunctions.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -214,6 +215,7 @@ update_status ModuleScene::Update(float dt)
 		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
 		ComponentCamera* camera = (ComponentCamera*)(*it)->GetComponent(Component::CompCamera);
 		ComponentParticleEmmiter* p_emmiter = (ComponentParticleEmmiter*)(*it)->GetComponent(Component::CompParticleSystem);
+		ComponentRigidBody* rb = (ComponentRigidBody*)(*it)->GetComponent(Component::CompRigidBody);
 
 		bool active_parents = RecursiveCheckActiveParents((*it));
 		if (active_parents && (*it)->IsActive())
@@ -236,6 +238,11 @@ update_status ModuleScene::Update(float dt)
 			{
 				App->renderer3D->AddParticleToDraw(p_emmiter);
 			}
+			if (rb && !App->IsGame())
+			{
+				rb->DrawColliders();
+			}
+
 			if (App->IsPlaying())
 			{
 				(*it)->UpdateScripts();
@@ -419,7 +426,7 @@ void ModuleScene::NewScene(bool loading_scene)
 	octree.Create(float3::zero, float3::zero);
 	octree.update_tree = true;
 	App->blast->CleanFamilies();
-	//App->physics->CleanPhysScene();
+	App->physics->CleanPhysScene();
 	if (!loading_scene)
 	{
 		CreateMainCamera();

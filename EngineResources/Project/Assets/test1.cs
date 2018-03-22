@@ -9,10 +9,15 @@ public class test1 {
 	private TheScript ship_hit_scpt; 
 
 	void Start () {
-		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
-		game_manager_scpt.CallFunction("AddToScore");
-		ship_hit_scpt = TheGameObject.Find("test").GetComponent<TheScript>();
-		ship_hit_scpt.CallFunction("SubstractHP"); 
+		//game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
+		//game_manager_scpt.CallFunction("AddToScore");
+		//ship_hit_scpt = TheGameObject.Find("test").GetComponent<TheScript>();
+		//ship_hit_scpt.CallFunction("SubstractHP"); 
+	}
+	
+	void OnTriggerEnter(TheGameObject other_ship)
+	{
+		TheConsole.Log("Triggered" + TheGameObject.Self.name);
 	}
 	
 	void Update () {

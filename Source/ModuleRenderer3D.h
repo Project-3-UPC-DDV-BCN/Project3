@@ -125,6 +125,8 @@ private:
 
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
+	void DrawColliders();
+
 public:
 	Light lights[MAX_LIGHTS];
 	void DrawZBuffer();

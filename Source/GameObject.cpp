@@ -269,19 +269,17 @@ void GameObject::SetActive(bool active)
 	{
 		if (!active)
 		{
-			//rb->SetToSleep();
-			App->physics->RemoveRigidBodyFromScene(rb->GetRigidBody(), nullptr);
-			App->physics->RemoveNonBlastActorFromList(rb->GetRigidBody());
+			rb->SetToSleep();
+			rb->EnableShapes();
 		}
 		else
 		{
-			//rb->WakeUp();
-			App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
-			App->physics->AddNonBlastActorToList(rb->GetRigidBody(), this);
+			rb->WakeUp();
+			rb->DisableShapes();
 		}
 	}
 
-	/*if (App->IsPlaying())
+	if (App->IsPlaying())
 	{
 		ComponentScript * comp_script = nullptr;
 		for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
@@ -297,7 +295,7 @@ void GameObject::SetActive(bool active)
 				}
 			}
 		}
-	}*/
+	}
 }
 
 void GameObject::SetStatic(bool is_static)
@@ -896,6 +894,6 @@ bool GameObject::Update()
 void GameObject::DeleteFromResourcesDestructor()
 {
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) {
-		RELEASE(*it);
+		//RELEASE(*it);
 	}
 }

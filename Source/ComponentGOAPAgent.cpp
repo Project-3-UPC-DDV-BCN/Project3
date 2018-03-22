@@ -118,7 +118,7 @@ bool ComponentGOAPAgent::Update()
 
 			//set the current script to the current action one
 			if (curr_action != nullptr)
-				App->script_importer->SetCurrentScript(curr_action->GetScript());
+				App->script_importer->ns_importer->current_script = curr_action->GetScript();
 
 			//check if the conditions for the current actions are fulfilled
 			bool fulfilled = true;
