@@ -43,28 +43,44 @@ public class GameManager
 
 	void Init ()
 	{
-		team = TheGameObject.Find("Slave1").tag; 	
+		TheGameObject slave = TheGameObject.Find("Slave1");
+		if(slave != null)
+			team = slave.tag; 	
 	}
 
 	void Start ()
 	{
-	 	show_gametime = show_gametime_go.GetComponent<TheText>();
-		show_score = show_score_go.GetComponent<TheText>();
-		//show_score = TheGameObject.Self.GetComponent<TheText>();
+		if(show_gametime_go != null)
+	 		show_gametime = show_gametime_go.GetComponent<TheText>();
+
+		if(show_score_go != null)
+			show_score = show_score_go.GetComponent<TheText>();
+		
+		if(show_gametime != null)
+			show_gametime.Text = GetTimeFromSeconds(gametime_seconds); 
+
+		if(show_score != null)
+			show_score.Text = score.ToString();
+
+		if(background_music != null)
+			audio_source = background_music.GetComponent<TheAudioSource>();
+
+		if(audio_source != null)
+		{
+			audio_source.Play("Play_Calm_song");
+			audio_source.SetVolume(calm_volume);
+		}
+		
+
+		if(slave1 != null)
+			slave1_audio = slave1.GetComponent<TheAudioSource>();
+
 		score = 0; 
 		
 		timer = (float)gametime_seconds; 
 		gametime_step = timer - 1.0f; 	
-
+	
 		background_music_timer = music_timer;
-		
-		show_gametime.Text = GetTimeFromSeconds(gametime_seconds); 
-		show_score.Text = score.ToString();
-
-		audio_source = background_music.GetComponent<TheAudioSource>();
-		audio_source.Play("Play_Calm_song");
-		audio_source.SetVolume(calm_volume);
-		slave1_audio = slave1.GetComponent<TheAudioSource>();
 	}
 	
 	
@@ -74,9 +90,12 @@ public class GameManager
 
 		if (TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000 && !calm_combat)
 		{
-			audio_source.SetVolume(combat_volume);
-			audio_source.Stop("Play_Calm_song");
-			audio_source.Play("Play_Combat_song");
+			if(audio_source != null)
+			{
+				audio_source.SetVolume(combat_volume);
+				audio_source.Stop("Play_Calm_song");
+				audio_source.Play("Play_Combat_song");
+			}
 			calm_combat = true;
 		}
 		
@@ -85,11 +104,16 @@ public class GameManager
 			background_music_timer -= TheTime.DeltaTime;
 			
 			if(background_music_timer < 0.0f)
-			{
-				audio_source.SetVolume(calm_volume);
+			{	
+				if(audio_source != null)
+				{
+					audio_source.SetVolume(calm_volume);
+					audio_source.Stop("Play_Combat_song");
+					audio_source.Play("Play_Calm_song");
+				}
+
 				background_music_timer = music_timer;
-				audio_source.Stop("Play_Combat_song");
-				audio_source.Play("Play_Calm_song");
+
 				calm_combat = false;
 			}
 		}
@@ -99,18 +123,26 @@ public class GameManager
 			gametime_step = timer - 1.0f;
 			gametime_seconds--;  
 
-			show_gametime.Text = GetTimeFromSeconds(gametime_seconds);
-
+			if(show_gametime != null)
+				show_gametime.Text = GetTimeFromSeconds(gametime_seconds);
 		}
 
 		if(gametime_seconds <= 0) 
 		{
-			audio_source.Stop("Play_Calm_song");
-			audio_source.Stop("Play_Combat_song");
-			slave1_audio.Stop("Play_Engine");
-			TheApplication.LoadScene("VS2-UI");	
-		}	 		
-		show_score.Text = UpdateScore();
+			if(audio_source != null)
+			{
+				audio_source.Stop("Play_Calm_song");
+				audio_source.Stop("Play_Combat_song");
+			}
+			
+			if(slave1_audio != null)
+				slave1_audio.Stop("Play_Engine");
+
+			TheApplication.LoadScene("VS3-MainMenu");	
+		}
+		
+		if(show_score != null)	 		
+			show_score.Text = UpdateScore();
 	}
 
 	void AddToScore()
@@ -120,9 +152,15 @@ public class GameManager
 		//show_score.Text = score.ToString();
 		
 	}
+
 	string UpdateScore()
 	{
-		return score.ToString();
+		string ret = "0";
+
+		if(score != null)
+			ret = score.ToString();
+
+		return ret;
 	}
 
 	void SubstractToScore()
@@ -130,7 +168,9 @@ public class GameManager
 		if(score - score_to_inc > 0)
 		{
 			score -= score_to_inc; 
-			show_score.Text = score.ToString(); 	
+
+			if(show_score != null && score != null)
+				show_score.Text = score.ToString(); 	
 		}
 	}
 
