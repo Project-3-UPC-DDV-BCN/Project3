@@ -1,5 +1,6 @@
 using TheEngine;
-using TheEngine.TheMath;
+using TheEngine.Math;
+using System.Collections.Generic;
 public class Ai_Starship_Dflt {
 
 	public float maxSpd = 50.0f;
@@ -16,6 +17,13 @@ public class Ai_Starship_Dflt {
 
 	TheTransform transform;
 
+	public float roll_rotate_speed = 100.0f;
+	public float pitch_rotate_speed = 100.0f;
+	public float yaw_rotate_speed = 100.0f;
+	public float max_angle = 10.0f;
+
+    TheGameObject gameobject;
+
 	public float xangle = 0;
 	public float yangle = 0;
 	public float zangle = 0;
@@ -23,9 +31,23 @@ public class Ai_Starship_Dflt {
 
 	public bool Interpolate = false;
 
-	void Start () {
+    public bool Separation = true;
+    public float repulsion_spd = 5.0f;
+    public float range = 10.0f;
+    public float break_range = 5.0f;
+    TheGameObject[] all_gos;
+    TheVector3 repulsion_v = TheVector3.Zero;
+
+    public float min_target_range = 20.0f;
+
+	TheGameObject auxTarget = null;
+
+	public int rand = 0;
+
+    void Start () {
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
-	}
+        gameobject = TheGameObject.Self;
+    }
 	
 	void Update () {
 		// Propulsion
@@ -46,115 +68,227 @@ public class Ai_Starship_Dflt {
 		if(currSpd > maxSpd) {
 			currSpd = maxSpd;
 		}
-
-		// UNCOMMENT THIS TO MAKE THE SHIP MOVE 
-		//transform.LocalPosition += transform.ForwardDirection.Normalized * currSpd * TheTime.DeltaTime;
-
+		rand = 6;
+		TheVector3 toTDir = transform.ForwardDirection;
+        // Targeting
+        if(target == null)
+        {
+            TheGameObject[] ships_in_scene = new TheGameObject[500];
+			//List<TheGameObject> ships_in_scene = new List<TheGameObject>();
+            int nship = 0;
+            foreach (TheGameObject go in TheGameObject.GetSceneGameObjects())
+            {
+                if(gameobject.tag == "Alliance" && go.tag == "Empire" || gameobject.tag == "Empire" && go.tag == "Alliance")
+                {
+     				//ships_in_scene.Add(go);               
+					ships_in_scene[nship++] = go;
+                }
+            }
+			int newS = 0;
+			foreach(TheGameObject go in ships_in_scene) {
+				if(go == null)
+					break;
+				newS++;
+			}
+			TheGameObject[] auxList = new TheGameObject[newS];
+			for(int i = 0; i < newS; i++) {
+				auxList[i] = ships_in_scene[i];
+			}
+            if(auxList.Length > 0)
+            {
+				target = auxList[0];
+				foreach(TheGameObject ship in auxList) {
+					float distA = TheVector3.Magnitude(transform.GlobalPosition - ship.GetComponent<TheTransform>().GlobalPosition);
+					float currDistB  = TheVector3.Magnitude(transform.GlobalPosition - target.GetComponent<TheTransform>().GlobalPosition);
+					if(currDistB > distA) {
+						//if(target != auxTarget && target != null)
+							target = ship;
+					}
+				}
+				//rand = (int)TheRandom.RandomRange(0f, auxList.Length);
+				//target = ships_in_scene[0];
+                //target = ships_in_scene[rand];
+            }
+        } 
+		else
+        {
+           /*
+		   float disto = TheVector3.Magnitude(transform.GlobalPosition - target.GetComponent<TheTransform>().GlobalPosition);
+           if (disto < min_target_range)
+           {
+				auxTarget = target;
+				
+                target = null;
+				TheGameObject[] ships_in_scene = new TheGameObject[500];
+				List<TheGameObject> ships_in_scene = new List<TheGameObject>();
+		     	int nship = 0;
+            	foreach (TheGameObject go in TheGameObject.GetSceneGameObjects())
+            	{
+                	if(gameobject.tag == "Alliance" && go.tag == "Empire" || gameobject.tag == "Empire" && go.tag == "Alliance")
+                	{
+     					ships//_in_scene.Add(go);               
+						ships_in_scene[nship++] = go;
+                 	}
+				}
+				int newS =  0;
+				foreach(TheGameObject go in ships_in_scene) {
+					if (go == null)
+						break;
+					newS++;
+				}
+				TheGameObject[] auxList = new TheGameObject[newS];
+				for(int i = 0; i < newS; i++) {
+					auxList[i] = ships_in_scene[i];
+				}
+				if(auxList.Length > 0)
+				{
+					target = auxList[0];
+					foreach(TheGameObject ship in auxList) {
+						float distA = TheVector3.Magnitude(transform.GlobalPosition - ship.GetComponent<TheTransform>().GlobalPosition);
+						float currDistB  = TheVector3.Magnitude(transform.GlobalPosition - target.GetComponent<TheTransform>().GlobalPosition);
+						if(currDistB > distA) {
+							if(ship != auxTarget && ship != null)
+								target = ship;
+						}
+					}
+					rand = (int)TheRandom.RandomRange(0f, auxList.Length);
+					target = ships_in_scene[0];
+					target = ships_in_scene[rand];
+				}
+		   }
+			*/
+		}
 		// AlignToTarget
 
 		// ROTATION PART HERE \/\/\/ -----------		
 
 		if(target != null) { // YOU NEED A TARGET (USE 'New GameObject(4)')
 			TheTransform tTrans = target.GetComponent<TheTransform>();
-			//TheVector3 fdir = (tTrans.GlobalPosition - transform.GlobalPosition).Normalized;
-			//TheVector3 fwd = transform.ForwardDirection.Normalized;
-			//TheVector3 hfwd = TheVector3.Zero;
-			//hfwd.x = fwd.x;
-			//hfwd.z = fwd.z;
-			//TheVector3 vfwd = TheVector3.Zero;
-			//vfwd.y = fwd.y;
-			//vfwd.z = fwd.z;
-			//TheVector3 hfdir = TheVector3.Zero;
-			//hfdir.x = fdir.x;
-			//hfdir.z = fdir.z;
-			//TheVector3 vfdir = TheVector3.Zero;
-			//vfdir.y = fdir.y;
-			//vfdir.z = fdir.z;
-			//float vAngle = TheVector3.AngleBetween(hfwd, hfdir);
-			//float vAngle = AngleBetween3D(vfwd, vfdir);
-			//float hAngle = TheVector3.AngleBetween(vfwd, vfdir);
-			//float hAngle = AngleBetween3D(hfwd, hfdir);
-			//xangle = hAngle;
-			//yangle = vAngle;
-			//TheVector3 comparingV = transform.GlobalPosition + fwd;
-			//TheVector3 enemyV = transform.GlobalPosition + fdir;
-			//if(vAngle > capAngle) {
-			//	if(comparingV.x > enemyV.x)
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x + Mnv * TheTime.DeltaTime, transform.GlobalRotation.y, transform.LocalRotation.z);
-			//	else {
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x - Mnv * TheTime.DeltaTime, transform.GlobalRotation.y, transform.LocalRotation.z);
-			//	}
-			//}			
-			//if(hAngle > capAngle) {
-			//	if(comparingV.y > enemyV.y)
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x, transform.LocalRotation.y + Mnv * TheTime.DeltaTime, transform.LocalRotation.z);
-			//	else
-			//		transform.LocalRotation = new TheVector3(transform.LocalRotation.x, transform.LocalRotation.y - Mnv * TheTime.DeltaTime, transform.LocalRotation.z);
-			//}
-
-			// Quaternion approach
-
-			TheQuaternion fRot = QuaternionLookRotation(tTrans.GlobalPosition - transform.GlobalPosition, TheVector3.Up); // THIS IS THE FINAL ROTATION QUAT
-			TheVector3 fQuat = fRot.ToEulerAngles();
-			fQuat.x = fQuat.x * TheMath.RadToDeg;
-			fQuat.y = fQuat.y * TheMath.RadToDeg;
-			fQuat.z = fQuat.z * TheMath.RadToDeg;
-			//TheQuaternion debugQ = TheQuaternion.Slerp(TheQuaternion.FromEulerAngles(transform.GlobalRotation), fRot, Mnv); // THIS IS THE FINAL ROTATIO EULER
-			if(Interpolate == true) {
-				TheVector3 convertedGlobalRotation = TheVector3.Zero;
-				convertedGlobalRotation.x = transform.GlobalRotation.x * TheMath.DegToRad;
-				convertedGlobalRotation.y = transform.GlobalRotation.y * TheMath.DegToRad;
-				convertedGlobalRotation.z = transform.GlobalRotation.z * TheMath.DegToRad;
-				TheQuaternion debugQ = TheQuaternion.Slerp(TheQuaternion.FromEulerAngles(convertedGlobalRotation), fRot, Mnv * TheTime.DeltaTime);
-				TheVector3 auxConverter = debugQ.ToEulerAngles();
-				auxConverter.z = auxConverter.z * TheMath.RadToDeg;
-				auxConverter.y = auxConverter.y * TheMath.RadToDeg;
-				auxConverter.x = auxConverter.x * TheMath.RadToDeg;
-				xangle = 2;
-				if(transform.GlobalPosition.z > tTrans.GlobalPosition.z) {
-						auxConverter.y = -auxConverter.y;
-				}
-
-					transform.GlobalRotation = auxConverter;
-				}
-			else {
-				//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z)
-				//	fQuat.y = -fQuat.y;
-				xangle = 1;
-				transform.GlobalRotation = fQuat;
-			}
-			//if(transform.GlobalPosition.z > tTrans.GlobalPosition.z) {
-			//	TheVector3 aux = TheVector3.Zero;
-			//	aux.x = transform.GlobalRotation.x;
-			//	aux.y = -transform.GlobalRotation.y;
-			//	aux.z = transform.GlobalRotation.z;
-			//	transform.GlobalRotation = aux;
-			//}
 			
-			//transform.GlobalRotation = VecPerQuat(transform.GlobalRotation, debugQ);
-			//transform.GlobalRotation = TheQuaternion.RotateTowards(qGlobalRot, fRot, Mnv * TheTime.DeltaTime).ToEulerAngles();
-			xangle = fQuat.x;
-			yangle = fQuat.y;
-			zangle = fQuat.z;
-			//wangle = -auxConverter.y;
-			// Take02
-			//transform.LookAt(transform.GlobalPosition + auxConverter * 10.0f);
+			// No Rotations Baby
+			toTDir = tTrans.GlobalPosition - transform.GlobalPosition;
+			
+			TheVector3 direction = toTDir;
+			float x_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(tTrans.GlobalPosition.x, 0, tTrans.GlobalPosition.z));
+			float y_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(0, toTDir.y, toTDir.z));
+			float z_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(toTDir.x, toTDir.y, 0));
+			
+			TheVector3 new_rot = transform.LocalRotation;
+			if (x_ > 2 )
+			{
+				new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
+			}
+			else if (x_ < -2)
+			{
+				new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
+			}
+			/*if (y_ > 2 )
+			{
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
+			}
+			else if (y_ < -2)
+			{
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+			}
+			if (z_ > 2 )
+			{
+				new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
+			}
+			else if (z_ < -2)
+			{
+				new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
+			}*/
+			transform.LocalRotation = new_rot;
+			/*
+			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.y < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			if (direction.z > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.z < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			*/
+			
+			/*
+			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.y < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			if (direction.z > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			else if (direction.z < 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
+			{
+				TheVector3 new_rot = transform.LocalRotation;
+				new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
+				transform.LocalRotation = new_rot;
+			}
+			*/
+			
+
+            // Separation
+            if(Separation)
+            {
+                repulsion_v = TheVector3.Zero;
+                all_gos = TheGameObject.GetSceneGameObjects();
+                if (all_gos.Length <= 0)
+                {
+                    TheVector3 closest_dist = transform.GlobalPosition - all_gos[0].GetComponent<TheTransform>().GlobalPosition;
+                    foreach (TheGameObject go in all_gos)
+                    {
+                        if (go == TheGameObject.Self)
+                            continue;
+                        TheVector3 dist = transform.GlobalPosition - go.GetComponent<TheTransform>().GlobalPosition;
+                        if (TheVector3.Magnitude(dist) < range)
+                        {
+                            if (TheVector3.Magnitude(closest_dist) > TheVector3.Magnitude(dist))
+                                closest_dist = dist;
+                            repulsion_v += dist.Normalized;
+                        }
+                    }
+                    float sep_spd = ((range - (TheVector3.Magnitude(closest_dist))) * repulsion_spd) / (range - break_range);
+                    TheVector3 reflectV = TheVector3.Reflect(closest_dist, repulsion_v);
+                    toTDir += reflectV.Normalized * sep_spd;
+                }
+
+			}
+		
+			transform.LocalPosition += toTDir.Normalized * currSpd * TheTime.DeltaTime;	
+
 		}
-	
+		
 		// GetTarget
 		if(target == null) {
 			
 		}
-	}
-
-	TheVector3 EulerAnglesFromDir(TheVector3 dir) {
-		TheVector3 ret = TheVector3.Zero;		
-
-		ret.x = dir.x - TheVector3.DotProduct(dir.Normalized, TheVector3.Right);
-		ret.y = dir.y - TheVector3.DotProduct(dir.Normalized, TheVector3.Up);
-		ret.z = dir.z - TheVector3.DotProduct(dir.Normalized, TheVector3.Forward);
-
-		return ret;
 	}
 	
 	TheQuaternion CalculateRotationFromVec(TheVector3 v1, TheVector3 v2) {
