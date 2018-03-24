@@ -2096,8 +2096,27 @@ MonoObject * NSScriptImporter::GetScale(MonoObject * object, mono_bool is_global
 	return nullptr;
 }
 
-void NSScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
+void NSScriptImporter::LookAt(MonoObject * object, MonoObject * vector3)
 {
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_object_get_class(vector3);
+		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+		float3 target_pos;
+
+		if (x_field) mono_field_get_value(vector3, x_field, &target_pos.x);
+		if (y_field) mono_field_get_value(vector3, y_field, &target_pos.y);
+		if (z_field) mono_field_get_value(vector3, z_field, &target_pos.z);
+
+		ComponentTransform* transform = (ComponentTransform*)comp;
+		float3 direction = target_pos - transform->GetGlobalPosition();
+		transform->LookAt(direction.Normalized(), float3::unitY);
+	}
 }
 
 void NSScriptImporter::SetRectPosition(MonoObject * object, MonoObject * vector3)

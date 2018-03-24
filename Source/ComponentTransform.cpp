@@ -224,16 +224,26 @@ void ComponentTransform::UpdateLocals()
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 		transform_matrix = transform_matrix * parent_transform->transform_matrix;
+
+		global_pos = parent_transform->GetGlobalPosition() + position;
+		global_rot = (parent_transform->GetQuatRotation() * rotation).ToEulerXYZ() * RADTODEG;
+		global_scale = parent_transform->GetGlobalScale().Mul(scale);
+	}
+	else
+	{
+		global_pos = position;
+		global_rot = shown_rotation;
+		global_scale = scale;
 	}
 
 	//local_transform.Decompose(position, rotation, scale);
 
-	float3 _pos, _scale;
+	/*float3 _pos, _scale;
 	Quat _rot;
 	transform_matrix.Decompose(_pos, _rot, _scale);
 	global_pos = _pos;
 	global_rot = _rot.ToEulerXYZ() * RADTODEG;
-	global_scale = _scale;
+	global_scale = _scale;*/
 	
 }
 
@@ -249,24 +259,33 @@ const float4x4 ComponentTransform::GetOpenGLMatrix() const
 
 void ComponentTransform::SetMatrix(const float4x4 & matrix)
 {
-	transform_matrix = matrix;
-
-	UpdateLocals();
-
-	if (GetGameObject() == nullptr)
+	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
 	{
-		transform_matrix = matrix;
-		return; 
+		float3 pos;
+		Quat rot;
+		float3 scale;
+		matrix.Decompose(pos, rot, scale);
+		position = pos;
+		rotation = rot;
+		shown_rotation = rot.ToEulerXYZ() * RADTODEG;
+		this->scale = scale;
+		UpdateGlobalMatrix();
 	}
-		
-	if (this->GetGameObject()->IsRoot())
+	else
 	{
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
-		{
-			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-			child_transform->UpdateGlobalMatrix();
-		}
+		CONSOLE_ERROR("SetMatrix: RigidBody is in charge of transforms");
 	}
+}
+
+void ComponentTransform::LookAt(float3 dir, float3 up)
+{
+	float3 z(dir);
+	float3 x(-z.Normalized().Cross(up));
+	float3 y(x.Normalized().Cross(-z.Normalized()));
+	float3x3 mat(x, y, z);
+	Quat q = mat.ToQuat();
+	SetRotation(q.ToEulerXYZ() * RADTODEG);
+	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
 }
 
 void ComponentTransform::SetTransformedFromRB(bool transformed)
