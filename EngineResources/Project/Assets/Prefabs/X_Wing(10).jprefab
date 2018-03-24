@@ -1,115 +1,12 @@
 {
-    "Scene_Name": "RogerScene",
-    "GameObjects_Count": "9",
+    "UUID": "1178070320",
+    "assets_path": "./Project/Assets/Prefabs/X_Wing(10).jprefab",
+    "library_path": "./Project/Library/Prefabs/X_Wing(10).jprefab",
+    "prefab_name": "X_Wing(10)",
+    "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "1023234263",
-        "Name": "Main Camera(3)",
-        "Tag": "Main Camera",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1405867729",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "-20.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "1",
-                "Active": "1",
-                "UUID": "203822756",
-                "RenderTexture_Target": "",
-                "background_color": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "viewport_rect": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "0.000000"
-                },
-                "render_order": "0",
-                "far_plane": "1000.000000",
-                "near_plane": "0.300000"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_1": {
-        "UUID": "117602392",
-        "Name": "Directional Light(3)",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "741538489",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "100.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "-0.198267",
-                    "value_Y": "-0.620885",
-                    "value_Z": "0.739942",
-                    "value_W": "0.166366"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "20",
-                "Active": "1",
-                "UUID": "2083989857",
-                "color": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "lightType": "0",
-                "diffuse": "1.500000",
-                "ambient": "0.000000",
-                "specular": "0.000000",
-                "cutOff": "0.000000",
-                "outercutOff": "0.000000"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_2": {
-        "UUID": "1388471068",
-        "Name": "X_Wing(12)",
+        "UUID": "1738302496",
+        "Name": "X_Wing(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -141,14 +38,14 @@
         "IsRoot": "1",
         "IsStatic": "0"
     },
-    "GameObject_3": {
-        "UUID": "2062822817",
-        "Name": "Xwing(12)",
+    "GameObject_1": {
+        "UUID": "917147331",
+        "Name": "Xwing(10)",
         "Tag": "XWING",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "2",
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -171,6 +68,35 @@
                 }
             },
             "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "344684322",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\ShipProperties.dll",
+                    "assets_path": "",
+                    "script_name": "ShipProperties",
+                    "UUID": "1284910384",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_2": {
                 "Type": "10",
                 "Active": "1",
                 "UUID": "1167045032",
@@ -205,13 +131,13 @@
                 }
             }
         },
-        "ParentID": "1388471068",
+        "ParentID": "1738302496",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_4": {
-        "UUID": "670965585",
-        "Name": "Body(12)",
+    "GameObject_2": {
+        "UUID": "1583055300",
+        "Name": "Body(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -313,13 +239,13 @@
                 }
             }
         },
-        "ParentID": "2062822817",
+        "ParentID": "917147331",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_5": {
-        "UUID": "1230703741",
-        "Name": "BotRight_Wing(12)",
+    "GameObject_3": {
+        "UUID": "737309966",
+        "Name": "BotRight_Wing(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -421,13 +347,13 @@
                 }
             }
         },
-        "ParentID": "2062822817",
+        "ParentID": "917147331",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_6": {
-        "UUID": "375120508",
-        "Name": "BotLeft_Wing(12)",
+    "GameObject_4": {
+        "UUID": "955528645",
+        "Name": "BotLeft_Wing(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -529,13 +455,13 @@
                 }
             }
         },
-        "ParentID": "2062822817",
+        "ParentID": "917147331",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_7": {
-        "UUID": "716256301",
-        "Name": "TopRight_Wing(12)",
+    "GameObject_5": {
+        "UUID": "111376779",
+        "Name": "TopRight_Wing(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -637,13 +563,13 @@
                 }
             }
         },
-        "ParentID": "2062822817",
+        "ParentID": "917147331",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_8": {
-        "UUID": "1909648581",
-        "Name": "TopLeft_Wing(12)",
+    "GameObject_6": {
+        "UUID": "1746765089",
+        "Name": "TopLeft_Wing(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -745,7 +671,7 @@
                 }
             }
         },
-        "ParentID": "2062822817",
+        "ParentID": "917147331",
         "IsRoot": "0",
         "IsStatic": "0"
     }

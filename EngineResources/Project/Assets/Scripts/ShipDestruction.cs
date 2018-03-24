@@ -18,6 +18,7 @@ public class ShipDestruction
 
 	void Start () 
 	{
+		TheConsole.Log("d"); 
 		transform = TheGameObject.Self.GetComponent<TheTransform>(); 
 		TheGameObject.Self.SetActive(false); 
 		need_boom = false; 
@@ -26,8 +27,8 @@ public class ShipDestruction
 	
 	void Update ()
 	{
-		
-		if(exploted == false)
+		TheConsole.Log("in");
+		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{			
 			TheConsole.Log("ExploteNow"); 
 			FillPartList(); 
