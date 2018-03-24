@@ -2,8 +2,8 @@
     "Scene_Name": "AiTest",
     "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "1387465084",
-        "Name": "Audio(4)",
+        "UUID": "326595211",
+        "Name": "Audio(9)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -42,8 +42,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "744687457",
-        "Name": "New GameObject(9)",
+        "UUID": "328330595",
+        "Name": "New GameObject(24)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -82,8 +82,8 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1335237923",
-        "Name": "Main Camera(4)",
+        "UUID": "888415827",
+        "Name": "Main Camera(9)",
         "Tag": "Main Camera",
         "Layer": "Default",
         "Active": "1",
@@ -137,8 +137,8 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "327325847",
-        "Name": "Directional Light(4)",
+        "UUID": "574290673",
+        "Name": "Directional Light(9)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -188,8 +188,8 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1803815670",
-        "Name": "New GameObject(10)",
+        "UUID": "840405087",
+        "Name": "Target",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -221,7 +221,7 @@
                 "Active": "1",
                 "UUID": "948093081",
                 "Mesh": {
-                    "mesh_name": "xwing_chunk_0"
+                    "mesh_name": "A_Wing"
                 },
                 "Material": {
                     "Name": "default_mat"
@@ -240,13 +240,13 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "754568157",
-        "Name": "AI_base_starship",
+        "UUID": "1650599512",
+        "Name": "AI_base_Starship",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "1",
+            "Components_Count": "2",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -267,6 +267,131 @@
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "553509989",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\AI_Starship_Movement.dll",
+                    "assets_path": "",
+                    "script_name": "Ai_Starship_Movement",
+                    "UUID": "1472382401",
+                    "int_fields_count": "2",
+                    "double_fields_count": "0",
+                    "float_fields_count": "18",
+                    "bool_fields_count": "2",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "movState",
+                            "field_value": "1"
+                        },
+                        "field_1": {
+                            "field_name": "rand",
+                            "field_value": "0"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "Mnv",
+                            "field_value": "5.000000"
+                        },
+                        "field_1": {
+                            "field_name": "acceleration",
+                            "field_value": "1.000000"
+                        },
+                        "field_2": {
+                            "field_name": "break_range",
+                            "field_value": "20.000000"
+                        },
+                        "field_3": {
+                            "field_name": "capAngle",
+                            "field_value": "5.000000"
+                        },
+                        "field_4": {
+                            "field_name": "currSpd",
+                            "field_value": "0.000000"
+                        },
+                        "field_5": {
+                            "field_name": "maxSpd",
+                            "field_value": "20.000000"
+                        },
+                        "field_6": {
+                            "field_name": "max_angle",
+                            "field_value": "10.000000"
+                        },
+                        "field_7": {
+                            "field_name": "minSpd",
+                            "field_value": "5.000000"
+                        },
+                        "field_8": {
+                            "field_name": "min_target_range",
+                            "field_value": "50.000000"
+                        },
+                        "field_9": {
+                            "field_name": "pitch_rotate_speed",
+                            "field_value": "100.000000"
+                        },
+                        "field_10": {
+                            "field_name": "range",
+                            "field_value": "40.000000"
+                        },
+                        "field_11": {
+                            "field_name": "repulsion_spd",
+                            "field_value": "5.000000"
+                        },
+                        "field_12": {
+                            "field_name": "roll_rotate_speed",
+                            "field_value": "100.000000"
+                        },
+                        "field_13": {
+                            "field_name": "wangle",
+                            "field_value": "0.000000"
+                        },
+                        "field_14": {
+                            "field_name": "xangle",
+                            "field_value": "0.000000"
+                        },
+                        "field_15": {
+                            "field_name": "yangle",
+                            "field_value": "0.000000"
+                        },
+                        "field_16": {
+                            "field_name": "yaw_rotate_speed",
+                            "field_value": "100.000000"
+                        },
+                        "field_17": {
+                            "field_name": "zangle",
+                            "field_value": "0.000000"
+                        }
+                    },
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "Interpolate",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "Separation",
+                            "field_value": "1"
+                        }
+                    },
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "target",
+                            "field_value": "840405087"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -274,8 +399,8 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "2044685583",
-        "Name": "A_Wing(4)",
+        "UUID": "243706688",
+        "Name": "A_Wing(9)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -321,7 +446,7 @@
                 "Int_Mat_Indices_Start": "0"
             }
         },
-        "ParentID": "754568157",
+        "ParentID": "1650599512",
         "IsRoot": "0",
         "IsStatic": "0"
     }

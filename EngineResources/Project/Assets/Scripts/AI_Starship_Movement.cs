@@ -1,7 +1,7 @@
 using TheEngine;
-using TheEngine.Math;
+using TheEngine.TheMath;
 using System.Collections.Generic;
-public class Ai_Starship_Dflt {
+public class Ai_Starship_Movement {
 
 	public float maxSpd = 50.0f;
 	public float minSpd = 5.0f;
@@ -280,10 +280,9 @@ public class Ai_Starship_Dflt {
                 }
 
 			}
-		
-			transform.LocalPosition += toTDir.Normalized * currSpd * TheTime.DeltaTime;	
-
 		}
+		
+		transform.LocalPosition += toTDir.Normalized * currSpd * TheTime.DeltaTime;	
 		
 		// GetTarget
 		if(target == null) {
