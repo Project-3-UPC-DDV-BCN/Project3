@@ -17,9 +17,9 @@ public class Ai_Starship_Dflt {
 
 	TheTransform transform;
 
-	public float roll_rotate_speed = 40.0f;
-	public float pitch_rotate_speed = 40.0f;
-	public float yaw_rotate_speed = 40.0f;
+	public float roll_rotate_speed = 100.0f;
+	public float pitch_rotate_speed = 100.0f;
+	public float yaw_rotate_speed = 100.0f;
 	public float max_angle = 10.0f;
 
     TheGameObject gameobject;
@@ -166,32 +166,36 @@ public class Ai_Starship_Dflt {
 			toTDir = tTrans.GlobalPosition - transform.GlobalPosition;
 			
 			TheVector3 direction = toTDir;
-			float x_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(toTDir.x, 0, toTDir.z));
+			float x_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(tTrans.GlobalPosition.x, 0, tTrans.GlobalPosition.z));
 			float y_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(0, toTDir.y, toTDir.z));
+			float z_ = TheVector3.AngleBetween(transform.ForwardDirection, new TheVector3(toTDir.x, toTDir.y, 0));
+			
+			TheVector3 new_rot = transform.LocalRotation;
 			if (x_ > 2 )
 			{
-				TheVector3 new_rot = transform.LocalRotation;
 				new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
-				transform.LocalRotation = new_rot;
 			}
 			else if (x_ < -2)
 			{
-				TheVector3 new_rot = transform.LocalRotation;
 				new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
-				transform.LocalRotation = new_rot;
 			}
 			/*if (y_ > 2 )
 			{
-				TheVector3 new_rot = transform.LocalRotation;
-				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
-				transform.LocalRotation = new_rot;
+				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
 			}
 			else if (y_ < -2)
 			{
-				TheVector3 new_rot = transform.LocalRotation;
-				new_rot.x += pitch_rotate_speed*TheTime.DeltaTime;
-				transform.LocalRotation = new_rot;
+				new_rot.x -= pitch_rotate_speed*TheTime.DeltaTime;
+			}
+			if (z_ > 2 )
+			{
+				new_rot.y -= yaw_rotate_speed*TheTime.DeltaTime;
+			}
+			else if (z_ < -2)
+			{
+				new_rot.y += yaw_rotate_speed*TheTime.DeltaTime;
 			}*/
+			transform.LocalRotation = new_rot;
 			/*
 			if (direction.y > 0 && TheVector3.AngleBetween(transform.ForwardDirection, toTDir) > max_angle)
 			{

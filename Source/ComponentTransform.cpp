@@ -221,6 +221,33 @@ void ComponentTransform::SetMatrix(const float4x4 & matrix)
 	}
 }
 
+void ComponentTransform::LookAt(float3 target_pos)
+{
+	float3 lookat = { target_pos.x, target_pos.y, target_pos.z };
+	float3 pos = { position.x, position.y, position.z };
+	float3 objectUpVector = { 0.0f, 1.0f, 0.0f };
+
+	float3 zaxis = lookat - pos;
+	zaxis = zaxis.Normalized();
+	float3 xaxis = objectUpVector.Cross(zaxis);
+	xaxis = xaxis.Normalized();
+	float3 yaxis = zaxis.Cross(xaxis);
+
+	math::float4x4 pm = {
+		xaxis.x, yaxis.x, zaxis.x, 0,
+		xaxis.y, yaxis.y, zaxis.y, 0,
+		xaxis.z, yaxis.z, zaxis.z, 0,
+		0, 0, 0, 1
+	};
+
+	float3 rot = pm.ToEulerXYZ();
+	rot.x = -rot.x*RADTODEG;
+	rot.y = rot.y*RADTODEG;
+	rot.z = rot.z*RADTODEG;
+
+	SetRotation(rot);
+}
+
 float3 ComponentTransform::GetForward() const
 {
 	return transform_matrix.WorldZ();

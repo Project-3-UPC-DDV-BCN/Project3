@@ -24,6 +24,8 @@ public:
 	const float4x4 GetOpenGLMatrix() const;
 	void SetMatrix(const float4x4 &matrix);
 
+	void LookAt(float3 target_pos);
+
 	float3 GetForward()const;
 	float3 GetUp()const;
 	float3 GetRight()const;

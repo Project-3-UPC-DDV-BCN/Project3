@@ -1937,6 +1937,13 @@ void CSScript::LookAt(MonoObject * object, MonoObject * vector)
 	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
 	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
 
+	ComponentTransform* transform = (ComponentTransform*)active_gameobject->GetComponent(Component::CompTransform);
+	float3 target_pos;
+	if (x_field) mono_field_set_value(vector, x_field, &target_pos.x);
+	if (y_field) mono_field_set_value(vector, y_field, &target_pos.y);
+	if (z_field) mono_field_set_value(vector, z_field, &target_pos.z);
+
+	transform->LookAt(target_pos);
 	
 }
 
