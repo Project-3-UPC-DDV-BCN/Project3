@@ -73,16 +73,17 @@ GameObject* ComponentFactory::Spawn()
 		if (transform)
 		{
 			transform->SetPosition(spawn_position);
-			//transform->SetRotation(spawn_rotation);
+			transform->SetRotation(spawn_rotation);
 			transform->SetScale(spawn_scale);
+			CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
 			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
-				float4x4 m = transform->GetOpenGLMatrix();
-				rb->SetTransform(m.ptr());
-				//rb->SetLinearVelocity({ 0,0,0 });
-				/*rb->SetPosition(spawn_position);
-				rb->SetRotation(spawn_rotation);*/
+				//float4x4 m = transform->GetOpenGLMatrix();
+				//rb->SetTransform(m.ptr());
+				rb->SetLinearVelocity({ 0,0,0 });
+				rb->SetPosition(spawn_position);
+				rb->SetRotation(spawn_rotation);
 			}
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
@@ -162,7 +163,7 @@ void ComponentFactory::StartFactory()
 			for (int i = 0; i < App->scene->saving_index; i++) {
 				GameObject* go = new GameObject();
 				data.EnterSection("GameObject_" + std::to_string(i));
-				go->Load(data, true);
+				go->Load(data);
 				if (GetGameObject() && i == 0)
 				{
 					go->SetRoot(true);

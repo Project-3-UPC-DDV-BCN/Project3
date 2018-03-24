@@ -1657,6 +1657,7 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 			}
 			else
 			{
+				rigidbody->SetTransformsGo(false);
 				components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
 				rigidbody = nullptr;
 				return;
@@ -1697,6 +1698,11 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		if (ImGui::Checkbox("CCD", &is_ccd))
 		{
 			rigidbody->SetCCDMode(is_ccd);
+		}
+		bool transforms_go = rigidbody->GetTransformsGo();
+		if (ImGui::Checkbox("Transforms GO", &transforms_go))
+		{
+			rigidbody->SetTransformsGo(transforms_go);
 		}
 
 		ImGui::Text("Axis Lock");
@@ -1754,6 +1760,7 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
 		{
+			comp_collider->GetRigidBody()->RemoveShape(*comp_collider->GetColliderShape());
 			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_collider->GetGameObject(), comp_collider));
 			comp_collider = nullptr;
 			return;
@@ -1836,7 +1843,7 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 
 void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * current_emmiter)
 {
-	if (ImGui::CollapsingHeader("Component Particle Emmiter"))
+	if (ImGui::CollapsingHeader("Component Particle Emmiter", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		bool active_bool = current_emmiter->IsActive();
 		bool keeper = active_bool;
@@ -2357,7 +2364,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 {
-	if (ImGui::CollapsingHeader("Component Billboard"))
+	if (ImGui::CollapsingHeader("Component Billboard", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		static int billboard_type;
 		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
@@ -2378,8 +2385,9 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 
 void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 {
-	if (ImGui::CollapsingHeader("Listener"))
+	if (ImGui::CollapsingHeader("Listener", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Text("GameObject Listening");
 	}
 }
 
@@ -2388,7 +2396,8 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 
-	if (ImGui::CollapsingHeader("Audio Source")) {
+	if (ImGui::CollapsingHeader("Audio Source", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
 		SoundBankResource* sbk = audio_source->soundbank;
 		if (ImGui::InputResourceAudio("SoundBank", &sbk))
 		{
@@ -2437,7 +2446,8 @@ void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
 
 void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
 {
-	if (ImGui::CollapsingHeader("Distorsion Zone")) {
+	if (ImGui::CollapsingHeader("Distorsion Zone", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
 		char* bus_name = new char[41];
 
 		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
@@ -2567,7 +2577,7 @@ void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 	static GOAPAction* act_to_add_precon = nullptr;
 	static GOAPAction* act_to_add_effect = nullptr;
 	static ComponentGOAPAgent* goap_to_add_var = nullptr;
-	if (ImGui::CollapsingHeader("GOAP Agent"))
+	if (ImGui::CollapsingHeader("GOAP Agent", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//Goals
 		if (ImGui::TreeNode("Goals##Goap_goal"))

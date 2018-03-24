@@ -1011,45 +1011,47 @@ void ModuleResources::LoadShaderProgramMeta(std::string path) const
 	for (int i = 0; i < sections; ++i)
 	{
 		std::string section_name = "shprogram_" + std::to_string(i);
-		d.EnterSection(section_name);
-		UID program = d.GetUInt("uuid");
-		ShaderProgram* shprog = GetShaderProgram(program);
-		if (shprog != nullptr)
+		if (d.EnterSection(section_name))
 		{
-			UID vert_uid = d.GetUInt("vertex_shader");
-			if (vert_uid != 0)
+			UID program = d.GetUInt("uuid");
+			ShaderProgram* shprog = GetShaderProgram(program);
+			if (shprog != nullptr)
 			{
-				Shader* vert_shader = GetShader(vert_uid);
-				if (vert_shader != nullptr)
+				UID vert_uid = d.GetUInt("vertex_shader");
+				if (vert_uid != 0)
 				{
-					shprog->SetVertexShader(vert_shader);
+					Shader* vert_shader = GetShader(vert_uid);
+					if (vert_shader != nullptr)
+					{
+						shprog->SetVertexShader(vert_shader);
+					}
+					else
+					{
+						CONSOLE_WARNING("Vertex shader %d not found for %s", vert_uid, section_name.c_str());
+					}
 				}
-				else
+
+				UID frag_uid = d.GetUInt("fragment_shader");
+				if (frag_uid != 0)
 				{
-					CONSOLE_WARNING("Vertex shader %d not found for %s", vert_uid, section_name.c_str());
+					Shader* frag_shader = GetShader(frag_uid);
+					if (frag_shader != nullptr)
+					{
+						shprog->SetFragmentShader(frag_shader);
+					}
+					else
+					{
+						CONSOLE_WARNING("Fragment shader %d not found for %s", frag_uid, section_name.c_str());
+					}
 				}
 			}
-
-			UID frag_uid = d.GetUInt("fragment_shader");
-			if (frag_uid != 0)
+			else
 			{
-				Shader* frag_shader = GetShader(frag_uid);
-				if (frag_shader != nullptr)
-				{
-					shprog->SetFragmentShader(frag_shader);
-				}
-				else
-				{
-					CONSOLE_WARNING("Fragment shader %d not found for %s", frag_uid, section_name.c_str());
-				}
+				CONSOLE_WARNING("%s not found!", section_name.c_str());
 			}
-		}
-		else
-		{
-			CONSOLE_WARNING("%s not found!", section_name.c_str());
-		}
 
-		d.LeaveSection();
+			d.LeaveSection();
+		}
 	}
 }
 
@@ -1168,12 +1170,12 @@ Resource::ResourceType ModuleResources::AssetExtensionToResourceType(std::string
 	else if (str == ".bmesh") return Resource::BlastMeshResource;
 	else if (str == ".cs" || str == ".lua") return Resource::ScriptResource;
 	else if (str == ".wav" || str == ".ogg") return Resource::AudioResource;
-	else if (str == ".prefab") return Resource::PrefabResource;
+	else if (str == ".jprefab") return Resource::PrefabResource;
 	else if (str == ".mat") return Resource::MaterialResource;
 	else if (str == ".pmat") return Resource::PhysicsMatResource;
 	else if (str == ".animation") return Resource::AnimationResource;
 	else if (str == ".particle") return Resource::ParticleFXResource;
-	else if (str == ".scene") return Resource::SceneResource;
+	else if (str == ".scene" || str == ".jscene") return Resource::SceneResource;
 	else if (str == ".ttf") return Resource::FontResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
@@ -1187,12 +1189,12 @@ Resource::ResourceType ModuleResources::LibraryExtensionToResourceType(std::stri
 	if (str == ".dds") return Resource::TextureResource;
 	else if (str == ".mesh") return Resource::MeshResource;
 	else if (str == ".bmesh") return Resource::BlastMeshResource;
-	else if (str == ".scene") return Resource::SceneResource;
+	else if (str == ".scene" || str == ".jscene") return Resource::SceneResource;
 	else if (str == ".mat") return Resource::MaterialResource;
 	else if (str == ".pmat") return Resource::PhysicsMatResource;
 	else if (str == ".particle") return Resource::ParticleFXResource;
 	else if (str == ".dll") return Resource::ScriptResource;
-	else if (str == ".prefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
+	else if (str == ".jprefab" || str == ".fbx" || str == ".FBX") return Resource::PrefabResource;
 	else if (str == ".vshader") return Resource::ShaderResource;
 	else if (str == ".fshader") return Resource::ShaderResource;
 	else if (str == ".ttf") return Resource::FontResource;
@@ -2497,6 +2499,70 @@ void ModuleResources::CreateDefaultShaders()
 	depthdebugprog->LinkShaderProgram();
 
 	AddResource(depthdebugprog);
+
+	// outline shader
+	std::string outline_vert_path = SHADER_DEFAULT_FOLDER "outline_vertex.vshader";
+	if (!App->file_system->FileExist(outline_vert_path))
+	{
+		Shader* outline_vert = new Shader();
+		outline_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n\n"
+			"out vec3 TexCoord;\n\n"
+			"uniform mat4 Model; \n"
+			"uniform mat4 view; \n"
+			"uniform mat4 projection;\n\n "
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	TexCoord = texCoord;\n"
+			"}";
+
+		outline_vert->SetContent(shader_text);
+		std::ofstream outfile(outline_vert_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(outline_vert);
+	}
+	CreateResource(outline_vert_path);
+
+	std::string outline_frag_path = SHADER_DEFAULT_FOLDER "outline_fragment.fshader";
+	if (!App->file_system->FileExist(outline_frag_path))
+	{
+		Shader* outline_frag = new Shader();
+		outline_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"out vec4 color;\n\n"
+			"void main()\n"
+			"{\n"
+			"	color = vec4(0.4, 0.28, 0.26, 1.0);\n"
+			"}";
+
+		outline_frag->SetContent(shader_text);
+		std::ofstream outfile(outline_frag_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(outline_frag);
+	}
+	CreateResource(outline_frag_path);
+
+	ShaderProgram* outline_prog = new ShaderProgram();
+	outline_prog->SetName("outline_shader_program");
+
+	Shader* outline_vertex = GetShader("outline_vertex");
+	outline_prog->SetVertexShader(outline_vertex);
+
+	Shader* outline_fragment = GetShader("outline_fragment");
+	outline_prog->SetFragmentShader(outline_fragment);
+
+	outline_prog->LinkShaderProgram();
+
+	AddResource(outline_prog);
 }
 
 void ModuleResources::CreateDefaultMaterial()

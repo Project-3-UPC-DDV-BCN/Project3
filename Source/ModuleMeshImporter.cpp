@@ -61,8 +61,11 @@ std::string ModuleMeshImporter::ImportMesh(std::string path)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		aiNode* root_node = scene->mRootNode;
-		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
-		std::string library_path = LIBRARY_PREFABS_FOLDER + App->file_system->GetFileNameWithoutExtension(path) + ".prefab";
+		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) 
+			App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
+
+		std::string library_path = LIBRARY_PREFABS_FOLDER + App->file_system->GetFileNameWithoutExtension(path) + ".jprefab";
+
 		Data data;
 		Prefab* prefab = new Prefab();
 		prefab->SetRootGameObject(LoadMeshNode(nullptr, root_node, *scene, path.c_str()));
@@ -71,8 +74,14 @@ std::string ModuleMeshImporter::ImportMesh(std::string path)
 		prefab->SetName(App->file_system->GetFileNameWithoutExtension(path));
 		prefab->Save(data);
 
-		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
-		data.SaveAsBinary(library_path);
+		if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) 
+			App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
+
+		std::list<GameObject*> gos;
+		gos.push_back(prefab->GetRootGameObject());
+
+		App->scene->SavePrefab(gos, library_path, "jprefab", data);
+
 		App->resources->AddPrefab(prefab);
 
 		ret = library_path;

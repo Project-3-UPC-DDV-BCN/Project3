@@ -22,7 +22,7 @@ public:
 
 	void LookAt(const float3 &spot);
 	void OrbitAt(const float3 &spot);
-	void FocusOnObject(AABB& box);
+	void FocusOnObject(float3 obj_position, float3 look_at);
 	float* GetViewMatrix();
 	void SetOrbital(bool is_orbital);
 	bool IsOrbital() const;
@@ -52,4 +52,6 @@ public:
 	int key_down;
 	int key_left;
 	int key_right;
+
+	float speed;
 };

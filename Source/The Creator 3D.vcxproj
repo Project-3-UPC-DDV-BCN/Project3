@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseWDebug|Win32">
+      <Configuration>ReleaseWDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -30,6 +34,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWDebug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -37,6 +48,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWDebug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -50,6 +64,13 @@
     <TargetExt>.exe</TargetExt>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\**;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;</IncludePath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\**;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWDebug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetExt>.exe</TargetExt>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\Simón Stoyanov\Documents\Wwise 2017.2.1.6524\SDK\include;$(WWISESDK)\**;$(Wwise)\**;C:\Program Files (x86)\Audiokinetic\Wwise 2017.2.1.6524\SDK\include;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,6 +103,30 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWDebug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

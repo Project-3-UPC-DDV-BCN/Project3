@@ -7,6 +7,8 @@
 #include "ComponentCollider.h"
 #include "Nvidia/PhysX/Include/PxRigidDynamic.h"
 #include "Nvidia/PhysX/Include/PxShape.h"
+#include "ModuleRenderer3D.h"
+#include "DebugDraw.h"
 
 ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 {
@@ -22,11 +24,21 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	physx::PxTransform phys_transform(mat);
 	rigidbody->setGlobalPose(phys_transform);
 
+	transforms_go = false;
+
 	SetInitValues();
 }
 
 ComponentRigidBody::~ComponentRigidBody()
 {
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		if(shape)
+			RemoveShape(*shape);
+	}
+
 	if (App->physics)
 	{
 		App->physics->RemoveRigidBodyFromScene(rigidbody, nullptr);
@@ -232,8 +244,8 @@ float3 ComponentRigidBody::GetPosition() const
 
 void ComponentRigidBody::SetRotation(float3 new_rotation)
 {
-	math::Quat q = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
-	physx::PxQuat rotation(q.x, q.y, q.z, q.w);
+	Quat final_rot = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
+	physx::PxQuat rotation(final_rot.x, final_rot.y, final_rot.z, final_rot.w);
 	physx::PxTransform transform(rigidbody->getGlobalPose().p ,rotation);
 	rigidbody->setGlobalPose(transform);
 }
@@ -241,7 +253,8 @@ void ComponentRigidBody::SetRotation(float3 new_rotation)
 float3 ComponentRigidBody::GetRotation() const
 {
 	physx::PxTransform phys_rotation = rigidbody->getGlobalPose();
-	float3 rotation(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z);
+	Quat q(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z, phys_rotation.q.w);
+	float3 rotation = q.ToEulerXYZ() * RADTODEG;
 	return rotation;
 }
 
@@ -329,7 +342,7 @@ std::vector<physx::PxShape*> ComponentRigidBody::GetShapes() const
 
 void ComponentRigidBody::RemoveShape(physx::PxShape & shape) const
 {
-	if(rigidbody->getNbShapes() > 0)
+	if(rigidbody && rigidbody->getNbShapes() > 0)
 	{
 		rigidbody->detachShape(shape);
 	}
@@ -360,6 +373,8 @@ void ComponentRigidBody::SetTransform(float * transform)
 	physx::PxMat44 mat(transform);
 	physx::PxTransform phys_transform(mat);
 	rigidbody->setGlobalPose(phys_transform);
+	//float3 a = Quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w).ToEulerXYZ() * RADTODEG;
+	//CONSOLE_LOG("Set transform: %.3f,%.3f,%.3f", a.x, a.y, a.z);
 }
 
 void ComponentRigidBody::SetColliderScale(float3 scale)
@@ -476,6 +491,40 @@ bool ComponentRigidBody::IsCCDMode() const
 	return flag.isSet(physx::PxRigidBodyFlag::eENABLE_CCD);
 }
 
+void ComponentRigidBody::SetTransformsGo(bool transforms)
+{
+	transforms_go = transforms;
+	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+	transform->SetTransformedFromRB(transforms);
+}
+
+bool ComponentRigidBody::GetTransformsGo() const
+{
+	return transforms_go;
+}
+
+void ComponentRigidBody::EnableShapes()
+{
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	}
+}
+
+void ComponentRigidBody::DisableShapes()
+{
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+	}
+}
+
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
 {
 	rigidbody->release();
@@ -496,8 +545,8 @@ void ComponentRigidBody::Save(Data & data) const
 	data.AddFloat("MaxAngularVelocity", GetMaxAngularVelocity());
 	data.AddFloat("LinearDamping", GetLinearDamping());
 	data.AddFloat("AngularDamping", GetAngularDamping());
-	data.AddVector3("Position", GetPosition());
-	data.AddVector3("Rotation", GetRotation());
+	//data.AddVector3("Position", GetPosition());
+	//data.AddVector3("Rotation", GetRotation());
 	data.AddVector3("CenterMass", GetCenterOfMass());
 	data.AddVector3("InertiaTensor", GetInertiaTensor());
 	data.AddFloat("SleepThreshold", GetSleepThreshold());
@@ -510,6 +559,7 @@ void ComponentRigidBody::Save(Data & data) const
 	data.AddBool("AngularYLock", GetDynamicLocks(AngularY));
 	data.AddBool("AngularZLock", GetDynamicLocks(AngularZ));
 	data.AddBool("IsCCDMode", IsCCDMode());
+	data.AddBool("Transforms", transforms_go);
 	/*std::vector<physx::PxShape*> shapes = GetShapes();
 	data.AddInt("ShapesCount", shapes.size());
 	for (std::vector<physx::PxShape*>::iterator it = shapes.begin(), int i = 0; it != shapes.end(); it++, i++)
@@ -548,6 +598,7 @@ void ComponentRigidBody::Load(Data & data)
 	SetDynamicLocks(AngularY, data.GetBool("AngularYLock"));
 	SetDynamicLocks(AngularZ, data.GetBool("AngularZLock"));
 	SetCCDMode(data.GetBool("IsCCDMode"));
+	SetTransformsGo(data.GetBool("Transforms"));
 	/*int shapes_count = data.GetInt("ShapesCount");
 	for (int i = 0; i < shapes_count; i++)
 	{
@@ -583,6 +634,22 @@ void ComponentRigidBody::Load(Data & data)
 			break;
 		}
 	}*/
+}
+
+void ComponentRigidBody::DrawColliders()
+{
+	std::vector<physx::PxShape*> shapes = GetShapes();
+	for (std::vector<physx::PxShape*>::iterator it = shapes.begin(); it != shapes.end(); it++)
+	{
+		if (GetGameObject()->IsSelected())
+		{
+			(*it)->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
+		}
+		else
+		{
+			(*it)->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+		}
+	}
 }
 
 

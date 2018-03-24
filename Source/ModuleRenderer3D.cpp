@@ -34,6 +34,7 @@
 #include "ModuleMeshImporter.h"
 #include "ComponentRectTransform.h"
 #include "ModuleInput.h"
+#include "ComponentRigidBody.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -331,14 +332,10 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			if (rect_trans != nullptr)
 			{
 				if (!editor_camera)
-				{
-					// Mouse Input
-					if ((*it).GetLayer() >= highest_layer)
+				{					
+					if (rect_trans->GetInteractable() && rect_trans->GetGameObject()->IsActive() && (*it).CheckRay(segment, canvas->GetRenderMode()))
 					{
-						if (rect_trans->GetInteractable() && (*it).CheckRay(segment, canvas->GetRenderMode()))
-						{
-							top_element = &(*it);
-						}
+						top_element = &(*it);
 					}
 				}
 				// -----------

@@ -40,11 +40,22 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseWDebug|AnyCPU'">
+    <OutputPath>bin\ReleaseWDebug\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TheApplication.cs" />
+    <Compile Include="TheData.cs" />
+    <Compile Include="TheMeshCollider.cs" />
     <Compile Include="TheMeshRenderer.cs" />
     <Compile Include="TheScript.cs" />
     <Compile Include="TheGOAPAgent.cs" />

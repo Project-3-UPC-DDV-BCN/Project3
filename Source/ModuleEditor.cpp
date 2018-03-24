@@ -117,36 +117,33 @@ update_status ModuleEditor::Update(float deltaTime)
 				}
 				if (ImGui::MenuItem("Load Scene"))
 				{
-					char const * lFilterPatterns[2] = { "*.scene; *.json"};
+					char const * lFilterPatterns[2] = { "*.scene; *.jscene"};
 					const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
 					if (path != NULL) 
 						App->scene->LoadScene(path);
 					
 				}
-				if (ImGui::MenuItem("Save Scene (JSON)"))
+				if (ImGui::MenuItem("Load Scene into current"))
 				{
-					char const * lFilterPatterns[1] = { "*.json" };
+					char const * lFilterPatterns[2] = { "*.scene; *.jscene" };
+					const char* path = tinyfd_openFileDialog("Load Scene...", NULL, 1, lFilterPatterns, NULL, 0);
+					if (path != NULL)
+						App->scene->LoadSceneIntoCurrent(path);
+				}
+
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					char const * lFilterPatterns[1] = { "*.jscene" };
 					const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name).c_str(), 1, lFilterPatterns, NULL);
 					if (path != NULL)
 					{
 						std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
 						App->scene->scene_name = new_scene_name;
 						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
-						std::string final_path = App->file_system->ChangeFileExtension(path, "json");
-						App->scene->SaveScene(final_path, SceneFileType::SF_JSON);
-					}
-				}
-				if (ImGui::MenuItem("Save Scene (BINARY) -> (SAVE YOUR SCENES AS JSON NOW)"))
-				{
-					char const * lFilterPatterns[1] = { "*.scene" };
-					const char* path = tinyfd_saveFileDialog("Save Scene...", (App->scene->scene_name).c_str(), 1, lFilterPatterns, NULL);
-					if (path != NULL) 
-					{
-						std::string new_scene_name = App->file_system->GetFileNameWithoutExtension(path);
-						App->scene->scene_name = new_scene_name;
-						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
-						std::string final_path = App->file_system->ChangeFileExtension(path, "scene");
-						App->scene->SaveScene(final_path, SceneFileType::SF_BINARY);
+						std::string final_path_assets = App->file_system->ChangeFileExtension(path, "jscene");
+						std::string final_path_library = LIBRARY_SCENES_FOLDER + new_scene_name + "jscene";
+						App->scene->SaveScene(final_path_assets);
+						App->scene->SaveScene(final_path_library);
 					}
 				}
 				ImGui::Separator();
