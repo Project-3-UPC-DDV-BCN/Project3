@@ -130,6 +130,25 @@ void Mesh::CreateVerticesFromData()
 	}
 }
 
+void Mesh::FillVerticesList()
+{
+	if (vertices_data == nullptr)
+		return;
+
+	for (uint i = 0; i < num_vertices; ++i)
+	{
+		Vertex v;
+		v.SetPosition(&vertices_data[(i * 19) + 0]);
+		v.SetUV(&vertices_data[(i * 19) + 3]);
+		v.SetColor(&vertices_data[(i * 19) + 6]);
+		v.SetNormal(&vertices_data[(i * 19) + 10]);
+		v.SetTangent(&vertices_data[(i * 19) + 13]);
+		v.SetTangent(&vertices_data[(i * 19) + 16]);
+
+		vertices_list.push_back(v);
+	}
+}
+
 void Mesh::InitializeMesh()
 {
 	id_vao = App->renderer3D->GenVertexArrayObject();

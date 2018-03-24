@@ -680,6 +680,9 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
@@ -708,6 +711,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			UseShaderProgram(program);
 			material->LoadToMemory();
 
+			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
@@ -738,6 +742,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			UseShaderProgram(program);
 			material->LoadToMemory();
 
+			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
@@ -759,6 +764,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			UseShaderProgram(program);
 			interior_material->LoadToMemory();
 
+			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 			SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
@@ -1314,6 +1320,20 @@ void ModuleRenderer3D::SetUniformFloat(uint program, const char * name, float da
 	GLint modelLoc = glGetUniformLocation(program, name);
 	if (modelLoc != -1)
 		glUniform1f(modelLoc, data);
+	GLenum error = glGetError();
+
+	//Check for error
+	if (error != GL_NO_ERROR)
+	{
+		CONSOLE_ERROR("Error Setting uniform float %s: %s\n", name, gluErrorString(error));
+	}
+}
+
+void ModuleRenderer3D::SetUniformVector2(uint program, const char * name, float2 data)
+{
+	GLint modelLoc = glGetUniformLocation(program, name);
+	if (modelLoc != -1)
+		glUniform2f(modelLoc, data.x, data.y);
 	GLenum error = glGetError();
 
 	//Check for error

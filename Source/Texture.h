@@ -5,6 +5,7 @@
 
 class Data;
 
+
 class Texture : public Resource
 {
 public:
@@ -22,7 +23,7 @@ public:
 		IL_DXTC_FORMAT, IL_DXT1, IL_DXT2, IL_DXT3, IL_DXT4, IL_DXT5, IL_DXT_NO_COMP, 
 		IL_KEEP_DXTC_DATA, IL_DXTC_DATA_FORMAT, IL_3DC, IL_RXGB, IL_ATI1N, IL_DXT1A
 	};
-
+	
 	Texture();
 	virtual ~Texture();
 
@@ -39,6 +40,7 @@ public:
 	byte* GetImageData() const;
 	TextureType GetTextureType() const;
 	std::string GetTypeString() const;
+	std::string Texture::GetModeString() const;
 	void SetFormat(TextureFormat format);
 	TextureFormat GetFormat() const;
 	void SetCompression(int compression_format);
@@ -46,7 +48,6 @@ public:
 	std::string CompressionToString() const;
 
 	std::string GetFormatString() const;
-
 	void Save(Data& data) const;
 	bool Load(Data& data);
 	void CreateMeta() const;

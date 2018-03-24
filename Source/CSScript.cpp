@@ -40,7 +40,7 @@ CSScript::CSScript()
 
 	init = nullptr;
 	start = nullptr;
-	update = nullptr; 
+	update = nullptr;
 	on_collision_enter = nullptr;
 	on_collision_stay = nullptr;
 	on_collision_exit = nullptr;
@@ -65,7 +65,7 @@ CSScript::~CSScript()
 {
 	/*for (MonoComponent* mono_comp : created_components)
 	{
-		RELEASE(mono_comp);
+	RELEASE(mono_comp);
 	}*/
 }
 
@@ -83,14 +83,14 @@ bool CSScript::LoadScript(std::string script_path)
 	if (mono_object)
 	{
 		mono_runtime_object_init(mono_object);
-		
+
 		init = GetFunction("Init", 0);
 		start = GetFunction("Start", 0);
 		update = GetFunction("Update", 0);
 		on_collision_enter = GetFunction("OnCollisionEnter", 1);
 		on_collision_stay = GetFunction("OnCollisionStay", 1);
 		on_collision_exit = GetFunction("OnCollisionExit", 1);
- 		on_trigger_enter = GetFunction("OnTriggerEnter", 1);
+		on_trigger_enter = GetFunction("OnTriggerEnter", 1);
 		on_trigger_stay = GetFunction("OnTriggerStay", 1);
 		on_trigger_exit = GetFunction("OnTriggerExit", 1);
 		on_enable = GetFunction("OnEnable", 0);
@@ -100,7 +100,7 @@ bool CSScript::LoadScript(std::string script_path)
 
 		ret = true;
 	}
-	
+
 	return ret;
 }
 
@@ -474,8 +474,8 @@ double CSScript::GetDoubleProperty(const char * propertyName)
 void CSScript::SetFloatProperty(const char * propertyName, float value)
 {
 	MonoClassField* field = mono_class_get_field_from_name(mono_class, propertyName);
-	
-	if(field)
+
+	if (field)
 	{
 		void* params = &value;
 		mono_field_set_value(mono_object, field, params);
@@ -601,7 +601,7 @@ std::string CSScript::GetStringProperty(const char * propertyName)
 	{
 		return mono_string_to_utf8(value);
 	}
-	
+
 	return "";
 }
 
@@ -952,7 +952,7 @@ void CSScript::ConvertMonoType(MonoType * type, ScriptField& script_field)
 		script_field.propertyType = ScriptField::String;
 		break;
 	case MONO_TYPE_CLASS:
-		if(name == "TheEngine.TheGameObject") script_field.propertyType = ScriptField::GameObject;
+		if (name == "TheEngine.TheGameObject") script_field.propertyType = ScriptField::GameObject;
 		else if (name == "TheEngine.Texture") script_field.propertyType = ScriptField::Texture;
 		else if (name == "TheEngine.Animation") script_field.propertyType = ScriptField::Animation;
 		else if (name == "TheEngine.Audio") script_field.propertyType = ScriptField::Audio;

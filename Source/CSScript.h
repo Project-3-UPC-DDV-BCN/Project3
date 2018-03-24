@@ -245,7 +245,6 @@ public:
 //	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 //	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 //	void CallFunction(MonoObject* object, MonoString* function_name);
-//>>>>>>> origin/Vertical-Slice-2
 
 	void AddFieldsToMonoObjectList();
 

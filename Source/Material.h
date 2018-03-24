@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "Color.h"
 #include <vector>
+#include "MathGeoLib\MathGeoLib.h"
 
 class Texture;
 class ShaderProgram;
@@ -109,8 +110,8 @@ private:
 	Texture* ambient_texture = nullptr;
 	Texture* emissive_texture = nullptr;
 	Texture* heightmap_texture = nullptr;
-	Texture* normalmap_texture = nullptr;
-	Texture* shininess_texture = nullptr;
+	Texture* normalmap_texture = nullptr;	
+	Texture* shininess_texture = nullptr;	
 	Texture* opacity_texture = nullptr;
 	Texture* displacement_texture = nullptr;
 	Texture* lightmap_texture = nullptr;
@@ -145,5 +146,22 @@ private:
 	float bump_scaling;
 
 	ShaderProgram* shader_program = nullptr;
+
+	public:
+	//Objects with this material will receive light ot not
+		float2 diffuse_UV;
+		float2 specular_UV; 
+		float2 ambient_UV; 
+		float2 emissive_UV; 
+		float2 heightmap_UV; 
+		float2 normalmap_UV;
+		float2 shininess_UV; 
+		float2 opacity_UV; 
+		float2 displacement_UV; 
+		float2 lightmap_UV;
+		float2 reflection_UV;
+
+		bool own_diffuse_uvs = false;
+		bool own_normal_uvs = false;
 };
 
