@@ -283,7 +283,9 @@ void ComponentTransform::LookAt(float3 dir, float3 up)
 	float3 x(-z.Normalized().Cross(up));
 	float3 y(x.Normalized().Cross(-z.Normalized()));
 	float3x3 mat(x, y, z);
-	Quat q = mat.ToQuat();
+	//mat.ToQuat crashes and need to do this workaround...
+	float3 eulers = mat.ToEulerXYZ();
+	Quat q = Quat::FromEulerXYZ(eulers.x, eulers.y, eulers.z);
 	SetRotation(q.ToEulerXYZ() * RADTODEG);
 	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
 }

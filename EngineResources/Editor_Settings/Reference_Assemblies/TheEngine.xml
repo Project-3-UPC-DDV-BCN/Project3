@@ -10,5 +10,200 @@
             </summary>
             <param name="gameobject_name"></param>
         </member>
+        <member name="M:TheEngine.TheVector3.#ctor">
+            <summary>
+              <para>Creates a new vector (0,0,0).</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+              <para>Creates a new vector with given x, y, z components.</para>
+            </summary>
+            <param name="x">X Component</param>
+            <param name="y">Y Component</param>
+            <param name="z">Z Component</param>
+        </member>
+        <member name="F:TheEngine.TheVector3.x">
+            <summary>
+              <para>X component</para>
+            </summary>
+        </member>
+        <member name="F:TheEngine.TheVector3.y">
+            <summary>
+              <para>Y component</para>
+            </summary>
+        </member>
+        <member name="F:TheEngine.TheVector3.z">
+            <summary>
+              <para>Z component</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Zero">
+            <summary>
+              <para>Returns vector (0,0,0)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Forward">
+            <summary>
+              <para>Returns forward vector (0,0,1)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.BackWard">
+            <summary>
+              <para>Returns backward vector (0,0,-1)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Up">
+            <summary>
+              <para>Returns up vector (0,1,0)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Down">
+            <summary>
+              <para>Returns down vector (0,-1,0)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Left">
+            <summary>
+              <para>Returns down vector (-1,0,0)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Right">
+            <summary>
+              <para>Returns down vector (1,0,0)</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.Length">
+            <summary>
+              <para>Returns the length of the vector</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheVector3.LengthSquared">
+            <summary>
+              <para>Returns the squared length of the vector</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.Magnitude(TheEngine.TheVector3)">
+            <summary>
+              <para>Returns the magnitude of the given vector</para>
+            </summary>
+            <param name="vector">The vector to return its magnitude</param>
+        </member>
+        <member name="P:TheEngine.TheVector3.Normalized">
+            <summary>
+              <para>Returns the normalized vector</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.Normalize(TheEngine.TheVector3)">
+            <summary>
+              <para>Returns the normalized vector of the given vector</para>
+            </summary>
+            <param name="vector">The vector to return its normalized vector</param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Lerp(TheEngine.TheVector3,TheEngine.TheVector3,System.Single)">
+            <summary>
+              <para>Linearly interpolates between two vectors</para>
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <param name="percent"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Slerp(TheEngine.TheVector3,TheEngine.TheVector3,System.Single)">
+            <summary>
+              <para>Spherically interpolates between two vectors</para>
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <param name="percent"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.NLerp(TheEngine.TheVector3,TheEngine.TheVector3,System.Single)">
+            <summary>
+              <para>Normalized Lerp</para>
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <param name="percent"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.DotProduct(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Returns the Dot Product of given vectors</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.Project(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Projects a vector onto another vector.</para>
+            </summary>
+            <param name="vector"></param>
+            <param name="normal"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.AngleBetween(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Returns the angle in degrees between a and b.</para>
+            </summary>
+            <param name="a">The vector from which the angular difference is measured.</param>
+            <param name="b">The vector to which the angular difference is measured.</param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Distance(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Returns the distance between a and b.</para>
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.MoveTowards(TheEngine.TheVector3,TheEngine.TheVector3,System.Single)">
+            <summary>
+              <para>Moves a point current in a straight line towards a target point.</para>
+            </summary>
+            <param name="position"></param>
+            <param name="target"></param>
+            <param name="step"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Set(System.Single,System.Single,System.Single)">
+            <summary>
+              <para>Set x, y and z components of an existing Vector3.</para>
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="z"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.CrossProduct(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Return Cross Product of two vectors.</para>
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Reflect(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Reflects a vector off the plane defined by a normal.</para>
+            </summary>
+            <param name="direction"></param>
+            <param name="normal"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Scale(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Multiplies two vectors component-wise.</para>
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.Scale(TheEngine.TheVector3)">
+            <summary>
+              <para>Multiplies every component of this vector by the same component of scale.</para>
+            </summary>
+            <param name="scale"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.RotationToTarget(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Returns Rotation from one vector to another.</para>
+            </summary>
+            <param name="from"></param>
+            /// <param name="to"></param>
+        </member>
+        <member name="M:TheEngine.TheVector3.ToQuaternion">
+            <summary>
+              <para>Transforms the vector to Quaternion.</para>
+            </summary>
+        </member>
     </members>
 </doc>
