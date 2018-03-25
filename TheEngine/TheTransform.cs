@@ -99,7 +99,7 @@ namespace TheEngine
                 return GetRight();
             }
         }
-
+     
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void RotateAroundAxis(TheVector3 axis, float angle);
 
@@ -114,6 +114,9 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void SetRotation(TheVector3 value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetIncrementalRotation(TheVector3 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetScale(bool is_global);

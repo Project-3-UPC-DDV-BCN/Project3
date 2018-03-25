@@ -64,6 +64,7 @@ public:
 	MonoObject* GetRight(MonoObject* object);
 	MonoObject* GetUp(MonoObject* object);
 	void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
+	void SetIncrementalRotation(MonoObject * object, MonoObject * vector3);
 
 	//RECTTRANSFORM
 	void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -241,6 +242,8 @@ private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
 	MonoClass* DumpClassInfo(MonoImage* image, std::string& class_name, std::string& name_space);
 
+	void DumpEngineDLLInfo(MonoAssembly* assembly, MonoImage* image);
+
 	void RegisterAPI();
 
 	//GAMEOBJECT
@@ -283,6 +286,7 @@ private:
 	static MonoObject* GetRight(MonoObject* object);
 	static MonoObject* GetUp(MonoObject* object);
 	static void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
+	static void SetIncrementalRotation(MonoObject * object, MonoObject * vector3);
 
 	//RECTTRANSFORM
 	static void SetRectPosition(MonoObject * object, MonoObject * vector3);

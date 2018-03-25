@@ -2762,7 +2762,8 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		};
 
 		static const char* const csharpClasses[] = {
-			"Math","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","Time", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText", "TheRadar"
+			"TheMath","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","TheTime", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText", "TheRadar", "TheApplication", "TheData", "TheGOAPAgent"
+
 		};
 		for (auto& k : csharpClasses)
 			langDef.mClasses.insert(k);

@@ -6,7 +6,8 @@ public class test2 {
 	public TheGameObject target;
 	TheTransform self_t;
 	TheTransform target_t;
-
+	
+	//Start method
 	void Start () {
 		self_t = TheGameObject.Self.GetComponent<TheTransform>();
 		target_t = target.GetComponent<TheTransform>();

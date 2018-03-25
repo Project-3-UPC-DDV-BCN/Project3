@@ -88,6 +88,7 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 	{
 		mono_engine_image = mono_assembly_get_image(engine_assembly);
 		RegisterAPI();
+		DumpEngineDLLInfo(engine_assembly, mono_engine_image);
 	}
 	else
 	{
@@ -272,6 +273,36 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 	}
 
 	return mono_class;
+}
+
+void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage* image)
+{
+	
+	//const MonoTableInfo* table_info = mono_image_get_table_info(image, MONO_TABLE_CLASSLAYOUT);
+
+	//int rows2 = mono_table_info_get_rows(table_info);
+
+	///*for (int i = 1; i < rows2; i++) {
+	//	dump
+	//	uint32_t cols[MONO_EXP_TYPE_SIZE];
+	//	mono_metadata_decode_row(table_info, i, cols, MONO_EXP_TYPE_SIZE);
+	//	const char* name = mono_metadata_string_heap(image, cols[MONO_EXP_TYPE_NAME]);
+	//	int s = 0;
+	//}*/
+
+	//int i;
+	//CONSOLE_LOG("ClassLayout Table (1..%d)\n", rows2);
+
+	//for (i = 0; i < rows2; i++) {
+	//	uint32_t cols[MONO_EXP_TYPE_SIZE];
+
+	//	mono_metadata_decode_row(table_info, i, cols, MONO_CLASS_LAYOUT_SIZE);
+
+	//	CONSOLE_LOG("%d: PackingSize=%d  ClassSize=%d  Parent=%s\n",
+	//		i + 1, cols[MONO_CLASS_LAYOUT_PACKING_SIZE],
+	//		cols[MONO_CLASS_LAYOUT_CLASS_SIZE],
+	//		mono_metadata_string_heap(image, cols[MONO_CLASS_LAYOUT_PARENT]));
+	//}
 }
 
 void ModuleScriptImporter::RegisterAPI()
@@ -768,6 +799,11 @@ MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
 void ModuleScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
 {
 	ns_importer->RotateAroundAxis(object, axis, angle);
+}
+
+void ModuleScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * vector3)
+{
+	ns_importer->SetIncrementalRotation(object, vector3);
 }
 
 void ModuleScriptImporter::StartFactory(MonoObject * object)
@@ -2512,6 +2548,28 @@ void NSScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, 
 
 		ComponentTransform* transform = (ComponentTransform*)comp;
 		transform->RotateAroundAxis(rot_axis, angle);
+	}
+}
+
+void NSScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * vector3)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_object_get_class(vector3);
+		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+		float3 new_rot;
+
+		if (x_field) mono_field_get_value(vector3, x_field, &new_rot.x);
+		if (y_field) mono_field_get_value(vector3, y_field, &new_rot.y);
+		if (z_field) mono_field_get_value(vector3, z_field, &new_rot.z);
+
+		ComponentTransform* transform = (ComponentTransform*)comp;
+		transform->SetIncrementalRotation(new_rot);
 	}
 }
 

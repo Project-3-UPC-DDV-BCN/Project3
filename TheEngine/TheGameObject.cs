@@ -10,6 +10,10 @@ namespace TheEngine
             CreateNewGameObject(this);
         }
 
+        /// <summary>
+        ///   <para>Transforms direction from local space to world space.</para>
+        /// </summary>
+        /// <param name="gameobject_name"></param>
         public string name
         {
             get
