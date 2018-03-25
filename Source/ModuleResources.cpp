@@ -1786,7 +1786,7 @@ void ModuleResources::CreateDefaultShaders()
 		"{ \n"
 		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
 		"	FragPos = vec3(Model * vec4(position, 1.0));"
-		"	Normal = normals;\n"
+		"	Normal = mat3(transpose(inverse(Model))) * normals;\n"
 		"	mat3 normalMatrix = transpose(inverse(mat3(Model)));\n"
 		"	vec3 T = normalize(normalMatrix * tangents);\n"
 		"	vec3 N = normalize(normalMatrix * normals);\n"
