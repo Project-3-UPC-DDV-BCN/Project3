@@ -11,6 +11,18 @@ class CSScript;
 class ComponentRectTransform;
 class GameObject;
 
+struct DLLMethodInfo
+{
+
+};
+
+struct DLLClassInfo
+{
+	std::vector<std::string> properties;
+	std::vector<std::string> classes;
+	
+};
+
 class NSScriptImporter
 {
 public:
@@ -237,6 +249,8 @@ public:
 	CSScript* GetCurrentSctipt() const;*/
 
 	static NSScriptImporter* ns_importer;
+
+	std::vector<std::string> classes_names;
 
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);

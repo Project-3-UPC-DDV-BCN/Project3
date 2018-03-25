@@ -7,6 +7,7 @@
 #include "../../Application.h"
 #include "../../ModuleTime.h"
 #include "TextEditor.h"
+#include "../../ModuleScriptImporter.h"
 
 static const int cTextStart = 7;
 std::map<std::string, std::string> TextEditor::variables;
@@ -2761,10 +2762,12 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 			"readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","using static","virtual","void","volatile","while"
 		};
 
-		static const char* const csharpClasses[] = {
+		/*static const char* const csharpClasses[] = {
 			"TheMath","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","TheTime", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText", "TheRadar", "TheApplication", "TheData", "TheGOAPAgent"
 
-		};
+		};*/
+
+		std::vector<std::string> csharpClasses = App->script_importer->classes_names;
 		for (auto& k : csharpClasses)
 			langDef.mClasses.insert(k);
 

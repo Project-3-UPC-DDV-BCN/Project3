@@ -278,31 +278,16 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage* image)
 {
 	
-	//const MonoTableInfo* table_info = mono_image_get_table_info(image, MONO_TABLE_CLASSLAYOUT);
+	const MonoTableInfo* table_info = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 
-	//int rows2 = mono_table_info_get_rows(table_info);
+	int rows = mono_table_info_get_rows(table_info);
 
-	///*for (int i = 1; i < rows2; i++) {
-	//	dump
-	//	uint32_t cols[MONO_EXP_TYPE_SIZE];
-	//	mono_metadata_decode_row(table_info, i, cols, MONO_EXP_TYPE_SIZE);
-	//	const char* name = mono_metadata_string_heap(image, cols[MONO_EXP_TYPE_NAME]);
-	//	int s = 0;
-	//}*/
-
-	//int i;
-	//CONSOLE_LOG("ClassLayout Table (1..%d)\n", rows2);
-
-	//for (i = 0; i < rows2; i++) {
-	//	uint32_t cols[MONO_EXP_TYPE_SIZE];
-
-	//	mono_metadata_decode_row(table_info, i, cols, MONO_CLASS_LAYOUT_SIZE);
-
-	//	CONSOLE_LOG("%d: PackingSize=%d  ClassSize=%d  Parent=%s\n",
-	//		i + 1, cols[MONO_CLASS_LAYOUT_PACKING_SIZE],
-	//		cols[MONO_CLASS_LAYOUT_CLASS_SIZE],
-	//		mono_metadata_string_heap(image, cols[MONO_CLASS_LAYOUT_PARENT]));
-	//}
+	for (int i = 1; i < rows; i++) {
+		uint32_t cols[MONO_TYPEDEF_SIZE];
+		mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
+		const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+		classes_names.push_back(name);
+	}
 }
 
 void ModuleScriptImporter::RegisterAPI()

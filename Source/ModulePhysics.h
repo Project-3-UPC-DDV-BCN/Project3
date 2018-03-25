@@ -76,7 +76,7 @@ private:
 	physx::PxDefaultErrorCallback gDefaultErrorCallback;
 	physx::PxDefaultAllocator gDefaultAllocatorCallback;
 
-	std::map<physx::PxTriggerPair*, bool> trigger_stay_pairs;
+	std::map<physx::PxRigidActor*, physx::PxRigidActor*> trigger_stay_pairs;
 
 	std::map<physx::PxRigidActor*, GameObject*> physics_objects;
 	std::map<physx::PxRigidActor*, GameObject*> non_blast_objects;

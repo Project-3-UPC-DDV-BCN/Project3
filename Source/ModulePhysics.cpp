@@ -154,8 +154,29 @@ update_status ModulePhysics::Update(float dt)
 				}
 			}
 		}
+
+		for (std::map<physx::PxRigidActor*, physx::PxRigidActor*>::iterator it = trigger_stay_pairs.begin(); it != trigger_stay_pairs.end(); it++)
+		{
+			//Call OnTriggerStay in script module
+			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+			{
+				if (it->second == it2->first)
+				{
+					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it3 = physics_objects.begin(); it3 != physics_objects.end(); it3++)
+					{
+						if (it->first == it3->first)
+						{
+							it2->second->OnTriggerStay(it3->second);
+							it3->second->OnTriggerStay(it2->second);
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
 	}
-	
+
 	DrawColliders();
 	
 	return UPDATE_CONTINUE;
@@ -565,7 +586,7 @@ void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 					break;
 				}
 			}
-			trigger_stay_pairs[&pairs[i]] = true;
+			trigger_stay_pairs.insert(std::pair<physx::PxRigidActor*, physx::PxRigidActor*>(pairs[i].triggerActor, pairs[i].otherActor));
 		}
 		else if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 		{ 
@@ -586,27 +607,7 @@ void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 					break;
 				}
 			}
-			trigger_stay_pairs.erase(&pairs[i]);
-		}
-		else if (trigger_stay_pairs[&pairs[i]] == true)
-		{
-			//Call OnTriggerStay in script module
-			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it = physics_objects.begin(); it != physics_objects.end(); it++)
-			{
-				if (pairs[i].otherActor == it->first)
-				{
-					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
-					{
-						if (pairs[i].triggerActor == it2->first)
-						{
-							it2->second->OnTriggerStay(it->second);
-							it->second->OnTriggerStay(it2->second);
-							break;
-						}
-					}
-					break;
-				}
-			}
+			trigger_stay_pairs.erase(pairs[i].triggerActor);
 		}
 	}
 }
