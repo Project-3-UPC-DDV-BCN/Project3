@@ -8,12 +8,14 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "ModuleResources.h"
+#include "PropertiesWindow.h"
 #include "Component.h"
 #include "ComponentTransform.h"
 #include "ComponentRectTransform.h"
 #include "ComponentText.h"
 #include "ComponentProgressBar.h"
 #include "ComponentRadar.h"
+#include "ModuleEditor.h"
 #include "ComponentFactory.h"
 #include "ModuleTime.h"
 #include "ModuleInput.h"
@@ -312,11 +314,15 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::GetChild(string)", (const void*)GetGameObjectChildString);
 	mono_add_internal_call("TheEngine.TheGameObject::GetChildCount", (const void*)GetGameObjectChildCount);
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
+	mono_add_internal_call("TheEngine.TheGameObject::DestroyComponent", (const void*)DestroyComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetSceneGameObjects", (const void*)GetSceneGameObjects);
 	mono_add_internal_call("TheEngine.TheGameObject::GetObjectsInFrustum", (const void*)GetObjectsInFrustum);
 	mono_add_internal_call("TheEngine.TheGameObject::GetAllChilds", (const void*)GetAllChilds);
+
+	//COMPONENT
+	mono_add_internal_call("TheEngine.TheComponent::SetComponentActive", (const void*)SetComponentActive);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -587,6 +593,11 @@ MonoArray * ModuleScriptImporter::GetAllChilds(MonoObject * object)
 	return ns_importer->GetAllChilds(object);
 }
 
+void ModuleScriptImporter::SetComponentActive(MonoObject * object, bool active)
+{
+	ns_importer->SetComponentActive(object, active);
+}
+
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
 {
 	return ns_importer->AddComponent(object, type);
@@ -595,6 +606,11 @@ MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflecti
 MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
 	return ns_importer->GetComponent(object, type, index);
+}
+
+void ModuleScriptImporter::DestroyComponent(MonoObject * object, MonoObject * cmp)
+{
+	ns_importer->DestroyComponent(object, cmp);
 }
 
 void ModuleScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
@@ -1778,6 +1794,12 @@ MonoArray * NSScriptImporter::GetAllChilds(MonoObject * object)
 	return nullptr;
 }
 
+void NSScriptImporter::SetComponentActive(MonoObject * object, bool active)
+{
+	Component* cmp = GetComponentFromMonoObject(object); 
+	cmp->SetActive(active); 
+}
+
 MonoObject* NSScriptImporter::AddComponent(MonoObject * object, MonoReflectionType * type)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
@@ -1883,6 +1905,10 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		{
 			comp_name = "TheRigidBody";
 		}
+		else if (name == "TheEngine.TheMeshCollider")
+		{
+			comp_name = "TheMeshCollider";
+		}
 		else if (name == "TheEngine.TheGOAPAgent")
 		{
 			comp_name = "TheGOAPAgent";
@@ -1971,6 +1997,17 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 	}
 
 	return nullptr;
+}
+
+void NSScriptImporter::DestroyComponent(MonoObject* object, MonoObject* cmp)
+{
+	Component* comp = GetComponentFromMonoObject(cmp);
+	GameObject* go = GetGameObjectFromMonoObject(object);
+
+	if (comp != nullptr && go != nullptr)
+	{
+		App->editor->properties_window->components_to_destroy[go] = comp;
+	}
 }
 
 void NSScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
@@ -4204,6 +4241,10 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	else if (component_type == "TheRigidBody")
 	{
 		type = Component::CompRigidBody;
+	}
+	else if (component_type == "TheMeshCollider")
+	{
+		type = Component::CompMeshCollider;
 	}
 	else if (component_type == "TheGOAPAgent")
 	{

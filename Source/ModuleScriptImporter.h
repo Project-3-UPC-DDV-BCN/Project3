@@ -61,8 +61,10 @@ public:
 	MonoArray* GetAllChilds(MonoObject* object);
 
 	//COMPONENT
+	void SetComponentActive(MonoObject* object, bool active); 
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+	void DestroyComponent(MonoObject* object, MonoObject* cmp);
 
 	//TRANSFORM
 	void SetPosition(MonoObject * object, MonoObject * vector3);
@@ -291,8 +293,10 @@ private:
 	static MonoArray* GetAllChilds(MonoObject* object);
 
 	//COMPONENT
+	static void SetComponentActive(MonoObject* object, bool active); 
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+	static void DestroyComponent(MonoObject * object, MonoObject* cmp);
 
 	//TRANSFORM
 	static void SetPosition(MonoObject * object, MonoObject * vector);

@@ -131,6 +131,9 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheComponent GetComponent(Type type, int index);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void DestroyComponent(TheComponent to_del);
+
         public T GetComponent<T>(int index = 0) where T : TheComponent
         {
             return GetComponent(typeof(T), index) as T;

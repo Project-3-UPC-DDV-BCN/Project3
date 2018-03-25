@@ -63,6 +63,8 @@ public:
 	void DrawLightPanel(ComponentLight* light);
 	void DrawGOAPAgent(ComponentGOAPAgent* goap_agent);
 
+	std::map<GameObject*, Component*> components_to_destroy;
+
 private:
 	int scripts_count;
 	int factories_count;
@@ -80,6 +82,6 @@ private:
 	float add_goal_inc_time = 0;
 
 	GOAPGoal* goal_to_add_condition = nullptr;
-	std::map<GameObject*, Component*> components_to_destroy;
+	
 };
 

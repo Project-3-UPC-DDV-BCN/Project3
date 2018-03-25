@@ -18,7 +18,7 @@ namespace TheEngine
             }
         }
 
-        public bool Transform_go
+        public bool TransformGO
         {
             get
             {
