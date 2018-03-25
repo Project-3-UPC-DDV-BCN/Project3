@@ -525,6 +525,24 @@ void ComponentRigidBody::DisableShapes()
 	}
 }
 
+void ComponentRigidBody::DisableShapeByIndex(int index)
+{
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	int count = 0; 
+	for (physx::PxShape* shape : shapes)
+	{
+		if (count == index)
+		{
+			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+			shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+			break; 
+		}
+
+		count++; 
+	}
+}
+
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
 {
 	rigidbody->release();

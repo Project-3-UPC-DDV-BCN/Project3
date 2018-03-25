@@ -173,6 +173,12 @@ public:
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void DisableCollider(MonoObject * object, int index);
+	void DisableAllColliders(MonoObject * object);
+	void SetKinematic(MonoObject * object, bool kinematic);
+	void SetTransformGO(MonoObject * object, bool transform_go);
+	bool IsKinematic(MonoObject * object);
+	bool IsTransformGO(MonoObject * object);
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
 
@@ -396,6 +402,12 @@ private:
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	static void DisableCollider(MonoObject * object, int index);
+	static void DisableAllColliders(MonoObject * object);
+	static bool IsKinematic(MonoObject * object);
+	static void SetKinematic(MonoObject * object, bool kinematic);
+	static void SetTransformGO(MonoObject * object, bool transform_go);
+	static bool IsTransformGO(MonoObject * object);
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
 

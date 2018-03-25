@@ -76,6 +76,7 @@ public:
 
 	void EnableShapes();
 	void DisableShapes();
+	void DisableShapeByIndex(int index); 
 
 	void SetNewRigidBody(physx::PxRigidDynamic* new_rigid);
 
