@@ -2,8 +2,8 @@
     "Scene_Name": "AiTest",
     "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "326595211",
-        "Name": "Audio(9)",
+        "UUID": "1506401153",
+        "Name": "Audio(11)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -42,8 +42,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "328330595",
-        "Name": "New GameObject(24)",
+        "UUID": "495804474",
+        "Name": "New GameObject(28)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -82,8 +82,8 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "888415827",
-        "Name": "Main Camera(9)",
+        "UUID": "1898626123",
+        "Name": "Main Camera(11)",
         "Tag": "Main Camera",
         "Layer": "Default",
         "Active": "1",
@@ -137,8 +137,8 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "574290673",
-        "Name": "Directional Light(9)",
+        "UUID": "188385592",
+        "Name": "Directional Light(11)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -188,8 +188,8 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "840405087",
-        "Name": "Target",
+        "UUID": "910668403",
+        "Name": "A-Wing_bin(11)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -198,63 +198,11 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1734284225",
-                "position": {
-                    "value_X": "-67.680298",
-                    "value_Y": "-28.355865",
-                    "value_Z": "100.447990"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "948093081",
-                "Mesh": {
-                    "mesh_name": "A_Wing"
-                },
-                "Material": {
-                    "Name": "default_mat"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_5": {
-        "UUID": "1650599512",
-        "Name": "AI_base_Starship",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1610185217",
+                "UUID": "50282275",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_Z": "-9.500000"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -271,12 +219,12 @@
             "Component_1": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "553509989",
+                "UUID": "1757253085",
                 "Script": {
                     "library_path": ".\\Project\\Library\\Scripts\\AI_Starship_Movement.dll",
                     "assets_path": "",
                     "script_name": "Ai_Starship_Movement",
-                    "UUID": "1472382401",
+                    "UUID": "1721144842",
                     "int_fields_count": "2",
                     "double_fields_count": "0",
                     "float_fields_count": "18",
@@ -308,7 +256,7 @@
                         },
                         "field_2": {
                             "field_name": "break_range",
-                            "field_value": "20.000000"
+                            "field_value": "5.000000"
                         },
                         "field_3": {
                             "field_name": "capAngle",
@@ -332,7 +280,7 @@
                         },
                         "field_8": {
                             "field_name": "min_target_range",
-                            "field_value": "50.000000"
+                            "field_value": "20.000000"
                         },
                         "field_9": {
                             "field_name": "pitch_rotate_speed",
@@ -340,7 +288,7 @@
                         },
                         "field_10": {
                             "field_name": "range",
-                            "field_value": "40.000000"
+                            "field_value": "10.000000"
                         },
                         "field_11": {
                             "field_name": "repulsion_spd",
@@ -385,7 +333,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "target",
-                            "field_value": "840405087"
+                            "field_value": "1485174882"
                         }
                     },
                     "vec2_fields": {},
@@ -398,9 +346,62 @@
         "IsRoot": "1",
         "IsStatic": "0"
     },
+    "GameObject_5": {
+        "UUID": "1485174882",
+        "Name": "New GameObject(29)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "385025929",
+                "position": {
+                    "value_X": "-46.390877",
+                    "value_Y": "12.262531",
+                    "value_Z": "34.072468"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1027941052",
+                "Mesh": {
+                    "mesh_name": "A_Wing"
+                },
+                "Material": {
+                    "Name": "default_mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
     "GameObject_6": {
-        "UUID": "243706688",
-        "Name": "A_Wing(9)",
+        "UUID": "170340319",
+        "Name": "A_Wing(11)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -443,10 +444,11 @@
                 "Mat_Indices_Number": "0",
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "0"
             }
         },
-        "ParentID": "1650599512",
+        "ParentID": "910668403",
         "IsRoot": "0",
         "IsStatic": "0"
     }

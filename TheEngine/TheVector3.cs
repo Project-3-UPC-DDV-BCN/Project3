@@ -5,6 +5,9 @@ namespace TheEngine
 {
     public class TheVector3
     {
+        /// <summary>
+        ///   <para>Creates a new vector (0,0,0).</para>
+        /// </summary>
         public TheVector3()
         {
             x = 0.0f;
@@ -12,6 +15,12 @@ namespace TheEngine
             z = 0.0f;
         }
 
+        /// <summary>
+        ///   <para>Creates a new vector with given x, y, z components.</para>
+        /// </summary>
+        /// <param name="x">X Component</param>
+        /// <param name="y">Y Component</param>
+        /// <param name="z">Z Component</param>
         public TheVector3(float x, float y, float z)
         {
             this.x = x;
@@ -19,8 +28,19 @@ namespace TheEngine
             this.z = z;
         }
 
+        /// <summary>
+        ///   <para>X component</para>
+        /// </summary>
         public float x;
+
+        /// <summary>
+        ///   <para>Y component</para>
+        /// </summary>
         public float y;
+
+        /// <summary>
+        ///   <para>Z component</para>
+        /// </summary>
         public float z;
 
         private readonly static TheVector3 forward = new TheVector3(0, 0, 1);
@@ -30,6 +50,9 @@ namespace TheEngine
         private readonly static TheVector3 left = new TheVector3(-1, 0, 0);
         private readonly static TheVector3 right = new TheVector3(1, 0, 0);
 
+        /// <summary>
+		///   <para>Returns vector (0,0,0)</para>
+		/// </summary>
         public static TheVector3 Zero
         {
             get
@@ -38,6 +61,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns forward vector (0,0,1)</para>
+        /// </summary>
         public static TheVector3 Forward
         {
             get
@@ -46,6 +72,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns backward vector (0,0,-1)</para>
+        /// </summary>
         public static TheVector3 BackWard
         {
             get
@@ -54,6 +83,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns up vector (0,1,0)</para>
+        /// </summary>
         public static TheVector3 Up
         {
             get
@@ -62,6 +94,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns down vector (0,-1,0)</para>
+        /// </summary>
         public static TheVector3 Down
         {
             get
@@ -70,6 +105,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns down vector (-1,0,0)</para>
+        /// </summary>
         public static TheVector3 Left
         {
             get
@@ -78,6 +116,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns down vector (1,0,0)</para>
+        /// </summary>
         public static TheVector3 Right
         {
             get
@@ -86,6 +127,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns the length of the vector</para>
+        /// </summary>
         public float Length
         {
             get
@@ -94,6 +138,9 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns the squared length of the vector</para>
+        /// </summary>
         public float LengthSquared
         {
             get
@@ -102,11 +149,18 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns the magnitude of the given vector</para>
+        /// </summary>
+        /// <param name="vector">The vector to return its magnitude</param>
         public static float Magnitude(TheVector3 vector)
         {
             return TheMath.TheMath.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
 
+        /// <summary>
+        ///   <para>Returns the normalized vector</para>
+        /// </summary>
         public TheVector3 Normalized
         {
             get
@@ -115,6 +169,10 @@ namespace TheEngine
             }
         }
 
+        /// <summary>
+        ///   <para>Returns the normalized vector of the given vector</para>
+        /// </summary>
+        /// <param name="vector">The vector to return its normalized vector</param>
         public static TheVector3 Normalize(TheVector3 vector)
         {
             TheVector3 ret;
@@ -130,30 +188,56 @@ namespace TheEngine
             return ret;
         }
 
-        public static TheVector3 Lerp(TheVector3 start, TheVector3 end, float value)
+        /// <summary>
+        ///   <para>Linearly interpolates between two vectors</para>
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="percent"></param>
+        public static TheVector3 Lerp(TheVector3 a, TheVector3 b, float percent)
         {
-            return start + value * (end - start);
+            return a + percent * (b - a);
         }
 
-        public static TheVector3 Slerp(TheVector3 start, TheVector3 end, float value)
+        /// <summary>
+        ///   <para>Spherically interpolates between two vectors</para>
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="percent"></param>
+        public static TheVector3 Slerp(TheVector3 a, TheVector3 b, float percent)
         {
-            float dot = DotProduct(start, end);
+            float dot = DotProduct(a, b);
             TheMath.TheMath.Clamp(dot, -1, 1);
-            float theta = TheMath.TheMath.Acos(dot) * value;
-            TheVector3 relative_vector = end - start * dot;
-            return (start * TheMath.TheMath.Cos(theta)) + (relative_vector.Normalized * TheMath.TheMath.Sin(theta));
+            float theta = TheMath.TheMath.Acos(dot) * percent;
+            TheVector3 relative_vector = b - a * dot;
+            return (a * TheMath.TheMath.Cos(theta)) + (relative_vector.Normalized * TheMath.TheMath.Sin(theta));
         }
 
-        public static TheVector3 NLerp(TheVector3 start, TheVector3 end, float value)
+        /// <summary>
+        ///   <para>Normalized Lerp</para>
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="percent"></param>
+        public static TheVector3 NLerp(TheVector3 a, TheVector3 b, float percent)
         {
-            return Lerp(start, end, value).Normalized;
+            return Lerp(a, b, percent).Normalized;
         }
 
+        /// <summary>
+        ///   <para>Returns the Dot Product of given vectors</para>
+        /// </summary>
         public static float DotProduct(TheVector3 a, TheVector3 b)
         {
             return a.x * b.x + a.y * b.y + a.z * b.z; 
         }
 
+        /// <summary>
+		///   <para>Projects a vector onto another vector.</para>
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <param name="normal"></param>
         public static TheVector3 Project(TheVector3 vector, TheVector3 normal)
         {
             TheVector3 ret;
@@ -169,17 +253,33 @@ namespace TheEngine
             return ret;
         }
 
+        /// <summary>
+		///   <para>Returns the angle in degrees between a and b.</para>
+		/// </summary>
+		/// <param name="a">The vector from which the angular difference is measured.</param>
+		/// <param name="b">The vector to which the angular difference is measured.</param>
         public static float AngleBetween(TheVector3 a, TheVector3 b)
         {
             return TheMath.TheMath.Acos(DotProduct(a, b) / (Magnitude(a) * Magnitude(b))) * TheMath.TheMath.RadToDeg;
         }
 
+        /// <summary>
+		///   <para>Returns the distance between a and b.</para>
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
         public static float Distance(TheVector3 a, TheVector3 b)
         {
             TheVector3 vector = new TheVector3(a.x - b.x, a.y - b.y, a.z - b.z);
             return TheMath.TheMath.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
         }
 
+        /// <summary>
+		///   <para>Moves a point current in a straight line towards a target point.</para>
+		/// </summary>
+		/// <param name="position"></param>
+		/// <param name="target"></param>
+		/// <param name="step"></param>
         public static TheVector3 MoveTowards(TheVector3 position, TheVector3 target, float step)
         {
             TheVector3 diff = target - position;
@@ -196,6 +296,12 @@ namespace TheEngine
             return ret;
         }
 
+        /// <summary>
+		///   <para>Set x, y and z components of an existing Vector3.</para>
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="z"></param>
         public void Set(float x, float y, float z)
         {
             this.x = x;
@@ -203,21 +309,40 @@ namespace TheEngine
             this.z = z;
         }
 
+        /// <summary>
+		///   <para>Return Cross Product of two vectors.</para>
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
         public static TheVector3 CrossProduct(TheVector3 a, TheVector3 b)
         {
             return new TheVector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
         }
 
+        /// <summary>
+		///   <para>Reflects a vector off the plane defined by a normal.</para>
+		/// </summary>
+		/// <param name="direction"></param>
+		/// <param name="normal"></param>
         public static TheVector3 Reflect(TheVector3 direction, TheVector3 normal)
         {
             return -2f * DotProduct(normal, direction) * normal + direction;
         }
 
+        /// <summary>
+		///   <para>Multiplies two vectors component-wise.</para>
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
         public static TheVector3 Scale(TheVector3 a, TheVector3 b)
         {
             return new TheVector3(a.x * b.x, a.y * b.y, a.z * b.z);
         }
 
+        /// <summary>
+		///   <para>Multiplies every component of this vector by the same component of scale.</para>
+		/// </summary>
+		/// <param name="scale"></param>
         public void Scale(TheVector3 scale)
         {
             x *= scale.x;
@@ -225,6 +350,11 @@ namespace TheEngine
             z *= scale.z;
         }
 
+        /// <summary>
+		///   <para>Returns Rotation from one vector to another.</para>
+		/// </summary>
+		/// <param name="from"></param>
+        /// /// <param name="to"></param>
         public static TheQuaternion RotationToTarget(TheVector3 from, TheVector3 to)
         {
             float a = TheMath.TheMath.Sqrt(from.LengthSquared * to.LengthSquared);
@@ -305,6 +435,10 @@ namespace TheEngine
             return quaternion;
         }
 
+
+        /// <summary>
+        ///   <para>Transforms the vector to Quaternion.</para>
+        /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern TheQuaternion ToQuaternion();
 

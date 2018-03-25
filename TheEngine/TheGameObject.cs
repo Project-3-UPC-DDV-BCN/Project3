@@ -10,6 +10,10 @@ namespace TheEngine
             CreateNewGameObject(this);
         }
 
+        /// <summary>
+        ///   <para>Transforms direction from local space to world space.</para>
+        /// </summary>
+        /// <param name="gameobject_name"></param>
         public string name
         {
             get
@@ -126,6 +130,9 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheComponent GetComponent(Type type, int index);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void DestroyComponent(TheComponent to_del);
 
         public T GetComponent<T>(int index = 0) where T : TheComponent
         {

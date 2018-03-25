@@ -1687,8 +1687,7 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		{
 			rigidbody->SetAngularDamping(a_damping);
 		}
-
-		static float3 linear_velocity = rigidbody->GetLinearVelocity();
+		float3 linear_velocity = rigidbody->GetLinearVelocity();
 		if (ImGui::DragFloat3("Linear Velo", (float*)&linear_velocity))
 		{
 			rigidbody->SetLinearVelocity(linear_velocity);

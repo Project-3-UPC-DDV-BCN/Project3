@@ -11,6 +11,18 @@ class CSScript;
 class ComponentRectTransform;
 class GameObject;
 
+struct DLLMethodInfo
+{
+
+};
+
+struct DLLClassInfo
+{
+	std::vector<std::string> properties;
+	std::vector<std::string> classes;
+	
+};
+
 class NSScriptImporter
 {
 public:
@@ -49,8 +61,10 @@ public:
 	MonoArray* GetAllChilds(MonoObject* object);
 
 	//COMPONENT
+	void SetComponentActive(MonoObject* object, bool active); 
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+	void DestroyComponent(MonoObject* object, MonoObject* cmp);
 
 	//TRANSFORM
 	void SetPosition(MonoObject * object, MonoObject * vector3);
@@ -64,6 +78,7 @@ public:
 	MonoObject* GetRight(MonoObject* object);
 	MonoObject* GetUp(MonoObject* object);
 	void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
+	void SetIncrementalRotation(MonoObject * object, MonoObject * vector3);
 
 	//RECTTRANSFORM
 	void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -160,6 +175,12 @@ public:
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void DisableCollider(MonoObject * object, int index);
+	void DisableAllColliders(MonoObject * object);
+	void SetKinematic(MonoObject * object, bool kinematic);
+	void SetTransformGO(MonoObject * object, bool transform_go);
+	bool IsKinematic(MonoObject * object);
+	bool IsTransformGO(MonoObject * object);
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
 
@@ -237,9 +258,13 @@ public:
 
 	static NSScriptImporter* ns_importer;
 
+	std::vector<std::string> classes_names;
+
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
 	MonoClass* DumpClassInfo(MonoImage* image, std::string& class_name, std::string& name_space);
+
+	void DumpEngineDLLInfo(MonoAssembly* assembly, MonoImage* image);
 
 	void RegisterAPI();
 
@@ -268,8 +293,10 @@ private:
 	static MonoArray* GetAllChilds(MonoObject* object);
 
 	//COMPONENT
+	static void SetComponentActive(MonoObject* object, bool active); 
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+	static void DestroyComponent(MonoObject * object, MonoObject* cmp);
 
 	//TRANSFORM
 	static void SetPosition(MonoObject * object, MonoObject * vector);
@@ -283,6 +310,7 @@ private:
 	static MonoObject* GetRight(MonoObject* object);
 	static MonoObject* GetUp(MonoObject* object);
 	static void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
+	static void SetIncrementalRotation(MonoObject * object, MonoObject * vector3);
 
 	//RECTTRANSFORM
 	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -378,6 +406,12 @@ private:
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	static void DisableCollider(MonoObject * object, int index);
+	static void DisableAllColliders(MonoObject * object);
+	static bool IsKinematic(MonoObject * object);
+	static void SetKinematic(MonoObject * object, bool kinematic);
+	static void SetTransformGO(MonoObject * object, bool transform_go);
+	static bool IsTransformGO(MonoObject * object);
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
 

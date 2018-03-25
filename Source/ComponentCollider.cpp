@@ -107,6 +107,12 @@ ComponentCollider::~ComponentCollider()
 	{
 		convex_mesh->release();
 	}*/
+	//collider_material->release();
+	//collider_shape->release();
+
+	//RELEASE(phys_material);
+	GetRigidBody()->RemoveShape(*GetColliderShape());
+
 	RELEASE(geo_triangle_mesh);
 	RELEASE(geo_convex_mesh);
 }

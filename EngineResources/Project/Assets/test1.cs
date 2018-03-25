@@ -15,9 +15,9 @@ public class test1 {
 		//ship_hit_scpt.CallFunction("SubstractHP"); 
 	}
 	
-	void OnTriggerEnter(TheGameObject other_ship)
+	void OnTriggerStay(TheGameObject other)
 	{
-		TheConsole.Log("Triggered" + TheGameObject.Self.name);
+		TheConsole.Log("Triggered " + other.name);
 	}
 	
 	void Update () {

@@ -83,6 +83,20 @@ namespace TheEngine
             return (a * (1 - value) + b * value).Normalized;
         }
 
+        public TheVector3 RotateVector(TheVector3 vector)
+        {
+            TheVector3 v = new TheVector3(x, y, z);
+            TheVector3 v2 = TheVector3.CrossProduct(v, vector) * 2f;
+            return vector + v2 * w + TheVector3.CrossProduct(v, v2);
+        }
+
+        public TheVector3 UnRotateVector(TheVector3 vector)
+        {
+            TheVector3 v = new TheVector3(-x, -y, -z);
+            TheVector3 v2 = TheVector3.CrossProduct(v, vector) * 2f;
+            return vector + v2 * w + TheVector3.CrossProduct(v, v2);
+        }
+
         //public static TheQuaternion Slerp(TheQuaternion a, TheQuaternion b, float value)
         //{
         //    TheQuaternion v0 = a.Normalized;

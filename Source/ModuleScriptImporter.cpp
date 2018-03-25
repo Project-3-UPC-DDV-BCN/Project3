@@ -8,12 +8,14 @@
 #include "GameObject.h"
 #include "ModuleScene.h"
 #include "ModuleResources.h"
+#include "PropertiesWindow.h"
 #include "Component.h"
 #include "ComponentTransform.h"
 #include "ComponentRectTransform.h"
 #include "ComponentText.h"
 #include "ComponentProgressBar.h"
 #include "ComponentRadar.h"
+#include "ModuleEditor.h"
 #include "ComponentFactory.h"
 #include "ModuleTime.h"
 #include "ModuleInput.h"
@@ -88,6 +90,7 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 	{
 		mono_engine_image = mono_assembly_get_image(engine_assembly);
 		RegisterAPI();
+		DumpEngineDLLInfo(engine_assembly, mono_engine_image);
 	}
 	else
 	{
@@ -274,6 +277,21 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 	return mono_class;
 }
 
+void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage* image)
+{
+	
+	const MonoTableInfo* table_info = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+
+	int rows = mono_table_info_get_rows(table_info);
+
+	for (int i = 1; i < rows; i++) {
+		uint32_t cols[MONO_TYPEDEF_SIZE];
+		mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
+		const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+		classes_names.push_back(name);
+	}
+}
+
 void ModuleScriptImporter::RegisterAPI()
 {
 	//GAMEOBJECT
@@ -296,11 +314,15 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::GetChild(string)", (const void*)GetGameObjectChildString);
 	mono_add_internal_call("TheEngine.TheGameObject::GetChildCount", (const void*)GetGameObjectChildCount);
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
+	mono_add_internal_call("TheEngine.TheGameObject::DestroyComponent", (const void*)DestroyComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetSceneGameObjects", (const void*)GetSceneGameObjects);
 	mono_add_internal_call("TheEngine.TheGameObject::GetObjectsInFrustum", (const void*)GetObjectsInFrustum);
 	mono_add_internal_call("TheEngine.TheGameObject::GetAllChilds", (const void*)GetAllChilds);
+
+	//COMPONENT
+	mono_add_internal_call("TheEngine.TheComponent::SetComponentActive", (const void*)SetComponentActive);
 
 	//TRANSFORM
 	mono_add_internal_call("TheEngine.TheTransform::SetPosition", (const void*)SetPosition);
@@ -412,6 +434,12 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetPosition", (const void*)SetRBPosition);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetRotation", (const void*)SetRBRotation);
+	mono_add_internal_call("TheEngine.TheRigidBody::DisableCollider", (const void*)DisableCollider);
+	mono_add_internal_call("TheEngine.TheRigidBody::DisableAllColliders", (const void*)DisableAllColliders);
+	mono_add_internal_call("TheEngine.TheRigidBody::IsTransformGO", (const bool*)IsTransformGO);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetTransformGO", (const void*)SetTransformGO);
+	mono_add_internal_call("TheEngine.TheRigidBody::IsKinematic", (const bool*)IsKinematic);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetKinematic", (const void*)SetKinematic);
 
 	//GOAP
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableB", (const void*)GetBlackboardVariableB);
@@ -565,6 +593,11 @@ MonoArray * ModuleScriptImporter::GetAllChilds(MonoObject * object)
 	return ns_importer->GetAllChilds(object);
 }
 
+void ModuleScriptImporter::SetComponentActive(MonoObject * object, bool active)
+{
+	ns_importer->SetComponentActive(object, active);
+}
+
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
 {
 	return ns_importer->AddComponent(object, type);
@@ -573,6 +606,11 @@ MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflecti
 MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
 	return ns_importer->GetComponent(object, type, index);
+}
+
+void ModuleScriptImporter::DestroyComponent(MonoObject * object, MonoObject * cmp)
+{
+	ns_importer->DestroyComponent(object, cmp);
 }
 
 void ModuleScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
@@ -768,6 +806,11 @@ MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
 void ModuleScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
 {
 	ns_importer->RotateAroundAxis(object, axis, angle);
+}
+
+void ModuleScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * vector3)
+{
+	ns_importer->SetIncrementalRotation(object, vector3);
 }
 
 void ModuleScriptImporter::StartFactory(MonoObject * object)
@@ -1018,6 +1061,36 @@ void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 {
 	ns_importer->SetLinearVelocity(object, x, y, z);
+}
+
+void ModuleScriptImporter::DisableCollider(MonoObject * object, int index)
+{
+	ns_importer->DisableCollider(object, index);
+}
+
+void ModuleScriptImporter::DisableAllColliders(MonoObject * object)
+{
+	ns_importer->DisableAllColliders(object);
+}
+
+bool ModuleScriptImporter::IsKinematic(MonoObject * object)
+{
+	return ns_importer->IsKinematic(object);
+}
+
+bool ModuleScriptImporter::IsTransformGO(MonoObject * object)
+{
+	return ns_importer->IsTransformGO(object);
+}
+
+void ModuleScriptImporter::SetTransformGO(MonoObject * object, bool transform_go)
+{
+	ns_importer->SetTransformGO(object, transform_go);
+}
+
+void ModuleScriptImporter::SetKinematic(MonoObject * object, bool kinematic)
+{
+	ns_importer->SetKinematic(object, kinematic);
 }
 
 void ModuleScriptImporter::SetRBPosition(MonoObject * object, float x, float y, float z)
@@ -1721,6 +1794,12 @@ MonoArray * NSScriptImporter::GetAllChilds(MonoObject * object)
 	return nullptr;
 }
 
+void NSScriptImporter::SetComponentActive(MonoObject * object, bool active)
+{
+	Component* cmp = GetComponentFromMonoObject(object); 
+	cmp->SetActive(active); 
+}
+
 MonoObject* NSScriptImporter::AddComponent(MonoObject * object, MonoReflectionType * type)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
@@ -1826,6 +1905,10 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		{
 			comp_name = "TheRigidBody";
 		}
+		else if (name == "TheEngine.TheMeshCollider")
+		{
+			comp_name = "TheMeshCollider";
+		}
 		else if (name == "TheEngine.TheGOAPAgent")
 		{
 			comp_name = "TheGOAPAgent";
@@ -1914,6 +1997,17 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 	}
 
 	return nullptr;
+}
+
+void NSScriptImporter::DestroyComponent(MonoObject* object, MonoObject* cmp)
+{
+	Component* comp = GetComponentFromMonoObject(cmp);
+	GameObject* go = GetGameObjectFromMonoObject(object);
+
+	if (comp != nullptr && go != nullptr)
+	{
+		App->editor->properties_window->components_to_destroy[go] = comp;
+	}
 }
 
 void NSScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
@@ -2096,8 +2190,27 @@ MonoObject * NSScriptImporter::GetScale(MonoObject * object, mono_bool is_global
 	return nullptr;
 }
 
-void NSScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
+void NSScriptImporter::LookAt(MonoObject * object, MonoObject * vector3)
 {
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_object_get_class(vector3);
+		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+		float3 target_pos;
+
+		if (x_field) mono_field_get_value(vector3, x_field, &target_pos.x);
+		if (y_field) mono_field_get_value(vector3, y_field, &target_pos.y);
+		if (z_field) mono_field_get_value(vector3, z_field, &target_pos.z);
+
+		ComponentTransform* transform = (ComponentTransform*)comp;
+		float3 direction = target_pos - transform->GetGlobalPosition();
+		transform->LookAt(direction.Normalized(), float3::unitY);
+	}
 }
 
 void NSScriptImporter::SetRectPosition(MonoObject * object, MonoObject * vector3)
@@ -2493,6 +2606,28 @@ void NSScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, 
 
 		ComponentTransform* transform = (ComponentTransform*)comp;
 		transform->RotateAroundAxis(rot_axis, angle);
+	}
+}
+
+void NSScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * vector3)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_object_get_class(vector3);
+		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+		float3 new_rot;
+
+		if (x_field) mono_field_get_value(vector3, x_field, &new_rot.x);
+		if (y_field) mono_field_get_value(vector3, y_field, &new_rot.y);
+		if (z_field) mono_field_get_value(vector3, z_field, &new_rot.z);
+
+		ComponentTransform* transform = (ComponentTransform*)comp;
+		transform->SetIncrementalRotation(new_rot);
 	}
 }
 
@@ -3265,6 +3400,88 @@ void NSScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, 
 	}
 }
 
+void NSScriptImporter::DisableCollider(MonoObject * object, int index)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->DisableShapeByIndex(index);
+	}
+}
+
+void NSScriptImporter::DisableAllColliders(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->DisableShapes();
+	}
+}
+
+void NSScriptImporter::SetKinematic(MonoObject * object, bool kinematic)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->SetKinematic(kinematic);
+	}
+}
+
+void NSScriptImporter::SetTransformGO(MonoObject * object, bool transform_go)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->SetTransformsGo(transform_go);
+	}
+}
+
+bool NSScriptImporter::IsKinematic(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			return rb->IsKinematic();
+	}
+
+	return false; 
+}
+
+bool NSScriptImporter::IsTransformGO(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			return rb->GetTransformsGo();
+	}
+
+	return false; 
+}
+
 void NSScriptImporter::SetRBPosition(MonoObject * object, float x, float y, float z)
 {
 	Component* comp = GetComponentFromMonoObject(object);
@@ -4024,6 +4241,10 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	else if (component_type == "TheRigidBody")
 	{
 		type = Component::CompRigidBody;
+	}
+	else if (component_type == "TheMeshCollider")
+	{
+		type = Component::CompMeshCollider;
 	}
 	else if (component_type == "TheGOAPAgent")
 	{

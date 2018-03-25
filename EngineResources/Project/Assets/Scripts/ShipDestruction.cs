@@ -48,8 +48,6 @@ public class ShipDestruction
 	void SetPartsDirection()
 	{
 
-
-
 		for(int i = 0; i < ship_parts.Count ;i++)
 		{
 			TheVector3 direction = transform.ForwardDirection.Normalized; 
@@ -64,6 +62,15 @@ public class ShipDestruction
 			direction.z = rand;
 	
 			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>(); 
+			TheMeshCollider mesh_col = ship_parts[i].GetComponent<TheMeshCollider>(); 
+			
+			//Disable Colliders 
+			ship_parts[i].DestroyComponent(mesh_col); 
+			//mesh_col.SetComponentActive(false); 
+
+			//Modify RigidBody
+			piece_rb.Kinematic = false; 
+			piece_rb.TransformGO = true; 
 			
 			direction = direction.Normalized * explosion_v;
 

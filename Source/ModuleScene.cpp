@@ -549,11 +549,7 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				{
 					GameObject* game_object = *it;
 					game_object->Load(data);
-
-					RenameDuplicatedGameObject(game_object);
-
 					data.LeaveSection();
-
 					++it;
 				}
 			}
