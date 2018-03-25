@@ -28,50 +28,42 @@ public class laser
 	void OnCollisionEnter(TheGameObject other_ship)
 	{
 
+
+		TheConsole.Log("Entered"); 
+
 		TheGameObject parent = other_ship.GetParent(); 	
 		enemy_properties_scpt = parent.GetComponent<TheScript>(0); 
 
+		bool is_enemy = AreEnemies(team, parent.tag); 
+
 		if(other_ship != null)
 		{
-			enemy_properties_scpt.SetIntField("hp_inc", 20);
+			int to_inc = 0; 
+
+			if(is_enemy)
+				to_inc = 20; 
+			else
+				to_inc = 10; 
+			
+			enemy_properties_scpt.SetIntField("hp_inc", to_inc);
 			enemy_properties_scpt.CallFunction("SubstractHP"); 
 			enemy_properties_scpt.SetIntField("hp_inc", 0); 
 		}
 
-		/*if(other_ship != null)
-		{	
-			string enemy_tag = other_ship.tag; 
-			TheConsole.Log("Collided"); 
-			TheConsole.Log(other_ship.name); 
+	}
 
-			ship_hit_scpt = other_ship.GetComponent<TheScript>(); //Num has to be change for the order  
+	bool AreEnemies(string team1, string team2)
+	{
+		bool return_value; 
 
-			if(team == "Alliance") 
-			{
-				TheConsole.Log("You are alliance"); 
+		if(team2 == "XWING" || team2 == "YWING")
+			return_value = false; 
+		else
+			return_value = true; 
 
-				if(enemy_tag == "Empire")
-				{
-					game_manager_scpt.SetIntField("score_to_inc", 20);
-					game_manager_scpt.CallFunction("AddToScore"); 
-					game_manager_scpt.SetIntField("score_to_inc", 0);
+		if(team1 == "EMPIRE")
+			return_value = !return_value;
 
-					//ENEMY HP
-					ship_hit_scpt.SetIntField("hp_inc", 20);
-					ship_hit_scpt.CallFunction("SubstractHP"); 
-					ship_hit_scpt.SetIntField("hp_inc", 0); 
-				}
-				else
-				{
-					game_manager_scpt.SetIntField("score_to_inc", 10);
-					game_manager_scpt.CallFunction("SubstractToScore"); 
-					game_manager_scpt.SetIntField("score_to_inc", 0);
-
-					ship_hit_scpt.SetIntField("hp_inc", 10);
-					ship_hit_scpt.CallFunction("SubstractHP"); 
-					ship_hit_scpt.SetIntField("hp_inc", 0); 
-				}				
-			} 
-		}*/
+		return return_value; 
 	}
 }

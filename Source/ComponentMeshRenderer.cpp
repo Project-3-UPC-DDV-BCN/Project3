@@ -108,6 +108,7 @@ void ComponentMeshRenderer::Save(Data & data) const
 	data.AddInt("Mat_Indices_Start", material_indices_start);
 	data.AddInt("Int_Mat_Indices_Number", interior_material_indices_number);
 	data.AddInt("Int_Mat_Indices_Start", interior_material_indices_start);
+	data.AddBool("has_light", has_light);
 }
 
 void ComponentMeshRenderer::Load(Data & data)
@@ -139,6 +140,7 @@ void ComponentMeshRenderer::Load(Data & data)
 	{
 		UpdateBoundingBox();
 	}
+	has_light = data.GetBool("has_light");
 }
 
 Material * ComponentMeshRenderer::GetInteriorMaterial() const

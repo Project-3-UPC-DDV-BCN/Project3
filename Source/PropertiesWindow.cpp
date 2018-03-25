@@ -1221,6 +1221,13 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			mesh_renderer->SetMaterial(material);
 		}
 
+		bool has_light = mesh_renderer->has_light;
+
+		if (ImGui::Checkbox("Receive Lighting", &has_light))
+		{
+			mesh_renderer->has_light = has_light;
+		}
+
 		if(ImGui::TreeNodeEx("Mesh Info", ImGuiTreeNodeFlags_OpenOnArrow))
 		{
 			if (mesh_renderer->GetMesh() == nullptr)
@@ -1237,6 +1244,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 			ImGui::Text("UV: "); ImGui::TextColored(ImVec4(0, 1, 0, 1), ("yes"));
 			ImGui::TreePop();
 		}
+
 		if (ImGui::TreeNodeEx("Material", ImGuiTreeNodeFlags_OpenOnArrow))
 		{
 			if (mesh_renderer->GetMaterial() == nullptr)
@@ -1284,6 +1292,24 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				{
 					material->SetNormalMapTexture(normalmap);
 				}
+				if (normalmap)
+				{
+					bool normal_uvs = material->own_normal_uvs;
+
+					if (ImGui::Checkbox("Edit Normal UVs", &normal_uvs))
+					{
+						material->own_normal_uvs = normal_uvs;
+					}
+					if (material->own_normal_uvs == true)
+					{
+						float2 normalUV = material->normalmap_UV;
+						if (ImGui::DragFloat2("Normal Map UV (X/Y)", (float*)&normalUV, 0.25, 0.05)) {
+							material->normalmap_UV.x = normalUV.x;
+							material->normalmap_UV.y = normalUV.y;
+						}
+					}
+				}
+
 
 				// DIFFUSE
 				ImGui::Text("Diffuse: "); ImGui::SameLine();
@@ -1298,7 +1324,41 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				{
 					material->SetDiffuseTexture(diffuse);
 				}
-				
+
+				if (diffuse)
+				{
+					bool diffuse_uvs = material->own_diffuse_uvs;
+
+					if (ImGui::Checkbox("Edit Diffuse UVs", &diffuse_uvs))
+					{
+						material->own_diffuse_uvs = diffuse_uvs;
+					}
+
+					if (material->own_diffuse_uvs == true)
+					{
+						float2 diffuseUV(material->diffuse_UV);
+						if (ImGui::DragFloat2("Diffuse UV (X,Y)", (float*)&diffuseUV, 0.25, 0.05))
+						{
+							material->diffuse_UV.x = diffuseUV.x;
+							material->diffuse_UV.y = diffuseUV.y;
+						}
+					}
+				}
+
+				//OPACITY
+				ImGui::Text("Opacity: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetOpacityTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetOpacityTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* opacity = material->GetOpacityTexture();
+				if (ImGui::InputResourceTexture("Change Opacity Map", &opacity))
+				{
+					material->SetOpacityTexture(opacity);
+				}
+
 				if (ImGui::Button("Save Material"))
 				{
 					Data data;

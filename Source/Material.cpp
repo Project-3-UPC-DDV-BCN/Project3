@@ -25,8 +25,30 @@ Material::Material()
 	refraction = 1;
 	reflectivity = 0;
 	bump_scaling = 1;
-
 	diffuse_color = { 0.6f,0.6f,0.0f };
+	// Set uvs
+	diffuse_UV.x = 1.0f;
+	diffuse_UV.y = 1.0f;
+	specular_UV.x = 1.0f;
+	specular_UV.y = 1.0f;
+	ambient_UV.x = 1.0f;
+	ambient_UV.y = 1.0f;
+	emissive_UV.x = 1.0f;
+	emissive_UV.y = 1.0f;
+	heightmap_UV.x = 1.0f;
+	heightmap_UV.y = 1.0f;
+	normalmap_UV.x = 1.0f;
+	normalmap_UV.y = 1.0f;
+	shininess_UV.x = 1.0f;
+	shininess_UV.y = 1.0f;
+	opacity_UV.x = 1.0f;
+	opacity_UV.y = 1.0f;
+	displacement_UV.x = 1.0f;
+	displacement_UV.y = 1.0f;
+	lightmap_UV.x = 1.0f;
+	lightmap_UV.y = 1.0f;
+	reflection_UV.x = 1.0f;
+	reflection_UV.y = 1.0;
 
 	SetDefaultShaders();
 }
@@ -55,6 +77,8 @@ void Material::Save(Data & data) const
 
 	if(diffuse_texture != nullptr)
 		data.AddString("diffuse_texture", diffuse_texture->GetLibraryPath());
+	data.AddFloat("diffuse_UVx", diffuse_UV.x);
+	data.AddFloat("diffuse_UVy", diffuse_UV.y);
 
 	math::float4 f_diffuse_color;
 	f_diffuse_color.x = diffuse_color.r;
@@ -65,33 +89,58 @@ void Material::Save(Data & data) const
 
 	if (specular_texture != nullptr)
 		data.AddString("specular_texture", specular_texture->GetLibraryPath());
+	data.AddFloat("specular_UVx", specular_UV.x);
+	data.AddFloat("specular_UVy", specular_UV.y);
 
 	if (ambient_texture != nullptr)
 		data.AddString("ambient_texture", ambient_texture->GetLibraryPath());
-	
+	data.AddFloat("ambient_UVx", ambient_UV.x);
+	data.AddFloat("ambient_UVy", ambient_UV.y);
+
 	if (emissive_texture != nullptr) 
 		data.AddString("emissive_texture", emissive_texture->GetLibraryPath());
-	
+	data.AddFloat("emissive_UVx", emissive_UV.x);
+	data.AddFloat("emissive_UVy", emissive_UV.y);
+
 	if (heightmap_texture != nullptr)
 		data.AddString("height_texture", heightmap_texture->GetLibraryPath());
-	
+	data.AddFloat("heightmap_UVx", heightmap_UV.x);
+	data.AddFloat("heightmap_UVy", heightmap_UV.y);
+
 	if (normalmap_texture != nullptr)
 		data.AddString("normalmap_texture", normalmap_texture->GetLibraryPath());
+	data.AddFloat("normalmap_UVx", normalmap_UV.x);
+	data.AddFloat("normalmap_UVy", normalmap_UV.y);
 
 	if (shininess_texture != nullptr)
 		data.AddString("shininess_texture", shininess_texture->GetLibraryPath());
-	
+	data.AddFloat("shininess_UVx", shininess_UV.x);
+	data.AddFloat("shininess_UVy", shininess_UV.y);
+
 	if (opacity_texture != nullptr)
 		data.AddString("opacity_texture", opacity_texture->GetLibraryPath());
-	
+	data.AddFloat("opacity_UVx", opacity_UV.x);
+	data.AddFloat("opacity_UVy", opacity_UV.y);
+
 	if (displacement_texture != nullptr)
 		data.AddString("displacement_texture", displacement_texture->GetLibraryPath());
-	
+	data.AddFloat("displacement_UVx", displacement_UV.x);
+	data.AddFloat("displacement_UVy", displacement_UV.y);
+
 	if (lightmap_texture != nullptr)
 		data.AddString("lightmap_texture", lightmap_texture->GetLibraryPath());
-	
+	data.AddFloat("lightmap_UVx", lightmap_UV.x);
+	data.AddFloat("lightmap_UVy", lightmap_UV.y);
+
 	if (reflection_texture != nullptr)
 		data.AddString("reflection_texture", reflection_texture->GetLibraryPath());
+	data.AddFloat("reflection_UVx", reflection_UV.x);
+	data.AddFloat("reflection_UVy", reflection_UV.y);
+
+	data.AddBool("own_diffuse_uvs", own_diffuse_uvs);
+	data.AddBool("own_normal_uvs", own_normal_uvs);
+
+
 	if (shader_program != nullptr)
 	{
 		data.AddInt("vertex_shader", shader_program->GetVertexShader()->GetUID());
@@ -113,14 +162,19 @@ bool Material::Load(Data & data)
 	refraction = data.GetFloat("refraction");
 	reflectivity = data.GetFloat("reflectivity");
 	bump_scaling = data.GetFloat("bump_scaling");
-	
+
+
 	std::string library_path = data.GetString("diffuse_texture");
 	if (library_path != "value not found")
 	{
 		Texture* diffuse = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
 		SetDiffuseTexture(diffuse);
 	}
-	
+	diffuse_UV.x = data.GetFloat("diffuse_UVx");
+	diffuse_UV.y = data.GetFloat("diffuse_UVy");
+	if (diffuse_UV.x < 0) diffuse_UV.x = 1.0;
+	if (diffuse_UV.y < 0) diffuse_UV.y = 1.0;
+
 	math::float4 f_diffuse_color = data.GetVector4("diffuse_color");
 	diffuse_color.r = f_diffuse_color.x;
 	diffuse_color.g = f_diffuse_color.y;
@@ -134,48 +188,65 @@ bool Material::Load(Data & data)
 		Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetSpecularTexture(specular);
 	}
-	
+	specular_UV.x = data.GetFloat("specular_UVx");
+	specular_UV.y = data.GetFloat("specular_UVy");
+
 	library_path = data.GetString("ambient_texture");
 	if (library_path != "value not found")
 	{
 		Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetAmbientTexture(ambient);
 	}
-	
+	ambient_UV.x = data.GetFloat("ambient_UVx");
+	ambient_UV.y = data.GetFloat("ambient_UVy");
+
 	library_path = data.GetString("emissive_texture");
 	if (library_path != "value not found")
 	{
 		Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetEmissiveTexture(emissive);
 	}
-	
+	emissive_UV.x = data.GetFloat("emissive_UVx");
+	emissive_UV.y = data.GetFloat("emissive_UVy");
+
 	library_path = data.GetString("heightmap_texture");
 	if (library_path != "value not found")
 	{
 		Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetHeightMapTexture(heightmap);
 	}
-	
+	heightmap_UV.x = data.GetFloat("heightmap_UVx");
+	heightmap_UV.y = data.GetFloat("heightmap_UVy");
+
 	library_path = data.GetString("normalmap_texture");
 	if (library_path != "value not found")
 	{
 		Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetNormalMapTexture(normalmap);
 	}
-	
+	normalmap_UV.x = data.GetFloat("normalmap_UVx");
+	normalmap_UV.y = data.GetFloat("normalmap_UVy");
+	if (normalmap_UV.x < 0) normalmap_UV.x = 1.0;
+	if (normalmap_UV.y < 0) normalmap_UV.y = 1.0;
+
+
 	library_path = data.GetString("shininess_texture");
 	if (library_path != "value not found")
 	{
 		Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetShininessTexture(shininess);
 	}
-	
+	shininess_UV.x = data.GetFloat("shininess_UVx");
+	shininess_UV.y = data.GetFloat("shininess_UVy");
+
 	library_path = data.GetString("opacity_texture");
 	if (library_path != "value not found")
 	{
 		Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetOpacityTexture(opacity);
 	}
+	opacity_UV.x = data.GetFloat("opacity_UVx");
+	opacity_UV.y = data.GetFloat("opacity_UVy");
 
 	library_path = data.GetString("displacement_texture");
 	if (library_path != "value not found")
@@ -183,13 +254,17 @@ bool Material::Load(Data & data)
 		Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetDisplacementTexture(displacement);
 	}
-	
+	displacement_UV.x = data.GetFloat("displacement_UVx");
+	displacement_UV.y = data.GetFloat("displacement_UVy");
+
 	library_path = data.GetString("lightmap_texture");
 	if (library_path != "value not found")
 	{
 		Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetLightMapTexture(lightmap);
 	}
+	lightmap_UV.x = data.GetFloat("lightmap_UVx");
+	lightmap_UV.y = data.GetFloat("lightmap_UVy");
 
 	library_path = data.GetString("reflection_texture");
 	if (library_path != "value not found")
@@ -197,12 +272,16 @@ bool Material::Load(Data & data)
 		Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path);
 		SetReflectionTexture(reflection);
 	}
+	reflection_UV.x = data.GetFloat("reflection_UVx");
+	reflection_UV.y = data.GetFloat("reflection_UVy");
 
 	SetUID(data.GetUInt("UUID"));
 	SetAssetsPath(data.GetString("assets_path"));
 	SetLibraryPath(data.GetString("library_path"));
 	SetName(data.GetString("material_name"));
 
+	own_diffuse_uvs = data.GetBool("own_diffuse_uvs");
+	own_normal_uvs = data.GetBool("own_normal_uvs");
 	//Shader* vert = App->resources->GetShader(data.GetInt("vertex_shader"));
 	//Shader* frag = App->resources->GetShader(data.GetInt("fragment_shader"));
 	//
@@ -223,11 +302,48 @@ void Material::CreateMeta() const
 	data.AddString("Time_Created", dt);
 	data.AddString("Library_path", GetLibraryPath());
 	data.SaveAsMeta(GetAssetsPath());
+
+	data.AddFloat("diffuse_UVx", diffuse_UV.x);
+	data.AddFloat("diffuse_UVy", diffuse_UV.y);
+
+	data.AddFloat("specular_UVx", specular_UV.x);
+	data.AddFloat("specular_UVy", specular_UV.y);
+
+	data.AddFloat("ambient_UVx", ambient_UV.x);
+	data.AddFloat("ambient_UVy", ambient_UV.y);
+
+	data.AddFloat("emissive_UVx", emissive_UV.x);
+	data.AddFloat("emissive_UVy", emissive_UV.y);
+
+	data.AddFloat("heightmap_UVx", heightmap_UV.x);
+	data.AddFloat("heightmap_UVy", heightmap_UV.y);
+
+	data.AddFloat("normalmap_UVx", normalmap_UV.x);
+	data.AddFloat("normalmap_UVy", normalmap_UV.y);
+
+	data.AddFloat("shininess_UVx", shininess_UV.x);
+	data.AddFloat("shininess_UVy", shininess_UV.y);
+
+	data.AddFloat("opacity_UVx", opacity_UV.x);
+	data.AddFloat("opacity_UVy", opacity_UV.y);
+
+	data.AddFloat("displacement_UVx", displacement_UV.x);
+	data.AddFloat("displacement_UVy", displacement_UV.y);
+
+	data.AddFloat("lightmap_UVx", lightmap_UV.x);
+	data.AddFloat("lightmap_UVy", lightmap_UV.y);
+
+	data.AddFloat("reflection_UVx", reflection_UV.x);
+	data.AddFloat("reflection_UVy", reflection_UV.y);
+
+	data.AddBool("own_diffuse_uvs", own_diffuse_uvs);
+	data.AddBool("own_normal_uvs", own_normal_uvs);
+
 }
 
 void Material::LoadToMemory()
 {
-	bool has_tex = false, has_normalmap = false;
+	bool has_tex = false, has_normalmap = false, has_opacity = false;
 	if (diffuse_texture != nullptr && diffuse_texture->GetID() != 0)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -244,6 +360,15 @@ void Material::LoadToMemory()
 		has_normalmap = true;
 	}
 
+	if (opacity_texture != nullptr && opacity_texture->GetID() != 0)
+	{
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, opacity_texture->GetID());
+
+		has_opacity = true;
+	}
+
+
 	bool has_mat_color = false;
 	if (diffuse_color.a != 0.0f)
 	{
@@ -253,10 +378,18 @@ void Material::LoadToMemory()
 
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Diffuse", 0);
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_NormalMap", 1);
+	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Opacity", 2);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture", has_tex);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_opacity", has_opacity);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
+
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_normalmap", own_normal_uvs);
 	
+	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
+	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
+
 }
 
 void Material::UnloadFromMemory()

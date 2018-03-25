@@ -18,21 +18,21 @@ public class ShipDestruction
 
 	void Start () 
 	{
+		TheConsole.Log("d"); 
 		transform = TheGameObject.Self.GetComponent<TheTransform>(); 
-
+		TheGameObject.Self.SetActive(false); 
 		need_boom = false; 
 		exploted = false; 
 	}
 	
 	void Update ()
 	{
-		
-		if(need_boom == true && exploted == false) 
+		TheConsole.Log("in");
+		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{			
 			TheConsole.Log("ExploteNow"); 
 			FillPartList(); 
-			SetPartsDirection(); 
-			
+			SetPartsDirection(); 		
 			exploted = true; 
 		}
 				 	
@@ -40,19 +40,10 @@ public class ShipDestruction
 
 	void FillPartList()
 	{
-
-		TheGameObject[] childs = TheGameObject.Self.GetAllChilds(); 
-
-		int i = 0; 
-		foreach (TheGameObject curr in childs)
+		for(int i = 0; i < TheGameObject.Self.GetChildCount(); i++)
 		{
-
-			childs[i].SetActive(false); 
-			i++; 
-				//TheMeshCollider col = curr.GetComponent<TheMeshCollider>(); 
-				//col.SetActive(false); 
-
-				//ship_parts.Add(curr);
+			TheGameObject new_part = TheGameObject.Self.GetChild(i); 
+			ship_parts.Add(new_part); 
 		}
 	}
 

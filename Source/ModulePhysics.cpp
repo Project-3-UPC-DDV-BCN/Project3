@@ -517,6 +517,14 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	if (go == nullptr) return;
 
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+//<<<<<<< HEAD
+//	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+//	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
+//	float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
+//	transform->SetPosition(position);
+//	transform->SetRotation(rotation);
+//	//CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
+//=======
 	if (transform->GetTransformedFromRB())
 	{
 		physx::PxTransform phys_transform = rigid_actor->getGlobalPose();

@@ -1188,6 +1188,11 @@
     <ClInclude Include="SoundBankResource.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ComponentFactory.h" />
+    <ClInclude Include="Vertex.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1858,6 +1863,11 @@
     </ClCompile>
     <ClCompile Include="ComponentRadar.cpp">
       <Filter>Sources\GameObject\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

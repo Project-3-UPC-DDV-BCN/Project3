@@ -21,6 +21,12 @@ bool RenderTextureMSAA::Create(uint width, uint height, int MSAA_level)
 {
 	bool ret = true;
 
+	if (width <= 0)
+		width = 1;
+
+	if (height <= 0)
+		height = 1;
+	
 	if (MSAA_level > max_msaa_samples) MSAA_level = max_msaa_samples;
 	current_msaa_samples = MSAA_level;
 
@@ -43,7 +49,7 @@ bool RenderTextureMSAA::Create(uint width, uint height, int MSAA_level)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
 
 	GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if ( error != GL_FRAMEBUFFER_COMPLETE)
+	if (error != GL_FRAMEBUFFER_COMPLETE)
 	{
 		CONSOLE_ERROR("RenderTextureMSAA: Framebuffer is not complete! %s", gluErrorString(error));
 		ret = false;

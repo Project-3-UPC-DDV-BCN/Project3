@@ -891,23 +891,30 @@ void ModuleScene::LoadSceneNow()
 
 void ModuleScene::DestroyGameObjectNow()
 {
-	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) {
-		if (*it != nullptr)
-		{
-			if (!(*it)->GetIsUsedInPrefab()) {
-				(*it)->OnDestroy();
-				if ((*it)->IsRoot()) {
-					root_gameobjects.remove(*it);
-				}
-				CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
-				RELEASE(*it);
-			}
-			else
+	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) 
+	{
+		if((*it) != nullptr)
+		{ 
+			(*it)->OnDestroy();
+			
+			for (std::list<GameObject*>::iterator r = root_gameobjects.begin(); r != root_gameobjects.end(); ++r)
 			{
-				RemoveWithoutDelete(*it);
+				if((*r) == (*it))
+				{
+					root_gameobjects.erase(r);
+					break;
+				}
 			}
-			it = gameobjects_to_destroy.erase(it);
+			
+			CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
+			RELEASE(*it);
 		}
+		else
+		{
+			RemoveWithoutDelete(*it);
+		}
+
+		it = gameobjects_to_destroy.erase(it);
 	}
 }
 

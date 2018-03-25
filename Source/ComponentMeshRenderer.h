@@ -46,7 +46,7 @@ public:
 	int interior_material_indices_start;
 	AABB bounding_box;
 	////////////////////////////////////////
-
+	bool has_light = true;
 private:
 	Mesh* mesh;
 	Material* material;

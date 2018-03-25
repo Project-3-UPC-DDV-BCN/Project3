@@ -6,6 +6,8 @@ public class ShipProperties
 
 	private TheScript destruction_scpt;
 	private TheScript game_manager;
+
+	public TheGameObject game_manager_obj; 
 	
 	int hp; 
 	int hp_inc; 
@@ -17,9 +19,10 @@ public class ShipProperties
 		hp = 100; 
 		hp_inc = 0; 
 		is_dead = false; 
-
-		game_manager = TheGameObject.Find("Game_Manager").GetComponent<TheScript>(0);
-		destruction_scpt = TheGameObject.Self.GetChild(0).GetComponent<TheScript>(0);   //The number has to be changed by order
+		
+		game_manager_obj = TheGameObject.Find("GameeManager"); 
+		game_manager = game_manager_obj.GetComponent<TheScript>(0);
+		destruction_scpt = TheGameObject.Self.GetComponent<TheScript>(1);   //The number has to be changed by order
 	}
 	
 	void Update () 
