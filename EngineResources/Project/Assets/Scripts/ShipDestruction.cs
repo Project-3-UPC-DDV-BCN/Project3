@@ -18,16 +18,14 @@ public class ShipDestruction
 
 	void Start () 
 	{
-		TheConsole.Log("d"); 
 		transform = TheGameObject.Self.GetComponent<TheTransform>(); 
-		TheGameObject.Self.SetActive(false); 
+		ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
 		exploted = false; 
 	}
 	
 	void Update ()
 	{
-		TheConsole.Log("in");
 		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{			
 			TheConsole.Log("ExploteNow"); 
@@ -41,9 +39,8 @@ public class ShipDestruction
 	void FillPartList()
 	{
 		for(int i = 0; i < TheGameObject.Self.GetChildCount(); i++)
-		{
-			TheGameObject new_part = TheGameObject.Self.GetChild(i); 
-			ship_parts.Add(new_part); 
+		{			
+			ship_parts.Add(TheGameObject.Self.GetChild(i)); 
 		}
 	}
 
@@ -51,34 +48,30 @@ public class ShipDestruction
 	void SetPartsDirection()
 	{
 
-		/*TheVector3 direction = transform.ForwardDirection.Normalized; 
+
 
 		for(int i = 0; i < ship_parts.Count ;i++)
 		{
-			//Random Angle in XZ from 0 to 360 (guess 22)
-			float angle_in_xz = 22 * TheMath.DegToRad; 
+			TheVector3 direction = transform.ForwardDirection.Normalized; 
+
+			float rand = TheRandom.RandomRange(-5,5); 
+			direction.x = rand; 
 			
-			//Angle in YX from 0 to 360 (guess 78) 
-			float angle_in_yz = 78 * TheMath.DegToRad; 
+			rand = TheRandom.RandomRange(-5,5); 
+			direction.y = rand;
 
-			TheQuaternion fRot = null; 
-			fRot.Set(angle_in_xz,angle_in_yz,0,1);
+			rand = TheRandom.RandomRange(-5,5); 
+			direction.z = rand;
+	
+			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>(); 
+			
+			direction = direction.Normalized * explosion_v;
 
-			//Set the velocity
-			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>();
-		
-			TheQuaternion global_rot = transform.GlobalRotation.ToQuaternion();
-			TheQuaternion debugQ = TheQuaternion.Slerp(global_rot, fRot, 0);
-
-			TheVector3 converter = debugQ.ToEulerAngles(); 
-
-			direction.x = debugQ.x;
-			direction.y = debugQ.y;
-			direction.z = debugQ.z;
-
-			direction = direction.Normalized * explosion_v; 
+			TheConsole.Log(direction.x);  
+			TheConsole.Log(direction.y);  
+			TheConsole.Log(direction.z);  
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);		
-		}*/
+		}
 	}
 }
