@@ -967,6 +967,14 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 		float markers_size = radar->GetMarkersSize();
 		GameObject* center_go = radar->GetCenter();
 		Texture* center_texture = radar->GetCenterTexture();
+		int radar_type = radar->GetRadarType();
+
+		const char* radar_types_names[] = { "Front", "Back", "Up" };
+
+		if (ImGui::Combo("Type", &radar_type, radar_types_names, 3))
+		{
+			radar->SetRadarType(static_cast<RadarType>(radar_type));
+		}
 
 		if (ImGui::Checkbox("Transparent", &transparent))
 		{

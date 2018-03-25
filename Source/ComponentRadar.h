@@ -12,6 +12,13 @@ class CanvasDrawElement;
 class Texture;
 class Timer;
 
+enum RadarType
+{
+	RT_FRONT,
+	RT_BACK,
+	RT_TOP,
+};
+
 struct RadarMarker
 {
 	RadarMarker() {};
@@ -33,6 +40,9 @@ public:
 
 	bool Update();
 	bool CleanUp();
+
+	void SetRadarType(RadarType type);
+	RadarType GetRadarType() const;
 
 	void SetBackgroundTexture(Texture* tex);
 	Texture* GetBackgroundTexture() const;
@@ -72,6 +82,10 @@ private:
 	ComponentRectTransform * GetRectTrans();
 	void CleanEntitiesWithMarker(RadarMarker* marker);
 
+	void DrawRadarTop(ComponentCanvas* cv);
+	void DrawRadarFront(ComponentCanvas* cv);
+	void DrawRadarBack(ComponentCanvas* cv);
+
 public:
 	std::vector<RadarMarker*> markers;
 	std::vector<RadarEntity> entities;
@@ -88,6 +102,8 @@ private:
 	float max_distance;
 
 	float markers_size;
+
+	RadarType type;
 };
 
 #endif // !_H_COMPONENT_RADAR__
