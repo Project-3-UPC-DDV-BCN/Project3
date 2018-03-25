@@ -1786,7 +1786,7 @@ void ModuleResources::CreateDefaultShaders()
 		"{ \n"
 		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
 		"	FragPos = vec3(Model * vec4(position, 1.0));"
-		"	Normal = normals;\n"
+		"	Normal = mat3(transpose(inverse(Model))) * normals;\n"
 		"	mat3 normalMatrix = transpose(inverse(mat3(Model)));\n"
 		"	vec3 T = normalize(normalMatrix * tangents);\n"
 		"	vec3 N = normalize(normalMatrix * normals);\n"
@@ -2420,7 +2420,7 @@ void ModuleResources::CreateDefaultShaders()
 
 
 	//Depth Debug Shader
-	std::string vert_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_vertex.vshader";
+	/*std::string vert_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_vertex.vshader";
 	if (!App->file_system->FileExist(vert_depthdebug_path))
 	{
 		Shader* depthdebug_vert = new Shader();
@@ -2500,7 +2500,7 @@ void ModuleResources::CreateDefaultShaders()
 
 	depthdebugprog->LinkShaderProgram();
 
-	AddResource(depthdebugprog);
+	AddResource(depthdebugprog);*/
 
 	// outline shader
 	std::string outline_vert_path = SHADER_DEFAULT_FOLDER "outline_vertex.vshader";
