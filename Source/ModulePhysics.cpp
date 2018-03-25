@@ -560,6 +560,7 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 {
+	if (!App->IsPlaying()) return;
 	for (physx::PxU32 i = 0; i < count; i++)
 	{
 		// ignore pairs when shapes have been deleted
@@ -626,6 +627,7 @@ void ModulePhysics::onSleep(physx::PxActor ** actors, physx::PxU32 count)
 
 void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
 {
+	if (!App->IsPlaying()) return;
 	for (physx::PxU32 i = 0; i < nbPairs; i++)
 	{
 		const physx::PxContactPair& cp = pairs[i];
