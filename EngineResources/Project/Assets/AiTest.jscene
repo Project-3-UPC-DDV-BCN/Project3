@@ -1,8 +1,8 @@
 {
     "Scene_Name": "AiTest",
-    "GameObjects_Count": "7",
+    "GameObjects_Count": "9",
     "GameObject_0": {
-        "UUID": "1506401153",
+        "UUID": "1736788147",
         "Name": "Audio(11)",
         "Tag": "Default",
         "Layer": "Default",
@@ -42,7 +42,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "495804474",
+        "UUID": "713354305",
         "Name": "New GameObject(28)",
         "Tag": "Default",
         "Layer": "Default",
@@ -82,7 +82,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1898626123",
+        "UUID": "1733247883",
         "Name": "Main Camera(11)",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -137,7 +137,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "188385592",
+        "UUID": "1197253766",
         "Name": "Directional Light(11)",
         "Tag": "Default",
         "Layer": "Default",
@@ -188,9 +188,9 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "910668403",
+        "UUID": "1574168028",
         "Name": "A-Wing_bin(11)",
-        "Tag": "Default",
+        "Tag": "Alliance",
         "Layer": "Default",
         "Active": "1",
         "Components": {
@@ -333,7 +333,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "target",
-                            "field_value": "1485174882"
+                            "field_value": "0"
                         }
                     },
                     "vec2_fields": {},
@@ -347,9 +347,9 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1485174882",
+        "UUID": "471836390",
         "Name": "New GameObject(29)",
-        "Tag": "Default",
+        "Tag": "Empire",
         "Layer": "Default",
         "Active": "1",
         "Components": {
@@ -359,9 +359,9 @@
                 "Active": "1",
                 "UUID": "385025929",
                 "position": {
-                    "value_X": "-46.390877",
+                    "value_X": "-52.310013",
                     "value_Y": "12.262531",
-                    "value_Z": "34.072468"
+                    "value_Z": "38.632790"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -383,7 +383,7 @@
                     "mesh_name": "A_Wing"
                 },
                 "Material": {
-                    "Name": "default_mat"
+                    "Name": "A_Wing"
                 },
                 "Interior_Material": {
                     "UUID": "1480464845"
@@ -400,7 +400,113 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "170340319",
+        "UUID": "1811443678",
+        "Name": "New GameObject(29)",
+        "Tag": "Empire",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "385025929",
+                "position": {
+                    "value_X": "-18.045908",
+                    "value_Y": "-23.922195",
+                    "value_Z": "38.632790"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1027941052",
+                "Mesh": {
+                    "mesh_name": "A_Wing"
+                },
+                "Material": {
+                    "Name": "A_Wing"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_7": {
+        "UUID": "1395652316",
+        "Name": "New GameObject(29)",
+        "Tag": "Empire",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "385025929",
+                "position": {
+                    "value_X": "18.154165",
+                    "value_Y": "12.262531",
+                    "value_Z": "38.632790"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1027941052",
+                "Mesh": {
+                    "mesh_name": "A_Wing"
+                },
+                "Material": {
+                    "Name": "A_Wing"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_8": {
+        "UUID": "1664800074",
         "Name": "A_Wing(11)",
         "Tag": "Default",
         "Layer": "Default",
@@ -445,10 +551,10 @@
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
                 "Int_Mat_Indices_Start": "0",
-                "has_light": "0"
+                "has_light": "1"
             }
         },
-        "ParentID": "910668403",
+        "ParentID": "1574168028",
         "IsRoot": "0",
         "IsStatic": "0"
     }

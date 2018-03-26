@@ -1,6 +1,8 @@
 using TheEngine;
 using TheEngine.TheMath;
 using System.Collections.Generic;
+using TheEngine.TheConsole; 
+
 public class Ai_Starship_Movement {
 
 	public float maxSpd = 50.0f;
@@ -105,10 +107,13 @@ public class Ai_Starship_Movement {
 							target = ship;
 					}
 				}
-				//rand = (int)TheRandom.RandomRange(0f, auxList.Length);
-				//target = ships_in_scene[0];
-                //target = ships_in_scene[rand];
+				rand = (int)TheRandom.RandomRange(0f, auxList.Length);
+				target = ships_in_scene[rand];
             }
+			else
+			{	
+				target = ships_in_scene[1];
+			}
         } 
 		else
         {
