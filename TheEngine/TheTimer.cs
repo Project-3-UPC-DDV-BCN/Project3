@@ -5,12 +5,9 @@ namespace TheEngine
     public class TheTimer
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void CreateTimer(float time);
+        public extern void Start()
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern float ReadTime();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void ResetTime();
     }
 }

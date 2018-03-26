@@ -135,9 +135,8 @@ public:
 	float GetDeltaTime();
 
 	//TIMER
-	void CreateTimer(MonoObject* object, float time);
+	void Start(MonoObject* object, float time);
 	float ReadTime(MonoObject* object);
-	void ResetTime(MonoObject* object);
 
 	//INPUT
 	mono_bool IsKeyDown(MonoString * key_name);

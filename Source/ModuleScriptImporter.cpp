@@ -3046,18 +3046,14 @@ float NSScriptImporter::GetDeltaTime()
 	return App->time->GetGameDt();
 }
 
-void NSScriptImporter::CreateTimer(MonoObject * object, float time)
-{
 
+void NSScriptImporter::Start(MonoObject * object, float time)
+{
 }
 
 float NSScriptImporter::ReadTime(MonoObject * object)
 {
 	return 0.0f;
-}
-
-void NSScriptImporter::ResetTime(MonoObject * object)
-{
 }
 
 mono_bool NSScriptImporter::IsKeyDown(MonoString * key_name)
