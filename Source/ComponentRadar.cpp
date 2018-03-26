@@ -505,7 +505,7 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					float distance_mag_x_z = float2(center_pos.x, center_pos.z).Distance(float2(entity_pos.x, entity_pos.z));
 					float distance_mag_z_y = float2(center_pos.z, center_pos.y).Distance(float2(entity_pos.z, entity_pos.y));
 
-					float angle_center_entity_x_z = AngleFromTwoPoints(center_pos.x, center_pos.z, entity_pos.x, entity_pos.z) - 90;
+					float angle_center_entity_x_z = -AngleFromTwoPoints(center_pos.x, center_pos.z, entity_pos.x, entity_pos.z) + 90;
 					angle_center_entity_x_z -= center_rot.y;
 
 					float angle_center_entity_z_y = AngleFromTwoPoints(entity_pos.z, entity_pos.y, center_pos.z, center_pos.y);
@@ -521,8 +521,8 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					float y_offset = entity_rotated_pos_x_y.y;
 					float z_offset = entity_rotated_pos_x_z.x;
 
-					//float angle_x_z = AngleFromTwoPoints(center_pos.x, center_pos.z, entity_pos.x, entity_pos.z);
-					//angle_x_z += center_rot.y;
+					x_offset *= cos(DEGTORAD * center_rot.z);
+					y_offset *= cos(DEGTORAD * center_rot.z);
 
 					float scaled_size = c_rect_trans->GetScaledSize().x;
 
@@ -537,7 +537,7 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 						de.SetSize(c_rect_trans->GetScaledSize() * markers_size);
 						de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
 						de.SetFlip(false, false);
-						de.SetPosition(float3(x_offset, -y_offset, 0));
+						de.SetPosition(float3(-x_offset, -y_offset, 0));
 
 						if ((*it).marker != nullptr)
 						{
