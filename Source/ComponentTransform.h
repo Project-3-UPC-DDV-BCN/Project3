@@ -17,6 +17,7 @@ public:
 	void SetRotationFromRB(float3 rotation);
 	void SetIncrementalRotation(float3 rotation);
 	float3 GetGlobalRotation() const;
+	Quat GetGlobalQuatRotation() const;
 	float3 GetLocalRotation() const;
 	Quat GetQuatRotation() const;
 	void SetScale(float3 scale);
@@ -54,6 +55,7 @@ private:
 
 	float3 global_pos;
 	float3 global_rot;
+	Quat global_quat_rot;
 	float3 global_scale;
 
 	float4x4 transform_matrix;

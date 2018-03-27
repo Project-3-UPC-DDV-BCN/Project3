@@ -110,6 +110,11 @@ float3 ComponentTransform::GetGlobalRotation() const
 	return global_rot;
 }
 
+Quat ComponentTransform::GetGlobalQuatRotation() const
+{
+	return global_quat_rot;
+}
+
 float3 ComponentTransform::GetLocalRotation() const
 {
 	return shown_rotation; //If it's the parent. local rotation = global rotation
@@ -160,19 +165,25 @@ void ComponentTransform::UpdateGlobalMatrix()
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
 
+		global_pos = parent_transform->GetGlobalPosition() + position;
+		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
+		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
+		global_scale = parent_transform->GetGlobalScale().Mul(scale);
+
 		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
 		{
 			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
 			child_transform->UpdateGlobalMatrix();
 		}
-
-		global_pos = parent_transform->GetGlobalPosition() + position;
-		global_rot = (parent_transform->GetQuatRotation() * rotation).ToEulerXYZ() * RADTODEG;
-		global_scale = parent_transform->GetGlobalScale().Mul(scale);
 	}
 	else
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
+
+		global_pos = position;
+		global_quat_rot = rotation;
+		global_rot = shown_rotation;
+		global_scale = scale;
 
 		if (!is_particle)
 		{
@@ -182,10 +193,6 @@ void ComponentTransform::UpdateGlobalMatrix()
 				child_transform->UpdateGlobalMatrix();
 			}
 		}
-
-		global_pos = position;
-		global_rot = shown_rotation;
-		global_scale = scale;
 	}
 
 	if (!is_particle)
