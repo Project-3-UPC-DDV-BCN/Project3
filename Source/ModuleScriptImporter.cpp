@@ -262,12 +262,14 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 
 	int rows = mono_table_info_get_rows(table_info);
 
-	for (int i = 1; i < rows; i++) {
+	for (int i = 1; i < rows; i++) 
+	{
 		uint32_t cols[MONO_TYPEDEF_SIZE];
 		mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
 		const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 		const char* _name_space = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
 		mono_class = mono_class_from_name(image, _name_space, name);
+
 		if (mono_class)
 		{
 			class_name = name;
