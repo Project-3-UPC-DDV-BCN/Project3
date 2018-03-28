@@ -39,7 +39,7 @@ float NormalizeAngle(float angle)
 	return angle;
 }
 
-float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float angle_y)
+float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float angle_y, float angle_z)
 {
 	float3 to_rotate_pos;
 	Quat to_rotate_rot;
@@ -51,9 +51,11 @@ float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float a
 
 	Quat X(to_rotate.WorldX(), angle_x * DEGTORAD);
 	Quat Y(to_rotate.WorldY(), angle_y * DEGTORAD);
+	Quat Z(to_rotate.WorldZ(), angle_z * DEGTORAD);
 
 	distance = X.Transform(distance);
 	distance = Y.Transform(distance);
+	distance = Z.Transform(distance);
 
 	float4x4 ret = to_rotate;
 

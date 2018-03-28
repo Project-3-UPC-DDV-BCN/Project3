@@ -22,7 +22,7 @@ float AngleFromTwoPoints(float x1, float y1, float x2, float y2);
 
 float NormalizeAngle(float angle);
 
-float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float angle_y);
+float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float angle_y, float angle_z);
 
 // Returns the distance from two points(can be a negative distance)
 float DistanceFromTwoPoints(float x1, float y1, float x2, float y2);
