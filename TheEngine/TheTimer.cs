@@ -4,10 +4,16 @@ namespace TheEngine
 {
     public class TheTimer
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void Start();
+        private float start_time = 0.0f;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern float ReadTime();
+        public void Start()
+        {
+            start_time = TheTime.DeltaTime;
+        }
+
+        public float ReadTime()
+        {
+            return TheTime.DeltaTime - start_time;
+        }
     }
 }
