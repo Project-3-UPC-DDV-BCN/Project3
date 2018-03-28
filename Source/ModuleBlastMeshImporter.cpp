@@ -228,7 +228,7 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 					App->mesh_importer->SaveMeshToLibrary(*mesh);
 					mesh->FillVerticesList();
 
-					/*for (uint i = 0; i < indices_count; i += 3) // CreateTriangles
+					for (uint i = 0; i < indices_count; i += 3) // CreateTriangles
 					{
 						Triangle temp;
 						Vertex v0 = mesh->vertices_list[mesh->indices[i++]];
@@ -268,7 +268,7 @@ std::string ModuleBlastMeshImporter::ImportModel(std::string path)
 						v0.SetBitangent(bitangent.x, bitangent.y, bitangent.z);
 						v1.SetBitangent(bitangent.x, bitangent.y, bitangent.z);
 						v2.SetBitangent(bitangent.x, bitangent.y, bitangent.z);
-					}*/
+					}
 
 					//mesh->UnloadFromMemory();
 				}

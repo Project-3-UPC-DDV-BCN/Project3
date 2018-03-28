@@ -35,6 +35,8 @@
 #include "ComponentRectTransform.h"
 #include "ModuleInput.h"
 #include "ComponentRigidBody.h"
+#include "glmath.h"
+#include "OpenGL.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -159,7 +161,7 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 	}
 
 	//Set Up Depth Map
-
+	//SetDepthMap();
 
 	return ret;
 }
@@ -176,6 +178,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	ms_timer.Start();
+
+	//DrawFromLightForShadows();
 
 	// Regular rendering
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
@@ -538,9 +542,6 @@ void ModuleRenderer3D::DrawZBuffer()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, depth_map);
-
-	Mesh* plane = App->resources->GetMesh("Plane001");
-	plane->LoadToMemory();
 
 	SetUniformMatrix(program, "view", App->camera->GetCamera()->GetViewMatrix());
 	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
@@ -1609,6 +1610,11 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	float4x4 light_space_mat = light_projection * light_view;
 
 	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
 	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
 	{
 		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*) (*it)->GetComponent(Component::CompMeshRenderer);
@@ -1618,10 +1624,8 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawZBuffer();
 
+	//DrawZBuffer();
 	}
 }
 
@@ -1629,10 +1633,6 @@ void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, floa
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
 	uint program = 0;
 	ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
