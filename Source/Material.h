@@ -22,6 +22,7 @@ public:
 	void UnloadFromMemory();
 
 	void SetDiffuseTexture(Texture* diffuse);
+	void SetDiffuse2Texture(Texture* diffuse2);
 	void SetSpecularTexture(Texture* specular);
 	void SetAmbientTexture(Texture* ambient);
 	void SetEmissiveTexture(Texture* emissive);
@@ -34,6 +35,7 @@ public:
 	void SetReflectionTexture(Texture* refection);
 
 	Texture* GetDiffuseTexture() const;
+	Texture* GetDiffuse2Texture() const;
 	Texture* GetSpecularTexture() const;
 	Texture* GetAmbientTexture() const;
 	Texture* GetEmissiveTexture() const;
@@ -106,6 +108,7 @@ private:
 private:
 
 	Texture* diffuse_texture = nullptr;
+	Texture* diffuse2_texture = nullptr;
 	Texture* specular_texture = nullptr;
 	Texture* ambient_texture = nullptr;
 	Texture* emissive_texture = nullptr;
@@ -150,6 +153,7 @@ private:
 	public:
 	//Objects with this material will receive light ot not
 		float2 diffuse_UV;
+		float2 diffuse2_UV;
 		float2 specular_UV; 
 		float2 ambient_UV; 
 		float2 emissive_UV; 
@@ -162,6 +166,7 @@ private:
 		float2 reflection_UV;
 
 		bool own_diffuse_uvs = false;
+		bool own_diffuse2_uvs = false;
 		bool own_normal_uvs = false;
 };
 

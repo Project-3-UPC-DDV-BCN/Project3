@@ -1827,19 +1827,23 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
 			"uniform bool has_texture;\n"
+			"uniform bool has_texture2;\n"
 			"uniform bool is_ui;\n"
 			"uniform bool has_normalmap;\n\n"
 			"uniform bool has_opacity;"
 			"uniform bool has_light;\n"
 
 			"uniform bool own_uvs_diffuse;\n"
+			"uniform bool own_uvs_diffuse2;\n"
 			"uniform bool own_uvs_normalmap;\n"
 
 			"uniform sampler2D Tex_Diffuse;\n\n"
+			"uniform sampler2D Tex_Diffuse2;\n\n"
 			"uniform sampler2D Tex_NormalMap;\n\n"
 			"uniform sampler2D Tex_Opacity;\n"
 
 			"uniform vec2 Tex_Diffuse_UV;\n"
+			"uniform vec2 Tex_Diffuse2_UV;\n"
 			"uniform vec2 Tex_NormalMap_UV;\n"
 			"uniform vec2 Tex_Opacity_UV;\n"
 
@@ -1900,21 +1904,10 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n"
 			"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n\n"
 			"void ApplyOpacity();\n"
-
+			"void SetFragmentColor();\n"
 			"void main()\n"
 			"{\n"
-			"	if (has_texture)\n"
-			"	{\n"
-			"		if (own_uvs_diffuse == false)\n"	
-			"		color = texture(Tex_Diffuse, TexCoord);\n"
-			"		else\n"
-			"		color = texture(Tex_Diffuse, TexCoord * Tex_Diffuse_UV);\n"
-			"	}\n"
-			"	else if (has_material_color)\n"
-			"	color = material_color;\n"
-			"	else\n"
-			"	color = ourColor;\n"
-
+			"	SetFragmentColor();\n"
 			"	if (is_ui == false)\n"
 			"	{\n"
 			"		vec3 normal; vec3 viewDir;  vec3 fragPosarg;\n"
@@ -2051,6 +2044,29 @@ void ModuleResources::CreateDefaultShaders()
 			"	}\n"
 			"	else\n"
 			"		return vec3(0.0, 0.0, 0.0);\n"
+			"}\n"
+			"void SetFragmentColor()\n"
+			"{\n"
+			"	if (has_texture)\n"
+			"	{\n"
+			"		if (own_uvs_diffuse == false)\n"	
+			"		color = texture(Tex_Diffuse, TexCoord);\n"
+			"		else\n"
+			"		color = texture(Tex_Diffuse, TexCoord * Tex_Diffuse_UV);\n"
+			"	}\n"
+			"	else if (has_material_color)\n"
+			"	color = material_color;\n"
+			"	else\n"
+			"	color = ourColor;\n"
+			"	if (has_texture2)\n"
+			"	{\n"
+			"	vec4 diffuse2 = vec4(0.0, 0.0, 0.0, 0.0);"
+			"		if (own_uvs_diffuse2 == false)\n"
+			"		diffuse2 = texture(Tex_Diffuse2, TexCoord); \n"
+			"		else\n"
+			"		diffuse2 = texture(Tex_Diffuse2, TexCoord * Tex_Diffuse2_UV);\n"
+			"		if (diffuse2.a > 0.1) color = diffuse2;"
+			"	}\n"
 			"}\n"
 			"void ApplyOpacity()\n"
 			"{\n"
@@ -2421,7 +2437,7 @@ void ModuleResources::CreateDefaultShaders()
 
 
 	//Depth Debug Shader
-	std::string vert_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_vertex.vshader";
+	/*std::string vert_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_vertex.vshader";
 	if (!App->file_system->FileExist(vert_depthdebug_path))
 	{
 		Shader* depthdebug_vert = new Shader();
@@ -2501,7 +2517,7 @@ void ModuleResources::CreateDefaultShaders()
 
 	depthdebugprog->LinkShaderProgram();
 
-	AddResource(depthdebugprog);
+	AddResource(depthdebugprog);*/
 
 	// outline shader
 	std::string outline_vert_path = SHADER_DEFAULT_FOLDER "outline_vertex.vshader";

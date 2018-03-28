@@ -1286,41 +1286,8 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				ImGui::Text("Material name: "); ImGui::SameLine();
 				ImGui::Text(mesh_renderer->GetMaterial()->GetName().c_str());
 
-
-				// NORMAL MAP
-				ImGui::Text("Normal: "); ImGui::SameLine();
-				if (mesh_renderer->GetMaterial()->GetNormalMapTexture() != nullptr)
-				{
-					ImGui::Text(mesh_renderer->GetMaterial()->GetNormalMapTexture()->GetName().c_str());
-				}
-				else ImGui::Text("none");
-
-				Texture* normalmap = material->GetNormalMapTexture();
-				if (ImGui::InputResourceTexture("Change Normal Map", &normalmap))
-				{
-					material->SetNormalMapTexture(normalmap);
-				}
-				if (normalmap)
-				{
-					bool normal_uvs = material->own_normal_uvs;
-
-					if (ImGui::Checkbox("Edit Normal UVs", &normal_uvs))
-					{
-						material->own_normal_uvs = normal_uvs;
-					}
-					if (material->own_normal_uvs == true)
-					{
-						float2 normalUV = material->normalmap_UV;
-						if (ImGui::DragFloat2("Normal Map UV (X/Y)", (float*)&normalUV, 0.25, 0.05)) {
-							material->normalmap_UV.x = normalUV.x;
-							material->normalmap_UV.y = normalUV.y;
-						}
-					}
-				}
-
-
 				// DIFFUSE
-				ImGui::Text("Diffuse: "); ImGui::SameLine();
+				ImGui::TextColored({ 255, 0, 255, 255 }, "DIFFUSE: "); ImGui::SameLine();
 				if (mesh_renderer->GetMaterial()->GetDiffuseTexture() != nullptr)
 				{
 					ImGui::Text(mesh_renderer->GetMaterial()->GetDiffuseTexture()->GetName().c_str());
@@ -1352,9 +1319,78 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 						}
 					}
 				}
+				ImGui::Separator();
 
+				// SECOND DIFFUSE
+				ImGui::TextColored({ 255, 0, 255, 255 }, "DIFFUSE 2: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetDiffuse2Texture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetDiffuse2Texture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* diffuse2 = material->GetDiffuse2Texture();
+				if (ImGui::InputResourceTexture("Change Diffuse 2", &diffuse2))
+				{
+					material->SetDiffuse2Texture(diffuse2);
+				}
+
+				if (diffuse2)
+				{
+					bool diffuse2_uvs = material->own_diffuse2_uvs;
+
+					if (ImGui::Checkbox("Edit Diffuse 2 UVs", &diffuse2_uvs))
+					{
+						material->own_diffuse2_uvs = diffuse2_uvs;
+					}
+
+					if (material->own_diffuse2_uvs == true)
+					{
+						float2 diffuse2UV(material->diffuse2_UV);
+						if (ImGui::DragFloat2("Diffuse 2 UV (X,Y)", (float*)&diffuse2UV, 0.25, 0.05))
+						{
+							material->diffuse2_UV.x = diffuse2UV.x;
+							material->diffuse2_UV.y = diffuse2UV.y;
+						}
+					}
+				}
+				ImGui::Separator();
+
+
+				// NORMAL MAP
+				ImGui::TextColored({ 255, 0, 255, 255 }, "NORMAL: "); ImGui::SameLine();
+				if (mesh_renderer->GetMaterial()->GetNormalMapTexture() != nullptr)
+				{
+					ImGui::Text(mesh_renderer->GetMaterial()->GetNormalMapTexture()->GetName().c_str());
+				}
+				else ImGui::Text("none");
+
+				Texture* normalmap = material->GetNormalMapTexture();
+				if (ImGui::InputResourceTexture("Change Normal Map", &normalmap))
+				{
+					material->SetNormalMapTexture(normalmap);
+				}
+				if (normalmap)
+				{
+					bool normal_uvs = material->own_normal_uvs;
+
+					if (ImGui::Checkbox("Edit Normal UVs", &normal_uvs))
+					{
+						material->own_normal_uvs = normal_uvs;
+					}
+					if (material->own_normal_uvs == true)
+					{
+						float2 normalUV = material->normalmap_UV;
+						if (ImGui::DragFloat2("Normal Map UV (X/Y)", (float*)&normalUV, 0.25, 0.05)) {
+							material->normalmap_UV.x = normalUV.x;
+							material->normalmap_UV.y = normalUV.y;
+						}
+					}
+				}
+
+				ImGui::Separator();
 				//OPACITY
-				ImGui::Text("Opacity: "); ImGui::SameLine();
+				ImGui::TextColored({ 255, 0, 255, 255 }, "OPACITY: "); ImGui::SameLine();
 				if (mesh_renderer->GetMaterial()->GetOpacityTexture() != nullptr)
 				{
 					ImGui::Text(mesh_renderer->GetMaterial()->GetOpacityTexture()->GetName().c_str());

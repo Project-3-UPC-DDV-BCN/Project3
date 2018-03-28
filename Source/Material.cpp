@@ -29,6 +29,8 @@ Material::Material()
 	// Set uvs
 	diffuse_UV.x = 1.0f;
 	diffuse_UV.y = 1.0f;
+	diffuse2_UV.x = 1.0f;
+	diffuse2_UV.y = 1.0f;
 	specular_UV.x = 1.0f;
 	specular_UV.y = 1.0f;
 	ambient_UV.x = 1.0f;
@@ -87,6 +89,12 @@ void Material::Save(Data & data) const
 	f_diffuse_color.w = diffuse_color.a;
 	data.AddVector4("diffuse_color", f_diffuse_color);
 
+
+	if (diffuse2_texture != nullptr)
+		data.AddString("diffuse2_texture", diffuse2_texture->GetLibraryPath());
+	data.AddFloat("diffuse2_UVx", diffuse2_UV.x);
+	data.AddFloat("diffuse2_UVy", diffuse2_UV.y);
+
 	if (specular_texture != nullptr)
 		data.AddString("specular_texture", specular_texture->GetLibraryPath());
 	data.AddFloat("specular_UVx", specular_UV.x);
@@ -138,6 +146,7 @@ void Material::Save(Data & data) const
 	data.AddFloat("reflection_UVy", reflection_UV.y);
 
 	data.AddBool("own_diffuse_uvs", own_diffuse_uvs);
+	data.AddBool("own_diffuse2_uvs", own_diffuse2_uvs);
 	data.AddBool("own_normal_uvs", own_normal_uvs);
 
 
@@ -181,6 +190,17 @@ bool Material::Load(Data & data)
 	diffuse_color.b = f_diffuse_color.z;
 	diffuse_color.a = f_diffuse_color.w;
 	if (diffuse_color.a == -1.0f) diffuse_color.a = 0.0f;
+
+	library_path = data.GetString("diffuse2_texture");
+	if (library_path != "value not found")
+	{
+		Texture* diffuse2 = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
+		SetDiffuse2Texture(diffuse2);
+	}
+	diffuse2_UV.x = data.GetFloat("diffuse2_UVx");
+	diffuse2_UV.y = data.GetFloat("diffuse2_UVy");
+	if (diffuse2_UV.x < 0) diffuse2_UV.x = 1.0;
+	if (diffuse2_UV.y < 0) diffuse2_UV.y = 1.0;
 
 	library_path = data.GetString("specular_texture");
 	if (library_path != "value not found")
@@ -281,6 +301,7 @@ bool Material::Load(Data & data)
 	SetName(data.GetString("material_name"));
 
 	own_diffuse_uvs = data.GetBool("own_diffuse_uvs");
+	own_diffuse2_uvs = data.GetBool("own_diffuse2_uvs");
 	own_normal_uvs = data.GetBool("own_normal_uvs");
 	//Shader* vert = App->resources->GetShader(data.GetInt("vertex_shader"));
 	//Shader* frag = App->resources->GetShader(data.GetInt("fragment_shader"));
@@ -305,6 +326,9 @@ void Material::CreateMeta() const
 
 	data.AddFloat("diffuse_UVx", diffuse_UV.x);
 	data.AddFloat("diffuse_UVy", diffuse_UV.y);
+
+	data.AddFloat("diffuse2_UVx", diffuse_UV.x);
+	data.AddFloat("diffuse2_UVy", diffuse_UV.y);
 
 	data.AddFloat("specular_UVx", specular_UV.x);
 	data.AddFloat("specular_UVy", specular_UV.y);
@@ -337,19 +361,28 @@ void Material::CreateMeta() const
 	data.AddFloat("reflection_UVy", reflection_UV.y);
 
 	data.AddBool("own_diffuse_uvs", own_diffuse_uvs);
+	data.AddBool("own_diffuse2_uvs", own_diffuse2_uvs);
 	data.AddBool("own_normal_uvs", own_normal_uvs);
 
 }
 
 void Material::LoadToMemory()
 {
-	bool has_tex = false, has_normalmap = false, has_opacity = false;
+	bool has_tex = false, has_normalmap = false, has_opacity = false, has_tex2 = false;
 	if (diffuse_texture != nullptr && diffuse_texture->GetID() != 0)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
 	
 		has_tex = true;
+
+		if (diffuse2_texture != nullptr && diffuse2_texture->GetID() != 0)
+		{
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, diffuse2_texture->GetID());
+
+			has_tex2 = true;
+		}
 	}
 
 	if (normalmap_texture != nullptr && normalmap_texture->GetID() != 0)
@@ -379,15 +412,20 @@ void Material::LoadToMemory()
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Diffuse", 0);
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_NormalMap", 1);
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Opacity", 2);
+	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Diffuse2", 3);
+
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture", has_tex);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture2", has_tex2);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_opacity", has_opacity);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
 
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
+	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse2", own_diffuse2_uvs);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_normalmap", own_normal_uvs);
 	
 	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
+	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse2_UV", diffuse2_UV);
 	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
 
 }
@@ -400,6 +438,11 @@ void Material::UnloadFromMemory()
 void Material::SetDiffuseTexture(Texture * diffuse)
 {
 	diffuse_texture = diffuse;
+}
+
+void Material::SetDiffuse2Texture(Texture * diffuse2)
+{
+	diffuse2_texture = diffuse2;
 }
 
 void Material::SetSpecularTexture(Texture * specular)
@@ -455,6 +498,11 @@ void Material::SetReflectionTexture(Texture * refection)
 Texture * Material::GetDiffuseTexture() const
 {
 	return diffuse_texture;
+}
+
+Texture * Material::GetDiffuse2Texture() const
+{
+	return diffuse2_texture;
 }
 
 Texture * Material::GetSpecularTexture() const
