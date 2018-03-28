@@ -69,7 +69,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game)
 		else
 		{
 			physx::PxCookingParams cooking_params(scale);
-			//cooking_params.buildGPUData = true;
+			cooking_params.buildGPUData = true;
 			cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
 			if (!cooking)
 			{
@@ -374,7 +374,7 @@ physx::PxTriangleMesh * ModulePhysics::CreateTriangleMesh(Mesh * mesh)
 	physx::PxDefaultMemoryOutputStream writeBuffer;
 	physx::PxTriangleMeshCookingResult::Enum result;
 	physx::PxCookingParams params = cooking->getParams();
-	//params.buildGPUData = true;
+	params.buildGPUData = true;
 	cooking->setParams(params);
 	bool status = cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
 	if (!status)
@@ -527,25 +527,10 @@ void ModulePhysics::CreateScene()
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 {
 	physx::PxRigidActor* rigid_actor = static_cast<physx::PxRigidActor*>(actor);
-	/*if (rigid_actor->userData == nullptr)
-	{
-		if (physics_objects.find(rigid_actor) != physics_objects.end())
-		{
-			
-		}
-	}*/
 	GameObject* go = non_blast_objects[rigid_actor];
 	if (go == nullptr) return;
 
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-//<<<<<<< HEAD
-//	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
-//	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
-//	float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
-//	transform->SetPosition(position);
-//	transform->SetRotation(rotation);
-//	//CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
-//=======
 	if (transform->GetTransformedFromRB())
 	{
 		physx::PxTransform phys_transform = rigid_actor->getGlobalPose();

@@ -30,7 +30,10 @@ ComponentJointDistance::ComponentJointDistance(GameObject* attached_gameobject)
 
 ComponentJointDistance::~ComponentJointDistance()
 {
-	joint->release();
+	if (joint->isReleasable())
+	{
+		joint->release();
+	}
 }
 
 void ComponentJointDistance::SetBreakForce(float force)

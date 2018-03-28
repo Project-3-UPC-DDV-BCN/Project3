@@ -23,7 +23,10 @@ ComponentJointPrismatic::ComponentJointPrismatic(GameObject* attached_gameobject
 
 ComponentJointPrismatic::~ComponentJointPrismatic()
 {
-	joint->release();
+	if (joint->isReleasable())
+	{
+		joint->release();
+	}
 }
 
 void ComponentJointPrismatic::SetBreakForce(float force)

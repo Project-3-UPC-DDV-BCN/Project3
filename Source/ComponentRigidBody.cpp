@@ -19,11 +19,15 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	rigidbody = App->physics->CreateDynamicRigidBody();
 	//rigidbody->userData = attached_gameobject;
 
-	float* matrix = attached_gameobject->GetOpenGLMatrix().ptr();
+	/*float* matrix = attached_gameobject->GetOpenGLMatrix().ptr();
 	physx::PxMat44 mat(matrix);
 	physx::PxTransform phys_transform(mat);
-	rigidbody->setGlobalPose(phys_transform);
-
+	rigidbody->setGlobalPose(phys_transform);*/
+	ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
+	SetPosition(transform->GetGlobalPosition());
+	SetRotation(transform->GetGlobalRotation());
+	/*rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);*/
+	rigidbody->setActorFlag(physx::PxActorFlag::eVISUALIZATION, false);
 	transforms_go = false;
 
 	SetInitValues();
@@ -35,8 +39,15 @@ ComponentRigidBody::~ComponentRigidBody()
 
 	for (physx::PxShape* shape : shapes)
 	{
-		if(shape)
+		if (shape)
+		{
 			RemoveShape(*shape);
+			ComponentCollider* col = (ComponentCollider*)shape->userData;
+			if (col)
+			{
+				col->rb_is_released = true;
+			}
+		}
 	}
 
 	if (App->physics)
@@ -117,8 +128,11 @@ bool ComponentRigidBody::IsKinematic() const
 
 void ComponentRigidBody::SetLinearVelocity(float3 linear_velocity)
 {
-	physx::PxVec3 velocity(linear_velocity.x, linear_velocity.y, linear_velocity.z);
-	rigidbody->setLinearVelocity(velocity);
+	if (!is_kinematic)
+	{
+		physx::PxVec3 velocity(linear_velocity.x, linear_velocity.y, linear_velocity.z);
+		rigidbody->setLinearVelocity(velocity);
+	}
 }
 
 float3 ComponentRigidBody::GetLinearVelocity() const
@@ -130,8 +144,11 @@ float3 ComponentRigidBody::GetLinearVelocity() const
 
 void ComponentRigidBody::SetAngularVelocity(float3 angular_velocity)
 {
-	physx::PxVec3 phys_angular_velocity(angular_velocity.x, angular_velocity.y, angular_velocity.z);
-	rigidbody->setAngularVelocity(phys_angular_velocity);
+	if (!is_kinematic)
+	{
+		physx::PxVec3 phys_angular_velocity(angular_velocity.x, angular_velocity.y, angular_velocity.z);
+		rigidbody->setAngularVelocity(phys_angular_velocity);
+	}
 }
 
 float3 ComponentRigidBody::GetAngularVelocity() const
@@ -496,6 +513,14 @@ void ComponentRigidBody::SetTransformsGo(bool transforms)
 	transforms_go = transforms;
 	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 	transform->SetTransformedFromRB(transforms);
+	/*if (transforms)
+	{
+		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
+	}
+	else
+	{
+		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
+	}*/
 }
 
 bool ComponentRigidBody::GetTransformsGo() const
@@ -505,29 +530,62 @@ bool ComponentRigidBody::GetTransformsGo() const
 
 void ComponentRigidBody::EnableShapes()
 {
-	std::vector<physx::PxShape*> shapes = GetShapes();
+	/*std::vector<physx::PxShape*> shapes = GetShapes();
 
 	for (physx::PxShape* shape : shapes)
 	{
-		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+		ComponentCollider* collider = (ComponentCollider*)shape->userData;
+		collider->SetActive(true);
+		if (!collider->IsTrigger())
+		{
+			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+		}
 		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-	}
+		shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
+	}*/
+}
+
+void ComponentRigidBody::EnableShapeByIndex(int index)
+{
+	/*std::vector<physx::PxShape*> shapes = GetShapes();
+
+	int count = 0;
+	for (physx::PxShape* shape : shapes)
+	{
+		if (count == index)
+		{
+			ComponentCollider* collider = (ComponentCollider*)shape->userData;
+			collider->SetActive(true);
+			if (!collider->IsTrigger())
+			{
+				shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+			}
+			shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+			shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
+			break;
+		}
+
+		count++;
+	}*/
 }
 
 void ComponentRigidBody::DisableShapes()
 {
-	std::vector<physx::PxShape*> shapes = GetShapes();
+	/*std::vector<physx::PxShape*> shapes = GetShapes();
 
 	for (physx::PxShape* shape : shapes)
 	{
 		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
 		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
-	}
+		shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+		ComponentCollider* collider = (ComponentCollider*)shape->userData;
+		collider->SetActive(false);
+	}*/
 }
 
 void ComponentRigidBody::DisableShapeByIndex(int index)
 {
-	std::vector<physx::PxShape*> shapes = GetShapes();
+	/*std::vector<physx::PxShape*> shapes = GetShapes();
 
 	int count = 0; 
 	for (physx::PxShape* shape : shapes)
@@ -536,11 +594,14 @@ void ComponentRigidBody::DisableShapeByIndex(int index)
 		{
 			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
 			shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+			shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+			ComponentCollider* collider = (ComponentCollider*)shape->userData;
+			collider->SetActive(false);
 			break; 
 		}
 
 		count++; 
-	}
+	}*/
 }
 
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
@@ -659,13 +720,17 @@ void ComponentRigidBody::DrawColliders()
 	std::vector<physx::PxShape*> shapes = GetShapes();
 	for (std::vector<physx::PxShape*>::iterator it = shapes.begin(); it != shapes.end(); it++)
 	{
-		if (GetGameObject()->IsSelected())
+		ComponentCollider* col = (ComponentCollider*)(*it)->userData;
+		if (col && col->IsActive())
 		{
-			(*it)->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
-		}
-		else
-		{
-			(*it)->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+			if (GetGameObject()->IsSelected())
+			{
+				(*it)->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
+			}
+			else
+			{
+				(*it)->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+			}
 		}
 	}
 }

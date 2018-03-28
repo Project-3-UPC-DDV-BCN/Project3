@@ -27,30 +27,36 @@ namespace TheEngine
 
             set
             {
-                SetKinematic(value); 
+                SetTransformGO(value); 
             }
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern void SetKinematic(bool kinematic);
+        private extern void SetKinematic(bool kinematic);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern bool IsKinematic();
+        private extern bool IsKinematic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern void SetTransformGO(bool transform);
+        private extern void SetTransformGO(bool transform);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern bool IsTransformGO();
+        private extern bool IsTransformGO();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetLinearVelocity(float x, float y, float z);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void DisableCollider(int index);
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //public extern void DisableCollider(int index);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void DisableAllColliders();
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //public extern void DisableAllColliders();
+
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //public extern void EnableCollider(int index);
+
+        //[MethodImpl(MethodImplOptions.InternalCall)]
+        //public extern void EnableAllColliders();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetPosition(float x, float y, float z);

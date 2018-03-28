@@ -23,7 +23,10 @@ ComponentJointRevolute::ComponentJointRevolute(GameObject* attached_gameobject)
 
 ComponentJointRevolute::~ComponentJointRevolute()
 {
-	joint->release();
+	if (joint->isReleasable())
+	{
+		joint->release();
+	}
 }
 
 void ComponentJointRevolute::SetBreakForce(float force)

@@ -13,14 +13,33 @@ class GameObject;
 
 struct DLLMethodInfo
 {
+	std::string declaration;
+	std::string description;
+	std::string returning_type;
+	std::string method_name;
+	bool is_static = false;
+};
 
+struct DLLPropertyInfo
+{
+	std::string description;
+	std::string name;
+	std::string returning_type;
+};
+
+struct DLLFieldsInfo
+{
+	std::string description;
+	std::string name;
+	std::string returning_type;
 };
 
 struct DLLClassInfo
 {
-	std::vector<std::string> properties;
-	std::vector<std::string> classes;
-	
+	const char* name;
+	std::vector<DLLPropertyInfo> properties;
+	std::vector<DLLMethodInfo> methods;
+	std::vector<DLLFieldsInfo> fields;
 };
 
 class NSScriptImporter
@@ -176,6 +195,8 @@ public:
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 	void DisableCollider(MonoObject * object, int index);
 	void DisableAllColliders(MonoObject * object);
+	void EnableCollider(MonoObject * object, int index);
+	void EnableAllColliders(MonoObject * object);
 	void SetKinematic(MonoObject * object, bool kinematic);
 	void SetTransformGO(MonoObject * object, bool transform_go);
 	bool IsKinematic(MonoObject * object);
@@ -257,7 +278,7 @@ public:
 
 	static NSScriptImporter* ns_importer;
 
-	std::vector<std::string> classes_names;
+	std::vector<DLLClassInfo> engine_dll_info;
 
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
@@ -407,6 +428,8 @@ private:
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 	static void DisableCollider(MonoObject * object, int index);
 	static void DisableAllColliders(MonoObject * object);
+	static void EnableCollider(MonoObject * object, int index);
+	static void EnableAllColliders(MonoObject * object);
 	static bool IsKinematic(MonoObject * object);
 	static void SetKinematic(MonoObject * object, bool kinematic);
 	static void SetTransformGO(MonoObject * object, bool transform_go);

@@ -129,10 +129,10 @@ namespace TheEngine
         public extern int GetChildCount();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheComponent GetComponent(Type type, int index);
+        public extern void DestroyComponent(TheComponent to_del);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void DestroyComponent(TheComponent to_del);
+        private extern TheComponent GetComponent(Type type, int index);
 
         public T GetComponent<T>(int index = 0) where T : TheComponent
         {
@@ -140,7 +140,7 @@ namespace TheEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern TheComponent AddComponent(Type type);
+        private extern TheComponent AddComponent(Type type);
 
         public T AddComponent<T>() where T : TheComponent
         {
