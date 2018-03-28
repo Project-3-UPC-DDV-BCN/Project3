@@ -6,6 +6,7 @@
 #include <limits>
 #include <stdlib.h>
 #include "Globals.h"
+#include "MathGeoLib\TransformOps.h"
 
 // Returns the angle between two points in degrees
 float AngleFromTwoPoints(float x1, float y1, float x2, float y2)
@@ -13,7 +14,54 @@ float AngleFromTwoPoints(float x1, float y1, float x2, float y2)
 	float deltaY = y2 - y1;
 	float deltaX = x2 - x1;
 
-	return (atan2(deltaY, deltaX) * RADTODEG);
+	float angle = atan2(deltaY, deltaX) * RADTODEG;
+
+	if (angle <= 180)
+		return -angle;
+	if (angle > 180)
+		return angle / 2;
+}
+
+float NormalizeAngle(float angle)
+{
+	if (angle > 360)
+	{
+		int multiplers = angle / 360;
+		angle -= (360 * multiplers);
+	}
+
+	if (angle < -360)
+	{
+		int multiplers = abs(angle) / 360;
+		angle += (360 * multiplers);
+	}
+
+	return angle;
+}
+
+float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float angle_y)
+{
+	float3 to_rotate_pos;
+	Quat to_rotate_rot;
+	float3 to_rotate_scal;
+
+	to_rotate.Decompose(to_rotate_pos, to_rotate_rot, to_rotate_scal);
+
+	float3 distance = to_rotate_pos - center;
+
+	Quat X(to_rotate.WorldX(), angle_x * DEGTORAD);
+	Quat Y(to_rotate.WorldY(), angle_y * DEGTORAD);
+
+	distance = X.Transform(distance);
+	distance = Y.Transform(distance);
+
+	float4x4 ret = to_rotate;
+
+	ret[0][3] = distance.x + center.x;
+	ret[1][3] = distance.y + center.y;
+	ret[2][3] = distance.z + center.z;
+
+	return ret;
 }
 
 float DistanceFromTwoPoints(float x1, float y1, float x2, float y2)

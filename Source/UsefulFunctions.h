@@ -6,6 +6,8 @@
 #include <string>
 #include "MathGeoLib\float2.h"
 #include "MathGeoLib\float4.h"
+#include "MathGeoLib\float4x4.h"
+#include "MathGeoLib\Quat.h"
 
 // -----------------------------------------
 // -----------------------------------------
@@ -17,6 +19,10 @@
 
 // Returns the angle between two points in degrees
 float AngleFromTwoPoints(float x1, float y1, float x2, float y2);
+
+float NormalizeAngle(float angle);
+
+float4x4 RotateArround(float4x4 to_rotate, float3 center, float angle_x, float angle_y);
 
 // Returns the distance from two points(can be a negative distance)
 float DistanceFromTwoPoints(float x1, float y1, float x2, float y2);

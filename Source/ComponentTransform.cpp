@@ -62,13 +62,12 @@ float3 ComponentTransform::GetLocalPosition() const
 	return position; //If it's the parent. local position = global position
 }
 
-void ComponentTransform::SetRotation(float3 rotation)
+void ComponentTransform::SetRotation(float3 rot)
 {
 	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
 	{
-		this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
-
-		shown_rotation = rotation;
+		this->rotation = Quat::FromEulerXYZ(rot.x * DEGTORAD, rot.y * DEGTORAD, rot.z * DEGTORAD);
+		shown_rotation = rot;
 		UpdateGlobalMatrix();
 		dirty = true; 
 	}
@@ -165,25 +164,20 @@ void ComponentTransform::UpdateGlobalMatrix()
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
 
-		global_pos = parent_transform->GetGlobalPosition() + position;
-		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
-		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
-		global_scale = parent_transform->GetGlobalScale().Mul(scale);
-
 		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
 		{
 			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
 			child_transform->UpdateGlobalMatrix();
 		}
+
+		global_pos = parent_transform->GetGlobalPosition() + position;
+		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
+		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
+		global_scale = parent_transform->GetGlobalScale().Mul(scale);
 	}
 	else
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
-
-		global_pos = position;
-		global_quat_rot = rotation;
-		global_rot = shown_rotation;
-		global_scale = scale;
 
 		if (!is_particle)
 		{
@@ -193,6 +187,11 @@ void ComponentTransform::UpdateGlobalMatrix()
 				child_transform->UpdateGlobalMatrix();
 			}
 		}
+
+		global_pos = position;
+		global_quat_rot = rotation;
+		global_rot = shown_rotation;
+		global_scale = scale;
 	}
 
 	if (!is_particle)
