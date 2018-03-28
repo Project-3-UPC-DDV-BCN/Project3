@@ -9,6 +9,7 @@
 #include <map>
 #include <regex>
 #include "../imgui.h"
+#include "../../ModuleScriptImporter.h"
 
 class TextEditor
 {
@@ -144,9 +145,11 @@ public:
 		Identifiers mPreprocIdentifiers;
 		Classes mClasses;
 		std::string mCommentStart, mCommentEnd;
-		std::map<std::string, std::string> class_non_static_auto_complete;
+		/*std::map<std::string, std::string> class_non_static_auto_complete;
 		std::map<std::string, std::string> class_static_auto_complete;
-		std::map<std::string, std::string> functions_info;
+		std::map<std::string, std::string> functions_info;*/
+		std::vector<DLLClassInfo> csharpClasses;
+		std::string current_class_return;
 
 		TokenRegexStrings mTokenRegexStrings;
 

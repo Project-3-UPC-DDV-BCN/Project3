@@ -376,7 +376,7 @@ namespace TheEngine
             return q.Normalized;
         }
 
-        public static TheQuaternion QuaternionLookRotation(TheVector3 forward, TheVector3 up)
+        public static TheQuaternion LookRotation(TheVector3 forward, TheVector3 up)
         {
             Normalize(forward);
 

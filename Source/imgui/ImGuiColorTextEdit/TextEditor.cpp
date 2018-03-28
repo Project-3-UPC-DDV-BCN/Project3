@@ -500,55 +500,6 @@ void TextEditor::FillAutoWord(Char aChar)
 				}
 				return;
 			}
-			//is_method_auto_complete_open = false;
-			//if (auto_complete_word_methods.empty())
-			//{
-			//	Coordinates cursor_pos = GetActualCursorCoordinates();
-			//	auto line = mLines[cursor_pos.mLine];
-			//	/*if (line[cursor_pos.mColumn].mChar == '.')
-			//	{
-			//		line.pop_back();
-			//		return;
-			//	}*/
-			//	int check_word_start = 0;
-			//	if (line[cursor_pos.mColumn - 1].mChar == ')')
-			//	{
-			//		check_word_start = 3;
-			//	}
-			//	else
-			//	{
-			//		check_word_start = 1;
-			//	}
-			//	std::string new_word = GetWordAt(Coordinates(cursor_pos.mLine, cursor_pos.mColumn - check_word_start));
-			//	if (!new_word.empty())
-			//	{
-			//		bool found = false;
-			//		for (std::map<std::string, std::string>::iterator it = def.class_static_auto_complete.begin(); it != def.class_static_auto_complete.end(); it++)
-			//		{
-			//			if (it->second.find(new_word) != std::string::npos)
-			//			{
-			//				auto_complete_word = it->first;
-			//				is_method_auto_complete_open = false;
-			//				is_word_auto_complete_open = false;
-			//				found = true;
-			//				break;
-			//			}
-			//		}
-			//		if(!found)
-			//		{
-			//			for (std::map<std::string, std::string>::iterator it = def.class_non_static_auto_complete.begin(); it != def.class_non_static_auto_complete.end(); it++)
-			//			{
-			//				if (it->second.find(new_word) != std::string::npos)
-			//				{
-			//					auto_complete_word = it->first;
-			//					is_method_auto_complete_open = false;
-			//					is_word_auto_complete_open = false;
-			//					break;
-			//				}
-			//			}
-			//		}
-			//	}
-			//}
 		}
 	}
 	if (is_word_auto_complete_open)
@@ -621,7 +572,7 @@ std::string TextEditor::GetReturnTypeRecursively(std::string word, const Coordin
 {
 	std::string ret;
 
-	if (word == "Normalized")
+	/*if (word == "Normalized")
 	{
 		std::string type = GetWordAt(Coordinates(aCoords.mLine, aCoords.mColumn - 2));
 		if (variables.find(type) != variables.end())
@@ -640,7 +591,7 @@ std::string TextEditor::GetReturnTypeRecursively(std::string word, const Coordin
 			Coordinates c = FindFullWordStart(Coordinates(aCoords.mLine, aCoords.mColumn - 2));
 			ret = GetReturnTypeRecursively(type, c);
 		}
-	}
+	}*/
 	return ret;
 }
 
@@ -834,9 +785,6 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 						}
 						if (c == '.')
 						{
-							auto_complete_is_quaternion = false;
-							auto_complete_is_vector = false;
-
 							Coordinates coord = GetActualCursorCoordinates();
 							auto line = mLines[coord.mLine];
 							Coordinates c = FindFullWordStart(Coordinates(coord.mLine, coord.mColumn - 1));
@@ -846,61 +794,38 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 							if (def.mClasses.find(word) != def.mClasses.end())
 							{
 								auto_complete_word = word;
-								is_auto_complete_static = true;
+								def.current_class_return = word;
 								is_method_auto_complete_open = true;
-
-								if (word == "TheQuaternion")
-								{
-									auto_complete_is_quaternion = true;
-								}
-								else if (word == "TheVector3")
-								{
-									auto_complete_is_vector = true;
-								}
+								is_auto_complete_static = true;
 							}
 							else
 							{
-								if (line[coord.mColumn - 2].mChar == ')')
-								{
-									word += "()";
-								}
-
-								if (word == "Normalize()" || word == "Lerp()" || word == "Slerp()")
-								{
-									std::string type = GetWordAt(Coordinates(c.mLine, c.mColumn - 2));
-									if (type == "TheQuaternion")
-									{
-										word += "_TheQuaternion";
-										auto_complete_is_quaternion = true;
-									}
-									else if (type == "TheVector3")
-									{
-										word += "_TheVector3";
-										auto_complete_is_vector = true;
-									}
-								}
-
-								if (word == "Normalized")
-								{
-									std::string type = GetReturnTypeRecursively(word, c);
-									if (type == "TheQuaternion")
-									{
-										word += "_TheQuaternion";
-										auto_complete_is_quaternion = true;
-									}
-									else if (type == "TheVector3")
-									{
-										word += "_TheVector3";
-										auto_complete_is_vector = true;
-									}
-								}
-
 								if (variables.find(word) != variables.end())
 								{
 									auto_complete_word.clear();
 									auto_complete_word = variables[word];
+									def.current_class_return = variables[word];
 									is_auto_complete_static = false;
 									is_method_auto_complete_open = true;
+								}
+								else
+								{
+									for (DLLClassInfo class_info : def.csharpClasses)
+									{
+										if (class_info.name == def.current_class_return)
+										{
+											for (DLLMethodInfo method_info : class_info.methods)
+											{
+												if (method_info.method_name == word + "()")
+												{
+													auto_complete_word = method_info.returning_type;
+													def.current_class_return = method_info.returning_type;
+													is_method_auto_complete_open = true;
+													is_auto_complete_static = false;
+												}
+											}
+										}
+									}
 								}
 							}
 						}
@@ -964,105 +889,144 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	{
 		if (is_method_auto_complete_open)
 		{
-			std::map<std::string, std::string> auto_complete;
-			if (is_auto_complete_static)
-			{
-				auto_complete = GetLanguageDefinition().class_static_auto_complete;
-			}
-			else
-			{
-				auto_complete = GetLanguageDefinition().class_non_static_auto_complete;
-			}
-			std::string words = auto_complete[auto_complete_word];
 			Coordinates cords = GetActualCursorCoordinates();
 			ImVec2 cursor_pos = CoordinatesToScreenPos(cords);
 			ImGui::SetNextWindowPos(cursor_pos);
 
-			ImGui::BeginTooltip();
-			int word_index = 0;
-			for (int i = 0; i < words.size(); i++)
+			std::vector<DLLMethodInfo> methods_list;
+			for (DLLClassInfo class_info : mLanguageDefinition.csharpClasses)
 			{
+				if (class_info.name == auto_complete_word)
+				{
+					if (!class_info.methods.empty())
+					{
+						for (DLLMethodInfo method_info : class_info.methods)
+						{
+							if (is_auto_complete_static && method_info.is_static)
+							{
+								methods_list.push_back(method_info);
+							}
+							else if (!is_auto_complete_static && !method_info.is_static)
+							{
+								methods_list.push_back(method_info);
+							}
+						}
+					}
+				}
+			}
+			if (!methods_list.empty())
+			{
+				ImGui::BeginTooltip();
+				bool selected = false;
+				int word_index = 0;
+				for (DLLMethodInfo method_info : methods_list)
+				{
+					if (auto_complete_index == word_index)
+					{
+						selected = true;
+					}
+					if (ImGui::Selectable(method_info.method_name.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick | ImGuiSelectableFlags_AllowEnterKey))
+					{
+						ImGui::SetClipboardText(method_info.method_name.c_str());
+						Paste();
+						is_method_auto_complete_open = false;
+						auto_complete_index = 0;
+						break;
+					}
+					ImGui::Spacing(3);
+					word_index++;
+					selected = false;
+				}
+				if (auto_complete_index >= word_index)
+				{
+					auto_complete_index = word_index - 1;
+				}
+				/*int word_index = 0;
+				for (int i = 0; i < words.size(); i++)
+				{
 				std::string word;
 				while (words[i] != '_' && words[i] != '\0')
 				{
-					word += words[i];
-					i++;
+				word += words[i];
+				i++;
 				}
 				if (word.find(auto_complete_word_methods) == std::string::npos) continue;
 				bool selected = false;
 				if (auto_complete_index == word_index)
 				{
-					selected = true;
+				selected = true;
 				}
 				if (ImGui::Selectable(word.c_str(), &selected, ImGuiSelectableFlags_AllowEnterKey))
 				{
-					size_t size = auto_complete_word_methods.size();
-					if (size != 0)
-					{
-						word.erase(word.begin(), word.begin() + size);
-					}
-					ImGui::SetClipboardText(word.c_str());
-					Paste();
-					is_method_auto_complete_open = false;
-					auto_complete_index = 0;
-					break;
+				size_t size = auto_complete_word_methods.size();
+				if (size != 0)
+				{
+				word.erase(word.begin(), word.begin() + size);
+				}
+				ImGui::SetClipboardText(word.c_str());
+				Paste();
+				is_method_auto_complete_open = false;
+				auto_complete_index = 0;
+				break;
 				}
 				if (selected || ImGui::IsItemHovered())
 				{
-					ImVec2 new_tooltip_pos = cursor_pos;
-					new_tooltip_pos.x += ImGui::GetWindowSize().x;
-					new_tooltip_pos.y = cursor_pos.y;
+				ImVec2 new_tooltip_pos = cursor_pos;
+				new_tooltip_pos.x += ImGui::GetWindowSize().x;
+				new_tooltip_pos.y = cursor_pos.y;
 
-					ImGui::SetNextWindowPos(new_tooltip_pos);
-					ImGui::Begin("methods##auto_complete_methods", &is_method_auto_complete_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
-					static TextEditor::LanguageDefinition def = GetLanguageDefinition();
-					if (word == "Lerp()" || word == "AngleBetween()" || word == "DotProduct()" || word == "Magnitude()" || word == "Normalize()" ||
-						word == "Slerp()" || word == "ToAngleAxis()" || word == "Length" || word == "LengthSquared" || word == "Normalized" || word == "Set()" ||
-						word == "Scale()")
-					{
-						if (auto_complete_is_vector)
-						{
-							word += "_Vec";
-							if (is_auto_complete_static)
-							{
-								word += "_Static";
-							}
-							else
-							{
-								word += "_NStatic";
-							}
-						}
-						else if (auto_complete_is_quaternion)
-						{
-							word += "_Quat";
-							if (is_auto_complete_static)
-							{
-								word += "_Static";
-							}
-							else
-							{
-								word += "_NStatic";
-							}
-						}
-						else
-						{
-							word += "_Math";
-						}
-					}
-					ImGui::Text("Info:");
-					ImGui::Separator();
-					ImGui::Spacing(5);
-					ImGui::Text(def.functions_info[word].c_str());
-					ImGui::End();
+				ImGui::SetNextWindowPos(new_tooltip_pos);
+				ImGui::Begin("methods##auto_complete_methods", &is_method_auto_complete_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+				static TextEditor::LanguageDefinition def = GetLanguageDefinition();
+				if (word == "Lerp()" || word == "AngleBetween()" || word == "DotProduct()" || word == "Magnitude()" || word == "Normalize()" ||
+				word == "Slerp()" || word == "ToAngleAxis()" || word == "Length" || word == "LengthSquared" || word == "Normalized" || word == "Set()" ||
+				word == "Scale()")
+				{
+				if (auto_complete_is_vector)
+				{
+				word += "_Vec";
+				if (is_auto_complete_static)
+				{
+				word += "_Static";
+				}
+				else
+				{
+				word += "_NStatic";
+				}
+				}
+				else if (auto_complete_is_quaternion)
+				{
+				word += "_Quat";
+				if (is_auto_complete_static)
+				{
+				word += "_Static";
+				}
+				else
+				{
+				word += "_NStatic";
+				}
+				}
+				else
+				{
+				word += "_Math";
+				}
+				}
+				ImGui::Text("Info:");
+				ImGui::Separator();
+				ImGui::Spacing(5);
+				ImGui::Text(def.functions_info[word].c_str());
+				ImGui::End();
 				}
 				word_index++;
-			}
-			if (auto_complete_index >= word_index)
-			{
+				}
+				if (auto_complete_index >= word_index)
+				{
 				auto_complete_index = word_index - 1;
-			}
-			ImGui::EndTooltip();
+				}*/
+				ImGui::EndTooltip();
 
+			}
+			
 			ImGui::SetWindowFocus();
 		}
 
@@ -2061,14 +2025,14 @@ void TextEditor::ColorizeRange(int aFromLine, int aToLine)
 					if (def.mClasses.find(v.str()) != def.mClasses.end())
 					{
 						std::string tmp = v.first._Ptr;
-						if (tmp.find(' ') != std::string::npos && tmp.find('.') == std::string::npos && tmp.find(';') != std::string::npos)
+						if (tmp.find(' ') != std::string::npos && tmp.find('.') == std::string::npos/* && tmp.find(';') != std::string::npos*/)
 						{
 							std::string sentence = v.second._Ptr;
 							std::string variable_name;
 							bool variable_started = false;
 							for (std::string::iterator it = sentence.begin(); it != sentence.end(); it++)
 							{
-								if (*it != ' ' && *it != ';' && *it != '.')
+								if (*it != ' ' && *it != ';' && *it != '.' && *it != ')')
 								{
 									variable_started = true;
 								}
@@ -2767,9 +2731,9 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 
 		};*/
 
-		std::vector<std::string> csharpClasses = App->script_importer->classes_names;
-		for (auto& k : csharpClasses)
-			langDef.mClasses.insert(k);
+		langDef.csharpClasses = App->script_importer->engine_dll_info;
+		for (auto& k : langDef.csharpClasses)
+			langDef.mClasses.insert(k.name);
 
 		for (auto& k : csharpKeywords)
 			langDef.mKeywords.insert(k);
@@ -2795,7 +2759,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation));
 
-		langDef.class_static_auto_complete["Math"] = "Abs()_Acos()_Asin()_Atan()_Atan2()_Ceiling()_Clamp()_Cos()_DegToRad_Epsilon_Exp()_Floor()_Infinity_IsPowerOfTwo()_Lerp()_Log()_Max()_Min()_NegativeInfinity_PI_Pow()_RadToDeg_Round()_Sin()_Sqrt()_Tan()";
+		/*langDef.class_static_auto_complete["Math"] = "Abs()_Acos()_Asin()_Atan()_Atan2()_Ceiling()_Clamp()_Cos()_DegToRad_Epsilon_Exp()_Floor()_Infinity_IsPowerOfTwo()_Lerp()_Log()_Max()_Min()_NegativeInfinity_PI_Pow()_RadToDeg_Round()_Sin()_Sqrt()_Tan()";
 		langDef.class_static_auto_complete["TheGameObject"] = "Destroy()_Duplicate()_Self";
 		langDef.class_non_static_auto_complete["TheGameObject"] = "AddComponent<TheFactory>()_GetChild()_GetChildCount()_GetComponent<TheTransform>()_GetComponent<TheFactory>()_GetComponent<TheProgressBar>()_GetComponent<TheText>()_GetComponent<TheRadar>_GetComponent<TheAudioSource>()_IsActive()_IsStatic()_layer_name_SetActive()_SetParent()_SetStatic()_tag";
 		langDef.class_static_auto_complete["TheConsole"] = "Error()_Log()_Warning()";
@@ -2986,7 +2950,7 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		variables["CrossProduct()"] = "TheVector3";
 		variables["Reflect()"] = "TheVector3";
 		variables["Scale()"] = "TheVector3";
-		variables["ToQuaternion()"] = "TheQuaternion";
+		variables["ToQuaternion()"] = "TheQuaternion";*/
 		
 		langDef.mCommentStart = "/*";
 		langDef.mCommentEnd = "*/";

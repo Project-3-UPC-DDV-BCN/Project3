@@ -25,6 +25,7 @@
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
+#include <mono/metadata/attrdefs.h>
 
 //CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -279,16 +280,144 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 
 void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage* image)
 {
-	
-	const MonoTableInfo* table_info = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
-
-	int rows = mono_table_info_get_rows(table_info);
-
-	for (int i = 1; i < rows; i++) {
+	const MonoTableInfo* class_table_info = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+	int class_table_rows = mono_table_info_get_rows(class_table_info);
+	for (int i = 1; i < class_table_rows; i++) {
+		DLLClassInfo class_info;
 		uint32_t cols[MONO_TYPEDEF_SIZE];
-		mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
-		const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
-		classes_names.push_back(name);
+		mono_metadata_decode_row(class_table_info, i, cols, MONO_TYPEDEF_SIZE);
+		class_info.name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+		const char* name_space = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+		MonoClass* m_class = mono_class_from_name(image, name_space, class_info.name);
+
+		void* properties_iter = nullptr;
+		MonoProperty* property;
+		while ((property = mono_class_get_properties(m_class, &properties_iter)))
+		{
+			MonoMethod* method = mono_property_get_get_method(property);
+			if (!(mono_method_get_flags(method, NULL) & MONO_METHOD_ATTR_PUBLIC))
+			{
+				continue;
+			}
+			DLLPropertyInfo property_info;
+			property_info.name = mono_property_get_name(property);
+			MonoMethodSignature* sig = mono_method_get_signature(method, image, 0);
+			MonoType* return_type = mono_signature_get_return_type(sig);
+			std::string return_name = mono_type_get_name(return_type);
+			if (return_name.find("TheEngine") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 10);
+			else if (return_name.find("System") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 7);
+			if (return_name == "Single") return_name = "Float";
+			else if (return_name == "Int32") return_name = "Int";
+			property_info.returning_type = return_name.c_str();
+			class_info.properties.push_back(property_info);
+		}
+
+		void* fields_iter = nullptr;
+		MonoClassField* field;
+		while ((field = mono_class_get_fields(m_class, &fields_iter)))
+		{
+			if (!(mono_field_get_flags(field) & MONO_FIELD_ATTR_PUBLIC))
+			{
+				continue;
+			}
+			DLLFieldsInfo field_info;
+			field_info.name = mono_field_get_name(field);
+			MonoType* return_type = mono_field_get_type(field);
+			std::string return_name = mono_type_get_name(return_type);
+			if (return_name.find("TheEngine") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 10);
+			else if (return_name.find("System") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 7);
+			if (return_name == "Single") return_name = "Float";
+			else if (return_name == "Int32") return_name = "Int";
+			field_info.returning_type = return_name.c_str();
+			class_info.fields.push_back(field_info);
+		}
+
+		MonoMethod *method;
+		void* iter = nullptr;
+		while ((method = mono_class_get_methods(m_class, &iter)))
+		{
+			if (!(mono_method_get_flags(method, NULL) & MONO_METHOD_ATTR_PUBLIC) || mono_method_get_flags(method, NULL) == 6278
+				|| mono_method_get_flags(method, NULL) == 2182 || mono_method_get_flags(method, NULL) == 2198)
+			{
+				continue;
+			}
+			std::string method_name = mono_method_get_name(method);
+			const MonoTableInfo* method_table_info = mono_image_get_table_info(image, MONO_TABLE_METHOD);
+			int method_table_rows = mono_table_info_get_rows(method_table_info);
+			const MonoTableInfo* param_table_info = mono_image_get_table_info(image, MONO_TABLE_PARAM);
+			int param_table_rows = mono_table_info_get_rows(param_table_info);
+			uint index = mono_method_get_index(method);
+			uint param_index = mono_metadata_decode_row_col(method_table_info, index - 1, MONO_METHOD_PARAMLIST);
+			uint lastp = 0;
+			if (index < method_table_rows)
+				lastp = mono_metadata_decode_row_col(method_table_info, index, MONO_METHOD_PARAMLIST);
+			else
+				lastp = param_table_rows + 1;
+			uint cols[MONO_PARAM_SIZE];
+
+			DLLMethodInfo method_info;
+			if (mono_method_get_flags(method, NULL) & MONO_METHOD_ATTR_STATIC) method_info.is_static = true;
+			MonoMethodSignature* sig = mono_method_get_signature(method, image, 0);
+			MonoType* return_type = mono_signature_get_return_type(sig);
+			std::string return_name = mono_type_get_name(return_type);
+			if (return_name.find("TheEngine") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 10);
+			else if (return_name.find("System") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 7);
+			if (return_name == "Single") return_name = "Float";
+			else if (return_name == "Int32") return_name = "Int";
+			std::string template_name = "";
+			method_info.method_name = method_name;
+			if (return_name == "T")
+			{
+				method_info.method_name += "<>";
+				return_name = "TheComponent";
+				template_name = "<TheComponent>";
+			}
+			else method_info.method_name += "()";
+			method_info.returning_type = return_name;
+			method_info.declaration += return_name + " " + method_name + template_name + "(";
+			
+			void* param_iter = nullptr;
+			MonoType* param_type = nullptr;
+			uint param_count = mono_signature_get_param_count(sig);
+			if (param_count == 0)
+			{
+				method_info.declaration += ")";
+			}
+			int param_index_start = 0;
+			while ((param_type = mono_signature_get_params(sig, &param_iter)))
+			{
+				std::string param_type_name = mono_type_get_name(param_type);
+				if (param_type_name.find("TheEngine") != std::string::npos) param_type_name.erase(param_type_name.begin(), param_type_name.begin() + 10);
+				else if (param_type_name.find("System") != std::string::npos) param_type_name.erase(param_type_name.begin(), param_type_name.begin() + 7);
+				if (mono_signature_param_is_out(sig, param_index_start))
+				{
+					method_info.declaration += "out ";
+				}
+				else if (param_type_name.find('&') != std::string::npos)
+				{
+					method_info.declaration += "ref ";
+				}
+				if (param_type_name == "Single") param_type_name = "Float";
+				else if (param_type_name == "Int32") param_type_name = "Int";
+				method_info.declaration += param_type_name + " ";
+				mono_metadata_decode_row(param_table_info, param_index - 1, cols, MONO_PARAM_SIZE);
+				const char* param_name = mono_metadata_string_heap(image, cols[MONO_PARAM_NAME]);
+				method_info.declaration += param_name;
+				param_count--;
+				if (param_count != 0)
+				{
+					method_info.declaration += ", ";
+				}
+				else
+				{
+					method_info.declaration += ")";
+				}
+				param_index++;
+				param_index_start++;
+			}
+			class_info.methods.push_back(method_info);
+		}
+		engine_dll_info.push_back(class_info);
 	}
 }
 
@@ -1071,6 +1200,16 @@ void ModuleScriptImporter::DisableCollider(MonoObject * object, int index)
 void ModuleScriptImporter::DisableAllColliders(MonoObject * object)
 {
 	ns_importer->DisableAllColliders(object);
+}
+
+void ModuleScriptImporter::EnableCollider(MonoObject * object, int index)
+{
+	ns_importer->EnableCollider(object, index);
+}
+
+void ModuleScriptImporter::EnableAllColliders(MonoObject * object)
+{
+	ns_importer->EnableAllColliders(object);
 }
 
 bool ModuleScriptImporter::IsKinematic(MonoObject * object)
@@ -2006,7 +2145,7 @@ void NSScriptImporter::DestroyComponent(MonoObject* object, MonoObject* cmp)
 
 	if (comp != nullptr && go != nullptr)
 	{
-		App->editor->properties_window->components_to_destroy[go] = comp;
+		go->DestroyComponent(comp);
 	}
 }
 
@@ -3419,6 +3558,32 @@ void NSScriptImporter::DisableAllColliders(MonoObject * object)
 
 		if (rb != nullptr)
 			rb->DisableShapes();
+	}
+}
+
+void NSScriptImporter::EnableCollider(MonoObject * object, int index)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->EnableShapeByIndex(index);
+	}
+}
+
+void NSScriptImporter::EnableAllColliders(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->EnableShapes();
 	}
 }
 

@@ -53,6 +53,8 @@ public:
 
 	ComponentRigidBody* GetRigidBody() const;
 
+	bool rb_is_released;
+
 private:
 	ColliderType collider_type;
 	physx::PxMaterial* collider_material;

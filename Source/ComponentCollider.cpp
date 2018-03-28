@@ -24,6 +24,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 	geo_convex_mesh = nullptr;
 	is_convex = false;
 	phys_material = nullptr;
+	rb_is_released = false;
 
 	rigidbody = (ComponentRigidBody*)attached_gameobject->GetComponent(Component::CompRigidBody);
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
@@ -110,9 +111,15 @@ ComponentCollider::~ComponentCollider()
 	//collider_material->release();
 	//collider_shape->release();
 
-	//RELEASE(phys_material);
-	GetRigidBody()->RemoveShape(*GetColliderShape());
-
+	if (!rb_is_released)
+	{
+		rigidbody->RemoveShape(*GetColliderShape());
+	}
+	else
+	{
+		rigidbody = nullptr;
+	}
+	RELEASE(phys_material);
 	RELEASE(geo_triangle_mesh);
 	RELEASE(geo_convex_mesh);
 }

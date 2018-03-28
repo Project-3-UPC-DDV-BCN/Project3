@@ -75,6 +75,7 @@ public:
 	bool GetTransformsGo() const;
 
 	void EnableShapes();
+	void EnableShapeByIndex(int index);
 	void DisableShapes();
 	void DisableShapeByIndex(int index); 
 
@@ -88,7 +89,6 @@ public:
 private:
 	bool use_gravity;
 	bool is_kinematic;
-
 	physx::PxRigidDynamic* rigidbody;
 	bool transforms_go;
 };

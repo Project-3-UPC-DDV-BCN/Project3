@@ -22,7 +22,10 @@ ComponentJointFixed::ComponentJointFixed(GameObject* attached_gameobject)
 
 ComponentJointFixed::~ComponentJointFixed()
 {
-	joint->release();
+	if (joint->isReleasable())
+	{
+		joint->release();
+	}
 }
 
 void ComponentJointFixed::SetBreakForce(float force)

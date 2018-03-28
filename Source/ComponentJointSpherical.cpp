@@ -23,7 +23,10 @@ ComponentJointSpherical::ComponentJointSpherical(GameObject* attached_gameobject
 
 ComponentJointSpherical::~ComponentJointSpherical()
 {
-	joint->release();
+	if (joint->isReleasable())
+	{
+		joint->release();
+	}
 }
 
 void ComponentJointSpherical::SetBreakForce(float force)
