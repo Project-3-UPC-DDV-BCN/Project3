@@ -383,12 +383,19 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 
 			bool has_texture = ((*it).GetTextureId() > 0);
 
-			SetUniformInt(program->GetProgramID(), "Tex_Diffuse", 0);
-			SetUniformInt(program->GetProgramID(), "Tex_NormalMap", 0);
-			SetUniformBool(program->GetProgramID(), "has_normalmap", false);
-			SetUniformBool(program->GetProgramID(), "has_texture", has_texture);
 			SetUniformBool(program->GetProgramID(), "has_material_color", !has_texture);
 			SetUniformVector4(program->GetProgramID(), "material_color", (*it).GetColour());
+			SetUniformBool(program->GetProgramID(), "has_texture", has_texture);
+			SetUniformBool(program->GetProgramID(), "has_texture2", false);
+			SetUniformBool(program->GetProgramID(), "has_opacity", false);
+			SetUniformBool(program->GetProgramID(), "has_light", true);
+			SetUniformBool(program->GetProgramID(), "own_uvs_diffuse", false);
+			SetUniformBool(program->GetProgramID(), "own_uvs_diffuse2", false);
+			SetUniformBool(program->GetProgramID(), "own_uvs_normalmap", false);
+			SetUniformInt(program->GetProgramID(), "Tex_Diffuse2", 0);
+			SetUniformInt(program->GetProgramID(), "Tex_NormalMap", 0);
+			SetUniformInt(program->GetProgramID(), "Tex_Opacity", 0);
+			SetUniformBool(program->GetProgramID(), "has_normalmap", false);
 
 			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
 
@@ -670,6 +677,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	
 	if(active_camera == game_camera)
 		DrawCanvas(active_camera, false);
+	else if(active_camera == editor_camera)
+		DrawCanvas(active_camera, true);
 
 	// Debug Draw render
 	if(is_editor_camera)
