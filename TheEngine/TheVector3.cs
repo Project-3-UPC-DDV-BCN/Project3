@@ -354,7 +354,7 @@ namespace TheEngine
 		///   <para>Returns Rotation from one vector to another.</para>
 		/// </summary>
 		/// <param name="from"></param>
-        /// /// <param name="to"></param>
+        /// <param name="to"></param>
         public static TheQuaternion RotationToTarget(TheVector3 from, TheVector3 to)
         {
             float a = TheMath.TheMath.Sqrt(from.LengthSquared * to.LengthSquared);

@@ -217,7 +217,7 @@ void ComponentRigidBody::AddTorque(float3 torque, int force_mode)
 		CONSOLE_ERROR("Force Mode is not valid");
 		return;
 	}
-	rigidbody->addForce(phys_torque, (physx::PxForceMode::Enum)force_mode);
+	rigidbody->addTorque(phys_torque, (physx::PxForceMode::Enum)force_mode);
 }
 
 void ComponentRigidBody::ClearTorque(int force_mode)
