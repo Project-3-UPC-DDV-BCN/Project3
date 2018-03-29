@@ -75,13 +75,13 @@ public class ShipDestruction
 		{
 			TheVector3 direction = transform.ForwardDirection.Normalized; 
 
-			float randx = TheRandom.RandomRange(-5,5); 
+			float randx = TheRandom.RandomRange(-100,100); 
 			direction.x = randx; 
 			
-			float randy = TheRandom.RandomRange(-5,5); 
+			float randy = TheRandom.RandomRange(-100,100); 
 			direction.y = randy;
 
-			float randz = TheRandom.RandomRange(-5,5); 
+			float randz = TheRandom.RandomRange(-100,100); 
 			direction.z = randz;
 	
 			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>(); 
