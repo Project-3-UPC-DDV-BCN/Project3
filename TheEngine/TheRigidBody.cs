@@ -35,6 +35,12 @@ namespace TheEngine
         private extern void SetKinematic(bool kinematic);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetAngularVelocity(float x, float y, float z);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void AddTorque(float x, float y, float z, int force_type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool IsKinematic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]

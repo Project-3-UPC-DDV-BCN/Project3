@@ -193,6 +193,8 @@ public:
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void SetAngularVelocity(MonoObject * object, float x, float y, float z); 
+	void AddTorque(MonoObject* object, float x, float y, float z, int force_type);
 	void DisableCollider(MonoObject * object, int index);
 	void DisableAllColliders(MonoObject * object);
 	void EnableCollider(MonoObject * object, int index);
@@ -426,6 +428,8 @@ private:
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	static void SetAngularVelocity(MonoObject * object, float x, float y, float z);
+	static void AddTorque(MonoObject * object, float x, float y, float z, int force_type);
 	static void DisableCollider(MonoObject * object, int index);
 	static void DisableAllColliders(MonoObject * object);
 	static void EnableCollider(MonoObject * object, int index);

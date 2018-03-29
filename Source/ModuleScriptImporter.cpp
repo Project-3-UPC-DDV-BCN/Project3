@@ -563,11 +563,13 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//RIGIDBODY
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
+	mono_add_internal_call("TheEngine.TheRigidBody::SetAngularVelocity", (const void*)SetAngularVelocity);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetPosition", (const void*)SetRBPosition);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetRotation", (const void*)SetRBRotation);
 	mono_add_internal_call("TheEngine.TheRigidBody::DisableCollider", (const void*)DisableCollider);
 	mono_add_internal_call("TheEngine.TheRigidBody::DisableAllColliders", (const void*)DisableAllColliders);
 	mono_add_internal_call("TheEngine.TheRigidBody::IsTransformGO", (const bool*)IsTransformGO);
+	mono_add_internal_call("TheEngine.TheRigidBody::AddTorque", (const void*)AddTorque);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetTransformGO", (const void*)SetTransformGO);
 	mono_add_internal_call("TheEngine.TheRigidBody::IsKinematic", (const bool*)IsKinematic);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetKinematic", (const void*)SetKinematic);
@@ -1192,6 +1194,16 @@ void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 {
 	ns_importer->SetLinearVelocity(object, x, y, z);
+}
+
+void ModuleScriptImporter::SetAngularVelocity(MonoObject * object, float x, float y, float z)
+{
+	ns_importer->SetAngularVelocity(object, x, y, z);
+}
+
+void ModuleScriptImporter::AddTorque(MonoObject * object, float x, float y, float z, int force_type)
+{
+	ns_importer->AddTorque(object, x, y, z, force_type);
 }
 
 void ModuleScriptImporter::DisableCollider(MonoObject * object, int index)
@@ -3534,6 +3546,35 @@ void NSScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, 
 
 		if (rb != nullptr)
 			rb->SetLinearVelocity({ x,y,z });
+	}
+}
+
+void NSScriptImporter::SetAngularVelocity(MonoObject * object, float x, float y, float z)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+			rb->SetAngularVelocity({ x,y,z });
+	}
+}
+
+void NSScriptImporter::AddTorque(MonoObject* object, float x, float y, float z, int force_type)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+		{
+			float3 force = { x,y,z }; 
+			rb->AddTorque(force, force_type);
+		}			
 	}
 }
 
