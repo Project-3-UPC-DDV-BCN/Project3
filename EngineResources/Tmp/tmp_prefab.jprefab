@@ -1,8 +1,8 @@
 {
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "884403725",
-        "Name": "RebelsIdleOver(2)",
+        "UUID": "584905403",
+        "Name": "EmpireText(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -11,32 +11,32 @@
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
-                "UUID": "939607222",
+                "UUID": "432948171",
                 "pos": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000"
+                    "value_X": "212.750000",
+                    "value_Y": "-527.750000"
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "389.399994",
-                    "value_Y": "548.700012"
+                    "value_X": "137.745651",
+                    "value_Y": "52.646240"
                 },
                 "anchor": {
                     "value_X": "0.500000",
-                    "value_Y": "0.500000"
+                    "value_Y": "1.000000"
                 },
                 "scale": "1.000000",
-                "interactable": "1",
-                "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000"
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "2.616438"
             },
             "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1109095771",
+                "UUID": "1052971140",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_X": "145.102158",
+                    "value_Y": "-98.442017",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -52,49 +52,23 @@
                 }
             },
             "Component_2": {
-                "Type": "29",
+                "Type": "27",
                 "Active": "1",
-                "UUID": "1895031595",
-                "mode": "1",
-                "idle_colour": {
-                    "value_X": "0.098000",
-                    "value_Y": "0.392000",
-                    "value_Z": "0.701000",
-                    "value_W": "1.000000"
-                },
-                "over_colour": {
-                    "value_X": "0.078000",
-                    "value_Y": "0.129000",
-                    "value_Z": "0.180000",
-                    "value_W": "1.000000"
-                },
-                "pressed_colour": {
-                    "value_X": "0.078000",
-                    "value_Y": "0.329000",
-                    "value_Z": "0.380000",
-                    "value_W": "1.000000"
-                },
-                "text_idle_colour": {
+                "UUID": "204143899",
+                "colour": {
                     "value_X": "1.000000",
-                    "value_Y": "1.000000",
+                    "value_Y": "0.999990",
                     "value_Z": "1.000000",
-                    "value_W": "1.000000"
+                    "value_W": "0.999990"
                 },
-                "text_over_colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "text_pressed_colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "idle_texture": "Rebels_Button_v2",
-                "over_texture": "Rebels_Button_Over",
-                "pressed_texture": "Rebels_SelectedButton_v2"
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "EMPIRE",
+                "font_size": "56",
+                "grow_dir": "2",
+                "font": "Purista Semibold Italic"
             }
         },
         "ParentID": "0",
