@@ -392,9 +392,10 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			SetUniformBool(program->GetProgramID(), "own_uvs_diffuse", false);
 			SetUniformBool(program->GetProgramID(), "own_uvs_diffuse2", false);
 			SetUniformBool(program->GetProgramID(), "own_uvs_normalmap", false);
-			SetUniformInt(program->GetProgramID(), "Tex_Diffuse2", 0);
-			SetUniformInt(program->GetProgramID(), "Tex_NormalMap", 0);
-			SetUniformInt(program->GetProgramID(), "Tex_Opacity", 0);
+			SetUniformInt(program->GetProgramID(), "Tex_Diffuse", 0);
+			SetUniformInt(program->GetProgramID(), "Tex_Diffuse2", 3);
+			SetUniformInt(program->GetProgramID(), "Tex_NormalMap", 1);
+			SetUniformInt(program->GetProgramID(), "Tex_Opacity", 2);
 			SetUniformBool(program->GetProgramID(), "has_normalmap", false);
 
 			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
