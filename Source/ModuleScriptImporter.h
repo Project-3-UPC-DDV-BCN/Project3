@@ -206,6 +206,9 @@ public:
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
 
+	//PREFAB
+	MonoObject* GetPrefabGameObject(MonoObject* object);
+
 	//GOAPAGENT
 	mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
 	float GetBlackboardVariableF(MonoObject * object, MonoString* name);
@@ -440,6 +443,9 @@ private:
 	static bool IsTransformGO(MonoObject * object);
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
+
+	//PREFAB
+	static MonoObject* GetPrefabGameObject(MonoObject* object); 
 
 	//GOAP AGENT
 	static mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);

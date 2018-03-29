@@ -611,6 +611,8 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::CallFunction", (const void*)CallFunction);
 
+	//PREFAB
+
 	//APPLICATION
 	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
 	mono_add_internal_call("TheEngine.TheApplication::Quit", (const void*)Quit);
@@ -1254,6 +1256,11 @@ void ModuleScriptImporter::SetRBPosition(MonoObject * object, float x, float y, 
 void ModuleScriptImporter::SetRBRotation(MonoObject * object, float x, float y, float z)
 {
 	ns_importer->SetRBRotation(object, x, y, z);
+}
+
+MonoObject * ModuleScriptImporter::GetPrefabGameObject(MonoObject * object)
+{
+	return ns_importer->GetPrefabGameObject(object);
 }
 
 mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoObject * object, MonoString * name)
@@ -3710,6 +3717,11 @@ void NSScriptImporter::SetRBRotation(MonoObject * object, float x, float y, floa
 		if (rb != nullptr)
 			rb->SetRotation({ x,y,z });
 	}
+}
+
+MonoObject * NSScriptImporter::GetPrefabGameObject(MonoObject * object)
+{
+	return nullptr;
 }
 
 // ----- GOAP AGENT -----
