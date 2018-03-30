@@ -4,7 +4,7 @@ public class Spawner
 {
 	private TheMeshRenderer ship_mesh; 
 
-	public TheGameObject xwing_prf; 
+	public ThePrefab xwing_prf; 
 	private TheGameObject ywing_prf; 
 	private TheGameObject landcraft_prf; 
 	private TheGameObject sentinel_prf; 

@@ -665,6 +665,25 @@ void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path,
 	App->resources->CreateResource(assets_path);
 }
 
+void ModuleScene::MoveGameObjectBack(GameObject * go)
+{
+	bool found = false;
+	for (std::list<GameObject*>::iterator it = scene_gameobjects.begin(); it != scene_gameobjects.end(); ++it)
+	{
+		if ((*it) == go)
+		{
+			scene_gameobjects.erase(it);
+			found = true;
+			break;
+		}
+	}
+
+	if (found)
+	{
+		scene_gameobjects.push_front(go);
+	}
+}
+
 void ModuleScene::DrawSkyBox(float3 pos, ComponentCamera* active_camera)
 {
 	skybox->RenderCubeMap(pos, active_camera);

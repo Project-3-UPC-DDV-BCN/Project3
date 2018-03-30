@@ -36,6 +36,7 @@ EngineResources/Tmp/
 !Source/Nvidia/PhysX/lib/lib_release/*
 !Source/Nvidia/Blast/lib/lib_debug/*
 !Source/Nvidia/Blast/lib/lib_release/*
+!TheEngine/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -168,7 +169,7 @@ PublishScripts/
 # NuGet Packages
 *.nupkg
 # The packages folder can be ignored because of Package Restore
-**/packages/*
+!**/packages/*
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed

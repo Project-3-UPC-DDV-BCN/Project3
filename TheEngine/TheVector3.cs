@@ -153,6 +153,15 @@ namespace TheEngine
         ///   <para>Returns the magnitude of the given vector</para>
         /// </summary>
         /// <param name="vector">The vector to return its magnitude</param>
+        /// <code>
+        /// class TestClass 
+        /// {
+        ///     static int Main() 
+        ///     {
+        ///         return GetZero();
+        ///     }
+        /// }
+        /// </code>
         public static float Magnitude(TheVector3 vector)
         {
             return TheMath.TheMath.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
@@ -191,9 +200,9 @@ namespace TheEngine
         /// <summary>
         ///   <para>Linearly interpolates between two vectors</para>
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="percent"></param>
+        /// <param name="a">From</param>
+        /// <param name="b">To</param>
+        /// <param name="percent">Lerp value</param>
         public static TheVector3 Lerp(TheVector3 a, TheVector3 b, float percent)
         {
             return a + percent * (b - a);
@@ -354,7 +363,7 @@ namespace TheEngine
 		///   <para>Returns Rotation from one vector to another.</para>
 		/// </summary>
 		/// <param name="from"></param>
-        /// /// <param name="to"></param>
+        /// <param name="to"></param>
         public static TheQuaternion RotationToTarget(TheVector3 from, TheVector3 to)
         {
             float a = TheMath.TheMath.Sqrt(from.LengthSquared * to.LengthSquared);

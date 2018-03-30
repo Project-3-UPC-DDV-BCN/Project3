@@ -638,6 +638,11 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					rect_transform->SetRotation(rotation);
 				}
 
+				if (ImGui::Button("Move Back"))
+				{
+					App->scene->MoveGameObjectBack(rect_transform->GetGameObject());
+				}
+
 				if (!is_canvas)
 				{
 					if (ImGui::DragFloat2("Size", (float*)&size, true, 0.1f, 0))

@@ -193,6 +193,8 @@ public:
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	void SetAngularVelocity(MonoObject * object, float x, float y, float z); 
+	void AddTorque(MonoObject* object, float x, float y, float z, int force_type);
 	void DisableCollider(MonoObject * object, int index);
 	void DisableAllColliders(MonoObject * object);
 	void EnableCollider(MonoObject * object, int index);
@@ -203,6 +205,9 @@ public:
 	bool IsTransformGO(MonoObject * object);
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
+
+	//PREFAB
+	MonoObject* GetPrefabGameObject(MonoObject* object);
 
 	//GOAPAGENT
 	mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
@@ -426,6 +431,8 @@ private:
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
+	static void SetAngularVelocity(MonoObject * object, float x, float y, float z);
+	static void AddTorque(MonoObject * object, float x, float y, float z, int force_type);
 	static void DisableCollider(MonoObject * object, int index);
 	static void DisableAllColliders(MonoObject * object);
 	static void EnableCollider(MonoObject * object, int index);
@@ -436,6 +443,9 @@ private:
 	static bool IsTransformGO(MonoObject * object);
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
+
+	//PREFAB
+	static MonoObject* GetPrefabGameObject(MonoObject* object); 
 
 	//GOAP AGENT
 	static mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
