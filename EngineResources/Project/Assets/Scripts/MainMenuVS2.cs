@@ -205,6 +205,21 @@ public class MainMenuVS2
 
 				if(menu_go != null)
 					menu_go.SetActive(true);
+
+				if(rebels_idle_image_go != null)
+					rebels_idle_image_go.SetActive(true);
+
+				if(rebels_selected_image_go != null)
+					rebels_selected_image_go.SetActive(false);
+
+				if(empire_selected_image_go != null)
+					empire_selected_image_go.SetActive(false);
+
+				if(empire_idle_image_go != null)
+					empire_idle_image_go.SetActive(true);
+
+				if(side_selection_continue_go != null)
+					side_selection_continue_go.SetActive(false);
 			}
 		}
 
@@ -216,11 +231,17 @@ public class MainMenuVS2
 				pressed_sound = true;
 				faction = "rebels";
 
+				if(rebels_idle_image_go != null)
+					rebels_idle_image_go.SetActive(false);
+
 				if(rebels_selected_image_go != null)
 					rebels_selected_image_go.SetActive(true);
 
 				if(empire_selected_image_go != null)
 					empire_selected_image_go.SetActive(false);
+
+				if(empire_idle_image_go != null)
+					empire_idle_image_go.SetActive(true);
 
 				if(side_selection_continue_go != null)
 					side_selection_continue_go.SetActive(true);
@@ -235,11 +256,17 @@ public class MainMenuVS2
 				pressed_sound = true;
 				faction = "empire";
 
-				if(empire_selected_image_go != null)
-					empire_selected_image_go.SetActive(true);
+				if(rebels_idle_image_go != null)
+					rebels_idle_image_go.SetActive(true);
 
 				if(rebels_selected_image_go != null)
 					rebels_selected_image_go.SetActive(false);
+
+				if(empire_selected_image_go != null)
+					empire_selected_image_go.SetActive(true);
+
+				if(empire_idle_image_go != null)
+					empire_idle_image_go.SetActive(false);
 
 				if(side_selection_continue_go != null)
 					side_selection_continue_go.SetActive(true);

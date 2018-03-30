@@ -312,6 +312,7 @@ void ComponentRadar::Save(Data & data) const
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
 
+	data.AddInt("radar_type", type);
 	data.AddFloat("markers_size", markers_size);
 	data.AddFloat("max_distance", max_distance);
 	data.AddBool("transparent", transparent);
@@ -350,6 +351,7 @@ void ComponentRadar::Load(Data & data)
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
 
+	SetRadarType(static_cast<RadarType>(data.GetInt("radar_type")));
 	SetMarkersSize(data.GetFloat("markers_size"));
 	SetMaxDistance(data.GetFloat("max_distance"));
 	SetTransparent(data.GetBool("transparent"));

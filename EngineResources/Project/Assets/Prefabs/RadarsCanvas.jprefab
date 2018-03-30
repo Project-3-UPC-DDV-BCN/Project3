@@ -1,114 +1,11 @@
 {
-    "Scene_Name": "Untitled Scene",
-    "GameObjects_Count": "11",
+    "UUID": "1545646976",
+    "assets_path": "./Project/Assets/Prefabs/RadarsCanvas.jprefab",
+    "library_path": "./Project/Library/Prefabs/RadarsCanvas.jprefab",
+    "prefab_name": "RadarsCanvas",
+    "GameObjects_Count": "9",
     "GameObject_0": {
-        "UUID": "113591503",
-        "Name": "Main Camera",
-        "Tag": "Main Camera",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "976790381",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "-20.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "1",
-                "Active": "1",
-                "UUID": "689610209",
-                "RenderTexture_Target": "",
-                "background_color": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "viewport_rect": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "0.000000"
-                },
-                "render_order": "0",
-                "far_plane": "1000.000000",
-                "near_plane": "0.300000"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_1": {
-        "UUID": "1319242109",
-        "Name": "Directional Light",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "552588890",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "100.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "-0.198267",
-                    "value_Y": "-0.620885",
-                    "value_Z": "0.739942",
-                    "value_W": "0.166366"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "20",
-                "Active": "1",
-                "UUID": "1128009428",
-                "color": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "lightType": "0",
-                "diffuse": "1.500000",
-                "ambient": "0.000000",
-                "specular": "0.000000",
-                "cutOff": "0.000000",
-                "outercutOff": "0.000000"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_2": {
-        "UUID": "1226772146",
+        "UUID": "1230048573",
         "Name": "RadarsCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -179,8 +76,8 @@
         "IsRoot": "1",
         "IsStatic": "0"
     },
-    "GameObject_3": {
-        "UUID": "1531451829",
+    "GameObject_1": {
+        "UUID": "2006309414",
         "Name": "BackRadar",
         "Tag": "Default",
         "Layer": "Default",
@@ -239,24 +136,23 @@
                 "max_distance": "563.000000",
                 "transparent": "0",
                 "background_texture": "Radar_shape",
-                "center_go": "1865770372",
+                "center_go": "780557397",
                 "markers_count": "2",
-                "entities_count": "2",
+                "entities_count": "1",
                 "marker_name_0": "Rebels",
                 "marker_texture_0": "RebelsMarker",
                 "marker_name_1": "Empire",
                 "marker_texture_1": "EmpireMarker",
-                "entity_marker_name_0": "Rebels",
-                "entity_go_1": "1955712923",
-                "entity_marker_name_1": "Rebels"
+                "entity_go_0": "1112849202",
+                "entity_marker_name_0": "Rebels"
             }
         },
-        "ParentID": "1226772146",
+        "ParentID": "1230048573",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_4": {
-        "UUID": "792196906",
+    "GameObject_2": {
+        "UUID": "341376626",
         "Name": "FrontRadar",
         "Tag": "Default",
         "Layer": "Default",
@@ -315,24 +211,23 @@
                 "max_distance": "563.000000",
                 "transparent": "0",
                 "background_texture": "Radar_shape",
-                "center_go": "1865770372",
+                "center_go": "780557397",
                 "markers_count": "2",
-                "entities_count": "2",
+                "entities_count": "1",
                 "marker_name_0": "Rebels",
                 "marker_texture_0": "RebelsMarker",
                 "marker_name_1": "Empire",
                 "marker_texture_1": "EmpireMarker",
-                "entity_marker_name_0": "Rebels",
-                "entity_go_1": "1955712923",
-                "entity_marker_name_1": "Rebels"
+                "entity_go_0": "1112849202",
+                "entity_marker_name_0": "Rebels"
             }
         },
-        "ParentID": "1226772146",
+        "ParentID": "1230048573",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_5": {
-        "UUID": "1865770372",
+    "GameObject_3": {
+        "UUID": "780557397",
         "Name": "TieFighterOnePiece_Model_v1",
         "Tag": "Default",
         "Layer": "Default",
@@ -361,12 +256,12 @@
                 }
             }
         },
-        "ParentID": "1226772146",
+        "ParentID": "1230048573",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_6": {
-        "UUID": "1955712923",
+    "GameObject_4": {
+        "UUID": "1112849202",
         "Name": "TieFigher2",
         "Tag": "Default",
         "Layer": "Default",
@@ -395,44 +290,182 @@
                 }
             }
         },
-        "ParentID": "1226772146",
+        "ParentID": "1230048573",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "759275976",
+        "Name": "RadarAnimation",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1649209449",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "200.000000",
+                    "value_Y": "200.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1325611277",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "102894680",
+                "mode": "1",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "0.150000",
+                "anim_textures_count": "8",
+                "anim_texture_0": "Radar_1",
+                "anim_texture_1": "Radar_2",
+                "anim_texture_2": "Radar_3",
+                "anim_texture_3": "Radar_4",
+                "anim_texture_4": "Radar_5",
+                "anim_texture_5": "Radar_6",
+                "anim_texture_6": "Radar_7",
+                "anim_texture_7": "Radar_8"
+            }
+        },
+        "ParentID": "2006309414",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_6": {
+        "UUID": "1242754191",
+        "Name": "RadarAnimation",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1649209449",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "200.000000",
+                    "value_Y": "200.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1325611277",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "102894680",
+                "mode": "1",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "0.150000",
+                "anim_textures_count": "8",
+                "anim_texture_0": "Radar_1",
+                "anim_texture_1": "Radar_2",
+                "anim_texture_2": "Radar_3",
+                "anim_texture_3": "Radar_4",
+                "anim_texture_4": "Radar_5",
+                "anim_texture_5": "Radar_6",
+                "anim_texture_6": "Radar_7",
+                "anim_texture_7": "Radar_8"
+            }
+        },
+        "ParentID": "341376626",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "1783741442",
-        "Name": "RadarAnimation",
+        "UUID": "1820877628",
+        "Name": "TIE_FIGHTER",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "2",
             "Component_0": {
-                "Type": "25",
-                "Active": "1",
-                "UUID": "1649209449",
-                "pos": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000"
-                },
-                "z_pos": "0.000000",
-                "size": {
-                    "value_X": "200.000000",
-                    "value_Y": "200.000000"
-                },
-                "anchor": {
-                    "value_X": "0.500000",
-                    "value_Y": "0.500000"
-                },
-                "scale": "1.000000",
-                "interactable": "1",
-                "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000"
-            },
-            "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1325611277",
+                "UUID": "2004858926",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -450,117 +483,32 @@
                     "value_Z": "1.000000"
                 }
             },
-            "Component_2": {
-                "Type": "26",
+            "Component_1": {
+                "Type": "3",
                 "Active": "1",
-                "UUID": "102894680",
-                "mode": "1",
-                "colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
+                "UUID": "98785654",
+                "Mesh": {
+                    "mesh_name": "TIE_FIGHTER"
                 },
-                "flip": "0",
-                "loop": "1",
-                "anim_speed": "0.150000",
-                "anim_textures_count": "8",
-                "anim_texture_0": "Radar_1",
-                "anim_texture_1": "Radar_2",
-                "anim_texture_2": "Radar_3",
-                "anim_texture_3": "Radar_4",
-                "anim_texture_4": "Radar_5",
-                "anim_texture_5": "Radar_6",
-                "anim_texture_6": "Radar_7",
-                "anim_texture_7": "Radar_8"
+                "Material": {
+                    "Name": "TieFighter1"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
             }
         },
-        "ParentID": "1531451829",
+        "ParentID": "780557397",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1178594766",
-        "Name": "RadarAnimation",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "3",
-            "Component_0": {
-                "Type": "25",
-                "Active": "1",
-                "UUID": "1649209449",
-                "pos": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000"
-                },
-                "z_pos": "0.000000",
-                "size": {
-                    "value_X": "200.000000",
-                    "value_Y": "200.000000"
-                },
-                "anchor": {
-                    "value_X": "0.500000",
-                    "value_Y": "0.500000"
-                },
-                "scale": "1.000000",
-                "interactable": "1",
-                "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000"
-            },
-            "Component_1": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1325611277",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_2": {
-                "Type": "26",
-                "Active": "1",
-                "UUID": "102894680",
-                "mode": "1",
-                "colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "flip": "0",
-                "loop": "1",
-                "anim_speed": "0.150000",
-                "anim_textures_count": "8",
-                "anim_texture_0": "Radar_1",
-                "anim_texture_1": "Radar_2",
-                "anim_texture_2": "Radar_3",
-                "anim_texture_3": "Radar_4",
-                "anim_texture_4": "Radar_5",
-                "anim_texture_5": "Radar_6",
-                "anim_texture_6": "Radar_7",
-                "anim_texture_7": "Radar_8"
-            }
-        },
-        "ParentID": "792196906",
-        "IsRoot": "0",
-        "IsStatic": "0"
-    },
-    "GameObject_9": {
-        "UUID": "1743535463",
+        "UUID": "1066689284",
         "Name": "TIE_FIGHTER",
         "Tag": "Default",
         "Layer": "Default",
@@ -608,60 +556,7 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1865770372",
-        "IsRoot": "0",
-        "IsStatic": "0"
-    },
-    "GameObject_10": {
-        "UUID": "169322848",
-        "Name": "TIE_FIGHTER",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "2004858926",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "98785654",
-                "Mesh": {
-                    "mesh_name": "TIE_FIGHTER"
-                },
-                "Material": {
-                    "Name": "TieFighter1"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
-            }
-        },
-        "ParentID": "1955712923",
+        "ParentID": "1112849202",
         "IsRoot": "0",
         "IsStatic": "0"
     }
