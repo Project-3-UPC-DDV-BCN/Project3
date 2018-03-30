@@ -1,8 +1,8 @@
 {
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "21681961",
-        "Name": "Radar",
+        "UUID": "584905403",
+        "Name": "EmpireText(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -11,32 +11,32 @@
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
-                "UUID": "640845564",
+                "UUID": "432948171",
                 "pos": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000"
+                    "value_X": "212.750000",
+                    "value_Y": "-527.750000"
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "100.000000",
-                    "value_Y": "100.000000"
+                    "value_X": "137.745651",
+                    "value_Y": "52.646240"
                 },
                 "anchor": {
                     "value_X": "0.500000",
-                    "value_Y": "0.500000"
+                    "value_Y": "1.000000"
                 },
                 "scale": "1.000000",
                 "interactable": "0",
                 "fixed_aspect_ratio": "1",
-                "fixed_ratio": "1.000000"
+                "fixed_ratio": "2.616438"
             },
             "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1400050349",
+                "UUID": "1052971140",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_X": "145.102158",
+                    "value_Y": "-98.442017",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -52,17 +52,23 @@
                 }
             },
             "Component_2": {
-                "Type": "30",
+                "Type": "27",
                 "Active": "1",
-                "UUID": "188761172",
-                "markers_size": "0.070000",
-                "max_distance": "478.000031",
-                "transparent": "0",
-                "center_go": "17126420",
-                "markers_count": "1",
-                "entities_count": "8",
-                "marker_name_0": "Marker_0",
-                "entity_go_6": "75437457"
+                "UUID": "204143899",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "0.999990",
+                    "value_Z": "1.000000",
+                    "value_W": "0.999990"
+                },
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "EMPIRE",
+                "font_size": "56",
+                "grow_dir": "2",
+                "font": "Purista Semibold Italic"
             }
         },
         "ParentID": "0",

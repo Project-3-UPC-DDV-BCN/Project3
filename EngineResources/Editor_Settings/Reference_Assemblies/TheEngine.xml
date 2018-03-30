@@ -88,6 +88,15 @@
               <para>Returns the magnitude of the given vector</para>
             </summary>
             <param name="vector">The vector to return its magnitude</param>
+            <code>
+            class TestClass 
+            {
+                static int Main() 
+                {
+                    return GetZero();
+                }
+            }
+            </code>
         </member>
         <member name="P:TheEngine.TheVector3.Normalized">
             <summary>
@@ -104,9 +113,9 @@
             <summary>
               <para>Linearly interpolates between two vectors</para>
             </summary>
-            <param name="a"></param>
-            <param name="b"></param>
-            <param name="percent"></param>
+            <param name="a">From</param>
+            <param name="b">To</param>
+            <param name="percent">Lerp value</param>
         </member>
         <member name="M:TheEngine.TheVector3.Slerp(TheEngine.TheVector3,TheEngine.TheVector3,System.Single)">
             <summary>

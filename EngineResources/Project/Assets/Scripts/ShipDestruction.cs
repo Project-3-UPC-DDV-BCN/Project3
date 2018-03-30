@@ -75,13 +75,13 @@ public class ShipDestruction
 		{
 			TheVector3 direction = transform.ForwardDirection.Normalized; 
 
-			float randx = TheRandom.RandomRange(-5,5); 
+			float randx = TheRandom.RandomRange(-100,100); 
 			direction.x = randx; 
 			
-			float randy = TheRandom.RandomRange(-5,5); 
+			float randy = TheRandom.RandomRange(-100,100); 
 			direction.y = randy;
 
-			float randz = TheRandom.RandomRange(-5,5); 
+			float randz = TheRandom.RandomRange(-100,100); 
 			direction.z = randz;
 	
 			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>(); 
@@ -103,7 +103,16 @@ public class ShipDestruction
 				direction *= -1; 
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
-			piece_rb.SetRotation(20,20,20); 		
+
+			/*float dest_factor = TheRandom.RandomRange(1,5); 
+
+			TheVector3 rotation = null; 
+
+			rotation.x = direction.x * dest_factor;
+			rotation.y = direction.y * dest_factor; 
+			rotation.z = direction.z * dest_factor;*/
+
+			piece_rb.SetAngularVelocity(direction.x, direction.y, direction.z); 		
 		}
 	}
 }

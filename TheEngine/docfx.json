@@ -28,7 +28,6 @@
       {
         "files": [
           "api/*.md",
-          "articles/**.md",
           "toc.yml",
           "*.md"
         ],
@@ -62,7 +61,7 @@
     ],
     "dest": "_site",
     "template": [
-      "default"
+      "./Templates/default" //, "./Templates/Mathew"
     ]
   }
 }

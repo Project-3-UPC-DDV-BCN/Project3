@@ -68,6 +68,8 @@ public:
 	void LoadPrefabToScene(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);
 
+	void MoveGameObjectBack(GameObject* go);
+
 	void LoadBlastModel(BlastModel* model);
 
 	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);

@@ -153,6 +153,15 @@ namespace TheEngine
         ///   <para>Returns the magnitude of the given vector</para>
         /// </summary>
         /// <param name="vector">The vector to return its magnitude</param>
+        /// <code>
+        /// class TestClass 
+        /// {
+        ///     static int Main() 
+        ///     {
+        ///         return GetZero();
+        ///     }
+        /// }
+        /// </code>
         public static float Magnitude(TheVector3 vector)
         {
             return TheMath.TheMath.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
@@ -191,9 +200,9 @@ namespace TheEngine
         /// <summary>
         ///   <para>Linearly interpolates between two vectors</para>
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="percent"></param>
+        /// <param name="a">From</param>
+        /// <param name="b">To</param>
+        /// <param name="percent">Lerp value</param>
         public static TheVector3 Lerp(TheVector3 a, TheVector3 b, float percent)
         {
             return a + percent * (b - a);
