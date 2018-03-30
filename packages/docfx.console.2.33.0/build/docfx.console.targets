@@ -53,6 +53,5 @@
     <Exec Condition="!Exists($(DocfxConfigFile))" Command="&quot;$(BuildDocToolPath)&quot; init -o &quot;$(MSBuildProjectDirectory)&quot; -q --apiGlobPattern **.csproj --apiSourceFolder &quot;$(MSBuildProjectDirectory)&quot;" />
     <Message Text="Executing $(DocGenerateCommand)" />
     <Exec Command="$(DocGenerateCommand)"></Exec>
-	<Exec Command="start $(MSBuildProjectDirectory)/UpdateAPI.bat"></Exec>
   </Target>
 </Project>

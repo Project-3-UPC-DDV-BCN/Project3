@@ -80,15 +80,15 @@ public class Slave1Movement {
     bool repair_mode = false;
     public int rand_rotate_pos = 50;
     public float repair_hp = 5.0f;
-    //public TheGameObject inner_ring;
-    //public TheGameObject center_ring;
-    //public TheGameObject exterior_ring;
-    //public TheGameObject body_part;
-    //public TheGameObject wings_part;
-    //public TheGameObject engines_part;
-    //TheRectTransform inner_ring_trans;
-    //TheRectTransform center_ring_trans;
-    //TheRectTransform exterior_ring_trans;
+    public TheGameObject inner_ring;
+    public TheGameObject center_ring;
+    public TheGameObject exterior_ring;
+    public TheGameObject body_part;
+    public TheGameObject wings_part;
+    public TheGameObject engine_part;
+    TheRectTransform inner_ring_trans;
+    TheRectTransform center_ring_trans;
+    TheRectTransform exterior_ring_trans;
 
     public TheGameObject weapons;
 	public TheGameObject shields;
@@ -149,9 +149,9 @@ public class Slave1Movement {
         cam_rot = new TheVector3(0, 0, 0);
 
         //Repair Puzzle
-        //inner_ring_trans = inner_ring.GetComponent<TheRectTransform>();
-        //center_ring_trans = center_ring.GetComponent<TheRectTransform>();
-        //exterior_ring_trans = exterior_ring.GetComponent<TheRectTransform>();
+        inner_ring_trans = inner_ring.GetComponent<TheRectTransform>();
+        center_ring_trans = center_ring.GetComponent<TheRectTransform>();
+        exterior_ring_trans = exterior_ring.GetComponent<TheRectTransform>();
 
         audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
@@ -627,9 +627,6 @@ public class Slave1Movement {
     {
         if(repair_mode)
         {
-            //inner_ring.SetActive(true);
-            //center_ring.SetActive(true);
-            //exterior_ring.SetActive(true);
 
             if (TheInput.IsKeyDown("W") && repair_ring > 0)
             {
@@ -683,6 +680,10 @@ public class Slave1Movement {
                             break;
                         }
                 }
+				
+				inner_ring_trans.Rotation = new TheVector3(0,ring_interior_pos*90,0);
+				center_ring_trans.Rotation = new TheVector3(0,ring_center_pos*90,0);
+				exterior_ring_trans.Rotation = new TheVector3(0,ring_exterior_pos*90,0);
             }
 
             if(ring_exterior_pos == 0 && ring_center_pos == 0 && ring_interior_pos == 0)
@@ -695,9 +696,9 @@ public class Slave1Movement {
                         {
                             wings_hp = total_hp / 3.0f;
                             repair_mode = false;
-                            //inner_ring.SetActive(false);
-                            //center_ring.SetActive(false);
-                            //exterior_ring.SetActive(false);
+                            inner_ring.SetActive(false);
+                            center_ring.SetActive(false);
+                            exterior_ring.SetActive(false);
                         }
                         break;
                     case 1:
@@ -706,9 +707,9 @@ public class Slave1Movement {
                         {
                             body_hp = total_hp / 3.0f;
                             repair_mode = false;
-                            //inner_ring.SetActive(false);
-                            //center_ring.SetActive(false);
-                            //exterior_ring.SetActive(false);
+                            inner_ring.SetActive(false);
+                            center_ring.SetActive(false);
+                            exterior_ring.SetActive(false);
                         }
                         break;
                     case 2:
@@ -717,9 +718,9 @@ public class Slave1Movement {
                         {
                             engine_hp = total_hp / 3.0f;
                             repair_mode = false;
-                            //inner_ring.SetActive(false);
-                            //center_ring.SetActive(false);
-                            //exterior_ring.SetActive(false);
+                            inner_ring.SetActive(false);
+                            center_ring.SetActive(false);
+                            exterior_ring.SetActive(false);
                         }
                         break;
                 }
@@ -742,12 +743,15 @@ public class Slave1Movement {
             if(TheInput.IsKeyDown("SPACE"))
             {
                 repair_mode = true;
-                //wings_part.SetActive(false);
-                //body_part.SetActive(false);
-                //engine_part.SetActive(false);
+                wings_part.SetActive(false);
+                body_part.SetActive(false);
+                engine_part.SetActive(false);
+				inner_ring.SetActive(true);
+            	center_ring.SetActive(true);
+            	exterior_ring.SetActive(true);
             }
 
-            /*switch(repair_part)
+            switch(repair_part)
             {
                 case 0:
                     wings_part.SetActive(true);
@@ -764,7 +768,7 @@ public class Slave1Movement {
                     body_part.SetActive(false);
                     engine_part.SetActive(true);
                     break;
-            }*/
+            }
         }
     }
 
