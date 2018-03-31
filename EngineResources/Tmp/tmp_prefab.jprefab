@@ -1,8 +1,8 @@
 {
-    "GameObjects_Count": "2",
+    "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "573564224",
-        "Name": "TieFighterOnePiece_Model_v1",
+        "UUID": "1410733906",
+        "Name": "L_Spawner",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -11,7 +11,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1193166627",
+                "UUID": "1958983373",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -32,59 +32,6 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_1": {
-        "UUID": "1803906786",
-        "Name": "TIE_FIGHTER",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "2004858926",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "98785654",
-                "Mesh": {
-                    "mesh_name": "TIE_FIGHTER"
-                },
-                "Material": {
-                    "Name": "TieFighter1"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
-            }
-        },
-        "ParentID": "573564224",
-        "IsRoot": "0",
         "IsStatic": "0"
     }
 }
