@@ -1055,12 +1055,13 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 				break;
 			}
 
-			ImGui::PopID();
+			if (marker_texture != nullptr)
+			{
+				id = "Texture_" + std::to_string(markers_count);
 
-			id = "Texture_" + std::to_string(markers_count);
-
-			if (ImGui::InputResourceTexture(id.c_str(), &marker_texture))
-				(*it)->marker_texture = marker_texture;
+				if (ImGui::InputResourceTexture(id.c_str(), &marker_texture))
+					(*it)->marker_texture = marker_texture;
+			}
 
 			++markers_count;
 		}

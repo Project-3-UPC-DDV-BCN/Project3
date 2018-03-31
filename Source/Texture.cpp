@@ -183,7 +183,7 @@ bool Texture::Load(Data & data)
 	std::string library_path = data.GetString("library_path");
 
 	Texture* text = App->texture_importer->LoadTextureFromLibrary(library_path);
-	if (!text)
+	if (text != nullptr)
 	{
 		std::string assets_path = data.GetString("assets_path");
 		if (App->file_system->FileExist(assets_path))

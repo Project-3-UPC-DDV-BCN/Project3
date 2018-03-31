@@ -90,23 +90,27 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 		int format = ilGetInteger(IL_IMAGE_FORMAT);
 		int type = ilGetInteger(IL_IMAGE_TYPE);
 		int file_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
-		byte* data = new byte[file_size];
-		ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
+		if (file_size > 0)
+		{
+			byte* data = new byte[file_size];
+			ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
 
-		tmp_texture = new Texture();
-		tmp_texture->SetWidth(width);
-		tmp_texture->SetHeight(height);
-		tmp_texture->SetLibraryPath(path);
-		tmp_texture->SetName(App->file_system->GetFileNameWithoutExtension(path).c_str());
-		tmp_texture->SetCompression(ilGetInteger(IL_DXTC_FORMAT));
-		tmp_texture->SetImageData(data);
-		tmp_texture->SetFormat(Texture::rgba);
-		tmp_texture->LoadToMemory();
+			tmp_texture = new Texture();
+			tmp_texture->SetWidth(width);
+			tmp_texture->SetHeight(height);
+			tmp_texture->SetLibraryPath(path);
+			tmp_texture->SetName(App->file_system->GetFileNameWithoutExtension(path).c_str());
+			tmp_texture->SetCompression(ilGetInteger(IL_DXTC_FORMAT));
+			tmp_texture->SetImageData(data);
+			tmp_texture->SetFormat(Texture::rgba);
+			tmp_texture->LoadToMemory();
 
-		ilDeleteImage(ilGetInteger(IL_ACTIVE_IMAGE));
-		CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
+			CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
 
-		tmp_texture->RecreateTexture();
+			tmp_texture->RecreateTexture();
+		}
+
+		ilDeleteImages(1, &ImageInfo.Id);
 	}
 	else
 	{
