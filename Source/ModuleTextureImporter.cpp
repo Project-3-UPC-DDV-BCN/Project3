@@ -89,7 +89,8 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 		int height = ilGetInteger(IL_IMAGE_HEIGHT);
 		int format = ilGetInteger(IL_IMAGE_FORMAT);
 		int type = ilGetInteger(IL_IMAGE_TYPE);
-		byte* data = new byte[width * height * 4];
+		int file_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+		byte* data = new byte[file_size];
 		ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
 
 		tmp_texture = new Texture();
