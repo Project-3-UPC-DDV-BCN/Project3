@@ -102,7 +102,7 @@ public class Ai_Starship_Movement {
 			}
 		}
 		transform.LocalPosition += separation_vector.Normalized * separation_force * TheTime.DeltaTime;
-		
+		*/
 		
 		// Shooting
 		if(target != null) {
@@ -130,12 +130,12 @@ public class Ai_Starship_Movement {
 				laser_factory.SetSpawnPosition(spawn_pos);
 				TheGameObject laser = laser_factory.Spawn();
 				TheVector3 laser_velocity = spawn_dir.Normalized * laser_speed * TheTime.DeltaTime;
-				laser.GetComponent<TheRigidBody>().SetLinearVelocity(laser_velocity.x, laser_velocity.y, laser_velocity.z);				
+				//laser.GetComponent<TheRigidBody>().SetLinearVelocity(laser_velocity.x, laser_velocity.y, laser_velocity.z);				
 
 				timer = 0.0f;
 			}
 		}
-*/
+
 	}
 
 	bool isEnemy(string your_tag, string other_tag) {

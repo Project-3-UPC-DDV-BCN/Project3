@@ -903,7 +903,7 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 		inside_function = true;
 		MonoObject* exception = nullptr;
 		MonoMarshalSpec* spec;
-
+	
 		MonoObject* obj = mono_runtime_invoke(function, mono_object, parameter, &exception);
 
 		if (exception)
