@@ -10,8 +10,9 @@ public class laser
 	void Start ()
 	{
 		
-		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
-		team = game_manager_scpt.GetStringField("team"); 
+		//game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
+		//team = game_manager_scpt.GetStringField("team");
+		team = "Alliance"; 
 	}
 	
 	void Update () 
@@ -25,32 +26,33 @@ public class laser
 		
 	}
 
-	void OnCollisionEnter(TheGameObject other_ship)
+	void OnTriggerEnter(TheGameObject other_ship)
 	{
+		TheGameObject parent = other_ship.GetParent();
 
+		TheConsole.Log(parent.tag);
 
-		TheConsole.Log("Entered"); 
+		if(parent.tag == "XWING" || parent.tag == "TIEFIGHTER")
+		{ 	
+			enemy_properties_scpt = parent.GetComponent<TheScript>(1); 
 
-		TheGameObject parent = other_ship.GetParent(); 	
-		enemy_properties_scpt = parent.GetComponent<TheScript>(0); 
-
-		bool is_enemy = AreEnemies(team, parent.tag); 
-
-		if(other_ship != null)
-		{
+			bool is_enemy = AreEnemies(team, parent.tag); 
 			int to_inc = 0; 
 
 			if(is_enemy)
-				to_inc = 20; 
+				to_inc = 5; 
 			else
 				to_inc = 10; 
 			
 			enemy_properties_scpt.SetIntField("hp_inc", to_inc);
 			enemy_properties_scpt.CallFunction("SubstractHP"); 
-			enemy_properties_scpt.SetIntField("hp_inc", 0); 
+			enemy_properties_scpt.SetIntField("hp_inc", 0);
+			
+			TheGameObject.Self.SetActive(false); 
+			
 		}
-
 	}
+
 
 	bool AreEnemies(string team1, string team2)
 	{

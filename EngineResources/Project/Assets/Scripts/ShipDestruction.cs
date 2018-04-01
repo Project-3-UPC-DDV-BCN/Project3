@@ -30,7 +30,7 @@ public class ShipDestruction
 	
 	void Update ()
 	{
-		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(need_boom == true && exploted == false)
 		{			
 			FillPartList(); 
 			SetPartsDirection(); 		
@@ -43,11 +43,7 @@ public class ShipDestruction
 
 			if(destroy_timer > time_to_destroy * 100)
 				DeleteShipParts(); 
-		}
-
-		TheConsole.Log("---");
-		TheConsole.Log(destroy_timer); 
-		TheConsole.Log(time_to_destroy);  	
+		} 	
 	}
 
 	void FillPartList()
