@@ -22,6 +22,12 @@ public class ShipProperties
 	
 	void Update () 
 	{
+		
+		TheConsole.Log("-----");
+		TheConsole.Log(hp.ToString()); 
+
+		TheConsole.Log(is_dead.ToString()); 
+
 		if(hp <= 0 && is_dead == false)
 		{
 
@@ -39,13 +45,20 @@ public class ShipProperties
 
 	void SubstractHP()
 	{
-		hp -= hp_inc; 
+		if(hp - hp_inc <= 0)
+			hp = 0; 
+		else
+			hp -= hp_inc; 
+
 		TheConsole.Log(hp.ToString());
 	}
 
 	void AddHP()
 	{
-		hp += hp_inc;
+		if(hp + hp_inc > 100)
+			hp = 100; 
+		else
+			hp += hp_inc; 
 	}
 
 }
