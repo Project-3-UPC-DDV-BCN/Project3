@@ -6,6 +6,7 @@ public class AI_Movement {
 
 	TheGameObject target = null;
 	TheGameObject gameobject;
+	TheTransform own_trans;
 	
 	public float yaw_rotation = 10.0f;
 	public float pitch_rotation = 10.0f;
@@ -17,11 +18,30 @@ public class AI_Movement {
 	
 	bool avoid = false;
 	
-	TheTransform own_trans;
+	public TheGameObject laser_spawner_L = null;
+	public TheGameObject laser_spawner_R = null;
+	TheFactory laser_factory;
+	bool laser_spawned_left = false;
+	public float laser_speed = 20000.0f;
+	public float time_between_lasers = 0.02f;
+	TheVector3 spawn_pos = new TheVector3();
+	TheVector3 spawn_dir = new TheVector3();
+	float timer = 0.0f;
+
+	public float sight_range = 100.0f;
+	public float sight_angle = 60.0f;
+
+	public bool shooting = false;
 	
 	void Start () {
 		own_trans = TheGameObject.Self.GetComponent<TheTransform>();
 		gameobject = TheGameObject.Self;
+		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+		laser_factory.StartFactory();
+		if(laser_spawner_L == null)
+			laser_spawner_L = laser_spawner_R;
+		if(laser_spawner_R == null)
+			laser_spawner_R = laser_spawner_L;
 	}
 	
 	void Update () {
@@ -29,7 +49,7 @@ public class AI_Movement {
 		if(target != null)
 		{
 			Movement();
-			
+			Shoot();
 		}
 		else
 		{
@@ -43,11 +63,10 @@ public class AI_Movement {
 		{
 			//calculate the direction to the target
 			TheTransform target_trans = target.GetComponent<TheTransform>();
-			TheVector3 dir_to_target = target_trans.GlobalPosition - own_trans.GlobalPosition;
+			TheVector3 dir_to_target = own_trans.GlobalPosition - target_trans.GlobalPosition;
 			dir_to_target = TheVector3.Normalize(dir_to_target);
 				
 			//compare this to our direction and rotate to target
-			TheVector3 curr_dir = own_trans.ForwardDirection;
 			TheVector3 new_rot = own_trans.LocalRotation;
 			/////Check the z rotation
 			//float curr_angle = TheMath.Atan(curr_dir.y/curr_dir.x) * TheMath.RadToDeg;
@@ -64,11 +83,9 @@ public class AI_Movement {
 			//	new_rot.z+=TheTime.DeltaTime * roll_rotation;
 			
 			///Check the y rotation
-			float curr_angle = TheMath.Atan(curr_dir.x/curr_dir.z) * TheMath.RadToDeg;
+			float curr_angle = own_trans.GlobalRotation.y;
 		    float targ_angle = TheMath.Atan(dir_to_target.x/dir_to_target.z) * TheMath.RadToDeg;
 			
-			if(curr_dir.x < 0)
-				curr_angle+=180;
 			if(dir_to_target.x < 0)
 				targ_angle+=180;
 			
@@ -78,11 +95,9 @@ public class AI_Movement {
 				new_rot.y+=TheTime.DeltaTime * yaw_rotation;
 			
 			///Check the x rotation
-			curr_angle = TheMath.Atan(curr_dir.y/curr_dir.z) * TheMath.RadToDeg;
+			curr_angle = own_trans.GlobalRotation.x;
 		    targ_angle = TheMath.Atan(dir_to_target.y/dir_to_target.z) * TheMath.RadToDeg;
 			
-			if(curr_dir.y < 0)
-				curr_angle+=180;
 			if(dir_to_target.y < 0)
 				targ_angle+=180;
 			
@@ -172,4 +187,35 @@ public class AI_Movement {
 		//return ret;
 	}
 	
+	void Shoot()
+	{
+		TheTransform ttrans = target.GetComponent<TheTransform>();
+		TheVector3 ship_dir = ttrans.GlobalPosition - own_trans.GlobalPosition;
+		if(TheVector3.Magnitude(ship_dir) < sight_range && TheVector3.AngleBetween(own_trans.ForwardDirection, ship_dir) < sight_angle/2)
+			shooting = true;
+		else
+			shooting = false;
+			
+		if(shooting) {
+			timer += TheTime.DeltaTime;
+			if(timer >= time_between_lasers) {
+				if(laser_spawned_left) {
+					spawn_pos = laser_spawner_R.GetComponent<TheTransform>().GlobalPosition;
+					spawn_dir = laser_spawner_R.GetComponent<TheTransform>().ForwardDirection;
+					laser_spawned_left = false;
+				}
+				else {
+					spawn_pos = laser_spawner_L.GetComponent<TheTransform>().GlobalPosition;
+					spawn_dir = laser_spawner_L.GetComponent<TheTransform>().ForwardDirection;
+					laser_spawned_left = true;
+				}
+				laser_factory.SetSpawnPosition(spawn_pos);
+				TheGameObject laser = laser_factory.Spawn();
+				TheVector3 laser_velocity = spawn_dir.Normalized * laser_speed * TheTime.DeltaTime;
+				laser.GetComponent<TheRigidBody>().SetLinearVelocity(laser_velocity.x, laser_velocity.y, laser_velocity.z);				
+
+				timer = 0.0f;
+			}
+		}
+	}
 }

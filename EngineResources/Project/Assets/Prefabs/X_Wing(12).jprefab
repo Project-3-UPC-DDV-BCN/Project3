@@ -1,12 +1,12 @@
 {
-    "UUID": "294507347",
-    "assets_path": "./Project/Assets/Prefabs/X_Wing(8).jprefab",
-    "library_path": "./Project/Library/Prefabs/X_Wing(8).jprefab",
-    "prefab_name": "X_Wing(8)",
+    "UUID": "1633128771",
+    "assets_path": "./Project/Assets/Prefabs/X_Wing(12).jprefab",
+    "library_path": "./Project/Library/Prefabs/X_Wing(12).jprefab",
+    "prefab_name": "X_Wing(12)",
     "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "1869627578",
-        "Name": "X_Wing(8)",
+        "UUID": "1536475376",
+        "Name": "X_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -18,7 +18,7 @@
                 "UUID": "410297581",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_Y": "20.180832",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -39,8 +39,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2062795974",
-        "Name": "Xwing(8)",
+        "UUID": "496728132",
+        "Name": "Xwing(12)",
         "Tag": "XWING",
         "Layer": "Default",
         "Active": "1",
@@ -70,12 +70,50 @@
             "Component_1": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "344684322",
+                "UUID": "1672893311",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\ShipDestruction.dll",
+                    "assets_path": "",
+                    "script_name": "ShipDestruction",
+                    "UUID": "1877093733",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "2",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "explosion_v",
+                            "field_value": "15.000000"
+                        },
+                        "field_1": {
+                            "field_name": "time_to_destroy",
+                            "field_value": "1.300000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_2": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "25447008",
                 "Script": {
                     "library_path": ".\\Project\\Library\\Scripts\\ShipProperties.dll",
                     "assets_path": "",
                     "script_name": "ShipProperties",
-                    "UUID": "1284910384",
+                    "UUID": "2119618840",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
@@ -95,49 +133,15 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
-            },
-            "Component_2": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "1167045032",
-                "Script": {
-                    "library_path": ".\\Project\\Library\\Scripts\\ShipDestruction.dll",
-                    "assets_path": "",
-                    "script_name": "ShipDestruction",
-                    "UUID": "798388627",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "1",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {
-                        "field_0": {
-                            "field_name": "explosion_v",
-                            "field_value": "5.000000"
-                        }
-                    },
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
             }
         },
-        "ParentID": "1869627578",
+        "ParentID": "1536475376",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "949612729",
-        "Name": "Body(8)",
+        "UUID": "1780110331",
+        "Name": "Body(12)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -180,7 +184,8 @@
                 "Mat_Indices_Number": "0",
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "0"
             },
             "Component_2": {
                 "Type": "2",
@@ -239,13 +244,13 @@
                 }
             }
         },
-        "ParentID": "2062795974",
+        "ParentID": "496728132",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "556249167",
-        "Name": "BotRight_Wing(8)",
+        "UUID": "1780086181",
+        "Name": "BotRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -288,7 +293,8 @@
                 "Mat_Indices_Number": "0",
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "0"
             },
             "Component_2": {
                 "Type": "2",
@@ -347,13 +353,13 @@
                 }
             }
         },
-        "ParentID": "2062795974",
+        "ParentID": "496728132",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1050649356",
-        "Name": "BotLeft_Wing(8)",
+        "UUID": "98739031",
+        "Name": "BotLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -396,7 +402,8 @@
                 "Mat_Indices_Number": "0",
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "0"
             },
             "Component_2": {
                 "Type": "2",
@@ -455,13 +462,13 @@
                 }
             }
         },
-        "ParentID": "2062795974",
+        "ParentID": "496728132",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1818313609",
-        "Name": "TopRight_Wing(8)",
+        "UUID": "214923204",
+        "Name": "TopRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -504,7 +511,8 @@
                 "Mat_Indices_Number": "0",
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "0"
             },
             "Component_2": {
                 "Type": "2",
@@ -563,13 +571,13 @@
                 }
             }
         },
-        "ParentID": "2062795974",
+        "ParentID": "496728132",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "798265186",
-        "Name": "TopLeft_Wing(8)",
+        "UUID": "1649817035",
+        "Name": "TopLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -612,7 +620,8 @@
                 "Mat_Indices_Number": "0",
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0"
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "0"
             },
             "Component_2": {
                 "Type": "2",
@@ -671,7 +680,7 @@
                 }
             }
         },
-        "ParentID": "2062795974",
+        "ParentID": "496728132",
         "IsRoot": "0",
         "IsStatic": "0"
     }

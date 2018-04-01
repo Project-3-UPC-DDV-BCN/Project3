@@ -30,12 +30,14 @@ public class Spawner
 			
 		else if(TheGameObject.Self.tag == "LANDINGCRAFT") 
 		{
-			//Instantiate "LANDINGCRAFT" at position 
+			TheGameObject go = TheGameObject.Duplicate(tiefighter_prf);
+            go.GetComponent<TheTransform>().GlobalPosition = spawn_position;
 		}	
 
 		else if(TheGameObject.Self.tag == "SENTINEL") 
 			{
-			//Instantiate "SENTINEL" at position 
+		    TheGameObject go = TheGameObject.Duplicate(tiefighter_prf);
+            go.GetComponent<TheTransform>().GlobalPosition = spawn_position;
 		}	
 	}
 	
