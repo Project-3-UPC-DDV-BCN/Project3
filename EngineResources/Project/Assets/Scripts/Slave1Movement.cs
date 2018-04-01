@@ -650,11 +650,11 @@ public class Slave1Movement {
 
             if (TheInput.IsKeyDown("W") && repair_ring > 0)
             {
-                repair_ring--;
+                repair_ring++;
             }
             if (TheInput.IsKeyDown("S") && repair_ring < num_rings - 1)
             {
-                repair_ring++;
+                repair_ring--;
             }
 			
             if (TheInput.IsKeyDown("SPACE"))
@@ -701,12 +701,12 @@ public class Slave1Movement {
                         }
                 }
 								
-				inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*90);
-				center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*90);
-				exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*90);
-				selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*90);
-				selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*90);
-				selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*90);
+				inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*-90);
+				center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*-90);
+				exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*-90);
+				selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*-90);
+				selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*-90);
+				selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*-90);
             }
 			
 			switch(repair_ring)
@@ -772,13 +772,13 @@ public class Slave1Movement {
         {
             if(TheInput.IsKeyDown("W"))
             {
-                repair_part--;
+                repair_part++;
                 if (repair_part < 0)
                     repair_part = ship_parts - 1;
             }
             if (TheInput.IsKeyDown("S"))
             {
-                repair_part++;
+                repair_part--;
                 repair_part %= ship_parts;
             }
 
