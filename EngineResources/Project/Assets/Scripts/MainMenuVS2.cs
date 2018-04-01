@@ -176,7 +176,7 @@ public class MainMenuVS2
 			if(continue_rect.OnMouseEnter)
 				over_sound = true;
 
-			if(continue_rect.OnClickUp && faction != "no_faction")
+			if(continue_rect.OnClickUp && faction != "")
 			{
 				pressed_sound = true;
 
@@ -185,7 +185,9 @@ public class MainMenuVS2
 				if(loading_text_go != null)
 					loading_text_go.SetActive(true);
 
-				TheApplication.LoadScene("VerticalSlice_2_TrueStory");
+				TheData.AddString("faction", faction);
+				
+				TheApplication.LoadScene("FinalScene");
 			}
 		}
 
