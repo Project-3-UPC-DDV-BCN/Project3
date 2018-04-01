@@ -56,6 +56,18 @@ bool Prefab::Load(Data & data)
 	SetLibraryPath(data.GetString("library_path"));
 	SetName(data.GetString("prefab_name"));
 
+	int gameObjectsCount = data.GetInt("GameObjects_Count");
+	for (int i = 0; i < gameObjectsCount; i++) {
+		GameObject* go = new GameObject();
+		data.EnterSection("GameObject_" + std::to_string(i));
+		go->Load(data);
+		data.LeaveSection();
+		//AddGameObject(go);
+		App->resources->AddGameObject(go);
+		go->SetIsUsedInPrefab(true);
+		if (i == 0) root_gameobject = go;
+	}
+
 	return true;
 }
 

@@ -104,15 +104,15 @@ public class ShipDestruction
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
 
-			/*float dest_factor = TheRandom.RandomRange(1,5); 
+			float dest_factor = TheRandom.RandomRange(1,5); 
 
-			TheVector3 rotation = null; 
+			TheVector3 rotation = direction.Normalized; 
 
-			rotation.x = direction.x * dest_factor;
-			rotation.y = direction.y * dest_factor; 
-			rotation.z = direction.z * dest_factor;*/
-
-			piece_rb.SetAngularVelocity(direction.x, direction.y, direction.z); 		
+			rotation.x = rotation.x * 50; 
+			rotation.y = rotation.y * 50;  
+			rotation.z = rotation.z * 50; 
+			
+			piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
 		}
 	}
 }

@@ -32,10 +32,7 @@ Prefab* ModulePrefabImporter::LoadPrefabFromLibrary(std::string path)
 	{
 		if (data.LoadJSON(path))
 		{
-			prefab->SetUID(data.GetUInt("UUID"));
-			prefab->SetAssetsPath(data.GetString("assets_path"));
-			prefab->SetLibraryPath(data.GetString("library_path"));
-			prefab->SetName(data.GetString("prefab_name"));
+			prefab->Load(data);
 		}
 	}
 	return prefab;
