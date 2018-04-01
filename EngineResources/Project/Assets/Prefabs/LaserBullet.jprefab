@@ -1,12 +1,12 @@
 {
-    "UUID": "483807080",
-    "assets_path": "./Project/Assets/Prefabs/TestLaser.jprefab",
-    "library_path": "./Project/Library/Prefabs/TestLaser.jprefab",
-    "prefab_name": "TestLaser",
+    "UUID": "1505546010",
+    "assets_path": "./Project/Assets/Prefabs/LaserBullet.jprefab",
+    "library_path": "./Project/Library/Prefabs/LaserBullet.jprefab",
+    "prefab_name": "LaserBullet",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "1999197132",
-        "Name": "TestLaser",
+        "UUID": "1089435787",
+        "Name": "LaserBullet",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -15,7 +15,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "125724685",
+                "UUID": "609877462",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -36,9 +36,9 @@
             "Component_1": {
                 "Type": "3",
                 "Active": "1",
-                "UUID": "142169796",
+                "UUID": "153830903",
                 "Mesh": {
-                    "mesh_name": "Laser_Mesh_v1_1_"
+                    "mesh_name": "pSphere1"
                 },
                 "Material": {
                     "Name": "default_mat"
@@ -55,10 +55,10 @@
             "Component_2": {
                 "Type": "2",
                 "Active": "1",
-                "UUID": "251238293",
-                "Mass": "14.999999",
+                "UUID": "360350174",
+                "Mass": "1.000000",
                 "IsUsingGravity": "0",
-                "IsKinematic": "1",
+                "IsKinematic": "0",
                 "LinearVelocity": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -97,21 +97,21 @@
             "Component_3": {
                 "Type": "4",
                 "Active": "1",
-                "UUID": "206892138",
+                "UUID": "1035499800",
                 "IsConvex": "0",
                 "IsTrigger": "1",
                 "CapsuleDir": "0",
                 "HaveMaterial": "0",
                 "ColliderCenter": {
-                    "value_X": "0.020600",
-                    "value_Y": "-0.234900",
-                    "value_Z": "0.091550"
+                    "value_X": "0.048274",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "2.253800",
-                        "value_Y": "2.151600",
-                        "value_Z": "8.888500"
+                        "value_X": "1.853307",
+                        "value_Y": "2.000000",
+                        "value_Z": "1.900969"
                     }
                 }
             }

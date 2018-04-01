@@ -117,9 +117,13 @@ public class StarShipShooting {
 				
                             TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
 
-                            go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
-							TheVector3 laser_rot = (ship_rot.ToQuaternion() * go.GetComponent<TheTransform>().GlobalRotation.ToQuaternion()).ToEulerAngles();
-							go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
+							if(go != null)
+							{
+								go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+								TheVector3 laser_rot = (ship_rot.ToQuaternion() * go.GetComponent<TheTransform>().GlobalRotation.ToQuaternion()).ToEulerAngles();
+								go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
+							}
+                       
 
                             timer = spawn_time;
 
