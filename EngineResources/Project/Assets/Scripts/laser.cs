@@ -63,10 +63,6 @@ public class laser
                 game_manager_scpt.CallFunction("AddToScore");
                 game_manager_scpt.SetIntField("score_to_inc", 0);
 
-                TheConsole.Log("----");
-                TheConsole.Log(game_manager_scpt.GetIntField("score"));
-                TheConsole.Log(score_inc.ToString());
-
                 score_added = true; 
             }
 			
@@ -83,8 +79,8 @@ public class laser
         TheConsole.Log(team);
         TheConsole.Log(enemy_tag);
 
-        if ((team == "Alliance" && (enemy_tag == "XWING" || enemy_tag == "TIEFIGHTER")) ||
-            (team == "Empire" && (enemy_tag == "YWING" || enemy_tag == "LANDCRAFTING")))
+        if ((team == "Alliance" && (enemy_tag == "XWING" || enemy_tag == "YWING")) ||
+            (team == "Empire" && (enemy_tag == "TIEFIGHTER" || enemy_tag == "LANDCRAFTING")))
             return -30; 
 
         if (enemy_tag == "XWING" || enemy_tag == "TIEFIGHTER")
