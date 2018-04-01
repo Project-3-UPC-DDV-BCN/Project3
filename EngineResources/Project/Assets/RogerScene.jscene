@@ -1,8 +1,8 @@
 {
     "Scene_Name": "RogerScene",
-    "GameObjects_Count": "9",
+    "GameObjects_Count": "38",
     "GameObject_0": {
-        "UUID": "1125826749",
+        "UUID": "1327975774",
         "Name": "Main Camera(3)",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -49,7 +49,8 @@
                 },
                 "render_order": "0",
                 "far_plane": "1000.000000",
-                "near_plane": "0.300000"
+                "near_plane": "0.300000",
+                "fov": "-1.000000"
             }
         },
         "ParentID": "0",
@@ -57,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "178460276",
+        "UUID": "1535391010",
         "Name": "Directional Light(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -108,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1389977501",
+        "UUID": "164010491",
         "Name": "X_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -142,13 +143,474 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1715496007",
-        "Name": "Xwing(12)",
+        "UUID": "403842812",
+        "Name": "Slave1",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1431340887",
+                "position": {
+                    "value_X": "-26.802299",
+                    "value_Y": "0.000000",
+                    "value_Z": "-101.501266"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "544220215",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\Slave1Movement.dll",
+                    "assets_path": "",
+                    "script_name": "Slave1Movement",
+                    "UUID": "1101604494",
+                    "int_fields_count": "11",
+                    "double_fields_count": "0",
+                    "float_fields_count": "24",
+                    "bool_fields_count": "1",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "14",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "accel_rumble_ms",
+                            "field_value": "3"
+                        },
+                        "field_1": {
+                            "field_name": "boost_rumble_ms",
+                            "field_value": "3"
+                        },
+                        "field_2": {
+                            "field_name": "controller_sensibility",
+                            "field_value": "2500"
+                        },
+                        "field_3": {
+                            "field_name": "engine_energy",
+                            "field_value": "2"
+                        },
+                        "field_4": {
+                            "field_name": "max_energy",
+                            "field_value": "6"
+                        },
+                        "field_5": {
+                            "field_name": "max_energy_on_system",
+                            "field_value": "4"
+                        },
+                        "field_6": {
+                            "field_name": "rand_rotate_pos",
+                            "field_value": "50"
+                        },
+                        "field_7": {
+                            "field_name": "rotate_rumble_ms",
+                            "field_value": "5"
+                        },
+                        "field_8": {
+                            "field_name": "shield_energy",
+                            "field_value": "2"
+                        },
+                        "field_9": {
+                            "field_name": "trigger_sensibility",
+                            "field_value": "0"
+                        },
+                        "field_10": {
+                            "field_name": "weapon_energy",
+                            "field_value": "2"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "accel_max_rumble_strength",
+                            "field_value": "0.300000"
+                        },
+                        "field_1": {
+                            "field_name": "acceleration",
+                            "field_value": "10.000000"
+                        },
+                        "field_2": {
+                            "field_name": "boost_accel_multiplier",
+                            "field_value": "1.500000"
+                        },
+                        "field_3": {
+                            "field_name": "boost_cd_time",
+                            "field_value": "5.000000"
+                        },
+                        "field_4": {
+                            "field_name": "boost_extra_vel",
+                            "field_value": "25.000000"
+                        },
+                        "field_5": {
+                            "field_name": "boost_rumble_strength",
+                            "field_value": "0.300000"
+                        },
+                        "field_6": {
+                            "field_name": "boost_time",
+                            "field_value": "1.500000"
+                        },
+                        "field_7": {
+                            "field_name": "camera_rot_step",
+                            "field_value": "1.000000"
+                        },
+                        "field_8": {
+                            "field_name": "max_camera_displacement",
+                            "field_value": "0.100000"
+                        },
+                        "field_9": {
+                            "field_name": "max_camera_rot",
+                            "field_value": "10.000000"
+                        },
+                        "field_10": {
+                            "field_name": "max_vel",
+                            "field_value": "50.000000"
+                        },
+                        "field_11": {
+                            "field_name": "pitch_rotate_speed",
+                            "field_value": "40.000000"
+                        },
+                        "field_12": {
+                            "field_name": "repair_hp",
+                            "field_value": "5.000000"
+                        },
+                        "field_13": {
+                            "field_name": "roll_rotate_speed",
+                            "field_value": "45.000000"
+                        },
+                        "field_14": {
+                            "field_name": "rotate_rumble_strength",
+                            "field_value": "0.050000"
+                        },
+                        "field_15": {
+                            "field_name": "shield_hp",
+                            "field_value": "25.000000"
+                        },
+                        "field_16": {
+                            "field_name": "shield_regen",
+                            "field_value": "10.000000"
+                        },
+                        "field_17": {
+                            "field_name": "shield_regen_time",
+                            "field_value": "10.000000"
+                        },
+                        "field_18": {
+                            "field_name": "slow_acceleration",
+                            "field_value": "50.000000"
+                        },
+                        "field_19": {
+                            "field_name": "slow_regen",
+                            "field_value": "0.100000"
+                        },
+                        "field_20": {
+                            "field_name": "slow_time",
+                            "field_value": "1.000000"
+                        },
+                        "field_21": {
+                            "field_name": "slow_vel_percent",
+                            "field_value": "0.020000"
+                        },
+                        "field_22": {
+                            "field_name": "total_hp",
+                            "field_value": "99.000000"
+                        },
+                        "field_23": {
+                            "field_name": "yaw_rotate_speed",
+                            "field_value": "25.000000"
+                        }
+                    },
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "invert_axis",
+                            "field_value": "0"
+                        }
+                    },
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "audio_emiter",
+                            "field_value": "1245668989"
+                        },
+                        "field_1": {
+                            "field_name": "body_part",
+                            "field_value": "483587748"
+                        },
+                        "field_2": {
+                            "field_name": "camera_go",
+                            "field_value": "1066148087"
+                        },
+                        "field_3": {
+                            "field_name": "center_ring",
+                            "field_value": "483587748"
+                        },
+                        "field_4": {
+                            "field_name": "energy",
+                            "field_value": "709768430"
+                        },
+                        "field_5": {
+                            "field_name": "engine_part",
+                            "field_value": "483587748"
+                        },
+                        "field_6": {
+                            "field_name": "exterior_ring",
+                            "field_value": "483587748"
+                        },
+                        "field_7": {
+                            "field_name": "hp",
+                            "field_value": "1189147560"
+                        },
+                        "field_8": {
+                            "field_name": "inner_ring",
+                            "field_value": "483587748"
+                        },
+                        "field_9": {
+                            "field_name": "shield_hp_go",
+                            "field_value": "2000199263"
+                        },
+                        "field_10": {
+                            "field_name": "shields",
+                            "field_value": "1720841053"
+                        },
+                        "field_11": {
+                            "field_name": "speed",
+                            "field_value": "148315961"
+                        },
+                        "field_12": {
+                            "field_name": "weapons",
+                            "field_value": "1449385709"
+                        },
+                        "field_13": {
+                            "field_name": "wings_part",
+                            "field_value": "483587748"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "1084507728",
+        "Name": "Xspwan",
         "Tag": "XWING",
         "Layer": "Default",
         "Active": "1",
         "Components": {
             "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "2114334433",
+                "position": {
+                    "value_X": "-75.799667",
+                    "value_Y": "0.000007",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "975144798",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\Spawner.dll",
+                    "assets_path": "",
+                    "script_name": "Spawner",
+                    "UUID": "7965300",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "4",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "landcraft_prf",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "tiefighter_prf",
+                            "field_value": "0"
+                        },
+                        "field_2": {
+                            "field_name": "xwing_prf",
+                            "field_value": "164010491"
+                        },
+                        "field_3": {
+                            "field_name": "ywing_prf",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "1134986215",
+        "Name": "TieSpawn",
+        "Tag": "TIEFIGHTER",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "647215881",
+                "position": {
+                    "value_X": "52.769737",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "133400630",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\Spawner.dll",
+                    "assets_path": "",
+                    "script_name": "Spawner",
+                    "UUID": "1765971602",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "4",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "landcraft_prf",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "tiefighter_prf",
+                            "field_value": "66999503"
+                        },
+                        "field_2": {
+                            "field_name": "xwing_prf",
+                            "field_value": "0"
+                        },
+                        "field_3": {
+                            "field_name": "ywing_prf",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_6": {
+        "UUID": "66999503",
+        "Name": "TieFighterDestruct",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "867628952",
+                "position": {
+                    "value_X": "210.973587",
+                    "value_Y": "0.000000",
+                    "value_Z": "403.721375"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_7": {
+        "UUID": "237917079",
+        "Name": "Xwing(12)",
+        "Tag": "XWING",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -173,12 +635,716 @@
             "Component_1": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1167045032",
+                "UUID": "1672893311",
                 "Script": {
                     "library_path": ".\\Project\\Library\\Scripts\\ShipDestruction.dll",
                     "assets_path": "",
                     "script_name": "ShipDestruction",
-                    "UUID": "798388627",
+                    "UUID": "1877093733",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "2",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "explosion_v",
+                            "field_value": "15.000000"
+                        },
+                        "field_1": {
+                            "field_name": "time_to_destroy",
+                            "field_value": "5.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_2": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "25447008",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\ShipProperties.dll",
+                    "assets_path": "",
+                    "script_name": "ShipProperties",
+                    "UUID": "2119618840",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "game_manager_obj",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "164010491",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_8": {
+        "UUID": "483587748",
+        "Name": "Cockpit(3)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1580560019",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_9": {
+        "UUID": "1761469489",
+        "Name": "Energy_Bars",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1428842613",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1583676034",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.974755",
+                    "value_Z": "0.223279",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "1714063339",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "0",
+                "scale": "0.140000"
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_10": {
+        "UUID": "1066148087",
+        "Name": "Camera",
+        "Tag": "Main Camera",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1682165945",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.831500",
+                    "value_Z": "-3.091311"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "1",
+                "Active": "1",
+                "UUID": "1886918064",
+                "RenderTexture_Target": "",
+                "background_color": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "viewport_rect": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "0.000000"
+                },
+                "render_order": "1",
+                "far_plane": "2000.000000",
+                "near_plane": "0.300000",
+                "fov": "72.362007"
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_11": {
+        "UUID": "671190119",
+        "Name": "Hull_Shields",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1405574588",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1167464100",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.313164",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "0.949699"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "973564652",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "0",
+                "scale": "1.000000"
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_12": {
+        "UUID": "1830599826",
+        "Name": "Speed",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1762454599",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "37018289",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.021815",
+                    "value_Z": "0.000000",
+                    "value_W": "0.999762"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "931014693",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "0",
+                "scale": "1.000000"
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_13": {
+        "UUID": "1478487437",
+        "Name": "Laser_factory",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1086972864",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "12",
+                "Active": "1",
+                "UUID": "1174447447",
+                "Object_count": "200",
+                "Spawn_position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "-nan"
+                },
+                "Life_time": "0.000000",
+                "Prefab_UID": "0"
+            },
+            "Component_2": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "299310822",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\StarShipShooting.dll",
+                    "assets_path": "",
+                    "script_name": "StarShipShooting",
+                    "UUID": "1284911621",
+                    "int_fields_count": "2",
+                    "double_fields_count": "0",
+                    "float_fields_count": "6",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "6",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "num_weapons",
+                            "field_value": "2"
+                        },
+                        "field_1": {
+                            "field_name": "weapon",
+                            "field_value": "0"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "overheat_increment",
+                            "field_value": "0.200000"
+                        },
+                        "field_1": {
+                            "field_name": "overheat_time",
+                            "field_value": "2.000000"
+                        },
+                        "field_2": {
+                            "field_name": "overheated_time",
+                            "field_value": "3.000000"
+                        },
+                        "field_3": {
+                            "field_name": "spawn_time",
+                            "field_value": "0.010000"
+                        },
+                        "field_4": {
+                            "field_name": "w1_cooling_rate",
+                            "field_value": "10.000000"
+                        },
+                        "field_5": {
+                            "field_name": "w2_cooling_rate",
+                            "field_value": "10.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "audio_emiter",
+                            "field_value": "1245668989"
+                        },
+                        "field_1": {
+                            "field_name": "crosshair_1",
+                            "field_value": "804146005"
+                        },
+                        "field_2": {
+                            "field_name": "crosshair_2",
+                            "field_value": "550336815"
+                        },
+                        "field_3": {
+                            "field_name": "laser_spawner",
+                            "field_value": "741082721"
+                        },
+                        "field_4": {
+                            "field_name": "overheat_bar_obj",
+                            "field_value": "1743650988"
+                        },
+                        "field_5": {
+                            "field_name": "weapons_energy",
+                            "field_value": "1449385709"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_14": {
+        "UUID": "587683373",
+        "Name": "Crosshairs",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "190452996",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1253166209",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "963997938",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "0",
+                "scale": "1.000000"
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_15": {
+        "UUID": "1245668989",
+        "Name": "Ship_Emiter",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "351849730",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "585109621",
+                "Sound_ID": "100",
+                "SoundBank_Name": "Player.bnk"
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_16": {
+        "UUID": "741082721",
+        "Name": "laser_spawner",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "93064423",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "403842812",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_17": {
+        "UUID": "1625499566",
+        "Name": "Tie_Fighter_TIE",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "582201445",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "746283794",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\ShipDestruction.dll",
+                    "assets_path": "",
+                    "script_name": "ShipDestruction",
+                    "UUID": "804666556",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "2",
@@ -209,12 +1375,12 @@
                 }
             }
         },
-        "ParentID": "1389977501",
+        "ParentID": "66999503",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_4": {
-        "UUID": "96991795",
+    "GameObject_18": {
+        "UUID": "812054880",
         "Name": "Body(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -318,12 +1484,12 @@
                 }
             }
         },
-        "ParentID": "1715496007",
+        "ParentID": "237917079",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_5": {
-        "UUID": "977173527",
+    "GameObject_19": {
+        "UUID": "1418309558",
         "Name": "BotRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -427,12 +1593,12 @@
                 }
             }
         },
-        "ParentID": "1715496007",
+        "ParentID": "237917079",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_6": {
-        "UUID": "1663669954",
+    "GameObject_20": {
+        "UUID": "684164811",
         "Name": "BotLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -536,12 +1702,12 @@
                 }
             }
         },
-        "ParentID": "1715496007",
+        "ParentID": "237917079",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_7": {
-        "UUID": "1835366489",
+    "GameObject_21": {
+        "UUID": "1051016171",
         "Name": "TopRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -645,12 +1811,12 @@
                 }
             }
         },
-        "ParentID": "1715496007",
+        "ParentID": "237917079",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_8": {
-        "UUID": "478366875",
+    "GameObject_22": {
+        "UUID": "1586536960",
         "Name": "TopLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -754,7 +1920,1157 @@
                 }
             }
         },
-        "ParentID": "1715496007",
+        "ParentID": "237917079",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_23": {
+        "UUID": "468308715",
+        "Name": "Panel",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1744901031",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1860311679",
+                "Mesh": {
+                    "mesh_name": "Panel"
+                },
+                "Material": {
+                    "Name": "mainpanel_mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "483587748",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_24": {
+        "UUID": "1024318261",
+        "Name": "HUD_Elements",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "382477946",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "814691543",
+                "Mesh": {
+                    "mesh_name": "HUD_Elements"
+                },
+                "Material": {
+                    "Name": "MatPalenHUD"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "483587748",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_25": {
+        "UUID": "424699505",
+        "Name": "Wall",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1840128818",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1244464885",
+                "Mesh": {
+                    "mesh_name": "Wall"
+                },
+                "Material": {
+                    "Name": "MatPanelWall"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "483587748",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_26": {
+        "UUID": "1449385709",
+        "Name": "Weapons",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1306683740",
+                "pos": {
+                    "value_X": "7.273000",
+                    "value_Y": "6.929000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "4.600000",
+                    "value_Y": "1.300000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1030535071",
+                "position": {
+                    "value_X": "1.018220",
+                    "value_Y": "0.970060",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "-0.137906",
+                    "value_Y": "-0.143225",
+                    "value_Z": "0.587089",
+                    "value_W": "0.784726"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "926408326",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "0.266667",
+                    "value_Y": "0.266667",
+                    "value_Z": "0.266667",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1761469489",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_27": {
+        "UUID": "1720841053",
+        "Name": "Shields",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1634739775",
+                "pos": {
+                    "value_X": "8.573000",
+                    "value_Y": "6.569000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "4.600000",
+                    "value_Y": "1.300000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1602637174",
+                "position": {
+                    "value_X": "1.200220",
+                    "value_Y": "0.919660",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "-0.127504",
+                    "value_Y": "-0.166919",
+                    "value_Z": "0.593487",
+                    "value_W": "0.776952"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "2027035216",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "0.265400",
+                    "value_Y": "0.265401",
+                    "value_Z": "0.265403",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.047626",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1761469489",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_28": {
+        "UUID": "709768430",
+        "Name": "Engines",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1690262566",
+                "pos": {
+                    "value_X": "9.942000",
+                    "value_Y": "6.271000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "4.600000",
+                    "value_Y": "1.400000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "183426884",
+                "position": {
+                    "value_X": "1.391880",
+                    "value_Y": "0.877940",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.612217",
+                    "value_W": "0.790690"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "2108702827",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "0.266667",
+                    "value_Y": "0.266667",
+                    "value_Z": "0.266667",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "0.075829",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1761469489",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_29": {
+        "UUID": "1189147560",
+        "Name": "Hull",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1850736126",
+                "pos": {
+                    "value_X": "0.551000",
+                    "value_Y": "1.156000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.800000",
+                    "value_Y": "0.200000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1665770278",
+                "position": {
+                    "value_X": "0.551000",
+                    "value_Y": "1.156000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "-0.707105",
+                    "value_Y": "-0.707105",
+                    "value_Z": "-0.001543",
+                    "value_W": "-0.001543"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "1081008246",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "0.101961",
+                    "value_Y": "0.101961",
+                    "value_Z": "0.101961",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "0.483412",
+                    "value_Y": "0.045821",
+                    "value_Z": "0.045821",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "671190119",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_30": {
+        "UUID": "2000199263",
+        "Name": "Shield",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1850736126",
+                "pos": {
+                    "value_X": "-0.527000",
+                    "value_Y": "1.149752"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.800000",
+                    "value_Y": "0.180000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1665770278",
+                "position": {
+                    "value_X": "-0.527000",
+                    "value_Y": "1.149752",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "-0.707107",
+                    "value_Y": "-0.707107",
+                    "value_Z": "0.000000",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "1081008246",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "0.101961",
+                    "value_Y": "0.101961",
+                    "value_Z": "0.101961",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "0.045821",
+                    "value_Y": "0.290540",
+                    "value_Z": "0.483412",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "671190119",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_31": {
+        "UUID": "148315961",
+        "Name": "SpeedBar",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "479289915",
+                "pos": {
+                    "value_X": "2.150000",
+                    "value_Y": "0.710000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.950000",
+                    "value_Y": "0.120000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1932955870",
+                "position": {
+                    "value_X": "2.150000",
+                    "value_Y": "0.710000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "-0.250294",
+                    "value_Y": "-0.967816",
+                    "value_Z": "0.006554",
+                    "value_W": "0.025343"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "1042265129",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "0.066351",
+                    "value_Y": "1.000000",
+                    "value_Z": "0.933627",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1830599826",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_32": {
+        "UUID": "804146005",
+        "Name": "crosshair_1",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "220109361",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.750000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.700000",
+                    "value_Y": "0.700000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1341505454",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.750000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "1938000836",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "mira1"
+            }
+        },
+        "ParentID": "587683373",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_33": {
+        "UUID": "550336815",
+        "Name": "crosshair_2",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "220109361",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.750000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.300000",
+                    "value_Y": "0.300000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1341505454",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.750000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "1938000836",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "0",
+                "texture": "mira2"
+            }
+        },
+        "ParentID": "587683373",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_34": {
+        "UUID": "1743650988",
+        "Name": "HeatBar",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1168365970",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.560000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.300000",
+                    "value_Y": "0.050000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "601013372",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.560000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.999998",
+                    "value_Z": "0.000000",
+                    "value_W": "-0.002182"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "421616304",
+                "progress_percentage": "38.000000",
+                "base_colour": {
+                    "value_X": "0.511848",
+                    "value_Y": "0.511843",
+                    "value_Z": "0.511843",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "587683373",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_35": {
+        "UUID": "1769837932",
+        "Name": "Body_TIE",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1984796140",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1363472081",
+                "Mesh": {
+                    "mesh_name": "Body_TIE"
+                },
+                "Material": {
+                    "Name": "TieFighter1"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            },
+            "Component_2": {
+                "Type": "2",
+                "Active": "1",
+                "UUID": "1049408118",
+                "Mass": "1.000000",
+                "IsUsingGravity": "0",
+                "IsKinematic": "1",
+                "LinearVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "AngularVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "MaxAngularVelocity": "7.000000",
+                "LinearDamping": "0.000000",
+                "AngularDamping": "0.050000",
+                "CenterMass": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "InertiaTensor": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                },
+                "SleepThreshold": "0.005000",
+                "SolverIterations": "4",
+                "VelocitySolverIterations": "1",
+                "LinearXLock": "0",
+                "LinearYLock": "0",
+                "LinearZLock": "0",
+                "AngularXLock": "0",
+                "AngularYLock": "0",
+                "AngularZLock": "0",
+                "IsCCDMode": "0",
+                "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "7",
+                "Active": "1",
+                "UUID": "1301428691",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                }
+            }
+        },
+        "ParentID": "1625499566",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_36": {
+        "UUID": "1717449853",
+        "Name": "WingL_TIE",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1135496436",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1130237247",
+                "Mesh": {
+                    "mesh_name": "WingL_TIE"
+                },
+                "Material": {
+                    "Name": "TieFighter1"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            },
+            "Component_2": {
+                "Type": "2",
+                "Active": "1",
+                "UUID": "136861887",
+                "Mass": "1.000000",
+                "IsUsingGravity": "0",
+                "IsKinematic": "1",
+                "LinearVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "AngularVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "MaxAngularVelocity": "7.000000",
+                "LinearDamping": "0.000000",
+                "AngularDamping": "0.050000",
+                "CenterMass": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "InertiaTensor": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                },
+                "SleepThreshold": "0.005000",
+                "SolverIterations": "4",
+                "VelocitySolverIterations": "1",
+                "LinearXLock": "0",
+                "LinearYLock": "0",
+                "LinearZLock": "0",
+                "AngularXLock": "0",
+                "AngularYLock": "0",
+                "AngularZLock": "0",
+                "IsCCDMode": "0",
+                "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "7",
+                "Active": "1",
+                "UUID": "76493088",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                }
+            }
+        },
+        "ParentID": "1625499566",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_37": {
+        "UUID": "834234400",
+        "Name": "WingR_TIE",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "417443715",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "2000607249",
+                "Mesh": {
+                    "mesh_name": "WingR_TIE"
+                },
+                "Material": {
+                    "Name": "TieFighter1"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            },
+            "Component_2": {
+                "Type": "2",
+                "Active": "1",
+                "UUID": "1913318735",
+                "Mass": "1.000000",
+                "IsUsingGravity": "0",
+                "IsKinematic": "1",
+                "LinearVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "AngularVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "MaxAngularVelocity": "7.000000",
+                "LinearDamping": "0.000000",
+                "AngularDamping": "0.050000",
+                "CenterMass": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "InertiaTensor": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                },
+                "SleepThreshold": "0.005000",
+                "SolverIterations": "4",
+                "VelocitySolverIterations": "1",
+                "LinearXLock": "0",
+                "LinearYLock": "0",
+                "LinearZLock": "0",
+                "AngularXLock": "0",
+                "AngularYLock": "0",
+                "AngularZLock": "0",
+                "IsCCDMode": "0",
+                "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "7",
+                "Active": "1",
+                "UUID": "900509672",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                }
+            }
+        },
+        "ParentID": "1625499566",
         "IsRoot": "0",
         "IsStatic": "0"
     }
