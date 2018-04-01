@@ -112,6 +112,7 @@ void ModuleScene::CreateMainCamera()
 	{
 		App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
 	}
+	App->scene->RenameDuplicatedGameObject(main_camera);
 }
 
 void ModuleScene::CreateMainLight()
@@ -125,6 +126,7 @@ void ModuleScene::CreateMainLight()
 	ComponentTransform* trans = (ComponentTransform*)main_light->GetComponent(Component::CompTransform);
 	trans->SetPosition({ 0, 100, 0 });
 	trans->SetRotation({ -100, -150, 0 });
+	App->scene->RenameDuplicatedGameObject(main_light);
 }
 
 // Load assets
@@ -148,6 +150,7 @@ GameObject * ModuleScene::CreateGameObject(GameObject * parent)
 	GameObject* ret = new GameObject(parent);
 	RenameDuplicatedGameObject(ret);
 	AddGameObjectToScene(ret);
+	App->scene->RenameDuplicatedGameObject(ret);
 	App->resources->AddGameObject(ret);
 	return ret;
 }
@@ -157,6 +160,7 @@ GameObject * ModuleScene::CreateLightObject(GameObject * parent)
 	GameObject* ret = new GameObject(parent);
 	RenameDuplicatedGameObject(ret);
 	AddGameObjectToScene(ret);
+	App->scene->RenameDuplicatedGameObject(ret);
 	App->resources->AddGameObject(ret);
 	ret->AddComponent(Component::CompLight);
 	return ret;
@@ -296,8 +300,6 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 				App->physics->AddNonBlastActorToList(rb->GetRigidBody(), gameobject);
 			}
 		}
-
-		RenameDuplicatedGameObject(gameobject);
 
 		CONSOLE_DEBUG("GameObject Created: %s", gameobject->GetName().c_str());
 	}
@@ -502,9 +504,11 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			if (data.EnterSection("GameObject_" + std::to_string(i)))
 			{
 				GameObject* game_object = new GameObject();
+				AddGameObjectToScene(game_object);
+				
 				game_object->Load(data);
 
-				AddGameObjectToScene(game_object);
+				RenameDuplicatedGameObject(game_object);
 
 				App->resources->AddGameObject(game_object);
 
@@ -936,6 +940,10 @@ void ModuleScene::DestroyGameObjectNow()
 void ModuleScene::RenameDuplicatedGameObject(GameObject * gameObject, bool justIncrease)
 {
 	if (gameObject == nullptr) return;
+	if (std::find(scene_gameobjects.begin(), scene_gameobjects.end(), gameObject) == scene_gameobjects.end() && !justIncrease)
+	{
+		return;
+	}
 
 	int gameObjectCount = 1;
 	//Rename if name exist

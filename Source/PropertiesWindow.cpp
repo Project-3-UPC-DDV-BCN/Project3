@@ -374,7 +374,6 @@ void PropertiesWindow::DrawWindow()
 				{
 					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
 						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 						App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 					}
 					else
@@ -390,7 +389,6 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompBoxCollider);
@@ -400,7 +398,6 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompSphereCollider);
@@ -410,7 +407,6 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
@@ -422,7 +418,6 @@ void PropertiesWindow::DrawWindow()
 							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 							{
 								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 								App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 							}
 							selected_gameobject->AddComponent(Component::CompMeshCollider);

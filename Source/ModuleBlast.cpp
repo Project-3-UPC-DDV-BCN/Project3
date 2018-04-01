@@ -220,9 +220,11 @@ void ModuleBlast::SpawnFamily(BlastModel* model, bool loaded_from_scene)
 	if (!loaded_from_scene)
 	{
 		App->scene->AddGameObjectToScene(model->root);
+		App->scene->RenameDuplicatedGameObject(model->root);
 		for (GameObject* go : model->root->childs)
 		{
 			App->scene->AddGameObjectToScene(go);
+			App->scene->RenameDuplicatedGameObject(go);
 		}
 	}
 	
