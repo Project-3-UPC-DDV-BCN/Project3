@@ -168,6 +168,9 @@ public class Slave1Movement {
 		inner_ring.SetActive(false);
         center_ring.SetActive(false);
         exterior_ring.SetActive(false);
+		selected_inner_ring.SetActive(false);
+		selected_center_ring.SetActive(false);
+		selected_exterior_ring.SetActive(false);
 
         audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
@@ -697,7 +700,16 @@ public class Slave1Movement {
                             break;
                         }
                 }
-				switch(repair_ring)
+								
+				inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*90);
+				center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*90);
+				exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*90);
+				selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*90);
+				selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*90);
+				selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*90);
+            }
+			
+			switch(repair_ring)
                 {
                     case 0:
                         selected_inner_ring.SetActive(true);
@@ -715,14 +727,6 @@ public class Slave1Movement {
 						selected_exterior_ring.SetActive(true);
                         break;
                 }
-				
-				inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*90);
-				center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*90);
-				exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*90);
-				selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*90);
-				selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*90);
-				selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*90);
-            }
 
             if(ring_exterior_pos == 0 && ring_center_pos == 0 && ring_interior_pos == 0)
             {
