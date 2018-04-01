@@ -712,9 +712,9 @@ public class Slave1Movement {
 			switch(repair_ring)
                 {
                     case 0:
-                        selected_inner_ring.SetActive(true);
+                        selected_inner_ring.SetActive(false);
 						selected_center_ring.SetActive(false);
-						selected_exterior_ring.SetActive(false);
+						selected_exterior_ring.SetActive(true);
 						break;
                     case 1:
                         selected_inner_ring.SetActive(false);
@@ -722,9 +722,9 @@ public class Slave1Movement {
 						selected_exterior_ring.SetActive(false);
                         break;    
                     case 2:
-						selected_inner_ring.SetActive(false);
+						selected_inner_ring.SetActive(true);
 						selected_center_ring.SetActive(false);
-						selected_exterior_ring.SetActive(true);
+						selected_exterior_ring.SetActive(false);
                         break;
                 }
 
