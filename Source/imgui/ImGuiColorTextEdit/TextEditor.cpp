@@ -598,7 +598,6 @@ std::string TextEditor::GetReturnTypeRecursively(std::string word, const Coordin
 void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 {
 	mWithinRender = true;
-
 	ImGuiIO& io = ImGui::GetIO();
 	auto xadv = (io.Fonts->Fonts[1]->IndexXAdvance['X']);
 	mCharAdvance = ImVec2(xadv, io.Fonts->Fonts[1]->FontSize + mLineSpacing);
@@ -612,8 +611,6 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	auto shift = io.KeyShift;
 	auto ctrl = io.KeyCtrl;
 	auto alt = io.KeyAlt;
-
-	ImGui::SetWindowFocus();
 
 	if (ImGui::IsWindowFocused())
 	{

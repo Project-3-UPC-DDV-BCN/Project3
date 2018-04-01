@@ -9,6 +9,7 @@
 #include "Nvidia/PhysX/Include/PxShape.h"
 #include "ModuleRenderer3D.h"
 #include "DebugDraw.h"
+#include "ModuleScene.h"
 
 ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 {
@@ -29,7 +30,11 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	/*rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);*/
 	rigidbody->setActorFlag(physx::PxActorFlag::eVISUALIZATION, false);
 	transforms_go = false;
-
+	if (std::find(App->scene->scene_gameobjects.begin(), App->scene->scene_gameobjects.end(), attached_gameobject) != App->scene->scene_gameobjects.end())
+	{
+		App->physics->AddRigidBodyToScene(rigidbody, nullptr);
+		App->physics->AddNonBlastActorToList(rigidbody, attached_gameobject);
+	}
 	SetInitValues();
 }
 
@@ -237,12 +242,18 @@ bool ComponentRigidBody::IsSleeping() const
 
 void ComponentRigidBody::SetToSleep()
 {
-	rigidbody->putToSleep();
+	if (!is_kinematic)
+	{
+		rigidbody->putToSleep();
+	}
 }
 
 void ComponentRigidBody::WakeUp()
 {
-	rigidbody->wakeUp();
+	if (!is_kinematic)
+	{
+		rigidbody->wakeUp();
+	}
 }
 
 void ComponentRigidBody::SetPosition(float3 new_position)
@@ -530,7 +541,7 @@ bool ComponentRigidBody::GetTransformsGo() const
 
 void ComponentRigidBody::EnableShapes()
 {
-	/*std::vector<physx::PxShape*> shapes = GetShapes();
+	std::vector<physx::PxShape*> shapes = GetShapes();
 
 	for (physx::PxShape* shape : shapes)
 	{
@@ -542,12 +553,12 @@ void ComponentRigidBody::EnableShapes()
 		}
 		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 		shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
-	}*/
+	}
 }
 
 void ComponentRigidBody::EnableShapeByIndex(int index)
 {
-	/*std::vector<physx::PxShape*> shapes = GetShapes();
+	std::vector<physx::PxShape*> shapes = GetShapes();
 
 	int count = 0;
 	for (physx::PxShape* shape : shapes)
@@ -566,12 +577,12 @@ void ComponentRigidBody::EnableShapeByIndex(int index)
 		}
 
 		count++;
-	}*/
+	}
 }
 
 void ComponentRigidBody::DisableShapes()
 {
-	/*std::vector<physx::PxShape*> shapes = GetShapes();
+	std::vector<physx::PxShape*> shapes = GetShapes();
 
 	for (physx::PxShape* shape : shapes)
 	{
@@ -580,12 +591,12 @@ void ComponentRigidBody::DisableShapes()
 		shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
 		ComponentCollider* collider = (ComponentCollider*)shape->userData;
 		collider->SetActive(false);
-	}*/
+	}
 }
 
 void ComponentRigidBody::DisableShapeByIndex(int index)
 {
-	/*std::vector<physx::PxShape*> shapes = GetShapes();
+	std::vector<physx::PxShape*> shapes = GetShapes();
 
 	int count = 0; 
 	for (physx::PxShape* shape : shapes)
@@ -601,7 +612,7 @@ void ComponentRigidBody::DisableShapeByIndex(int index)
 		}
 
 		count++; 
-	}*/
+	}
 }
 
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)

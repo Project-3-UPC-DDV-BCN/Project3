@@ -270,12 +270,12 @@ void GameObject::SetActive(bool active)
 		if (!active)
 		{
 			rb->SetToSleep();
-			rb->EnableShapes();
+			rb->DisableShapes();
 		}
 		else
 		{
 			rb->WakeUp();
-			rb->DisableShapes();
+			rb->EnableShapes();
 		}
 	}
 

@@ -385,6 +385,9 @@ namespace TheEngine
             return q.Normalized;
         }
 
+        /// <summary>
+        ///   <para>Returns rotation quaternion where the vector is facing</para>
+        /// </summary>
         public static TheQuaternion LookRotation(TheVector3 forward, TheVector3 up)
         {
             Normalize(forward);
@@ -451,16 +454,25 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern TheQuaternion ToQuaternion();
 
+        /// <summary>
+        ///   <para>Sums 2 vectors</para>
+        /// </summary>
         public static TheVector3 operator +(TheVector3 a, TheVector3 b)
         {
             return new TheVector3(a.x + b.x, a.y + b.y, a.z + b.z);
         }
 
+        /// <summary>
+        ///   <para>Subs 2 vectors</para>
+        /// </summary>
         public static TheVector3 operator -(TheVector3 a, TheVector3 b)
         {
             return new TheVector3(a.x - b.x, a.y - b.y, a.z - b.z);
         }
 
+        /// <summary>
+        ///   <para>Subs current vector with given vector</para>
+        /// </summary>
         public static TheVector3 operator -(TheVector3 a)
         {
             return new TheVector3(-a.x, -a.y, -a.z);

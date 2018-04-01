@@ -2,10 +2,20 @@
 
 namespace TheEngine
 {
+    /// <summary>
+    ///   <para>Application Input system</para>
+    /// </summary>
     public class TheInput
     {
+        /// <summary>
+        ///   <para>Maximum joystick movement</para>
+        /// </summary>
         public const int MaxJoystickMove = 32767;
 
+        /// <summary>
+        ///   <para>Given key is down</para>
+        /// </summary>
+        /// <param name="key_name">Key to </param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsKeyDown(string key_name);
 
