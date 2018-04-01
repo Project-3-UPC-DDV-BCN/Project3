@@ -63,11 +63,10 @@ public class AI_Movement {
 		{
 			//calculate the direction to the target
 			TheTransform target_trans = target.GetComponent<TheTransform>();
-			TheVector3 dir_to_target = target_trans.GlobalPosition - own_trans.GlobalPosition;
+			TheVector3 dir_to_target = own_trans.GlobalPosition - target_trans.GlobalPosition;
 			dir_to_target = TheVector3.Normalize(dir_to_target);
 				
 			//compare this to our direction and rotate to target
-			TheVector3 curr_dir = own_trans.ForwardDirection;
 			TheVector3 new_rot = own_trans.LocalRotation;
 			/////Check the z rotation
 			//float curr_angle = TheMath.Atan(curr_dir.y/curr_dir.x) * TheMath.RadToDeg;
@@ -84,11 +83,9 @@ public class AI_Movement {
 			//	new_rot.z+=TheTime.DeltaTime * roll_rotation;
 			
 			///Check the y rotation
-			float curr_angle = TheMath.Atan(curr_dir.x/curr_dir.z) * TheMath.RadToDeg;
+			float curr_angle = own_trans.GlobalRotation.y;
 		    float targ_angle = TheMath.Atan(dir_to_target.x/dir_to_target.z) * TheMath.RadToDeg;
 			
-			if(curr_dir.x < 0)
-				curr_angle+=180;
 			if(dir_to_target.x < 0)
 				targ_angle+=180;
 			
@@ -98,11 +95,9 @@ public class AI_Movement {
 				new_rot.y+=TheTime.DeltaTime * yaw_rotation;
 			
 			///Check the x rotation
-			curr_angle = TheMath.Atan(curr_dir.y/curr_dir.z) * TheMath.RadToDeg;
+			curr_angle = own_trans.GlobalRotation.x;
 		    targ_angle = TheMath.Atan(dir_to_target.y/dir_to_target.z) * TheMath.RadToDeg;
 			
-			if(curr_dir.y < 0)
-				curr_angle+=180;
 			if(dir_to_target.y < 0)
 				targ_angle+=180;
 			
