@@ -81,6 +81,9 @@ private:
 	GOAPGoal* goal_to_return;
 	GOAPAction* action_to_return;
 
+	bool is_prefab;
+	bool is_gameobject;
+
 public:
 	bool texture_changed;
 	bool mesh_changed;

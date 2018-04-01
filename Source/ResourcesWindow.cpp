@@ -48,6 +48,9 @@ ResourcesWindow::ResourcesWindow()
 	action_changed = false;
 	goal_changed = false;
 
+	is_prefab = false;
+	is_gameobject = true;
+
 	shader_type = Shader::ShaderType::ST_NULL;
 
 	type = Resource::Unknown;
@@ -198,36 +201,73 @@ void ResourcesWindow::DrawWindow()
 	case Resource::RenderTextureResource:
 		break;
 	case Resource::GameObjectResource:
+
+		if (ImGui::Checkbox("GameObject", &is_gameobject))
+		{
+			is_prefab = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Prefab", &is_prefab))
+		{
+			is_gameobject = false;
+		}
+
 		gameobjects_list = App->scene->scene_gameobjects;
+		prefabs_list = App->resources->GetPrefabsList();
+
+		ImGui::Spacing(5);
+
 		if (ImGui::Selectable("None##gameobject"))
 		{
 			gameobject_to_return = nullptr;
 			gameobject_changed = true;
 			break;
 		}
-		for (std::list<GameObject*>::const_iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); it++)
-		{
-			if (go_filter != GoFilterNone)
-			{
-				switch (go_filter)
-				{
-				case ResourcesWindow::GoFilterRigidBody:
-					if ((*it)->GetComponent(Component::CompRigidBody) == nullptr) continue;
-					break;
-				}
-			}
 
-			std::string name = (*it)->GetName();
-			if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
+		if (is_gameobject)
+		{
+			for (std::list<GameObject*>::const_iterator it = gameobjects_list.begin(); it != gameobjects_list.end(); it++)
 			{
-				if (ImGui::Selectable(name.c_str()))
+				if (go_filter != GoFilterNone)
 				{
-					gameobject_to_return = *it;
-					gameobject_changed = true;
-					break;
+					switch (go_filter)
+					{
+					case ResourcesWindow::GoFilterRigidBody:
+						if ((*it)->GetComponent(Component::CompRigidBody) == nullptr) continue;
+						break;
+					}
+				}
+
+				std::string name = (*it)->GetName();
+				if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
+				{
+					if (ImGui::Selectable(name.c_str()))
+					{
+						gameobject_to_return = *it;
+						gameobject_changed = true;
+						break;
+					}
 				}
 			}
 		}
+		
+		if (is_prefab)
+		{
+			for (std::map<uint, Prefab*>::const_iterator it = prefabs_list.begin(); it != prefabs_list.end(); it++)
+			{
+				std::string name = it->second->GetName();
+				if (input_text[0] == 0 || name.find(input_text) != std::string::npos)
+				{
+					if (ImGui::Selectable(name.c_str()))
+					{
+						gameobject_to_return = it->second->GetRootGameObject();
+						gameobject_changed = true;
+						break;
+					}
+				}
+			}
+		}
+		
 		break;
 	case Resource::MaterialResource:
 		materials_list = App->resources->GetMaterialsList();
@@ -472,6 +512,9 @@ void ResourcesWindow::Reset()
 	soundbank_changed = false;
 	goal_changed = false;
 	action_changed = false;
+
+	is_prefab = false;
+	is_gameobject = true;
 	
 	texture_to_return = nullptr;
 	mesh_to_return = nullptr;

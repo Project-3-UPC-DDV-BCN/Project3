@@ -4,11 +4,21 @@
         <name>TheEngine</name>
     </assembly>
     <members>
+        <member name="P:TheEngine.TheProgressBar.PercentageProgress">
+            <summary>
+              <para>Get the percentatge progress</para>
+            </summary>
+        </member>
         <member name="P:TheEngine.TheGameObject.name">
             <summary>
               <para>Transforms direction from local space to world space.</para>
             </summary>
             <param name="gameobject_name"></param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetComponent``1(System.Int32)">
+            <summary>
+              <para>Returns the component if the GameObject has one attached</para>
+            </summary>
         </member>
         <member name="M:TheEngine.TheVector3.#ctor">
             <summary>

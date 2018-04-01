@@ -613,6 +613,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	auto ctrl = io.KeyCtrl;
 	auto alt = io.KeyAlt;
 
+	ImGui::SetWindowFocus();
+
 	if (ImGui::IsWindowFocused())
 	{
 		if (ImGui::IsWindowHovered())
@@ -693,14 +695,7 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
 		{
-			if (is_method_auto_complete_open || is_word_auto_complete_open)
-			{
-				if (auto_complete_index > 0)
-				{
-					auto_complete_index--;
-				}
-			}
-			else
+			if(!is_method_auto_complete_open && !is_word_auto_complete_open)
 			{
 				MoveUp();
 			}
@@ -708,18 +703,12 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
 		{
-			if (is_method_auto_complete_open || is_word_auto_complete_open)
-			{
-				if (auto_complete_index >= 0)
-				{
-					auto_complete_index++;
-				}
-			}
-			else
+			if (!is_method_auto_complete_open && !is_word_auto_complete_open)
 			{
 				MoveDown();
 			}
 		}
+
 		//Enter
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
@@ -751,7 +740,11 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 		//
 		if (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN)
 		{
-			EnterCharacter('\t');
+			if (!is_method_auto_complete_open && !is_word_auto_complete_open)
+			{
+				EnterCharacter('\t');
+				auto_complete_word.clear();
+			}
 		}
 		if (!IsReadOnly())
 		{
@@ -893,141 +886,232 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 			ImVec2 cursor_pos = CoordinatesToScreenPos(cords);
 			ImGui::SetNextWindowPos(cursor_pos);
 
-			std::vector<DLLMethodInfo> methods_list;
+			std::vector<AutoCompleteInfo> auto_complete_info;
+
 			for (DLLClassInfo class_info : mLanguageDefinition.csharpClasses)
 			{
 				if (class_info.name == auto_complete_word)
 				{
+					if (!class_info.fields.empty())
+					{
+						for (DLLFieldsInfo field_info : class_info.fields)
+						{
+							AutoCompleteInfo auto_info;
+							auto_info.name = field_info.name;
+							auto_info.description = field_info.description;
+							auto_info.type = "Field ";
+							auto_info.type_letter = "F ";
+							auto_info.color = { 182.f / 255.f, 39.f / 255.f, 1, 1 };
+							auto_info.declaration = field_info.declaration;
+
+							if (is_auto_complete_static && field_info.is_static)
+							{
+								auto_complete_info.push_back(auto_info);
+							}
+							else if (!is_auto_complete_static && !field_info.is_static)
+							{
+								auto_complete_info.push_back(auto_info);
+							}
+						}
+					}
+
+					if (!class_info.properties.empty())
+					{
+						for (DLLPropertyInfo property_info : class_info.properties)
+						{
+							AutoCompleteInfo auto_info;
+							auto_info.name = property_info.name;
+							auto_info.description = property_info.description;
+							auto_info.type = "Property ";
+							auto_info.type_letter = "P ";
+							auto_info.color = { 39.f / 255.f, 176.f / 255.f, 1, 1 };
+							auto_info.declaration = property_info.declaration;
+
+							if (is_auto_complete_static && property_info.is_static)
+							{
+								auto_complete_info.push_back(auto_info);
+							}
+							else if (!is_auto_complete_static && !property_info.is_static)
+							{
+								auto_complete_info.push_back(auto_info);
+							}
+						}
+					}
+
 					if (!class_info.methods.empty())
 					{
 						for (DLLMethodInfo method_info : class_info.methods)
 						{
+							AutoCompleteInfo auto_info;
+							auto_info.name = method_info.method_name;
+							auto_info.description = method_info.description;
+							auto_info.type = "Method ";
+							auto_info.type_letter = "M ";
+							auto_info.color = { 1, 182.f / 255.f, 39.f / 255.f, 1 };
+							auto_info.declaration = method_info.declaration;
+							auto_info.params_description = method_info.params_description;
+
+							if (method_info.returning_type == "T")
+							{
+								auto_info.name += "<>";
+								method_info.returning_type = "TheComponent";
+							}
+							else
+							{
+								auto_info.name += "()";
+							}
+
 							if (is_auto_complete_static && method_info.is_static)
 							{
-								methods_list.push_back(method_info);
+								auto_complete_info.push_back(auto_info);
 							}
 							else if (!is_auto_complete_static && !method_info.is_static)
 							{
-								methods_list.push_back(method_info);
+								auto_complete_info.push_back(auto_info);
 							}
 						}
 					}
+					break;
 				}
 			}
-			if (!methods_list.empty())
+
+			if (!auto_complete_info.empty())
 			{
+				ImGui::SetNextWindowFocus();
 				ImGui::BeginTooltip();
+
+				bool select_with_arrows = true;
 				bool selected = false;
 				int word_index = 0;
-				for (DLLMethodInfo method_info : methods_list)
+				for (AutoCompleteInfo auto_info : auto_complete_info)
 				{
-					if (auto_complete_index == word_index)
+					ImGui::TextColored(auto_info.color, auto_info.type_letter);
+					ImGui::SameLine();
+					ImGui::Text(auto_info.name.c_str());
+
+					ImVec2 item_min_rect = ImGui::GetItemRectMin();
+					ImVec2 item_max_rect;
+					item_max_rect.y = ImGui::GetItemRectMax().y;
+					item_max_rect.x = ImGui::GetItemRectMin().x + ImGui::GetWindowWidth();
+
+					bool clicked = false;
+
+					if (ImGui::IsMouseHoveringRect(item_min_rect, item_max_rect))
+					{
+						selected = true;
+						auto_complete_index = word_index;
+						select_with_arrows = false;
+						if (ImGui::IsMouseClicked(0))
+						{
+							clicked = true;
+						}
+					}
+					else if (word_index == auto_complete_index)
 					{
 						selected = true;
 					}
-					if (ImGui::Selectable(method_info.method_name.c_str(), &selected, ImGuiSelectableFlags_AllowDoubleClick | ImGuiSelectableFlags_AllowEnterKey))
+
+					if (clicked || selected && (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
 					{
-						ImGui::SetClipboardText(method_info.method_name.c_str());
+						ImGui::SetClipboardText(auto_info.name.c_str());
 						Paste();
 						is_method_auto_complete_open = false;
 						auto_complete_index = 0;
 						break;
 					}
+
+					if (selected)
+					{
+						ImDrawList* list = ImGui::GetWindowDrawList();
+						ImVec2 max_rect;
+						max_rect.y = ImGui::GetItemRectMax().y;
+						max_rect.x = ImGui::GetItemRectMin().x + ImGui::GetWindowWidth();
+						list->AddRectFilled(ImGui::GetItemRectMin(), max_rect, ImGui::ColorConvertFloat4ToU32(ImVec4(1, 1, 1, 0.2f)), 0);
+
+						ImVec2 new_tooltip_pos = cursor_pos;
+						new_tooltip_pos.x += ImGui::GetWindowSize().x;
+						new_tooltip_pos.y = ImGui::GetItemRectMin().y;
+
+						ImGui::SetNextWindowPos(new_tooltip_pos);
+						ImGui::SetNextWindowFocus();
+						ImGui::Begin("methods##auto_complete_methods", &is_method_auto_complete_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+
+						if (!auto_info.declaration.empty())
+						{
+							std::string word;
+							for (std::string::iterator it = auto_info.declaration.begin(); it != auto_info.declaration.end(); it++)
+							{
+								if (*it != ' ' && *it != ',' && *it != ';' && *it != '(' && *it != ')' && *it != '{' && *it != '}' && *it != '\n' && *it != '[' && *it != ']')
+								{
+									word += *it;
+								}
+								else
+								{
+									if (GetLanguageDefinition().mClasses.find(word) != GetLanguageDefinition().mClasses.end())
+									{
+										ImGui::TextColored(ImVec4(63.f / 255.f, 191.f / 255.f, 191.f / 255.f, 1), word.c_str());
+									}
+									else if (word == "get" || word == "set" || word == "float" || word == "bool" || word == "int" || word == "double"
+										|| word == "string" || word == "out" || word == "ref" || word == "boolean" || word == "void")
+									{
+										ImGui::TextColored(ImVec4(63.f / 255.f, 127.f / 255.f, 191.f / 255.f, 1), word.c_str());
+									}
+									else
+									{
+										ImGui::Text(word.c_str());
+									}
+									word.clear();
+									if (*it + 1 != '\0')
+									{
+										ImGui::SameLine();
+										ImGui::Text(std::string(1, *it).c_str());
+										if (*it != '\n')
+										{
+											ImGui::SameLine();
+										}
+									}
+								}
+							}
+						}
+						if (!auto_info.description.empty())
+						{
+							ImGui::Spacing(5);
+							ImGui::Text(auto_info.description.c_str());
+						}
+						if (!auto_info.params_description.empty())
+						{
+							ImGui::Spacing(5);
+							ImGui::Text(auto_info.params_description.c_str());
+						}
+
+						ImGui::End();
+					}
 					ImGui::Spacing(3);
 					word_index++;
 					selected = false;
 				}
-				if (auto_complete_index >= word_index)
-				{
-					auto_complete_index = word_index - 1;
-				}
-				/*int word_index = 0;
-				for (int i = 0; i < words.size(); i++)
-				{
-				std::string word;
-				while (words[i] != '_' && words[i] != '\0')
-				{
-				word += words[i];
-				i++;
-				}
-				if (word.find(auto_complete_word_methods) == std::string::npos) continue;
-				bool selected = false;
-				if (auto_complete_index == word_index)
-				{
-				selected = true;
-				}
-				if (ImGui::Selectable(word.c_str(), &selected, ImGuiSelectableFlags_AllowEnterKey))
-				{
-				size_t size = auto_complete_word_methods.size();
-				if (size != 0)
-				{
-				word.erase(word.begin(), word.begin() + size);
-				}
-				ImGui::SetClipboardText(word.c_str());
-				Paste();
-				is_method_auto_complete_open = false;
-				auto_complete_index = 0;
-				break;
-				}
-				if (selected || ImGui::IsItemHovered())
-				{
-				ImVec2 new_tooltip_pos = cursor_pos;
-				new_tooltip_pos.x += ImGui::GetWindowSize().x;
-				new_tooltip_pos.y = cursor_pos.y;
 
-				ImGui::SetNextWindowPos(new_tooltip_pos);
-				ImGui::Begin("methods##auto_complete_methods", &is_method_auto_complete_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
-				static TextEditor::LanguageDefinition def = GetLanguageDefinition();
-				if (word == "Lerp()" || word == "AngleBetween()" || word == "DotProduct()" || word == "Magnitude()" || word == "Normalize()" ||
-				word == "Slerp()" || word == "ToAngleAxis()" || word == "Length" || word == "LengthSquared" || word == "Normalized" || word == "Set()" ||
-				word == "Scale()")
+				if (select_with_arrows)
 				{
-				if (auto_complete_is_vector)
-				{
-				word += "_Vec";
-				if (is_auto_complete_static)
-				{
-				word += "_Static";
+					if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
+					{
+						if (auto_complete_index < auto_complete_info.size() - 1)
+						{
+							auto_complete_index++;
+						}
+					}
+
+					if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+					{
+						if (auto_complete_index > 0)
+						{
+							auto_complete_index--;
+						}
+					}
 				}
-				else
-				{
-				word += "_NStatic";
-				}
-				}
-				else if (auto_complete_is_quaternion)
-				{
-				word += "_Quat";
-				if (is_auto_complete_static)
-				{
-				word += "_Static";
-				}
-				else
-				{
-				word += "_NStatic";
-				}
-				}
-				else
-				{
-				word += "_Math";
-				}
-				}
-				ImGui::Text("Info:");
-				ImGui::Separator();
-				ImGui::Spacing(5);
-				ImGui::Text(def.functions_info[word].c_str());
-				ImGui::End();
-				}
-				word_index++;
-				}
-				if (auto_complete_index >= word_index)
-				{
-				auto_complete_index = word_index - 1;
-				}*/
+
 				ImGui::EndTooltip();
-
 			}
-			
-			ImGui::SetWindowFocus();
 		}
 
 		if (is_word_auto_complete_open)
@@ -1035,8 +1119,12 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 			Coordinates cords = GetActualCursorCoordinates();
 			ImVec2 cursor_pos = CoordinatesToScreenPos(cords);
 			cursor_pos.x += 5;
-			ImGui::SetNextWindowPos(cursor_pos);
 
+			bool select_with_arrows = true;
+
+			ImGui::SetNextWindowPos(cursor_pos);
+			ImGui::SetNextWindowFocus();
+			
 			ImGui::BeginTooltip();
 			if (!auto_complete_word_list.empty())
 			{
@@ -1048,11 +1136,34 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 					{
 						auto_complete_index = auto_complete_word_list.size() - 1;
 					}
-					if (i == auto_complete_index)
+					
+					ImGui::TextColored(ImVec4(77.f / 255.f, 226.f / 255.f, 28.f / 255.f, 1), "C ");
+					ImGui::SameLine();
+					ImGui::Text((*it).c_str());
+					
+					ImVec2 item_min_rect = ImGui::GetItemRectMin();
+					ImVec2 item_max_rect;
+					item_max_rect.y = ImGui::GetItemRectMax().y;
+					item_max_rect.x = ImGui::GetItemRectMin().x + ImGui::GetWindowWidth();
+
+					bool clicked = false;
+
+					if (ImGui::IsMouseHoveringRect(item_min_rect, item_max_rect))
+					{
+						selected = true;
+						auto_complete_index = i;
+						select_with_arrows = false;
+						if (ImGui::IsMouseClicked(0))
+						{
+							clicked = true;
+						}
+					}
+					else if (i == auto_complete_index)
 					{
 						selected = true;
 					}
-					if (ImGui::Selectable((*it).c_str(), &selected, ImGuiSelectableFlags_AllowEnterKey))
+
+					if (clicked || selected && (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
 					{
 						size_t size = auto_complete_word.size();
 						if (size != 0)
@@ -1066,7 +1177,32 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 						auto_complete_index = 0;
 						break;
 					}
+
+					if (selected)
+					{
+						ImDrawList* list = ImGui::GetWindowDrawList();
+						list->AddRectFilled(item_min_rect, item_max_rect, ImGui::ColorConvertFloat4ToU32(ImVec4(1, 1, 1, 0.2f)), 0);
+					}
 					i++;
+				}
+
+				if (select_with_arrows)
+				{
+					if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
+					{
+						if (auto_complete_index < auto_complete_word_list.size() - 1)
+						{
+							auto_complete_index++;
+						}
+					}
+
+					if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+					{
+						if (auto_complete_index > 0)
+						{
+							auto_complete_index--;
+						}
+					}
 				}
 			}
 			else if (!auto_complete_word_list_secondary.empty())
@@ -1079,11 +1215,34 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 					{
 						auto_complete_index = auto_complete_word_list_secondary.size() - 1;
 					}
-					if (i == auto_complete_index)
+
+					ImGui::TextColored(ImVec4(77.f / 255.f, 226.f / 255.f, 28.f / 255.f, 1), "C ");
+					ImGui::SameLine();
+					ImGui::Text((*it).c_str());
+
+					ImVec2 item_min_rect = ImGui::GetItemRectMin();
+					ImVec2 item_max_rect;
+					item_max_rect.y = ImGui::GetItemRectMax().y;
+					item_max_rect.x = ImGui::GetItemRectMin().x + ImGui::GetWindowWidth();
+
+					bool clicked = false;
+
+					if (ImGui::IsMouseHoveringRect(item_min_rect, item_max_rect))
+					{
+						selected = true;
+						auto_complete_index = i;
+						select_with_arrows = false;
+						if (ImGui::IsMouseClicked(0))
+						{
+							clicked = true;
+						}
+					}
+					else if (i == auto_complete_index)
 					{
 						selected = true;
 					}
-					if (ImGui::Selectable((*it).c_str(), &selected, ImGuiSelectableFlags_AllowEnterKey))
+
+					if (clicked || selected && (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN))
 					{
 						size_t size = auto_complete_word.size();
 						if (size != 0)
@@ -1097,12 +1256,35 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 						auto_complete_index = 0;
 						break;
 					}
+
+					if (selected)
+					{
+						ImDrawList* list = ImGui::GetWindowDrawList();
+						list->AddRectFilled(item_min_rect, item_max_rect, ImGui::ColorConvertFloat4ToU32(ImVec4(1, 1, 1, 0.2f)), 0);
+					}
 					i++;
+				}
+
+				if (select_with_arrows)
+				{
+					if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
+					{
+						if (auto_complete_index < auto_complete_word_list.size() - 1)
+						{
+							auto_complete_index++;
+						}
+					}
+
+					if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+					{
+						if (auto_complete_index > 0)
+						{
+							auto_complete_index--;
+						}
+					}
 				}
 			}
 			ImGui::EndTooltip();
-
-			ImGui::SetWindowFocus();
 		}
 
 		while (lineNo <= lineMax)
@@ -1339,19 +1521,23 @@ void TextEditor::EnterCharacter(Char aChar)
 			auto_complete_word_list_secondary.clear();
 			int i = coord.mColumn;
 			bool can_open = true;
-			while (i > 0)
+			if (coord.mColumn >= 2 && GetWordAt(Coordinates(coord.mLine, coord.mColumn - 2)) != "new")
 			{
-				if (line[i - 1].mChar != ' ' && line[i - 1].mChar != '\t')
+				while (i > 0)
 				{
-					if (line[i - 1].mChar == ';')
+					if (line[i - 1].mChar != ' ' && line[i - 1].mChar != '\t')
 					{
+						if (line[i - 1].mChar == ';')
+						{
+							break;
+						}
+						can_open = false;
 						break;
 					}
-					can_open = false;
-					break;
+					i--;
 				}
-				i--;
 			}
+			
 			if (can_open)
 			{
 				is_word_auto_complete_open = true;
@@ -2726,11 +2912,6 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 			"readonly","ref","return","sbyte","sealed","short","sizeof","stackalloc","static","string","struct","switch","this","throw","true","try","typeof","uint","ulong","unchecked","unsafe","ushort","using","using static","virtual","void","volatile","while"
 		};
 
-		/*static const char* const csharpClasses[] = {
-			"TheMath","TheComponent","TheConsole","TheFactory","TheGameObject","TheInput","TheQuaternion","TheTransform","TheVector3","TheTime", "TheAudio", "TheAudioSource","TheRectTransform","TheProgressBar", "TheText", "TheRadar", "TheApplication", "TheData", "TheGOAPAgent"
-
-		};*/
-
 		langDef.csharpClasses = App->script_importer->engine_dll_info;
 		for (auto& k : langDef.csharpClasses)
 			langDef.mClasses.insert(k.name);
@@ -2758,199 +2939,6 @@ TextEditor::LanguageDefinition TextEditor::LanguageDefinition::CSharp()
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
 		langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation));
-
-		/*langDef.class_static_auto_complete["Math"] = "Abs()_Acos()_Asin()_Atan()_Atan2()_Ceiling()_Clamp()_Cos()_DegToRad_Epsilon_Exp()_Floor()_Infinity_IsPowerOfTwo()_Lerp()_Log()_Max()_Min()_NegativeInfinity_PI_Pow()_RadToDeg_Round()_Sin()_Sqrt()_Tan()";
-		langDef.class_static_auto_complete["TheGameObject"] = "Destroy()_Duplicate()_Self";
-		langDef.class_non_static_auto_complete["TheGameObject"] = "AddComponent<TheFactory>()_GetChild()_GetChildCount()_GetComponent<TheTransform>()_GetComponent<TheFactory>()_GetComponent<TheProgressBar>()_GetComponent<TheText>()_GetComponent<TheRadar>_GetComponent<TheAudioSource>()_IsActive()_IsStatic()_layer_name_SetActive()_SetParent()_SetStatic()_tag";
-		langDef.class_static_auto_complete["TheConsole"] = "Error()_Log()_Warning()";
-		langDef.class_non_static_auto_complete["TheFactory"] = "SetSpawnPosition()_SetSpawnRotation()_SetSpawnScale()_Spawn()_StartFactory()";
-		langDef.class_static_auto_complete["TheInput"] = "GetMousePosition()_GetMouseXMotion()_GetMouseYMotion()_IsKeyDown()_IsKeyRepeat()_IsKeyUp()_IsMouseButtonDown()_IsMouseButtonRepeat()_IsMouseButtonUp()";
-		langDef.class_static_auto_complete["TheQuaternion"] = "AngleBetween()_DotProduct()_FromAngleAxis()_FromEulerAngles()_Identity_Lerp()_LookRotation()_Magnitude()_Normalize()_RotateTowards()_Slerp()_ToAngleAxis()";
-		langDef.class_non_static_auto_complete["TheQuaternion"] = "Conjugate()_Inverse()_Length_LengthSquared_Normalized_Set()_ToAngleAxis()_ToEulerAngles()_ToString()_w_x_y_z";
-		langDef.class_non_static_auto_complete["TheTransform"] = "ForwardDirection_GlobalPosition_GlobalRotation_GlobalScale_LocalPosition_LocalRotation_LocalScale_LookAt()_ToString()";
-		langDef.class_static_auto_complete["TheVector3"] = "AngleBetween()_BackWard_CrossProduct()_Distance()_DotProduct()_Down_Forward_Left_Lerp()_Magnitude()_MoveTowards()_NLerp()_Normalize()_Project()_Reflect()_Right_Scale()_SLerp()_Up_Zero";
-		langDef.class_non_static_auto_complete["TheVector3"] = "Length_LengthSquared_Normalized_Scale()_Set()_ToQuaternion()_ToString()_x_y_z";
-		langDef.class_static_auto_complete["Time"] = "TimeScale_DeltaTime";
-		langDef.class_static_auto_complete["TheAudio"] = "IsMuted()_SetMute()_GetVolume()_GetPitch()_SetPitch()_SetRTPCvalue()";
-		langDef.class_static_auto_complete["TheAudioSource"] = "Play()_Stop()_Send()_SetMyRTPCvalue()_SetState()_SetVolume()";
-		langDef.class_static_auto_complete["TheProgressBar"] = "PercentageProgress";
-		langDef.class_static_auto_complete["TheText"] = "Text";
-		langDef.class_static_auto_complete["TheRadar"] = "AddEntity()_RemoveEntity()_RemoveAllEntities()_SetMarkerToEntity()";
-		langDef.functions_info["Abs()"] = "Returns the absolute value of value. \n1. float Abs(float value) \n2. int Abs(int value)";
-		langDef.functions_info["Acos()"] = "Returns the arc-cosine of value. \nfloat Acos(float value)";
-		langDef.functions_info["Asin()"] = "Returns the arc-sine of value. \nfloat Asin(float value)";
-		langDef.functions_info["Atan()"] = "Returns the arc-tangent of value. \nfloat Atan(float value)";
-		langDef.functions_info["Atan2()"] = "Returns the angle in radians whose Tan is a/b. \nfloat Atan2(float a, float b)";
-		langDef.functions_info["Ceiling()"] = "Returns the smallest integer greater to or equal to value. \nfloat Ceiling(float value)";
-		langDef.functions_info["Clamp()"] = "Clamps a value between a minimum float and maximum float value. \nfloat Clamp(float value, float max_value, float min_value)";
-		langDef.functions_info["Cos()"] = "Returns the cosine of angle value in radians. \nfloat Cos(float value)";
-		langDef.functions_info["DegToRad"] = "Degrees to Radians. \n float DegToRad = 0.0174532925199432957f";
-		langDef.functions_info["Epsilon"] = "A tiny floating point value. \nfloat Epsilon = 1.401298E-45f";
-		langDef.functions_info["Exp()"] = "Returns e raised to the specified power. \nfloat Exp(float power)";
-		langDef.functions_info["Floor()"] = "Returns the largest integer smaller to or equal to value. \nfloat Floor(float value)";
-		langDef.functions_info["Infinity"] = "A representation of positive infinity. \nfloat Infinity = float.PositiveInfinity;";
-		langDef.functions_info["IsPowerOfTwo()"] = "Returns true if the value is power of two. \nbool IsPowerOfTwo(int value)";
-		langDef.functions_info["Lerp()_Math"] = "Linearly interpolates between start and end by value. \nfloat Lerp(float start, float end, float value)";
-		langDef.functions_info["Log()"] = "Returns the logarithm of a specified number in a specified base. \nfloat Log(float value, float new_base)";
-		langDef.functions_info["Max()"] = "Returns largest of two values. \nfloat Max(float a, float b)";
-		langDef.functions_info["Min()"] = "Returns smallest of two values. \nfloat Min(float a, float b)";
-		langDef.functions_info["Min()"] = "Returns smallest of two values. \nfloat Min(float a, float b)";
-		langDef.functions_info["NegativeInfinity"] = "A representation of negative infinity. NegativeInfinity = float.NegativeInfinity";
-		langDef.functions_info["PI"] = "The PI value. \nPI = 3.14159265358979323846.";
-		langDef.functions_info["Pow()"] = "Returns value raised to power. \nfloat Pow(float value, float power)";
-		langDef.functions_info["RadToDeg"] = "Radians to Degrees. \nRadToDeg = 57.295779513082320876f";
-		langDef.functions_info["Round()"] = "Returns value rounded to the nearest integer. \nfloat Round(float value)";
-		langDef.functions_info["Sin()"] = "Returns the sine of angle value in radians. \nfloat Sin(float value)";
-		langDef.functions_info["Sqrt()"] = "Returns square root of value. \nfloat Sqrt(float value)";
-		langDef.functions_info["Tan()"] = "Returns the tangent of angle value in radians. \nfloat Tan(float value)";
-		langDef.functions_info["Destroy()"] = "Destroys the target GameObject. \nVoid Destroy(TheGameObject target)";
-		langDef.functions_info["Duplicate()"] = "Duplicates the original GameObject. \nTheGameObject Duplicate(TheGameObject original)";
-		langDef.functions_info["Self"] = "The GameObject this script is attached to. \nTheGameObject Self";
-		langDef.functions_info["AddComponent<TheFactory>()"] = "Adds a Factory component to the attached GameObject. \nTheFactory AddComponent<TheFactory>()";
-		langDef.functions_info["GetChild()"] = "Returns the child by index. \n1. TheGameObject GetChild(int index) \n2. TheGameObject GetChild(string child_name)";
-		langDef.functions_info["GetChildCount()"] = "Returns the numbers of childs. \nint GetChildCount()";
-		langDef.functions_info["GetComponent<TheTransform>()"] = "Returns the transform attached to this GameObject. \nTheTransform GetComponent<TheTransform>()";
-		langDef.functions_info["GetComponent<TheFactory>()"] = "Returns the Factory attached to this GameObject or null if component doesn't exist. \nTheFactory GetComponent<TheFactory>()";
-		langDef.functions_info["GetComponent<TheAudioSource>()"] = "Returns the AudioSource attached to this GameObject or null if component doesn't exist. \nTheAudioSource GetComponent<TheAudioSource>()";
-		langDef.functions_info["IsActive()"] = "Returns GameObject active state. \nbool IsActive()";
-		langDef.functions_info["IsStatic()"] = "Returns GameObject static state. \nbool IsStatic()";
-		langDef.functions_info["layer"] = "GameObject layer. \nstring layer";
-		langDef.functions_info["name"] = "GameObject name. \n string name";
-		langDef.functions_info["SetActive()"] = "Activates/Deactivates the GameObject. \nvoid SetActive(bool value)";
-		langDef.functions_info["SetParent()"] = "Set the parent of the GameObject. \nvoid SetParent(TheGameObject new_parent)";
-		langDef.functions_info["SetStatic()"] = "Set the GameObject static state. \nvoid SetStatic(bool value)";
-		langDef.functions_info["tag"] = "GameObject tag. \nstring tag";
-		langDef.functions_info["Error()"] = "Prints message in engine console as error. \nvoid Error(object message)";
-		langDef.functions_info["Warning()"] = "Prints message in engine console as warning. \nvoid Warning(object message)";
-		langDef.functions_info["Log()"] = "Prints message in engine console as log. \nvoid Log(object message)";
-		langDef.functions_info["SetSpawnPosition()"] = "Set the position for the following GameObjects to spawn. \nvoid SetSpawnPosition(TheVector3 position)";
-		langDef.functions_info["SetSpawnRotation()"] = "Set the rotation for the following GameObjects to spawn. \nvoid SetSpawnRotation(TheVector3 rotation)";
-		langDef.functions_info["SetSpawnScale()"] = "Set the scale for the following GameObjects to spawn. \nvoid SetSpawnScale(TheVector3 scale)";
-		langDef.functions_info["Spawn()"] = "Spawn the next GameObject. \nTheGameObject Spawn()";
-		langDef.functions_info["StartFactory()"] = "Starts the factory component. All GameObjects with the component values will be created. \nvoid StartFactory()";
-		langDef.functions_info["GetMousePosition()"] = "Returns the mouse position. \nTheVector3 GetMousePosition()";
-		langDef.functions_info["GetMouseXMotion()"] = "Returns the mouse x movement. \nint GetMouseXMotion()";
-		langDef.functions_info["GetMouseYMotion()"] = "Returns the mouse y movement. \nint GetMouseYMotion()";
-		langDef.functions_info["IsKeyDown()"] = "Returns if the key is pressed. \nbool IsKeyDown(string key_name)";
-		langDef.functions_info["IsKeyRepeat()"] = "Returns if the key is hold down. \nbool IsKeyRepeat(string key_name)";
-		langDef.functions_info["IsKeyUp()"] = "Returns if the key is released. \nbool IsKeyUp(string key_name)";
-		langDef.functions_info["IsMouseButtonDown()"] = "Returns if the mouse button is pressed. \nbool IsMouseButtonDown(int mouse_button)";
-		langDef.functions_info["IsMouseButtonRepeat()"] = "Returns if the mouse button is hold down. \nbool IsMouseButtonRepeat(int mouse_button)";
-		langDef.functions_info["IsMouseButtonUp()"] = "Returns if the mouse button is released. \nbool IsMouseButtonUp(int mouse_button)";
-		langDef.functions_info["AngleBetween()_Quat_Static"] = "Returns the angle in degrees between two rotations. \nfloat AngleBetween(TheQuaternion a, TheQuaternion b)";
-		langDef.functions_info["DotProduct()_Quat_Static"] = "Returns The dot product between two rotations. \nfloat DotProduct(TheQuaternion a, TheQuaternion b)";
-		langDef.functions_info["FromAngleAxis()"] = "Returns a rotation which rotates angle degrees around axis. \nTheQuaternion FromAngleAxis(float angle, TheVector3 axis)";
-		langDef.functions_info["FromEulerAngles()"] = "Returns a rotation from euler angles. \nTheQuaternion FromEulerAngles(TheVector3 angles)";
-		langDef.functions_info["Identity"] = "The identity rotation. \nTheQuaternion Identity";
-		langDef.functions_info["Lerp()_Quat_Static"] = "Linearly interpolates between two rotations. \nTheQuaternion Lerp(TheQuaternion a, TheQuaternion b, float value)";
-		langDef.functions_info["LookRotation()"] = "Returns a rotation with the specified direction. \nTheQuaternion LookRotation(TheVector3 direction)";
-		langDef.functions_info["Magnitude()_Quat_Static"] = "Returns the Quaternion magnitude. \nfloat Magnitude(TheQuaternion quaternion)";
-		langDef.functions_info["Normalize()_Quat_Static"] = "Normalize the Quaternion. \nTheQuaternion Normalize(TheQuaternion quaternion)";
-		langDef.functions_info["RotateTowards()"] = "Rotates a rotation from towards to. \nTheQuaternion RotateTowards(TheQuaternion from, TheQuaternion to, float step)";
-		langDef.functions_info["Slerp()_Quat_Static"] = "Spherically interpolates between a and b by value. \nTheQuaternion Slerp(TheQuaternion a, TheQuaternion b, float value)";
-		langDef.functions_info["ToAngleAxis()_Quat_Static"] = "Returns the quaternion angle and axis. \nvoid ToAngleAxis(TheQuaternion a, out float angle, out TheVector3 axis)";
-		langDef.functions_info["Conjugate()"] = "Returns the conjugate of the quaternion. \nTheQuaternion Conjugate()";
-		langDef.functions_info["Inverse()"] = "Returns the inverse of the quaternion. \nTheQuaternion Inverse()";
-		langDef.functions_info["Length_Quat_NStatic"] = "Returns the length of the quaternion.  \nfloat Length";
-		langDef.functions_info["LengthSquared_Quat_NStatic"] = "Returns the length squared of the quaternion. \nfloat LengthSquared";
-		langDef.functions_info["Normalized_Quat_NStatic"] = "Returns the quaternion normalized. \nTheQuaternion Normalized";
-		langDef.functions_info["Set()_Quat_NStatic"] = "Set the quaternion values. \nvoid Set(float x, float y, float z, float w)";
-		langDef.functions_info["ToAngleAxis()_Quat_NStatic"] = "Returns the quaternion angle and axis. \nvoid ToAngleAxis(out float angle, out TheVector3 axis)";
-		langDef.functions_info["ToEulerAngles()"] = "Returns the quaternion angle and axis. \nTheVector3 ToEulerAngles()";
-		langDef.functions_info["ForwardDirection"] = "The forward direction of the GameObject. \nTheVector3 ForwardDirection";
-		langDef.functions_info["GlobalPosition"] = "The global position of the GameObject. \nTheVector3 GlobalPosition";
-		langDef.functions_info["GlobalRotation"] = "The global rotation of the GameObject. \nTheVector3 GlobalRotation";
-		langDef.functions_info["GlobalScale"] = "The global scale of the GameObject. \nTheVector3 GlobalScale";
-		langDef.functions_info["LocalPosition"] = "The local position of the GameObject relative to the parent. \nTheVector3 LocalPosition";
-		langDef.functions_info["LocalRotation"] = "The local rotation of the GameObject. \nTheVector3 LocalRotation";
-		langDef.functions_info["LocalScale"] = "The local scale of the GameObject. \nTheVector3 LocalScale";
-		langDef.functions_info["LookAt()"] = "The local scale of the GameObject. \nvoid LookAt(TheVector3 value)";
-		langDef.functions_info["AngleBetween()_Vec_Static"] = "Returns the angle in degrees between a and b. \nfloat AngleBetween(TheVector3 a, TheVector3 b)";
-		langDef.functions_info["BackWard"] = "Shorthand for TheVector3(0, 0, -1). \nTheVector3 backward";
-		langDef.functions_info["CrossProduct()"] = "Cross Product of two vectors. \nTheVector3 CrossProduct(TheVector3 a, TheVector3 b)";
-		langDef.functions_info["Distance()"] = "Returns the distance between a and b. \nfloat Distance(TheVector3 a, TheVector3 b)";
-		langDef.functions_info["DotProduct()_Vec_Static"] = "Dot Product of two vectors. \nfloat DotProduct(TheVector3 a, TheVector3 b)";
-		langDef.functions_info["Down"] = "Shorthand for TheVector3(0, -1, 0). \nTheVector3 down";
-		langDef.functions_info["Forward"] = "Shorthand for TheVector3(0, 0, 1). \nTheVector3 Forward";
-		langDef.functions_info["Left"] = "Shorthand for TheVector3(-1, 0, 0). \nTheVector3 Left";
-		langDef.functions_info["Lerp()_Vec_Static"] = "Linearly interpolates between two vectors. \nTheVector3 Lerp(TheVector3 start, TheVector3 end, float value)";
-		langDef.functions_info["Magnitude()_Vec_Static"] = "Returns the magnitude of the vector. \nfloat Magnitude(TheVector3 vector)";
-		langDef.functions_info["MoveTowards()"] = "Moves a point in a straight line towards a target point. \nTheVector3 MoveTowards(TheVector3 position, TheVector3 target, float step)";
-		langDef.functions_info["NLerp()"] = "Normalized linear interpolation. Normalize the result of Lerp \nTheVector3 NLerp(TheVector3 start, TheVector3 end, float value)";
-		langDef.functions_info["Normalize()_Vec_Static"] = "Normalize the Vector. \nTheVector3 Normalize(TheVector3 vector)";
-		langDef.functions_info["Project()"] = "Projects a vector onto another vector. \nTheVector3 Project(TheVector3 vector, TheVector3 normal)";
-		langDef.functions_info["Reflect()"] = "Reflects a vector off the plane defined by a normal. \nTheVector3 Reflect(TheVector3 direction, TheVector3 normal)";
-		langDef.functions_info["Right"] = "Shorthand for TheVector3(1, 0, 0). \nTheVector3 Right";
-		langDef.functions_info["Scale()_Vec_Static"] = "Multiplies two vectors. \nTheVector3 Scale(TheVector3 a, TheVector3 b)";
-		langDef.functions_info["Slerp()_Vec_Static"] = "Spherically interpolates between start and end by value. \nTheVector3 SLerp(TheVector3 start, TheVector3 end, float value)";
-		langDef.functions_info["Up"] = "Shorthand for TheVector3(0, 1, 0). \nTheVector3 Up";
-		langDef.functions_info["Zero"] = "Shorthand for TheVector3(0, 0, 0). \nTheVector3 Zero";
-		langDef.functions_info["Length_Vec_NStatic"] = "Returns the length of the vector. \n float Length";
-		langDef.functions_info["LengthSquared_Vec_NStatic"] = "Returns the length squared of the vector. \nfloat LengthSquared";
-		langDef.functions_info["Normalized_Vec_NStatic"] = "Returns the vector normalized. \nTheVector3 Normalized";
-		langDef.functions_info["Scale()_Vec_NStatic"] = "Multiplies the vector by another vector. \nTheVector3 Scale(TheVector3 scale)";
-		langDef.functions_info["Set()_Vec_NStatic"] = "Set vector values. \nvoid Set(float x, float y, float z)";
-		langDef.functions_info["ToQuaternion()"] = "Converts the vector to a quaternion. \nTheQuaternion ToQuaternion()";
-		langDef.functions_info["TimeScale"] = "The scale at which the time is passing. \nfloat Scale";
-		langDef.functions_info["DeltaTime"] = "The time in seconds it took to complete the last frame. \nfloat DeltaTime";
-		langDef.functions_info["IsMuted()"] = "Returns true if the global audio is muted, if not it will return false. \nbool IsMuted()";
-		langDef.functions_info["SetMute()"] = "Set the global audio to mute if set to true or unmuted if set to false. \nvoid SetMute(bool set)";
-		langDef.functions_info["GetVolume()"] = "Returns the global volume as an integer from 0 to 100. \nint GetVolume()";
-		langDef.functions_info["GetPitch()"] = "Get the global pitch as an integer from 0 to 100. \nint GetPitch()";
-		langDef.functions_info["SetPitch()"] = "Set the pitch to the specified value. (Recomended:  0 to 100). \nvoid SetPitch(int pitch)";
-		langDef.functions_info["SetRTPCvalue()"] = "Set a value to the property with the specified name. \nvoid SetRTPCvalue(string name, float value)";
-		langDef.functions_info["Play()"] = "Plays an event of the AudioSource. Return true if done correctly, and false if there was an error. \nbool Play(string name)";
-		langDef.functions_info["Stop()"] = "Stops an event of the AudioSource. Return true if done correctly, and false if there was an error. \nbool Stop(string name)";
-		langDef.functions_info["Send()"] = "Sends an event of the AudioSource. Return true if done correctly, and false if there was an error. \nbool Send(string name)";
-		langDef.functions_info["SetMyRTPCvalue()"] = "Set a value to the property with the specified name from this audio source. \nbool SetMyRTPCvalue(string name, float value)";
-		langDef.functions_info["SetState()"] = "Set the state from this audio source. \nbool SetState(string group, string state)";
-		langDef.functions_info["SetVolume()"] = "Set the volume to the specified value. (Recomended:  0 to 100). \nvoid SetVolume(int volume)";
-
-		variables["Duplicate()"] = "TheGameObject";
-		variables["GetChild()"] = "TheGameObject";
-		variables["GetComponent<TheTransform>()"] = "TheTransform";
-		variables["GetComponent<TheFactory>()"] = "TheFactory";
-		variables["GetComponent<TheAudioSource>()"] = "TheAudioSource";
-		variables["AddComponent<TheFactory>()"] = "TheFactory";
-		variables["Spawn()"] = "TheGameObject";
-		variables["GetMousePosition()"] = "TheVector3";
-		variables["Identity"] = "TheQuaternion";
-		variables["ToEulerAngles()"] = "TheVector3";
-		variables["FromEulerAngles()"] = "TheQuaternion";
-		variables["Lerp()_TheQuaternion"] = "TheQuaternion";
-		variables["Slerp()_TheQuaternion"] = "TheQuaternion";
-		variables["RotateTowards()"] = "TheQuaternion";
-		variables["FromAngleAxis()"] = "TheQuaternion";
-		variables["LookRotation()"] = "TheQuaternion";
-		variables["Normalized_TheQuaternion"] = "TheQuaternion";
-		variables["Normalize()_TheQuaternion"] = "TheQuaternion";
-		variables["Conjugate()"] = "TheQuaternion";
-		variables["Inverse()"] = "TheQuaternion";
-		variables["LocalPosition()"] = "TheVector3";
-		variables["LocalRotation()"] = "TheVector3";
-		variables["LocalScale()"] = "TheVector3";
-		variables["GlobalPosition()"] = "TheVector3";
-		variables["GlobalRotation()"] = "TheVector3";
-		variables["GlobalScale()"] = "TheVector3";
-		variables["ForwardDirection"] = "TheVector3";
-		variables["Zero"] = "TheVector3";
-		variables["Forward"] = "TheVector3";
-		variables["BackWard"] = "TheVector3";
-		variables["Up"] = "TheVector3";
-		variables["Down"] = "TheVector3";
-		variables["Left"] = "TheVector3";
-		variables["Right"] = "TheVector3";
-		variables["Normalized_TheVector3"] = "TheVector3";
-		variables["Normalize()_TheVector3"] = "TheVector3";
-		variables["Lerp()_TheVector3"] = "TheVector3";
-		variables["Slerp()_TheVector3"] = "TheVector3";
-		variables["NLerp()"] = "TheVector3";
-		variables["Project()"] = "TheVector3";
-		variables["MoveTowards()"] = "TheVector3";
-		variables["CrossProduct()"] = "TheVector3";
-		variables["Reflect()"] = "TheVector3";
-		variables["Scale()"] = "TheVector3";
-		variables["ToQuaternion()"] = "TheQuaternion";*/
 		
 		langDef.mCommentStart = "/*";
 		langDef.mCommentEnd = "*/";

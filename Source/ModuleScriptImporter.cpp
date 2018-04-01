@@ -26,6 +26,8 @@
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
 #include <mono/metadata/attrdefs.h>
+#include "TinyXML/tinyxml2.h"
+#include "Prefab.h"
 
 //CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -91,7 +93,7 @@ bool ModuleScriptImporter::Init(Data * editor_config)
 	{
 		mono_engine_image = mono_assembly_get_image(engine_assembly);
 		RegisterAPI();
-		DumpEngineDLLInfo(engine_assembly, mono_engine_image);
+		DumpEngineDLLInfo(engine_assembly, mono_engine_image, REFERENCE_ASSEMBLIES_FOLDER"TheEngine.xml");
 	}
 	else
 	{
@@ -280,8 +282,14 @@ MonoClass* ModuleScriptImporter::DumpClassInfo(MonoImage * image, std::string& c
 	return mono_class;
 }
 
-void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage* image)
+void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage* image, const char* engine_xml_path)
 {
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile(engine_xml_path);
+	tinyxml2::XMLNode* root = doc.FirstChildElement("doc");
+	tinyxml2::XMLNode* members_node = root->FirstChildElement("members");
+	tinyxml2::XMLNode* member_node = members_node->FirstChildElement("member");
+
 	const MonoTableInfo* class_table_info = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 	int class_table_rows = mono_table_info_get_rows(class_table_info);
 	for (int i = 1; i < class_table_rows; i++) {
@@ -290,7 +298,7 @@ void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage*
 		mono_metadata_decode_row(class_table_info, i, cols, MONO_TYPEDEF_SIZE);
 		class_info.name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 		const char* name_space = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
-		MonoClass* m_class = mono_class_from_name(image, name_space, class_info.name);
+		MonoClass* m_class = mono_class_from_name(image, name_space, class_info.name.c_str());
 
 		void* properties_iter = nullptr;
 		MonoProperty* property;
@@ -302,15 +310,53 @@ void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage*
 				continue;
 			}
 			DLLPropertyInfo property_info;
+			if (mono_method_get_flags(method, NULL) & MONO_METHOD_ATTR_STATIC)
+			{
+				property_info.is_static = true;
+			}
 			property_info.name = mono_property_get_name(property);
 			MonoMethodSignature* sig = mono_method_get_signature(method, image, 0);
 			MonoType* return_type = mono_signature_get_return_type(sig);
 			std::string return_name = mono_type_get_name(return_type);
+			bool is_system_type = false;
 			if (return_name.find("TheEngine") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 10);
-			else if (return_name.find("System") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 7);
+			else if (return_name.find("System") != std::string::npos)
+			{
+				return_name.erase(return_name.begin(), return_name.begin() + 7);
+				is_system_type = true;
+			}
 			if (return_name == "Single") return_name = "Float";
 			else if (return_name == "Int32") return_name = "Int";
-			property_info.returning_type = return_name.c_str();
+			if (is_system_type)
+			{
+				return_name.front() = std::tolower(return_name.front());
+			}
+			property_info.returning_type = return_name;
+
+			property_info.declaration = return_name + " " + property_info.name + " {" + (mono_property_get_get_method(property) ? "get;" : "") + (mono_property_get_set_method(property) ? "set;" : "") + "}";
+			for (tinyxml2::XMLNode* node = member_node; node; node = node->NextSiblingElement("member"))
+			{
+				tinyxml2::XMLElement* element = node->ToElement();
+				if (element)
+				{
+					const char* attr_name = element->Attribute("name");
+					std::string full_name("P:TheEngine." + class_info.name + "." + property_info.name);
+					if (attr_name == full_name)
+					{
+						tinyxml2::XMLNode* summary = element->FirstChildElement("summary");
+						tinyxml2::XMLElement* para = summary->FirstChildElement("para");
+						if (para)
+						{
+							if (para->GetText() != NULL)
+							{
+								property_info.description = para->GetText();
+								property_info.declaration += "\n";
+							}
+						}
+						break;
+					}
+				}
+			}
 			class_info.properties.push_back(property_info);
 		}
 
@@ -323,14 +369,52 @@ void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage*
 				continue;
 			}
 			DLLFieldsInfo field_info;
+			if (mono_field_get_flags(field) & MONO_FIELD_ATTR_STATIC)
+			{
+				field_info.is_static = true;
+			}
 			field_info.name = mono_field_get_name(field);
 			MonoType* return_type = mono_field_get_type(field);
 			std::string return_name = mono_type_get_name(return_type);
+			bool is_system_type = false;
 			if (return_name.find("TheEngine") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 10);
-			else if (return_name.find("System") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 7);
+			else if (return_name.find("System") != std::string::npos)
+			{
+				return_name.erase(return_name.begin(), return_name.begin() + 7);
+				is_system_type = true;
+			}
 			if (return_name == "Single") return_name = "Float";
 			else if (return_name == "Int32") return_name = "Int";
-			field_info.returning_type = return_name.c_str();
+			if (is_system_type)
+			{
+				return_name.front() = std::tolower(return_name.front());
+			}
+			field_info.returning_type = return_name;
+			field_info.declaration = return_name + " " + class_info.name + "." + field_info.name;
+
+			for (tinyxml2::XMLNode* node = member_node; node; node = node->NextSiblingElement("member"))
+			{
+				tinyxml2::XMLElement* element = node->ToElement();
+				if (element)
+				{
+					const char* attr_name = element->Attribute("name");
+					std::string full_name("F:TheEngine." + class_info.name + "." + field_info.name);
+					if (attr_name == full_name)
+					{
+						tinyxml2::XMLNode* summary = element->FirstChildElement("summary");
+						tinyxml2::XMLElement* para = summary->FirstChildElement("para");
+						if (para)
+						{
+							if (para->GetText() != NULL)
+							{
+								field_info.description += para->GetText();
+								field_info.declaration += "\n";
+							}
+						}
+						break;
+					}
+				}
+			}
 			class_info.fields.push_back(field_info);
 		}
 
@@ -362,60 +446,129 @@ void ModuleScriptImporter::DumpEngineDLLInfo(MonoAssembly * assembly, MonoImage*
 			MonoMethodSignature* sig = mono_method_get_signature(method, image, 0);
 			MonoType* return_type = mono_signature_get_return_type(sig);
 			std::string return_name = mono_type_get_name(return_type);
+			bool is_system_type = false;
 			if (return_name.find("TheEngine") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 10);
-			else if (return_name.find("System") != std::string::npos) return_name.erase(return_name.begin(), return_name.begin() + 7);
+			else if (return_name.find("System") != std::string::npos)
+			{
+				return_name.erase(return_name.begin(), return_name.begin() + 7);
+				is_system_type = true;
+			}
 			if (return_name == "Single") return_name = "Float";
 			else if (return_name == "Int32") return_name = "Int";
-			std::string template_name = "";
-			method_info.method_name = method_name;
-			if (return_name == "T")
+			if (is_system_type)
 			{
-				method_info.method_name += "<>";
-				return_name = "TheComponent";
-				template_name = "<TheComponent>";
+				return_name.front() = std::tolower(return_name.front());
 			}
-			else method_info.method_name += "()";
 			method_info.returning_type = return_name;
-			method_info.declaration += return_name + " " + method_name + template_name + "(";
+			method_info.method_name = method_name;
+
+			method_info.declaration = return_name + " " + method_name + "(";
 			
 			void* param_iter = nullptr;
 			MonoType* param_type = nullptr;
-			uint param_count = mono_signature_get_param_count(sig);
-			if (param_count == 0)
-			{
-				method_info.declaration += ")";
-			}
 			int param_index_start = 0;
+			int param_count = mono_signature_get_param_count(sig);
 			while ((param_type = mono_signature_get_params(sig, &param_iter)))
 			{
+				DLLMethodParamsInfo param_info;
 				std::string param_type_name = mono_type_get_name(param_type);
+				param_info.full_type = param_type_name;
+				bool is_system_type = false;
 				if (param_type_name.find("TheEngine") != std::string::npos) param_type_name.erase(param_type_name.begin(), param_type_name.begin() + 10);
-				else if (param_type_name.find("System") != std::string::npos) param_type_name.erase(param_type_name.begin(), param_type_name.begin() + 7);
+				else if (param_type_name.find("System") != std::string::npos)
+				{
+					param_type_name.erase(param_type_name.begin(), param_type_name.begin() + 7);
+					is_system_type = true;
+				}
 				if (mono_signature_param_is_out(sig, param_index_start))
 				{
-					method_info.declaration += "out ";
+					param_info.is_out = true;
+					method_info.declaration += "out";
 				}
 				else if (param_type_name.find('&') != std::string::npos)
 				{
-					method_info.declaration += "ref ";
+					param_info.is_ref = true;
+					method_info.declaration += "ref";
 				}
 				if (param_type_name == "Single") param_type_name = "Float";
 				else if (param_type_name == "Int32") param_type_name = "Int";
-				method_info.declaration += param_type_name + " ";
+				if (is_system_type)
+				{
+					param_type_name.front() = std::tolower(param_type_name.front());
+				}
+				param_info.type = param_type_name;
 				mono_metadata_decode_row(param_table_info, param_index - 1, cols, MONO_PARAM_SIZE);
 				const char* param_name = mono_metadata_string_heap(image, cols[MONO_PARAM_NAME]);
-				method_info.declaration += param_name;
-				param_count--;
-				if (param_count != 0)
-				{
-					method_info.declaration += ", ";
-				}
-				else
-				{
-					method_info.declaration += ")";
-				}
-				param_index++;
+				param_info.name = param_name;
+
+				method_info.declaration += param_info.type + " " + param_info.name;
 				param_index_start++;
+				if (param_index_start != param_count)
+				{
+					method_info.declaration += ",";
+				}
+				method_info.params.push_back(param_info);
+				param_index++;
+			}
+
+			method_info.declaration += ")";
+
+			for (tinyxml2::XMLNode* node = member_node; node; node = node->NextSiblingElement("member"))
+			{
+				tinyxml2::XMLElement* element = node->ToElement();
+				if (element)
+				{
+					const char* attr_name = element->Attribute("name");
+					std::string full_name("M:TheEngine." + class_info.name + "." + method_info.method_name + "(");
+					for (int i = 0; i < method_info.params.size(); i++)
+					{
+						full_name += method_info.params[i].full_type;
+						if(i+1 != method_info.params.size())
+						{
+							full_name += ",";
+						}
+					}
+					full_name += ")";
+					if (attr_name == full_name)
+					{
+						tinyxml2::XMLNode* summary = element->FirstChildElement("summary");
+						tinyxml2::XMLElement* para = summary->FirstChildElement("para");
+						if (para)
+						{
+							if (para->GetText() != NULL)
+							{
+								method_info.description += para->GetText();
+								method_info.declaration += "\n";
+							}
+						}
+
+						tinyxml2::XMLNode* param_node = node->FirstChildElement("param");
+						if (param_node)
+						{
+							for (tinyxml2::XMLNode* param_node_it = param_node; param_node_it; param_node_it = param_node_it->NextSiblingElement("param"))
+							{
+								tinyxml2::XMLElement* param = param_node_it->ToElement();
+								if (param)
+								{
+									std:string param_name = param->Attribute("name");
+									for (DLLMethodParamsInfo param_info : method_info.params)
+									{
+										if (param_name == param_info.name)
+										{
+											if (param->GetText() != NULL)
+											{
+												param_info.description = param->GetText();
+												method_info.params_description += "@ " + param_name + ": " + param_info.description + "\n";
+											}
+											break;
+										}
+									}
+								}
+							}
+						}
+						break;
+					}
+				}
 			}
 			class_info.methods.push_back(method_info);
 		}
@@ -611,11 +764,12 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::CallFunction", (const void*)CallFunction);
 
-	//PREFAB
-
 	//APPLICATION
 	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
 	mono_add_internal_call("TheEngine.TheApplication::Quit", (const void*)Quit);
+
+	//RESOURCES
+	mono_add_internal_call("TheEngine.TheResources::LoadPrefab", (const void*)LoadPrefab);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1258,11 +1412,6 @@ void ModuleScriptImporter::SetRBRotation(MonoObject * object, float x, float y, 
 	ns_importer->SetRBRotation(object, x, y, z);
 }
 
-MonoObject * ModuleScriptImporter::GetPrefabGameObject(MonoObject * object)
-{
-	return ns_importer->GetPrefabGameObject(object);
-}
-
 mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoObject * object, MonoString * name)
 {
 	return ns_importer->GetBlackboardVariableB(object, name);
@@ -1427,6 +1576,12 @@ void ModuleScriptImporter::CallFunction(MonoObject * object, MonoString * functi
 {
 	ns_importer->CallFunction(object, function_name);
 }
+
+MonoObject * ModuleScriptImporter::LoadPrefab(MonoString* prefab_name)
+{
+	return ns_importer->LoadPrefab(prefab_name);
+}
+
 
 
 /////////// Non Static Class Defs //////////////
@@ -3719,11 +3874,6 @@ void NSScriptImporter::SetRBRotation(MonoObject * object, float x, float y, floa
 	}
 }
 
-MonoObject * NSScriptImporter::GetPrefabGameObject(MonoObject * object)
-{
-	return nullptr;
-}
-
 // ----- GOAP AGENT -----
 mono_bool NSScriptImporter::GetBlackboardVariableB(MonoObject * object, MonoString * name)
 {
@@ -4421,6 +4571,41 @@ void NSScriptImporter::CallFunction(MonoObject * object, MonoString * function_n
 		}
 	}
 }
+
+MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
+{
+	const char* name = mono_string_to_utf8(prefab_name);
+
+	Prefab* prefab = App->resources->GetPrefab(name);
+	if (prefab)
+	{
+		GameObject* go = prefab->GetRootGameObject();
+		if (go)
+		{
+			MonoObject* mono_object = GetMonoObjectFromGameObject(go);
+			if (mono_object)
+			{
+				return mono_object;
+			}
+			else
+			{
+				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+				if (c)
+				{
+					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+					if (new_object)
+					{
+						created_gameobjects[new_object] = go;
+						return new_object;
+					}
+				}
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 
 Component::ComponentType NSScriptImporter::CsToCppComponent(std::string component_type)
 {

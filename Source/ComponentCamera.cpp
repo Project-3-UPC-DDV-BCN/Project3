@@ -230,6 +230,7 @@ void ComponentCamera::Save(Data & data) const
 	data.AddInt("render_order", render_order);
 	data.AddFloat("far_plane", GetFarPlanceDistance());
 	data.AddFloat("near_plane", GetNearPlaneDistance());
+	data.AddFloat("fov", GetFOV());
 }
 
 void ComponentCamera::Load(Data & data)
@@ -251,6 +252,7 @@ void ComponentCamera::Load(Data & data)
 	render_order = data.GetInt("render_order");
 	SetFarPlaneDistance(data.GetFloat("far_plane"));
 	SetNearPlaneDistance(data.GetFloat("near_plane"));
+	SetFOV(data.GetFloat("fov"));
 	
 	//UpdateProjection();
 }

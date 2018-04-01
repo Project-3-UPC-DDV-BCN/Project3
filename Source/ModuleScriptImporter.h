@@ -11,13 +11,25 @@ class CSScript;
 class ComponentRectTransform;
 class GameObject;
 
+struct DLLMethodParamsInfo
+{
+	std::string name;
+	std::string type;
+	std::string full_type;
+	std::string description;
+	bool is_out = false;
+	bool is_ref = false;
+};
+
 struct DLLMethodInfo
 {
-	std::string declaration;
 	std::string description;
 	std::string returning_type;
 	std::string method_name;
+	std::string declaration;
+	std::string params_description;
 	bool is_static = false;
+	std::vector<DLLMethodParamsInfo> params;
 };
 
 struct DLLPropertyInfo
@@ -25,6 +37,8 @@ struct DLLPropertyInfo
 	std::string description;
 	std::string name;
 	std::string returning_type;
+	std::string declaration;
+	bool is_static = false;
 };
 
 struct DLLFieldsInfo
@@ -32,11 +46,13 @@ struct DLLFieldsInfo
 	std::string description;
 	std::string name;
 	std::string returning_type;
+	std::string declaration;
+	bool is_static = false;
 };
 
 struct DLLClassInfo
 {
-	const char* name;
+	std::string name;
 	std::vector<DLLPropertyInfo> properties;
 	std::vector<DLLMethodInfo> methods;
 	std::vector<DLLFieldsInfo> fields;
@@ -206,9 +222,6 @@ public:
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
 
-	//PREFAB
-	MonoObject* GetPrefabGameObject(MonoObject* object);
-
 	//GOAPAGENT
 	mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
 	float GetBlackboardVariableF(MonoObject * object, MonoString* name);
@@ -254,6 +267,9 @@ public:
 	std::map<MonoObject*, Component*> created_components;
 	CSScript* current_script;
 
+	//Resources
+	MonoObject* LoadPrefab(MonoString* prefab_name);
+
 private:
 	
 	//std::map<MonoObject*, PerfTimer*> created_timers;
@@ -289,7 +305,7 @@ private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
 	MonoClass* DumpClassInfo(MonoImage* image, std::string& class_name, std::string& name_space);
 
-	void DumpEngineDLLInfo(MonoAssembly* assembly, MonoImage* image);
+	void DumpEngineDLLInfo(MonoAssembly* assembly, MonoImage* image, const char* engine_xml_path);
 
 	void RegisterAPI();
 
@@ -444,9 +460,6 @@ private:
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
 
-	//PREFAB
-	static MonoObject* GetPrefabGameObject(MonoObject* object); 
-
 	//GOAP AGENT
 	static mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
 	static float GetBlackboardVariableF(MonoObject * object, MonoString* name);
@@ -487,6 +500,9 @@ private:
 	static void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	static MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	static void CallFunction(MonoObject* object, MonoString* function_name);
+
+	//Resources
+	static MonoObject* LoadPrefab(MonoString* prefab_name);
 
 private:
 	std::string mono_path;

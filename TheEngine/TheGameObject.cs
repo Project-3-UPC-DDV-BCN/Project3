@@ -134,6 +134,9 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheComponent GetComponent(Type type, int index);
 
+        /// <summary>
+        ///   <para>Returns the component if the GameObject has one attached</para>
+        /// </summary>
         public T GetComponent<T>(int index = 0) where T : TheComponent
         {
             return GetComponent(typeof(T), index) as T;
