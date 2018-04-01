@@ -43,9 +43,10 @@ public class GameManager
 
 	void Init ()
 	{
-		TheGameObject slave = TheGameObject.Find("Slave1");
-		if(slave != null)
-			team = slave.tag; 	
+		if(slave1 != null)
+			team = slave1.tag;
+
+        TheConsole.Log(team); 
 	}
 
 	void Start ()
@@ -140,38 +141,21 @@ public class GameManager
 
 			TheApplication.LoadScene("VS3-MainMenu");	
 		}
-		
-		if(show_score != null)	 		
-			show_score.Text = UpdateScore();
 	}
 
 	void AddToScore()
 	{
-		TheConsole.Log("Ewe");
-		score += 1; 
-		//show_score.Text = score.ToString();
-		
-	}
+		score += score_to_inc;
+        show_score.Text = score.ToString();
+    }
 
-	string UpdateScore()
-	{
-		string ret = "0";
-
-		if(score != null)
-			ret = score.ToString();
-
-		return ret;
-	}
 
 	void SubstractToScore()
 	{
 		if(score - score_to_inc > 0)
-		{
-			score -= score_to_inc; 
+			score -= score_to_inc;
 
-			if(show_score != null && score != null)
-				show_score.Text = score.ToString(); 	
-		}
+        show_score.Text = score.ToString(); 
 	}
 
 	string GetTimeFromSeconds(int seconds)

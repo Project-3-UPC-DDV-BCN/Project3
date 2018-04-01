@@ -42,7 +42,11 @@ public class ShipDestruction
 			destroy_timer++; 
 
 			if(destroy_timer > time_to_destroy * 100)
-				DeleteShipParts(); 
+            {
+                DeleteShipParts();
+                TheGameObject.Self.SetActive(false); 
+            }
+				
 		} 	
 	}
 
@@ -100,13 +104,13 @@ public class ShipDestruction
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
 
-			float dest_factor = TheRandom.RandomRange(1,5); 
+			float dest_factor = TheRandom.RandomRange(1,50); 
 
 			TheVector3 rotation = direction.Normalized; 
 
-			rotation.x = rotation.x * 50; 
-			rotation.y = rotation.y * 50;  
-			rotation.z = rotation.z * 50; 
+			rotation.x = rotation.x * dest_factor; 
+			rotation.y = rotation.y * dest_factor;  
+			rotation.z = rotation.z * dest_factor; 
 			
 			piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
 		}
