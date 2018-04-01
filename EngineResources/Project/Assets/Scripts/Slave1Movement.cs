@@ -773,13 +773,14 @@ public class Slave1Movement {
             if(TheInput.IsKeyDown("W"))
             {
                 repair_part++;
-                if (repair_part < 0)
-                    repair_part = ship_parts - 1;
+				repair_part %= ship_parts;
+                
             }
             if (TheInput.IsKeyDown("S"))
             {
                 repair_part--;
-                repair_part %= ship_parts;
+                if (repair_part < 0)
+                    repair_part = ship_parts - 1;
             }
 
             if(TheInput.IsKeyDown("SPACE"))
