@@ -84,7 +84,7 @@ public class AI_Movement {
 			//	new_rot.z+=TheTime.DeltaTime * roll_rotation;
 			
 			///Check the y rotation
-			float curr_angle = TheMath.Atan(curr_dir.x/curr_dir.z) * TheMath.RadToDeg;
+			float curr_angle = own_trans.GlobalRotation.y;
 		    float targ_angle = TheMath.Atan(dir_to_target.x/dir_to_target.z) * TheMath.RadToDeg;
 			
 			if(curr_dir.x < 0)
@@ -98,7 +98,7 @@ public class AI_Movement {
 				new_rot.y+=TheTime.DeltaTime * yaw_rotation;
 			
 			///Check the x rotation
-			curr_angle = TheMath.Atan(curr_dir.y/curr_dir.z) * TheMath.RadToDeg;
+			curr_angle = own_trans.GlobalRotation.x;
 		    targ_angle = TheMath.Atan(dir_to_target.y/dir_to_target.z) * TheMath.RadToDeg;
 			
 			if(curr_dir.y < 0)
