@@ -648,11 +648,11 @@ public class Slave1Movement {
         if(repair_mode)
         {
 
-            if (TheInput.IsKeyDown("W") && repair_ring > 0)
+            if (TheInput.IsKeyDown("W") && repair_ring < num_rings - 1)
             {
                 repair_ring++;
             }
-            if (TheInput.IsKeyDown("S") && repair_ring < num_rings - 1)
+            if (TheInput.IsKeyDown("S") && repair_ring > 0)
             {
                 repair_ring--;
             }
@@ -710,23 +710,23 @@ public class Slave1Movement {
             }
 			
 			switch(repair_ring)
-                {
-                    case 0:
-                        selected_inner_ring.SetActive(false);
-						selected_center_ring.SetActive(false);
-						selected_exterior_ring.SetActive(true);
-						break;
-                    case 1:
-                        selected_inner_ring.SetActive(false);
-						selected_center_ring.SetActive(true);
-						selected_exterior_ring.SetActive(false);
-                        break;    
-                    case 2:
-						selected_inner_ring.SetActive(true);
-						selected_center_ring.SetActive(false);
-						selected_exterior_ring.SetActive(false);
-                        break;
-                }
+             {
+                 case 0:
+                    selected_inner_ring.SetActive(false);
+					selected_center_ring.SetActive(false);
+					selected_exterior_ring.SetActive(true);
+					break;
+                 case 1:
+                    selected_inner_ring.SetActive(false);
+					selected_center_ring.SetActive(true);
+					selected_exterior_ring.SetActive(false);
+                    break;    
+                 case 2:
+					selected_inner_ring.SetActive(true);
+					selected_center_ring.SetActive(false);
+					selected_exterior_ring.SetActive(false);
+                    break;
+             }
 
             if(ring_exterior_pos == 0 && ring_center_pos == 0 && ring_interior_pos == 0)
             {
@@ -741,6 +741,9 @@ public class Slave1Movement {
                             inner_ring.SetActive(false);
                             center_ring.SetActive(false);
                             exterior_ring.SetActive(false);
+							selected_inner_ring.SetActive(false);
+							selected_center_ring.SetActive(false);
+							selected_exterior_ring.SetActive(false);
                         }
                         break;
                     case 1:
@@ -752,6 +755,9 @@ public class Slave1Movement {
                             inner_ring.SetActive(false);
                             center_ring.SetActive(false);
                             exterior_ring.SetActive(false);
+							selected_inner_ring.SetActive(false);
+							selected_center_ring.SetActive(false);
+							selected_exterior_ring.SetActive(false);
                         }
                         break;
                     case 2:
@@ -763,6 +769,9 @@ public class Slave1Movement {
                             inner_ring.SetActive(false);
                             center_ring.SetActive(false);
                             exterior_ring.SetActive(false);
+							selected_inner_ring.SetActive(false);
+							selected_center_ring.SetActive(false);
+							selected_exterior_ring.SetActive(false);
                         }
                         break;
                 }
