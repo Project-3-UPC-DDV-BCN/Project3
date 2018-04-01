@@ -6,6 +6,7 @@ public class AI_Movement {
 
 	TheGameObject target = null;
 	TheGameObject gameobject;
+	TheTransform own_trans;
 	
 	public float yaw_rotation = 10.0f;
 	public float pitch_rotation = 10.0f;
@@ -17,11 +18,30 @@ public class AI_Movement {
 	
 	bool avoid = false;
 	
-	TheTransform own_trans;
+	public TheGameObject laser_spawner_L = null;
+	public TheGameObject laser_spawner_R = null;
+	TheFactory laser_factory;
+	bool laser_spawned_left = false;
+	public float laser_speed = 20000.0f;
+	public float time_between_lasers = 0.02f;
+	TheVector3 spawn_pos = new TheVector3();
+	TheVector3 spawn_dir = new TheVector3();
+	float timer = 0.0f;
+
+	public float sight_range = 100.0f;
+	public float sight_angle = 60.0f;
+
+	public bool shooting = false;
 	
 	void Start () {
 		own_trans = TheGameObject.Self.GetComponent<TheTransform>();
 		gameobject = TheGameObject.Self;
+		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+		laser_factory.StartFactory();
+		if(laser_spawner_L == null)
+			laser_spawner_L = laser_spawner_R;
+		if(laser_spawner_R == null)
+			laser_spawner_R = laser_spawner_L;
 	}
 	
 	void Update () {
@@ -29,7 +49,7 @@ public class AI_Movement {
 		if(target != null)
 		{
 			Movement();
-			
+			Shoot();
 		}
 		else
 		{
@@ -172,4 +192,35 @@ public class AI_Movement {
 		//return ret;
 	}
 	
+	void Shoot()
+	{
+		TheTransform ttrans = target.GetComponent<TheTransform>();
+		TheVector3 ship_dir = ttrans.GlobalPosition - own_trans.GlobalPosition;
+		if(TheVector3.Magnitude(ship_dir) < sight_range && TheVector3.AngleBetween(own_trans.ForwardDirection, ship_dir) < sight_angle/2)
+			shooting = true;
+		else
+			shooting = false;
+			
+		if(shooting) {
+			timer += TheTime.DeltaTime;
+			if(timer >= time_between_lasers) {
+				if(laser_spawned_left) {
+					spawn_pos = laser_spawner_R.GetComponent<TheTransform>().GlobalPosition;
+					spawn_dir = laser_spawner_R.GetComponent<TheTransform>().ForwardDirection;
+					laser_spawned_left = false;
+				}
+				else {
+					spawn_pos = laser_spawner_L.GetComponent<TheTransform>().GlobalPosition;
+					spawn_dir = laser_spawner_L.GetComponent<TheTransform>().ForwardDirection;
+					laser_spawned_left = true;
+				}
+				laser_factory.SetSpawnPosition(spawn_pos);
+				TheGameObject laser = laser_factory.Spawn();
+				TheVector3 laser_velocity = spawn_dir.Normalized * laser_speed * TheTime.DeltaTime;
+				laser.GetComponent<TheRigidBody>().SetLinearVelocity(laser_velocity.x, laser_velocity.y, laser_velocity.z);				
+
+				timer = 0.0f;
+			}
+		}
+	}
 }
