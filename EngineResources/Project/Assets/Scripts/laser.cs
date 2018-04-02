@@ -37,9 +37,13 @@ public class laser
 	{
 		TheGameObject other_parent = other_ship.GetParent();
 
+		TheConsole.Log(other_parent.tag); 
+
 		if(other_parent.tag == "XWING" || other_parent.tag == "TIEFIGHTER")
 		{ 	
-			enemy_properties_scpt = other_parent.GetComponent<TheScript>(1); 
+			TheConsole.Log("dsfsdfsdfsd"); 
+
+			enemy_properties_scpt = other_parent.GetComponent<TheScript>(0); 
 
             //Substract hp to ship
 			bool is_enemy = AreEnemies(team, other_parent.tag); 
