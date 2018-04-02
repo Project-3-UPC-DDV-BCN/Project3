@@ -1,11 +1,11 @@
 {
-    "UUID": "756833589",
+    "UUID": "1435469569",
     "assets_path": "./Project/Assets/Prefabs/TieFighterOnePiece.jprefab",
     "library_path": "./Project/Library/Prefabs/TieFighterOnePiece.jprefab",
     "prefab_name": "TieFighterOnePiece",
-    "GameObjects_Count": "4",
+    "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "852536977",
+        "UUID": "1380382910",
         "Name": "TieFighterOnePiece",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -180,11 +180,11 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "936838465"
+                            "field_value": "619153732"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "257445081"
+                            "field_value": "1810212988"
                         }
                     },
                     "vec2_fields": {},
@@ -230,7 +230,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "176356284",
+        "UUID": "1597890213",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -341,12 +341,12 @@
                 }
             }
         },
-        "ParentID": "852536977",
+        "ParentID": "1380382910",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "936838465",
+        "UUID": "619153732",
         "Name": "Laser_Spawner_L",
         "Tag": "Default",
         "Layer": "Default",
@@ -375,12 +375,12 @@
                 }
             }
         },
-        "ParentID": "852536977",
+        "ParentID": "1380382910",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "257445081",
+        "UUID": "1810212988",
         "Name": "Laser_Spawner_R",
         "Tag": "Default",
         "Layer": "Default",
@@ -409,7 +409,143 @@
                 }
             }
         },
-        "ParentID": "852536977",
+        "ParentID": "1380382910",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "1613129706",
+        "Name": "OA_Checker",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1575950300",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1213232075",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\Ai_OA.dll",
+                    "assets_path": "",
+                    "script_name": "Ai_OA",
+                    "UUID": "1603489771",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "Mnv",
+                            "field_value": "20.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "parent",
+                            "field_value": "1380382910"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_2": {
+                "Type": "2",
+                "Active": "1",
+                "UUID": "1771441143",
+                "Mass": "1.000000",
+                "IsUsingGravity": "0",
+                "IsKinematic": "0",
+                "LinearVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "AngularVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "MaxAngularVelocity": "7.000000",
+                "LinearDamping": "0.000000",
+                "AngularDamping": "0.050000",
+                "CenterMass": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "InertiaTensor": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                },
+                "SleepThreshold": "0.005000",
+                "SolverIterations": "4",
+                "VelocitySolverIterations": "1",
+                "LinearXLock": "0",
+                "LinearYLock": "0",
+                "LinearZLock": "0",
+                "AngularXLock": "0",
+                "AngularYLock": "0",
+                "AngularZLock": "0",
+                "IsCCDMode": "0",
+                "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "4",
+                "Active": "1",
+                "UUID": "1665453240",
+                "IsConvex": "0",
+                "IsTrigger": "1",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "1.000000",
+                        "value_Y": "1.000000",
+                        "value_Z": "1.000000"
+                    }
+                }
+            }
+        },
+        "ParentID": "1380382910",
         "IsRoot": "0",
         "IsStatic": "0"
     }
