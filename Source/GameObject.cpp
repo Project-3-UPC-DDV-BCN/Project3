@@ -826,54 +826,56 @@ void GameObject::Load(Data & data)
 
 	is_root = data.GetBool("IsRoot");
 	
-	//Store gameObject name to know the existing gameObjects when loading scene
-	int gameObjectCount = 1;
-	bool inParenthesis = false;
-	std::string str;
-	std::string tempName = name;
-	for (int i = 0; i < name.size(); i++) 
-	{
-		if (name[i] == ')') 
-		{
-			inParenthesis = false;
-			if (name[i + 1] == '\0') 
-			{
-				break;
-			}
-			else 
-			{
-				str.clear();
-			}
-		}
-		if (inParenthesis) 
-		{
-			str.push_back(name[i]);
-		}
-		if (name[i] == '(') 
-		{
-			inParenthesis = true;
-		}
-	}
-	if (atoi(str.c_str()) != 0) 
-	{
-		name.erase(name.end() - (str.length() + 2), name.end());
-		gameObjectCount = stoi(str);
-	}
+	////Store gameObject name to know the existing gameObjects when loading scene
+	//if (std::find(App->scene->scene_gameobjects.begin(), App->scene->scene_gameobjects.end(), this) != App->scene->scene_gameobjects.end())
+	//{
+	//	int gameObjectCount = 1;
+	//	bool inParenthesis = false;
+	//	std::string str;
+	//	std::string tempName = name;
+	//	for (int i = 0; i < name.size(); i++)
+	//	{
+	//		if (name[i] == ')')
+	//		{
+	//			inParenthesis = false;
+	//			if (name[i + 1] == '\0')
+	//			{
+	//				break;
+	//			}
+	//			else
+	//			{
+	//				str.clear();
+	//			}
+	//		}
+	//		if (inParenthesis)
+	//		{
+	//			str.push_back(name[i]);
+	//		}
+	//		if (name[i] == '(')
+	//		{
+	//			inParenthesis = true;
+	//		}
+	//	}
+	//	if (atoi(str.c_str()) != 0)
+	//	{
+	//		name.erase(name.end() - (str.length() + 2), name.end());
+	//		gameObjectCount = stoi(str);
+	//	}
 
-	std::map<std::string, int>::iterator it = App->scene->scene_gameobjects_name_counter.find(name);
-	if (it != App->scene->scene_gameobjects_name_counter.end()) 
-	{
-		if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount) 
-		{
-			App->scene->scene_gameobjects_name_counter[name] = gameObjectCount;
-		}
-	}
-	else 
-	{
-		App->scene->scene_gameobjects_name_counter[name] = 1;
-	}
-	name = tempName;
-
+	//	std::map<std::string, int>::iterator it = App->scene->scene_gameobjects_name_counter.find(name);
+	//	if (it != App->scene->scene_gameobjects_name_counter.end())
+	//	{
+	//		if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount)
+	//		{
+	//			App->scene->scene_gameobjects_name_counter[name] = gameObjectCount;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		App->scene->scene_gameobjects_name_counter[name] = 1;
+	//	}
+	//	name = tempName;
+	//}
 }
 
 bool GameObject::Update()

@@ -231,6 +231,8 @@ public:
 	static const Palette& GetDarkPalette();
 	static const Palette& GetLightPalette();
 
+	bool menu_is_open = false;
+
 private:
 
 	bool is_method_auto_complete_open = false;

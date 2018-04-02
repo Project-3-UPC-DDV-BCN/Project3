@@ -8,6 +8,7 @@
 #include "../../ModuleTime.h"
 #include "TextEditor.h"
 #include "../../ModuleScriptImporter.h"
+#include "../../ModuleWindow.h"
 
 static const int cTextStart = 7;
 std::map<std::string, std::string> TextEditor::variables;
@@ -612,6 +613,7 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	auto ctrl = io.KeyCtrl;
 	auto alt = io.KeyAlt;
 
+	if(!menu_is_open) ImGui::SetWindowFocus();
 	if (ImGui::IsWindowFocused())
 	{
 		if (ImGui::IsWindowHovered())
@@ -881,6 +883,9 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 		{
 			Coordinates cords = GetActualCursorCoordinates();
 			ImVec2 cursor_pos = CoordinatesToScreenPos(cords);
+			cursor_pos.y += 16;
+			cursor_pos.x -= 16;
+
 			ImGui::SetNextWindowPos(cursor_pos);
 
 			std::vector<AutoCompleteInfo> auto_complete_info;
@@ -974,7 +979,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 
 			if (!auto_complete_info.empty())
 			{
-				ImGui::SetNextWindowFocus();
+				if (!menu_is_open) ImGui::SetNextWindowFocus();
+				
 				ImGui::BeginTooltip();
 
 				bool select_with_arrows = true;
@@ -1115,12 +1121,13 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 		{
 			Coordinates cords = GetActualCursorCoordinates();
 			ImVec2 cursor_pos = CoordinatesToScreenPos(cords);
-			cursor_pos.x += 5;
+			cursor_pos.y += 16;
+			cursor_pos.x -= 16;
 
 			bool select_with_arrows = true;
 
 			ImGui::SetNextWindowPos(cursor_pos);
-			ImGui::SetNextWindowFocus();
+			if (!menu_is_open) ImGui::SetNextWindowFocus();
 			
 			ImGui::BeginTooltip();
 			if (!auto_complete_word_list.empty())
@@ -1134,7 +1141,15 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 						auto_complete_index = auto_complete_word_list.size() - 1;
 					}
 					
-					ImGui::TextColored(ImVec4(77.f / 255.f, 226.f / 255.f, 28.f / 255.f, 1), "C ");
+					if (variables.find(*it) != variables.end())
+					{
+						ImGui::TextColored(ImVec4(1, 0, 1, 1), "V ");
+					}
+					else
+					{
+						ImGui::TextColored(ImVec4(77.f / 255.f, 226.f / 255.f, 28.f / 255.f, 1), "C ");
+					}
+					
 					ImGui::SameLine();
 					ImGui::Text((*it).c_str());
 					
@@ -1213,7 +1228,14 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 						auto_complete_index = auto_complete_word_list_secondary.size() - 1;
 					}
 
-					ImGui::TextColored(ImVec4(77.f / 255.f, 226.f / 255.f, 28.f / 255.f, 1), "C ");
+					if (variables.find(*it) != variables.end())
+					{
+						ImGui::TextColored(ImVec4(1, 0, 1, 1), "V ");
+					}
+					else
+					{
+						ImGui::TextColored(ImVec4(77.f / 255.f, 226.f / 255.f, 28.f / 255.f, 1), "C ");
+					}
 					ImGui::SameLine();
 					ImGui::Text((*it).c_str());
 
@@ -1518,7 +1540,7 @@ void TextEditor::EnterCharacter(Char aChar)
 			auto_complete_word_list_secondary.clear();
 			int i = coord.mColumn;
 			bool can_open = true;
-			if (coord.mColumn >= 2 && GetWordAt(Coordinates(coord.mLine, coord.mColumn - 2)) != "new")
+			/*if (coord.mColumn >= 2 && GetWordAt(Coordinates(coord.mLine, coord.mColumn - 2)) != "new")
 			{
 				while (i > 0)
 				{
@@ -1532,6 +1554,14 @@ void TextEditor::EnterCharacter(Char aChar)
 						break;
 					}
 					i--;
+				}
+			}*/
+			if (coord.mColumn >= 2)
+			{
+				std::string word = GetWordAt(Coordinates(coord.mLine, coord.mColumn - 2));
+				if (mLanguageDefinition.mClasses.find(word) != mLanguageDefinition.mClasses.end())
+				{
+					can_open = false;
 				}
 			}
 			
