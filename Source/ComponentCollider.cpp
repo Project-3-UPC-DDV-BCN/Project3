@@ -95,7 +95,8 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 	}
 
 	SetTrigger(false);
-	collider_shape->userData = this;
+	if(collider_shape != nullptr)
+		collider_shape->userData = this;
 }
 
 ComponentCollider::~ComponentCollider()
@@ -172,7 +173,7 @@ void ComponentCollider::SetTrigger(bool trigger)
 		is_trigger = trigger;
 		if (is_trigger)
 		{
-			if (collider_shape->getFlags().isSet(physx::PxShapeFlag::eSIMULATION_SHAPE))
+			if (collider_shape != nullptr && collider_shape->getFlags().isSet(physx::PxShapeFlag::eSIMULATION_SHAPE))
 			{
 				collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !trigger);
 				collider_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, trigger);
@@ -180,7 +181,7 @@ void ComponentCollider::SetTrigger(bool trigger)
 		}
 		else
 		{
-			if (collider_shape->getFlags().isSet(physx::PxShapeFlag::eTRIGGER_SHAPE))
+			if (collider_shape != nullptr && collider_shape->getFlags().isSet(physx::PxShapeFlag::eTRIGGER_SHAPE))
 			{
 				collider_shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, trigger);
 				collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !trigger);
@@ -196,145 +197,188 @@ bool ComponentCollider::IsTrigger() const
 
 void ComponentCollider::SetColliderCenter(float3 center)
 {
-	physx::PxTransform transform = collider_shape->getLocalPose();
-	transform.p.x = center.x;
-	transform.p.y = center.y;
-	transform.p.z = center.z;
-	collider_shape->setLocalPose(transform);
+	if (collider_shape != nullptr)
+	{
+		physx::PxTransform transform = collider_shape->getLocalPose();
+		transform.p.x = center.x;
+		transform.p.y = center.y;
+		transform.p.z = center.z;
+		collider_shape->setLocalPose(transform);
+	}
 }
 
 float3 ComponentCollider::GetColliderCenter() const
 {
-	physx::PxTransform transform = collider_shape->getLocalPose();
-	float3 pos(transform.p.x, transform.p.y, transform.p.z);
-	return pos;
+	if (collider_shape != nullptr)
+	{
+		physx::PxTransform transform = collider_shape->getLocalPose();
+		float3 pos(transform.p.x, transform.p.y, transform.p.z);
+		return pos;
+	}
+	else
+		return float3::zero;
 }
 
 void ComponentCollider::SetBoxSize(float3 size)
 {
-	if (collider_type == ColliderType::BoxCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxBoxGeometry geo_box;
-		if (collider_shape->getBoxGeometry(geo_box))
+		if (collider_type == ColliderType::BoxCollider)
 		{
-			geo_box.halfExtents.x = size.x * 0.5f;
-			geo_box.halfExtents.y = size.y * 0.5f;
-			geo_box.halfExtents.z = size.z * 0.5f;
-			collider_shape->setGeometry(geo_box);
+			physx::PxBoxGeometry geo_box;
+			if (collider_shape->getBoxGeometry(geo_box))
+			{
+				geo_box.halfExtents.x = size.x * 0.5f;
+				geo_box.halfExtents.y = size.y * 0.5f;
+				geo_box.halfExtents.z = size.z * 0.5f;
+				collider_shape->setGeometry(geo_box);
+			}
 		}
 	}
 }
 
 float3 ComponentCollider::GetBoxSize() const
 {
-	float3 ret;
-	if (collider_type == ColliderType::BoxCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxBoxGeometry geo_box;
-		if (collider_shape->getBoxGeometry(geo_box))
+		float3 ret;
+		if (collider_type == ColliderType::BoxCollider)
 		{
-			ret.x = geo_box.halfExtents.x * 2;
-			ret.y = geo_box.halfExtents.y * 2;
-			ret.z = geo_box.halfExtents.z * 2;
+			physx::PxBoxGeometry geo_box;
+			if (collider_shape->getBoxGeometry(geo_box))
+			{
+				ret.x = geo_box.halfExtents.x * 2;
+				ret.y = geo_box.halfExtents.y * 2;
+				ret.z = geo_box.halfExtents.z * 2;
+			}
 		}
+		return ret;
 	}
-	return ret;
+	else
+		return float3::zero;
 }
 
 void ComponentCollider::SetSphereRadius(float radius)
 {
-	if (collider_type == ColliderType::SphereCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxSphereGeometry geo_sphere;
-		if (collider_shape->getSphereGeometry(geo_sphere))
+		if (collider_type == ColliderType::SphereCollider)
 		{
-			geo_sphere.radius = radius;
-			collider_shape->setGeometry(geo_sphere);
+			physx::PxSphereGeometry geo_sphere;
+			if (collider_shape->getSphereGeometry(geo_sphere))
+			{
+				geo_sphere.radius = radius;
+				collider_shape->setGeometry(geo_sphere);
+			}
 		}
 	}
 }
 
 float ComponentCollider::GetSphereRadius() const
 {
-	float ret;
-	if (collider_type == ColliderType::SphereCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxSphereGeometry geo_sphere;
-		if (collider_shape->getSphereGeometry(geo_sphere))
+		float ret;
+		if (collider_type == ColliderType::SphereCollider)
 		{
-			ret = geo_sphere.radius;
+			physx::PxSphereGeometry geo_sphere;
+			if (collider_shape->getSphereGeometry(geo_sphere))
+			{
+				ret = geo_sphere.radius;
+			}
 		}
+		return ret;
 	}
-	return ret;
+	else
+		return 0;
 }
 
 void ComponentCollider::SetCapsuleRadius(float radius)
 {
-	if (collider_type == ColliderType::CapsuleCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxCapsuleGeometry geo_capsule;
-		if (collider_shape->getCapsuleGeometry(geo_capsule))
+		if (collider_type == ColliderType::CapsuleCollider)
 		{
-			geo_capsule.radius = radius;
-			collider_shape->setGeometry(geo_capsule);
+			physx::PxCapsuleGeometry geo_capsule;
+			if (collider_shape->getCapsuleGeometry(geo_capsule))
+			{
+				geo_capsule.radius = radius;
+				collider_shape->setGeometry(geo_capsule);
+			}
 		}
 	}
 }
 
 float ComponentCollider::GetCapsuleRadius() const
 {
-	float ret;
-	if (collider_type == ColliderType::CapsuleCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxCapsuleGeometry geo_capsule;
-		if (collider_shape->getCapsuleGeometry(geo_capsule))
+		float ret;
+		if (collider_type == ColliderType::CapsuleCollider)
 		{
-			ret = geo_capsule.radius;
+			physx::PxCapsuleGeometry geo_capsule;
+			if (collider_shape->getCapsuleGeometry(geo_capsule))
+			{
+				ret = geo_capsule.radius;
+			}
 		}
+		return ret;
 	}
-	return ret;
+	else
+		return 0;
 }
 
 void ComponentCollider::SetCapsuleHeight(float height)
 {
-	if (collider_type == ColliderType::CapsuleCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxCapsuleGeometry geo_capsule;
-		if (collider_shape->getCapsuleGeometry(geo_capsule))
+		if (collider_type == ColliderType::CapsuleCollider)
 		{
-			geo_capsule.halfHeight = height * 0.5f;
-			collider_shape->setGeometry(geo_capsule);
+			physx::PxCapsuleGeometry geo_capsule;
+			if (collider_shape->getCapsuleGeometry(geo_capsule))
+			{
+				geo_capsule.halfHeight = height * 0.5f;
+				collider_shape->setGeometry(geo_capsule);
+			}
 		}
 	}
 }
 
 float ComponentCollider::GetCapsuleHeight() const
 {
-	float ret;
-	if (collider_type == ColliderType::CapsuleCollider)
+	if (collider_shape != nullptr)
 	{
-		physx::PxCapsuleGeometry geo_capsule;
-		if (collider_shape->getCapsuleGeometry(geo_capsule))
+		float ret;
+		if (collider_type == ColliderType::CapsuleCollider)
 		{
-			ret = geo_capsule.halfHeight * 2;
+			physx::PxCapsuleGeometry geo_capsule;
+			if (collider_shape->getCapsuleGeometry(geo_capsule))
+			{
+				ret = geo_capsule.halfHeight * 2;
+			}
 		}
+		return ret;
 	}
-	return ret;
+	else
+		return 0;
 }
 
 void ComponentCollider::SetColliderActive(bool active)
 {
-	SetActive(active);
-	ComponentRigidBody* rigidbody = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-	if (rigidbody)
+	if (collider_shape != nullptr)
 	{
-		if (active)
+		SetActive(active);
+		ComponentRigidBody* rigidbody = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+		if (rigidbody)
 		{
-			rigidbody->GetRigidBody()->attachShape(*collider_shape);
-		}
-		else
-		{
-			rigidbody->GetRigidBody()->detachShape(*collider_shape);
+			if (active)
+			{
+				rigidbody->GetRigidBody()->attachShape(*collider_shape);
+			}
+			else
+			{
+				rigidbody->GetRigidBody()->detachShape(*collider_shape);
+			}
 		}
 	}
 }
@@ -370,12 +414,15 @@ void ComponentCollider::SetCapsuleDirection(CapsuleDirection direction)
 		break;
 	}
 
-	physx::PxTransform t = collider_shape->getLocalPose();
-	Quat rotation = Quat::FromEulerXYZ(axis_direction.x * DEGTORAD, axis_direction.y * DEGTORAD, axis_direction.z * DEGTORAD);
-	physx::PxQuat q(rotation.x, rotation.y, rotation.z, rotation.w);
-	t.q = q;
-	collider_shape->setLocalPose(t);
-	capsule_direction = direction;
+	if (collider_shape != nullptr)
+	{
+		physx::PxTransform t = collider_shape->getLocalPose();
+		Quat rotation = Quat::FromEulerXYZ(axis_direction.x * DEGTORAD, axis_direction.y * DEGTORAD, axis_direction.z * DEGTORAD);
+		physx::PxQuat q(rotation.x, rotation.y, rotation.z, rotation.w);
+		t.q = q;
+		collider_shape->setLocalPose(t);
+		capsule_direction = direction;
+	}
 }
 
 ComponentCollider::CapsuleDirection ComponentCollider::GetCapsuleDirection() const
@@ -385,33 +432,42 @@ ComponentCollider::CapsuleDirection ComponentCollider::GetCapsuleDirection() con
 
 void ComponentCollider::ChangeMeshToConvex(bool set_convex)
 {
-	if (collider_type != MeshCollider) return;
-	ComponentRigidBody* rigidbody = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
-	if (rigidbody)
+	if (collider_shape != nullptr)
 	{
-		if (set_convex)
+		if (collider_type != MeshCollider) return;
+		ComponentRigidBody* rigidbody = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
+		if (rigidbody)
 		{
-			if (collider_shape)
+			if (set_convex)
 			{
-				rigidbody->RemoveShape(*collider_shape);
+				if (collider_shape)
+				{
+					rigidbody->RemoveShape(*collider_shape);
+				}
+				collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_convex_mesh, *collider_material);
+				if (collider_shape != nullptr)
+				{
+					collider_shape->userData = this;
+				}
 			}
-			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_convex_mesh, *collider_material);
-			collider_shape->userData = this;
-		}
-		else
-		{
-			if (collider_shape)
+			else
 			{
-				rigidbody->RemoveShape(*collider_shape);
+				if (collider_shape)
+				{
+					rigidbody->RemoveShape(*collider_shape);
+				}
+				rigidbody->SetKinematic(true);
+				collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_triangle_mesh, *collider_material);
+				if (collider_shape != nullptr)
+				{
+					collider_shape->userData = this;
+					SetTrigger(false);
+				}
 			}
-			rigidbody->SetKinematic(true);
-			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_triangle_mesh, *collider_material);
-			collider_shape->userData = this;
-			SetTrigger(false);
 		}
+
+		is_convex = set_convex;
 	}
-	
-	is_convex = set_convex;
 }
 
 bool ComponentCollider::IsConvex() const
