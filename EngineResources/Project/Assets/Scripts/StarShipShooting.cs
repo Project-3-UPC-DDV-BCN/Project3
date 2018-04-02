@@ -18,6 +18,9 @@ public class StarShipShooting {
 	public TheGameObject crosshair_1;
 	public TheGameObject crosshair_2;
 	
+	public TheGameObject weapon_icon_1;
+	public TheGameObject weapon_icon_2;
+
 	TheAudioSource audio_source;	
 
 	public float spawn_time = 0.01f;
@@ -57,6 +60,7 @@ public class StarShipShooting {
 		overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
 		if(overheat_bar_bar == null) TheConsole.Log("no overheat");
 		crosshair_2.SetActive(false);
+		weapon_icon_2.SetActive(false);
     }	
 
 	void Update () {
@@ -216,11 +220,17 @@ public class StarShipShooting {
 			{
 				crosshair_1.SetActive(false);
 				crosshair_2.SetActive(true);
+
+				weapon_icon_1.SetActive(false);
+				weapon_icon_2.SetActive(true);
 			}
 			else
 			{
 				crosshair_1.SetActive(true);
 				crosshair_2.SetActive(false);
+
+				weapon_icon_1.SetActive(true);
+				weapon_icon_2.SetActive(false);
 			}
         }
     }
