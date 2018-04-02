@@ -337,9 +337,10 @@ void PropertiesWindow::DrawWindow()
 				{
 					if (ImGui::MenuItem("Audio Listener"))
 					{
-						if (App->audio->GetDefaultListener() != nullptr)
+						if (App->audio->GetDefaultListener() == nullptr)
 						{
-
+							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+							App->audio->SetDefaultListener(listener);
 						}
 						else
 							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
