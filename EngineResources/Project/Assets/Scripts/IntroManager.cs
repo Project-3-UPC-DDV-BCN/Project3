@@ -29,7 +29,7 @@ public class IntroManager
 		AddTextLine("Destroy every ships you see,", 1.5f, "Play_Ackbar_dialogue_02");
 		AddTextLine("the galaxy could depend of one of your shots.", 2.4f);
 		AddTextLine("That's just the beginning, continue with it,", 2, "Play_Ackbar_dialogue_03");
-		AddTextLine("prove your reputation Boba.", 2);
+		AddTextLine("prove your reputation Boba.", 2.5f);
 		
 		if(audio_emiter != null)
 			audio_source = audio_emiter.GetComponent<TheAudioSource>();
