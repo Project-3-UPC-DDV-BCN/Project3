@@ -2,9 +2,9 @@
 
 namespace TheEngine
 {
-    class TheResources
+    public class TheResources
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern static TheGameObject LoadPrefab(string name);
+        public extern static TheGameObject LoadPrefab(string name);
     }
 }
