@@ -9,7 +9,7 @@ public class ShipDestruction
 	public float explosion_v; 
 	public float time_to_destroy; 
 
-	private float destroy_timer; 
+	private TheTimer destroy_timer = new TheTimer(); 
 
 	List<TheGameObject> ship_parts; 
 
@@ -25,7 +25,6 @@ public class ShipDestruction
 		ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
 		exploted = false; 
-		destroy_timer = 0; 
 	}
 	
 	void Update ()
@@ -35,19 +34,20 @@ public class ShipDestruction
 			FillPartList(); 
 			SetPartsDirection(); 		
 			exploted = true; 
+			destroy_timer.Start();
 		}
 
 		if(exploted)
 		{
-			destroy_timer++; 
-
-			if(destroy_timer > time_to_destroy * 100)
+			if(destroy_timer.ReadTime() > time_to_destroy)
             {
                 DeleteShipParts();
                 TheGameObject.Self.SetActive(false); 
             }
 				
 		} 	
+
+		TheConsole.Log(destroy_timer.ReadTime());
 	}
 
 	void FillPartList()

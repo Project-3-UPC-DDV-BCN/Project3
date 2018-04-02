@@ -674,6 +674,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTime::SetTimeScale", (const void*)SetTimeScale);
 	mono_add_internal_call("TheEngine.TheTime::GetTimeScale", (const void*)GetTimeScale);
 	mono_add_internal_call("TheEngine.TheTime::GetDeltaTime", (const void*)GetDeltaTime);
+	mono_add_internal_call("TheEngine.TheTime::GetTimeSinceStart", (const void*)GetTimeSinceStart);
 
 	//INPUT
 	mono_add_internal_call("TheEngine.TheInput::IsKeyDown", (const void*)IsKeyDown);
@@ -1150,6 +1151,11 @@ float ModuleScriptImporter::GetTimeScale()
 float ModuleScriptImporter::GetDeltaTime()
 {
 	return ns_importer->GetDeltaTime();
+}
+
+float ModuleScriptImporter::GetTimeSinceStart()
+{
+	return ns_importer->GetTimeSinceStart();
 }
 
 mono_bool ModuleScriptImporter::IsKeyDown(MonoString * key_name)
@@ -3359,6 +3365,11 @@ float NSScriptImporter::GetTimeScale()
 float NSScriptImporter::GetDeltaTime()
 {
 	return App->time->GetGameDt();
+}
+
+float NSScriptImporter::GetTimeSinceStart()
+{
+	return App->time->GetPlayTime();
 }
 
 

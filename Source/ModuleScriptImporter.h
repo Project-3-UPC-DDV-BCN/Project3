@@ -168,6 +168,7 @@ public:
 	void SetTimeScale(MonoObject* object, float scale);
 	float GetTimeScale();
 	float GetDeltaTime();
+	float GetTimeSinceStart();
 
 	//TIMER
 	void Start(MonoObject* object, float time);
@@ -406,6 +407,7 @@ private:
 	static void SetTimeScale(MonoObject* object, float scale);
 	static float GetTimeScale();
 	static float GetDeltaTime();
+	static float GetTimeSinceStart();
 
 	//INPUT
 	static mono_bool IsKeyDown(MonoString * key_name);
