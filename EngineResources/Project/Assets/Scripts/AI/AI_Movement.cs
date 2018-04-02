@@ -6,7 +6,7 @@ public class AI_Movement {
 
 	//TheGameObject target = null;
 	//TheGameObject gameobject;
-	//TheTransform own_trans;
+	TheTransform own_trans;
 	//
 	//public float yaw_rotation = 10.0f;
 	//public float pitch_rotation = 10.0f;
