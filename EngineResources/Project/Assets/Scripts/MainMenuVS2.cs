@@ -92,7 +92,8 @@ public class MainMenuVS2
 
 		// Audio
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
-		menu_audio_source.Play("Play_Menu_song");
+		if(menu_audio_source != null)
+			menu_audio_source.Play("Play_Menu_song");
 	}
 	
 	void Update ()
@@ -180,7 +181,8 @@ public class MainMenuVS2
 			{
 				pressed_sound = true;
 
-				menu_audio_source.Stop("Play_Menu_song");
+				if(menu_audio_source != null)
+					menu_audio_source.Stop("Play_Menu_song");
 
 				if(loading_text_go != null)
 					loading_text_go.SetActive(true);
@@ -277,13 +279,15 @@ public class MainMenuVS2
 
 		if(pressed_sound)
 		{
-			menu_audio_source.Play("Play_click");
+			if(menu_audio_source != null)
+				menu_audio_source.Play("Play_click");
 			pressed_sound = false;
 		}
 
 		if(over_sound)
 		{
-			menu_audio_source.Play("Play_hover");
+			if(menu_audio_source != null)
+				menu_audio_source.Play("Play_hover");
 			over_sound = false;
 		}
 	}
