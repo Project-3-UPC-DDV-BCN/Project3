@@ -8,8 +8,9 @@ public class ShipDestruction
 
 	public float explosion_v; 
 	public float time_to_destroy; 
+	public bool start_automatic; 
 
-	private TheTimer destroy_timer = new TheTimer(); 
+	private TheTimer destroy_timer = new TheTimer();
 
 	List<TheGameObject> ship_parts; 
 
@@ -17,24 +18,23 @@ public class ShipDestruction
 	string ship_tag; 
 
 	bool need_boom;
-	bool exploted;  
+	bool exploted;
+    bool destruction_mesh; 
 
 	void Start () 
 	{
-		transform = TheGameObject.Self.GetComponent<TheTransform>(); 
-		ship_parts = new List<TheGameObject>(); 
+		transform = TheGameObject.Self.GetComponent<TheTransform>();
+
+        ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
 		exploted = false; 
 	}
 	
 	void Update ()
 	{
-		if(need_boom == true && exploted == false)
-		{			
-			FillPartList(); 
-			SetPartsDirection(); 		
-			exploted = true; 
-			destroy_timer.Start();
+		if(need_boom == true && exploted == false || start_automatic == true && exploted == false)
+		{                     	
+			PlayDestruction(); 
 		}
 
 		if(exploted)
@@ -46,9 +46,33 @@ public class ShipDestruction
             }
 				
 		} 	
-
-		TheConsole.Log(destroy_timer.ReadTime());
 	}
+
+	void PlayDestruction()
+	{
+		FillPartList(); 
+		SetPartsDirection(); 		
+		exploted = true; 
+		destroy_timer.Start();
+	}
+
+    TheGameObject SwapModel()
+    {
+        TheGameObject obj_to_ret = null; 
+        TheGameObject.Self.SetActive(false);
+
+        if (ship_tag == "TIEFIGHTER")
+        {
+            TheVector3 ship_pos = transform.GlobalPosition; 
+
+            TheGameObject.Self.SetActive(false);
+            TheGameObject ship_to_spaw = TheResources.LoadPrefab("TieFighterDestruct");
+            obj_to_ret = TheGameObject.Duplicate(ship_to_spaw);
+            obj_to_ret.GetComponent<TheTransform>().GlobalPosition = ship_pos;
+        }
+
+        return obj_to_ret; 
+    }
 
 	void FillPartList()
 	{

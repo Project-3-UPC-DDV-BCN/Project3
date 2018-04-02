@@ -4132,7 +4132,7 @@ void NSScriptImporter::LoadScene(MonoString * scene_name)
 		std::string scene_name = App->file_system->GetFileNameWithoutExtension(scene);
 		if (scene_name == name)
 		{
-			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".scene");
+			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".jscene");
 			return;
 		}
 	}

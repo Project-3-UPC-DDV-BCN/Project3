@@ -3,8 +3,8 @@ using TheEngine.TheConsole;
 
 public class ShipProperties 
 {
-
 	private TheScript destruction_scpt;
+	public bool destruction_mesh; 
 	
 	int hp; 
 	int hp_inc; 
@@ -20,16 +20,20 @@ public class ShipProperties
         string tag = TheGameObject.Self.tag;
 
         if(tag != "Alliance" && tag != "Empire")
-            destruction_scpt = TheGameObject.Self.GetComponent<TheScript>(0);      
+            destruction_scpt = TheGameObject.Self.GetComponent<TheScript>(1);   
 	}
 	
 	void Update () 
 	{
 		if(hp <= 0 && is_dead == false)
-		{
-			destruction_scpt.SetBoolField("need_boom", true);
+		{		
+			if(destruction_mesh == true) 
+				destruction_scpt.SetBoolField("need_boom", true);
+
 			is_dead = true; 
 		}
+
+		TheConsole.Log(hp.ToString());
 			
 	}
 
