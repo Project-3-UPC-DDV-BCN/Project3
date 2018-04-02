@@ -362,42 +362,51 @@ physx::PxShape * ModulePhysics::CreateShape(physx::PxRigidActor& body, physx::Px
 
 physx::PxTriangleMesh * ModulePhysics::CreateTriangleMesh(Mesh * mesh)
 {
-	physx::PxTriangleMeshDesc meshDesc;
-	meshDesc.points.count = mesh->num_vertices;
-	meshDesc.points.stride = sizeof(physx::PxVec3);
-	meshDesc.points.data = mesh->vertices;
+	if (mesh != nullptr)
+	{
+		physx::PxTriangleMeshDesc meshDesc;
+		meshDesc.points.count = mesh->num_vertices;
+		meshDesc.points.stride = sizeof(physx::PxVec3);
+		meshDesc.points.data = mesh->vertices;
 
-	meshDesc.triangles.count = mesh->num_indices;
-	meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
-	meshDesc.triangles.data = mesh->indices;
+		meshDesc.triangles.count = mesh->num_indices;
+		meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
+		meshDesc.triangles.data = mesh->indices;
 
-	physx::PxDefaultMemoryOutputStream writeBuffer;
-	physx::PxTriangleMeshCookingResult::Enum result;
-	physx::PxCookingParams params = cooking->getParams();
-	params.buildGPUData = true;
-	cooking->setParams(params);
-	bool status = cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
-	if (!status)
-		return nullptr;
+		physx::PxDefaultMemoryOutputStream writeBuffer;
+		physx::PxTriangleMeshCookingResult::Enum result;
+		physx::PxCookingParams params = cooking->getParams();
+		params.buildGPUData = true;
+		cooking->setParams(params);
+		bool status = cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
+		if (!status)
+			return nullptr;
 
-	physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-	return physx_physics->createTriangleMesh(readBuffer);
+		physx::PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+		return physx_physics->createTriangleMesh(readBuffer);
+	}
+	return nullptr;
 }
 
 physx::PxConvexMesh * ModulePhysics::CreateConvexMesh(Mesh * mesh)
 {
-	physx::PxConvexMeshDesc convexDesc;
-	convexDesc.points.count = mesh->num_vertices;
-	convexDesc.points.stride = sizeof(physx::PxVec3);
-	convexDesc.points.data = mesh->vertices;
-	convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
+	if (mesh != nullptr)
+	{
+		physx::PxConvexMeshDesc convexDesc;
+		convexDesc.points.count = mesh->num_vertices;
+		convexDesc.points.stride = sizeof(physx::PxVec3);
+		convexDesc.points.data = mesh->vertices;
+		convexDesc.flags = physx::PxConvexFlag::eCOMPUTE_CONVEX;
 
-	physx::PxDefaultMemoryOutputStream buf;
-	physx::PxConvexMeshCookingResult::Enum result;
-	if (!cooking->cookConvexMesh(convexDesc, buf, &result))
-		return NULL;
-	physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());
-	return physx_physics->createConvexMesh(input);
+		physx::PxDefaultMemoryOutputStream buf;
+		physx::PxConvexMeshCookingResult::Enum result;
+		if (!cooking->cookConvexMesh(convexDesc, buf, &result))
+			return nullptr;
+		physx::PxDefaultMemoryInputData input(buf.getData(), buf.getSize());
+		return physx_physics->createConvexMesh(input);
+	}
+	else
+		return nullptr;
 }
 
 void ModulePhysics::SetCullingBox(AABB & box)
