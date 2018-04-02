@@ -1391,6 +1391,11 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 							material->normalmap_UV.y = normalUV.y;
 						}
 					}
+					float normal_bump = material->GetBumpScaling();
+					if (ImGui::DragFloat("Bump", &normal_bump))
+					{
+						material->SetBumpScaling(normal_bump);
+					}
 				}
 
 				ImGui::Separator();
