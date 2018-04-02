@@ -1,17 +1,17 @@
 {
-    "UUID": "1392637383",
+    "UUID": "1865073102",
     "assets_path": "./Project/Assets/Prefabs/Ai_X-Wing_Prefab.jprefab",
     "library_path": "./Project/Library/Prefabs/Ai_X-Wing_Prefab.jprefab",
     "prefab_name": "Ai_X-Wing_Prefab",
     "GameObjects_Count": "10",
     "GameObject_0": {
-        "UUID": "68063440",
+        "UUID": "655718487",
         "Name": "Ai_X-Wing_Prefab",
         "Tag": "Alliance",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -42,9 +42,9 @@
                     "assets_path": "",
                     "script_name": "Ai_Starship_Movement",
                     "UUID": "2025829164",
-                    "int_fields_count": "2",
+                    "int_fields_count": "1",
                     "double_fields_count": "0",
-                    "float_fields_count": "7",
+                    "float_fields_count": "10",
                     "bool_fields_count": "1",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "2",
@@ -53,10 +53,6 @@
                     "vec4_fields_count": "0",
                     "int_fields": {
                         "field_0": {
-                            "field_name": "debugTest",
-                            "field_value": "0"
-                        },
-                        "field_1": {
                             "field_name": "mov_state",
                             "field_value": "1"
                         }
@@ -80,14 +76,26 @@
                             "field_value": "5.000000"
                         },
                         "field_4": {
+                            "field_name": "min_target_distance",
+                            "field_value": "10.000000"
+                        },
+                        "field_5": {
+                            "field_name": "separation_force",
+                            "field_value": "20.000000"
+                        },
+                        "field_6": {
+                            "field_name": "separation_max_range",
+                            "field_value": "10.000000"
+                        },
+                        "field_7": {
                             "field_name": "sight_angle",
                             "field_value": "60.000000"
                         },
-                        "field_5": {
+                        "field_8": {
                             "field_name": "sight_range",
                             "field_value": "100.000000"
                         },
-                        "field_6": {
+                        "field_9": {
                             "field_name": "time_between_lasers",
                             "field_value": "0.100000"
                         }
@@ -102,11 +110,11 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "1259116448"
+                            "field_value": "728471501"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "663755668"
+                            "field_value": "1940563569"
                         }
                     },
                     "vec2_fields": {},
@@ -144,7 +152,14 @@
                     "value_Z": "0.000000"
                 },
                 "Life_time": "2.000000",
-                "Prefab_UID": "0"
+                "Prefab_UID": "957995004"
+            },
+            "Component_3": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "735595691",
+                "Sound_ID": "102",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
         "ParentID": "0",
@@ -152,7 +167,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1295830958",
+        "UUID": "569415501",
         "Name": "Xwing(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -169,9 +184,9 @@
                     "value_Z": "-8.870000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -181,12 +196,12 @@
                 }
             }
         },
-        "ParentID": "68063440",
+        "ParentID": "655718487",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1259116448",
+        "UUID": "728471501",
         "Name": "Laser_Spawner_L(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -215,12 +230,12 @@
                 }
             }
         },
-        "ParentID": "68063440",
+        "ParentID": "655718487",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "663755668",
+        "UUID": "1940563569",
         "Name": "Laser_Spawner_R(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -249,12 +264,12 @@
                 }
             }
         },
-        "ParentID": "68063440",
+        "ParentID": "655718487",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1780245682",
+        "UUID": "1485037285",
         "Name": "OA_Checker(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -313,7 +328,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "parent",
-                            "field_value": "68063440"
+                            "field_value": "655718487"
                         }
                     },
                     "vec2_fields": {},
@@ -385,12 +400,12 @@
                 }
             }
         },
-        "ParentID": "68063440",
+        "ParentID": "655718487",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "465939917",
+        "UUID": "1328117817",
         "Name": "Body(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -438,12 +453,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1295830958",
+        "ParentID": "569415501",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1462473522",
+        "UUID": "687148478",
         "Name": "BotRight_Wing(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -491,12 +506,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1295830958",
+        "ParentID": "569415501",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "226919951",
+        "UUID": "470982619",
         "Name": "BotLeft_Wing(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -544,12 +559,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1295830958",
+        "ParentID": "569415501",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1504201239",
+        "UUID": "353111356",
         "Name": "TopRight_Wing(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -597,12 +612,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1295830958",
+        "ParentID": "569415501",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "1954414464",
+        "UUID": "1720408867",
         "Name": "TopLeft_Wing(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -650,7 +665,7 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1295830958",
+        "ParentID": "569415501",
         "IsRoot": "0",
         "IsStatic": "0"
     }
