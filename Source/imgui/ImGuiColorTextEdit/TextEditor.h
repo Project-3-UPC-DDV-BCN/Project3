@@ -134,6 +134,17 @@ public:
 	typedef std::vector<Glyph> Line;
 	typedef std::vector<Line> Lines;
 
+	struct AutoCompleteInfo
+	{
+		std::string name;
+		std::string description;
+		std::string declaration;
+		std::string params_description;
+		const char* type;
+		const char* type_letter;
+		ImVec4 color;
+	};
+
 	struct LanguageDefinition
 	{
 		typedef std::pair<std::string, PaletteIndex> TokenRegexString;
@@ -145,9 +156,6 @@ public:
 		Identifiers mPreprocIdentifiers;
 		Classes mClasses;
 		std::string mCommentStart, mCommentEnd;
-		/*std::map<std::string, std::string> class_non_static_auto_complete;
-		std::map<std::string, std::string> class_static_auto_complete;
-		std::map<std::string, std::string> functions_info;*/
 		std::vector<DLLClassInfo> csharpClasses;
 		std::string current_class_return;
 
@@ -223,6 +231,8 @@ public:
 	static const Palette& GetDarkPalette();
 	static const Palette& GetLightPalette();
 
+	bool menu_is_open = false;
+
 private:
 
 	bool is_method_auto_complete_open = false;
@@ -234,8 +244,6 @@ private:
 	std::vector<std::string> auto_complete_word_list_secondary;
 	std::string auto_complete_word;
 	std::string auto_complete_word_methods;
-	bool auto_complete_is_vector = false;
-	bool auto_complete_is_quaternion = false;
 	int auto_complete_index = 0;
 	float repeat_timer = 0.05f;
 

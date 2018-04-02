@@ -4,10 +4,10 @@ public class Spawner
 {
 	private TheMeshRenderer ship_mesh; 
 
-	public ThePrefab xwing_prf; 
-	private TheGameObject ywing_prf; 
-	private TheGameObject landcraft_prf; 
-	private TheGameObject sentinel_prf; 
+	public TheGameObject xwing_prf;
+    public TheGameObject tiefighter_prf; 
+    public TheGameObject ywing_prf; 
+	public TheGameObject landcraft_prf; 
 
 	private TheVector3 spawn_position; 
 
@@ -24,23 +24,21 @@ public class Spawner
 				
 		else if(TheGameObject.Self.tag == "TIEFIGHTER") 
 		{
-			//Instantiate "TIEFIGHTER" at position 
-		}		
+            TheGameObject go = TheGameObject.Duplicate(tiefighter_prf);
+            go.GetComponent<TheTransform>().GlobalPosition = spawn_position;
+        }		
 			
-
 		else if(TheGameObject.Self.tag == "LANDINGCRAFT") 
 		{
-			//Instantiate "LANDINGCRAFT" at position 
+			TheGameObject go = TheGameObject.Duplicate(tiefighter_prf);
+            go.GetComponent<TheTransform>().GlobalPosition = spawn_position;
 		}	
 
 		else if(TheGameObject.Self.tag == "SENTINEL") 
 			{
-			//Instantiate "SENTINEL" at position 
+		    TheGameObject go = TheGameObject.Duplicate(tiefighter_prf);
+            go.GetComponent<TheTransform>().GlobalPosition = spawn_position;
 		}	
 	}
 	
-	void Update () 
-	{
-		
-	}
 }

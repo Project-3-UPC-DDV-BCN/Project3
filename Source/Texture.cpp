@@ -183,7 +183,7 @@ bool Texture::Load(Data & data)
 	std::string library_path = data.GetString("library_path");
 
 	Texture* text = App->texture_importer->LoadTextureFromLibrary(library_path);
-	if (!text)
+	if (text != nullptr)
 	{
 		std::string assets_path = data.GetString("assets_path");
 		if (App->file_system->FileExist(assets_path))
@@ -248,7 +248,7 @@ void Texture::LoadToMemory()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

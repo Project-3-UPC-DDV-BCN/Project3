@@ -1191,6 +1191,9 @@
     <ClInclude Include="Vertex.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="TinyXML\tinyxml2.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1863,6 +1866,9 @@
       <Filter>Sources\GameObject\Components\UI</Filter>
     </ClCompile>
     <ClCompile Include="Vertex.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinyxml2.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>

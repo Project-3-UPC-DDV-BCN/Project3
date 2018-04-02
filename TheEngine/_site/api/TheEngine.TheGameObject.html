@@ -73,7 +73,8 @@
   
   <h1 id="TheEngine_TheGameObject" data-uid="TheEngine.TheGameObject" class="text-break">Class TheGameObject
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Base class for all enities in Scene</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -113,7 +114,8 @@
   
   <a id="TheEngine_TheGameObject__ctor_" data-uid="TheEngine.TheGameObject.#ctor*"></a>
   <h4 id="TheEngine_TheGameObject__ctor" data-uid="TheEngine.TheGameObject.#ctor">TheGameObject()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a new GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -125,7 +127,8 @@
   
   <a id="TheEngine_TheGameObject_layer_" data-uid="TheEngine.TheGameObject.layer*"></a>
   <h4 id="TheEngine_TheGameObject_layer" data-uid="TheEngine.TheGameObject.layer">layer</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>GameObject layer</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -150,7 +153,7 @@
   
   <a id="TheEngine_TheGameObject_name_" data-uid="TheEngine.TheGameObject.name*"></a>
   <h4 id="TheEngine_TheGameObject_name" data-uid="TheEngine.TheGameObject.name">name</h4>
-  <div class="markdown level1 summary"><p>Transforms direction from local space to world space.</p>
+  <div class="markdown level1 summary"><p>GameObject name</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -176,7 +179,8 @@
   
   <a id="TheEngine_TheGameObject_Self_" data-uid="TheEngine.TheGameObject.Self*"></a>
   <h4 id="TheEngine_TheGameObject_Self" data-uid="TheEngine.TheGameObject.Self">Self</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>GameObject this script is attached</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -201,7 +205,8 @@
   
   <a id="TheEngine_TheGameObject_tag_" data-uid="TheEngine.TheGameObject.tag*"></a>
   <h4 id="TheEngine_TheGameObject_tag" data-uid="TheEngine.TheGameObject.tag">tag</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>GameObject tag</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -228,7 +233,8 @@
   
   <a id="TheEngine_TheGameObject_AddComponent_" data-uid="TheEngine.TheGameObject.AddComponent*"></a>
   <h4 id="TheEngine_TheGameObject_AddComponent__1" data-uid="TheEngine.TheGameObject.AddComponent``1">AddComponent&lt;T&gt;()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Adds the component to the GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -268,7 +274,8 @@
   
   <a id="TheEngine_TheGameObject_Destroy_" data-uid="TheEngine.TheGameObject.Destroy*"></a>
   <h4 id="TheEngine_TheGameObject_Destroy_TheEngine_TheGameObject_" data-uid="TheEngine.TheGameObject.Destroy(TheEngine.TheGameObject)">Destroy(TheGameObject)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Destroys the given GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -287,7 +294,8 @@
       <tr>
         <td><a class="xref" href="TheEngine.TheGameObject.html">TheGameObject</a></td>
         <td><span class="parametername">target</span></td>
-        <td></td>
+        <td><p>GameObject to destroy</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -295,11 +303,12 @@
   
   <a id="TheEngine_TheGameObject_DestroyComponent_" data-uid="TheEngine.TheGameObject.DestroyComponent*"></a>
   <h4 id="TheEngine_TheGameObject_DestroyComponent_TheEngine_TheComponent_" data-uid="TheEngine.TheGameObject.DestroyComponent(TheEngine.TheComponent)">DestroyComponent(TheComponent)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Destroys the given Component in GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void DestroyComponent(TheComponent to_del)</code></pre>
+    <pre><code class="lang-csharp hljs">public void DestroyComponent(TheComponent component)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -313,8 +322,9 @@
     <tbody>
       <tr>
         <td><a class="xref" href="TheEngine.TheComponent.html">TheComponent</a></td>
-        <td><span class="parametername">to_del</span></td>
-        <td></td>
+        <td><span class="parametername">component</span></td>
+        <td><p>Component to destroy</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -322,7 +332,8 @@
   
   <a id="TheEngine_TheGameObject_Duplicate_" data-uid="TheEngine.TheGameObject.Duplicate*"></a>
   <h4 id="TheEngine_TheGameObject_Duplicate_TheEngine_TheGameObject_" data-uid="TheEngine.TheGameObject.Duplicate(TheEngine.TheGameObject)">Duplicate(TheGameObject)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Duplicates the given GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -341,7 +352,8 @@
       <tr>
         <td><a class="xref" href="TheEngine.TheGameObject.html">TheGameObject</a></td>
         <td><span class="parametername">original</span></td>
-        <td></td>
+        <td><p>GameObject to duplicate</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -364,7 +376,8 @@
   
   <a id="TheEngine_TheGameObject_Find_" data-uid="TheEngine.TheGameObject.Find*"></a>
   <h4 id="TheEngine_TheGameObject_Find_System_String_" data-uid="TheEngine.TheGameObject.Find(System.String)">Find(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Finds a GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -383,7 +396,8 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">gameobject_name</span></td>
-        <td></td>
+        <td><p>Name of GameObject to find</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -406,7 +420,8 @@
   
   <a id="TheEngine_TheGameObject_GetAllChilds_" data-uid="TheEngine.TheGameObject.GetAllChilds*"></a>
   <h4 id="TheEngine_TheGameObject_GetAllChilds" data-uid="TheEngine.TheGameObject.GetAllChilds">GetAllChilds()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return all childs in GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -431,7 +446,8 @@
   
   <a id="TheEngine_TheGameObject_GetChild_" data-uid="TheEngine.TheGameObject.GetChild*"></a>
   <h4 id="TheEngine_TheGameObject_GetChild_System_Int32_" data-uid="TheEngine.TheGameObject.GetChild(System.Int32)">GetChild(Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return GameObject child by index</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -450,7 +466,8 @@
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">index</span></td>
-        <td></td>
+        <td><p>Child index</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -473,7 +490,8 @@
   
   <a id="TheEngine_TheGameObject_GetChild_" data-uid="TheEngine.TheGameObject.GetChild*"></a>
   <h4 id="TheEngine_TheGameObject_GetChild_System_String_" data-uid="TheEngine.TheGameObject.GetChild(System.String)">GetChild(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return GameObject child by name</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -492,7 +510,8 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">child_name</span></td>
-        <td></td>
+        <td><p>Child name</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -515,7 +534,8 @@
   
   <a id="TheEngine_TheGameObject_GetChildCount_" data-uid="TheEngine.TheGameObject.GetChildCount*"></a>
   <h4 id="TheEngine_TheGameObject_GetChildCount" data-uid="TheEngine.TheGameObject.GetChildCount">GetChildCount()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return number of childs in GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -540,7 +560,8 @@
   
   <a id="TheEngine_TheGameObject_GetComponent_" data-uid="TheEngine.TheGameObject.GetComponent*"></a>
   <h4 id="TheEngine_TheGameObject_GetComponent__1_System_Int32_" data-uid="TheEngine.TheGameObject.GetComponent``1(System.Int32)">GetComponent&lt;T&gt;(Int32)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Returns the component if the GameObject has one attached</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -597,7 +618,8 @@
   
   <a id="TheEngine_TheGameObject_GetObjectsInFrustum_" data-uid="TheEngine.TheGameObject.GetObjectsInFrustum*"></a>
   <h4 id="TheEngine_TheGameObject_GetObjectsInFrustum_TheEngine_TheVector3_TheEngine_TheVector3_TheEngine_TheVector3_System_Single_System_Single_" data-uid="TheEngine.TheGameObject.GetObjectsInFrustum(TheEngine.TheVector3,TheEngine.TheVector3,TheEngine.TheVector3,System.Single,System.Single)">GetObjectsInFrustum(TheVector3, TheVector3, TheVector3, Single, Single)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return all GameObjects in the given frustum</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -616,27 +638,32 @@
       <tr>
         <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
         <td><span class="parametername">pos</span></td>
-        <td></td>
+        <td><p>Frustum pos</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
         <td><span class="parametername">front</span></td>
-        <td></td>
+        <td><p>Front vector</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
         <td><span class="parametername">up</span></td>
-        <td></td>
+        <td><p>Up Vector</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Single</span></td>
         <td><span class="parametername">nearPlaneDist</span></td>
-        <td></td>
+        <td><p>Near plane distance of Frustum</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Single</span></td>
         <td><span class="parametername">farPlaneDist</span></td>
-        <td></td>
+        <td><p>Far plane distance of Frustum</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -659,7 +686,8 @@
   
   <a id="TheEngine_TheGameObject_GetParent_" data-uid="TheEngine.TheGameObject.GetParent*"></a>
   <h4 id="TheEngine_TheGameObject_GetParent" data-uid="TheEngine.TheGameObject.GetParent">GetParent()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return GameObject parent</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -684,7 +712,8 @@
   
   <a id="TheEngine_TheGameObject_GetSceneGameObjects_" data-uid="TheEngine.TheGameObject.GetSceneGameObjects*"></a>
   <h4 id="TheEngine_TheGameObject_GetSceneGameObjects" data-uid="TheEngine.TheGameObject.GetSceneGameObjects">GetSceneGameObjects()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return all GameObjects in scene</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -709,7 +738,8 @@
   
   <a id="TheEngine_TheGameObject_IsActive_" data-uid="TheEngine.TheGameObject.IsActive*"></a>
   <h4 id="TheEngine_TheGameObject_IsActive" data-uid="TheEngine.TheGameObject.IsActive">IsActive()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return active state</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -734,7 +764,8 @@
   
   <a id="TheEngine_TheGameObject_IsStatic_" data-uid="TheEngine.TheGameObject.IsStatic*"></a>
   <h4 id="TheEngine_TheGameObject_IsStatic" data-uid="TheEngine.TheGameObject.IsStatic">IsStatic()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Return GameObject Static sate</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -759,7 +790,8 @@
   
   <a id="TheEngine_TheGameObject_SetActive_" data-uid="TheEngine.TheGameObject.SetActive*"></a>
   <h4 id="TheEngine_TheGameObject_SetActive_System_Boolean_" data-uid="TheEngine.TheGameObject.SetActive(System.Boolean)">SetActive(Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Activates/Deactivates the GameObject</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -778,7 +810,8 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">value</span></td>
-        <td></td>
+        <td><p>Active value</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -786,7 +819,8 @@
   
   <a id="TheEngine_TheGameObject_SetParent_" data-uid="TheEngine.TheGameObject.SetParent*"></a>
   <h4 id="TheEngine_TheGameObject_SetParent_TheEngine_TheGameObject_" data-uid="TheEngine.TheGameObject.SetParent(TheEngine.TheGameObject)">SetParent(TheGameObject)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets GameObject parent</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -805,7 +839,8 @@
       <tr>
         <td><a class="xref" href="TheEngine.TheGameObject.html">TheGameObject</a></td>
         <td><span class="parametername">new_parent</span></td>
-        <td></td>
+        <td><p>New GameObject parent</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -813,7 +848,8 @@
   
   <a id="TheEngine_TheGameObject_SetStatic_" data-uid="TheEngine.TheGameObject.SetStatic*"></a>
   <h4 id="TheEngine_TheGameObject_SetStatic_System_Boolean_" data-uid="TheEngine.TheGameObject.SetStatic(System.Boolean)">SetStatic(Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Sets GameObject static</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -832,7 +868,8 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">value</span></td>
-        <td></td>
+        <td><p>Static value</p>
+</td>
       </tr>
     </tbody>
   </table>

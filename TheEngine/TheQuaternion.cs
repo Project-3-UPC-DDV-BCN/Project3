@@ -210,11 +210,50 @@ namespace TheEngine
             angle *= 2;
         }
 
-        //public static TheQuaternion LookRotation(TheVector3 direction)
-        //{
-        //    TheVector3 up = TheVector3.Up;
-        //    return lookRotation(direction, up);
-        //}
+        public static TheQuaternion FromTwoVectors(TheVector3 u, TheVector3 v)
+        {
+            float norm_u_norm_v = TheMath.TheMath.Sqrt(TheVector3.DotProduct(u, u) * TheVector3.DotProduct(v, v));
+            float real_part = norm_u_norm_v + TheVector3.DotProduct(u, v);
+            TheVector3 w;
+
+            if (real_part < 1E-06f * norm_u_norm_v)
+            {
+                /* If u and v are exactly opposite, rotate 180 degrees
+                 * around an arbitrary orthogonal axis. Axis normalisation
+                 * can happen later, when we normalise the quaternion. */
+                real_part = 0.0f;
+                w = TheMath.TheMath.Abs(u.x) > TheMath.TheMath.Abs(u.z) ? new TheVector3(-u.y, u.x, 0.0f)
+                                        : new TheVector3(0.0f, -u.z, u.y);
+            }
+            else
+            {
+                /* Otherwise, build quaternion the standard way. */
+                w = TheVector3.CrossProduct(u, v);
+            }
+
+            return Normalize(new TheQuaternion(real_part, w.x, w.y, w.z));
+        }
+
+        public static TheQuaternion LookRotation(TheVector3 direction, TheVector3 up)
+        {
+            if(direction == TheVector3.Zero)
+            {
+                TheConsole.TheConsole.Log("Zero direction in LookRotation");
+                return Identity;
+            }
+
+            if(up != direction)
+            {
+                up = TheVector3.Normalize(up);
+                TheVector3 v = direction + up * -TheVector3.DotProduct(up, direction);
+                TheQuaternion q = FromTwoVectors(TheVector3.Forward, v);
+                return FromTwoVectors(v, direction) * q;
+            }
+            else
+            {
+                return FromTwoVectors(TheVector3.Forward, direction);
+            }
+        }
 
         //[MethodImpl(MethodImplOptions.InternalCall)]
         //private static extern TheQuaternion lookRotation(TheVector3 direction, TheVector3 up);

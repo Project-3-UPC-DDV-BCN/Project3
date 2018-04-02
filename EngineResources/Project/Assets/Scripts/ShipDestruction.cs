@@ -9,7 +9,7 @@ public class ShipDestruction
 	public float explosion_v; 
 	public float time_to_destroy; 
 
-	private float destroy_timer; 
+	private TheTimer destroy_timer = new TheTimer(); 
 
 	List<TheGameObject> ship_parts; 
 
@@ -25,29 +25,29 @@ public class ShipDestruction
 		ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
 		exploted = false; 
-		destroy_timer = 0; 
 	}
 	
 	void Update ()
 	{
-		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(need_boom == true && exploted == false)
 		{			
 			FillPartList(); 
 			SetPartsDirection(); 		
 			exploted = true; 
+			destroy_timer.Start();
 		}
 
 		if(exploted)
 		{
-			destroy_timer++; 
+			if(destroy_timer.ReadTime() > time_to_destroy)
+            {
+                DeleteShipParts();
+                TheGameObject.Self.SetActive(false); 
+            }
+				
+		} 	
 
-			if(destroy_timer > time_to_destroy * 100)
-				DeleteShipParts(); 
-		}
-
-		TheConsole.Log("---");
-		TheConsole.Log(destroy_timer); 
-		TheConsole.Log(time_to_destroy);  	
+		TheConsole.Log(destroy_timer.ReadTime());
 	}
 
 	void FillPartList()
@@ -104,15 +104,15 @@ public class ShipDestruction
 
 			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
 
-			/*float dest_factor = TheRandom.RandomRange(1,5); 
+			float dest_factor = TheRandom.RandomRange(1,50); 
 
-			TheVector3 rotation = null; 
+			TheVector3 rotation = direction.Normalized; 
 
-			rotation.x = direction.x * dest_factor;
-			rotation.y = direction.y * dest_factor; 
-			rotation.z = direction.z * dest_factor;*/
-
-			piece_rb.SetAngularVelocity(direction.x, direction.y, direction.z); 		
+			rotation.x = rotation.x * dest_factor; 
+			rotation.y = rotation.y * dest_factor;  
+			rotation.z = rotation.z * dest_factor; 
+			
+			piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
 		}
 	}
 }

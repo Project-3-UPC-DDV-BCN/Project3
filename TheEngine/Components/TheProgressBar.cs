@@ -4,6 +4,9 @@ namespace TheEngine
 {
     public class TheProgressBar : TheComponent
     {
+        /// <summary>
+        ///   <para>Get the percentatge progress</para>
+        /// </summary>
         public float PercentageProgress
         {
             get

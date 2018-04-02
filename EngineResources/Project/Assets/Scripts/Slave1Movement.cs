@@ -83,12 +83,20 @@ public class Slave1Movement {
     public TheGameObject inner_ring;
     public TheGameObject center_ring;
     public TheGameObject exterior_ring;
+	TheRectTransform inner_ring_trans;
+    TheRectTransform center_ring_trans;
+    TheRectTransform exterior_ring_trans;
+	
+	public TheGameObject selected_inner_ring;
+	public TheGameObject selected_center_ring;
+	public TheGameObject selected_exterior_ring;
+	TheRectTransform selected_inner_ring_trans;
+    TheRectTransform selected_center_ring_trans;
+    TheRectTransform selected_exterior_ring_trans;
+	
     public TheGameObject body_part;
     public TheGameObject wings_part;
     public TheGameObject engine_part;
-    TheRectTransform inner_ring_trans;
-    TheRectTransform center_ring_trans;
-    TheRectTransform exterior_ring_trans;
 
     public TheGameObject weapons;
 	public TheGameObject shields;
@@ -152,6 +160,17 @@ public class Slave1Movement {
         inner_ring_trans = inner_ring.GetComponent<TheRectTransform>();
         center_ring_trans = center_ring.GetComponent<TheRectTransform>();
         exterior_ring_trans = exterior_ring.GetComponent<TheRectTransform>();
+		
+		selected_inner_ring_trans = selected_inner_ring.GetComponent<TheRectTransform>();
+        selected_center_ring_trans = selected_center_ring.GetComponent<TheRectTransform>();
+        selected_exterior_ring_trans = selected_exterior_ring.GetComponent<TheRectTransform>();
+		
+		inner_ring.SetActive(false);
+        center_ring.SetActive(false);
+        exterior_ring.SetActive(false);
+		selected_inner_ring.SetActive(false);
+		selected_center_ring.SetActive(false);
+		selected_exterior_ring.SetActive(false);
 
         audio_source = audio_emiter.GetComponent<TheAudioSource>();
 		audio_source.Play("Play_Engine");
@@ -164,6 +183,7 @@ public class Slave1Movement {
 		EnergyManagement();
 		SetValuesWithEnergy();
         RegenShield();
+		RepairPuzzle();
 
         //set ui bars
 		weapons_bar.PercentageProgress = (100.0f / 8.0f) * weapon_energy;
@@ -628,15 +648,15 @@ public class Slave1Movement {
         if(repair_mode)
         {
 
-            if (TheInput.IsKeyDown("W") && repair_ring > 0)
-            {
-                repair_ring--;
-            }
-            if (TheInput.IsKeyDown("S") && repair_ring < num_rings - 1)
+            if (TheInput.IsKeyDown("W") && repair_ring < num_rings - 1)
             {
                 repair_ring++;
             }
-
+            if (TheInput.IsKeyDown("S") && repair_ring > 0)
+            {
+                repair_ring--;
+            }
+			
             if (TheInput.IsKeyDown("SPACE"))
             {
                 switch(repair_ring)
@@ -644,7 +664,7 @@ public class Slave1Movement {
                     case 0:
                         ring_exterior_pos++;
                         ring_exterior_pos %= num_ring_pos;
-                        break;
+						break;
                     case 1:
                         {
                             ring_center_pos++;
@@ -680,11 +700,33 @@ public class Slave1Movement {
                             break;
                         }
                 }
-				
-				inner_ring_trans.Rotation = new TheVector3(0,ring_interior_pos*90,0);
-				center_ring_trans.Rotation = new TheVector3(0,ring_center_pos*90,0);
-				exterior_ring_trans.Rotation = new TheVector3(0,ring_exterior_pos*90,0);
+								
+				inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*-90);
+				center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*-90);
+				exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*-90);
+				selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*-90);
+				selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*-90);
+				selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*-90);
             }
+			
+			switch(repair_ring)
+             {
+                 case 0:
+                    selected_inner_ring.SetActive(false);
+					selected_center_ring.SetActive(false);
+					selected_exterior_ring.SetActive(true);
+					break;
+                 case 1:
+                    selected_inner_ring.SetActive(false);
+					selected_center_ring.SetActive(true);
+					selected_exterior_ring.SetActive(false);
+                    break;    
+                 case 2:
+					selected_inner_ring.SetActive(true);
+					selected_center_ring.SetActive(false);
+					selected_exterior_ring.SetActive(false);
+                    break;
+             }
 
             if(ring_exterior_pos == 0 && ring_center_pos == 0 && ring_interior_pos == 0)
             {
@@ -699,6 +741,9 @@ public class Slave1Movement {
                             inner_ring.SetActive(false);
                             center_ring.SetActive(false);
                             exterior_ring.SetActive(false);
+							selected_inner_ring.SetActive(false);
+							selected_center_ring.SetActive(false);
+							selected_exterior_ring.SetActive(false);
                         }
                         break;
                     case 1:
@@ -710,6 +755,9 @@ public class Slave1Movement {
                             inner_ring.SetActive(false);
                             center_ring.SetActive(false);
                             exterior_ring.SetActive(false);
+							selected_inner_ring.SetActive(false);
+							selected_center_ring.SetActive(false);
+							selected_exterior_ring.SetActive(false);
                         }
                         break;
                     case 2:
@@ -721,6 +769,9 @@ public class Slave1Movement {
                             inner_ring.SetActive(false);
                             center_ring.SetActive(false);
                             exterior_ring.SetActive(false);
+							selected_inner_ring.SetActive(false);
+							selected_center_ring.SetActive(false);
+							selected_exterior_ring.SetActive(false);
                         }
                         break;
                 }
@@ -730,14 +781,15 @@ public class Slave1Movement {
         {
             if(TheInput.IsKeyDown("W"))
             {
-                repair_part--;
-                if (repair_part < 0)
-                    repair_part = ship_parts - 1;
+                repair_part++;
+				repair_part %= ship_parts;
+                
             }
             if (TheInput.IsKeyDown("S"))
             {
-                repair_part++;
-                repair_part %= ship_parts;
+                repair_part--;
+                if (repair_part < 0)
+                    repair_part = ship_parts - 1;
             }
 
             if(TheInput.IsKeyDown("SPACE"))

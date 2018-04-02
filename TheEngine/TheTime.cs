@@ -24,6 +24,14 @@ namespace TheEngine
             }
         }
 
+        public static float TimeSinceStart
+        {
+            get
+            {
+                return GetTimeSinceStart();
+            }
+        }
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetScale();
 
@@ -32,5 +40,8 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetDeltaTime();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float GetTimeSinceStart();
     }
 }

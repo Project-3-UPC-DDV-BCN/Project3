@@ -4,11 +4,331 @@
         <name>TheEngine</name>
     </assembly>
     <members>
+        <member name="T:TheEngine.TheApplication">
+            <summary>
+              <para>Controls Application</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheApplication.LoadScene(System.String)">
+            <summary>
+              <para>Load scene</para>
+            </summary>
+            <param name="scene_name">Name of scene to load</param>
+        </member>
+        <member name="M:TheEngine.TheApplication.Quit">
+            <summary>
+              <para>Exits application</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheProgressBar.PercentageProgress">
+            <summary>
+              <para>Get the percentatge progress</para>
+            </summary>
+        </member>
+        <member name="T:TheEngine.TheAudio">
+            <summary>
+              <para>Controls the Application Audio</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheAudio.IsMuted">
+            <summary>
+              <para>Returns if Audio is muted</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheAudio.SetMute(System.Boolean)">
+            <summary>
+              <para>Sets if Audio is muted</para>
+            </summary>
+            <param name="set">Muted value</param>
+        </member>
+        <member name="M:TheEngine.TheAudio.GetVolume">
+            <summary>
+              <para>Returns Audio volume</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheAudio.SetVolume(System.Int32)">
+            <summary>
+              <para>Sets Audio volume</para>
+            </summary>
+            <param name="volume">Volume value</param>
+        </member>
+        <member name="M:TheEngine.TheAudio.GetPitch">
+            <summary>
+              <para>Returns Audio pitch</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheAudio.SetPitch(System.Int32)">
+            <summary>
+              <para>Sets Audio pitch</para>
+            </summary>
+            <param name="pitch">Pitch value</param>
+        </member>
+        <member name="M:TheEngine.TheAudio.SetRTPCvalue(System.String,System.Single)">
+            <summary>
+              <para>Sets RTPC value</para>
+            </summary>
+            <param name="name">RTPC name</param>
+            <param name="value">value to set</param>
+        </member>
+        <member name="T:TheEngine.TheAudioSource">
+            <summary>
+              <para>Component to control GameObjects Audios</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheAudioSource.Play(System.String)">
+            <summary>
+              <para>Play Audio event</para>
+            </summary>
+            <param name="name">Name of event</param>
+        </member>
+        <member name="M:TheEngine.TheAudioSource.Stop(System.String)">
+            <summary>
+              <para>Stop Audio event</para>
+            </summary>
+            <param name="name">Name of event</param>
+        </member>
+        <member name="M:TheEngine.TheAudioSource.Send(System.String)">
+            <summary>
+              <para>Send Audio event</para>
+            </summary>
+            <param name="name">Name of event</param>
+        </member>
+        <member name="M:TheEngine.TheAudioSource.SetMyRTPCvalue(System.String,System.Single)">
+            <summary>
+              <para>Sets RTPC value</para>
+            </summary>
+            <param name="name">Name of RTPC</param>
+            <param name="value">RTPC value</param>
+        </member>
+        <member name="M:TheEngine.TheAudioSource.SetState(System.String,System.String)">
+            <summary>
+              <para>Sets group state</para>
+            </summary>
+            <param name="group">Group</param>
+            <param name="state">State</param>
+        </member>
+        <member name="M:TheEngine.TheAudioSource.SetVolume(System.Int32)">
+            <summary>
+              <para>Sets volume</para>
+            </summary>
+            <param name="value">Volume value</param>
+        </member>
+        <member name="T:TheEngine.TheComponent">
+            <summary>
+              <para>Base class for GameObject components</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheComponent.SetComponentActive(System.Boolean)">
+            <summary>
+              <para>Activates/Deactivates component</para>
+            </summary>
+            <param name="active">Active value</param>
+        </member>
+        <member name="T:TheEngine.TheFactory">
+            <summary>
+              <para>Used to dynamically spawn GameObjects</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheFactory.StartFactory">
+            <summary>
+              <para>Starts the factory. Creates the number of specified GameObjects</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheFactory.Spawn">
+            <summary>
+              <para>Spawns a GameObject</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheFactory.SetSpawnPosition(TheEngine.TheVector3)">
+            <summary>
+              <para>Position where the next GameObjects will be spawned</para>
+            </summary>
+            <param name="position"></param>
+        </member>
+        <member name="M:TheEngine.TheFactory.SetSpawnRotation(TheEngine.TheVector3)">
+            <summary>
+              <para>Rotation of next GameObjects that will be spawned</para>
+            </summary>
+            <param name="rotation"></param>
+        </member>
+        <member name="M:TheEngine.TheFactory.SetSpawnScale(TheEngine.TheVector3)">
+            <summary>
+              <para>Scale of next GameObjects that will be spawned</para>
+            </summary>
+            <param name="scale"></param>
+        </member>
+        <member name="T:TheEngine.TheInput">
+            <summary>
+              <para>Application Input system</para>
+            </summary>
+        </member>
+        <member name="F:TheEngine.TheInput.MaxJoystickMove">
+            <summary>
+              <para>Maximum joystick movement</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheInput.IsKeyDown(System.String)">
+            <summary>
+              <para>Given key is down</para>
+            </summary>
+            <param name="key_name">Key to </param>
+        </member>
+        <member name="T:TheEngine.TheGameObject">
+            <summary>
+              <para>Base class for all enities in Scene</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.#ctor">
+            <summary>
+              <para>Creates a new GameObject</para>
+            </summary>
+        </member>
         <member name="P:TheEngine.TheGameObject.name">
             <summary>
-              <para>Transforms direction from local space to world space.</para>
+              <para>GameObject name</para>
             </summary>
-            <param name="gameobject_name"></param>
+        </member>
+        <member name="P:TheEngine.TheGameObject.tag">
+            <summary>
+              <para>GameObject tag</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheGameObject.layer">
+            <summary>
+              <para>GameObject layer</para>
+            </summary>
+        </member>
+        <member name="P:TheEngine.TheGameObject.Self">
+            <summary>
+              <para>GameObject this script is attached</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.Find(System.String)">
+            <summary>
+              <para>Finds a GameObject</para>
+            </summary>
+            <param name="gameobject_name">Name of GameObject to find</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetSceneGameObjects">
+            <summary>
+              <para>Return all GameObjects in scene</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetAllChilds">
+            <summary>
+              <para>Return all childs in GameObject</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetObjectsInFrustum(TheEngine.TheVector3,TheEngine.TheVector3,TheEngine.TheVector3,System.Single,System.Single)">
+            <summary>
+              <para>Return all GameObjects in the given frustum</para>
+            </summary>
+            <param name="pos">Frustum pos</param>
+            <param name="front">Front vector</param>
+            <param name="up">Up Vector</param>
+            <param name="nearPlaneDist">Near plane distance of Frustum</param>
+            <param name="farPlaneDist">Far plane distance of Frustum</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.SetActive(System.Boolean)">
+            <summary>
+              <para>Activates/Deactivates the GameObject</para>
+            </summary>
+            <param name="value">Active value</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.IsActive">
+            <summary>
+              <para>Return active state</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.SetStatic(System.Boolean)">
+            <summary>
+              <para>Sets GameObject static</para>
+            </summary>
+            <param name="value">Static value</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.IsStatic">
+            <summary>
+              <para>Return GameObject Static sate</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.Duplicate(TheEngine.TheGameObject)">
+            <summary>
+              <para>Duplicates the given GameObject</para>
+            </summary>
+            <param name="original">GameObject to duplicate</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.Destroy(TheEngine.TheGameObject)">
+            <summary>
+              <para>Destroys the given GameObject</para>
+            </summary>
+            <param name="target">GameObject to destroy</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.SetParent(TheEngine.TheGameObject)">
+            <summary>
+              <para>Sets GameObject parent</para>
+            </summary>
+            <param name="new_parent">New GameObject parent</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetParent">
+            <summary>
+              <para>Return GameObject parent</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetChild(System.Int32)">
+            <summary>
+              <para>Return GameObject child by index</para>
+            </summary>
+            <param name="index">Child index</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetChild(System.String)">
+            <summary>
+              <para>Return GameObject child by name</para>
+            </summary>
+            <param name="child_name">Child name</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetChildCount">
+            <summary>
+              <para>Return number of childs in GameObject</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.DestroyComponent(TheEngine.TheComponent)">
+            <summary>
+              <para>Destroys the given Component in GameObject</para>
+            </summary>
+            <param name="component">Component to destroy</param>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetComponent``1(System.Int32)">
+            <summary>
+              <para>Returns the component if the GameObject has one attached</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.AddComponent``1">
+            <summary>
+              <para>Adds the component to the GameObject</para>
+            </summary>
+        </member>
+        <member name="T:TheEngine.TheConsole.TheConsole">
+            <summary>
+              <para>Send messages to editor console</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheConsole.TheConsole.Log(System.Object)">
+            <summary>
+              <para>Logs messages to editor console</para>
+            </summary>
+            <param name="message">Message to send</param>
+        </member>
+        <member name="M:TheEngine.TheConsole.TheConsole.Warning(System.Object)">
+            <summary>
+              <para>Logs warnings messages to editor console</para>
+            </summary>
+            <param name="message">Message to send</param>
+        </member>
+        <member name="M:TheEngine.TheConsole.TheConsole.Error(System.Object)">
+            <summary>
+              <para>Logs errors messages to editor console</para>
+            </summary>
+            <param name="message">Message to send</param>
         </member>
         <member name="M:TheEngine.TheVector3.#ctor">
             <summary>
@@ -209,9 +529,29 @@
             <param name="from"></param>
             <param name="to"></param>
         </member>
+        <member name="M:TheEngine.TheVector3.LookRotation(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Returns rotation quaternion where the vector is facing</para>
+            </summary>
+        </member>
         <member name="M:TheEngine.TheVector3.ToQuaternion">
             <summary>
               <para>Transforms the vector to Quaternion.</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.op_Addition(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Sums 2 vectors</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.op_Subtraction(TheEngine.TheVector3,TheEngine.TheVector3)">
+            <summary>
+              <para>Subs 2 vectors</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheVector3.op_UnaryNegation(TheEngine.TheVector3)">
+            <summary>
+              <para>Subs current vector with given vector</para>
             </summary>
         </member>
     </members>

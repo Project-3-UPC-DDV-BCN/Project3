@@ -72,18 +72,21 @@ GameObject* ComponentFactory::Spawn()
 		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 		if (transform)
 		{
-			transform->SetPosition(spawn_position);
-			transform->SetRotation(spawn_rotation);
-			transform->SetScale(spawn_scale);
-			CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
+			//CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
 			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
-			if (rb)
+			if (rb && transform->GetTransformedFromRB())
 			{
 				//float4x4 m = transform->GetOpenGLMatrix();
 				//rb->SetTransform(m.ptr());
 				rb->SetLinearVelocity({ 0,0,0 });
 				rb->SetPosition(spawn_position);
 				rb->SetRotation(spawn_rotation);
+			}
+			else
+			{
+				transform->SetPosition(spawn_position);
+				transform->SetRotation(spawn_rotation);
+				transform->SetScale(spawn_scale);
 			}
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
@@ -156,29 +159,34 @@ void ComponentFactory::StartFactory()
 			}
 		}
 		
+		App->scene->saving_index = 0;
+		Data data;
+		object_to_spawn->GetRootGameObject()->Save(data, true);
+
 		for (int i = 0; i < object_count; i++)
-		{
-			Data data;
-			object_to_spawn->GetRootGameObject()->Save(data, true);
-			for (int i = 0; i < App->scene->saving_index; i++) {
-				GameObject* go = new GameObject();
-				data.EnterSection("GameObject_" + std::to_string(i));
-				go->Load(data);
-				if (GetGameObject() && i == 0)
+		{	
+			for (int j = 0; j < App->scene->saving_index; j++) {
+				if (data.EnterSection("GameObject_" + std::to_string(j)))
 				{
-					go->SetRoot(true);
-					//go->SetParent(GetGameObject());
-					spawn_objects_list.push_back(go);
-					go->SetActive(false);
+					GameObject* go = new GameObject();
+					App->scene->AddGameObjectToScene(go);
+					go->Load(data);
+					if (GetGameObject() && j == 0)
+					{
+						go->SetRoot(true);
+						//go->SetParent(GetGameObject());
+						spawn_objects_list.push_back(go);
+						go->SetActive(false);
+					}
+					go->InitScripts();
+					go->StartScripts();
+					App->resources->AddGameObject(go);
+					App->scene->RenameDuplicatedGameObject(go);
+					data.LeaveSection();
 				}
-				go->InitScripts();
-				go->StartScripts();
-				App->scene->AddGameObjectToScene(go);
-				App->resources->AddGameObject(go);
-				data.LeaveSection();
 			}
-			App->scene->saving_index = 0;
 		}
+		App->scene->saving_index = 0;
 	}
 	else
 	{
@@ -196,9 +204,19 @@ void ComponentFactory::CheckLifeTimes()
 			if (transform)
 			{
 				it->first->SetActive(false);
-				transform->SetPosition(original_position);
-				transform->SetRotation(original_rotation);
-				transform->SetScale(original_scale);
+				ComponentRigidBody* rb = (ComponentRigidBody*)it->first->GetComponent(Component::CompRigidBody);
+				if (rb && transform->GetTransformedFromRB())
+				{
+					rb->SetLinearVelocity({ 0,0,0 });
+					rb->SetPosition(original_position);
+					rb->SetRotation(original_rotation);
+				}
+				else
+				{
+					transform->SetPosition(original_position);
+					transform->SetRotation(original_rotation);
+					transform->SetScale(original_scale);
+				}
 				spawn_objects_list.push_back(it->first);
 				it = spawned_objects.erase(it);
 			}

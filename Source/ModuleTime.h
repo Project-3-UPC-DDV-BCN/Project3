@@ -13,11 +13,14 @@ public:
 
 	float GetGameDt() const;
 	Uint32 GetTime();
+	float GetPlayTime() const;
 
 public:
 	float time_scale;
+
 private:
 	float game_dt;
+	float play_time;
 	Timer time;
 };
 

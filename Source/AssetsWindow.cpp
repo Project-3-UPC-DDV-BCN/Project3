@@ -395,7 +395,6 @@ void AssetsWindow::DrawWindow()
 						Prefab* prefab = App->resources->GetPrefab(file_name);
 						if (prefab)
 						{
-							Data data;
 							App->scene->LoadPrefabToScene(prefab);
 						}
 						else

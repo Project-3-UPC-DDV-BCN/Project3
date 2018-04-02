@@ -107,7 +107,9 @@ bool ModuleFileSystem::Delete_File(std::string file_path)
 
 void ModuleFileSystem::Copy(std::string old_path, std::string new_path)
 {
-	fs::copy(old_path, new_path, fs::copy_options::update_existing);
+	fs::path path(old_path);
+	if(path.compare(new_path) != 0)
+		fs::copy(old_path, new_path, fs::copy_options::update_existing);
 }
 
 std::string ModuleFileSystem::GetFileName(std::string file_path)

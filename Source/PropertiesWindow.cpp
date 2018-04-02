@@ -374,7 +374,6 @@ void PropertiesWindow::DrawWindow()
 				{
 					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
 						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-						App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 						App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 					}
 					else
@@ -390,7 +389,6 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompBoxCollider);
@@ -400,7 +398,6 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompSphereCollider);
@@ -410,7 +407,6 @@ void PropertiesWindow::DrawWindow()
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 						{
 							ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 						}
 						selected_gameobject->AddComponent(Component::CompCapsuleCollider);
@@ -422,7 +418,6 @@ void PropertiesWindow::DrawWindow()
 							if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
 							{
 								ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
-								App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 								App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
 							}
 							selected_gameobject->AddComponent(Component::CompMeshCollider);
@@ -1007,115 +1002,122 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 		{
 			radar->SetCenter(center_go);
 		}
-
-		if (center_go != nullptr)
+		
+		if (ImGui::InputResourceTexture("Center Texture", &center_texture))
 		{
-			if (ImGui::InputResourceTexture("Center Texture", &center_texture))
+			radar->SetCenterTexture(center_texture);
+		}
+
+		if (ImGui::Button("Create Marker"))
+		{
+			std::string marker_name = "Marker_" + std::to_string(radar->markers.size());
+			radar->CreateMarker(marker_name.c_str(), nullptr);
+		}
+
+		if (radar->markers.size() > 0)
+		{
+			ImGui::SameLine();
+
+			if (ImGui::Button("Add Entity"))
 			{
-				radar->SetCenterTexture(center_texture);
+				std::string marker_name = "Entity_" + std::to_string(radar->entities.size());
+				radar->AddEntity(nullptr);
+			}
+		}
+
+		ImGui::Separator();
+
+		ImGui::Text("Markers");
+
+		int markers_count = 0;
+		for (std::vector<RadarMarker*>::iterator it = radar->markers.begin(); it != radar->markers.end(); ++it)
+		{
+			char name[100];
+			strcpy_s(name, 100, (*it)->marker_name.c_str());
+			Texture* marker_texture = (*it)->marker_texture;
+
+			std::string id = "Name_" + std::to_string(markers_count);
+
+			if (ImGui::InputText(id.c_str(), name, 100))
+			{
+				(*it)->marker_name = name;
 			}
 
-			if (ImGui::Button("Create Marker"))
+			ImGui::SameLine();
+			if (ImGui::Button("X"))
 			{
-				std::string marker_name = "Marker_" + std::to_string(radar->markers.size());
-				radar->CreateMarker(marker_name.c_str(), nullptr);
+				radar->DeleteMarker((*it));
+				break;
 			}
 
-			if (radar->markers.size() > 0)
+			if (marker_texture != nullptr)
 			{
-				ImGui::SameLine();
+				id = "Texture_" + std::to_string(markers_count);
 
-				if (ImGui::Button("Add Entity"))
-				{
-					std::string marker_name = "Entity_" + std::to_string(radar->entities.size());
-					radar->AddEntity(nullptr);
-				}
-			}
-
-			ImGui::Separator();
-
-			ImGui::Text("Markers");
-
-			int markers_count = 0;
-			for (std::vector<RadarMarker*>::iterator it = radar->markers.begin(); it != radar->markers.end(); ++it)
-			{
-				char name[100];
-				strcpy_s(name, 100, (*it)->marker_name.c_str());
-				Texture* marker_texture = (*it)->marker_texture;
-
-				if (ImGui::InputText("Name", name, 100))
-				{
-					(*it)->marker_name = name;
-				}
-
-				ImGui::SameLine();
-				if (ImGui::Button("X"))
-				{
-					radar->DeleteMarker((*it));
-					break;
-				}
-
-				if (ImGui::InputResourceTexture("Texture", &marker_texture));
+				if (ImGui::InputResourceTexture(id.c_str(), &marker_texture))
 					(*it)->marker_texture = marker_texture;
 			}
 
-			ImGui::Separator();
-
-			ImGui::Text("Entities");
-
-			for (int i = 0; i < radar->entities.size(); ++i)
-			{
-				GameObject* curr_go = radar->entities[i].go;
-
-				string id = std::to_string(i);
-
-				ImGui::PushID(id.c_str());
-				
-				string input_res = "GameObject" + id;
-
-				if (ImGui::InputResourceGameObject(input_res.c_str(), &curr_go))
-				{
-					radar->entities[i].go = curr_go;
-				}
-
-				if (radar->entities[i].go != nullptr)
-					ImGui::Text(radar->entities[i].go->GetName().c_str());
-
-				if (radar->entities[i].marker != nullptr)
-				{
-					ImGui::SameLine();
-					ImGui::Text(radar->entities[i].marker->marker_name.c_str());
-				}
-
-				if (ImGui::Button("Select Marker"))
-				{
-					radar_marker_select = true;
-					marker_to_change = i;
-				}
-
-				ImGui::PopID();
-			}
-
-			ImGui::SetWindowSize(ImVec2(300, 600));
-			if (radar_marker_select)
-			{
-				if (ImGui::Begin("Marker Adder", &radar_marker_select))
-				{
-					for (std::vector<RadarMarker*>::iterator mar = radar->markers.begin(); mar != radar->markers.end(); ++mar)
-					{
-						if (ImGui::Button((*mar)->marker_name.c_str()))
-						{
-							radar->AddMarkerToEntity(marker_to_change, (*mar));
-							radar_marker_select = false;
-							break;
-						}
-					}
-
-					ImGui::End();
-				}
-			}
-			
+			++markers_count;
 		}
+
+		ImGui::Separator();
+
+		ImGui::Text("Entities");
+
+		for (int i = 0; i < radar->entities.size(); ++i)
+		{
+			GameObject* curr_go = radar->entities[i].go;
+
+			string id = "entities" + std::to_string(i);
+
+			ImGui::PushID(id.c_str());
+			
+			string input_res = "GameObject" + id;
+
+			if (ImGui::InputResourceGameObject(input_res.c_str(), &curr_go))
+			{
+				radar->entities[i].go = curr_go;
+			}
+
+			if (radar->entities[i].go != nullptr)
+				ImGui::Text(radar->entities[i].go->GetName().c_str());
+
+			if (radar->entities[i].marker != nullptr)
+			{
+				ImGui::SameLine();
+				ImGui::Text(radar->entities[i].marker->marker_name.c_str());
+			}
+
+			if (ImGui::Button("Select Marker"))
+			{
+				radar_marker_select = true;
+				marker_to_change = i;
+			}
+
+			ImGui::PopID();
+		}
+
+		ImGui::SetWindowSize(ImVec2(300, 600));
+		if (radar_marker_select)
+		{
+			if (ImGui::Begin("Marker Adder", &radar_marker_select))
+			{
+				for (std::vector<RadarMarker*>::iterator mar = radar->markers.begin(); mar != radar->markers.end(); ++mar)
+				{
+					if (ImGui::Button((*mar)->marker_name.c_str()))
+					{
+						radar->AddMarkerToEntity(marker_to_change, (*mar));
+						radar_marker_select = false;
+						break;
+					}
+				}
+
+				ImGui::End();
+			}
+		}
+		
+		
 	}
 }
 

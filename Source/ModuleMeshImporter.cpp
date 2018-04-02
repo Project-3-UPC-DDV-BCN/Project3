@@ -452,7 +452,7 @@ Texture* ModuleMeshImporter::CreateTexture(std::string mat_texture_name)
 			if (!library_path.empty())
 			{
 				material_texture = App->texture_importer->LoadTextureFromLibrary(library_path);
-				if (material_texture)
+				if (material_texture != nullptr)
 				{
 					material_texture->SetAssetsPath(full_texture_path);
 				}

@@ -29,9 +29,11 @@ void TextEditorWindow::DrawWindow()
 	ImGui::SetNextWindowSize({ 600,500 }, ImGuiCond_Once);
 	if (ImGui::Begin(window_name.c_str(), &active, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_ShowBorders))
 	{
+		editor.menu_is_open = false;
 		ImGui::BeginMenuBar();
 		if (ImGui::BeginMenu("File"))
 		{
+			editor.menu_is_open = true;
 			if (ImGui::MenuItem("Save"))
 			{
 				std::string text_to_save = editor.GetText();
@@ -68,6 +70,7 @@ void TextEditorWindow::DrawWindow()
 		}
 		if (ImGui::BeginMenu("Edit"))
 		{
+			editor.menu_is_open = true;
 			bool ro = editor.IsReadOnly();
 
 			if (ImGui::MenuItem("Undo", nullptr, !ro && editor.CanUndo()))
