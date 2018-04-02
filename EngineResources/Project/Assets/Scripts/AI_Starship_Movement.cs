@@ -116,7 +116,7 @@ public class Ai_Starship_Movement {
 
 		//TheConsole.Log("Separation");
 
-	// Separation
+		// Separation
 		/*TheVector3 separation_vector = TheVector3.Zero;
 		foreach(TheGameObject go in TheGameObject.GetSceneGameObjects()) {
 			TheVector3 goOffset = go.GetComponent<TheTransform>().GlobalPosition - transform.GlobalPosition;
@@ -127,10 +127,12 @@ public class Ai_Starship_Movement {
 
 		transform.LocalPosition += separation_vector.Normalized * separation_force * TheTime.DeltaTime;*/
 		transform.LocalPosition += spdDir.Normalized * currSpd * TheTime.DeltaTime;
-		
-		//TheConsole.Log("Shooting");
 
-		// Shooting
+		Shoot();
+	}
+
+	void Shoot()
+	{
 		if(target != null) {
 			TheTransform ttrans = target.GetComponent<TheTransform>();
 			TheVector3 ship_dir = ttrans.GlobalPosition - transform.GlobalPosition;
@@ -161,9 +163,8 @@ public class Ai_Starship_Movement {
 				timer = 0.0f;
 			}
 		}
-
-	}
-
+	}	
+	
 	bool isEnemy(string your_tag, string other_tag) {
 		return (your_tag == "XWING" || your_tag == "YWING") && (other_tag == "TIEFIGHTER" || other_tag == "LANDCRAFTING") || (other_tag == "XWING" || other_tag == "YWING") && (your_tag == "TIEFIGHTER" || your_tag == "LANDCRAFTING");
 	}
@@ -174,10 +175,10 @@ public class Ai_Starship_Movement {
         int nship = 0;
         foreach (TheGameObject go in ships_in_scene)
         {
-  	      if(isEnemy(gameobject.tag, go.tag))
-          {   
+			if(isEnemy(gameobject.tag, go.tag))
+			{   
 			  ships_in_scene_list.Add(go);
-          }
+			}
         }
 		 TheConsole.Log(ships_in_scene_list.Count);  
 		 
@@ -193,59 +194,6 @@ public class Ai_Starship_Movement {
 				}
 			}
 		}
-		/*int newS = 0;
-		foreach(TheGameObject go in ships_in_scene_list) {
-			if(go == null)
-				break;
-			newS++;
-		}
-		TheGameObject[] auxList = new TheGameObject[newS];
-		for(int i = 0; i < newS; i++) {
-			auxList[i] = ships_in_scene_list[i];
-		}
-        if(auxList.Length > 0)
-        {
-			target = auxList[0];
-			foreach(TheGameObject ship in auxList) {
-				float distA = TheVector3.Magnitude(transform.GlobalPosition - ship.GetComponent<TheTransform>().GlobalPosition);
-				float currDistB  = TheVector3.Magnitude(transform.GlobalPosition - target.GetComponent<TheTransform>().GlobalPosition);
-				if(currDistB > distA) {
-					//if(target != auxTarget && target != null)
-					target = ship;
-				}
-			}
-			int rand = (int)TheRandom.RandomRange(0f, auxList.Length);
-			target = ships_in_scene_list[rand];
-   	   }
-	   else
-	   {	
-			target = ships_in_scene_list[1];
-	   }*/
-	   
-	   
- 
-		//TheGameObject ret = null;
-		//TheGameObject[] scene_gos = TheGameObject.GetSceneGameObjects();
-		//int nS = 0;
-		//foreach(TheGameObject go in scene_gos) {
-		//	if(isEnemy(gameobject.tag, go.tag)) {
-		//		nS++;
-		//	}
-		//}
-		//if(nS <= 0)
-		//	return null;
-		//TheGameObject[] enemy_ships = new TheGameObject[nS];
-		//int it = 0;
-		//for(int i = 0; i < scene_gos.Length; i++) {
-		//	if(isEnemy(gameobject.tag, scene_gos[i].tag))
-		//		if(scene_gos[i] is TheGameObject)
-		//			enemy_ships[it++] = scene_gos[i];
-		//		else
-		//			return null;
-		//}
-		//int rand_n = (int)TheRandom.RandomRange(0, nS);
-		//ret = enemy_ships[rand_n];
-		//return ret;
 	}
 
 	TheVector3 roundingVector(TheVector3 v) {
