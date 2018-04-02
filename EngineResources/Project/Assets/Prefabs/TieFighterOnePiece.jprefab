@@ -1,11 +1,11 @@
 {
-    "UUID": "1435469569",
+    "UUID": "1787070683",
     "assets_path": "./Project/Assets/Prefabs/TieFighterOnePiece.jprefab",
     "library_path": "./Project/Library/Prefabs/TieFighterOnePiece.jprefab",
     "prefab_name": "TieFighterOnePiece",
     "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "1380382910",
+        "UUID": "1035448551",
         "Name": "TieFighterOnePiece",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -17,9 +17,9 @@
                 "Active": "1",
                 "UUID": "1651011868",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "-0.000006",
+                    "value_Y": "-407.320221",
+                    "value_Z": "-1258.345337"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -163,11 +163,11 @@
                         },
                         "field_8": {
                             "field_name": "sight_range",
-                            "field_value": "100.000000"
+                            "field_value": "500.000000"
                         },
                         "field_9": {
                             "field_name": "time_between_lasers",
-                            "field_value": "0.020000"
+                            "field_value": "0.100000"
                         }
                     },
                     "bool_fields": {
@@ -180,11 +180,11 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "619153732"
+                            "field_value": "923301256"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "1810212988"
+                            "field_value": "528738325"
                         }
                     },
                     "vec2_fields": {},
@@ -230,7 +230,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1597890213",
+        "UUID": "85023028",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -248,9 +248,9 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_Y": "-1.000000",
                     "value_Z": "0.000000",
-                    "value_W": "1.000000"
+                    "value_W": "0.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -341,12 +341,12 @@
                 }
             }
         },
-        "ParentID": "1380382910",
+        "ParentID": "1035448551",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "619153732",
+        "UUID": "923301256",
         "Name": "Laser_Spawner_L",
         "Tag": "Default",
         "Layer": "Default",
@@ -375,12 +375,12 @@
                 }
             }
         },
-        "ParentID": "1380382910",
+        "ParentID": "1035448551",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1810212988",
+        "UUID": "528738325",
         "Name": "Laser_Spawner_R",
         "Tag": "Default",
         "Layer": "Default",
@@ -409,12 +409,12 @@
                 }
             }
         },
-        "ParentID": "1380382910",
+        "ParentID": "1035448551",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1613129706",
+        "UUID": "1273731598",
         "Name": "OA_Checker",
         "Tag": "Default",
         "Layer": "Default",
@@ -473,7 +473,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "parent",
-                            "field_value": "1380382910"
+                            "field_value": "1035448551"
                         }
                     },
                     "vec2_fields": {},
@@ -545,7 +545,7 @@
                 }
             }
         },
-        "ParentID": "1380382910",
+        "ParentID": "1035448551",
         "IsRoot": "0",
         "IsStatic": "0"
     }
