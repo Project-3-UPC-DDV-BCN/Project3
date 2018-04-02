@@ -1,13 +1,13 @@
 {
-    "UUID": "619731831",
+    "UUID": "289204140",
     "assets_path": "./Project/Assets/Prefabs/AI_X_Wing.jprefab",
     "library_path": "./Project/Library/Prefabs/AI_X_Wing.jprefab",
     "prefab_name": "AI_X_Wing",
     "GameObjects_Count": "10",
     "GameObject_0": {
-        "UUID": "1255854174",
+        "UUID": "2022240315",
         "Name": "AI_X_Wing",
-        "Tag": "Default",
+        "Tag": "XWING",
         "Layer": "Default",
         "Active": "1",
         "Components": {
@@ -133,11 +133,11 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "1640733620"
+                            "field_value": "879073210"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "565206796"
+                            "field_value": "819497557"
                         }
                     },
                     "vec2_fields": {},
@@ -167,7 +167,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1174244096",
+        "UUID": "1365073295",
         "Name": "Xwing(12)",
         "Tag": "XWING",
         "Layer": "Default",
@@ -268,12 +268,12 @@
                 }
             }
         },
-        "ParentID": "1255854174",
+        "ParentID": "2022240315",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1640733620",
+        "UUID": "879073210",
         "Name": "Laser_Spawner_L(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -302,12 +302,12 @@
                 }
             }
         },
-        "ParentID": "1255854174",
+        "ParentID": "2022240315",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "565206796",
+        "UUID": "819497557",
         "Name": "Laser_Spawner_R(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -336,12 +336,12 @@
                 }
             }
         },
-        "ParentID": "1255854174",
+        "ParentID": "2022240315",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1919480335",
+        "UUID": "2041366048",
         "Name": "OA_Checker(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -400,7 +400,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "parent",
-                            "field_value": "1255854174"
+                            "field_value": "2022240315"
                         }
                     },
                     "vec2_fields": {},
@@ -472,12 +472,12 @@
                 }
             }
         },
-        "ParentID": "1255854174",
+        "ParentID": "2022240315",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "380533872",
+        "UUID": "1477869348",
         "Name": "Body(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -581,12 +581,12 @@
                 }
             }
         },
-        "ParentID": "1174244096",
+        "ParentID": "1365073295",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1790433120",
+        "UUID": "505382044",
         "Name": "BotRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -690,12 +690,12 @@
                 }
             }
         },
-        "ParentID": "1174244096",
+        "ParentID": "1365073295",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "1055957405",
+        "UUID": "831212876",
         "Name": "BotLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -799,12 +799,12 @@
                 }
             }
         },
-        "ParentID": "1174244096",
+        "ParentID": "1365073295",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "2002805754",
+        "UUID": "1629804287",
         "Name": "TopRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -908,12 +908,12 @@
                 }
             }
         },
-        "ParentID": "1174244096",
+        "ParentID": "1365073295",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "1226199524",
+        "UUID": "2010808688",
         "Name": "TopLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1017,7 +1017,7 @@
                 }
             }
         },
-        "ParentID": "1174244096",
+        "ParentID": "1365073295",
         "IsRoot": "0",
         "IsStatic": "0"
     }
