@@ -314,7 +314,7 @@ private:
 	static void SetGameObjectName(MonoObject * object, MonoString* name);
 	static MonoString* GetGameObjectName(MonoObject* object);
 	static void CreateGameObject(MonoObject * object);
-	static MonoObject* GetSelfGameObject(MonoObject* obj, MonoObject* obj2, MonoObject* obj3, MonoObject* obj4);
+	static MonoObject* GetSelfGameObject();
 	static void SetGameObjectActive(MonoObject * object, mono_bool active);
 	static mono_bool GetGameObjectIsActive(MonoObject* object);
 	static void SetGameObjectTag(MonoObject * object, MonoString* tag);

@@ -10,24 +10,6 @@
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/exception.h>
-//#include "ComponentTransform.h"
-//#include "ModuleInput.h"
-//#include "ModuleTime.h"
-//#include "ModuleScene.h"
-//#include "ComponentFactory.h"
-//#include "ComponentFactory.h"
-//#include "ComponentRectTransform.h"
-//#include "ComponentProgressBar.h"
-//#include "ModuleAudio.h"
-//#include "ComponentParticleEmmiter.h"
-//#include "ComponentAudioSource.h"
-//#include "AudioEvent.h"
-//#include "ComponentText.h"
-//#include "ComponentRigidBody.h"
-//#include "ComponentGOAPAgent.h"
-//#include "GOAPGoal.h"
-//#include "ComponentScript.h"
-//#include "ComponentRadar.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -83,6 +65,7 @@ bool CSScript::LoadScript(std::string script_path)
 	if (mono_object)
 	{
 		mono_runtime_object_init(mono_object);
+		mono_gchandle_new(mono_object, 1);
 
 		init = GetFunction("Init", 0);
 		start = GetFunction("Start", 0);
@@ -134,6 +117,7 @@ void CSScript::UpdateScript()
 {
 	if (update != nullptr)
 	{
+		GetFunction("Update", 0);
 		CallFunction(update, nullptr);
 		inside_function = false;
 	}
@@ -163,6 +147,7 @@ void CSScript::OnCollisionEnter(GameObject* other_collider)
 				new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
 				}
 			}
@@ -198,6 +183,7 @@ void CSScript::OnCollisionStay(GameObject* other_collider)
 				new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
 				}
 			}
@@ -233,6 +219,7 @@ void CSScript::OnCollisionExit(GameObject* other_collider)
 				new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
 				}
 			}
@@ -268,6 +255,7 @@ void CSScript::OnTriggerEnter(GameObject * other_collider)
 				new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
 				}
 			}
@@ -303,6 +291,7 @@ void CSScript::OnTriggerStay(GameObject * other_collider)
 				new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
 				}
 			}
@@ -338,6 +327,7 @@ void CSScript::OnTriggerExit(GameObject * other_collider)
 				new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
 				}
 			}
@@ -617,6 +607,7 @@ void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * val
 			MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
 			if (object && value)
 			{
+				mono_gchandle_new(object, 1);
 				App->script_importer->ns_importer->created_gameobjects[object] = value;
 			}
 		}
@@ -890,6 +881,7 @@ MonoMethod * CSScript::GetFunction(const char * functionName, int parameters_cou
 
 	if (mono_class != nullptr)
 	{
+		const char* name = mono_class_get_name(mono_class);
 		method = mono_class_get_method_from_name(mono_class, functionName, parameters_count);
 	}
 
@@ -903,7 +895,7 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 		inside_function = true;
 		MonoObject* exception = nullptr;
 		MonoMarshalSpec* spec;
-	
+		CONSOLE_WARNING("Class name %s from script %s", mono_class_get_name(mono_class), GetName().c_str());
 		MonoObject* obj = mono_runtime_invoke(function, mono_object, parameter, &exception);
 
 		if (exception)
@@ -927,6 +919,7 @@ void CSScript::AddFieldsToMonoObjectList()
 			MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
 			if (object && gameobject)
 			{
+				mono_gchandle_new(object, 1);
 				App->script_importer->ns_importer->created_gameobjects[object] = gameobject;
 			}
 		}
