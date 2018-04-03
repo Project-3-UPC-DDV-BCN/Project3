@@ -6,6 +6,9 @@ public class GameManager
 {
 	public TheGameObject show_gametime_go;
 	public TheGameObject show_score_go; 
+	
+	public TheVector3 alliance_spawn = new TheVector3(0, 0, 0);
+	public TheVector3 empire_spawn = new TheVector3(0, 0, 0);
 
 	public int gametime_seconds; 
 		
@@ -41,8 +44,13 @@ public class GameManager
 
 	void Init ()
 	{
-		if(slave1 != null)
-			team = slave1.tag;
+		team = TheData.GetString("faction"); 
+		
+		if(team == "rebels")
+			slave1.tag = "Alliance"; 
+
+		else if(team == "empire")
+			slave1.tag = "Empire"; 
 
         TheConsole.Log(team); 
 	}
@@ -71,7 +79,15 @@ public class GameManager
 		}
 
 		if(slave1 != null)
+		{
 			slave1_audio = slave1.GetComponent<TheAudioSource>();
+
+			if(team == "rebels")
+				slave1.GetComponent<TheTransform>().GlobalPosition = alliance_spawn;
+			else if(slave1.tag == "empire")
+				slave1.GetComponent<TheTransform>().GlobalPosition = empire_spawn;
+		}
+			
 
 		score = 0; 
 		
@@ -85,6 +101,7 @@ public class GameManager
 	void Update () 
 	{
 		timer -= TheTime.DeltaTime;
+		TheConsole.Log(team); 
 
 		if (TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000 && !calm_combat)
 		{
