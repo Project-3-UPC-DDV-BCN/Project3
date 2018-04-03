@@ -508,8 +508,6 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				
 				game_object->Load(data);
 
-				RenameDuplicatedGameObject(game_object);
-
 				App->resources->AddGameObject(game_object);
 
 				new_gos.push_back(game_object);
@@ -555,6 +553,7 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					game_object->Load(data);
 					data.LeaveSection();
 					++it;
+					RenameDuplicatedGameObject(game_object);
 				}
 			}
 
