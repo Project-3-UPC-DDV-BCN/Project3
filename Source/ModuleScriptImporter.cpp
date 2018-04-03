@@ -798,7 +798,7 @@ void ModuleScriptImporter::CreateGameObject(MonoObject * object)
 	ns_importer->CreateGameObject(object);
 }
 
-MonoObject* ModuleScriptImporter::GetSelfGameObject()
+MonoObject* ModuleScriptImporter::GetSelfGameObject(MonoObject* obj, MonoObject* obj2, MonoObject* obj3, MonoObject* obj4)
 {
 	return ns_importer->GetSelfGameObject();
 }

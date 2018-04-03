@@ -23,6 +23,7 @@ void ComponentScript::InitScript()
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
+		script->SetAttachedGameObject(GetGameObject());
 		script->InitScript();
 		App->script_importer->ns_importer->current_script = last_script;
 	}
@@ -213,10 +214,10 @@ void ComponentScript::Load(Data & data)
 			CONSOLE_ERROR("Cannot find %s. Script not loaded", script_name.c_str());
 			RELEASE(script);
 		}
-		else
+		/*else
 		{
 			script->SetAttachedGameObject(GetGameObject());
-		}
+		}*/
 		data.LeaveSection();
 	}
 }
