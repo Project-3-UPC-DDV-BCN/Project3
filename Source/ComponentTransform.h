@@ -30,6 +30,7 @@ public:
 	const float4x4 GetOpenGLMatrix() const;
 	void SetMatrix(const float4x4 &matrix);
 	void LookAt(float3 dir, float3 up);
+	bool AnyDirty(); 
 
 	void SetTransformedFromRB(bool transformed);
 	bool GetTransformedFromRB() const;

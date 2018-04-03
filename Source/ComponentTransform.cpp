@@ -296,6 +296,23 @@ void ComponentTransform::LookAt(float3 dir, float3 up)
 	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
 }
 
+bool ComponentTransform::AnyDirty()
+{
+	GameObject* current_go= GetGameObject(); 
+
+	while (current_go != nullptr)
+	{
+		ComponentTransform* transform = (ComponentTransform*)current_go->GetComponent(CompTransform);
+
+		if (transform->dirty)
+			return true;
+
+		current_go = current_go->GetParent(); 
+	}
+
+	return false; 
+}
+
 void ComponentTransform::SetTransformedFromRB(bool transformed)
 {
 	rb_transforms_go = transformed;
