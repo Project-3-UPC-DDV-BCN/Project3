@@ -775,447 +775,447 @@ void ModuleScriptImporter::RegisterAPI()
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
 {
-	ns_importer->SetGameObjectName(object, name);
+	ns_importer->current_script->SetGameObjectName(object, name);
 }
 
 MonoString* ModuleScriptImporter::GetGameObjectName(MonoObject * object)
 {
-	return ns_importer->GetGameObjectName(object);
+	return ns_importer->current_script->GetGameObjectName(object);
 }
 
 void ModuleScriptImporter::SetGameObjectActive(MonoObject * object, mono_bool active)
 {
-	ns_importer->SetGameObjectActive(object, active);
+	ns_importer->current_script->SetGameObjectActive(object, active);
 }
 
 mono_bool ModuleScriptImporter::GetGameObjectIsActive(MonoObject * object)
 {
-	return ns_importer->GetGameObjectIsActive(object);
+	return ns_importer->current_script->GetGameObjectIsActive(object);
 }
 
 void ModuleScriptImporter::CreateGameObject(MonoObject * object)
 {
-	ns_importer->CreateGameObject(object);
+	ns_importer->current_script->CreateGameObject(object);
 }
 
 MonoObject* ModuleScriptImporter::GetSelfGameObject(MonoObject* obj, MonoObject* obj2, MonoObject* obj3, MonoObject* obj4)
 {
-	return ns_importer->GetSelfGameObject();
+	return ns_importer->current_script->GetSelfGameObject();
 }
 
 void ModuleScriptImporter::SetGameObjectTag(MonoObject * object, MonoString * name)
 {
-	ns_importer->SetGameObjectTag(object, name);
+	ns_importer->current_script->SetGameObjectTag(object, name);
 }
 
 MonoString* ModuleScriptImporter::GetGameObjectTag(MonoObject * object)
 {
-	return ns_importer->GetGameObjectTag(object);
+	return ns_importer->current_script->GetGameObjectTag(object);
 }
 
 void ModuleScriptImporter::SetGameObjectLayer(MonoObject * object, MonoString * layer)
 {
-	ns_importer->SetGameObjectLayer(object, layer);
+	ns_importer->current_script->SetGameObjectLayer(object, layer);
 }
 
 MonoString * ModuleScriptImporter::GetGameObjectLayer(MonoObject * object)
 {
-	return ns_importer->GetGameObjectLayer(object);
+	return ns_importer->current_script->GetGameObjectLayer(object);
 }
 
 void ModuleScriptImporter::SetGameObjectStatic(MonoObject * object, mono_bool value)
 {
-	ns_importer->SetGameObjectStatic(object, value);
+	ns_importer->current_script->SetGameObjectStatic(object, value);
 }
 
 mono_bool ModuleScriptImporter::GameObjectIsStatic(MonoObject * object)
 {
-	return ns_importer->GameObjectIsStatic(object);
+	return ns_importer->current_script->GameObjectIsStatic(object);
 }
 
 MonoObject * ModuleScriptImporter::DuplicateGameObject(MonoObject * object)
 {
-	return ns_importer->DuplicateGameObject(object);
+	return ns_importer->current_script->DuplicateGameObject(object);
 }
 
 void ModuleScriptImporter::SetGameObjectParent(MonoObject * object, MonoObject * parent)
 {
-	ns_importer->SetGameObjectParent(object, parent);
+	ns_importer->current_script->SetGameObjectParent(object, parent);
 }
 
 MonoObject* ModuleScriptImporter::GetGameObjectParent(MonoObject * object)
 {
-	return ns_importer->GetGameObjectParent(object);
+	return ns_importer->current_script->GetGameObjectParent(object);
 }
 
 MonoObject * ModuleScriptImporter::GetGameObjectChild(MonoObject * object, int index)
 {
-	return ns_importer->GetGameObjectChild(object, index);
+	return ns_importer->current_script->GetGameObjectChild(object, index);
 }
 
 MonoObject * ModuleScriptImporter::GetGameObjectChildString(MonoObject * object, MonoString * name)
 {
-	return ns_importer->GetGameObjectChildString(object, name);
+	return ns_importer->current_script->GetGameObjectChildString(object, name);
 }
 
 int ModuleScriptImporter::GetGameObjectChildCount(MonoObject * object)
 {
-	return ns_importer->GetGameObjectChildCount(object);
+	return ns_importer->current_script->GetGameObjectChildCount(object);
 }
 
 MonoObject * ModuleScriptImporter::FindGameObject(MonoString * gameobject_name)
 {
-	return ns_importer->FindGameObject(gameobject_name);
+	return ns_importer->current_script->FindGameObject(gameobject_name);
 }
 
 MonoArray * ModuleScriptImporter::GetSceneGameObjects(MonoObject * object)
 {
-	return ns_importer->GetSceneGameObjects(object);
+	return ns_importer->current_script->GetSceneGameObjects(object);
 }
 
 MonoArray * ModuleScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist )
 {
-	return ns_importer->GetObjectsInFrustum(pos, front, up, nearPlaneDist, farPlaneDist);
+	return ns_importer->current_script->GetObjectsInFrustum(pos, front, up, nearPlaneDist, farPlaneDist);
 }
 
 MonoArray * ModuleScriptImporter::GetAllChilds(MonoObject * object)
 {
-	return ns_importer->GetAllChilds(object);
+	return ns_importer->current_script->GetAllChilds(object);
 }
 
 void ModuleScriptImporter::SetComponentActive(MonoObject * object, bool active)
 {
-	ns_importer->SetComponentActive(object, active);
+	ns_importer->current_script->SetComponentActive(object, active);
 }
 
 MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflectionType* type)
 {
-	return ns_importer->AddComponent(object, type);
+	return ns_importer->current_script->AddComponent(object, type);
 }
 
 MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
-	return ns_importer->GetComponent(object, type, index);
+	return ns_importer->current_script->GetComponent(object, type, index);
 }
 
 void ModuleScriptImporter::DestroyComponent(MonoObject * object, MonoObject * cmp)
 {
-	ns_importer->DestroyComponent(object, cmp);
+	ns_importer->current_script->DestroyComponent(object, cmp);
 }
 
 void ModuleScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetPosition(object, vector3);
+	ns_importer->current_script->SetPosition(object, vector3);
 }
 
 MonoObject* ModuleScriptImporter::GetPosition(MonoObject * object, mono_bool is_global)
 {
-	return ns_importer->GetPosition(object, is_global);
+	return ns_importer->current_script->GetPosition(object, is_global);
 }
 
 void ModuleScriptImporter::SetRotation(MonoObject * object, MonoObject * vector)
 {
-	ns_importer->SetRotation(object, vector);
+	ns_importer->current_script->SetRotation(object, vector);
 }
 
 MonoObject * ModuleScriptImporter::GetRotation(MonoObject * object, mono_bool is_global)
 {
-	return ns_importer->GetRotation(object, is_global);
+	return ns_importer->current_script->GetRotation(object, is_global);
 }
 
 void ModuleScriptImporter::SetScale(MonoObject * object, MonoObject * vector)
 {
-	ns_importer->SetScale(object, vector);
+	ns_importer->current_script->SetScale(object, vector);
 }
 
 MonoObject * ModuleScriptImporter::GetScale(MonoObject * object, mono_bool is_global)
 {
-	return ns_importer->GetScale(object, is_global);
+	return ns_importer->current_script->GetScale(object, is_global);
 }
 
 void ModuleScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
 {
-	ns_importer->LookAt(object, vector);
+	ns_importer->current_script->LookAt(object, vector);
 }
 
 void ModuleScriptImporter::SetRectPosition(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetRectPosition(object, vector3);
+	ns_importer->current_script->SetRectPosition(object, vector3);
 }
 
 MonoObject * ModuleScriptImporter::GetRectPosition(MonoObject * object)
 {
-	return ns_importer->GetRectPosition(object);
+	return ns_importer->current_script->GetRectPosition(object);
 }
 
 void ModuleScriptImporter::SetRectRotation(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetRectRotation(object, vector3);
+	ns_importer->current_script->SetRectRotation(object, vector3);
 }
 
 MonoObject * ModuleScriptImporter::GetRectRotation(MonoObject * object)
 {
-	return ns_importer->GetRectRotation(object);
+	return ns_importer->current_script->GetRectRotation(object);
 }
 
 void ModuleScriptImporter::SetRectSize(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetRectSize(object, vector3);
+	ns_importer->current_script->SetRectSize(object, vector3);
 }
 
 MonoObject * ModuleScriptImporter::GetRectSize(MonoObject * object)
 {
-	return ns_importer->GetRectSize(object);
+	return ns_importer->current_script->GetRectSize(object);
 }
 
 void ModuleScriptImporter::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetRectAnchor(object, vector3);
+	ns_importer->current_script->SetRectAnchor(object, vector3);
 }
 
 MonoObject * ModuleScriptImporter::GetRectAnchor(MonoObject * object)
 {
-	return ns_importer->GetRectAnchor(object);
+	return ns_importer->current_script->GetRectAnchor(object);
 }
 
 mono_bool ModuleScriptImporter::GetOnClick(MonoObject * object)
 {
-	return ns_importer->GetOnClick(object);
+	return ns_importer->current_script->GetOnClick(object);
 }
 
 mono_bool ModuleScriptImporter::GetOnClickDown(MonoObject * object)
 {
-	return ns_importer->GetOnClickDown(object);
+	return ns_importer->current_script->GetOnClickDown(object);
 }
 
 mono_bool ModuleScriptImporter::GetOnClickUp(MonoObject * object)
 {
-	return ns_importer->GetOnClickUp(object);
+	return ns_importer->current_script->GetOnClickUp(object);
 }
 
 mono_bool ModuleScriptImporter::GetOnMouseEnter(MonoObject * object)
 {
-	return ns_importer->GetOnMouseEnter(object);
+	return ns_importer->current_script->GetOnMouseEnter(object);
 }
 
 mono_bool ModuleScriptImporter::GetOnMouseOver(MonoObject * object)
 {
-	return ns_importer->GetOnMouseOver(object);
+	return ns_importer->current_script->GetOnMouseOver(object);
 }
 
 mono_bool ModuleScriptImporter::GetOnMouseOut(MonoObject * object)
 {
-	return ns_importer->GetOnMouseOut(object);
+	return ns_importer->current_script->GetOnMouseOut(object);
 }
 
 void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
 {
-	return ns_importer->SetText(object, text);
+	return ns_importer->current_script->SetText(object, text);
 }
 
 MonoString* ModuleScriptImporter::GetText(MonoObject * object)
 {
-	return ns_importer->GetText(object);
+	return ns_importer->current_script->GetText(object);
 }
 
 void ModuleScriptImporter::SetPercentageProgress(MonoObject * object, float progress)
 {
-	ns_importer->SetPercentageProgress(object, progress);
+	ns_importer->current_script->SetPercentageProgress(object, progress);
 }
 
 float ModuleScriptImporter::GetPercentageProgress(MonoObject * object)
 {
-	return ns_importer->GetPercentageProgress(object);
+	return ns_importer->current_script->GetPercentageProgress(object);
 }
 
 void ModuleScriptImporter::AddEntity(MonoObject * object, MonoObject * game_object)
 {
-	ns_importer->AddEntity(object, game_object);
+	ns_importer->current_script->AddEntity(object, game_object);
 }
 
 void ModuleScriptImporter::RemoveEntity(MonoObject * object, MonoObject * game_object)
 {
-	ns_importer->RemoveEntity(object, game_object);
+	ns_importer->current_script->RemoveEntity(object, game_object);
 }
 
 void ModuleScriptImporter::RemoveAllEntities(MonoObject * object)
 {
-	ns_importer->RemoveAllEntities(object);
+	ns_importer->current_script->RemoveAllEntities(object);
 }
 
 void ModuleScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_object, MonoString * marker_name)
 {
-	ns_importer->SetMarkerToEntity(object, game_object, marker_name);
+	ns_importer->current_script->SetMarkerToEntity(object, game_object, marker_name);
 }
 
 void ModuleScriptImporter::AddString(MonoString * name, MonoString * string)
 {
-	ns_importer->AddString(name, string);
+	ns_importer->current_script->AddString(name, string);
 }
 
 void ModuleScriptImporter::AddInt(MonoString * name, int value)
 {
-	ns_importer->AddInt(name, value);
+	ns_importer->current_script->AddInt(name, value);
 }
 
 void ModuleScriptImporter::AddFloat(MonoString * name, float value)
 {
-	ns_importer->AddFloat(name, value);
+	ns_importer->current_script->AddFloat(name, value);
 }
 
 MonoString* ModuleScriptImporter::GetString(MonoString * name)
 {
-	return ns_importer->GetString(name);
+	return ns_importer->current_script->GetString(name);
 }
 
 int ModuleScriptImporter::GetInt(MonoString * name)
 {
-	return ns_importer->GetInt(name);
+	return ns_importer->current_script->GetInt(name);
 }
 
 float ModuleScriptImporter::GetFloat(MonoString * name)
 {
-	return ns_importer->GetFloat(name);
+	return ns_importer->current_script->GetFloat(name);
 }
 
 MonoObject * ModuleScriptImporter::GetForward(MonoObject * object)
 {
-	return ns_importer->GetForward(object);
+	return ns_importer->current_script->GetForward(object);
 }
 
 MonoObject * ModuleScriptImporter::GetRight(MonoObject * object)
 {
-	return ns_importer->GetRight(object);
+	return ns_importer->current_script->GetRight(object);
 }
 
 MonoObject * ModuleScriptImporter::GetUp(MonoObject * object)
 {
-	return ns_importer->GetUp(object);
+	return ns_importer->current_script->GetUp(object);
 }
 
 void ModuleScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, float angle)
 {
-	ns_importer->RotateAroundAxis(object, axis, angle);
+	ns_importer->current_script->RotateAroundAxis(object, axis, angle);
 }
 
 void ModuleScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetIncrementalRotation(object, vector3);
+	ns_importer->current_script->SetIncrementalRotation(object, vector3);
 }
 
 void ModuleScriptImporter::StartFactory(MonoObject * object)
 {
-	ns_importer->StartFactory(object);
+	ns_importer->current_script->StartFactory(object);
 }
 
 MonoObject * ModuleScriptImporter::Spawn(MonoObject * object)
 {
-	return ns_importer->Spawn(object);
+	return ns_importer->current_script->Spawn(object);
 }
 
 void ModuleScriptImporter::SetSpawnPosition(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetSpawnPosition(object, vector3);
+	ns_importer->current_script->SetSpawnPosition(object, vector3);
 }
 
 void ModuleScriptImporter::SetSpawnRotation(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetSpawnRotation(object, vector3);
+	ns_importer->current_script->SetSpawnRotation(object, vector3);
 }
 
 void ModuleScriptImporter::SetSpawnScale(MonoObject * object, MonoObject * vector3)
 {
-	ns_importer->SetSpawnScale(object, vector3);
+	ns_importer->current_script->SetSpawnScale(object, vector3);
 }
 
 MonoObject * ModuleScriptImporter::ToQuaternion(MonoObject * object)
 {
-	return ns_importer->ToQuaternion(object);
+	return ns_importer->current_script->ToQuaternion(object);
 }
 
 MonoObject * ModuleScriptImporter::ToEulerAngles(MonoObject * object)
 {
-	return ns_importer->ToEulerAngles(object);
+	return ns_importer->current_script->ToEulerAngles(object);
 }
 
 void ModuleScriptImporter::SetTimeScale(MonoObject * object, float scale)
 {
-	ns_importer->SetTimeScale(object, scale);
+	ns_importer->current_script->SetTimeScale(object, scale);
 }
 
 float ModuleScriptImporter::GetTimeScale()
 {
-	return ns_importer->GetTimeScale();
+	return ns_importer->current_script->GetTimeScale();
 }
 
 float ModuleScriptImporter::GetDeltaTime()
 {
-	return ns_importer->GetDeltaTime();
+	return ns_importer->current_script->GetDeltaTime();
 }
 
 float ModuleScriptImporter::GetTimeSinceStart()
 {
-	return ns_importer->GetTimeSinceStart();
+	return ns_importer->current_script->GetTimeSinceStart();
 }
 
 mono_bool ModuleScriptImporter::IsKeyDown(MonoString * key_name)
 {
-	return ns_importer->IsKeyDown(key_name);
+	return ns_importer->current_script->IsKeyDown(key_name);
 }
 
 mono_bool ModuleScriptImporter::IsKeyUp(MonoString * key_name)
 {
-	return ns_importer->IsKeyUp(key_name);
+	return ns_importer->current_script->IsKeyUp(key_name);
 }
 
 mono_bool ModuleScriptImporter::IsKeyRepeat(MonoString * key_name)
 {
-	return ns_importer->IsKeyRepeat(key_name);
+	return ns_importer->current_script->IsKeyRepeat(key_name);
 }
 
 mono_bool ModuleScriptImporter::IsMouseDown(int mouse_button)
 {
-	return ns_importer->IsMouseDown(mouse_button);
+	return ns_importer->current_script->IsMouseDown(mouse_button);
 }
 
 mono_bool ModuleScriptImporter::IsMouseUp(int mouse_button)
 {
-	return ns_importer->IsMouseUp(mouse_button);
+	return ns_importer->current_script->IsMouseUp(mouse_button);
 }
 
 mono_bool ModuleScriptImporter::IsMouseRepeat(int mouse_button)
 {
-	return ns_importer->IsMouseRepeat(mouse_button);
+	return ns_importer->current_script->IsMouseRepeat(mouse_button);
 }
 
 MonoObject * ModuleScriptImporter::GetMousePosition()
 {
-	return ns_importer->GetMousePosition();
+	return ns_importer->current_script->GetMousePosition();
 }
 
 int ModuleScriptImporter::GetMouseXMotion()
 {
-	return ns_importer->GetMouseXMotion();
+	return ns_importer->current_script->GetMouseXMotion();
 }
 
 int ModuleScriptImporter::GetMouseYMotion()
 {
-	return ns_importer->GetMouseYMotion();
+	return ns_importer->current_script->GetMouseYMotion();
 }
 
 int ModuleScriptImporter::GetControllerJoystickMove(int pad, MonoString * axis)
 {
-	return ns_importer->GetControllerJoystickMove(pad, axis);
+	return ns_importer->current_script->GetControllerJoystickMove(pad, axis);
 }
 
 int ModuleScriptImporter::GetControllerButton(int pad, MonoString * button)
 {
-	return ns_importer->GetControllerButton(pad, button);
+	return ns_importer->current_script->GetControllerButton(pad, button);
 }
 
 void ModuleScriptImporter::RumbleController(int pad, float strength, int ms)
 {
-	ns_importer->RumbleController(pad, strength, ms);
+	ns_importer->current_script->RumbleController(pad, strength, ms);
 }
 
 void ModuleScriptImporter::Log(MonoObject * object)
@@ -1286,306 +1286,306 @@ void ModuleScriptImporter::Error(MonoObject * object)
 
 bool ModuleScriptImporter::IsMuted()
 {
-	return ns_importer->IsMuted();
+	return ns_importer->current_script->IsMuted();
 }
 
 void ModuleScriptImporter::SetMute(bool set)
 {
-	ns_importer->SetMute(set);
+	ns_importer->current_script->SetMute(set);
 }
 
 int ModuleScriptImporter::GetVolume() 
 {
-	return ns_importer->GetVolume();
+	return ns_importer->current_script->GetVolume();
 }
 
 int ModuleScriptImporter::GetPitch()
 {
-	return ns_importer->GetPitch();
+	return ns_importer->current_script->GetPitch();
 }
 
 void ModuleScriptImporter::SetPitch(int pitch)
 {
-	ns_importer->SetPitch(pitch);
+	ns_importer->current_script->SetPitch(pitch);
 }
 
 void ModuleScriptImporter::SetRTPCvalue(MonoString* name, float value)
 {
-	ns_importer->SetRTPCvalue(name, value);
+	ns_importer->current_script->SetRTPCvalue(name, value);
 }
 
 bool ModuleScriptImporter::Play(MonoObject * object, MonoString * name)
 {
-	return ns_importer->Play(object, name);
+	return ns_importer->current_script->Play(object, name);
 }
 
 bool ModuleScriptImporter::Stop(MonoObject * object, MonoString * name)
 {
-	return ns_importer->Stop(object, name);
+	return ns_importer->current_script->Stop(object, name);
 }
 
 bool ModuleScriptImporter::Send(MonoObject * object, MonoString * name)
 {
-	return ns_importer->Send(object, name);
+	return ns_importer->current_script->Send(object, name);
 }
 
 bool ModuleScriptImporter::SetMyRTPCvalue(MonoObject * object, MonoString* name, float value)
 {
-	return ns_importer->SetMyRTPCvalue(object, name, value);
+	return ns_importer->current_script->SetMyRTPCvalue(object, name, value);
 }
 
 void ModuleScriptImporter::SetState(MonoObject* object, MonoString* group, MonoString* state)
 {
-	ns_importer->SetState(object, group, state);
+	ns_importer->current_script->SetState(object, group, state);
 }
 
 void ModuleScriptImporter::SetVolume(MonoObject* object, int value)
 {
-	ns_importer->SetVolume(object, value);
+	ns_importer->current_script->SetVolume(object, value);
 }
 
 void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
 {
-	ns_importer->PlayEmmiter(object); 
+	ns_importer->current_script->PlayEmmiter(object); 
 }
 void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 {
-	ns_importer->StopEmmiter(object);
+	ns_importer->current_script->StopEmmiter(object);
 }
 
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
 {
-	ns_importer->SetLinearVelocity(object, x, y, z);
+	ns_importer->current_script->SetLinearVelocity(object, x, y, z);
 }
 
 void ModuleScriptImporter::SetAngularVelocity(MonoObject * object, float x, float y, float z)
 {
-	ns_importer->SetAngularVelocity(object, x, y, z);
+	ns_importer->current_script->SetAngularVelocity(object, x, y, z);
 }
 
 void ModuleScriptImporter::AddTorque(MonoObject * object, float x, float y, float z, int force_type)
 {
-	ns_importer->AddTorque(object, x, y, z, force_type);
+	ns_importer->current_script->AddTorque(object, x, y, z, force_type);
 }
 
 void ModuleScriptImporter::DisableCollider(MonoObject * object, int index)
 {
-	ns_importer->DisableCollider(object, index);
+	ns_importer->current_script->DisableCollider(object, index);
 }
 
 void ModuleScriptImporter::DisableAllColliders(MonoObject * object)
 {
-	ns_importer->DisableAllColliders(object);
+	ns_importer->current_script->DisableAllColliders(object);
 }
 
 void ModuleScriptImporter::EnableCollider(MonoObject * object, int index)
 {
-	ns_importer->EnableCollider(object, index);
+	ns_importer->current_script->EnableCollider(object, index);
 }
 
 void ModuleScriptImporter::EnableAllColliders(MonoObject * object)
 {
-	ns_importer->EnableAllColliders(object);
+	ns_importer->current_script->EnableAllColliders(object);
 }
 
 bool ModuleScriptImporter::IsKinematic(MonoObject * object)
 {
-	return ns_importer->IsKinematic(object);
+	return ns_importer->current_script->IsKinematic(object);
 }
 
 bool ModuleScriptImporter::IsTransformGO(MonoObject * object)
 {
-	return ns_importer->IsTransformGO(object);
+	return ns_importer->current_script->IsTransformGO(object);
 }
 
 void ModuleScriptImporter::SetTransformGO(MonoObject * object, bool transform_go)
 {
-	ns_importer->SetTransformGO(object, transform_go);
+	ns_importer->current_script->SetTransformGO(object, transform_go);
 }
 
 void ModuleScriptImporter::SetKinematic(MonoObject * object, bool kinematic)
 {
-	ns_importer->SetKinematic(object, kinematic);
+	ns_importer->current_script->SetKinematic(object, kinematic);
 }
 
 void ModuleScriptImporter::SetRBPosition(MonoObject * object, float x, float y, float z)
 {
-	ns_importer->SetRBPosition(object, x, y, z);
+	ns_importer->current_script->SetRBPosition(object, x, y, z);
 }
 
 void ModuleScriptImporter::SetRBRotation(MonoObject * object, float x, float y, float z)
 {
-	ns_importer->SetRBRotation(object, x, y, z);
+	ns_importer->current_script->SetRBRotation(object, x, y, z);
 }
 
 mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoObject * object, MonoString * name)
 {
-	return ns_importer->GetBlackboardVariableB(object, name);
+	return ns_importer->current_script->GetBlackboardVariableB(object, name);
 }
 
 float ModuleScriptImporter::GetBlackboardVariableF(MonoObject * object, MonoString * name)
 {
-	return ns_importer->GetBlackboardVariableF(object, name);
+	return ns_importer->current_script->GetBlackboardVariableF(object, name);
 }
 
 int ModuleScriptImporter::GetNumGoals(MonoObject * object)
 {
-	return ns_importer->GetNumGoals(object);
+	return ns_importer->current_script->GetNumGoals(object);
 }
 
 MonoString * ModuleScriptImporter::GetGoalName(MonoObject * object, int index)
 {
-	return ns_importer->GetGoalName(object, index);
+	return ns_importer->current_script->GetGoalName(object, index);
 }
 
 MonoString * ModuleScriptImporter::GetGoalConditionName(MonoObject * object, int index)
 {
-	return ns_importer->GetGoalConditionName(object, index);
+	return ns_importer->current_script->GetGoalConditionName(object, index);
 }
 
 void ModuleScriptImporter::SetGoalPriority(MonoObject * object, int index, int priority)
 {
-	ns_importer->SetGoalPriority(object, index, priority);
+	ns_importer->current_script->SetGoalPriority(object, index, priority);
 }
 
 int ModuleScriptImporter::GetGoalPriority(MonoObject * object, int index)
 {
-	return ns_importer->GetGoalPriority(object, index);
+	return ns_importer->current_script->GetGoalPriority(object, index);
 }
 
 void ModuleScriptImporter::CompleteAction(MonoObject * object)
 {
-	ns_importer->CompleteAction(object);
+	ns_importer->current_script->CompleteAction(object);
 }
 
 void ModuleScriptImporter::FailAction(MonoObject * object)
 {
-	ns_importer->FailAction(object);
+	ns_importer->current_script->FailAction(object);
 }
 
 void ModuleScriptImporter::SetBlackboardVariable(MonoObject * object, MonoString * name, float value)
 {
-	ns_importer->SetBlackboardVariable(object, name, value);
+	ns_importer->current_script->SetBlackboardVariable(object, name, value);
 }
 
 void ModuleScriptImporter::SetBlackboardVariableB(MonoObject * object, MonoString * name, bool value)
 {
-	ns_importer->SetBlackboardVariable(object, name, value);
+	ns_importer->current_script->SetBlackboardVariable(object, name, value);
 }
 
 int ModuleScriptImporter::RandomInt(MonoObject * object)
 {
-	return ns_importer->RandomInt(object);
+	return ns_importer->current_script->RandomInt(object);
 }
 
 float ModuleScriptImporter::RandomFloat(MonoObject * object)
 {
-	return ns_importer->RandomFloat(object);
+	return ns_importer->current_script->RandomFloat(object);
 }
 
 float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
 {
-	return ns_importer->RandomRange(object, min, max);
+	return ns_importer->current_script->RandomRange(object, min, max);
 }
 
 void ModuleScriptImporter::LoadScene(MonoString * scene_name)
 {
-	ns_importer->LoadScene(scene_name);
+	ns_importer->current_script->LoadScene(scene_name);
 }
 
 void ModuleScriptImporter::Quit()
 {
-	ns_importer->Quit();
+	ns_importer->current_script->Quit();
 }
 
 void ModuleScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
 {
-	ns_importer->SetBoolField(object, field_name, value);
+	ns_importer->current_script->SetBoolField(object, field_name, value);
 }
 
 bool ModuleScriptImporter::GetBoolField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetBoolField(object, field_name);
+	return ns_importer->current_script->GetBoolField(object, field_name);
 }
 
 void ModuleScriptImporter::SetIntField(MonoObject * object, MonoString * field_name, int value)
 {
-	ns_importer->SetIntField(object, field_name, value);
+	ns_importer->current_script->SetIntField(object, field_name, value);
 }
 
 int ModuleScriptImporter::GetIntField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetIntField(object, field_name);
+	return ns_importer->current_script->GetIntField(object, field_name);
 }
 
 void ModuleScriptImporter::SetFloatField(MonoObject * object, MonoString * field_name, float value)
 {
-	ns_importer->SetFloatField(object, field_name, value);
+	ns_importer->current_script->SetFloatField(object, field_name, value);
 }
 
 float ModuleScriptImporter::GetFloatField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetFloatField(object, field_name);
+	return ns_importer->current_script->GetFloatField(object, field_name);
 }
 
 void ModuleScriptImporter::SetDoubleField(MonoObject * object, MonoString * field_name, double value)
 {
-	ns_importer->SetDoubleField(object, field_name, value);
+	ns_importer->current_script->SetDoubleField(object, field_name, value);
 }
 
 double ModuleScriptImporter::GetDoubleField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetDoubleField(object, field_name);
+	return ns_importer->current_script->GetDoubleField(object, field_name);
 }
 
 void ModuleScriptImporter::SetStringField(MonoObject * object, MonoString * field_name, MonoString * value)
 {
-	ns_importer->SetStringField(object, field_name, value);
+	ns_importer->current_script->SetStringField(object, field_name, value);
 }
 
 MonoString * ModuleScriptImporter::GetStringField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetStringField(object, field_name);
+	return ns_importer->current_script->GetStringField(object, field_name);
 }
 
 void ModuleScriptImporter::SetGameObjectField(MonoObject * object, MonoString * field_name, MonoObject * value)
 {
-	ns_importer->SetGameObjectField(object, field_name, value);
+	ns_importer->current_script->SetGameObjectField(object, field_name, value);
 }
 
 MonoObject * ModuleScriptImporter::GetGameObjectField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetGameObjectField(object, field_name);
+	return ns_importer->current_script->GetGameObjectField(object, field_name);
 }
 
 void ModuleScriptImporter::SetVector3Field(MonoObject * object, MonoString * field_name, MonoObject * value)
 {
-	ns_importer->SetVector3Field(object, field_name, value);
+	ns_importer->current_script->SetVector3Field(object, field_name, value);
 }
 
 MonoObject * ModuleScriptImporter::GetVector3Field(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetVector3Field(object, field_name);
+	return ns_importer->current_script->GetVector3Field(object, field_name);
 }
 
 void ModuleScriptImporter::SetQuaternionField(MonoObject * object, MonoString * field_name, MonoObject * value)
 {
-	ns_importer->SetQuaternionField(object, field_name, value);
+	ns_importer->current_script->SetQuaternionField(object, field_name, value);
 }
 
 MonoObject * ModuleScriptImporter::GetQuaternionField(MonoObject * object, MonoString * field_name)
 {
-	return ns_importer->GetQuaternionField(object, field_name);
+	return ns_importer->current_script->GetQuaternionField(object, field_name);
 }
 
 void ModuleScriptImporter::CallFunction(MonoObject * object, MonoString * function_name)
 {
-	ns_importer->CallFunction(object, function_name);
+	ns_importer->current_script->CallFunction(object, function_name);
 }
 
 MonoObject * ModuleScriptImporter::LoadPrefab(MonoString* prefab_name)
 {
-	return ns_importer->LoadPrefab(prefab_name);
+	return ns_importer->current_script->LoadPrefab(prefab_name);
 }
 
 
