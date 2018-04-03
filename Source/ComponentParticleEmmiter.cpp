@@ -261,7 +261,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	if (parent_transform->dirty)
+	if (parent_transform->AnyDirty())
 	{
 		//Position increment
 		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();

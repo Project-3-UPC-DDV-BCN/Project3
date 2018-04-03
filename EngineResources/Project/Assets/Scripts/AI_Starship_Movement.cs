@@ -1,6 +1,6 @@
 using TheEngine;
 using TheEngine.TheConsole;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 
 // READ PLS
 
@@ -171,7 +171,8 @@ public class Ai_Starship_Movement {
 
 	void GetNewTarget() {
     	TheGameObject[] ships_in_scene = TheGameObject.GetSceneGameObjects();
-		List<TheGameObject> ships_in_scene_list = new List<TheGameObject>();
+		target = ships_in_scene[(int)TheRandom.RandomRange(2,5)];
+		/*List<TheGameObject> ships_in_scene_list = new List<TheGameObject>();
         int nship = 0;
         foreach (TheGameObject go in ships_in_scene)
         {
@@ -193,7 +194,7 @@ public class Ai_Starship_Movement {
 					target = ship;
 				}
 			}
-		}
+		}*/
 	}
 
 	TheVector3 roundingVector(TheVector3 v) {

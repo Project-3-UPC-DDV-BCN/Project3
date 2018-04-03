@@ -31,7 +31,8 @@ public class XWingDestruction {
 	
 	void Update ()
 	{
-		if(need_boom == true && exploted == false)
+		//if(need_boom == true && exploted == false)
+		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{
 
             TheGameObject current = TheGameObject.Self; 
@@ -105,7 +106,7 @@ public class XWingDestruction {
 			if(invert >= 15) 
 				direction *= -1; 
 
-			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
+			//piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
 
 			float dest_factor = TheRandom.RandomRange(1,50); 
 
