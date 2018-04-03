@@ -1909,7 +1909,7 @@ MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 	}
 	else
 	{
-		CONSOLE_ERROR("Find: Cannot find gameobject %s", s_name);
+		CONSOLE_WARNING("Find: Cannot find gameobject %s", s_name);
 	}
 
 	return nullptr;
@@ -1929,7 +1929,7 @@ MonoArray * NSScriptImporter::GetSceneGameObjects(MonoObject * object)
 			for (GameObject* go : objects)
 			{
 				bool exist = false;
-				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 				{
 					if (it->second == go)
 					{
@@ -4588,9 +4588,10 @@ MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
 	const char* name = mono_string_to_utf8(prefab_name);
 
 	Prefab* prefab = App->resources->GetPrefab(name);
-	if (prefab)
+	if (prefab != nullptr)
 	{
-		GameObject* go = prefab->GetRootGameObject();
+		GameObject* go = App->scene->LoadPrefabToScene(prefab);
+
 		if (go)
 		{
 			MonoObject* mono_object = GetMonoObjectFromGameObject(go);
@@ -4612,6 +4613,7 @@ MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
 				}
 			}
 		}
+		
 	}
 
 	return nullptr;

@@ -15,9 +15,14 @@ public class laser
 
 	void Start ()
 	{
+		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		
-		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
-		team = game_manager_scpt.GetStringField("team");
+		if(game_manager != null)
+			game_manager_scpt = game_manager.GetComponent<TheScript>(0);
+
+		if(game_manager_scpt != null)
+			team = game_manager_scpt.GetStringField("team");
+
         score_added = false; 
 
     }
@@ -54,21 +59,28 @@ public class laser
 			else
 				to_inc = 10; 
 			
-			enemy_properties_scpt.SetIntField("hp_inc", to_inc);
-			enemy_properties_scpt.CallFunction("SubstractHP"); 
-			enemy_properties_scpt.SetIntField("hp_inc", 0);
+			if(enemy_properties_scpt != null)
+			{
+				enemy_properties_scpt.SetIntField("hp_inc", to_inc);
+				enemy_properties_scpt.CallFunction("SubstractHP"); 
+				enemy_properties_scpt.SetIntField("hp_inc", 0);
+			
 
-            //Punish/Reward player if necessary 
-            if (enemy_properties_scpt.GetIntField("hp") <= 0 && score_added == false)
-            { 
-                int score_inc = GetScoreIncrementByHit(other_parent.tag);
+            	//Punish/Reward player if necessary 
+            	if (enemy_properties_scpt.GetIntField("hp") <= 0 && score_added == false)
+           		{ 
+                	int score_inc = GetScoreIncrementByHit(other_parent.tag);
+					
+					if(game_manager_scpt != null)
+					{					
+                		game_manager_scpt.SetIntField("score_to_inc", score_inc);
+                		game_manager_scpt.CallFunction("AddToScore");
+                		game_manager_scpt.SetIntField("score_to_inc", 0);
+					}
 
-                game_manager_scpt.SetIntField("score_to_inc", score_inc);
-                game_manager_scpt.CallFunction("AddToScore");
-                game_manager_scpt.SetIntField("score_to_inc", 0);
-
-                score_added = true; 
-            }
+                	score_added = true; 
+            	}
+			}
 			
 			TheGameObject.Self.SetActive(false); 
 			

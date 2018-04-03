@@ -4,7 +4,6 @@ using TheEngine.TheConsole;
 
 public class GameManager
 {
-
 	public TheGameObject show_gametime_go;
 	public TheGameObject show_score_go; 
 
@@ -36,10 +35,9 @@ public class GameManager
 	public TheGameObject slave1;
 	TheAudioSource slave1_audio;
 
-	//Ships managagement
-	List<TheGameObject> alliance_ships;
-    List<TheGameObject> empire_ships; 
-	TheGameObject ship_to_insert_tmp; 
+	public TheVector3 position_to_spawn = new TheVector3(0, 0, 0);
+	List<TheGameObject> alliance_ships = new List<TheGameObject>();
+    List<TheGameObject> empire_ships = new List<TheGameObject>(); 
 
 	void Init ()
 	{
@@ -71,7 +69,6 @@ public class GameManager
 			audio_source.Play("Play_Calm_song");
 			audio_source.SetVolume(calm_volume);
 		}
-		
 
 		if(slave1 != null)
 			slave1_audio = slave1.GetComponent<TheAudioSource>();
@@ -139,14 +136,16 @@ public class GameManager
 			if(slave1_audio != null)
 				slave1_audio.Stop("Play_Engine");
 
-			TheApplication.LoadScene("VS3-MainMenu");	
+			TheApplication.LoadScene("VS3 - MainMenu");	
 		}
 	}
 
 	void AddToScore()
 	{
 		score += score_to_inc;
-        show_score.Text = score.ToString();
+
+		if(show_score != null)
+       		show_score.Text = score.ToString();
     }
 
 
@@ -155,7 +154,8 @@ public class GameManager
 		if(score - score_to_inc > 0)
 			score -= score_to_inc;
 
-        show_score.Text = score.ToString(); 
+		if(show_score != null)
+       		show_score.Text = score.ToString(); 
 	}
 
 	string GetTimeFromSeconds(int seconds)
@@ -175,14 +175,37 @@ public class GameManager
 	}
 
 	void AddToAlliance()
-	{
-		alliance_ships.Add(ship_to_insert_tmp); 
+	{	
+		TheGameObject new_go = TheResources.LoadPrefab("AllianceShip");
+			
+		if(new_go != null)
+		{
+			TheTransform trans = new_go.GetComponent<TheTransform>();
+
+			if(trans != null)		
+			{	
+				trans.LocalPosition = position_to_spawn;
+			}
+
+			alliance_ships.Add(new_go);
+		}
 	}
 
 	void AddToEmpire()
 	{
-		empire_ships.Add(ship_to_insert_tmp); 
-	}
-
 	
+		TheGameObject new_go = TheResources.LoadPrefab("RebelsShip");
+			
+		if(new_go != null)
+		{
+			TheTransform trans = new_go.GetComponent<TheTransform>();
+
+			if(trans != null)		
+			{	
+				trans.LocalPosition = new TheVector3(position_to_spawn.x, position_to_spawn.y, position_to_spawn.z);
+			}
+
+			empire_ships.Add(new_go);
+		} 
+	}
 }

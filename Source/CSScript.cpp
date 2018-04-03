@@ -919,7 +919,6 @@ void CSScript::AddFieldsToMonoObjectList()
 
 	for (std::vector<ScriptField*>::iterator it = script_fields.begin(); it != script_fields.end(); it++)
 	{
-
 		if ((*it)->propertyType == ScriptField::GameObject)
 		{
 			GameObject* gameobject = GetGameObjectProperty((*it)->fieldName.c_str());

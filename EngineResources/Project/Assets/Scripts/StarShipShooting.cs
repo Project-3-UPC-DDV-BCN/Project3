@@ -47,38 +47,55 @@ public class StarShipShooting {
     public int weapon = 0; //SELECTED WEAPON
     bool cooling = false;
 
-    void Start () {
+    void Start () 
+	{
 		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+		
+		if(laser_factory != null)
+        	laser_factory.StartFactory();
 
-        laser_factory.StartFactory();
-		TheConsole.Log("Before Audio source");
 		audio_source = audio_emiter.GetComponent<TheAudioSource>();
-		if(audio_source == null) TheConsole.Log("no audio");
+		if(audio_source == null) 
+			TheConsole.Log("no audio");
+
         weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
-		if(weapons_bar == null) TheConsole.Log("no weapon bar");
+		if(weapons_bar == null) 
+			TheConsole.Log("no weapon bar");
+
         curr_overheat_inc = overheat_increment;
-		overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
-		if(overheat_bar_bar == null) TheConsole.Log("no overheat");
-		crosshair_2.SetActive(false);
-		weapon_icon_2.SetActive(false);
+	
+		if(overheat_bar_obj != null)
+			overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
+
+		if(overheat_bar_bar == null) 
+			TheConsole.Log("no overheat");
+
+		if(crosshair_1 != null)
+			crosshair_1.SetActive(true);
+
+		if(crosshair_2 != null)
+			crosshair_2.SetActive(false);
+
+		if(weapon_icon_2 != null)
+			weapon_icon_2.SetActive(false);
     }	
 
-	void Update () {
+	void Update () 
+	{
+		if(overheat_bar_bar != null)
+			overheat_bar_bar.PercentageProgress = overheat * 100;
 
-		//Update bar
-		overheat_bar_bar.PercentageProgress = overheat * 100;
-		//
 		if(timer <= 0 && !overheated)
 		{
 			if(TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000)
 			{
-
                 TheVector3 offset;
                 switch (weapon)
                 {
-                    case 0:
+                	case 0:
                         {
-                            curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
+						  	if(weapons_bar != null)
+                           		curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
 
                             if (used_left_laser)
                             {
@@ -93,45 +110,47 @@ public class StarShipShooting {
 
                                 used_left_laser = true;
                             }
-
-                            laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition/* + offset*/);
-
-                            //Calculate the rotation
-                           // TheVector3 Z = new TheVector3(0, 0, 1);
-                            TheVector3 ship_rot = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
-
-                            /*float prod = Z.x * ship_rot.x + Z.y * ship_rot.y + Z.z * ship_rot.z;
-                            float magnitude_prod = Z.Length * ship_rot.Length;
-
-                            float angle = TheMath.Acos(prod / magnitude_prod);
-
-                            /// get the axis of this rotation
-                            TheVector3 axis = TheVector3.CrossProduct(Z, ship_rot);*/
 							
-							TheConsole.Log("ship_rot" + ship_rot);
-
-                            //TheVector3 laser_rot = ().ToEulerAngles();// ship_rot + new TheVector3(0, 90, 0);
-
-                            //laser_factory.SetSpawnRotation(laser_rot);
-
-                            TheGameObject go = laser_factory.Spawn();
-
-
-							//laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
-				
-                            TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
-
-							if(go != null)
+							if(laser_factory != null && laser_spawner != null)
 							{
-								go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
-								TheVector3 laser_rot = (ship_rot.ToQuaternion() * go.GetComponent<TheTransform>().GlobalRotation.ToQuaternion()).ToEulerAngles();
-								go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
+                            	laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition/* + offset*/);
+
+                            	//Calculate the rotation
+                           		// TheVector3 Z = new TheVector3(0, 0, 1);
+                            	TheVector3 ship_rot = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
+
+                            	/*float prod = Z.x * ship_rot.x + Z.y * ship_rot.y + Z.z * ship_rot.z;
+                           		float magnitude_prod = Z.Length * ship_rot.Length;
+
+                            	float angle = TheMath.Acos(prod / magnitude_prod);
+
+                            	/// get the axis of this rotation
+                            	TheVector3 axis = TheVector3.CrossProduct(Z, ship_rot);*/
+							
+								TheConsole.Log("ship_rot" + ship_rot);
+
+                            	//TheVector3 laser_rot = ().ToEulerAngles();// ship_rot + new TheVector3(0, 90, 0);
+
+                            	//laser_factory.SetSpawnRotation(laser_rot);
+                           		TheGameObject go = laser_factory.Spawn();
+	
+
+								//laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
+                            	TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
+							
+								if(go != null)
+								{
+									go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+									TheVector3 laser_rot = (ship_rot.ToQuaternion() * go.GetComponent<TheTransform>().GlobalRotation.ToQuaternion()).ToEulerAngles();
+									go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
+								}
 							}
                        
 
                             timer = spawn_time;
-
-                            audio_source.Play("Play_shot");
+							
+							if(audio_source != null)
+                            	audio_source.Play("Play_shot");
 
                             //Add heat
                             overheat += curr_overheat_inc;
@@ -157,21 +176,25 @@ public class StarShipShooting {
 
             if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") < 20000 && weapon == 1)
             {
-                if(overheat>0.0f && !cooling)
+                if(overheat > 0.0f && !cooling)
                 {
                     TheVector3 offset = new TheVector3(0, 2, 0);
+					
+					if(laser_factory != null && laser_spawner != null)
+					{
+                    	laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
+	
+                   		TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
 
-                    laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
+                    	TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
 
-                    TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
+                   		laser_factory.SetSpawnScale(size);
 
-                    TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
+                    	TheGameObject go = laser_factory.Spawn();
 
-                    laser_factory.SetSpawnScale(size);
+                    	go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+					}
 
-                    TheGameObject go = laser_factory.Spawn();
-
-                    go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
                     overheat_timer = 0.0f;
                     cooling = true;
                 }
@@ -214,23 +237,31 @@ public class StarShipShooting {
             weapon %= num_weapons;
 
             TheVector3 size = new TheVector3(1, 1, 1);
-
-            laser_factory.SetSpawnScale(size);
-			if(crosshair_1.IsActive())
+			
+			if(laser_factory != null)
+            	laser_factory.SetSpawnScale(size);
+			
+			if(crosshair_1 != null && crosshair_2 != null && crosshair_1.IsActive())
 			{
 				crosshair_1.SetActive(false);
 				crosshair_2.SetActive(true);
+							
+				if(weapon_icon_1 != null)
+					weapon_icon_1.SetActive(false);
 
-				weapon_icon_1.SetActive(false);
-				weapon_icon_2.SetActive(true);
+				if(weapon_icon_2 != null)
+					weapon_icon_2.SetActive(true);
 			}
-			else
+			else if(crosshair_1 != null && crosshair_2 != null)
 			{
 				crosshair_1.SetActive(true);
 				crosshair_2.SetActive(false);
 
-				weapon_icon_1.SetActive(true);
-				weapon_icon_2.SetActive(false);
+				if(weapon_icon_1 != null)
+					weapon_icon_1.SetActive(true);
+
+				if(weapon_icon_2 != null)
+					weapon_icon_2.SetActive(false);
 			}
         }
     }
