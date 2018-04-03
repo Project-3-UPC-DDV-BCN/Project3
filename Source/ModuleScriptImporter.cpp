@@ -1483,9 +1483,9 @@ float ModuleScriptImporter::RandomFloat(MonoObject * object)
 	return ns_importer->RandomFloat(object);
 }
 
-float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
+float ModuleScriptImporter::RandomRange(float min, float max)
 {
-	return ns_importer->RandomRange(object, min, max);
+	return ns_importer->RandomRange(min, max);
 }
 
 void ModuleScriptImporter::LoadScene(MonoString * scene_name)
@@ -4117,9 +4117,9 @@ float NSScriptImporter::RandomFloat(MonoObject * object)
 	return App->RandomNumber().Float();
 }
 
-float NSScriptImporter::RandomRange(MonoObject * object, float min, float max)
+float NSScriptImporter::RandomRange(float min, float max)
 {
-	return App->RandomNumber().FloatIncl(min, max);;
+	return App->RandomNumber().FloatIncl(min, max);
 }
 
 

@@ -890,6 +890,7 @@ MonoMethod * CSScript::GetFunction(const char * functionName, int parameters_cou
 
 	if (mono_class != nullptr)
 	{
+		const char* name = mono_class_get_name(mono_class);
 		method = mono_class_get_method_from_name(mono_class, functionName, parameters_count);
 	}
 

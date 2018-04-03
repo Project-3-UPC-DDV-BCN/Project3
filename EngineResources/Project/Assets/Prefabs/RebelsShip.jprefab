@@ -1,11 +1,11 @@
 {
-    "UUID": "1365864568",
+    "UUID": "1083886816",
     "assets_path": "./Project/Assets/Prefabs/RebelsShip.jprefab",
     "library_path": "./Project/Library/Prefabs/RebelsShip.jprefab",
     "prefab_name": "RebelsShip",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "133715921",
+        "UUID": "856144803",
         "Name": "RebelsShip",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -51,10 +51,10 @@
                     "UUID": "564736164",
                     "int_fields_count": "1",
                     "double_fields_count": "0",
-                    "float_fields_count": "0",
+                    "float_fields_count": "3",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
+                    "gameobject_fields_count": "2",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -65,10 +65,32 @@
                         }
                     },
                     "double_fields": {},
-                    "float_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "0.000000"
+                        },
+                        "field_1": {
+                            "field_name": "move_speed",
+                            "field_value": "300.000000"
+                        },
+                        "field_2": {
+                            "field_name": "rotation_speed",
+                            "field_value": "60.000000"
+                        }
+                    },
                     "bool_fields": {},
                     "string_fields": {},
-                    "gameobject_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "center_object",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "force_target",
+                            "field_value": "0"
+                        }
+                    },
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -80,7 +102,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "94526196",
+        "UUID": "101223531",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -98,9 +120,9 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_Y": "1.000000",
                     "value_Z": "0.000000",
-                    "value_W": "1.000000"
+                    "value_W": "-0.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -128,13 +150,13 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "133715921",
+        "ParentID": "856144803",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1118397308",
-        "Name": "Laser_Spawner_L",
+        "UUID": "1389605944",
+        "Name": "Laser_Spawner_L(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -162,13 +184,13 @@
                 }
             }
         },
-        "ParentID": "133715921",
+        "ParentID": "856144803",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "476907342",
-        "Name": "Laser_Spawner_R",
+        "UUID": "1617129874",
+        "Name": "Laser_Spawner_R(10)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -196,7 +218,7 @@
                 }
             }
         },
-        "ParentID": "133715921",
+        "ParentID": "856144803",
         "IsRoot": "0",
         "IsStatic": "0"
     }

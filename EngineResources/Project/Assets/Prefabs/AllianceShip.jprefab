@@ -1,11 +1,11 @@
 {
-    "UUID": "759203278",
+    "UUID": "1158505632",
     "assets_path": "./Project/Assets/Prefabs/AllianceShip.jprefab",
     "library_path": "./Project/Library/Prefabs/AllianceShip.jprefab",
     "prefab_name": "AllianceShip",
     "GameObjects_Count": "9",
     "GameObject_0": {
-        "UUID": "476414027",
+        "UUID": "1129791446",
         "Name": "AllianceShip",
         "Tag": "XWING",
         "Layer": "Default",
@@ -51,10 +51,10 @@
                     "UUID": "916529731",
                     "int_fields_count": "1",
                     "double_fields_count": "0",
-                    "float_fields_count": "0",
+                    "float_fields_count": "3",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "1",
+                    "gameobject_fields_count": "2",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -65,11 +65,28 @@
                         }
                     },
                     "double_fields": {},
-                    "float_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "0.000000"
+                        },
+                        "field_1": {
+                            "field_name": "move_speed",
+                            "field_value": "300.000000"
+                        },
+                        "field_2": {
+                            "field_name": "rotation_speed",
+                            "field_value": "60.000000"
+                        }
+                    },
                     "bool_fields": {},
                     "string_fields": {},
                     "gameobject_fields": {
                         "field_0": {
+                            "field_name": "center_object",
+                            "field_value": "0"
+                        },
+                        "field_1": {
                             "field_name": "force_target",
                             "field_value": "0"
                         }
@@ -85,7 +102,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "536045852",
+        "UUID": "1326723297",
         "Name": "Xwing(12)",
         "Tag": "XWING",
         "Layer": "Default",
@@ -102,10 +119,10 @@
                     "value_Z": "8.870169"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "-0.000000",
-                    "value_W": "-1.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "-0.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -186,12 +203,12 @@
                 }
             }
         },
-        "ParentID": "476414027",
+        "ParentID": "1129791446",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1077444526",
+        "UUID": "236035673",
         "Name": "Laser_Spawner_L(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -220,12 +237,12 @@
                 }
             }
         },
-        "ParentID": "476414027",
+        "ParentID": "1129791446",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1161554936",
+        "UUID": "494723089",
         "Name": "Laser_Spawner_R(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -254,12 +271,12 @@
                 }
             }
         },
-        "ParentID": "476414027",
+        "ParentID": "1129791446",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "824504177",
+        "UUID": "1773448683",
         "Name": "Body(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -307,12 +324,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "536045852",
+        "ParentID": "1326723297",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "567422607",
+        "UUID": "1845958525",
         "Name": "BotRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -360,12 +377,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "536045852",
+        "ParentID": "1326723297",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1567635382",
+        "UUID": "1319614310",
         "Name": "BotLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -413,12 +430,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "536045852",
+        "ParentID": "1326723297",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "929022388",
+        "UUID": "1369974203",
         "Name": "TopRight_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -466,12 +483,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "536045852",
+        "ParentID": "1326723297",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1555194602",
+        "UUID": "635289205",
         "Name": "TopLeft_Wing(12)",
         "Tag": "Default",
         "Layer": "Default",
@@ -519,7 +536,7 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "536045852",
+        "ParentID": "1326723297",
         "IsRoot": "0",
         "IsStatic": "0"
     }
