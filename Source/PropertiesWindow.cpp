@@ -1812,7 +1812,7 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
 		{
-			comp_collider->GetRigidBody()->RemoveShape(*comp_collider->GetColliderShape());
+			//comp_collider->GetRigidBody()->RemoveShape(*comp_collider->GetColliderShape());
 			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_collider->GetGameObject(), comp_collider));
 			comp_collider = nullptr;
 			return;

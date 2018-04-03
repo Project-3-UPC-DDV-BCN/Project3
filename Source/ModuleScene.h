@@ -65,7 +65,7 @@ public:
 	bool LoadPrefab(std::string path, std::string extension, Data& data, bool destroy_scene = false, bool duplicate = false, std::list<GameObject*>& new_gos = std::list<GameObject*>());
 	void SavePrefab(std::list<GameObject*> gos, std::string path, std::string extension, Data data);
 
-	void LoadPrefabToScene(Prefab* prefab);
+	GameObject* LoadPrefabToScene(Prefab* prefab);
 	void CreatePrefab(GameObject* gameobject, std::string assets_path, std::string library_path);
 
 	void MoveGameObjectBack(GameObject* go);

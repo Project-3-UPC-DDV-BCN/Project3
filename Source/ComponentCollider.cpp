@@ -112,7 +112,7 @@ ComponentCollider::~ComponentCollider()
 	//collider_material->release();
 	//collider_shape->release();
 
-	if (!rb_is_released)
+	if (rigidbody != nullptr && !rb_is_released)
 	{
 		rigidbody->RemoveShape(*GetColliderShape());
 	}

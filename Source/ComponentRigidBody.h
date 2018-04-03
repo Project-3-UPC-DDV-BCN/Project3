@@ -89,7 +89,7 @@ public:
 private:
 	bool use_gravity;
 	bool is_kinematic;
-	physx::PxRigidDynamic* rigidbody;
+	physx::PxRigidDynamic* rigidbody = nullptr;
 	bool transforms_go;
 };
 

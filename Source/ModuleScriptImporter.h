@@ -239,7 +239,7 @@ public:
 	//RANDOM
 	int RandomInt(MonoObject* object);
 	float RandomFloat(MonoObject* object);
-	float RandomRange(MonoObject* object, float min, float max);
+	float RandomRange(float min, float max);
 
 	//APPLICATION
 	void LoadScene(MonoString* scene_name);
@@ -478,7 +478,7 @@ private:
 	//RANDOM
 	static int RandomInt(MonoObject* object);
 	static float RandomFloat(MonoObject* object);
-	static float RandomRange(MonoObject* object, float min, float max);
+	static float RandomRange(float min, float max);
 
 	//APPLICATION
 	static void LoadScene(MonoString* scene_name);

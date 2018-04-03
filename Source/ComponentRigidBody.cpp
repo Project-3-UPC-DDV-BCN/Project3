@@ -259,110 +259,163 @@ void ComponentRigidBody::WakeUp()
 void ComponentRigidBody::SetPosition(float3 new_position)
 {
 	physx::PxVec3 position(new_position.x, new_position.y, new_position.z);
-	physx::PxTransform transform(position, rigidbody->getGlobalPose().q);
-	rigidbody->setGlobalPose(transform);
+	if (rigidbody != nullptr)
+	{
+		physx::PxTransform transform(position, rigidbody->getGlobalPose().q);
+		rigidbody->setGlobalPose(transform);
+	}
 }
 
 float3 ComponentRigidBody::GetPosition() const
 {
-	physx::PxTransform phys_position = rigidbody->getGlobalPose();
-	float3 position(phys_position.p.x, phys_position.p.y, phys_position.p.z);
-	return position;
+	if (rigidbody != nullptr)
+	{
+		physx::PxTransform phys_position = rigidbody->getGlobalPose();
+		float3 position(phys_position.p.x, phys_position.p.y, phys_position.p.z);
+		return position;
+	}
+	else
+		return float3::zero;
 }
 
 void ComponentRigidBody::SetRotation(float3 new_rotation)
 {
-	Quat final_rot = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
-	physx::PxQuat rotation(final_rot.x, final_rot.y, final_rot.z, final_rot.w);
-	physx::PxTransform transform(rigidbody->getGlobalPose().p ,rotation);
-	rigidbody->setGlobalPose(transform);
+	if (rigidbody != nullptr)
+	{
+		Quat final_rot = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
+		physx::PxQuat rotation(final_rot.x, final_rot.y, final_rot.z, final_rot.w);
+		physx::PxTransform transform(rigidbody->getGlobalPose().p, rotation);
+		rigidbody->setGlobalPose(transform);
+	}
 }
 
 float3 ComponentRigidBody::GetRotation() const
 {
-	physx::PxTransform phys_rotation = rigidbody->getGlobalPose();
-	Quat q(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z, phys_rotation.q.w);
-	float3 rotation = q.ToEulerXYZ() * RADTODEG;
-	return rotation;
+	if (rigidbody != nullptr)
+	{
+		physx::PxTransform phys_rotation = rigidbody->getGlobalPose();
+		Quat q(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z, phys_rotation.q.w);
+		float3 rotation = q.ToEulerXYZ() * RADTODEG;
+		return rotation;
+	}
+	else
+		return float3::zero;
 }
 
 void ComponentRigidBody::SetCenterOfMass(float3 center)
 {
-	physx::PxVec3 position(center.x, center.y, center.z);
-	physx::PxTransform transform(position);
-	rigidbody->setCMassLocalPose(transform);
+	if (rigidbody != nullptr)
+	{
+		physx::PxVec3 position(center.x, center.y, center.z);
+		physx::PxTransform transform(position);
+		rigidbody->setCMassLocalPose(transform);
+	}
 }
 
 float3 ComponentRigidBody::GetCenterOfMass() const
 {
-	physx::PxTransform transform = rigidbody->getCMassLocalPose();
-	float3 center(transform.p.x, transform.p.y, transform.p.z);
-	return center;
+	if (rigidbody != nullptr)
+	{
+		physx::PxTransform transform = rigidbody->getCMassLocalPose();
+		float3 center(transform.p.x, transform.p.y, transform.p.z);
+		return center;
+	}
+	else
+		return float3::zero;
 }
 
 void ComponentRigidBody::SetInertiaTensor(float3 tensor)
 {
-	physx::PxVec3 phys_tensor(tensor.x, tensor.y, tensor.z);
-	rigidbody->setMassSpaceInertiaTensor(phys_tensor);
+	if (rigidbody != nullptr)
+	{
+		physx::PxVec3 phys_tensor(tensor.x, tensor.y, tensor.z);
+		rigidbody->setMassSpaceInertiaTensor(phys_tensor);
+	}
 }
 
 float3 ComponentRigidBody::GetInertiaTensor() const
 {
-	physx::PxVec3 phys_tensor = rigidbody->getMassSpaceInertiaTensor();
-	float3 tensor(phys_tensor.x, phys_tensor.y, phys_tensor.z);
-	return tensor;
+	if (rigidbody != nullptr)
+	{
+		physx::PxVec3 phys_tensor = rigidbody->getMassSpaceInertiaTensor();
+		float3 tensor(phys_tensor.x, phys_tensor.y, phys_tensor.z);
+		return tensor;
+	}
+	else
+		return float3::zero;
 }
 
 void ComponentRigidBody::SetSleepThreshold(float value)
 {
-	rigidbody->setSleepThreshold(value);
+	if (rigidbody != nullptr)
+		rigidbody->setSleepThreshold(value);
 }
 
 float ComponentRigidBody::GetSleepThreshold() const
 {
-	return rigidbody->getSleepThreshold();
+	if (rigidbody != nullptr)
+		return rigidbody->getSleepThreshold();
+	return 0.0f;
 }
 
 void ComponentRigidBody::SetSolverIterations(uint count)
 {
-	rigidbody->setSolverIterationCounts(count);
+	if (rigidbody != nullptr)
+		rigidbody->setSolverIterationCounts(count);
 }
 
 uint ComponentRigidBody::GetSolverIterations() const
 {
-	uint iterations;
-	uint velocity_iterations;
-	rigidbody->getSolverIterationCounts(iterations, velocity_iterations);
-	return iterations;
+	if (rigidbody != nullptr)
+	{
+		uint iterations;
+		uint velocity_iterations;
+		rigidbody->getSolverIterationCounts(iterations, velocity_iterations);
+		return iterations;
+	}
+	else
+		return 0;
 }
 
 void ComponentRigidBody::SetVelocitySolverIterations(uint count)
 {
-	uint iterations;
-	uint velocity_iterations;
-	rigidbody->getSolverIterationCounts(iterations, velocity_iterations);
-	rigidbody->setSolverIterationCounts(iterations, count);
+	if (rigidbody != nullptr)
+	{
+		uint iterations;
+		uint velocity_iterations;
+		rigidbody->getSolverIterationCounts(iterations, velocity_iterations);
+		rigidbody->setSolverIterationCounts(iterations, count);
+	}
 }
 
 uint ComponentRigidBody::GetVelocitySolverIterations() const
 {
-	uint iterations;
-	uint velocity_iterations;
-	rigidbody->getSolverIterationCounts(iterations, velocity_iterations);
-	return velocity_iterations;
+	if (rigidbody != nullptr)
+	{
+		uint iterations;
+		uint velocity_iterations;
+		rigidbody->getSolverIterationCounts(iterations, velocity_iterations);
+		return velocity_iterations;
+	}
+	else
+		return 0;
 }
 
 std::vector<physx::PxShape*> ComponentRigidBody::GetShapes() const
 {
 	std::vector<physx::PxShape*> ret;
-	uint shapes_count = rigidbody->getNbShapes();
-	for (uint i = 0; i < shapes_count; i++)
+
+	if (rigidbody != nullptr)
 	{
-		physx::PxShape* shape = nullptr;
-		rigidbody->getShapes(&shape, 1, i);
-		if (shape)
+		uint shapes_count = rigidbody->getNbShapes();
+		for (uint i = 0; i < shapes_count; i++)
 		{
-			ret.push_back(shape);
+			physx::PxShape* shape = nullptr;
+			rigidbody->getShapes(&shape, 1, i);
+			if (shape)
+			{
+				ret.push_back(shape);
+			}
 		}
 	}
 	return ret;
@@ -383,65 +436,107 @@ physx::PxRigidDynamic * ComponentRigidBody::GetRigidBody() const
 
 void ComponentRigidBody::SetKinematicTarget(float3 destination)
 {
-	if (IsKinematic())
+	if (rigidbody != nullptr)
 	{
-		physx::PxVec3 position(destination.x, destination.y, destination.z);
-		physx::PxTransform phys_transform(position);
-		rigidbody->setKinematicTarget(phys_transform);
+		if (IsKinematic())
+		{
+			physx::PxVec3 position(destination.x, destination.y, destination.z);
+			physx::PxTransform phys_transform(position);
+			rigidbody->setKinematicTarget(phys_transform);
+		}
 	}
 }
 
 physx::PxTransform ComponentRigidBody::GetTransform() const
 {
-	return rigidbody->getGlobalPose();
+	if (rigidbody != nullptr)
+		return rigidbody->getGlobalPose();
+
+	return physx::PxTransform();
 }
 
 void ComponentRigidBody::SetTransform(float * transform)
 {
-	physx::PxMat44 mat(transform);
-	physx::PxTransform phys_transform(mat);
-	rigidbody->setGlobalPose(phys_transform);
-	//float3 a = Quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w).ToEulerXYZ() * RADTODEG;
-	//CONSOLE_LOG("Set transform: %.3f,%.3f,%.3f", a.x, a.y, a.z);
+	if (rigidbody != nullptr)
+	{
+		physx::PxMat44 mat(transform);
+		physx::PxTransform phys_transform(mat);
+		rigidbody->setGlobalPose(phys_transform);
+		//float3 a = Quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w).ToEulerXYZ() * RADTODEG;
+		//CONSOLE_LOG("Set transform: %.3f,%.3f,%.3f", a.x, a.y, a.z);
+	}
 }
 
 void ComponentRigidBody::SetColliderScale(float3 scale)
 {
-	std::vector<physx::PxShape*> shapes = GetShapes();
-	physx::PxVec3 phys_scale(scale.x, scale.y, scale.z);
-
-	for (uint i = 0; i < shapes.size(); i++)
+	if (rigidbody != nullptr)
 	{
-		switch (shapes[i]->getGeometryType())
-		{
-		case physx::PxGeometryType::eBOX:
+		std::vector<physx::PxShape*> shapes = GetShapes();
+		physx::PxVec3 phys_scale(scale.x, scale.y, scale.z);
 
-			break;
-		case physx::PxGeometryType::eSPHERE:
-			break;
-		case physx::PxGeometryType::eCAPSULE:
-			break;
-		case physx::PxGeometryType::eTRIANGLEMESH:
+		for (uint i = 0; i < shapes.size(); i++)
 		{
-			physx::PxTriangleMeshGeometry mesh = shapes[i]->getGeometry().triangleMesh();
-			physx::PxMaterial* mat = nullptr;
-			shapes[i]->getMaterials(&mat, 1);
-			mesh.scale = phys_scale;
-			rigidbody->detachShape(*shapes[i]);
-			App->physics->CreateShape(*rigidbody, mesh, *mat);
+			switch (shapes[i]->getGeometryType())
+			{
+			case physx::PxGeometryType::eBOX:
+
+				break;
+			case physx::PxGeometryType::eSPHERE:
+				break;
+			case physx::PxGeometryType::eCAPSULE:
+				break;
+			case physx::PxGeometryType::eTRIANGLEMESH:
+			{
+				physx::PxTriangleMeshGeometry mesh = shapes[i]->getGeometry().triangleMesh();
+				physx::PxMaterial* mat = nullptr;
+				shapes[i]->getMaterials(&mat, 1);
+				mesh.scale = phys_scale;
+				rigidbody->detachShape(*shapes[i]);
+				App->physics->CreateShape(*rigidbody, mesh, *mat);
+			}
+			break;
+			case physx::PxGeometryType::eHEIGHTFIELD:
+				break;
+			case physx::PxGeometryType::eCONVEXMESH:
+			{
+				physx::PxConvexMeshGeometry mesh = shapes[i]->getGeometry().convexMesh();
+				physx::PxMaterial* mat = nullptr;
+				shapes[i]->getMaterials(&mat, 1);
+				mesh.scale = phys_scale;
+				rigidbody->detachShape(*shapes[i]);
+				App->physics->CreateShape(*rigidbody, mesh, *mat);
+			}
+			break;
+			default:
+				break;
+			}
 		}
-			break;
-		case physx::PxGeometryType::eHEIGHTFIELD:
-			break;
-		case physx::PxGeometryType::eCONVEXMESH:
+	}
+}
+
+void ComponentRigidBody::SetDynamicLocks(DynamicLocks lock_type, bool active)
+{
+	if (rigidbody != nullptr)
+	{
+		switch (lock_type)
 		{
-			physx::PxConvexMeshGeometry mesh = shapes[i]->getGeometry().convexMesh();
-			physx::PxMaterial* mat = nullptr;
-			shapes[i]->getMaterials(&mat, 1);
-			mesh.scale = phys_scale;
-			rigidbody->detachShape(*shapes[i]);
-			App->physics->CreateShape(*rigidbody, mesh, *mat);
-		}
+		case ComponentRigidBody::LinearX:
+			rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, active);
+			break;
+		case ComponentRigidBody::LinearY:
+			rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y, active);
+			break;
+		case ComponentRigidBody::LinearZ:
+			rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, active);
+			break;
+		case ComponentRigidBody::AngularX:
+			rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, active);
+			break;
+		case ComponentRigidBody::AngularY:
+			rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, active);
+			break;
+		case ComponentRigidBody::AngularZ:
+			rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, active);
 			break;
 		default:
 			break;
@@ -449,62 +544,38 @@ void ComponentRigidBody::SetColliderScale(float3 scale)
 	}
 }
 
-void ComponentRigidBody::SetDynamicLocks(DynamicLocks lock_type, bool active)
-{
-	switch (lock_type)
-	{
-	case ComponentRigidBody::LinearX:
-		rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, active);
-		break;
-	case ComponentRigidBody::LinearY:
-		rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y, active);
-		break;
-	case ComponentRigidBody::LinearZ:
-		rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, active);
-		break;
-	case ComponentRigidBody::AngularX:
-		rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, active);
-		break;
-	case ComponentRigidBody::AngularY:
-		rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, active);
-		break;
-	case ComponentRigidBody::AngularZ:
-		rigidbody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, active);
-		break;
-	default:
-		break;
-	}
-}
-
 bool ComponentRigidBody::GetDynamicLocks(DynamicLocks lock_type) const
 {
 	bool ret = false;
-	physx::PxRigidDynamicLockFlags flags = rigidbody->getRigidDynamicLockFlags();
 
-	switch (lock_type)
+	if (rigidbody != nullptr)
 	{
-	case ComponentRigidBody::LinearX:
-		ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X);
-		break;
-	case ComponentRigidBody::LinearY:
-		ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y);
-		break;
-	case ComponentRigidBody::LinearZ:
-		ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z);
-		break;
-	case ComponentRigidBody::AngularX:
-		ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X);
-		break;
-	case ComponentRigidBody::AngularY:
-		ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y);
-		break;
-	case ComponentRigidBody::AngularZ:
-		ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z);
-		break;
-	default:
-		break;
-	}
+		physx::PxRigidDynamicLockFlags flags = rigidbody->getRigidDynamicLockFlags();
 
+		switch (lock_type)
+		{
+		case ComponentRigidBody::LinearX:
+			ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X);
+			break;
+		case ComponentRigidBody::LinearY:
+			ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y);
+			break;
+		case ComponentRigidBody::LinearZ:
+			ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z);
+			break;
+		case ComponentRigidBody::AngularX:
+			ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X);
+			break;
+		case ComponentRigidBody::AngularY:
+			ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y);
+			break;
+		case ComponentRigidBody::AngularZ:
+			ret = flags.isSet(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z);
+			break;
+		default:
+			break;
+		}
+	}
 	return ret;
 }
 
