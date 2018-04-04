@@ -47,8 +47,6 @@ public class laser
 
 		if(other_parent.tag == "XWING" || other_parent.tag == "TIEFIGHTER")
 		{ 	
-			TheConsole.Log("dsfsdfsdfsd"); 
-
 			enemy_properties_scpt = other_parent.GetComponent<TheScript>(0); 
 
             //Substract hp to ship
