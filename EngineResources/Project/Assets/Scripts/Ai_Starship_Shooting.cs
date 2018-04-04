@@ -45,8 +45,7 @@ public class Ai_Starship_Shooting {
 		//if(gosInFrustrum.Length > 0) shooting = true; else shooting = false;
 
 		if(movement != null) {
-			movement.CallFunction("GetTargetPos");
-			TheVector3 tOffset = movement.GetVector3Field("tPos") - transform.GlobalPosition;
+			TheVector3 tOffset = movement.GetVector3Field("target_pos") - transform.GlobalPosition;
 			if(TheVector3.Magnitude(tOffset) < shooting_range)
 				shooting = true;
 			else
@@ -70,7 +69,7 @@ public class Ai_Starship_Shooting {
 				laser_factory.SetSpawnRotation(spawn_dir);
 				TheGameObject laser = laser_factory.Spawn();
 				TheVector3 laser_velocity = spawn_dir.Normalized * laser_speed * TheTime.DeltaTime;
-				laser.GetComponent<TheTransform>().LocalRotation = TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection;
+				laser.GetComponent<TheTransform>().GlobalRotation = TheGameObject.Self.GetComponent<TheTransform>().ForwardDirection;
 				TheRigidBody laserBody = laser.GetComponent<TheRigidBody>();
 				if(laserBody != null) {
 					laserBody.SetLinearVelocity(laser_velocity.x, laser_velocity.y, laser_velocity.z);			
