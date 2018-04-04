@@ -31,11 +31,12 @@ public class XWingDestruction {
 	
 	void Update ()
 	{
-		//if(need_boom == true && exploted == false)
-		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(need_boom == true && exploted == false)
 		{
 
             TheGameObject current = TheGameObject.Self; 
+
+			TheConsole.Log("YOU KILEEEEEED MEEEEE"); 
                      	
 			FillPartList(current); 
 			SetPartsDirection(); 		

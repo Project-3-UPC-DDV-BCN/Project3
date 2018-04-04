@@ -32,8 +32,9 @@ public class ShipDestruction
 	
 	void Update ()
 	{
-		if(need_boom == true && exploted == false || start_automatic == true && exploted == false)
-		{                     	
+		if(need_boom == true && exploted == false)
+		{                    
+			TheGameObject.Self.SetActive(false);  	
 			PlayDestruction(); 
 		}
 
