@@ -5,6 +5,9 @@ using TheEngine.TheConsole;
 
 public class GuillemMovement 
 {
+
+	TheAudioSource audio_source = null;
+
 	public int faction;
 	public TheGameObject force_target;
 	private bool forced = false;
@@ -31,6 +34,8 @@ public class GuillemMovement
 	{
 		RandomizeStats();
 
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+
 		self_transform = TheGameObject.Self.GetComponent<TheTransform>();
 
 		if(center_object != null)
@@ -48,6 +53,10 @@ public class GuillemMovement
 	
 	void Update () 
 	{
+		if(audio_source != null) {
+			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);
+			audio_source.Play("Play_Enemy_Engine");
+		}
 		// Change target after x seconds
 		if(timer.ReadTime() > random_time && !forced)
 		{
