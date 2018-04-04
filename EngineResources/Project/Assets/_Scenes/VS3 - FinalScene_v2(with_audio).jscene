@@ -2,7 +2,7 @@
     "Scene_Name": "VS3 - FinalScene_v2(with_audio)",
     "GameObjects_Count": "299",
     "GameObject_0": {
-        "UUID": "454162080",
+        "UUID": "45882425",
         "Name": "Directional Light(24)",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1816436899",
+        "UUID": "1072127836",
         "Name": "FinalSceneCanvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -70,8 +70,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "1170.000000",
-                    "value_Y": "384.000000"
+                    "value_X": "585.000000",
+                    "value_Y": "447.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -125,7 +125,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1136340743",
+        "UUID": "375467730",
         "Name": "ShieldGate(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -159,7 +159,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2028796570",
+        "UUID": "1267879046",
         "Name": "AllianceSpawn",
         "Tag": "Default",
         "Layer": "Default",
@@ -193,7 +193,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "404085839",
+        "UUID": "839235278",
         "Name": "EmpireSpawn",
         "Tag": "Default",
         "Layer": "Default",
@@ -227,7 +227,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "824421319",
+        "UUID": "1811705709",
         "Name": "MEDIUM_AST_SPWNER_A(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -261,7 +261,7 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1241216730",
+        "UUID": "311159744",
         "Name": "SMALL_AST_SPWNR_A(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -295,7 +295,7 @@
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "8004050",
+        "UUID": "1584989735",
         "Name": "ASTEROID_CLOYSTER(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -329,7 +329,7 @@
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1051700477",
+        "UUID": "123139340",
         "Name": "ASTEROID_ABOVE(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -363,7 +363,7 @@
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "1983964752",
+        "UUID": "329271316",
         "Name": "ASTEROID_HOLE(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -397,7 +397,7 @@
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "1609307599",
+        "UUID": "1957843158",
         "Name": "ASTEROID_BELOW(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -431,7 +431,7 @@
         "IsStatic": "0"
     },
     "GameObject_11": {
-        "UUID": "940035048",
+        "UUID": "1916460734",
         "Name": "GameManager",
         "Tag": "Default",
         "Layer": "Default",
@@ -473,7 +473,7 @@
                     "float_fields_count": "1",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "6",
+                    "gameobject_fields_count": "7",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "1",
                     "vec4_fields_count": "0",
@@ -503,27 +503,31 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "alliance_spawn",
-                            "field_value": "2028796570"
+                            "field_value": "1267879046"
                         },
                         "field_1": {
                             "field_name": "background_music",
-                            "field_value": "601341907"
+                            "field_value": "1728976612"
                         },
                         "field_2": {
                             "field_name": "empire_spawn",
-                            "field_value": "404085839"
+                            "field_value": "839235278"
                         },
                         "field_3": {
                             "field_name": "show_gametime_go",
-                            "field_value": "412302761"
+                            "field_value": "1545719219"
                         },
                         "field_4": {
                             "field_name": "show_score_go",
-                            "field_value": "1664097779"
+                            "field_value": "1964711182"
                         },
                         "field_5": {
                             "field_name": "slave1",
-                            "field_value": "831208982"
+                            "field_value": "179838761"
+                        },
+                        "field_6": {
+                            "field_name": "slave1_audio",
+                            "field_value": "822187444"
                         }
                     },
                     "vec2_fields": {},
@@ -546,7 +550,7 @@
         "IsStatic": "0"
     },
     "GameObject_12": {
-        "UUID": "1615934483",
+        "UUID": "606290057",
         "Name": "SPAWNERS",
         "Tag": "Default",
         "Layer": "Default",
@@ -580,7 +584,7 @@
         "IsStatic": "0"
     },
     "GameObject_13": {
-        "UUID": "601341907",
+        "UUID": "1728976612",
         "Name": "Background Music",
         "Tag": "Default",
         "Layer": "Default",
@@ -621,7 +625,7 @@
         "IsStatic": "0"
     },
     "GameObject_14": {
-        "UUID": "831208982",
+        "UUID": "179838761",
         "Name": "Slave1",
         "Tag": "Default",
         "Layer": "Default",
@@ -822,71 +826,71 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "audio_emiter",
-                            "field_value": "795031326"
+                            "field_value": "822187444"
                         },
                         "field_1": {
                             "field_name": "body_part",
-                            "field_value": "2064346189"
+                            "field_value": "1543826293"
                         },
                         "field_2": {
                             "field_name": "camera_go",
-                            "field_value": "592162204"
+                            "field_value": "1391460147"
                         },
                         "field_3": {
                             "field_name": "center_ring",
-                            "field_value": "1524989608"
+                            "field_value": "844993606"
                         },
                         "field_4": {
                             "field_name": "energy",
-                            "field_value": "1995881360"
+                            "field_value": "701411308"
                         },
                         "field_5": {
                             "field_name": "engine_part",
-                            "field_value": "1502948894"
+                            "field_value": "1173812603"
                         },
                         "field_6": {
                             "field_name": "exterior_ring",
-                            "field_value": "2011698054"
+                            "field_value": "743354968"
                         },
                         "field_7": {
                             "field_name": "hp",
-                            "field_value": "179301778"
+                            "field_value": "1326025135"
                         },
                         "field_8": {
                             "field_name": "inner_ring",
-                            "field_value": "315723993"
+                            "field_value": "563248106"
                         },
                         "field_9": {
                             "field_name": "selected_center_ring",
-                            "field_value": "955846972"
+                            "field_value": "610984718"
                         },
                         "field_10": {
                             "field_name": "selected_exterior_ring",
-                            "field_value": "1841727488"
+                            "field_value": "907818075"
                         },
                         "field_11": {
                             "field_name": "selected_inner_ring",
-                            "field_value": "798784376"
+                            "field_value": "10972102"
                         },
                         "field_12": {
                             "field_name": "shield_hp_go",
-                            "field_value": "1994129774"
+                            "field_value": "1021422952"
                         },
                         "field_13": {
                             "field_name": "shields",
-                            "field_value": "212799846"
+                            "field_value": "1642678833"
                         },
                         "field_14": {
                             "field_name": "speed",
-                            "field_value": "2054165248"
+                            "field_value": "857871222"
                         },
                         "field_15": {
                             "field_name": "weapons",
-                            "field_value": "2053099953"
+                            "field_value": "1771810960"
                         },
                         "field_16": {
                             "field_name": "wings_part",
-                            "field_value": "1773666981"
+                            "field_value": "1619637964"
                         }
                     },
                     "vec2_fields": {},
@@ -900,7 +904,7 @@
         "IsStatic": "0"
     },
     "GameObject_15": {
-        "UUID": "1358700113",
+        "UUID": "724717571",
         "Name": "AckbarDialogCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -917,8 +921,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "1170.000000",
-                    "value_Y": "384.000000"
+                    "value_X": "585.000000",
+                    "value_Y": "447.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -978,7 +982,7 @@
         "IsStatic": "0"
     },
     "GameObject_16": {
-        "UUID": "1700884117",
+        "UUID": "433724326",
         "Name": "TimeBack(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1012,8 +1016,8 @@
                 "Active": "1",
                 "UUID": "1159324857",
                 "position": {
-                    "value_X": "-485.367188",
-                    "value_Y": "131.443359",
+                    "value_X": "-242.683594",
+                    "value_Y": "193.221680",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1045,12 +1049,12 @@
                 "anim_textures_count": "1"
             }
         },
-        "ParentID": "1816436899",
+        "ParentID": "1072127836",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_17": {
-        "UUID": "709846783",
+        "UUID": "553739979",
         "Name": "ScoreBack",
         "Tag": "Default",
         "Layer": "Default",
@@ -1084,8 +1088,8 @@
                 "Active": "1",
                 "UUID": "1080299180",
                 "position": {
-                    "value_X": "-331.576172",
-                    "value_Y": "131.443359",
+                    "value_X": "-165.788086",
+                    "value_Y": "193.221680",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1117,12 +1121,12 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "1816436899",
+        "ParentID": "1072127836",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_18": {
-        "UUID": "201710832",
+        "UUID": "304647015",
         "Name": "ShortBrifge(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1170,12 +1174,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1136340743",
+        "ParentID": "375467730",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_19": {
-        "UUID": "914266939",
+        "UUID": "1281333543",
         "Name": "LargeBrifge(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1223,12 +1227,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1136340743",
+        "ParentID": "375467730",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_20": {
-        "UUID": "763263039",
+        "UUID": "1251900823",
         "Name": "Rings(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1276,12 +1280,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1136340743",
+        "ParentID": "375467730",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_21": {
-        "UUID": "1800676851",
+        "UUID": "815900941",
         "Name": "Extras(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1329,12 +1333,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1136340743",
+        "ParentID": "375467730",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_22": {
-        "UUID": "1270182552",
+        "UUID": "749466564",
         "Name": "Asteroid_3_PF(185)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1363,12 +1367,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_23": {
-        "UUID": "150352979",
+        "UUID": "1201481085",
         "Name": "Asteroid_3_PF(186)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1397,12 +1401,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_24": {
-        "UUID": "889455481",
+        "UUID": "1679084488",
         "Name": "Asteroid4_PF(233)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1431,12 +1435,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_25": {
-        "UUID": "2089081456",
+        "UUID": "1268814603",
         "Name": "Asteroid_3_PF(187)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1465,12 +1469,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_26": {
-        "UUID": "1315087807",
+        "UUID": "1549139765",
         "Name": "Asteroid4_PF(234)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1499,12 +1503,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_27": {
-        "UUID": "1910404949",
+        "UUID": "1735859431",
         "Name": "Asteroid4_PF(235)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1533,12 +1537,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_28": {
-        "UUID": "2050761031",
+        "UUID": "479727079",
         "Name": "Asteroid_3_PF(188)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1567,12 +1571,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_29": {
-        "UUID": "583468456",
+        "UUID": "1413288915",
         "Name": "Asteroid4_PF(236)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1601,12 +1605,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_30": {
-        "UUID": "2004192171",
+        "UUID": "1181812969",
         "Name": "Asteroid4_PF(237)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1635,12 +1639,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_31": {
-        "UUID": "1113173366",
+        "UUID": "312263591",
         "Name": "Asteroid_3_PF(189)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1669,12 +1673,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_32": {
-        "UUID": "1853061350",
+        "UUID": "1126510430",
         "Name": "Asteroid4_PF(238)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1703,12 +1707,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_33": {
-        "UUID": "1904154825",
+        "UUID": "532374943",
         "Name": "Asteroid_3_PF(190)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1737,12 +1741,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_34": {
-        "UUID": "702574721",
+        "UUID": "1055643030",
         "Name": "Asteroid4_PF(239)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1771,12 +1775,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_35": {
-        "UUID": "719623022",
+        "UUID": "1590540349",
         "Name": "Asteroid4_PF(240)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1805,12 +1809,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_36": {
-        "UUID": "80930152",
+        "UUID": "15380174",
         "Name": "Asteroid_3_PF(191)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1839,12 +1843,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_37": {
-        "UUID": "1588506311",
+        "UUID": "1336237848",
         "Name": "Asteroid4_PF(241)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1873,12 +1877,12 @@
                 }
             }
         },
-        "ParentID": "824421319",
+        "ParentID": "1811705709",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_38": {
-        "UUID": "137541278",
+        "UUID": "1223627568",
         "Name": "Asteroid5_PF(253)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1907,12 +1911,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_39": {
-        "UUID": "131733665",
+        "UUID": "1646118885",
         "Name": "Asteroid5_PF(254)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1941,12 +1945,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_40": {
-        "UUID": "1674318275",
+        "UUID": "1830586783",
         "Name": "Asteroid6_PF(258)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1975,12 +1979,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_41": {
-        "UUID": "152780968",
+        "UUID": "570420734",
         "Name": "Asteroid6_PF(259)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2009,12 +2013,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_42": {
-        "UUID": "277269537",
+        "UUID": "1994321490",
         "Name": "Asteroid5_PF(255)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2043,12 +2047,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_43": {
-        "UUID": "51932594",
+        "UUID": "1101258505",
         "Name": "Asteroid6_PF(260)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2077,12 +2081,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_44": {
-        "UUID": "1384148973",
+        "UUID": "1257211411",
         "Name": "Asteroid5_PF(256)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2111,12 +2115,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_45": {
-        "UUID": "1801957402",
+        "UUID": "1177160805",
         "Name": "Asteroid6_PF(261)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2145,12 +2149,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_46": {
-        "UUID": "229110549",
+        "UUID": "693984444",
         "Name": "Asteroid5_PF(257)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2179,12 +2183,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_47": {
-        "UUID": "1544485660",
+        "UUID": "1803885518",
         "Name": "Asteroid6_PF(262)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2213,12 +2217,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_48": {
-        "UUID": "1982445923",
+        "UUID": "1322488471",
         "Name": "Asteroid6_PF(263)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2247,12 +2251,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_49": {
-        "UUID": "1093612493",
+        "UUID": "1755958013",
         "Name": "Asteroid5_PF(258)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2281,12 +2285,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_50": {
-        "UUID": "1510154415",
+        "UUID": "1751250304",
         "Name": "Asteroid5_PF(259)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2315,12 +2319,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_51": {
-        "UUID": "1956136889",
+        "UUID": "413356359",
         "Name": "Asteroid6_PF(264)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2338,9 +2342,9 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.675590",
+                    "value_Y": "0.675587",
                     "value_Z": "0.000000",
-                    "value_W": "0.737277"
+                    "value_W": "0.737280"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -2349,12 +2353,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_52": {
-        "UUID": "1235907270",
+        "UUID": "2002200139",
         "Name": "Asteroid6_PF(265)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2383,12 +2387,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_53": {
-        "UUID": "1872760321",
+        "UUID": "2012350549",
         "Name": "Asteroid5_PF(260)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2417,12 +2421,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_54": {
-        "UUID": "1124164383",
+        "UUID": "24441649",
         "Name": "Asteroid5_PF(261)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2451,12 +2455,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_55": {
-        "UUID": "406993928",
+        "UUID": "844996605",
         "Name": "Asteroid5_PF(262)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2485,12 +2489,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_56": {
-        "UUID": "1425022770",
+        "UUID": "1341610787",
         "Name": "Asteroid5_PF(263)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2519,12 +2523,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_57": {
-        "UUID": "2060746064",
+        "UUID": "1630859109",
         "Name": "Asteroid6_PF(266)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2553,12 +2557,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_58": {
-        "UUID": "2114232968",
+        "UUID": "286643505",
         "Name": "Asteroid6_PF(267)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2587,12 +2591,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_59": {
-        "UUID": "41848807",
+        "UUID": "1989413681",
         "Name": "Asteroid6_PF(268)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2621,12 +2625,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_60": {
-        "UUID": "1567966815",
+        "UUID": "864587989",
         "Name": "Asteroid5_PF(264)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2655,12 +2659,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_61": {
-        "UUID": "381399164",
+        "UUID": "1661240406",
         "Name": "Asteroid5_PF(265)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2689,12 +2693,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_62": {
-        "UUID": "1903385336",
+        "UUID": "191529647",
         "Name": "Asteroid6_PF(269)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2723,12 +2727,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_63": {
-        "UUID": "817072227",
+        "UUID": "759589564",
         "Name": "Asteroid6_PF(270)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2757,12 +2761,12 @@
                 }
             }
         },
-        "ParentID": "1241216730",
+        "ParentID": "311159744",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_64": {
-        "UUID": "691190584",
+        "UUID": "1600227869",
         "Name": "Asteroid_2_PF(21)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2791,12 +2795,12 @@
                 }
             }
         },
-        "ParentID": "8004050",
+        "ParentID": "1584989735",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_65": {
-        "UUID": "566086688",
+        "UUID": "160344936",
         "Name": "Asteroid4_PF(242)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2825,12 +2829,12 @@
                 }
             }
         },
-        "ParentID": "8004050",
+        "ParentID": "1584989735",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_66": {
-        "UUID": "901415504",
+        "UUID": "754792150",
         "Name": "Asteroid_3_PF(192)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2859,12 +2863,12 @@
                 }
             }
         },
-        "ParentID": "8004050",
+        "ParentID": "1584989735",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_67": {
-        "UUID": "1534187703",
+        "UUID": "459433060",
         "Name": "Asteroid4_PF(252)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2893,12 +2897,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_68": {
-        "UUID": "140436077",
+        "UUID": "1567631842",
         "Name": "Asteroid4_PF(253)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2927,12 +2931,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_69": {
-        "UUID": "1954555673",
+        "UUID": "682564048",
         "Name": "Asteroid_3_PF(200)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2961,12 +2965,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_70": {
-        "UUID": "671734131",
+        "UUID": "1273444992",
         "Name": "AsteroidAbove(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2995,12 +2999,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_71": {
-        "UUID": "1050553632",
+        "UUID": "1798905284",
         "Name": "Asteroid6_PF(284)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3029,12 +3033,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_72": {
-        "UUID": "1596363946",
+        "UUID": "338484324",
         "Name": "Asteroid5_PF(279)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3063,12 +3067,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_73": {
-        "UUID": "1733101275",
+        "UUID": "1279062673",
         "Name": "Asteroid6_PF(285)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3097,12 +3101,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_74": {
-        "UUID": "1727676433",
+        "UUID": "2065450431",
         "Name": "Asteroid5_PF(280)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3131,12 +3135,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_75": {
-        "UUID": "2001873423",
+        "UUID": "1071969884",
         "Name": "Asteroid6_PF(286)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3165,12 +3169,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_76": {
-        "UUID": "740892383",
+        "UUID": "116109773",
         "Name": "MEDIUM_AST_SPWNR_E(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3199,12 +3203,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_77": {
-        "UUID": "1258879550",
+        "UUID": "550058725",
         "Name": "SMALL_AST_SPWNR_E(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3233,12 +3237,12 @@
                 }
             }
         },
-        "ParentID": "1051700477",
+        "ParentID": "123139340",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_78": {
-        "UUID": "1350549186",
+        "UUID": "1710099921",
         "Name": "Asteroid1_PF(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3267,12 +3271,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_79": {
-        "UUID": "1160878258",
+        "UUID": "225726614",
         "Name": "Asteroid6_PF(287)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3301,12 +3305,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_80": {
-        "UUID": "958145373",
+        "UUID": "27264548",
         "Name": "Asteroid4_PF(254)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3335,12 +3339,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_81": {
-        "UUID": "1901970519",
+        "UUID": "1957036007",
         "Name": "Asteroid4_PF(255)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3369,12 +3373,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_82": {
-        "UUID": "1100345632",
+        "UUID": "1556375785",
         "Name": "Asteroid_3_PF(201)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3403,12 +3407,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_83": {
-        "UUID": "2126589688",
+        "UUID": "856150806",
         "Name": "Asteroid5_PF(281)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3437,12 +3441,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_84": {
-        "UUID": "1335593127",
+        "UUID": "519158394",
         "Name": "Asteroid5_PF(282)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3471,12 +3475,12 @@
                 }
             }
         },
-        "ParentID": "1983964752",
+        "ParentID": "329271316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_85": {
-        "UUID": "1434663414",
+        "UUID": "29286017",
         "Name": "Asteroid4_PF(256)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3505,12 +3509,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_86": {
-        "UUID": "1089640477",
+        "UUID": "959808554",
         "Name": "Asteroid4_PF(257)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3539,12 +3543,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_87": {
-        "UUID": "1999818942",
+        "UUID": "1730177982",
         "Name": "Asteroid_3_PF(202)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3573,12 +3577,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_88": {
-        "UUID": "1587275031",
+        "UUID": "68557298",
         "Name": "Asteroid6_PF(288)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3607,12 +3611,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_89": {
-        "UUID": "313942278",
+        "UUID": "1318980424",
         "Name": "Asteroid5_PF(283)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3641,12 +3645,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_90": {
-        "UUID": "2034261119",
+        "UUID": "187869937",
         "Name": "Asteroid6_PF(289)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3675,12 +3679,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_91": {
-        "UUID": "746846249",
+        "UUID": "1517473647",
         "Name": "Asteroid5_PF(284)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3709,12 +3713,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_92": {
-        "UUID": "1308640465",
+        "UUID": "427279975",
         "Name": "Asteroid6_PF(290)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3743,12 +3747,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_93": {
-        "UUID": "1864089790",
+        "UUID": "715661231",
         "Name": "AsteroidBelow(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3777,12 +3781,12 @@
                 }
             }
         },
-        "ParentID": "1609307599",
+        "ParentID": "1957843158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_94": {
-        "UUID": "916030439",
+        "UUID": "1282469404",
         "Name": "TieFighterSpawner",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -3849,12 +3853,12 @@
                 }
             }
         },
-        "ParentID": "1615934483",
+        "ParentID": "606290057",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_95": {
-        "UUID": "1133328660",
+        "UUID": "874784565",
         "Name": "XWingSpawner",
         "Tag": "XWING",
         "Layer": "Default",
@@ -3921,12 +3925,12 @@
                 }
             }
         },
-        "ParentID": "1615934483",
+        "ParentID": "606290057",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_96": {
-        "UUID": "630479786",
+        "UUID": "739970945",
         "Name": "Cockpit(27)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3955,12 +3959,12 @@
                 }
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_97": {
-        "UUID": "67436426",
+        "UUID": "1531953962",
         "Name": "Energy_Bars(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4027,12 +4031,12 @@
                 "scale": "0.140000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_98": {
-        "UUID": "592162204",
+        "UUID": "1391460147",
         "Name": "Camera(26)",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -4083,12 +4087,12 @@
                 "fov": "80.916000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_99": {
-        "UUID": "1681233225",
+        "UUID": "1859578117",
         "Name": "Hull_Shields(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4155,12 +4159,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_100": {
-        "UUID": "542177990",
+        "UUID": "341456968",
         "Name": "Laser_factory(26)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4271,35 +4275,35 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "audio_emiter",
-                            "field_value": "795031326"
+                            "field_value": "822187444"
                         },
                         "field_1": {
                             "field_name": "crosshair_1",
-                            "field_value": "638700751"
+                            "field_value": "713854434"
                         },
                         "field_2": {
                             "field_name": "crosshair_2",
-                            "field_value": "1188590589"
+                            "field_value": "45506993"
                         },
                         "field_3": {
                             "field_name": "laser_spawner",
-                            "field_value": "1632429668"
+                            "field_value": "335427939"
                         },
                         "field_4": {
                             "field_name": "overheat_bar_obj",
-                            "field_value": "1878026918"
+                            "field_value": "703980328"
                         },
                         "field_5": {
                             "field_name": "weapon_icon_1",
-                            "field_value": "926132836"
+                            "field_value": "1302236270"
                         },
                         "field_6": {
                             "field_name": "weapon_icon_2",
-                            "field_value": "1365259043"
+                            "field_value": "37156498"
                         },
                         "field_7": {
                             "field_name": "weapons_energy",
-                            "field_value": "2053099953"
+                            "field_value": "1771810960"
                         }
                     },
                     "vec2_fields": {},
@@ -4308,12 +4312,12 @@
                 }
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_101": {
-        "UUID": "653778471",
+        "UUID": "2079080485",
         "Name": "Crosshairs(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4380,12 +4384,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_102": {
-        "UUID": "795031326",
+        "UUID": "822187444",
         "Name": "Ship_Emiter(26)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4421,12 +4425,12 @@
                 "SoundBank_Name": "Player.bnk"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_103": {
-        "UUID": "1632429668",
+        "UUID": "335427939",
         "Name": "laser_spawner(26)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4455,12 +4459,12 @@
                 }
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_104": {
-        "UUID": "108865647",
+        "UUID": "1091363641",
         "Name": "Puzzle(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4527,12 +4531,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_105": {
-        "UUID": "865419524",
+        "UUID": "1709135554",
         "Name": "RadarsCanvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4599,12 +4603,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_106": {
-        "UUID": "1571480172",
+        "UUID": "1805008411",
         "Name": "Speed+Weapons+Targe",
         "Tag": "Default",
         "Layer": "Default",
@@ -4671,12 +4675,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "831208982",
+        "ParentID": "179838761",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_107": {
-        "UUID": "171691103",
+        "UUID": "42527085",
         "Name": "BackgroundImage(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4710,8 +4714,8 @@
                 "Active": "1",
                 "UUID": "114321291",
                 "position": {
-                    "value_X": "-200.408173",
-                    "value_Y": "-119.332031",
+                    "value_X": "-100.204086",
+                    "value_Y": "-187.166016",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -4769,15 +4773,15 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "audio_emiter",
-                            "field_value": "171691103"
+                            "field_value": "42527085"
                         },
                         "field_1": {
                             "field_name": "canvas_go",
-                            "field_value": "1358700113"
+                            "field_value": "724717571"
                         },
                         "field_2": {
                             "field_name": "text_go",
-                            "field_value": "1227004799"
+                            "field_value": "2056711332"
                         }
                     },
                     "vec2_fields": {},
@@ -4793,12 +4797,12 @@
                 "SoundBank_Name": "Rebel_dialogue.bnk"
             }
         },
-        "ParentID": "1358700113",
+        "ParentID": "724717571",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_108": {
-        "UUID": "412302761",
+        "UUID": "1545719219",
         "Name": "TimeNum",
         "Tag": "Default",
         "Layer": "Default",
@@ -4815,8 +4819,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "29.202679",
-                    "value_Y": "62.898079"
+                    "value_X": "29.202604",
+                    "value_Y": "62.897919"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -4868,12 +4872,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1700884117",
+        "ParentID": "433724326",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_109": {
-        "UUID": "1664097779",
+        "UUID": "1964711182",
         "Name": "ScoreNum",
         "Tag": "Default",
         "Layer": "Default",
@@ -4890,8 +4894,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "29.156250",
-                    "value_Y": "62.798077"
+                    "value_X": "29.156176",
+                    "value_Y": "62.797916"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -4943,12 +4947,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "709846783",
+        "ParentID": "553739979",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_110": {
-        "UUID": "1556199756",
+        "UUID": "1186306357",
         "Name": "Asteroid3(186)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4996,12 +5000,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1270182552",
+        "ParentID": "749466564",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_111": {
-        "UUID": "1485737679",
+        "UUID": "1761300724",
         "Name": "Asteroid3(187)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5049,12 +5053,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "150352979",
+        "ParentID": "1201481085",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_112": {
-        "UUID": "698124610",
+        "UUID": "53978257",
         "Name": "Group1(234)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5102,12 +5106,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "889455481",
+        "ParentID": "1679084488",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_113": {
-        "UUID": "136090259",
+        "UUID": "2071331994",
         "Name": "Asteroid3(188)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5155,12 +5159,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2089081456",
+        "ParentID": "1268814603",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_114": {
-        "UUID": "42071275",
+        "UUID": "382890930",
         "Name": "Group1(235)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5208,12 +5212,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1315087807",
+        "ParentID": "1549139765",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_115": {
-        "UUID": "2024025914",
+        "UUID": "534927319",
         "Name": "Group1(236)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5261,12 +5265,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1910404949",
+        "ParentID": "1735859431",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_116": {
-        "UUID": "1126209748",
+        "UUID": "513469825",
         "Name": "Asteroid3(189)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5314,12 +5318,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2050761031",
+        "ParentID": "479727079",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_117": {
-        "UUID": "1073429891",
+        "UUID": "1269898363",
         "Name": "Group1(237)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5367,12 +5371,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "583468456",
+        "ParentID": "1413288915",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_118": {
-        "UUID": "831525711",
+        "UUID": "1839667080",
         "Name": "Group1(238)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5420,12 +5424,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2004192171",
+        "ParentID": "1181812969",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_119": {
-        "UUID": "1934853352",
+        "UUID": "1389585953",
         "Name": "Asteroid3(190)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5473,12 +5477,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1113173366",
+        "ParentID": "312263591",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_120": {
-        "UUID": "1218494223",
+        "UUID": "225336463",
         "Name": "Group1(239)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5526,12 +5530,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1853061350",
+        "ParentID": "1126510430",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_121": {
-        "UUID": "739792042",
+        "UUID": "781849188",
         "Name": "Asteroid3(191)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5579,12 +5583,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1904154825",
+        "ParentID": "532374943",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_122": {
-        "UUID": "1961450081",
+        "UUID": "854317239",
         "Name": "Group1(240)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5632,12 +5636,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "702574721",
+        "ParentID": "1055643030",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_123": {
-        "UUID": "1778460218",
+        "UUID": "1713409107",
         "Name": "Group1(241)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5685,12 +5689,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "719623022",
+        "ParentID": "1590540349",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_124": {
-        "UUID": "714202299",
+        "UUID": "833814891",
         "Name": "Asteroid3(192)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5738,12 +5742,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "80930152",
+        "ParentID": "15380174",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_125": {
-        "UUID": "641896041",
+        "UUID": "248580607",
         "Name": "Group1(242)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5791,12 +5795,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1588506311",
+        "ParentID": "1336237848",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_126": {
-        "UUID": "309576391",
+        "UUID": "2007212421",
         "Name": "Asteroid5(258)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5844,12 +5848,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "137541278",
+        "ParentID": "1223627568",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_127": {
-        "UUID": "872036519",
+        "UUID": "932601210",
         "Name": "Asteroid5(259)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5897,12 +5901,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "131733665",
+        "ParentID": "1646118885",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_128": {
-        "UUID": "544304962",
+        "UUID": "1608258012",
         "Name": "Asteroid6(264)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5950,12 +5954,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1674318275",
+        "ParentID": "1830586783",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_129": {
-        "UUID": "559324440",
+        "UUID": "881182519",
         "Name": "Asteroid6(265)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6003,12 +6007,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "152780968",
+        "ParentID": "570420734",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_130": {
-        "UUID": "405866189",
+        "UUID": "1642811450",
         "Name": "Asteroid5(260)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6056,12 +6060,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "277269537",
+        "ParentID": "1994321490",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_131": {
-        "UUID": "220117143",
+        "UUID": "1344404877",
         "Name": "Asteroid6(266)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6109,12 +6113,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "51932594",
+        "ParentID": "1101258505",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_132": {
-        "UUID": "332307811",
+        "UUID": "737187122",
         "Name": "Asteroid5(261)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6162,12 +6166,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1384148973",
+        "ParentID": "1257211411",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_133": {
-        "UUID": "760780500",
+        "UUID": "992941109",
         "Name": "Asteroid6(267)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6215,12 +6219,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1801957402",
+        "ParentID": "1177160805",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_134": {
-        "UUID": "762520892",
+        "UUID": "2054352759",
         "Name": "Asteroid5(262)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6268,12 +6272,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "229110549",
+        "ParentID": "693984444",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_135": {
-        "UUID": "1671268092",
+        "UUID": "1535060492",
         "Name": "Asteroid6(268)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6321,12 +6325,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1544485660",
+        "ParentID": "1803885518",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_136": {
-        "UUID": "396871378",
+        "UUID": "775336930",
         "Name": "Asteroid6(269)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6374,12 +6378,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1982445923",
+        "ParentID": "1322488471",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_137": {
-        "UUID": "1057605436",
+        "UUID": "583452538",
         "Name": "Asteroid5(263)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6427,12 +6431,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1093612493",
+        "ParentID": "1755958013",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_138": {
-        "UUID": "776255067",
+        "UUID": "895965093",
         "Name": "Asteroid5(264)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6480,12 +6484,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1510154415",
+        "ParentID": "1751250304",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_139": {
-        "UUID": "80559205",
+        "UUID": "28245344",
         "Name": "Asteroid6(270)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6533,12 +6537,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1956136889",
+        "ParentID": "413356359",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_140": {
-        "UUID": "1532608988",
+        "UUID": "1521557619",
         "Name": "Asteroid6(271)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6586,12 +6590,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1235907270",
+        "ParentID": "2002200139",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_141": {
-        "UUID": "1897868706",
+        "UUID": "1289653183",
         "Name": "Asteroid5(265)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6639,12 +6643,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1872760321",
+        "ParentID": "2012350549",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_142": {
-        "UUID": "1143347810",
+        "UUID": "652972573",
         "Name": "Asteroid5(266)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6692,12 +6696,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1124164383",
+        "ParentID": "24441649",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_143": {
-        "UUID": "241536661",
+        "UUID": "522181490",
         "Name": "Asteroid5(267)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6745,12 +6749,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "406993928",
+        "ParentID": "844996605",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_144": {
-        "UUID": "1226919471",
+        "UUID": "46855227",
         "Name": "Asteroid5(268)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6798,12 +6802,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1425022770",
+        "ParentID": "1341610787",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_145": {
-        "UUID": "1050947419",
+        "UUID": "80099174",
         "Name": "Asteroid6(272)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6851,12 +6855,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2060746064",
+        "ParentID": "1630859109",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_146": {
-        "UUID": "1094921262",
+        "UUID": "1717045442",
         "Name": "Asteroid6(273)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6904,12 +6908,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2114232968",
+        "ParentID": "286643505",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_147": {
-        "UUID": "286164143",
+        "UUID": "596023580",
         "Name": "Asteroid6(274)",
         "Tag": "Default",
         "Layer": "Default",
@@ -6957,12 +6961,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "41848807",
+        "ParentID": "1989413681",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_148": {
-        "UUID": "828006584",
+        "UUID": "2078635846",
         "Name": "Asteroid5(269)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7010,12 +7014,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1567966815",
+        "ParentID": "864587989",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_149": {
-        "UUID": "1742848243",
+        "UUID": "2078230330",
         "Name": "Asteroid5(270)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7063,12 +7067,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "381399164",
+        "ParentID": "1661240406",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_150": {
-        "UUID": "1716503109",
+        "UUID": "1763088305",
         "Name": "Asteroid6(275)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7116,12 +7120,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1903385336",
+        "ParentID": "191529647",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_151": {
-        "UUID": "1492963433",
+        "UUID": "2100587179",
         "Name": "Asteroid6(276)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7169,12 +7173,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "817072227",
+        "ParentID": "759589564",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_152": {
-        "UUID": "1251170446",
+        "UUID": "1343628459",
         "Name": "Asteroid_2(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7222,12 +7226,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "691190584",
+        "ParentID": "1600227869",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_153": {
-        "UUID": "1505931352",
+        "UUID": "369280719",
         "Name": "Group1(243)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7275,12 +7279,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "566086688",
+        "ParentID": "160344936",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_154": {
-        "UUID": "43758",
+        "UUID": "18715615",
         "Name": "Asteroid3(193)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7328,12 +7332,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "901415504",
+        "ParentID": "754792150",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_155": {
-        "UUID": "898992071",
+        "UUID": "1624741833",
         "Name": "Group1(253)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7381,12 +7385,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1534187703",
+        "ParentID": "459433060",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_156": {
-        "UUID": "316083276",
+        "UUID": "1745016862",
         "Name": "Group1(254)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7434,12 +7438,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "140436077",
+        "ParentID": "1567631842",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_157": {
-        "UUID": "768827587",
+        "UUID": "226587571",
         "Name": "Asteroid3(201)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7487,12 +7491,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1954555673",
+        "ParentID": "682564048",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_158": {
-        "UUID": "515533052",
+        "UUID": "1985893376",
         "Name": "Asteroid6(290)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7540,12 +7544,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "671734131",
+        "ParentID": "1273444992",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_159": {
-        "UUID": "1032420981",
+        "UUID": "590569342",
         "Name": "Asteroid6(291)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7593,12 +7597,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1050553632",
+        "ParentID": "1798905284",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_160": {
-        "UUID": "1903453111",
+        "UUID": "306253920",
         "Name": "Asteroid5(284)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7646,12 +7650,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1596363946",
+        "ParentID": "338484324",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_161": {
-        "UUID": "1240668208",
+        "UUID": "1486516904",
         "Name": "Asteroid6(292)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7699,12 +7703,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1733101275",
+        "ParentID": "1279062673",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_162": {
-        "UUID": "474059534",
+        "UUID": "1261457160",
         "Name": "Asteroid5(285)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7752,12 +7756,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1727676433",
+        "ParentID": "2065450431",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_163": {
-        "UUID": "1970129518",
+        "UUID": "417708648",
         "Name": "Asteroid6(293)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7805,12 +7809,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2001873423",
+        "ParentID": "1071969884",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_164": {
-        "UUID": "459155141",
+        "UUID": "70234734",
         "Name": "Asteroid_3_PF(203)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7839,12 +7843,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_165": {
-        "UUID": "1545985966",
+        "UUID": "2139635242",
         "Name": "Asteroid_3_PF(204)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7873,12 +7877,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_166": {
-        "UUID": "1208551246",
+        "UUID": "1194525480",
         "Name": "Asteroid4_PF(258)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7907,12 +7911,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_167": {
-        "UUID": "2137008306",
+        "UUID": "606729358",
         "Name": "Asteroid_3_PF(205)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7941,12 +7945,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_168": {
-        "UUID": "840724219",
+        "UUID": "101296828",
         "Name": "Asteroid4_PF(259)",
         "Tag": "Default",
         "Layer": "Default",
@@ -7975,12 +7979,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_169": {
-        "UUID": "246568367",
+        "UUID": "50165440",
         "Name": "Asteroid4_PF(260)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8009,12 +8013,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_170": {
-        "UUID": "1499488436",
+        "UUID": "759688218",
         "Name": "Asteroid_3_PF(206)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8043,12 +8047,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_171": {
-        "UUID": "261871145",
+        "UUID": "2026167062",
         "Name": "Asteroid4_PF(261)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8077,12 +8081,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_172": {
-        "UUID": "1742306662",
+        "UUID": "2018703013",
         "Name": "Asteroid4_PF(262)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8111,12 +8115,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_173": {
-        "UUID": "518314307",
+        "UUID": "2055190158",
         "Name": "Asteroid_3_PF(207)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8145,12 +8149,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_174": {
-        "UUID": "1392647106",
+        "UUID": "1853557802",
         "Name": "Asteroid4_PF(263)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8179,12 +8183,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_175": {
-        "UUID": "744988423",
+        "UUID": "2107901165",
         "Name": "Asteroid_3_PF(208)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8213,12 +8217,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_176": {
-        "UUID": "813955339",
+        "UUID": "1597023426",
         "Name": "Asteroid4_PF(264)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8247,12 +8251,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_177": {
-        "UUID": "586179483",
+        "UUID": "402118121",
         "Name": "Asteroid4_PF(265)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8281,12 +8285,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_178": {
-        "UUID": "1770042002",
+        "UUID": "1268879849",
         "Name": "Asteroid_3_PF(209)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8315,12 +8319,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_179": {
-        "UUID": "892621794",
+        "UUID": "1796664237",
         "Name": "Asteroid4_PF(266)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8349,12 +8353,12 @@
                 }
             }
         },
-        "ParentID": "740892383",
+        "ParentID": "116109773",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_180": {
-        "UUID": "1340143188",
+        "UUID": "1080857368",
         "Name": "Asteroid5_PF(285)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8383,12 +8387,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_181": {
-        "UUID": "386880539",
+        "UUID": "396343001",
         "Name": "Asteroid5_PF(286)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8417,12 +8421,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_182": {
-        "UUID": "1270105045",
+        "UUID": "778692318",
         "Name": "Asteroid6_PF(291)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8451,12 +8455,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_183": {
-        "UUID": "1196689073",
+        "UUID": "113202963",
         "Name": "Asteroid6_PF(292)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8485,12 +8489,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_184": {
-        "UUID": "914382321",
+        "UUID": "38502533",
         "Name": "Asteroid5_PF(287)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8519,12 +8523,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_185": {
-        "UUID": "206338673",
+        "UUID": "525258537",
         "Name": "Asteroid6_PF(293)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8553,12 +8557,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_186": {
-        "UUID": "986638150",
+        "UUID": "1673063361",
         "Name": "Asteroid5_PF(288)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8587,12 +8591,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_187": {
-        "UUID": "1322708208",
+        "UUID": "831242901",
         "Name": "Asteroid6_PF(294)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8621,12 +8625,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_188": {
-        "UUID": "2021882161",
+        "UUID": "1572691165",
         "Name": "Asteroid5_PF(289)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8655,12 +8659,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_189": {
-        "UUID": "52353778",
+        "UUID": "730372523",
         "Name": "Asteroid6_PF(295)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8689,12 +8693,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_190": {
-        "UUID": "642629179",
+        "UUID": "1147630117",
         "Name": "Asteroid6_PF(296)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8723,12 +8727,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_191": {
-        "UUID": "1959253208",
+        "UUID": "2027289022",
         "Name": "Asteroid5_PF(290)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8757,12 +8761,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_192": {
-        "UUID": "1301304022",
+        "UUID": "673785234",
         "Name": "Asteroid5_PF(291)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8791,12 +8795,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_193": {
-        "UUID": "47216026",
+        "UUID": "2116474893",
         "Name": "Asteroid6_PF(297)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8814,9 +8818,9 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.675587",
+                    "value_Y": "0.675586",
                     "value_Z": "0.000000",
-                    "value_W": "0.737280"
+                    "value_W": "0.737282"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -8825,12 +8829,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_194": {
-        "UUID": "1576966236",
+        "UUID": "1508086648",
         "Name": "Asteroid6_PF(298)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8859,12 +8863,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_195": {
-        "UUID": "2012347328",
+        "UUID": "1877534931",
         "Name": "Asteroid5_PF(292)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8893,12 +8897,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_196": {
-        "UUID": "1947676055",
+        "UUID": "677321908",
         "Name": "Asteroid5_PF(293)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8927,12 +8931,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_197": {
-        "UUID": "594702634",
+        "UUID": "1382636042",
         "Name": "Asteroid5_PF(294)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8961,12 +8965,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_198": {
-        "UUID": "307367554",
+        "UUID": "1696886954",
         "Name": "Asteroid5_PF(295)",
         "Tag": "Default",
         "Layer": "Default",
@@ -8995,12 +8999,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_199": {
-        "UUID": "1709418326",
+        "UUID": "1596235670",
         "Name": "Asteroid6_PF(299)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9029,12 +9033,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_200": {
-        "UUID": "17041353",
+        "UUID": "1392332467",
         "Name": "Asteroid6_PF(300)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9063,12 +9067,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_201": {
-        "UUID": "1025064069",
+        "UUID": "314343074",
         "Name": "Asteroid6_PF(301)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9097,12 +9101,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_202": {
-        "UUID": "808990745",
+        "UUID": "2020792024",
         "Name": "Asteroid5_PF(296)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9131,12 +9135,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_203": {
-        "UUID": "691047776",
+        "UUID": "1465336993",
         "Name": "Asteroid5_PF(297)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9165,12 +9169,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_204": {
-        "UUID": "1361069155",
+        "UUID": "2016138918",
         "Name": "Asteroid6_PF(302)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9199,12 +9203,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_205": {
-        "UUID": "1279716380",
+        "UUID": "1781474864",
         "Name": "Asteroid6_PF(303)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9233,12 +9237,12 @@
                 }
             }
         },
-        "ParentID": "1258879550",
+        "ParentID": "550058725",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_206": {
-        "UUID": "332545244",
+        "UUID": "143474059",
         "Name": "Asteroid1(23)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9286,12 +9290,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1350549186",
+        "ParentID": "1710099921",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_207": {
-        "UUID": "111234217",
+        "UUID": "861019442",
         "Name": "Asteroid6(294)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9339,12 +9343,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1160878258",
+        "ParentID": "225726614",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_208": {
-        "UUID": "411390675",
+        "UUID": "176049124",
         "Name": "Group1(255)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9392,12 +9396,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "958145373",
+        "ParentID": "27264548",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_209": {
-        "UUID": "440784136",
+        "UUID": "1026888575",
         "Name": "Group1(256)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9445,12 +9449,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1901970519",
+        "ParentID": "1957036007",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_210": {
-        "UUID": "291016826",
+        "UUID": "1131387798",
         "Name": "Asteroid3(202)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9498,12 +9502,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1100345632",
+        "ParentID": "1556375785",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_211": {
-        "UUID": "1521717148",
+        "UUID": "797196245",
         "Name": "Asteroid5(286)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9551,12 +9555,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2126589688",
+        "ParentID": "856150806",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_212": {
-        "UUID": "1658803457",
+        "UUID": "2032400077",
         "Name": "Asteroid5(287)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9604,12 +9608,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1335593127",
+        "ParentID": "519158394",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_213": {
-        "UUID": "179911431",
+        "UUID": "28259987",
         "Name": "Group1(257)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9657,12 +9661,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1434663414",
+        "ParentID": "29286017",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_214": {
-        "UUID": "1489108347",
+        "UUID": "393534275",
         "Name": "Group1(258)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9710,12 +9714,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1089640477",
+        "ParentID": "959808554",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_215": {
-        "UUID": "1291683915",
+        "UUID": "653391349",
         "Name": "Asteroid3(203)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9763,12 +9767,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1999818942",
+        "ParentID": "1730177982",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_216": {
-        "UUID": "300644443",
+        "UUID": "1760497975",
         "Name": "Asteroid6(295)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9816,12 +9820,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1587275031",
+        "ParentID": "68557298",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_217": {
-        "UUID": "1791142441",
+        "UUID": "364950",
         "Name": "Asteroid5(288)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9869,12 +9873,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "313942278",
+        "ParentID": "1318980424",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_218": {
-        "UUID": "1047470865",
+        "UUID": "1785863833",
         "Name": "Asteroid6(296)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9922,12 +9926,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2034261119",
+        "ParentID": "187869937",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_219": {
-        "UUID": "1719407339",
+        "UUID": "765206934",
         "Name": "Asteroid5(289)",
         "Tag": "Default",
         "Layer": "Default",
@@ -9975,12 +9979,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "746846249",
+        "ParentID": "1517473647",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_220": {
-        "UUID": "1824897445",
+        "UUID": "1845120885",
         "Name": "Asteroid6(297)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10028,12 +10032,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1308640465",
+        "ParentID": "427279975",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_221": {
-        "UUID": "1757494531",
+        "UUID": "984338339",
         "Name": "Asteroid5(290)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10081,12 +10085,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1864089790",
+        "ParentID": "715661231",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_222": {
-        "UUID": "1350987632",
+        "UUID": "121356455",
         "Name": "Panel(26)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10134,12 +10138,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "630479786",
+        "ParentID": "739970945",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_223": {
-        "UUID": "1621156166",
+        "UUID": "757086257",
         "Name": "HUD_Elements(26)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10187,12 +10191,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "630479786",
+        "ParentID": "739970945",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_224": {
-        "UUID": "1215397707",
+        "UUID": "1263666629",
         "Name": "Wall(26)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10240,12 +10244,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "630479786",
+        "ParentID": "739970945",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_225": {
-        "UUID": "2053099953",
+        "UUID": "1771810960",
         "Name": "Weapons(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10314,12 +10318,12 @@
                 }
             }
         },
-        "ParentID": "67436426",
+        "ParentID": "1531953962",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_226": {
-        "UUID": "212799846",
+        "UUID": "1642678833",
         "Name": "Shields(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10388,12 +10392,12 @@
                 }
             }
         },
-        "ParentID": "67436426",
+        "ParentID": "1531953962",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_227": {
-        "UUID": "1995881360",
+        "UUID": "701411308",
         "Name": "Engines(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10462,12 +10466,12 @@
                 }
             }
         },
-        "ParentID": "67436426",
+        "ParentID": "1531953962",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_228": {
-        "UUID": "179301778",
+        "UUID": "1326025135",
         "Name": "Hull(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10536,12 +10540,12 @@
                 }
             }
         },
-        "ParentID": "1681233225",
+        "ParentID": "1859578117",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_229": {
-        "UUID": "1994129774",
+        "UUID": "1021422952",
         "Name": "Shield(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10610,12 +10614,12 @@
                 }
             }
         },
-        "ParentID": "1681233225",
+        "ParentID": "1859578117",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_230": {
-        "UUID": "638700751",
+        "UUID": "713854434",
         "Name": "crosshair_1(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10683,12 +10687,12 @@
                 "texture": "CrosshairNormal_Image_v2"
             }
         },
-        "ParentID": "653778471",
+        "ParentID": "2079080485",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_231": {
-        "UUID": "1188590589",
+        "UUID": "45506993",
         "Name": "crosshair_2(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10756,12 +10760,12 @@
                 "texture": "CrosshairCharged_Image_v2"
             }
         },
-        "ParentID": "653778471",
+        "ParentID": "2079080485",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_232": {
-        "UUID": "1878026918",
+        "UUID": "703980328",
         "Name": "HeatBar(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10830,12 +10834,12 @@
                 }
             }
         },
-        "ParentID": "653778471",
+        "ParentID": "2079080485",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_233": {
-        "UUID": "570210483",
+        "UUID": "1942623854",
         "Name": "Puzzle_Background(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10903,12 +10907,12 @@
                 "texture": "Puzzle_Backgroudn"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_234": {
-        "UUID": "241338501",
+        "UUID": "1042734921",
         "Name": "Base(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -10976,12 +10980,12 @@
                 "texture": "Base"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_235": {
-        "UUID": "315723993",
+        "UUID": "563248106",
         "Name": "Circle_Interior(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11049,12 +11053,12 @@
                 "texture": "circle_1"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_236": {
-        "UUID": "1524989608",
+        "UUID": "844993606",
         "Name": "Circle_Mid(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11122,12 +11126,12 @@
                 "texture": "circle_1"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_237": {
-        "UUID": "1857474535",
+        "UUID": "1132817408",
         "Name": "Slave_Base(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11195,12 +11199,12 @@
                 "texture": "Slave_1"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_238": {
-        "UUID": "2064346189",
+        "UUID": "1543826293",
         "Name": "Slave_Top_Selected(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11268,12 +11272,12 @@
                 "texture": "Selected_top"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_239": {
-        "UUID": "1502948894",
+        "UUID": "1173812603",
         "Name": "Slave_Bottom_Select(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11341,12 +11345,12 @@
                 "texture": "Selected_bottom"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_240": {
-        "UUID": "664249099",
+        "UUID": "1664530525",
         "Name": "Core(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11414,12 +11418,12 @@
                 "texture": "Nucli"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_241": {
-        "UUID": "1773666981",
+        "UUID": "1619637964",
         "Name": "Slave_Mid_Selected(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11487,12 +11491,12 @@
                 "texture": "Selected_mid"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_242": {
-        "UUID": "2011698054",
+        "UUID": "743354968",
         "Name": "Circle_Exteriror(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11560,12 +11564,12 @@
                 "texture": "circle_1"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_243": {
-        "UUID": "1841727488",
+        "UUID": "907818075",
         "Name": "Circle_Exterior_Sel(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11633,12 +11637,12 @@
                 "texture": "circle_1_selected"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_244": {
-        "UUID": "955846972",
+        "UUID": "610984718",
         "Name": "Circle_Mid_Sel(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11706,12 +11710,12 @@
                 "texture": "circle_1_selected"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_245": {
-        "UUID": "798784376",
+        "UUID": "10972102",
         "Name": "Circle_Interior_Sel(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11779,12 +11783,12 @@
                 "texture": "circle_1_selected"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_246": {
-        "UUID": "930518784",
+        "UUID": "1532018657",
         "Name": "Animation",
         "Tag": "Default",
         "Layer": "Default",
@@ -11863,12 +11867,12 @@
                 "anim_texture_11": "Screen_anim_00022"
             }
         },
-        "ParentID": "108865647",
+        "ParentID": "1091363641",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_247": {
-        "UUID": "509081815",
+        "UUID": "1600623448",
         "Name": "BackRadar(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -11927,7 +11931,7 @@
                 "max_distance": "563.000000",
                 "transparent": "0",
                 "background_texture": "Radar_shape",
-                "center_go": "831208982",
+                "center_go": "179838761",
                 "markers_count": "2",
                 "marker_name_0": "Rebels",
                 "marker_texture_0": "RebelsMarker",
@@ -11936,12 +11940,12 @@
                 "entities_count": "0"
             }
         },
-        "ParentID": "865419524",
+        "ParentID": "1709135554",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_248": {
-        "UUID": "714932027",
+        "UUID": "1931146731",
         "Name": "FrontRadar(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12000,7 +12004,7 @@
                 "max_distance": "1564.000122",
                 "transparent": "0",
                 "background_texture": "Radar_shape",
-                "center_go": "831208982",
+                "center_go": "179838761",
                 "markers_count": "2",
                 "marker_name_0": "Rebels",
                 "marker_texture_0": "RebelsMarker",
@@ -12009,12 +12013,12 @@
                 "entities_count": "0"
             }
         },
-        "ParentID": "865419524",
+        "ParentID": "1709135554",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_249": {
-        "UUID": "2054165248",
+        "UUID": "857871222",
         "Name": "SpeedBar",
         "Tag": "Default",
         "Layer": "Default",
@@ -12083,12 +12087,12 @@
                 }
             }
         },
-        "ParentID": "1571480172",
+        "ParentID": "1805008411",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_250": {
-        "UUID": "1365259043",
+        "UUID": "37156498",
         "Name": "CannonImage",
         "Tag": "Default",
         "Layer": "Default",
@@ -12156,12 +12160,12 @@
                 "texture": "Cannon"
             }
         },
-        "ParentID": "1571480172",
+        "ParentID": "1805008411",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_251": {
-        "UUID": "926132836",
+        "UUID": "1302236270",
         "Name": "BasicImage",
         "Tag": "Default",
         "Layer": "Default",
@@ -12229,12 +12233,12 @@
                 "texture": "Basic"
             }
         },
-        "ParentID": "1571480172",
+        "ParentID": "1805008411",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_252": {
-        "UUID": "97673981",
+        "UUID": "526744624",
         "Name": "AckbarNameText(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12251,8 +12255,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "124.921829",
-                    "value_Y": "26.610565"
+                    "value_X": "124.921783",
+                    "value_Y": "26.610556"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -12268,8 +12272,8 @@
                 "Active": "1",
                 "UUID": "1687529910",
                 "position": {
-                    "value_X": "-189.667984",
-                    "value_Y": "12.796876",
+                    "value_X": "-94.834000",
+                    "value_Y": "6.398438",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -12304,12 +12308,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "171691103",
+        "ParentID": "42527085",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_253": {
-        "UUID": "1227004799",
+        "UUID": "2056711332",
         "Name": "TextBoxText(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12343,8 +12347,8 @@
                 "Active": "1",
                 "UUID": "1603433722",
                 "position": {
-                    "value_X": "-203.678162",
-                    "value_Y": "-13.025392",
+                    "value_X": "-101.839081",
+                    "value_Y": "-6.512695",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -12379,12 +12383,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "171691103",
+        "ParentID": "42527085",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_254": {
-        "UUID": "549117166",
+        "UUID": "385030506",
         "Name": "AckbarImageAnim(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12418,8 +12422,8 @@
                 "Active": "1",
                 "UUID": "507093443",
                 "position": {
-                    "value_X": "-311.238281",
-                    "value_Y": "11.197267",
+                    "value_X": "-155.619141",
+                    "value_Y": "5.598633",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -12474,12 +12478,12 @@
                 "anim_texture_22": "Ackbar_23"
             }
         },
-        "ParentID": "171691103",
+        "ParentID": "42527085",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_255": {
-        "UUID": "582330192",
+        "UUID": "1317976372",
         "Name": "Asteroid3(204)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12527,12 +12531,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "459155141",
+        "ParentID": "70234734",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_256": {
-        "UUID": "66525519",
+        "UUID": "1151725996",
         "Name": "Asteroid3(205)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12580,12 +12584,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1545985966",
+        "ParentID": "2139635242",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_257": {
-        "UUID": "1598415367",
+        "UUID": "1571155830",
         "Name": "Group1(259)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12633,12 +12637,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1208551246",
+        "ParentID": "1194525480",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_258": {
-        "UUID": "673678367",
+        "UUID": "1212996838",
         "Name": "Asteroid3(206)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12686,12 +12690,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2137008306",
+        "ParentID": "606729358",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_259": {
-        "UUID": "1118738427",
+        "UUID": "258440123",
         "Name": "Group1(260)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12739,12 +12743,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "840724219",
+        "ParentID": "101296828",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_260": {
-        "UUID": "603633124",
+        "UUID": "1241808817",
         "Name": "Group1(261)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12792,12 +12796,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "246568367",
+        "ParentID": "50165440",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_261": {
-        "UUID": "1434237861",
+        "UUID": "427503784",
         "Name": "Asteroid3(207)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12845,12 +12849,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1499488436",
+        "ParentID": "759688218",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_262": {
-        "UUID": "1526986122",
+        "UUID": "1265082091",
         "Name": "Group1(262)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12898,12 +12902,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "261871145",
+        "ParentID": "2026167062",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_263": {
-        "UUID": "1270338674",
+        "UUID": "1533443100",
         "Name": "Group1(263)",
         "Tag": "Default",
         "Layer": "Default",
@@ -12951,12 +12955,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1742306662",
+        "ParentID": "2018703013",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_264": {
-        "UUID": "282304506",
+        "UUID": "1987521789",
         "Name": "Asteroid3(208)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13004,12 +13008,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "518314307",
+        "ParentID": "2055190158",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_265": {
-        "UUID": "551674882",
+        "UUID": "145677524",
         "Name": "Group1(264)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13057,12 +13061,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1392647106",
+        "ParentID": "1853557802",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_266": {
-        "UUID": "411933127",
+        "UUID": "1797117270",
         "Name": "Asteroid3(209)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13110,12 +13114,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "744988423",
+        "ParentID": "2107901165",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_267": {
-        "UUID": "1699612829",
+        "UUID": "409213156",
         "Name": "Group1(265)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13163,12 +13167,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "813955339",
+        "ParentID": "1597023426",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_268": {
-        "UUID": "248334462",
+        "UUID": "1311072774",
         "Name": "Group1(266)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13216,12 +13220,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "586179483",
+        "ParentID": "402118121",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_269": {
-        "UUID": "2050220552",
+        "UUID": "1552666566",
         "Name": "Asteroid3(210)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13269,12 +13273,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1770042002",
+        "ParentID": "1268879849",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_270": {
-        "UUID": "1609485643",
+        "UUID": "314652447",
         "Name": "Group1(267)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13322,12 +13326,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "892621794",
+        "ParentID": "1796664237",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_271": {
-        "UUID": "450734490",
+        "UUID": "2084813187",
         "Name": "Asteroid5(291)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13375,12 +13379,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1340143188",
+        "ParentID": "1080857368",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_272": {
-        "UUID": "1554878326",
+        "UUID": "506675044",
         "Name": "Asteroid5(292)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13428,12 +13432,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "386880539",
+        "ParentID": "396343001",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_273": {
-        "UUID": "1828256470",
+        "UUID": "656852702",
         "Name": "Asteroid6(298)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13481,12 +13485,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1270105045",
+        "ParentID": "778692318",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_274": {
-        "UUID": "1540456533",
+        "UUID": "77703077",
         "Name": "Asteroid6(299)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13534,12 +13538,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1196689073",
+        "ParentID": "113202963",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_275": {
-        "UUID": "643469166",
+        "UUID": "254617024",
         "Name": "Asteroid5(293)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13587,12 +13591,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "914382321",
+        "ParentID": "38502533",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_276": {
-        "UUID": "310446019",
+        "UUID": "1361805566",
         "Name": "Asteroid6(300)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13640,12 +13644,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "206338673",
+        "ParentID": "525258537",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_277": {
-        "UUID": "1286865391",
+        "UUID": "1009779083",
         "Name": "Asteroid5(294)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13693,12 +13697,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "986638150",
+        "ParentID": "1673063361",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_278": {
-        "UUID": "1985117618",
+        "UUID": "1804869351",
         "Name": "Asteroid6(301)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13746,12 +13750,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1322708208",
+        "ParentID": "831242901",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_279": {
-        "UUID": "268612799",
+        "UUID": "1098449060",
         "Name": "Asteroid5(295)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13799,12 +13803,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2021882161",
+        "ParentID": "1572691165",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_280": {
-        "UUID": "804081103",
+        "UUID": "1081852943",
         "Name": "Asteroid6(302)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13852,12 +13856,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "52353778",
+        "ParentID": "730372523",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_281": {
-        "UUID": "326761967",
+        "UUID": "989793372",
         "Name": "Asteroid6(303)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13905,12 +13909,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "642629179",
+        "ParentID": "1147630117",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_282": {
-        "UUID": "1200631836",
+        "UUID": "1949087076",
         "Name": "Asteroid5(296)",
         "Tag": "Default",
         "Layer": "Default",
@@ -13958,12 +13962,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1959253208",
+        "ParentID": "2027289022",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_283": {
-        "UUID": "535578328",
+        "UUID": "47147913",
         "Name": "Asteroid5(297)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14011,12 +14015,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1301304022",
+        "ParentID": "673785234",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_284": {
-        "UUID": "740210827",
+        "UUID": "1129838357",
         "Name": "Asteroid6(304)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14064,12 +14068,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "47216026",
+        "ParentID": "2116474893",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_285": {
-        "UUID": "1052909508",
+        "UUID": "297746734",
         "Name": "Asteroid6(305)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14117,12 +14121,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1576966236",
+        "ParentID": "1508086648",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_286": {
-        "UUID": "258566123",
+        "UUID": "1913206970",
         "Name": "Asteroid5(298)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14170,12 +14174,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2012347328",
+        "ParentID": "1877534931",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_287": {
-        "UUID": "1424120229",
+        "UUID": "1709253195",
         "Name": "Asteroid5(299)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14223,12 +14227,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1947676055",
+        "ParentID": "677321908",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_288": {
-        "UUID": "1501964866",
+        "UUID": "1405357884",
         "Name": "Asteroid5(300)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14276,12 +14280,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "594702634",
+        "ParentID": "1382636042",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_289": {
-        "UUID": "874712415",
+        "UUID": "918800997",
         "Name": "Asteroid5(301)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14329,12 +14333,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "307367554",
+        "ParentID": "1696886954",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_290": {
-        "UUID": "11783089",
+        "UUID": "748818948",
         "Name": "Asteroid6(306)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14382,12 +14386,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1709418326",
+        "ParentID": "1596235670",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_291": {
-        "UUID": "11686115",
+        "UUID": "1210964136",
         "Name": "Asteroid6(307)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14435,12 +14439,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "17041353",
+        "ParentID": "1392332467",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_292": {
-        "UUID": "1850193849",
+        "UUID": "473614883",
         "Name": "Asteroid6(308)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14488,12 +14492,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1025064069",
+        "ParentID": "314343074",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_293": {
-        "UUID": "1981846875",
+        "UUID": "1077853305",
         "Name": "Asteroid5(302)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14541,12 +14545,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "808990745",
+        "ParentID": "2020792024",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_294": {
-        "UUID": "189480978",
+        "UUID": "1703870284",
         "Name": "Asteroid5(303)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14594,12 +14598,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "691047776",
+        "ParentID": "1465336993",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_295": {
-        "UUID": "2010609464",
+        "UUID": "303865731",
         "Name": "Asteroid6(309)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14647,12 +14651,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1361069155",
+        "ParentID": "2016138918",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_296": {
-        "UUID": "1214930743",
+        "UUID": "574651354",
         "Name": "Asteroid6(310)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14700,12 +14704,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1279716380",
+        "ParentID": "1781474864",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_297": {
-        "UUID": "1754854014",
+        "UUID": "181573224",
         "Name": "RadarAnimation(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14780,12 +14784,12 @@
                 "anim_texture_7": "Radar_8"
             }
         },
-        "ParentID": "509081815",
+        "ParentID": "1600623448",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_298": {
-        "UUID": "51663570",
+        "UUID": "1220681862",
         "Name": "RadarAnimation(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -14860,7 +14864,7 @@
                 "anim_texture_7": "Radar_8"
             }
         },
-        "ParentID": "714932027",
+        "ParentID": "1931146731",
         "IsRoot": "0",
         "IsStatic": "0"
     }
