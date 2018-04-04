@@ -22,6 +22,8 @@ public class GuillemMovement
 	TheTransform target_transform = null;
 	TheTransform center_transform = null;
 
+	public TheVector3 target_pos;
+
 	TheTimer timer = new TheTimer();
 	float random_time = 0;
 	
@@ -78,6 +80,7 @@ public class GuillemMovement
 		{
 			MoveFront();
 			OrientateToTarget();
+			target_pos = target_transform.GlobalPosition;
 		}
 	}
 
@@ -195,4 +198,5 @@ public class GuillemMovement
 		modified_move_speed = TheRandom.RandomRange(move_min, move_max);
 		modified_rotation_speed = TheRandom.RandomRange(rotation_min, rotation_max);
 	}
+
 }
