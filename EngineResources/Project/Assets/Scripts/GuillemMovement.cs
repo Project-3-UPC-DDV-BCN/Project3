@@ -12,7 +12,8 @@ public class GuillemMovement
 	public TheGameObject force_target;
 	private bool forced = false;
 
-	public TheGameObject center_object;
+	public string center_go_name;
+	private TheGameObject center_object;
 	public float max_distance_to_center_object;
 
 	public float move_speed = 300;
@@ -37,7 +38,9 @@ public class GuillemMovement
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
 		self_transform = TheGameObject.Self.GetComponent<TheTransform>();
-
+		
+		center_object = TheGameObject.Find(center_go_name);
+		
 		if(center_object != null)
 			center_transform = 	center_object.GetComponent<TheTransform>();
 
