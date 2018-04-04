@@ -1,11 +1,11 @@
 {
-    "UUID": "334737775",
+    "UUID": "142453972",
     "assets_path": "./Project/Assets/Prefabs/XWing_1.jprefab",
     "library_path": "./Project/Library/Prefabs/XWing_1.jprefab",
     "prefab_name": "XWing_1",
     "GameObjects_Count": "9",
     "GameObject_0": {
-        "UUID": "286096031",
+        "UUID": "708502766",
         "Name": "XWing_1",
         "Tag": "XWING",
         "Layer": "Default",
@@ -68,7 +68,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "max_distance_to_center_object",
-                            "field_value": "0.000000"
+                            "field_value": "2000.000000"
                         },
                         "field_1": {
                             "field_name": "move_speed",
@@ -158,15 +158,15 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "LaserFactoryGO",
-                            "field_value": "0"
+                            "field_value": "23064958"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "580363996"
+                            "field_value": "1542207302"
                         },
                         "field_2": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "616947211"
+                            "field_value": "127189836"
                         }
                     },
                     "vec2_fields": {},
@@ -180,7 +180,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "380948326",
+        "UUID": "1119183743",
         "Name": "Xwing(19)",
         "Tag": "XWING",
         "Layer": "Default",
@@ -281,12 +281,12 @@
                 }
             }
         },
-        "ParentID": "286096031",
+        "ParentID": "708502766",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "580363996",
+        "UUID": "1542207302",
         "Name": "Laser_Spawner_L(16)",
         "Tag": "Default",
         "Layer": "Default",
@@ -315,12 +315,12 @@
                 }
             }
         },
-        "ParentID": "286096031",
+        "ParentID": "708502766",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "616947211",
+        "UUID": "127189836",
         "Name": "Laser_Spawner_R(16)",
         "Tag": "Default",
         "Layer": "Default",
@@ -349,12 +349,12 @@
                 }
             }
         },
-        "ParentID": "286096031",
+        "ParentID": "708502766",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "661353384",
+        "UUID": "1008495575",
         "Name": "Body(19)",
         "Tag": "Default",
         "Layer": "Default",
@@ -402,12 +402,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "380948326",
+        "ParentID": "1119183743",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "2034555784",
+        "UUID": "492588410",
         "Name": "BotRight_Wing(19)",
         "Tag": "Default",
         "Layer": "Default",
@@ -455,12 +455,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "380948326",
+        "ParentID": "1119183743",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1934365391",
+        "UUID": "1331333667",
         "Name": "BotLeft_Wing(19)",
         "Tag": "Default",
         "Layer": "Default",
@@ -508,12 +508,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "380948326",
+        "ParentID": "1119183743",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "1605899794",
+        "UUID": "1239542040",
         "Name": "TopRight_Wing(19)",
         "Tag": "Default",
         "Layer": "Default",
@@ -561,12 +561,12 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "380948326",
+        "ParentID": "1119183743",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "2055927960",
+        "UUID": "1526012145",
         "Name": "TopLeft_Wing(19)",
         "Tag": "Default",
         "Layer": "Default",
@@ -614,7 +614,7 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "380948326",
+        "ParentID": "1119183743",
         "IsRoot": "0",
         "IsStatic": "0"
     }

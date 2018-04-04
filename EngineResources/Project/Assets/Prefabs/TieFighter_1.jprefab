@@ -1,11 +1,11 @@
 {
-    "UUID": "1839472731",
+    "UUID": "1989768834",
     "assets_path": "./Project/Assets/Prefabs/TieFighter_1.jprefab",
     "library_path": "./Project/Library/Prefabs/TieFighter_1.jprefab",
     "prefab_name": "TieFighter_1",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "743716106",
+        "UUID": "1968374885",
         "Name": "TieFighter_1",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -68,7 +68,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "max_distance_to_center_object",
-                            "field_value": "0.000000"
+                            "field_value": "2000.000000"
                         },
                         "field_1": {
                             "field_name": "move_speed",
@@ -158,15 +158,15 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "LaserFactoryGO",
-                            "field_value": "0"
+                            "field_value": "23064958"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "1242650948"
+                            "field_value": "2069116720"
                         },
                         "field_2": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "1075447666"
+                            "field_value": "772122360"
                         }
                     },
                     "vec2_fields": {},
@@ -180,7 +180,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "280803009",
+        "UUID": "706418927",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -228,12 +228,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "743716106",
+        "ParentID": "1968374885",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1242650948",
+        "UUID": "2069116720",
         "Name": "Laser_Spawner_L(17)",
         "Tag": "Default",
         "Layer": "Default",
@@ -262,12 +262,12 @@
                 }
             }
         },
-        "ParentID": "743716106",
+        "ParentID": "1968374885",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1075447666",
+        "UUID": "772122360",
         "Name": "Laser_Spawner_R(17)",
         "Tag": "Default",
         "Layer": "Default",
@@ -296,7 +296,7 @@
                 }
             }
         },
-        "ParentID": "743716106",
+        "ParentID": "1968374885",
         "IsRoot": "0",
         "IsStatic": "0"
     }
