@@ -167,7 +167,9 @@ public class GameManager
 			
 			if(slave1_audio != null)
 				slave1_audio.Stop("Play_Engine");
-
+			
+			TheData.AddString("score", score.ToString());
+			TheData.AddString("time", GetTimeFromSeconds(gametime_seconds));
 			TheApplication.LoadScene("VS3 - MainMenu");	
 		}
 	}
