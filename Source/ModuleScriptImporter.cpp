@@ -1689,7 +1689,7 @@ void NSScriptImporter::SetGameObjectTag(MonoObject * object, MonoString * tag)
 	if (go && tag)
 	{
 		const char* new_tag = mono_string_to_utf8(tag);
-		go->SetName(new_tag);
+		go->SetTag(new_tag);
 	}
 }
 
