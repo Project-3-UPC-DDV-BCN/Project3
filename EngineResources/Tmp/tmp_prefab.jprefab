@@ -1,9 +1,9 @@
 {
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "1875499523",
-        "Name": "XWingSpawner",
-        "Tag": "XWING",
+        "UUID": "806513570",
+        "Name": "TieFighterSpawner",
+        "Tag": "TIEFIGHTER",
         "Layer": "Default",
         "Active": "1",
         "Components": {
@@ -11,11 +11,11 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1277563748",
+                "UUID": "514662282",
                 "position": {
-                    "value_X": "-17.287819",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "18.956028",
+                    "value_Y": "7.754495",
+                    "value_Z": "-11.501377"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -24,20 +24,20 @@
                     "value_W": "1.000000"
                 },
                 "scale": {
-                    "value_X": "10.000000",
-                    "value_Y": "10.000000",
-                    "value_Z": "10.000000"
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
                 }
             },
             "Component_1": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "144554593",
+                "UUID": "1305964399",
                 "Script": {
                     "library_path": ".\\Project\\Library\\Scripts\\Spawner.dll",
                     "assets_path": "",
                     "script_name": "Spawner",
-                    "UUID": "926949411",
+                    "UUID": "237292446",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
@@ -54,11 +54,11 @@
                     "string_fields": {
                         "field_0": {
                             "field_name": "tie_fighter_prefab_name",
-                            "field_value": ""
+                            "field_value": "TieFighter_1"
                         },
                         "field_1": {
                             "field_name": "xwing_prefab_name",
-                            "field_value": "XWing_1"
+                            "field_value": ""
                         }
                     },
                     "gameobject_fields": {},
