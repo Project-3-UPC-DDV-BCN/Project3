@@ -29,6 +29,8 @@ public class GameManager
 	
 	private string team; 
 
+	private int ally_killed; 
+
 	private TheText show_gametime; 
 	private TheText show_score; 
 
@@ -45,7 +47,7 @@ public class GameManager
 
 	void Init ()
 	{
-		team = "empire";
+		team = TheData.GetString("faction");
 
         TheConsole.Log(team); 
 	}
@@ -93,6 +95,7 @@ public class GameManager
 			slave1_audio = slave1.GetComponent<TheAudioSource>();
 		}
 			
+		ally_killed = 0; 
 
 		score = 0; 
 		
