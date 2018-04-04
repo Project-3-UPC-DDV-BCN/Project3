@@ -64,7 +64,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 		{
 			physx::PxCapsuleGeometry geo_capsule(box.MinimalEnclosingSphere().r, box.HalfSize().y);
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), geo_capsule, *collider_material);
-			SetColliderCenter(float3::zero + transform->GetLocalPosition());
+			SetColliderCenter(float3::zero);
 			SetType(ComponentType::CompCapsuleCollider);
 			name += "Capsule_";
 		}

@@ -171,6 +171,7 @@ void ComponentTransform::UpdateGlobalMatrix()
 			child_transform->UpdateGlobalMatrix();
 		}
 
+		global_pos = parent_transform->GetGlobalPosition() + position;
 		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
 		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
 		global_scale = parent_transform->GetGlobalScale().Mul(scale);

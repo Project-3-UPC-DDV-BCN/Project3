@@ -1889,6 +1889,8 @@ int NSScriptImporter::GetGameObjectChildCount(MonoObject * object)
 
 MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 {
+	if (!gameobject_name) return nullptr;
+
 	const char* s_name = mono_string_to_utf8(gameobject_name);
 
 	GameObject* go = App->scene->FindGameObjectByName(s_name);
