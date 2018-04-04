@@ -18,14 +18,24 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	SetType(ComponentType::CompRigidBody);
 	SetGameObject(attached_gameobject);
 	rigidbody = App->physics->CreateDynamicRigidBody();
+	float3 offset;
+	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
+	ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
+	if (mesh_renderer != nullptr)
+	{
+		SetPosition(mesh_renderer->bounding_box.CenterPoint());
+	}
+	else
+	{
+		SetPosition(transform->GetGlobalPosition());
+	}
 	//rigidbody->userData = attached_gameobject;
 
 	/*float* matrix = attached_gameobject->GetOpenGLMatrix().ptr();
 	physx::PxMat44 mat(matrix);
 	physx::PxTransform phys_transform(mat);
 	rigidbody->setGlobalPose(phys_transform);*/
-	ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
-	SetPosition(transform->GetGlobalPosition());
+	
 	SetRotation(transform->GetGlobalRotation());
 	/*rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);*/
 	//rigidbody->setActorFlag(physx::PxActorFlag::eVISUALIZATION, false);

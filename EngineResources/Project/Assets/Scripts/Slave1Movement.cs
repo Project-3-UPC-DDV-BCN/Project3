@@ -216,8 +216,12 @@ public class Slave1Movement {
 		if(audio_emiter != null)
 		{
        		audio_source = audio_emiter.GetComponent<TheAudioSource>();
-			audio_source.Play("Play_Engine");
-			audio_source.SetMyRTPCvalue("Speed",vel_percent);
+
+			if(audio_source != null)
+			{
+				audio_source.Play("Play_Engine");
+				audio_source.SetMyRTPCvalue("Speed",vel_percent);
+			}
 		}
 	}
 	
@@ -253,8 +257,8 @@ public class Slave1Movement {
 
 	void SetValuesWithEnergy()
 	{
-		curr_max_vel = 0.5f*max_vel + ((12.5f*(float)engine_energy)/100)*max_vel;
-        shield_regen_energy = 0.5f*shield_regen + ((12.5f * (float)shield_energy) / 100) * shield_regen;
+		curr_max_vel = 0.5f * max_vel + ((12.5f*(float)engine_energy)/100) * max_vel;
+        shield_regen_energy = 0.5f * shield_regen + ((12.5f * (float)shield_energy) / 100) * shield_regen;
     }
 
 	void EnergyManagement()

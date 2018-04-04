@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "ComponentBlast.h"
 #include "PerfTimer.h"
+#include "ComponentMeshRenderer.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
@@ -170,7 +171,6 @@ void ComponentTransform::UpdateGlobalMatrix()
 			child_transform->UpdateGlobalMatrix();
 		}
 
-		global_pos = parent_transform->GetGlobalPosition() + position;
 		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
 		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
 		global_scale = parent_transform->GetGlobalScale().Mul(scale);
@@ -199,6 +199,12 @@ void ComponentTransform::UpdateGlobalMatrix()
 		GetGameObject()->UpdateBoundingBox();
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
+
+		ComponentMeshRenderer* renderer = (ComponentMeshRenderer*)GetGameObject()->GetComponent(Component::CompMeshRenderer);
+		if (renderer)
+		{
+			global_pos = renderer->bounding_box.CenterPoint();
+		}
 
 		if (!rb_transforms_go)
 		{
