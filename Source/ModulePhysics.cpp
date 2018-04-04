@@ -369,7 +369,7 @@ physx::PxTriangleMesh * ModulePhysics::CreateTriangleMesh(Mesh * mesh)
 		meshDesc.points.stride = sizeof(physx::PxVec3);
 		meshDesc.points.data = mesh->vertices;
 
-		meshDesc.triangles.count = mesh->num_indices;
+		meshDesc.triangles.count = mesh->num_indices / 3;
 		meshDesc.triangles.stride = 3 * sizeof(physx::PxU32);
 		meshDesc.triangles.data = mesh->indices;
 
