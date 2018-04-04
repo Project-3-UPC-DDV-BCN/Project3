@@ -28,7 +28,7 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	SetPosition(transform->GetGlobalPosition());
 	SetRotation(transform->GetGlobalRotation());
 	/*rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);*/
-	rigidbody->setActorFlag(physx::PxActorFlag::eVISUALIZATION, false);
+	//rigidbody->setActorFlag(physx::PxActorFlag::eVISUALIZATION, false);
 	transforms_go = false;
 	if (std::find(App->scene->scene_gameobjects.begin(), App->scene->scene_gameobjects.end(), attached_gameobject) != App->scene->scene_gameobjects.end())
 	{

@@ -79,6 +79,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 			ChangeMeshToConvex(false);
 			SetType(ComponentType::CompMeshCollider);
 			name += "Mesh_";
+			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_triangle_mesh, *collider_material);
 		}
 			break;
 		case ComponentCollider::TerrainCollider:
