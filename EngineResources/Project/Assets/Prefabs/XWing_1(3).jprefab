@@ -1,12 +1,12 @@
 {
-    "UUID": "142453972",
-    "assets_path": "./Project/Assets/Prefabs/XWing_1.jprefab",
-    "library_path": "./Project/Library/Prefabs/XWing_1.jprefab",
-    "prefab_name": "XWing_1",
-    "GameObjects_Count": "9",
+    "UUID": "359852786",
+    "assets_path": "./Project/Assets/Prefabs/XWing_1(3).jprefab",
+    "library_path": "./Project/Library/Prefabs/XWing_1(3).jprefab",
+    "prefab_name": "XWing_1(3)",
+    "GameObjects_Count": "10",
     "GameObject_0": {
-        "UUID": "708502766",
-        "Name": "XWing_1",
+        "UUID": "766588204",
+        "Name": "XWing_1(3)",
         "Tag": "XWING",
         "Layer": "Default",
         "Active": "1",
@@ -158,15 +158,15 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "LaserFactoryGO",
-                            "field_value": "23064958"
+                            "field_value": "275985923"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "1542207302"
+                            "field_value": "1895785448"
                         },
                         "field_2": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "127189836"
+                            "field_value": "2133730588"
                         }
                     },
                     "vec2_fields": {},
@@ -180,8 +180,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1119183743",
-        "Name": "Xwing(19)",
+        "UUID": "1373755440",
+        "Name": "Xwing(21)",
         "Tag": "XWING",
         "Layer": "Default",
         "Active": "1",
@@ -197,9 +197,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -281,13 +281,13 @@
                 }
             }
         },
-        "ParentID": "708502766",
+        "ParentID": "766588204",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1542207302",
-        "Name": "Laser_Spawner_L(16)",
+        "UUID": "1895785448",
+        "Name": "Laser_Spawner_L(19)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -315,13 +315,13 @@
                 }
             }
         },
-        "ParentID": "708502766",
+        "ParentID": "766588204",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "127189836",
-        "Name": "Laser_Spawner_R(16)",
+        "UUID": "2133730588",
+        "Name": "Laser_Spawner_R(19)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -349,13 +349,70 @@
                 }
             }
         },
-        "ParentID": "708502766",
+        "ParentID": "766588204",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1008495575",
-        "Name": "Body(19)",
+        "UUID": "275985923",
+        "Name": "REDLaser_Factory(2)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1289349889",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "12",
+                "Active": "1",
+                "UUID": "1279176591",
+                "Object_count": "20",
+                "Spawn_position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Life_time": "2.000000",
+                "Prefab_UID": "957995004"
+            }
+        },
+        "ParentID": "766588204",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "879755474",
+        "Name": "Body(21)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -402,13 +459,13 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "1119183743",
+        "ParentID": "1373755440",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_5": {
-        "UUID": "492588410",
-        "Name": "BotRight_Wing(19)",
+    "GameObject_6": {
+        "UUID": "1074759267",
+        "Name": "BotRight_Wing(21)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -455,13 +512,13 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "1119183743",
+        "ParentID": "1373755440",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_6": {
-        "UUID": "1331333667",
-        "Name": "BotLeft_Wing(19)",
+    "GameObject_7": {
+        "UUID": "1042215386",
+        "Name": "BotLeft_Wing(21)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -508,13 +565,13 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "1119183743",
+        "ParentID": "1373755440",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_7": {
-        "UUID": "1239542040",
-        "Name": "TopRight_Wing(19)",
+    "GameObject_8": {
+        "UUID": "899923870",
+        "Name": "TopRight_Wing(21)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -561,13 +618,13 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "1119183743",
+        "ParentID": "1373755440",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_8": {
-        "UUID": "1526012145",
-        "Name": "TopLeft_Wing(19)",
+    "GameObject_9": {
+        "UUID": "764352045",
+        "Name": "TopLeft_Wing(21)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -614,7 +671,7 @@
                 "has_light": "0"
             }
         },
-        "ParentID": "1119183743",
+        "ParentID": "1373755440",
         "IsRoot": "0",
         "IsStatic": "0"
     }
