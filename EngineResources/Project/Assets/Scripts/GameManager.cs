@@ -41,7 +41,8 @@ public class GameManager
 	
 	public TheGameObject slave1;
 	TheTransform slave1_trans = null;
-	public TheAudioSource slave1_audio;
+	public TheGameObject slave1_audio;
+	TheAudioSource slave1_audiosource;
 
 	public TheVector3 position_to_spawn = new TheVector3(0, 0, 0);
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
@@ -82,6 +83,9 @@ public class GameManager
 		if(background_music != null)
 			audio_source = background_music.GetComponent<TheAudioSource>();
 
+		if(slave1_audio != null)
+			slave1_audiosource = slave1_audio.GetComponent<TheAudioSource>();
+		
 		if(audio_source != null)
 		{
 			audio_source.Play("Play_Calm_song");
@@ -166,8 +170,8 @@ public class GameManager
 				audio_source.Stop("Play_Combat_song");
 			}
 			
-			if(slave1_audio != null)
-				slave1_audio.Stop("Play_Engine");
+			if(slave1_audiosource != null)
+				slave1_audiosource.Stop("Play_Engine");
 			
 			TheData.AddString("score", score.ToString());
 			TheData.AddString("time", GetTimeFromSeconds(gametime_seconds));
