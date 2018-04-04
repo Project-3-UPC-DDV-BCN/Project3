@@ -44,13 +44,7 @@ public class GameManager
 
 	void Init ()
 	{
-		team = TheData.GetString("faction"); 
-		
-		if(team == "rebels")
-			slave1.tag = "Alliance"; 
-
-		else if(team == "empire")
-			slave1.tag = "Empire"; 
+		team = TheData.GetString("faction");  
 
         TheConsole.Log(team); 
 	}
@@ -81,11 +75,6 @@ public class GameManager
 		if(slave1 != null)
 		{
 			slave1_audio = slave1.GetComponent<TheAudioSource>();
-
-			if(team == "rebels")
-				slave1.GetComponent<TheTransform>().GlobalPosition = alliance_spawn;
-			else if(slave1.tag == "empire")
-				slave1.GetComponent<TheTransform>().GlobalPosition = empire_spawn;
 		}
 			
 
