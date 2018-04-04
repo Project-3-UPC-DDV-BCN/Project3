@@ -1,11 +1,11 @@
 {
-    "UUID": "1989768834",
+    "UUID": "118780947",
     "assets_path": "./Project/Assets/Prefabs/TieFighter_1.jprefab",
     "library_path": "./Project/Library/Prefabs/TieFighter_1.jprefab",
     "prefab_name": "TieFighter_1",
-    "GameObjects_Count": "4",
+    "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "1968374885",
+        "UUID": "1836270137",
         "Name": "TieFighter_1",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -158,15 +158,15 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "LaserFactoryGO",
-                            "field_value": "23064958"
+                            "field_value": "1320297674"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "2069116720"
+                            "field_value": "1603283986"
                         },
                         "field_2": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "772122360"
+                            "field_value": "329385540"
                         }
                     },
                     "vec2_fields": {},
@@ -180,7 +180,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "706418927",
+        "UUID": "1114218520",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -228,13 +228,13 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1968374885",
+        "ParentID": "1836270137",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "2069116720",
-        "Name": "Laser_Spawner_L(17)",
+        "UUID": "1603283986",
+        "Name": "Laser_Spawner_L(18)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -262,13 +262,13 @@
                 }
             }
         },
-        "ParentID": "1968374885",
+        "ParentID": "1836270137",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "772122360",
-        "Name": "Laser_Spawner_R(17)",
+        "UUID": "329385540",
+        "Name": "Laser_Spawner_R(18)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -296,7 +296,64 @@
                 }
             }
         },
-        "ParentID": "1968374885",
+        "ParentID": "1836270137",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "1320297674",
+        "Name": "REDLaser_Factory",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1289349889",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "12",
+                "Active": "1",
+                "UUID": "1279176591",
+                "Object_count": "20",
+                "Spawn_position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Life_time": "2.000000",
+                "Prefab_UID": "957995004"
+            }
+        },
+        "ParentID": "1836270137",
         "IsRoot": "0",
         "IsStatic": "0"
     }
