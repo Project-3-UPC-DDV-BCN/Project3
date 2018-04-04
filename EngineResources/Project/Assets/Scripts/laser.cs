@@ -8,6 +8,7 @@ public class laser
 
     public int enemy_damage;
     public int ally_damage;
+	public int slave_damage; 
 
     bool score_added;  
   
@@ -55,9 +56,9 @@ public class laser
 			int to_inc = 0; 
 
 			if(is_enemy)
-				to_inc = 5; 
+				to_inc = enemy_damage; 
 			else
-				to_inc = 10; 
+				to_inc = ally_damage; 
 			
 			if(enemy_properties_scpt != null)
 			{
@@ -84,6 +85,17 @@ public class laser
 			
 			TheGameObject.Self.SetActive(false); 
 			
+		}
+		else if(other_parent.tag == "Alliance")
+		{
+			
+			enemy_properties_scpt = other_parent.GetComponent<TheScript>(0); 
+
+			int to_inc = slave_damage; 
+			enemy_properties_scpt.SetIntField("hp_inc", to_inc);
+			enemy_properties_scpt.CallFunction("SubstractHP"); 
+			enemy_properties_scpt.SetIntField("hp_inc", 0);
+
 		}
 	}
 
