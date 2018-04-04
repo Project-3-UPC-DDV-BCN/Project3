@@ -1,11 +1,11 @@
 {
-    "UUID": "957995004",
+    "UUID": "499246704",
     "assets_path": "./Project/Assets/Prefabs/LaserBulletTest.jprefab",
     "library_path": "./Project/Library/Prefabs/LaserBulletTest.jprefab",
     "prefab_name": "LaserBulletTest",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "23064958",
+        "UUID": "1031952489",
         "Name": "LaserBulletTest",
         "Tag": "Default",
         "Layer": "Default",
@@ -109,9 +109,9 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "2.253800",
-                        "value_Y": "2.151600",
-                        "value_Z": "8.888500"
+                        "value_X": "1.004000",
+                        "value_Y": "1.152000",
+                        "value_Z": "7.388000"
                     }
                 }
             },
@@ -124,7 +124,7 @@
                     "assets_path": "",
                     "script_name": "laser",
                     "UUID": "1711375098",
-                    "int_fields_count": "0",
+                    "int_fields_count": "3",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
                     "bool_fields_count": "0",
@@ -133,7 +133,20 @@
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
-                    "int_fields": {},
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "ally_damage",
+                            "field_value": "150"
+                        },
+                        "field_1": {
+                            "field_name": "enemy_damage",
+                            "field_value": "150"
+                        },
+                        "field_2": {
+                            "field_name": "slave_damage",
+                            "field_value": "150"
+                        }
+                    },
                     "double_fields": {},
                     "float_fields": {},
                     "bool_fields": {},
