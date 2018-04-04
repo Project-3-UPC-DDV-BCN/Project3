@@ -60,6 +60,7 @@ public class GuillemMovement
 			if(TheVector3.Distance(center_transform.LocalPosition, self_transform.LocalPosition) > max_distance_to_center_object)
 			{
 				target_transform = center_transform;
+				TheConsole.Log("TooFar");
 			}
 			else if(TheVector3.Distance(center_transform.LocalPosition, self_transform.LocalPosition) < max_distance_to_center_object / 2 && 
 					target_transform == center_transform && !forced)
@@ -130,7 +131,6 @@ public class GuillemMovement
 		float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z + 30) - 270;
 		
 		float angle_diff_x = self_transform.LocalRotation.y - target_x_angle;
-		TheConsole.Log(angle_diff_x);
 
 		if(NormalizeAngle(angle_diff_x) > 180)
 			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
@@ -144,7 +144,6 @@ public class GuillemMovement
 
 		if(target_pos.z > self_pos.z)
 			angle_diff_y += 180;
-		TheConsole.Log(angle_diff_y);
 
 		if(NormalizeAngle(angle_diff_y) < 180 && NormalizeAngle(angle_diff_y) > -180)
 		{
@@ -184,10 +183,10 @@ public class GuillemMovement
 
 	void RandomizeStats()
 	{
-		float move_min = move_speed - (float)(move_speed / 20);
-		float move_max = move_speed + (float)(move_speed / 20);
-		float rotation_min = rotation_speed - (float)(rotation_speed / 20);
-		float rotation_max = rotation_speed + (float)(rotation_speed / 20);
+		float move_min = move_speed - (float)(move_speed / 10);
+		float move_max = move_speed + (float)(move_speed / 10);
+		float rotation_min = rotation_speed - (float)(rotation_speed / 10);
+		float rotation_max = rotation_speed + (float)(rotation_speed / 10);
 
 
 		TheConsole.Log("Speed " + move_min + " | " + move_max);

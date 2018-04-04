@@ -1,11 +1,11 @@
 {
-    "UUID": "1083886816",
+    "UUID": "53486069",
     "assets_path": "./Project/Assets/Prefabs/RebelsShip.jprefab",
     "library_path": "./Project/Library/Prefabs/RebelsShip.jprefab",
     "prefab_name": "RebelsShip",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "856144803",
+        "UUID": "16965951",
         "Name": "RebelsShip",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -68,7 +68,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "max_distance_to_center_object",
-                            "field_value": "0.000000"
+                            "field_value": "1000.000000"
                         },
                         "field_1": {
                             "field_name": "move_speed",
@@ -84,7 +84,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "center_object",
-                            "field_value": "0"
+                            "field_value": "2024120705"
                         },
                         "field_1": {
                             "field_name": "force_target",
@@ -102,7 +102,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "101223531",
+        "UUID": "70468721",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -119,10 +119,10 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "-0.000000"
+                    "value_X": "-0.000000",
+                    "value_Y": "-1.000000",
+                    "value_Z": "-0.000000",
+                    "value_W": "0.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -150,12 +150,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "856144803",
+        "ParentID": "16965951",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1389605944",
+        "UUID": "1250174993",
         "Name": "Laser_Spawner_L(10)",
         "Tag": "Default",
         "Layer": "Default",
@@ -184,12 +184,12 @@
                 }
             }
         },
-        "ParentID": "856144803",
+        "ParentID": "16965951",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1617129874",
+        "UUID": "920974743",
         "Name": "Laser_Spawner_R(10)",
         "Tag": "Default",
         "Layer": "Default",
@@ -218,7 +218,7 @@
                 }
             }
         },
-        "ParentID": "856144803",
+        "ParentID": "16965951",
         "IsRoot": "0",
         "IsStatic": "0"
     }

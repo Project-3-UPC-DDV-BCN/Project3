@@ -1,8 +1,8 @@
 {
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "294414572",
-        "Name": "RebelsShip(3)",
+        "UUID": "180463310",
+        "Name": "RebelsShip(5)",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
         "Active": "1",
@@ -13,9 +13,9 @@
                 "Active": "1",
                 "UUID": "1651011868",
                 "position": {
-                    "value_X": "91.051727",
-                    "value_Y": "-66.915619",
-                    "value_Z": "-140.246735"
+                    "value_X": "-59.905960",
+                    "value_Y": "-301.476868",
+                    "value_Z": "81.421387"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -80,7 +80,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "center_object",
-                            "field_value": "1505392415"
+                            "field_value": "278072444"
                         },
                         "field_1": {
                             "field_name": "force_target",
@@ -98,8 +98,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1852990244",
-        "Name": "TIE_FIGHTER(3)",
+        "UUID": "1256770560",
+        "Name": "TIE_FIGHTER(5)",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
         "Active": "1",
@@ -115,9 +115,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -146,13 +146,13 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "294414572",
+        "ParentID": "180463310",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1248651293",
-        "Name": "Laser_Spawner_L(15)",
+        "UUID": "549444392",
+        "Name": "Laser_Spawner_L(18)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -180,13 +180,13 @@
                 }
             }
         },
-        "ParentID": "294414572",
+        "ParentID": "180463310",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "66155746",
-        "Name": "Laser_Spawner_R(15)",
+        "UUID": "1889295068",
+        "Name": "Laser_Spawner_R(18)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -214,7 +214,7 @@
                 }
             }
         },
-        "ParentID": "294414572",
+        "ParentID": "180463310",
         "IsRoot": "0",
         "IsStatic": "0"
     }
