@@ -8,7 +8,9 @@ public class GameManager
 	public TheGameObject show_score_go; 
 	
 	public TheGameObject alliance_spawn;
+	TheTransform alliance_spawn_trans;
     public TheGameObject empire_spawn;
+	TheTransform empire_spawn_trans;
 
 	public int gametime_seconds; 
 		
@@ -38,6 +40,7 @@ public class GameManager
 	TheAudioSource audio_source;
 	
 	public TheGameObject slave1;
+	TheTransform slave1_trans = null;
 	TheAudioSource slave1_audio;
 
 	public TheVector3 position_to_spawn = new TheVector3(0, 0, 0);
@@ -48,26 +51,22 @@ public class GameManager
 	void Init ()
 	{
 		team = TheData.GetString("faction");
-
+		if(team == "no_str")
+			team = "empire";
         TheConsole.Log(team); 
 	}
 
 	void Start ()
 	{
-        if (team == "rebels")
-        {
-            slave1.tag = "Alliance";
-            slave1.GetComponent<TheTransform>().GlobalPosition = alliance_spawn.GetComponent<TheTransform>().GlobalPosition;
-            slave1.GetComponent<TheTransform>().GlobalRotation = alliance_spawn.GetComponent<TheTransform>().GlobalRotation;
-        }
-
-
-        else if (team == "empire")
-        {
-            slave1.tag = "Empire";
-            slave1.GetComponent<TheTransform>().GlobalPosition = empire_spawn.GetComponent<TheTransform>().GlobalPosition;
-            slave1.GetComponent<TheTransform>().GlobalRotation = empire_spawn.GetComponent<TheTransform>().GlobalRotation;
-        }
+		if(slave1 != null)
+			slave1_trans = slave1.GetComponent<TheTransform>();
+		
+		
+		if(alliance_spawn != null)
+			alliance_spawn_trans = alliance_spawn.GetComponent<TheTransform>();
+		
+		if(empire_spawn != null)
+			empire_spawn_trans = empire_spawn.GetComponent<TheTransform>();
 
 		if(show_gametime_go != null)
 	 		show_gametime = show_gametime_go.GetComponent<TheText>();
@@ -91,9 +90,7 @@ public class GameManager
 		}
 
 		if(slave1 != null)
-		{
 			slave1_audio = slave1.GetComponent<TheAudioSource>();
-		}
 			
 		ally_killed = 0; 
 
@@ -103,13 +100,23 @@ public class GameManager
 		gametime_step = timer - 1.0f; 	
 	
 		background_music_timer = music_timer;
+
+		if (team == "rebels")
+        {
+            slave1.tag = "Alliance";
+            slave1_trans.LocalPosition = new TheVector3(alliance_spawn_trans.LocalPosition.x, alliance_spawn_trans.LocalPosition.y, alliance_spawn_trans.LocalPosition.z);
+			slave1_trans.LocalRotation = new TheVector3(180, 0, 0);
+        }
+        else if (team == "empire")
+        {
+            slave1.tag = "Empire";
+            slave1_trans.LocalPosition = new TheVector3(empire_spawn_trans.LocalPosition.x, empire_spawn_trans.LocalPosition.y, empire_spawn_trans.LocalPosition.z);
+        }
 	}
-	
 	
 	void Update () 
 	{
-		timer -= TheTime.DeltaTime;
-		TheConsole.Log(team); 
+		timer -= TheTime.DeltaTime; 
 
 		if (TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000 && !calm_combat)
 		{
