@@ -1689,7 +1689,7 @@ void NSScriptImporter::SetGameObjectTag(MonoObject * object, MonoString * tag)
 	if (go && tag)
 	{
 		const char* new_tag = mono_string_to_utf8(tag);
-		go->SetName(new_tag);
+		go->SetTag(new_tag);
 	}
 }
 
@@ -2266,7 +2266,7 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			{
 				if (comp_type_count == 0)
 				{
-					CONSOLE_ERROR("GetComponent method: %s does not exist in %s", comp_name, go->GetName().c_str());
+
 				}
 				else
 				{
