@@ -74,7 +74,6 @@ public class GuillemMovement
 			if(TheVector3.Distance(center_transform.LocalPosition, self_transform.LocalPosition) > max_distance_to_center_object)
 			{
 				target_transform = center_transform;
-				TheConsole.Log("TooFar");
 			}
 			else if(TheVector3.Distance(center_transform.LocalPosition, self_transform.LocalPosition) < max_distance_to_center_object / 2 && 
 					target_transform == center_transform && !forced)
@@ -202,10 +201,6 @@ public class GuillemMovement
 		float move_max = move_speed + (float)(move_speed / 10);
 		float rotation_min = rotation_speed - (float)(rotation_speed / 10);
 		float rotation_max = rotation_speed + (float)(rotation_speed / 10);
-
-
-		TheConsole.Log("Speed " + move_min + " | " + move_max);
-		TheConsole.Log("Rotation " + rotation_min + " | " + rotation_max);
 
 		modified_move_speed = TheRandom.RandomRange(move_min, move_max);
 		modified_rotation_speed = TheRandom.RandomRange(rotation_min, rotation_max);
