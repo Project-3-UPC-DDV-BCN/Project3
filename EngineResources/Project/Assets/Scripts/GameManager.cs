@@ -90,7 +90,7 @@ public class GameManager
 		}
 
 		if(slave1 != null)
-			slave1_audio = slave1.GetComponent<TheAudioSource>();
+			slave1_audio = slave1.GetChild(7).GetComponent<TheAudioSource>();
 			
 		ally_killed = 0; 
 
