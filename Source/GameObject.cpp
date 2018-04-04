@@ -547,6 +547,11 @@ void GameObject::InitScripts()
 			comp_script->InitScript();
 		}
 	}
+	ComponentRigidBody* rb = (ComponentRigidBody*)GetComponent(Component::CompRigidBody);
+	if (rb)
+	{
+		//rb->GetRigidBody()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
+	}
 }
 
 void GameObject::StartScripts()
