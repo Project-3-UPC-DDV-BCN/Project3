@@ -15,7 +15,7 @@ public class test1 {
 		//ship_hit_scpt = TheGameObject.Find("test").GetComponent<TheScript>();
 		//ship_hit_scpt.CallFunction("SubstractHP"); 
 		fact = TheGameObject.Self.GetComponent<TheFactory>();
-		//fact.StartFactory();
+		//fact.StartFactory(); 
 	}
 	
 	void OnTriggerStay(TheGameObject other)

@@ -2266,7 +2266,7 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			{
 				if (comp_type_count == 0)
 				{
-
+					CONSOLE_ERROR("%s GetComponent: %s at index (%d) does not exist in %s", current_script->GetName().c_str(), comp_name, index, go->GetName().c_str());
 				}
 				else
 				{

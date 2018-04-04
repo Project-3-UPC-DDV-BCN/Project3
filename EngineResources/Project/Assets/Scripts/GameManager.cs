@@ -7,8 +7,8 @@ public class GameManager
 	public TheGameObject show_gametime_go;
 	public TheGameObject show_score_go; 
 	
-	public TheVector3 alliance_spawn = new TheVector3(0, 0, 0);
-	public TheVector3 empire_spawn = new TheVector3(0, 0, 0);
+	public TheGameObject alliance_spawn;
+    public TheGameObject empire_spawn;
 
 	public int gametime_seconds; 
 		
@@ -40,17 +40,33 @@ public class GameManager
 
 	public TheVector3 position_to_spawn = new TheVector3(0, 0, 0);
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
-    List<TheGameObject> empire_ships = new List<TheGameObject>(); 
+    List<TheGameObject> empire_ships = new List<TheGameObject>();
+
 
 	void Init ()
 	{
-		team = TheData.GetString("faction");  
+		team = "empire";
 
         TheConsole.Log(team); 
 	}
 
 	void Start ()
 	{
+        if (team == "rebels")
+        {
+            slave1.tag = "Alliance";
+            slave1.GetComponent<TheTransform>().GlobalPosition = alliance_spawn.GetComponent<TheTransform>().GlobalPosition;
+            slave1.GetComponent<TheTransform>().GlobalRotation = alliance_spawn.GetComponent<TheTransform>().GlobalRotation;
+        }
+
+
+        else if (team == "empire")
+        {
+            slave1.tag = "Empire";
+            slave1.GetComponent<TheTransform>().GlobalPosition = empire_spawn.GetComponent<TheTransform>().GlobalPosition;
+            slave1.GetComponent<TheTransform>().GlobalRotation = empire_spawn.GetComponent<TheTransform>().GlobalRotation;
+        }
+
 		if(show_gametime_go != null)
 	 		show_gametime = show_gametime_go.GetComponent<TheText>();
 

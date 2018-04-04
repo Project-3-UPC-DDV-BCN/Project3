@@ -894,8 +894,7 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 	{
 		inside_function = true;
 		MonoObject* exception = nullptr;
-		MonoMarshalSpec* spec;
-		CONSOLE_WARNING("Class name %s from script %s", mono_class_get_name(mono_class), GetName().c_str());
+		
 		MonoObject* obj = mono_runtime_invoke(function, mono_object, parameter, &exception);
 
 		if (exception)
@@ -1203,6 +1202,7 @@ bool CSScript::Load(Data & data)
 		mono_class = text->mono_class;
 		mono_image = text->mono_image;
 		mono_object = text->mono_object;
+		mono_assembly = text->mono_assembly;
 		init = text->init;
 		start = text->start;
 		update = text->update;
@@ -1343,6 +1343,8 @@ bool CSScript::Load(Data & data)
 			}
 			data.LeaveSection();
 		}
+
+		RELEASE(text);
 	}
 
 	GetScriptFields();

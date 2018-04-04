@@ -323,10 +323,7 @@ void PropertiesWindow::DrawWindow()
 						ComponentScript* comp_script = (ComponentScript*)selected_gameobject->AddComponent(Component::CompScript);
 						if (comp_script != nullptr)
 						{
-							/*script->SetAttachedGameObject(selected_gameobject);
-							comp_script->SetScript(script);*/
 							Script* tmp_script = App->script_importer->LoadScriptFromLibrary(script->GetLibraryPath());
-							tmp_script->SetAttachedGameObject(selected_gameobject);
 							comp_script->SetScript(tmp_script);
 						}
 					}
