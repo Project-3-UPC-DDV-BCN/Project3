@@ -41,7 +41,7 @@ public class GameManager
 	
 	public TheGameObject slave1;
 	TheTransform slave1_trans = null;
-	TheAudioSource slave1_audio;
+	public TheAudioSource slave1_audio;
 
 	public TheVector3 position_to_spawn = new TheVector3(0, 0, 0);
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
@@ -87,9 +87,6 @@ public class GameManager
 			audio_source.Play("Play_Calm_song");
 			audio_source.SetVolume(calm_volume);
 		}
-
-		if(slave1 != null)
-			slave1_audio = slave1.GetChild(7).GetComponent<TheAudioSource>();
 			
 		ally_killed = 0; 
 
