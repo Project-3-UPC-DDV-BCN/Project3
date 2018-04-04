@@ -60,8 +60,7 @@ public class GameManager
 	{
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
-		
-		
+				
 		if(alliance_spawn != null)
 			alliance_spawn_trans = alliance_spawn.GetComponent<TheTransform>();
 		
@@ -112,6 +111,11 @@ public class GameManager
             slave1.tag = "Empire";
             slave1_trans.LocalPosition = new TheVector3(empire_spawn_trans.LocalPosition.x, empire_spawn_trans.LocalPosition.y, empire_spawn_trans.LocalPosition.z);
         }
+	}
+
+	void AddAllyKill()
+	{
+		ally_killed++;
 	}
 	
 	void Update () 
@@ -171,6 +175,11 @@ public class GameManager
 			TheData.AddString("score", score.ToString());
 			TheData.AddString("time", GetTimeFromSeconds(gametime_seconds));
 			TheApplication.LoadScene("VS3 - MainMenu");	
+		}
+
+		if(ally_killed >= 3)
+		{
+			TheApplication.LoadScene("VS3 - MainMenu"); 
 		}
 	}
 
