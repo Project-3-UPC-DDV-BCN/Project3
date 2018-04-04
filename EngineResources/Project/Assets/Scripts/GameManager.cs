@@ -174,12 +174,12 @@ public class GameManager
 			
 			TheData.AddString("score", score.ToString());
 			TheData.AddString("time", GetTimeFromSeconds(gametime_seconds));
-			TheApplication.LoadScene("VS3 - MainMenu");	
+			TheApplication.LoadScene("VS3 - EndGameScene");	
 		}
 
 		if(ally_killed >= 3)
 		{
-			TheApplication.LoadScene("VS3 - MainMenu"); 
+			TheApplication.LoadScene("VS3 - EndGameScene"); 
 		}
 	}
 

@@ -189,7 +189,7 @@ public class MainMenuVS2
 
 				TheData.AddString("faction", faction);
 				
-				TheApplication.LoadScene("VS3 - FinalScene");
+				TheApplication.LoadScene("VS3 - FinalScene_v2(with_audio)");
 			}
 		}
 
