@@ -5,14 +5,10 @@ using TheEngine.TheConsole;
 
 public class GuillemMovement 
 {
-
-	TheAudioSource audio_source = null;
-
 	public int faction;
 	public TheGameObject force_target;
 	private bool forced = false;
 
-	public string center_go_name;
 	public TheGameObject center_object;
 	public float max_distance_to_center_object;
 
@@ -35,11 +31,7 @@ public class GuillemMovement
 	{
 		RandomizeStats();
 
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
-
 		self_transform = TheGameObject.Self.GetComponent<TheTransform>();
-		
-		center_object = TheGameObject.Find(center_go_name);
 		
 		if(center_object != null)
 			center_transform = 	center_object.GetComponent<TheTransform>();
@@ -56,10 +48,6 @@ public class GuillemMovement
 	
 	void Update () 
 	{
-		if(audio_source != null) {
-			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);
-			audio_source.Play("Play_Enemy_Engine");
-		}
 		// Change target after x seconds
 		if(timer.ReadTime() > random_time && !forced)
 		{
