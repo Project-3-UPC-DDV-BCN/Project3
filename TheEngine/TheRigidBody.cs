@@ -68,6 +68,9 @@ namespace TheEngine
         public extern void SetPosition(float x, float y, float z);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheVector3 GetPosition();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetRotation(float x, float y, float z);
     }
 }

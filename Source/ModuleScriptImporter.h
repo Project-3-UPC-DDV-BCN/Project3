@@ -222,6 +222,7 @@ public:
 	bool IsTransformGO(MonoObject * object);
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
+	MonoObject* GetRBPosition(MonoObject* object);
 
 	//GOAPAGENT
 	mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);
@@ -461,6 +462,7 @@ private:
 	static bool IsTransformGO(MonoObject * object);
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
+	static MonoObject* GetRBPosition(MonoObject* object);
 
 	//GOAP AGENT
 	static mono_bool GetBlackboardVariableB(MonoObject * object, MonoString* name);

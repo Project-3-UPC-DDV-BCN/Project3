@@ -726,6 +726,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRigidBody::SetTransformGO", (const void*)SetTransformGO);
 	mono_add_internal_call("TheEngine.TheRigidBody::IsKinematic", (const bool*)IsKinematic);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetKinematic", (const void*)SetKinematic);
+	mono_add_internal_call("TheEngine.TheRigidBody::GetPosition", (const void*)GetRBPosition);
 
 	//GOAP
 	mono_add_internal_call("TheEngine.TheGOAPAgent::GetBlackboardVariableB", (const void*)GetBlackboardVariableB);
@@ -1415,6 +1416,11 @@ void ModuleScriptImporter::SetRBPosition(MonoObject * object, float x, float y, 
 void ModuleScriptImporter::SetRBRotation(MonoObject * object, float x, float y, float z)
 {
 	ns_importer->SetRBRotation(object, x, y, z);
+}
+
+MonoObject* ModuleScriptImporter::GetRBPosition(MonoObject * object)
+{
+	return ns_importer->GetRBPosition(object);
 }
 
 mono_bool ModuleScriptImporter::GetBlackboardVariableB(MonoObject * object, MonoString * name)
@@ -3896,6 +3902,41 @@ void NSScriptImporter::SetRBRotation(MonoObject * object, float x, float y, floa
 
 		if (rb != nullptr)
 			rb->SetRotation({ x,y,z });
+	}
+}
+
+MonoObject* NSScriptImporter::GetRBPosition(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
+
+		if (rb != nullptr)
+		{
+			float3 pos = rb->GetPosition();
+
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+			if (c)
+			{
+				MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+					MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+					MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+					ComponentTransform* transform = (ComponentTransform*)comp;
+
+					if (x_field) mono_field_set_value(new_object, x_field, &pos.x);
+					if (y_field) mono_field_set_value(new_object, y_field, &pos.y);
+					if (z_field) mono_field_set_value(new_object, z_field, &pos.z);
+
+					return new_object;
+				}
+			}
+		}
 	}
 }
 
