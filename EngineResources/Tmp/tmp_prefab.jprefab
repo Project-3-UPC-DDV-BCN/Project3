@@ -1,21 +1,21 @@
 {
-    "GameObjects_Count": "1",
+    "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "806513570",
-        "Name": "TieFighterSpawner",
+        "UUID": "2144823797",
+        "Name": "TieFighter_1(13)",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "2",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "514662282",
+                "UUID": "1651011868",
                 "position": {
-                    "value_X": "18.956028",
-                    "value_Y": "7.754495",
-                    "value_Z": "-11.501377"
+                    "value_X": "-299.643646",
+                    "value_Y": "684.324524",
+                    "value_Z": "-930.359619"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -30,38 +30,145 @@
                 }
             },
             "Component_1": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "1274932885",
+                "Sound_ID": "104",
+                "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_2": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1305964399",
+                "UUID": "1753288271",
                 "Script": {
-                    "library_path": ".\\Project\\Library\\Scripts\\Spawner.dll",
+                    "library_path": ".\\Project\\Library\\Scripts\\GuillemMovement.dll",
                     "assets_path": "",
-                    "script_name": "Spawner",
-                    "UUID": "237292446",
+                    "script_name": "GuillemMovement",
+                    "UUID": "564736164",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "3",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "1",
+                    "gameobject_fields_count": "2",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "faction",
+                            "field_value": "1"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "2000.000000"
+                        },
+                        "field_1": {
+                            "field_name": "move_speed",
+                            "field_value": "300.000000"
+                        },
+                        "field_2": {
+                            "field_name": "rotation_speed",
+                            "field_value": "60.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "center_go_name",
+                            "field_value": "Slave1"
+                        }
+                    },
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "center_object",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "force_target",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "target_pos",
+                            "field_value": {
+                                "value_X": "0.000000",
+                                "value_Y": "0.000000",
+                                "value_Z": "31.787598"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
+            },
+            "Component_3": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1110840059",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\Ai_Starship_Shooting.dll",
+                    "assets_path": "",
+                    "script_name": "Ai_Starship_Shooting",
+                    "UUID": "467168228",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "2",
-                    "gameobject_fields_count": "0",
+                    "float_fields_count": "5",
+                    "bool_fields_count": "1",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "3",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
                     "int_fields": {},
                     "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {
+                    "float_fields": {
                         "field_0": {
-                            "field_name": "tie_fighter_prefab_name",
-                            "field_value": "TieFighter_1"
+                            "field_name": "far_plane_offset",
+                            "field_value": "500.000000"
                         },
                         "field_1": {
-                            "field_name": "xwing_prefab_name",
-                            "field_value": ""
+                            "field_name": "laser_speed",
+                            "field_value": "50000.000000"
+                        },
+                        "field_2": {
+                            "field_name": "near_plane_offset",
+                            "field_value": "50.000000"
+                        },
+                        "field_3": {
+                            "field_name": "shooting_range",
+                            "field_value": "500.000000"
+                        },
+                        "field_4": {
+                            "field_name": "time_between_lasers",
+                            "field_value": "0.100000"
                         }
                     },
-                    "gameobject_fields": {},
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "shooting",
+                            "field_value": "0"
+                        }
+                    },
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "LaserFactoryGO",
+                            "field_value": "999800529"
+                        },
+                        "field_1": {
+                            "field_name": "laser_spawner_L",
+                            "field_value": "1436498412"
+                        },
+                        "field_2": {
+                            "field_name": "laser_spawner_R",
+                            "field_value": "2142501062"
+                        }
+                    },
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -70,6 +177,184 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_1": {
+        "UUID": "1649660439",
+        "Name": "TIE_FIGHTER(13)",
+        "Tag": "TIEFIGHTER",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1362302148",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1459999168",
+                "Mesh": {
+                    "mesh_name": "TIE_FIGHTER"
+                },
+                "Material": {
+                    "Name": "TieFighter1"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "2144823797",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "1436498412",
+        "Name": "Laser_Spawner_L(47)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "853921105",
+                "position": {
+                    "value_X": "6.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "2144823797",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "2142501062",
+        "Name": "Laser_Spawner_R(47)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "853921105",
+                "position": {
+                    "value_X": "-6.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "2144823797",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "999800529",
+        "Name": "REDLaser_Factory(30)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1289349889",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "12",
+                "Active": "1",
+                "UUID": "1279176591",
+                "Object_count": "20",
+                "Spawn_position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Life_time": "2.000000",
+                "Prefab_UID": "0"
+            }
+        },
+        "ParentID": "2144823797",
+        "IsRoot": "0",
         "IsStatic": "0"
     }
 }
