@@ -2442,6 +2442,11 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
+	if (ImGui::Button("Delete Component"))
+	{
+		audio_source->GetGameObject()->DestroyComponent(audio_source);
+	}
+
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 
