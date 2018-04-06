@@ -132,10 +132,8 @@ public:
 	mono_bool GetOnMouseOut(MonoObject * object);
 
 	//LIGHT
-	static void SetColor(MonoObject* object, MonoObject* color);
-	static MonoObject* GetColor(MonoObject* object);
-	static void SetLightActive(MonoObject * object, mono_bool active);
-	//
+	void SetColor(MonoObject* object, MonoObject* color);
+	MonoObject* GetColor(MonoObject* object);
 
 	//TEXT
 	void SetText(MonoObject * object, MonoString* t);
@@ -379,7 +377,6 @@ private:
 	// LIGHT
 	static void SetColor(MonoObject* object, MonoObject* color);
 	static MonoObject* GetColor(MonoObject* object);
-	static void SetLightActive(MonoObject * object, mono_bool active);
 
 	//TEXT
 	static void SetText(MonoObject * object, MonoString* text);

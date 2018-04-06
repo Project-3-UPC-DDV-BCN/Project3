@@ -1009,6 +1009,16 @@ mono_bool ModuleScriptImporter::GetOnMouseOut(MonoObject * object)
 	return ns_importer->GetOnMouseOut(object);
 }
 
+void ModuleScriptImporter::SetColor(MonoObject * object, MonoObject * color)
+{
+	ns_importer->SetColor(object, color);
+}
+
+MonoObject * ModuleScriptImporter::GetColor(MonoObject * object)
+{
+	return ns_importer->GetColor(object);
+}
+
 void ModuleScriptImporter::SetText(MonoObject * object, MonoString* text)
 {
 	return ns_importer->SetText(object, text);
@@ -2219,6 +2229,10 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		{
 			comp_name = "TheText";
 		}
+		else if (name == "TheEngine.TheLight")
+		{
+			comp_name = "TheLight";
+		}
 		else if (name == "TheEngine.TheRadar")
 		{
 			comp_name = "TheRadar";
@@ -2905,16 +2919,6 @@ MonoObject * NSScriptImporter::GetColor(MonoObject * object)
 		}
 	}
 	return nullptr;
-}
-
-void NSScriptImporter::SetLightActive(MonoObject * object, mono_bool active)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		comp->SetActive(active);
-	}
 }
 
 void NSScriptImporter::SetText(MonoObject * object, MonoString* t)
@@ -4730,6 +4734,10 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	else if (component_type == "TheScript")
 	{
 		type = Component::CompScript;
+	}
+	else if (component_type == "TheLight")
+	{
+		type = Component::CompLight;
 	}
 	else
 	{

@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class TheTime
+    <title>Class TheLight
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class TheTime
+    <meta name="title" content="Class TheLight
    ">
     <meta name="generator" content="docfx 2.33.0.0">
     
@@ -68,20 +68,24 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="TheEngine.TheTime">
+            <article class="content wrap" id="_content" data-uid="TheEngine.TheLight">
   
   
-  <h1 id="TheEngine_TheTime" data-uid="TheEngine.TheTime" class="text-break">Class TheTime
+  <h1 id="TheEngine_TheLight" data-uid="TheEngine.TheLight" class="text-break">Class TheLight
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">TheTime</span></div>
+    <div class="level1"><a class="xref" href="TheEngine.TheComponent.html">TheComponent</a></div>
+    <div class="level2"><span class="xref">TheLight</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="TheEngine.TheComponent.html#TheEngine_TheComponent_SetComponentActive_System_Boolean_">TheComponent.SetComponentActive(Boolean)</a>
+    </div>
     <div>
       <span class="xref">System.Object.ToString()</span>
     </div>
@@ -106,26 +110,26 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="TheEngine.html">TheEngine</a></h6>
   <h6><strong>Assembly</strong>: TheEngine.dll</h6>
-  <h5 id="TheEngine_TheTime_syntax">Syntax</h5>
+  <h5 id="TheEngine_TheLight_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TheTime</code></pre>
+    <pre><code class="lang-csharp hljs">public class TheLight : TheComponent</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/new/Tiling,-Shaders,-and-Player-Gameplay/apiSpec/new?filename=TheEngine_TheTime_DeltaTime.md&amp;value=---%0Auid%3A%20TheEngine.TheTime.DeltaTime%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/new/Tiling,-Shaders,-and-Player-Gameplay/apiSpec/new?filename=TheEngine_TheLight_Color.md&amp;value=---%0Auid%3A%20TheEngine.TheLight.Color%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/blob/Tiling,-Shaders,-and-Player-Gameplay/TheEngine/TheTime.cs/#L19">View Source</a>
+    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/blob/Tiling,-Shaders,-and-Player-Gameplay/TheEngine/TheLight.cs/#L7">View Source</a>
   </span>
-  <a id="TheEngine_TheTime_DeltaTime_" data-uid="TheEngine.TheTime.DeltaTime*"></a>
-  <h4 id="TheEngine_TheTime_DeltaTime" data-uid="TheEngine.TheTime.DeltaTime">DeltaTime</h4>
+  <a id="TheEngine_TheLight_Color_" data-uid="TheEngine.TheLight.Color*"></a>
+  <h4 id="TheEngine_TheLight_Color" data-uid="TheEngine.TheLight.Color">Color</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static float DeltaTime { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public TheVector3 Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -137,68 +141,39 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
+        <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/new/Tiling,-Shaders,-and-Player-Gameplay/apiSpec/new?filename=TheEngine_TheTime_TimeScale.md&amp;value=---%0Auid%3A%20TheEngine.TheTime.TimeScale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/blob/Tiling,-Shaders,-and-Player-Gameplay/TheEngine/TheTime.cs/#L7">View Source</a>
-  </span>
-  <a id="TheEngine_TheTime_TimeScale_" data-uid="TheEngine.TheTime.TimeScale*"></a>
-  <h4 id="TheEngine_TheTime_TimeScale" data-uid="TheEngine.TheTime.TimeScale">TimeScale</h4>
-  <div class="markdown level1 summary"></div>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="TheEngine_TheLight_SetActive_" data-uid="TheEngine.TheLight.SetActive*"></a>
+  <h4 id="TheEngine_TheLight_SetActive_System_Boolean_" data-uid="TheEngine.TheLight.SetActive(System.Boolean)">SetActive(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Activates/Deactivates the LightComponent</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static float TimeScale { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public void SetActive(bool value)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/new/Tiling,-Shaders,-and-Player-Gameplay/apiSpec/new?filename=TheEngine_TheTime_TimeSinceStart.md&amp;value=---%0Auid%3A%20TheEngine.TheTime.TimeSinceStart%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/blob/Tiling,-Shaders,-and-Player-Gameplay/TheEngine/TheTime.cs/#L27">View Source</a>
-  </span>
-  <a id="TheEngine_TheTime_TimeSinceStart_" data-uid="TheEngine.TheTime.TimeSinceStart*"></a>
-  <h4 id="TheEngine_TheTime_TimeSinceStart" data-uid="TheEngine.TheTime.TimeSinceStart">TimeSinceStart</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static float TimeSinceStart { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Active value</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -210,10 +185,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/new/Tiling,-Shaders,-and-Player-Gameplay/apiSpec/new?filename=TheEngine_TheTime.md&amp;value=---%0Auid%3A%20TheEngine.TheTime%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/new/Tiling,-Shaders,-and-Player-Gameplay/apiSpec/new?filename=TheEngine_TheLight.md&amp;value=---%0Auid%3A%20TheEngine.TheLight%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/blob/Tiling,-Shaders,-and-Player-Gameplay/TheEngine/TheTime.cs/#L5" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Project-3-UPC-DDV-BCN/Project3/blob/Tiling,-Shaders,-and-Player-Gameplay/TheEngine/TheLight.cs/#L5" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
