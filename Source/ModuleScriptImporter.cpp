@@ -25,6 +25,7 @@
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
 #include "ComponentScript.h"
+#include "ComponentLight.h"
 #include <mono/metadata/attrdefs.h>
 #include "TinyXML/tinyxml2.h"
 #include "Prefab.h"
@@ -2331,6 +2332,7 @@ void NSScriptImporter::DestroyComponent(MonoObject* object, MonoObject* cmp)
 	}
 }
 
+//
 void NSScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
@@ -2850,6 +2852,69 @@ mono_bool NSScriptImporter::GetOnMouseOut(MonoObject * object)
 		}
 	}
 	return false;
+}
+
+void NSScriptImporter::SetColor(MonoObject * object, MonoObject * color)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_object_get_class(color);
+		MonoClassField* r_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* g_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* b_field = mono_class_get_field_from_name(c, "z");
+
+		float3 new_color;
+
+		if (r_field) mono_field_get_value(color, r_field, &new_color.x);
+		if (g_field) mono_field_get_value(color, g_field, &new_color.y);
+		if (b_field) mono_field_get_value(color, b_field, &new_color.z);
+
+		ComponentLight* light = (ComponentLight*)comp;
+		light->SetRGBColor(new_color);
+
+	}
+}
+
+MonoObject * NSScriptImporter::GetColor(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
+			{
+				MonoClassField* r_field = mono_class_get_field_from_name(c, "x");
+				MonoClassField* g_field = mono_class_get_field_from_name(c, "y");
+				MonoClassField* b_field = mono_class_get_field_from_name(c, "z");
+
+				ComponentLight* light = (ComponentLight*)light;
+				float3 new_color = light->GetRGBColor();
+
+				if (r_field) mono_field_set_value(new_object, r_field, &new_color.x);
+				if (g_field) mono_field_set_value(new_object, g_field, &new_color.y);
+				if (b_field) mono_field_set_value(new_object, b_field, &new_color.z);
+
+				return new_object;
+			}
+		}
+	}
+	return nullptr;
+}
+
+void NSScriptImporter::SetLightActive(MonoObject * object, mono_bool active)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		comp->SetActive(active);
+	}
 }
 
 void NSScriptImporter::SetText(MonoObject * object, MonoString* t)
