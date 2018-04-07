@@ -2150,7 +2150,6 @@ void ModuleResources::CreateDefaultShaders()
 			"	if(has_texture)\n"
 			"	{\n"
 			"		color = texture(ourTexture, TexCoord);\n"
-			"		color.rgb = color.rgb + material_color.rgb;\n"
 			"	}\n"
 			"	else if(has_material_color)\n"
 			"		color = material_color;\n"
