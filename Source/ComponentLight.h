@@ -24,7 +24,9 @@ public:
 	void Load(Data& data);
 
 	void SetColor(Color color);
+	void SetRGBColor(float3 color);
 	Color GetColor() const;
+	float3 GetRGBColor() const;
 	float* GetColorToEdit() const;
 	float4 GetColorAsFloat4() const;
 

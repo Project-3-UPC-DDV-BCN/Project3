@@ -108,6 +108,11 @@ public class GuillemMovement
 		{
 			if(scene_gos[i] != null)
 			{
+                if(scene_gos[i].tag == "Alliance" || scene_gos[i].tag == "Empire")
+                {
+                    to_check.Add(scene_gos[i]);
+					continue;
+                }
 				TheScript sc = scene_gos[i].GetComponent<TheScript>();
 				if(sc != null)
 				{	
