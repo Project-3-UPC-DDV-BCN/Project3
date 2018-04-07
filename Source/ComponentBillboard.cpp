@@ -82,7 +82,16 @@ bool ComponentBillboard::RotateObject()
 	float3 angles = rot.ToEulerXYZ()*RADTODEG; 
 
 	object_transform->SetRotation({ 0,0,0 }); 
-	object_transform->SetRotation({ 0, angles.y, 0});
+
+	if (reference->camera_frustum.Pos().z > object_transform->GetGlobalPosition().z &&
+		reference->camera_frustum.Pos().x < object_transform->GetGlobalPosition().x)
+		angles.y = 90 + (90 - angles.y); 
+
+	else if(reference->camera_frustum.Pos().z > object_transform->GetGlobalPosition().z &&
+		reference->camera_frustum.Pos().x > object_transform->GetGlobalPosition().x)
+		angles.y = -90 - (90 + angles.y);
+
+	object_transform->SetRotation({ 0, angles.y, 0 });
 
 	CONSOLE_LOG("%f", angles.y); 
 
