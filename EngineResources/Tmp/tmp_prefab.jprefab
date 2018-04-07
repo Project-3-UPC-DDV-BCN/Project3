@@ -1,8 +1,8 @@
 {
-    "GameObjects_Count": "1",
+    "GameObjects_Count": "2",
     "GameObject_0": {
-        "UUID": "1123790474",
-        "Name": "Score",
+        "UUID": "1502687565",
+        "Name": "FrontRadar(2)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -11,31 +11,164 @@
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
-                "UUID": "96424882",
+                "UUID": "1072503313",
                 "pos": {
-                    "value_X": "-495.000031",
+                    "value_X": "0.000000",
+                    "value_Y": "361.100006"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.650000",
+                    "value_Y": "0.650000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.000000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1137883670",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.100006",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.918791",
+                    "value_Z": "-0.394744",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "30",
+                "Active": "1",
+                "UUID": "746748183",
+                "radar_type": "0",
+                "markers_size": "0.040000",
+                "max_distance": "1564.000122",
+                "transparent": "0",
+                "background_texture": "Radar_shape",
+                "center_go": "757840094",
+                "markers_count": "2",
+                "marker_name_0": "Rebels",
+                "marker_texture_0": "RebelsMarker",
+                "marker_name_1": "Empire",
+                "marker_texture_1": "EmpireMarker",
+                "entity_go_0": "600341305",
+                "entity_marker_name_0": "Empire",
+                "entity_go_1": "2035257491",
+                "entity_marker_name_1": "Empire",
+                "entity_go_2": "1395784557",
+                "entity_marker_name_2": "Empire",
+                "entity_go_3": "134132500",
+                "entity_marker_name_3": "Empire",
+                "entity_go_4": "1179885344",
+                "entity_marker_name_4": "Empire",
+                "entity_go_5": "1400553227",
+                "entity_marker_name_5": "Empire",
+                "entity_go_6": "1421224932",
+                "entity_marker_name_6": "Empire",
+                "entity_go_7": "1791955247",
+                "entity_marker_name_7": "Empire",
+                "entity_go_8": "1801262569",
+                "entity_marker_name_8": "Empire",
+                "entity_go_9": "1246266137",
+                "entity_marker_name_9": "Empire",
+                "entity_go_10": "1512934336",
+                "entity_marker_name_10": "Empire",
+                "entity_go_11": "76004953",
+                "entity_marker_name_11": "Empire",
+                "entity_go_12": "141126605",
+                "entity_marker_name_12": "Empire",
+                "entity_go_13": "637681680",
+                "entity_marker_name_13": "Empire",
+                "entity_go_14": "1106808849",
+                "entity_marker_name_14": "Rebels",
+                "entity_go_15": "902531620",
+                "entity_marker_name_15": "Rebels",
+                "entity_go_16": "1929888447",
+                "entity_marker_name_16": "Rebels",
+                "entity_go_17": "1301710385",
+                "entity_marker_name_17": "Rebels",
+                "entity_go_18": "421327038",
+                "entity_marker_name_18": "Rebels",
+                "entity_go_19": "730578225",
+                "entity_marker_name_19": "Rebels",
+                "entity_go_20": "436423530",
+                "entity_marker_name_20": "Rebels",
+                "entity_go_21": "1643944374",
+                "entity_marker_name_21": "Rebels",
+                "entity_go_22": "762811742",
+                "entity_marker_name_22": "Rebels",
+                "entity_go_23": "445699472",
+                "entity_marker_name_23": "Rebels",
+                "entity_go_24": "1051724609",
+                "entity_marker_name_24": "Rebels",
+                "entity_go_25": "1516575077",
+                "entity_marker_name_25": "Rebels",
+                "entity_go_26": "144963768",
+                "entity_marker_name_26": "Rebels",
+                "entity_go_27": "1496834675",
+                "entity_marker_name_27": "Rebels",
+                "entity_go_28": "187970206",
+                "entity_marker_name_28": "Rebels",
+                "entity_go_29": "2055850755",
+                "entity_marker_name_29": "Rebels",
+                "entities_count": "30"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_1": {
+        "UUID": "1797615613",
+        "Name": "RadarAnimation(4)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1649209449",
+                "pos": {
+                    "value_X": "0.000000",
                     "value_Y": "0.000000"
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "46.149998",
-                    "value_Y": "99.400002"
+                    "value_X": "0.650000",
+                    "value_Y": "0.650000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
                     "value_Y": "0.500000"
                 },
                 "scale": "1.000000",
-                "interactable": "0",
-                "fixed_aspect_ratio": "1",
-                "fixed_ratio": "0.464286"
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
             },
             "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "655805744",
+                "UUID": "1325611277",
                 "position": {
-                    "value_X": "-171.703140",
+                    "value_X": "0.000000",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
@@ -52,27 +185,32 @@
                 }
             },
             "Component_2": {
-                "Type": "27",
+                "Type": "26",
                 "Active": "1",
-                "UUID": "162829200",
+                "UUID": "102894680",
+                "mode": "1",
                 "colour": {
                     "value_X": "1.000000",
                     "value_Y": "1.000000",
                     "value_Z": "1.000000",
                     "value_W": "1.000000"
                 },
-                "bold": "0",
-                "italic": "0",
-                "underline": "0",
-                "strikethrough": "0",
-                "text": "0",
-                "font_size": "24",
-                "grow_dir": "2",
-                "font": "arial"
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "0.150000",
+                "anim_textures_count": "8",
+                "anim_texture_0": "Radar_1",
+                "anim_texture_1": "Radar_2",
+                "anim_texture_2": "Radar_3",
+                "anim_texture_3": "Radar_4",
+                "anim_texture_4": "Radar_5",
+                "anim_texture_5": "Radar_6",
+                "anim_texture_6": "Radar_7",
+                "anim_texture_7": "Radar_8"
             }
         },
-        "ParentID": "0",
-        "IsRoot": "1",
+        "ParentID": "1502687565",
+        "IsRoot": "0",
         "IsStatic": "0"
     }
 }

@@ -200,7 +200,6 @@ std::string ModuleScriptImporter::CompileScript(std::string assets_path, std::st
 		if (method)
 		{
 			MonoObject* exception = nullptr;
-			MonoObject* class_object = mono_object_new(mono_domain, compiler_class);
 			void* args[2];
 			MonoString* input_path = mono_string_new(mono_domain, assets_path.c_str());
 			MonoString* output_path = mono_string_new(mono_domain, output_name.c_str());
@@ -1494,9 +1493,9 @@ float ModuleScriptImporter::RandomFloat(MonoObject * object)
 	return ns_importer->RandomFloat(object);
 }
 
-float ModuleScriptImporter::RandomRange(MonoObject * object, float min, float max)
+float ModuleScriptImporter::RandomRange(float min, float max)
 {
-	return ns_importer->RandomRange(object, min, max);
+	return ns_importer->RandomRange(min, max);
 }
 
 void ModuleScriptImporter::LoadScene(MonoString * scene_name)
@@ -1607,6 +1606,7 @@ void NSScriptImporter::AddCreatedGameObjectToList(MonoObject* object, GameObject
 {
 	if (go && object)
 	{
+		mono_gchandle_new(object, 1);
 		created_gameobjects[object] = go;
 	}
 }
@@ -1700,7 +1700,7 @@ void NSScriptImporter::SetGameObjectTag(MonoObject * object, MonoString * tag)
 	if (go && tag)
 	{
 		const char* new_tag = mono_string_to_utf8(tag);
-		go->SetName(new_tag);
+		go->SetTag(new_tag);
 	}
 }
 
@@ -1770,6 +1770,7 @@ MonoObject * NSScriptImporter::DuplicateGameObject(MonoObject * object)
 			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 			if (new_object)
 			{
+				mono_gchandle_new(new_object, 1);
 				created_gameobjects[new_object] = duplicated;
 				return new_object;
 			}
@@ -1807,6 +1808,7 @@ MonoObject* NSScriptImporter::GetGameObjectParent(MonoObject * object)
 					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 					if (new_object)
 					{
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = parent;
 						return new_object;
 					}
@@ -1836,6 +1838,7 @@ MonoObject * NSScriptImporter::GetGameObjectChild(MonoObject * object, int index
 					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 					if (new_object)
 					{
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = *it;
 						return new_object;
 					}
@@ -1870,6 +1873,7 @@ MonoObject * NSScriptImporter::GetGameObjectChildString(MonoObject * object, Mon
 					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 					if (new_object)
 					{
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = *it;
 						return new_object;
 					}
@@ -1896,6 +1900,8 @@ int NSScriptImporter::GetGameObjectChildCount(MonoObject * object)
 
 MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 {
+	if (!gameobject_name) return nullptr;
+
 	const char* s_name = mono_string_to_utf8(gameobject_name);
 
 	GameObject* go = App->scene->FindGameObjectByName(s_name);
@@ -1913,6 +1919,7 @@ MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 			if (new_object)
 			{
+				mono_gchandle_new(new_object, 1);
 				created_gameobjects[new_object] = go;
 				return new_object;
 			}
@@ -1920,7 +1927,7 @@ MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 	}
 	else
 	{
-		CONSOLE_ERROR("Find: Cannot find gameobject %s", s_name);
+		CONSOLE_WARNING("Find: Cannot find gameobject %s", s_name);
 	}
 
 	return nullptr;
@@ -1940,7 +1947,7 @@ MonoArray * NSScriptImporter::GetSceneGameObjects(MonoObject * object)
 			for (GameObject* go : objects)
 			{
 				bool exist = false;
-				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 				{
 					if (it->second == go)
 					{
@@ -1957,6 +1964,7 @@ MonoArray * NSScriptImporter::GetSceneGameObjects(MonoObject * object)
 					{
 						mono_array_set(scene_objects, MonoObject*, index, new_object);
 						index++;
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = go;
 					}
 				}
@@ -2067,6 +2075,7 @@ MonoArray * NSScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject *
 					{
 						mono_array_set(scene_objects, MonoObject*, index, new_object);
 						index++;
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = go;
 					}
 				}
@@ -2114,6 +2123,7 @@ MonoArray * NSScriptImporter::GetAllChilds(MonoObject * object)
 						{
 							mono_array_set(scene_objects, MonoObject*, index, new_object);
 							index++;
+							mono_gchandle_new(new_object, 1);
 							created_gameobjects[new_object] = go;
 						}
 					}
@@ -2179,6 +2189,7 @@ MonoObject* NSScriptImporter::AddComponent(MonoObject * object, MonoReflectionTy
 				MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 				if (new_object)
 				{
+					mono_gchandle_new(new_object, 1);
 					created_components[new_object] = comp;
 					return new_object;
 				}
@@ -2272,7 +2283,7 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			{
 				if (comp_type_count == 0)
 				{
-					CONSOLE_ERROR("GetComponent method: %s does not exist in %s", comp_name, go->GetName().c_str());
+					CONSOLE_ERROR("%s GetComponent: %s at index (%d) does not exist in %s", current_script->GetName().c_str(), comp_name, index, go->GetName().c_str());
 				}
 				else
 				{
@@ -2316,6 +2327,7 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 						{
 							if (temp_index == 0)
 							{
+								mono_gchandle_new(new_object, 1);
 								created_components[new_object] = comp;
 								break;
 							}
@@ -3157,6 +3169,7 @@ MonoObject * NSScriptImporter::Spawn(MonoObject * object)
 					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 					if (new_object)
 					{
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = go;
 						return new_object;
 					}
@@ -3610,6 +3623,7 @@ void NSScriptImporter::CreateGameObject(MonoObject * object)
 	}*/
 	GameObject* gameobject = App->scene->CreateGameObject();
 	created_gameobjects[object] = gameobject;
+	mono_gchandle_new(object, 1);
 }
 
 MonoObject* NSScriptImporter::GetSelfGameObject()
@@ -4186,9 +4200,9 @@ float NSScriptImporter::RandomFloat(MonoObject * object)
 	return App->RandomNumber().Float();
 }
 
-float NSScriptImporter::RandomRange(MonoObject * object, float min, float max)
+float NSScriptImporter::RandomRange(float min, float max)
 {
-	return App->RandomNumber().FloatIncl(min, max);;
+	return App->RandomNumber().FloatIncl(min, max);
 }
 
 
@@ -4201,7 +4215,7 @@ void NSScriptImporter::LoadScene(MonoString * scene_name)
 		std::string scene_name = App->file_system->GetFileNameWithoutExtension(scene);
 		if (scene_name == name)
 		{
-			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".scene");
+			App->scene->LoadScene(LIBRARY_SCENES_FOLDER + scene_name + ".jscene");
 			return;
 		}
 	}
@@ -4473,6 +4487,7 @@ MonoObject * NSScriptImporter::GetGameObjectField(MonoObject * object, MonoStrin
 						MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 						if (new_object)
 						{
+							mono_gchandle_new(new_object, 1);
 							created_gameobjects[new_object] = go;
 							return new_object;
 						}
@@ -4657,9 +4672,10 @@ MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
 	const char* name = mono_string_to_utf8(prefab_name);
 
 	Prefab* prefab = App->resources->GetPrefab(name);
-	if (prefab)
+	if (prefab != nullptr)
 	{
-		GameObject* go = prefab->GetRootGameObject();
+		GameObject* go = App->scene->LoadPrefabToScene(prefab);
+
 		if (go)
 		{
 			MonoObject* mono_object = GetMonoObjectFromGameObject(go);
@@ -4675,12 +4691,14 @@ MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
 					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
 					if (new_object)
 					{
+						mono_gchandle_new(new_object, 1);
 						created_gameobjects[new_object] = go;
 						return new_object;
 					}
 				}
 			}
 		}
+		
 	}
 
 	return nullptr;

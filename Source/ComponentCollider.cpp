@@ -9,6 +9,7 @@
 #include "MathGeoLib/Quat.h"
 #include "PhysicsMaterial.h"
 #include "ModuleResources.h"
+#include "ComponentTransform.h"
 
 ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderType type)
 {
@@ -28,6 +29,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 
 	rigidbody = (ComponentRigidBody*)attached_gameobject->GetComponent(Component::CompRigidBody);
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
+	ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
 	AABB box;
 	box.SetFromCenterAndSize({ 0,0,0 }, { 1,1,1 });
 	if (mesh_renderer != nullptr)
@@ -44,7 +46,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 		{
 			physx::PxBoxGeometry geo_box(box.HalfSize().x, box.HalfSize().y, box.HalfSize().z);
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), geo_box, *collider_material);
-			SetColliderCenter(box.CenterPoint());
+			SetColliderCenter(float3::zero);
 			SetType(ComponentType::CompBoxCollider);
 			name += "Box_";
 		}
@@ -53,7 +55,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 		{
 			physx::PxSphereGeometry geo_sphere(box.MinimalEnclosingSphere().r);
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), geo_sphere, *collider_material);
-			SetColliderCenter(box.CenterPoint());
+			SetColliderCenter(float3::zero);
 			SetType(ComponentType::CompSphereCollider);
 			name += "Sphere_";
 		}
@@ -62,7 +64,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 		{
 			physx::PxCapsuleGeometry geo_capsule(box.MinimalEnclosingSphere().r, box.HalfSize().y);
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), geo_capsule, *collider_material);
-			SetColliderCenter(box.CenterPoint());
+			SetColliderCenter(float3::zero);
 			SetType(ComponentType::CompCapsuleCollider);
 			name += "Capsule_";
 		}
@@ -79,6 +81,9 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 			ChangeMeshToConvex(false);
 			SetType(ComponentType::CompMeshCollider);
 			name += "Mesh_";
+			float3 global = transform->GetGlobalPosition();
+			rigidbody->SetPosition(global);
+			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_triangle_mesh, *collider_material);
 		}
 			break;
 		case ComponentCollider::TerrainCollider:
@@ -95,8 +100,11 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 	}
 
 	SetTrigger(false);
-	if(collider_shape != nullptr)
+	if (collider_shape != nullptr)
+	{
 		collider_shape->userData = this;
+		//rigidbody->GetRigidBody()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
+	}
 }
 
 ComponentCollider::~ComponentCollider()
@@ -112,7 +120,7 @@ ComponentCollider::~ComponentCollider()
 	//collider_material->release();
 	//collider_shape->release();
 
-	if (!rb_is_released)
+	if (rigidbody != nullptr && !rb_is_released)
 	{
 		rigidbody->RemoveShape(*GetColliderShape());
 	}

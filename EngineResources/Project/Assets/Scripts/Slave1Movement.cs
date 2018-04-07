@@ -124,16 +124,33 @@ public class Slave1Movement {
 		if(shield_energy+weapon_energy+engine_energy > max_energy)
 			TheConsole.Warning("Energy is not properly set up!");
 		
-		weapons_bar = weapons.GetComponent<TheProgressBar>();
-		shields_bar = shields.GetComponent<TheProgressBar>();
-		energy_bar = energy.GetComponent<TheProgressBar>();
-		speed_bar = speed.GetComponent<TheProgressBar>();
-        shield_hp_bar = shield_hp_go.GetComponent<TheProgressBar>();
-        hp_bar = hp.GetComponent<TheProgressBar>();
+		if(weapons != null)
+			weapons_bar = weapons.GetComponent<TheProgressBar>();
+	
+		if(shields != null)
+			shields_bar = shields.GetComponent<TheProgressBar>();
 
-        weapons_bar.PercentageProgress = 100;
-		shields_bar.PercentageProgress = 100;
-		energy_bar.PercentageProgress = 100;
+		if(energy != null)
+			energy_bar = energy.GetComponent<TheProgressBar>();
+
+		if(speed != null)
+			speed_bar = speed.GetComponent<TheProgressBar>();
+
+		if(shield_hp_go != null)
+        	shield_hp_bar = shield_hp_go.GetComponent<TheProgressBar>();
+
+		if(hp != null)
+       		hp_bar = hp.GetComponent<TheProgressBar>();
+
+		if(weapons_bar != null)
+       		weapons_bar.PercentageProgress = 100;
+
+		if(shields_bar != null)
+			shields_bar.PercentageProgress = 100;
+
+		if(energy_bar != null)
+			energy_bar.PercentageProgress = 100;
+
 		//for halves, consider a point each 2 
 		max_energy *= 2;
 		shield_energy *= 2;
@@ -151,30 +168,61 @@ public class Slave1Movement {
         shield_regen_energy = shield_regen;
 
         //Camera
-        original_cam_pos = camera_go.GetComponent<TheTransform>().LocalPosition;
-        original_cam_rot = camera_go.GetComponent<TheTransform>().LocalRotation;
+		if(camera_go != null)
+		{
+        	original_cam_pos = camera_go.GetComponent<TheTransform>().LocalPosition;
+        	original_cam_rot = camera_go.GetComponent<TheTransform>().LocalRotation;
+		}
         cam_pos = new TheVector3(0, 0, 0);
         cam_rot = new TheVector3(0, 0, 0);
 
         //Repair Puzzle
-        inner_ring_trans = inner_ring.GetComponent<TheRectTransform>();
-        center_ring_trans = center_ring.GetComponent<TheRectTransform>();
-        exterior_ring_trans = exterior_ring.GetComponent<TheRectTransform>();
+		if(inner_ring != null)
+		{
+       		inner_ring_trans = inner_ring.GetComponent<TheRectTransform>();
+			inner_ring.SetActive(false);
+		}
 		
-		selected_inner_ring_trans = selected_inner_ring.GetComponent<TheRectTransform>();
-        selected_center_ring_trans = selected_center_ring.GetComponent<TheRectTransform>();
-        selected_exterior_ring_trans = selected_exterior_ring.GetComponent<TheRectTransform>();
-		
-		inner_ring.SetActive(false);
-        center_ring.SetActive(false);
-        exterior_ring.SetActive(false);
-		selected_inner_ring.SetActive(false);
-		selected_center_ring.SetActive(false);
-		selected_exterior_ring.SetActive(false);
+		if(center_ring != null)
+		{
+       		center_ring_trans = center_ring.GetComponent<TheRectTransform>();
+       		center_ring.SetActive(false);
+		}
 
-        audio_source = audio_emiter.GetComponent<TheAudioSource>();
-		audio_source.Play("Play_Engine");
-		audio_source.SetMyRTPCvalue("Speed",vel_percent);
+		if(exterior_ring != null)
+		{
+       		exterior_ring_trans = exterior_ring.GetComponent<TheRectTransform>();
+       	 	exterior_ring.SetActive(false);
+		}
+		
+		if(selected_inner_ring != null)
+		{
+			selected_inner_ring_trans = selected_inner_ring.GetComponent<TheRectTransform>();
+			selected_inner_ring.SetActive(false);
+		}
+
+		if(selected_center_ring != null)
+		{
+       		selected_center_ring_trans = selected_center_ring.GetComponent<TheRectTransform>();
+			selected_center_ring.SetActive(false);
+		}
+
+		if(selected_exterior_ring != null)
+		{
+       		selected_exterior_ring_trans = selected_exterior_ring.GetComponent<TheRectTransform>();
+			selected_exterior_ring.SetActive(false);
+		}
+		
+		if(audio_emiter != null)
+		{
+       		audio_source = audio_emiter.GetComponent<TheAudioSource>();
+
+			if(audio_source != null)
+			{
+				audio_source.Play("Play_Engine");
+				audio_source.SetMyRTPCvalue("Speed",vel_percent);
+			}
+		}
 	}
 	
 	void Update () 
@@ -186,20 +234,31 @@ public class Slave1Movement {
 		RepairPuzzle();
 
         //set ui bars
-		weapons_bar.PercentageProgress = (100.0f / 8.0f) * weapon_energy;
-		shields_bar.PercentageProgress = (100.0f / 8.0f) * shield_energy;
-		energy_bar.PercentageProgress = (100.0f / 8.0f) * engine_energy;
-        shield_hp_bar.PercentageProgress = (curr_shield_hp / shield_hp) * 100.0f;
-        hp_bar.PercentageProgress = (curr_total_hp / total_hp) * 100.0f;
+		if(weapons_bar != null)
+			weapons_bar.PercentageProgress = (100.0f / 8.0f) * weapon_energy;
+		
+		if(shields_bar != null)
+			shields_bar.PercentageProgress = (100.0f / 8.0f) * shield_energy;
 
-		speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
+		if(energy_bar != null)
+			energy_bar.PercentageProgress = (100.0f / 8.0f) * engine_energy;
+		
+		if(shield_hp_bar != null)
+        	shield_hp_bar.PercentageProgress = (curr_shield_hp / shield_hp) * 100.0f;
+
+		if(hp_bar != null)
+        	hp_bar.PercentageProgress = (curr_total_hp / total_hp) * 100.0f;
+
+		if(speed_bar != null)
+			speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
+
         curr_total_hp = wings_hp + body_hp + engine_hp;
 	}
 
 	void SetValuesWithEnergy()
 	{
-		curr_max_vel = 0.5f*max_vel + ((12.5f*(float)engine_energy)/100)*max_vel;
-        shield_regen_energy = 0.5f*shield_regen + ((12.5f * (float)shield_energy) / 100) * shield_regen;
+		curr_max_vel = 0.5f * max_vel + ((12.5f*(float)engine_energy)/100) * max_vel;
+        shield_regen_energy = 0.5f * shield_regen + ((12.5f * (float)shield_energy) / 100) * shield_regen;
     }
 
 	void EnergyManagement()
@@ -216,7 +275,9 @@ public class Slave1Movement {
 				}
 				else if(weapon_energy > 2)
 					weapon_energy -= 2;
-				else engine_energy -=2;
+				
+				else 
+					engine_energy -=2;
 			}
 		}
 		
@@ -232,7 +293,9 @@ public class Slave1Movement {
 				}
 				else if(shield_energy > 2)
 					shield_energy -= 2;
-				else engine_energy -=2;
+
+				else 
+					engine_energy -=2;
 			}
 		}
 
@@ -248,7 +311,8 @@ public class Slave1Movement {
 				}
 				else if(shield_energy > 2)
 					shield_energy -= 2;
-				else weapon_energy -=2;
+				else 
+					weapon_energy -=2;
 			}
 		}
 
@@ -283,10 +347,13 @@ public class Slave1Movement {
 		if(ljoy_up > controller_sensibility)
 		{
 			float move_percentage = (float)(ljoy_up - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
+
 			TheVector3 new_rot = trans.LocalRotation;
+
             if (invert_axis)
-            {
-                trans.RotateAroundAxis(TheVector3.Right, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+            {	
+               	trans.RotateAroundAxis(TheVector3.Right, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
                     cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
@@ -505,14 +572,18 @@ public class Slave1Movement {
 			}
 		}
 
-		float target_vel = vel_percent*curr_max_vel;
-		audio_source.SetMyRTPCvalue("Speed",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
+		float target_vel = vel_percent * curr_max_vel;
+
+		if(audio_source != null)
+			audio_source.SetMyRTPCvalue("Speed",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
 		
 		if(boosting)
 		{
-			target_vel = curr_max_vel+boost_extra_vel;
-			curr_accel = acceleration*boost_accel_multiplier;
-			TheInput.RumbleController(0,boost_rumble_strength,boost_rumble_ms);
+			target_vel = curr_max_vel + boost_extra_vel;
+			curr_accel = acceleration * boost_accel_multiplier;
+
+			TheInput.RumbleController(0, boost_rumble_strength,boost_rumble_ms);
+
 			if(curr_vel >= target_vel && boost_timer <= 0.0f)
 			{
 				boosting = false;
@@ -527,11 +598,11 @@ public class Slave1Movement {
 		{
 			if(engine_energy > 4)
 			{
-				boost_cd_timer -= TheTime.DeltaTime*(1+(0.5f/4)*(engine_energy-4));
+				boost_cd_timer -= TheTime.DeltaTime*(1+(0.5f/4) * (engine_energy-4));
 			}
 			else if(engine_energy < 4)
 			{
-				boost_cd_timer -= TheTime.DeltaTime*(1-(0.75f/4)*(engine_energy));
+				boost_cd_timer -= TheTime.DeltaTime*(1-(0.75f/4) * (engine_energy));
 			}
 			else
 				boost_cd_timer -= TheTime.DeltaTime;
@@ -541,7 +612,9 @@ public class Slave1Movement {
 		if(curr_vel < target_vel) 
 		{
 			curr_vel += curr_accel*TheTime.DeltaTime;
+
 			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
+
 			TheInput.RumbleController(0,rumble,accel_rumble_ms);
 		}
 		else if(curr_vel > target_vel)
@@ -551,7 +624,9 @@ public class Slave1Movement {
 			else
 			{
 				curr_vel-=slow_acceleration*TheTime.DeltaTime;
+
 				float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
+
 				TheInput.RumbleController(0,rumble,accel_rumble_ms);
 			}
 		}
@@ -559,14 +634,19 @@ public class Slave1Movement {
 		TheVector3 new_vel_pos = trans.LocalPosition;
 		new_vel_pos += trans.ForwardDirection*curr_vel*TheTime.DeltaTime;
 		trans.LocalPosition = new_vel_pos;
-
-        camera_go.GetComponent<TheTransform>().LocalPosition = original_cam_pos + cam_pos;
-        camera_go.GetComponent<TheTransform>().LocalRotation = original_cam_rot + cam_rot;
+		
+		if(camera_go != null)
+		{
+        	camera_go.GetComponent<TheTransform>().LocalPosition = original_cam_pos + cam_pos;
+        	camera_go.GetComponent<TheTransform>().LocalRotation = original_cam_rot + cam_rot;
+		}
     }
 
     public void DamageSlaveOne(float dmg)
     {
-		audio_source.Play("Play_Player_hit");
+		if(audio_source != null)
+			audio_source.Play("Play_Player_hit");
+
         switch(TheRandom.RandomInt() % ship_parts)
         {
             case 0:
@@ -591,6 +671,7 @@ public class Slave1Movement {
         else
         {
             wings_hp -= damage;
+
             if (wings_hp <= 0.0f)
             {
                 //lose
@@ -608,6 +689,7 @@ public class Slave1Movement {
         else
         {
             body_hp -= damage;
+
             if (wings_hp <= 0.0f)
             {
                 //lose
@@ -634,12 +716,14 @@ public class Slave1Movement {
 
     void RegenShield()
     {
-        if(shield_regen_timer<=0.0f && curr_shield_hp<shield_hp)
+        if(shield_regen_timer <= 0.0f && curr_shield_hp < shield_hp)
         {
-            curr_shield_hp+=shield_regen_energy* TheTime.DeltaTime;
+            curr_shield_hp += shield_regen_energy * TheTime.DeltaTime;
+
             if (curr_shield_hp > shield_hp)
                 curr_shield_hp = shield_hp;
         }
+
         shield_regen_timer -= TheTime.DeltaTime;
     }
 
@@ -647,7 +731,6 @@ public class Slave1Movement {
     {
         if(repair_mode)
         {
-
             if (TheInput.IsKeyDown("W") && repair_ring < num_rings - 1)
             {
                 repair_ring++;
@@ -700,31 +783,60 @@ public class Slave1Movement {
                             break;
                         }
                 }
-								
-				inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*-90);
-				center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*-90);
-				exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*-90);
-				selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos*-90);
-				selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos*-90);
-				selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos*-90);
+				
+				if(inner_ring_trans != null)
+					inner_ring_trans.Rotation = new TheVector3(0, 180, ring_interior_pos * -90);
+
+				if(center_ring_trans != null)
+					center_ring_trans.Rotation = new TheVector3(0, 180, ring_center_pos * -90);
+
+				if(exterior_ring_trans != null)
+					exterior_ring_trans.Rotation = new TheVector3(0, 180, ring_exterior_pos * -90);
+
+				if(selected_inner_ring_trans != null)
+					selected_inner_ring_trans.Rotation = new TheVector3(0,180,ring_interior_pos * -90);
+
+				if(selected_center_ring_trans != null)
+					selected_center_ring_trans.Rotation = new TheVector3(0,180,ring_center_pos * -90);
+
+				if(selected_exterior_ring_trans != null)
+					selected_exterior_ring_trans.Rotation = new TheVector3(0,180,ring_exterior_pos * -90);
             }
 			
 			switch(repair_ring)
              {
                  case 0:
-                    selected_inner_ring.SetActive(false);
-					selected_center_ring.SetActive(false);
-					selected_exterior_ring.SetActive(true);
+					if(selected_inner_ring_trans != null)
+                    	selected_inner_ring.SetActive(false);	
+
+					if(selected_center_ring_trans != null)
+						selected_center_ring.SetActive(false);
+
+					if(selected_exterior_ring_trans != null)
+						selected_exterior_ring.SetActive(true);
+
 					break;
+
                  case 1:
-                    selected_inner_ring.SetActive(false);
-					selected_center_ring.SetActive(true);
-					selected_exterior_ring.SetActive(false);
+					if(selected_inner_ring_trans != null)
+                    	selected_inner_ring.SetActive(false);
+
+					if(selected_center_ring_trans != null)
+						selected_center_ring.SetActive(true);
+
+					if(selected_exterior_ring_trans != null)
+						selected_exterior_ring.SetActive(false);
                     break;    
+
                  case 2:
-					selected_inner_ring.SetActive(true);
-					selected_center_ring.SetActive(false);
-					selected_exterior_ring.SetActive(false);
+					if(selected_inner_ring_trans != null)
+						selected_inner_ring.SetActive(true);
+	
+					if(selected_center_ring_trans != null)
+						selected_center_ring.SetActive(false);
+
+					if(selected_exterior_ring_trans != null)
+						selected_exterior_ring.SetActive(false);
                     break;
              }
 
@@ -738,12 +850,24 @@ public class Slave1Movement {
                         {
                             wings_hp = total_hp / 3.0f;
                             repair_mode = false;
-                            inner_ring.SetActive(false);
-                            center_ring.SetActive(false);
-                            exterior_ring.SetActive(false);
-							selected_inner_ring.SetActive(false);
-							selected_center_ring.SetActive(false);
-							selected_exterior_ring.SetActive(false);
+
+							if(inner_ring != null)
+                            	inner_ring.SetActive(false);
+
+							if(center_ring != null)
+                            	center_ring.SetActive(false);
+
+							if(exterior_ring != null)
+                            	exterior_ring.SetActive(false);
+
+							if(selected_inner_ring != null)
+								selected_inner_ring.SetActive(false);
+
+							if(selected_center_ring != null)
+								selected_center_ring.SetActive(false);
+							
+							if(selected_exterior_ring != null)
+								selected_exterior_ring.SetActive(false);
                         }
                         break;
                     case 1:
@@ -752,12 +876,24 @@ public class Slave1Movement {
                         {
                             body_hp = total_hp / 3.0f;
                             repair_mode = false;
-                            inner_ring.SetActive(false);
-                            center_ring.SetActive(false);
-                            exterior_ring.SetActive(false);
-							selected_inner_ring.SetActive(false);
-							selected_center_ring.SetActive(false);
-							selected_exterior_ring.SetActive(false);
+
+							if(inner_ring != null)
+                            	inner_ring.SetActive(false);
+							
+							if(center_ring != null)
+                           		center_ring.SetActive(false);
+
+							if(exterior_ring != null)
+                           		exterior_ring.SetActive(false);
+
+							if(selected_inner_ring != null)
+								selected_inner_ring.SetActive(false);
+
+							if(selected_center_ring != null)
+								selected_center_ring.SetActive(false);
+
+							if(selected_exterior_ring != null)
+								selected_exterior_ring.SetActive(false);
                         }
                         break;
                     case 2:
@@ -766,12 +902,24 @@ public class Slave1Movement {
                         {
                             engine_hp = total_hp / 3.0f;
                             repair_mode = false;
-                            inner_ring.SetActive(false);
-                            center_ring.SetActive(false);
-                            exterior_ring.SetActive(false);
-							selected_inner_ring.SetActive(false);
-							selected_center_ring.SetActive(false);
-							selected_exterior_ring.SetActive(false);
+
+							if(inner_ring != null)
+                            	inner_ring.SetActive(false);
+				
+							if(center_ring != null)
+                            	center_ring.SetActive(false);
+
+							if(exterior_ring != null)
+                           		exterior_ring.SetActive(false);
+								
+							if(selected_inner_ring != null)
+								selected_inner_ring.SetActive(false);
+
+							if(selected_center_ring != null)
+								selected_center_ring.SetActive(false);
+
+							if(selected_exterior_ring != null)
+								selected_exterior_ring.SetActive(false);
                         }
                         break;
                 }
@@ -795,30 +943,57 @@ public class Slave1Movement {
             if(TheInput.IsKeyDown("SPACE"))
             {
                 repair_mode = true;
-                wings_part.SetActive(false);
-                body_part.SetActive(false);
-                engine_part.SetActive(false);
-				inner_ring.SetActive(true);
-            	center_ring.SetActive(true);
-            	exterior_ring.SetActive(true);
+
+				if(wings_part != null)
+                	wings_part.SetActive(false);
+
+				if(body_part != null)
+                	body_part.SetActive(false);
+
+				if(engine_part != null)
+                	engine_part.SetActive(false);
+				
+				if(inner_ring != null)
+					inner_ring.SetActive(true);
+
+				if(center_ring != null)
+            		center_ring.SetActive(true);
+				
+				if(exterior_ring != null)
+            		exterior_ring.SetActive(true);
             }
 
             switch(repair_part)
             {
                 case 0:
-                    wings_part.SetActive(true);
-                    body_part.SetActive(false);
-                    engine_part.SetActive(false);
+					if(wings_part != null)
+                    	wings_part.SetActive(true);
+			
+					if(body_part != null)
+                   		body_part.SetActive(false);
+
+					if(engine_part != null)
+                    	engine_part.SetActive(false);
                     break;
                 case 1:
-                    wings_part.SetActive(false);
-                    body_part.SetActive(true);
-                    engine_part.SetActive(false);
+					if(wings_part != null)
+                   		wings_part.SetActive(false);
+		
+					if(body_part != null)
+                   		body_part.SetActive(true);
+
+					if(engine_part != null)
+                    	engine_part.SetActive(false);
                     break;
                 case 2:
-                    wings_part.SetActive(false);
-                    body_part.SetActive(false);
-                    engine_part.SetActive(true);
+					if(wings_part != null)
+                    	wings_part.SetActive(false);
+
+					if(body_part != null)
+                    	body_part.SetActive(false);
+
+					if(engine_part != null)
+                    	engine_part.SetActive(true);
                     break;
             }
         }

@@ -1,17 +1,17 @@
 {
-    "UUID": "1784798228",
+    "UUID": "407501371",
     "assets_path": "./Project/Assets/Prefabs/TieFighterDestruct.jprefab",
     "library_path": "./Project/Library/Prefabs/TieFighterDestruct.jprefab",
     "prefab_name": "TieFighterDestruct",
     "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "1738648874",
+        "UUID": "246489874",
         "Name": "TieFighterDestruct",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "1",
+            "Components_Count": "2",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -32,6 +32,13 @@
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
+            },
+            "Component_1": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "1873089326",
+                "Sound_ID": "103",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
         "ParentID": "0",
@@ -39,7 +46,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1410009952",
+        "UUID": "329694577",
         "Name": "Tie_Fighter_TIE",
         "Tag": "Default",
         "Layer": "Default",
@@ -79,7 +86,7 @@
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "2",
-                    "bool_fields_count": "0",
+                    "bool_fields_count": "1",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "0",
                     "vec2_fields_count": "0",
@@ -97,7 +104,12 @@
                             "field_value": "1.000000"
                         }
                     },
-                    "bool_fields": {},
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "start_automatic",
+                            "field_value": "1"
+                        }
+                    },
                     "string_fields": {},
                     "gameobject_fields": {},
                     "vec2_fields": {},
@@ -106,12 +118,12 @@
                 }
             }
         },
-        "ParentID": "1738648874",
+        "ParentID": "246489874",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "530396528",
+        "UUID": "1360926181",
         "Name": "Body_TIE",
         "Tag": "Default",
         "Layer": "Default",
@@ -215,12 +227,12 @@
                 }
             }
         },
-        "ParentID": "1410009952",
+        "ParentID": "329694577",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "755365723",
+        "UUID": "2063141761",
         "Name": "WingL_TIE",
         "Tag": "Default",
         "Layer": "Default",
@@ -324,12 +336,12 @@
                 }
             }
         },
-        "ParentID": "1410009952",
+        "ParentID": "329694577",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1737453247",
+        "UUID": "1401329339",
         "Name": "WingR_TIE",
         "Tag": "Default",
         "Layer": "Default",
@@ -433,7 +445,7 @@
                 }
             }
         },
-        "ParentID": "1410009952",
+        "ParentID": "329694577",
         "IsRoot": "0",
         "IsStatic": "0"
     }

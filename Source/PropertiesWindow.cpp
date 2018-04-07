@@ -323,10 +323,7 @@ void PropertiesWindow::DrawWindow()
 						ComponentScript* comp_script = (ComponentScript*)selected_gameobject->AddComponent(Component::CompScript);
 						if (comp_script != nullptr)
 						{
-							/*script->SetAttachedGameObject(selected_gameobject);
-							comp_script->SetScript(script);*/
 							Script* tmp_script = App->script_importer->LoadScriptFromLibrary(script->GetLibraryPath());
-							tmp_script->SetAttachedGameObject(selected_gameobject);
 							comp_script->SetScript(tmp_script);
 						}
 					}
@@ -337,9 +334,10 @@ void PropertiesWindow::DrawWindow()
 				{
 					if (ImGui::MenuItem("Audio Listener"))
 					{
-						if (App->audio->GetDefaultListener() != nullptr)
+						if (App->audio->GetDefaultListener() == nullptr)
 						{
-
+							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
+							App->audio->SetDefaultListener(listener);
 						}
 						else
 							ComponentListener* listener = (ComponentListener*)selected_gameobject->AddComponent(Component::CompAudioListener);
@@ -1816,7 +1814,7 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 		ImGui::SameLine();
 		if (ImGui::Button(("Delete Component##Collider" + std::to_string(colliders_count)).c_str()))
 		{
-			comp_collider->GetRigidBody()->RemoveShape(*comp_collider->GetColliderShape());
+			//comp_collider->GetRigidBody()->RemoveShape(*comp_collider->GetColliderShape());
 			components_to_destroy.insert(std::pair<GameObject*, Component*>(comp_collider->GetGameObject(), comp_collider));
 			comp_collider = nullptr;
 			return;
@@ -2449,6 +2447,11 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
+	if (ImGui::Button("Delete Component"))
+	{
+		audio_source->GetGameObject()->DestroyComponent(audio_source);
+	}
+
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 

@@ -84,11 +84,13 @@ public:
 	bool inside_function;
 	MonoObject* mono_self_object;
 
+	MonoAssembly* mono_assembly;
+	MonoImage* mono_image;
+
 private:
 	MonoDomain* mono_domain;
-	MonoAssembly* mono_assembly;
+	
 	MonoClass* mono_class;
-	MonoImage* mono_image;
 	MonoObject* mono_object;
 	GameObject* attached_gameobject;
 	std::string name_space;

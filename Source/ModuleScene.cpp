@@ -508,8 +508,6 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				
 				game_object->Load(data);
 
-				RenameDuplicatedGameObject(game_object);
-
 				App->resources->AddGameObject(game_object);
 
 				new_gos.push_back(game_object);
@@ -555,6 +553,7 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					game_object->Load(data);
 					data.LeaveSection();
 					++it;
+					RenameDuplicatedGameObject(game_object);
 				}
 			}
 
@@ -635,12 +634,16 @@ void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::
 	CONSOLE_LOG("Prefab saved to: %s", path.c_str());
 }
 
-void ModuleScene::LoadPrefabToScene(Prefab* prefab)
+GameObject* ModuleScene::LoadPrefabToScene(Prefab* prefab)
 {
-	prefab->GetRootGameObject();
-
 	Data data;
-	LoadPrefab(prefab->GetLibraryPath(), "jprefab", data, false);
+	std::list<GameObject*> new_gos;
+	LoadPrefab(prefab->GetLibraryPath(), "jprefab", data, false, false, new_gos);
+
+	if (new_gos.size() > 0)
+		return *new_gos.begin();
+
+	return nullptr;
 }
 
 void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path, std::string library_path)

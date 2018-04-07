@@ -4,71 +4,71 @@ using TheEngine.TheConsole;
 
 public class AI_Movement {
 
-	TheGameObject target = null;
-	TheGameObject gameobject;
+	//TheGameObject target = null;
+	//TheGameObject gameobject;
 	TheTransform own_trans;
-	
-	public float yaw_rotation = 10.0f;
-	public float pitch_rotation = 10.0f;
-	public float roll_rotation = 10.0f;
-	
+	//
+	//public float yaw_rotation = 10.0f;
+	//public float pitch_rotation = 10.0f;
+	//public float roll_rotation = 10.0f;
+	//
 	public float speed = 10.0f;
-
-	public float avoid_distance = 50.0f;
-	
-	bool avoid = false;
-	
-	public TheGameObject laser_spawner_L = null;
-	public TheGameObject laser_spawner_R = null;
-	TheFactory laser_factory;
-	bool laser_spawned_left = false;
-	public float laser_speed = 20000.0f;
-	public float time_between_lasers = 0.02f;
-	TheVector3 spawn_pos = new TheVector3();
-	TheVector3 spawn_dir = new TheVector3();
-	float timer = 0.0f;
-
-	public float sight_range = 100.0f;
-	public float sight_angle = 60.0f;
-
-	public bool shooting = false;
+    //
+	//public float avoid_distance = 50.0f;
+	//
+	//bool avoid = false;
+	//
+	//public TheGameObject laser_spawner_L = null;
+	//public TheGameObject laser_spawner_R = null;
+	//TheFactory laser_factory;
+	//bool laser_spawned_left = false;
+	//public float laser_speed = 20000.0f;
+	//public float time_between_lasers = 0.02f;
+	//TheVector3 spawn_pos = new TheVector3();
+	//TheVector3 spawn_dir = new TheVector3();
+	//float timer = 0.0f;
+    //
+	//public float sight_range = 100.0f;
+	//public float sight_angle = 60.0f;
+    //
+	//public bool shooting = false;
 	
 	void Start () {
 		own_trans = TheGameObject.Self.GetComponent<TheTransform>();
-		gameobject = TheGameObject.Self;
-		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
-		laser_factory.StartFactory();
-		if(laser_spawner_L == null)
-			laser_spawner_L = laser_spawner_R;
-		if(laser_spawner_R == null)
-			laser_spawner_R = laser_spawner_L;
+		//gameobject = TheGameObject.Self;
+		//laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+		//laser_factory.StartFactory();
+		//if(laser_spawner_L == null)
+		//	laser_spawner_L = laser_spawner_R;
+		//if(laser_spawner_R == null)
+		//	laser_spawner_R = laser_spawner_L;
 	}
 	
 	void Update () {
-		
-		if(target != null)
-		{
-			Movement();
-			Shoot();
-		}
-		else
-		{
-			GetNewTarget();
-		}
+
+        //if (target != null)
+        //{
+        Movement();
+            //Shoot();
+        //}
+        //else
+        //{
+            //GetNewTarget();
+        //}
 	}
 	
 	void Movement(){
 		
-		if(!avoid)
-		{
+		//if(!avoid)
+		//{
 			//calculate the direction to the target
-			TheTransform target_trans = target.GetComponent<TheTransform>();
-			TheVector3 dir_to_target = target_trans.GlobalPosition - own_trans.GlobalPosition;
-			dir_to_target = TheVector3.Normalize(dir_to_target);
+			//TheTransform target_trans = target.GetComponent<TheTransform>();
+			//TheVector3 dir_to_target = target_trans.GlobalPosition - own_trans.GlobalPosition;
+			//dir_to_target = TheVector3.Normalize(dir_to_target);
 				
 			//compare this to our direction and rotate to target
-			TheVector3 curr_dir = own_trans.ForwardDirection;
-			TheVector3 new_rot = own_trans.GlobalRotation;
+			//TheVector3 curr_dir = own_trans.ForwardDirection;
+			//TheVector3 new_rot = own_trans.GlobalRotation;
 			/////Check the z rotation
 			//float curr_angle = TheMath.Atan(curr_dir.y/curr_dir.x) * TheMath.RadToDeg;
 			//float targ_angle = TheMath.Atan(dir_to_target.y/dir_to_target.x) * TheMath.RadToDeg;
@@ -84,7 +84,7 @@ public class AI_Movement {
 			//	new_rot.z+=TheTime.DeltaTime * roll_rotation;
 			
 			///Check the y rotation
-			float curr_angle = TheMath.Atan(curr_dir.x/curr_dir.z) * TheMath.RadToDeg;
+			/*float curr_angle = TheMath.Atan(curr_dir.x/curr_dir.z) * TheMath.RadToDeg;
 		    float targ_angle = TheMath.Atan(dir_to_target.x/dir_to_target.z) * TheMath.RadToDeg;
 			
 			if(curr_dir.z < 0)
@@ -120,14 +120,14 @@ public class AI_Movement {
 			new_rot.y %= 360;
 			new_rot.z %= 360;
 			
-			own_trans.GlobalRotation = new_rot;
-		}
+			own_trans.GlobalRotation = new_rot;*/
+		//}
 		
 		TheVector3 new_pos = own_trans.LocalPosition + own_trans.ForwardDirection * speed * TheTime.DeltaTime;
 		own_trans.LocalPosition = new_pos;
 	}
 	
-	void GetNewTarget() {
+	/*void GetNewTarget() {
     	TheGameObject[] ships_in_scene = new TheGameObject[500];
 		//List<TheGameObject> ships_in_scene = new List<TheGameObject>();
         int nship = 0;
@@ -222,5 +222,5 @@ public class AI_Movement {
 				timer = 0.0f;
 			}
 		}
-	}
+	}*/
 }

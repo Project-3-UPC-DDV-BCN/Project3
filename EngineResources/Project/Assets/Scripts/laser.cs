@@ -8,6 +8,7 @@ public class laser
 
     public int enemy_damage;
     public int ally_damage;
+	public int slave_damage; 
 
     bool score_added;  
   
@@ -15,9 +16,14 @@ public class laser
 
 	void Start ()
 	{
+		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		
-		game_manager_scpt = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
-		team = game_manager_scpt.GetStringField("team");
+		if(game_manager != null)
+			game_manager_scpt = game_manager.GetComponent<TheScript>(0);
+
+		if(game_manager_scpt != null)
+			team = game_manager_scpt.GetStringField("team");
+
         score_added = false; 
 
     }
@@ -37,37 +43,57 @@ public class laser
 	{
 		TheGameObject other_parent = other_ship.GetParent();
 
+		TheConsole.Log(other_parent.tag); 
+
 		if(other_parent.tag == "XWING" || other_parent.tag == "TIEFIGHTER")
 		{ 	
-			enemy_properties_scpt = other_parent.GetComponent<TheScript>(1); 
+			enemy_properties_scpt = other_parent.GetComponent<TheScript>(0); 
 
             //Substract hp to ship
 			bool is_enemy = AreEnemies(team, other_parent.tag); 
 			int to_inc = 0; 
 
 			if(is_enemy)
-				to_inc = 5; 
+				to_inc = enemy_damage; 
 			else
-				to_inc = 10; 
+				to_inc = ally_damage; 
 			
+			if(enemy_properties_scpt != null)
+			{
+				enemy_properties_scpt.SetIntField("hp_inc", to_inc);
+				enemy_properties_scpt.CallFunction("SubstractHP"); 
+				enemy_properties_scpt.SetIntField("hp_inc", 0);
+			
+
+            	//Punish/Reward player if necessary 
+            	if (enemy_properties_scpt.GetIntField("hp") <= 0 && score_added == false)
+           		{ 
+                	int score_inc = GetScoreIncrementByHit(other_parent.tag);
+					
+					if(game_manager_scpt != null)
+					{					
+                		game_manager_scpt.SetIntField("score_to_inc", score_inc);
+                		game_manager_scpt.CallFunction("AddToScore");
+                		game_manager_scpt.SetIntField("score_to_inc", 0);
+					}
+
+                	score_added = true; 
+            	}
+			}
+			
+			TheGameObject.Self.SetActive(false); 
+			
+		}
+		else if(other_parent.tag == "Alliance")
+		{
+			
+			enemy_properties_scpt = other_parent.GetComponent<TheScript>(0); 
+
+			int to_inc = slave_damage; 
 			enemy_properties_scpt.SetIntField("hp_inc", to_inc);
 			enemy_properties_scpt.CallFunction("SubstractHP"); 
 			enemy_properties_scpt.SetIntField("hp_inc", 0);
 
-            //Punish/Reward player if necessary 
-            if (enemy_properties_scpt.GetIntField("hp") <= 0 && score_added == false)
-            { 
-                int score_inc = GetScoreIncrementByHit(other_parent.tag);
-
-                game_manager_scpt.SetIntField("score_to_inc", score_inc);
-                game_manager_scpt.CallFunction("AddToScore");
-                game_manager_scpt.SetIntField("score_to_inc", 0);
-
-                score_added = true; 
-            }
-			
-			TheGameObject.Self.SetActive(false); 
-			
 		}
 	}
 

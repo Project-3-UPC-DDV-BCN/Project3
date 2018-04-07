@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "ComponentBlast.h"
 #include "PerfTimer.h"
+#include "ComponentMeshRenderer.h"
 
 ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_particle)
 {
@@ -200,6 +201,12 @@ void ComponentTransform::UpdateGlobalMatrix()
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
 
+		ComponentMeshRenderer* renderer = (ComponentMeshRenderer*)GetGameObject()->GetComponent(Component::CompMeshRenderer);
+		if (renderer)
+		{
+			global_pos = renderer->bounding_box.CenterPoint();
+		}
+
 		if (!rb_transforms_go)
 		{
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
@@ -294,6 +301,23 @@ void ComponentTransform::LookAt(float3 dir, float3 up)
 	Quat q = Quat::FromEulerXYZ(eulers.x, eulers.y, eulers.z);
 	SetRotation(q.ToEulerXYZ() * RADTODEG);
 	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
+}
+
+bool ComponentTransform::AnyDirty()
+{
+	GameObject* current_go= GetGameObject(); 
+
+	while (current_go != nullptr)
+	{
+		ComponentTransform* transform = (ComponentTransform*)current_go->GetComponent(CompTransform);
+
+		if (transform->dirty)
+			return true;
+
+		current_go = current_go->GetParent(); 
+	}
+
+	return false; 
 }
 
 void ComponentTransform::SetTransformedFromRB(bool transformed)
