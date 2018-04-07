@@ -364,6 +364,7 @@ void Material::CreateMeta() const
 	data.AddBool("own_diffuse2_uvs", own_diffuse2_uvs);
 	data.AddBool("own_normal_uvs", own_normal_uvs);
 
+	data.AddFloat("bump_scaling", bump_scaling);
 }
 
 void Material::LoadToMemory()
@@ -427,6 +428,8 @@ void Material::LoadToMemory()
 	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
 	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse2_UV", diffuse2_UV);
 	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
+
+	App->renderer3D->SetUniformFloat(GetShaderProgramID(), "normal_bump", bump_scaling);
 
 }
 
