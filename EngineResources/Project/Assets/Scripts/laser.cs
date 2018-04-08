@@ -60,25 +60,25 @@ public class laser
 			
 			if(enemy_properties_scpt != null)
 			{
-				enemy_properties_scpt.SetIntField("hp_inc", to_inc);
+				enemy_properties_scpt.SetIntField("inc", to_inc);
 				enemy_properties_scpt.CallFunction("SubstractHP"); 
-				enemy_properties_scpt.SetIntField("hp_inc", 0);
+				enemy_properties_scpt.SetIntField("inc", 0);
 			
 
             	//Punish/Reward player if necessary 
-            	if (enemy_properties_scpt.GetIntField("hp") <= 0 && score_added == false)
-           		{ 
-                	int score_inc = GetScoreIncrementByHit(other_parent.tag);
+            	//if (enemy_properties_scpt.GetIntField("hp") <= 0 && score_added == false)
+           		//{ 
+                	//int score_inc = GetScoreIncrementByHit(other_parent.tag);
 					
-					if(game_manager_scpt != null)
-					{					
-                		game_manager_scpt.SetIntField("score_to_inc", score_inc);
-                		game_manager_scpt.CallFunction("AddToScore");
-                		game_manager_scpt.SetIntField("score_to_inc", 0);
-					}
+					//if(game_manager_scpt != null)
+					//{					
+                	//	game_manager_scpt.SetIntField("score_to_inc", score_inc);
+                	//	game_manager_scpt.CallFunction("AddToScore");
+                	//	game_manager_scpt.SetIntField("score_to_inc", 0);
+					//}
 
-                	score_added = true; 
-            	}
+                	//score_added = true; 
+            	//}
 			}
 			
 			TheGameObject.Self.SetActive(false); 
