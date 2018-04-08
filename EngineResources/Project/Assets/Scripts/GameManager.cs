@@ -51,10 +51,12 @@ public class GameManager
 
 	void Init ()
 	{
-		team = TheData.GetString("faction");
+		//team = TheData.GetString("faction");
+
 		if(team == "no_str")
 			team = "empire";
-        TheConsole.Log(team); 
+
+      //  TheConsole.Log(team); 
 	}
 
 	void Start ()

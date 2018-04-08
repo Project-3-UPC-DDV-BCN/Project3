@@ -21,7 +21,6 @@ public class HP_Tracker {
 		{
 			amount = 0; 
 			death = true; 
-			destruction_scpt.SetBoolField("need_boom", true); 
 		}
 
 	 TheConsole.Log(amount); 
