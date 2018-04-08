@@ -8,9 +8,9 @@ public class ShipDestruction
 
 	public float explosion_v; 
 	public float time_to_destroy; 
-	public bool start_automatic; 
 
 	private TheTimer destroy_timer = new TheTimer();
+	private TheScript hp_tracker; 
 
 	List<TheGameObject> ship_parts; 
 
@@ -24,6 +24,7 @@ public class ShipDestruction
 	void Start () 
 	{
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
+		hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0); 
 
         ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
@@ -32,9 +33,8 @@ public class ShipDestruction
 	
 	void Update ()
 	{
-		if(need_boom == true && exploted == false)
-		{                    
-			TheGameObject.Self.SetActive(false);  	
+		if(hp_tracker.GetIntField("amount") <= 0 && exploted == false)
+		{                     	
 			PlayDestruction(); 
 		}
 
