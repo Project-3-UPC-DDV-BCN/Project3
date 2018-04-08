@@ -1,79 +1,79 @@
 {
-    "SoundBanksInfo": {
-        "Platform": "Windows",
-        "BasePlatform": "Windows",
-        "SchemaVersion": "11",
-        "SoundbankVersion": "128",
-        "RootPaths": {
-            "ProjectRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Wwise_projects\\Enemy\\",
-            "SourceFilesRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Wwise_projects\\Enemy\\.cache\\Windows\\",
-            "SoundBanksRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Wwise_projects\\Enemy\\GeneratedSoundBanks\\Windows\\",
-            "ExternalSourcesInputFile": "",
-            "ExternalSourcesOutputRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Wwise_projects\\Enemy\\GeneratedSoundBanks\\Windows\\"
-        },
-        "SoundBanks": [
-            {
-                "Id": "2299321487",
-                "Language": "SFX",
-                "ObjectPath": "\\SoundBanks\\Default Work Unit\\Enemy",
-                "ShortName": "Enemy",
-                "Path": "Enemy.bnk",
-                "IncludedEvents": [
-                    {
-                        "Id": "2063026827",
-                        "Name": "Play_Enemy_Engine",
-                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Enemy_Engine"
-                    },
-                    {
-                        "Id": "654175685",
-                        "Name": "Play_Enemy_Explosions",
-                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Enemy_Explosions"
-                    },
-                    {
-                        "Id": "2641650631",
-                        "Name": "Play_Shoot",
-                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Shoot"
-                    }
-                ],
-                "IncludedMemoryFiles": [
-                    {
-                        "Id": "167984091",
-                        "Language": "SFX",
-                        "ShortName": "exp_obj_large04.wav",
-                        "Path": "SFX\\exp_obj_large04_1C9C67B2.wem"
-                    },
-                    {
-                        "Id": "191860919",
-                        "Language": "SFX",
-                        "ShortName": "eng_ywing_mid_lp.wav",
-                        "Path": "SFX\\eng_ywing_mid_lp_F17FB28C.wem"
-                    },
-                    {
-                        "Id": "448063206",
-                        "Language": "SFX",
-                        "ShortName": "exp_obj_huge01.wav",
-                        "Path": "SFX\\exp_obj_huge01_1C9C67B2.wem"
-                    },
-                    {
-                        "Id": "572468073",
-                        "Language": "SFX",
-                        "ShortName": "wpn_ywing_blaster_fire.wav",
-                        "Path": "SFX\\wpn_ywing_blaster_fire_1C9C67B2.wem"
-                    },
-                    {
-                        "Id": "762042938",
-                        "Language": "SFX",
-                        "ShortName": "exp_obj_huge02.wav",
-                        "Path": "SFX\\exp_obj_huge02_1C9C67B2.wem"
-                    },
-                    {
-                        "Id": "780649748",
-                        "Language": "SFX",
-                        "ShortName": "eng_ywing_low_lp.wav",
-                        "Path": "SFX\\eng_ywing_low_lp_F17FB28C.wem"
-                    }
-                ]
-            }
-        ]
-    }
+ "SoundBanksInfo": {
+  "Platform": "Windows",
+  "BasePlatform": "Windows",
+  "SchemaVersion": "11",
+  "SoundbankVersion": "128",
+  "RootPaths": {
+   "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\Wwise_projects\\Enemy\\",
+   "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\Wwise_projects\\Enemy\\.cache\\Windows\\",
+   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\Wwise_projects\\Enemy\\..\\..\\..\\Desktop\\Enemy_Soundbank\\",
+   "ExternalSourcesInputFile": "",
+   "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\Wwise_projects\\Enemy\\GeneratedSoundBanks\\Windows\\"
+  },
+  "SoundBanks": [
+   {
+    "Id": "2299321487",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Enemy",
+    "ShortName": "Enemy",
+    "Path": "Enemy.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "2063026827",
+      "Name": "Play_Enemy_Engine",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Enemy_Engine"
+     },
+     {
+      "Id": "654175685",
+      "Name": "Play_Enemy_Explosions",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Enemy_Explosions"
+     },
+     {
+      "Id": "2641650631",
+      "Name": "Play_Shoot",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Shoot"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "167984091",
+      "Language": "SFX",
+      "ShortName": "exp_obj_large04.wav",
+      "Path": "SFX\\exp_obj_large04_1C9C67B2.wem"
+     },
+     {
+      "Id": "191860919",
+      "Language": "SFX",
+      "ShortName": "eng_ywing_mid_lp.wav",
+      "Path": "SFX\\eng_ywing_mid_lp_F17FB28C.wem"
+     },
+     {
+      "Id": "448063206",
+      "Language": "SFX",
+      "ShortName": "exp_obj_huge01.wav",
+      "Path": "SFX\\exp_obj_huge01_1C9C67B2.wem"
+     },
+     {
+      "Id": "572468073",
+      "Language": "SFX",
+      "ShortName": "wpn_ywing_blaster_fire.wav",
+      "Path": "SFX\\wpn_ywing_blaster_fire_1C9C67B2.wem"
+     },
+     {
+      "Id": "762042938",
+      "Language": "SFX",
+      "ShortName": "exp_obj_huge02.wav",
+      "Path": "SFX\\exp_obj_huge02_1C9C67B2.wem"
+     },
+     {
+      "Id": "780649748",
+      "Language": "SFX",
+      "ShortName": "eng_ywing_low_lp.wav",
+      "Path": "SFX\\eng_ywing_low_lp_F17FB28C.wem"
+     }
+    ]
+   }
+  ]
+ }
 }
