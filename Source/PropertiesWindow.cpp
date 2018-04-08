@@ -2441,22 +2441,27 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 {
 	if (ImGui::CollapsingHeader("Listener", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::Button("Delete Component"))
+		{
+			listener->GetGameObject()->DestroyComponent(listener);
+		}
+
 		ImGui::Text("GameObject Listening");
 	}
 }
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
-	if (ImGui::Button("Delete Component"))
-	{
-		audio_source->GetGameObject()->DestroyComponent(audio_source);
-	}
-
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 
 	if (ImGui::CollapsingHeader("Audio Source", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
+		if (ImGui::Button("Delete Component"))
+		{
+			audio_source->GetGameObject()->DestroyComponent(audio_source);
+		}
+
 		SoundBankResource* sbk = audio_source->soundbank;
 		if (ImGui::InputResourceAudio("SoundBank", &sbk))
 		{
@@ -2507,6 +2512,11 @@ void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
 {
 	if (ImGui::CollapsingHeader("Distorsion Zone", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
+		if (ImGui::Button("Delete Component"))
+		{
+			dist_zone->GetGameObject()->DestroyComponent(dist_zone);
+		}
+
 		char* bus_name = new char[41];
 
 		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
