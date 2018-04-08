@@ -9,8 +9,9 @@ public class GuillemMovement
 	public TheGameObject force_target;
 	private bool forced = false;
 
-	public TheGameObject center_object;
+	TheGameObject center_object;
 	public float max_distance_to_center_object;
+	public float desertor_distance = 10000f;
 
 	public float move_speed = 300;
 	public float rotation_speed = 60;
@@ -35,6 +36,19 @@ public class GuillemMovement
 		
 		if(center_object != null)
 			center_transform = 	center_object.GetComponent<TheTransform>();
+        else
+        {
+            TheGameObject[] gos = TheGameObject.GetSceneGameObjects();
+            for(int i = 0; i < gos.Length; i++)
+            {
+                if(gos[i].tag == "AI_ANCHOR")
+                {
+                    center_object = gos[i];
+                    center_transform = gos[i].GetComponent<TheTransform>();
+                    break;
+                }
+            }
+        }
 
 		if(force_target != null)
 		{
@@ -59,11 +73,14 @@ public class GuillemMovement
 		// Avoid leaving x point on the map 
 		if(center_transform != null)
 		{
-			if(TheVector3.Distance(center_transform.LocalPosition, self_transform.LocalPosition) > max_distance_to_center_object)
+			if(TheVector3.Distance(center_transform.GlobalPosition, self_transform.GlobalPosition) > desertor_distance)
+				TheGameObject.Destroy(TheGameObject.Self);
+
+			if(TheVector3.Distance(center_transform.GlobalPosition, self_transform.GlobalPosition) > max_distance_to_center_object)
 			{
 				target_transform = center_transform;
 			}
-			else if(TheVector3.Distance(center_transform.LocalPosition, self_transform.LocalPosition) < max_distance_to_center_object / 2 && 
+			else if(TheVector3.Distance(center_transform.GlobalPosition, self_transform.GlobalPosition) < max_distance_to_center_object / 2 && 
 					target_transform == center_transform && !forced)
 			{
 				target_transform = null;
@@ -91,6 +108,11 @@ public class GuillemMovement
 		{
 			if(scene_gos[i] != null)
 			{
+                if(scene_gos[i].tag == "Alliance" || scene_gos[i].tag == "Empire")
+                {
+                    to_check.Add(scene_gos[i]);
+					continue;
+                }
 				TheScript sc = scene_gos[i].GetComponent<TheScript>();
 				if(sc != null)
 				{	

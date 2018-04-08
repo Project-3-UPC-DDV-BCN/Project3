@@ -19,6 +19,7 @@ uniform bool has_opacity;uniform bool has_light;
 uniform bool own_uvs_diffuse;
 uniform bool own_uvs_diffuse2;
 uniform bool own_uvs_normalmap;
+uniform float normal_bump;
 uniform sampler2D Tex_Diffuse;
 
 uniform sampler2D Tex_Diffuse2;
@@ -97,9 +98,9 @@ void main()
 		if (has_normalmap)
 		{
 			if (own_uvs_normalmap == false)
-			normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);
+			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0)* normal_bump);
 			else
-			normal = normalize(texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0);
+			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0)* normal_bump);
 			vec3 TangentViewPos = TBN * viewPos;
 			viewDir = normalize(TangentViewPos - TangentFragPos);
 			fragPosarg = TangentFragPos;

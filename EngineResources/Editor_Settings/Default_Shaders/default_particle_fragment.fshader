@@ -17,7 +17,6 @@ void main()
 	if(has_texture)
 	{
 		color = texture(ourTexture, TexCoord);
-		color.rgb = color.rgb + material_color.rgb;
 	}
 	else if(has_material_color)
 		color = material_color;
