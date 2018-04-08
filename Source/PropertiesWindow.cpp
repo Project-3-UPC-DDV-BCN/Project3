@@ -2444,6 +2444,7 @@ void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 		if (ImGui::Button("Delete Component"))
 		{
 			listener->GetGameObject()->DestroyComponent(listener);
+			App->audio->SetDefaultListener(nullptr);
 		}
 
 		ImGui::Text("GameObject Listening");

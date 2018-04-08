@@ -24,8 +24,9 @@ public class Ai_Starship_Shooting {
 	public float far_plane_offset = 500f;
 
 	public float shooting_range = 500f;
-
+	TheGameObject player = null;
 	TheScript movement = null;
+	bool in_range = false;
 
 	void Start () {
 		movement = TheGameObject.Self.GetComponent<TheScript>(0);
@@ -43,22 +44,49 @@ public class Ai_Starship_Shooting {
 	void Update () {
 		if(LaserFactoryGO == null || laser_factory == null) return;
 		if(laser_spawner_L == null || laser_spawner_R == null) return;
-
+		if(player == null)
+		{
+			TheGameObject[] scene_obj = TheGameObject.GetSceneGameObjects();
+			for(int i =0;i<scene_obj.Length;i++)
+				{
+					if(scene_obj[i].TheGameObject.Self.tag == "Player") 
+						{
+							player = scene_obj[i]];
+							break;
+						}
+				}
+		}
+		if(player)
+			{
+				TheVector3 vec_distance = player.GetComponent<TheTransform>().GlobalPosition - transform.gloGlobalPosition;
+				float distance = TheVector3.magnitMagnitude(vec_distance);
+				if(distance < 50000)
+				{
+					in_range = true;
+				}
+				else
+				{
+					in_range = false;
+				}
+			}
 		//TheGameObject[] gosInFrustrum = TheGameObject.GetObjectsInFrustum(transform.GlobalPosition, transform.ForwardDirection, transform.UpDirection, near_plane_offset, far_plane_offset);
 		//if(gosInFrustrum.Length > 0) shooting = true; else shooting = false;
 
 		if(movement != null) {
 			TheVector3 tOffset = movement.GetVector3Field("target_pos") - transform.GlobalPosition;
-			if(TheVector3.Magnitude(tOffset) < shooting_range)
-				shooting = true;
+			if(TheVector3.Magnitude(tOffset) < shooting_range)	
+				shooting = true;	
 			else
+			{
 				shooting = false;
+				can_play = true;
+			}
 		}
 
 		if(shooting) {
 			timer += TheTime.DeltaTime;
 			if(timer >= time_between_lasers) {
-				if(audio_source != null) audio_source.Play("Play_Shoot");
+				
 				if(laser_spawned_left) {
 					spawn_pos = laser_spawner_R.GetComponent<TheTransform>().GlobalPosition;
 					spawn_dir = laser_spawner_R.GetComponent<TheTransform>().ForwardDirection;
@@ -69,6 +97,9 @@ public class Ai_Starship_Shooting {
 					spawn_dir = laser_spawner_L.GetComponent<TheTransform>().ForwardDirection;
 					laser_spawned_left = true;
 				}
+				
+				
+				
 				laser_factory.SetSpawnPosition(spawn_pos);
 				laser_factory.SetSpawnRotation(spawn_dir);
 				TheGameObject laser = laser_factory.Spawn();
@@ -81,7 +112,7 @@ public class Ai_Starship_Shooting {
 
 				timer = 0.0f;
 			}
+			if(in_range) audio_source.Play("Play_Shoot");
 		}
-		
 	}
 }

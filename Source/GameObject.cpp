@@ -533,6 +533,12 @@ void GameObject::SetGlobalTransfomMatrix(const float4x4 & matrix)
 	transform->SetMatrix(matrix);
 }
 
+math::float3 GameObject::GetGlobalPosition()
+{
+	ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
+	return transform->GetGlobalPosition();
+}
+
 void GameObject::SetParentByID(UID parent_id)
 {
 	SetParent(App->scene->FindGameObject(parent_id));
