@@ -1,5 +1,4 @@
 using TheEngine;
-using TheApplication; 
 
 public class KillMyself 
 {
@@ -15,7 +14,7 @@ public class KillMyself
 	{
 		if(hp_tracker.GetIntField("amount") <= 0)
 		{
-			LoadScene("VS3 - EndGameScene"); 
+			TheApplication.LoadScene("VS3 - EndGameScene"); 
 		}
 	}
 }

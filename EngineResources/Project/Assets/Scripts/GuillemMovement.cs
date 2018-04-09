@@ -108,21 +108,20 @@ public class GuillemMovement
 		{
 			if(scene_gos[i] != null)
 			{
-                if(scene_gos[i].tag == "Alliance" || scene_gos[i].tag == "Empire")
+                if(scene_gos[i].tag == "XWING" || scene_gos[i].tag == "TIEFIGHTER")
                 {
                     to_check.Add(scene_gos[i]);
-					continue;
-                }
-				TheScript sc = scene_gos[i].GetComponent<TheScript>();
-				if(sc != null)
-				{	
-					int other_fac = sc.GetIntField("faction");
-					
-					if(other_fac != faction)
-					{
-						to_check.Add(scene_gos[i]);
+					TheScript sc = scene_gos[i].GetComponent<TheScript>();
+					if(sc != null)
+					{	
+						int other_fac = sc.GetIntField("faction");
+						
+						if(other_fac != faction)
+						{
+							to_check.Add(scene_gos[i]);
+						}
 					}
-				}
+                }
 			}
 		}
 

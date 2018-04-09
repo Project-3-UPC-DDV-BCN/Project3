@@ -4743,7 +4743,7 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	}
 	else if (component_type == "TheMeshCollider")
 	{
-		type = Component::CompMeshCollider;
+		type = Component::CompBoxCollider;
 	}
 	else if (component_type == "TheGOAPAgent")
 	{
