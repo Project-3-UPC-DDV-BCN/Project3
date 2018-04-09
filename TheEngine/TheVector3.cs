@@ -385,6 +385,34 @@ namespace TheEngine
             return q.Normalized;
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static TheVector3 RotateTowards(TheVector3 current, TheVector3 target, float angle);
+        //{
+        //    TheVector3 ortho_vec = TheVector3.CrossProduct(current, target);
+
+        //    TheQuaternion current_quat = current.ToQuaternion();
+        //    TheQuaternion target_quat = ortho_vec.ToQuaternion();
+
+        //    target_quat = target_quat.Normalized;
+        //    float rad_angle = angle/* * TheMath.TheMath.DegToRad*/;
+
+        //    float cos_result = TheMath.TheMath.Cos(rad_angle / 2);
+
+        //    TheQuaternion q =  target_quat * TheMath.TheMath.Sin(rad_angle / 2);
+        //    q.x += cos_result;
+        //    q.y += cos_result;
+        //    q.z += cos_result;
+
+        //    TheQuaternion q1 = target_quat * TheMath.TheMath.Sin(rad_angle / 2);
+        //    q.x -= cos_result;
+        //    q.y -= cos_result;
+        //    q.z -= cos_result;
+
+        //    TheQuaternion final_quat = q * current_quat * q1;
+
+        //    return final_quat.ToEulerAngles() * TheMath.TheMath.RadToDeg;
+        //}
+
         /// <summary>
         ///   <para>Returns rotation quaternion where the vector is facing</para>
         /// </summary>

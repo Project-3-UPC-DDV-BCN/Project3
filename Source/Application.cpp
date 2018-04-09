@@ -212,6 +212,7 @@ void Application::PrepareUpdate()
 void Application::FinishUpdate()
 {
 	StopNow();
+	PauseNow();
 
 	frames++;
 	num_fps++;
@@ -260,6 +261,17 @@ void Application::StopNow()
 			}
 			App->scene->is_game = false;
 			to_stop = false;
+		}
+	}
+}
+
+void Application::PauseNow()
+{
+	if (to_pause)
+	{
+		if (state == OnPlay) {
+			state == OnPause;
+			to_pause = false;
 		}
 	}
 }
@@ -455,7 +467,7 @@ void Application::Play()
 void Application::Pause()
 {
 	if (state == OnPlay) {
-		state = OnPause;
+		to_pause = true;
 	}
 }
 

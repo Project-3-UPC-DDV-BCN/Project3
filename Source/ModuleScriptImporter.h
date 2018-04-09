@@ -65,11 +65,13 @@ public:
 	~NSScriptImporter() {};
 
 	void AddCreatedGameObjectToList(MonoObject* object, GameObject* go);
+	void AddCreatedComponentToList(MonoObject* object, Component* comp);
 	GameObject* GetGameObjectFromMonoObject(MonoObject* object);
 	Component* GetComponentFromMonoObject(MonoObject* object);
 	MonoObject* GetMonoObjectFromGameObject(GameObject* go);
 	MonoObject* GetMonoObjectFromComponent(Component* component);
 	Component::ComponentType CsToCppComponent(std::string component_type);
+	std::string CppComponentToCs(Component::ComponentType component_type);
 
 	//GAMEOBJECT
 	void SetGameObjectName(MonoObject * object, MonoString* name);
@@ -114,6 +116,8 @@ public:
 	MonoObject* GetUp(MonoObject* object);
 	void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
 	void SetIncrementalRotation(MonoObject * object, MonoObject * vector3);
+	void SetQuatRotation(MonoObject * object, MonoObject * quat);
+	MonoObject* GetQuatRotation(MonoObject* object);
 
 	//RECTTRANSFORM
 	void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -163,6 +167,7 @@ public:
 	//VECTOR/QUATERNION
 	MonoObject* ToQuaternion(MonoObject * object);
 	MonoObject* ToEulerAngles(MonoObject * object);
+	MonoObject* RotateTowards(MonoObject* current, MonoObject* target, float angle);
 
 	//TIME
 	void SetTimeScale(MonoObject* object, float scale);
@@ -212,10 +217,6 @@ public:
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 	void SetAngularVelocity(MonoObject * object, float x, float y, float z); 
 	void AddTorque(MonoObject* object, float x, float y, float z, int force_type);
-	void DisableCollider(MonoObject * object, int index);
-	void DisableAllColliders(MonoObject * object);
-	void EnableCollider(MonoObject * object, int index);
-	void EnableAllColliders(MonoObject * object);
 	void SetKinematic(MonoObject * object, bool kinematic);
 	void SetTransformGO(MonoObject * object, bool transform_go);
 	bool IsKinematic(MonoObject * object);
@@ -265,12 +266,27 @@ public:
 	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	void CallFunction(MonoObject* object, MonoString* function_name);
 
+	//RESOURCES
+	MonoObject* LoadPrefab(MonoString* prefab_name);
+
+	//PHYSICS
+	void Explosion(MonoObject* world_pos, float radius, float explosive_impulse);
+	MonoObject* PhysicsRayCast(MonoObject* origin, MonoObject* direction, float max_distance);
+	MonoArray* PhysicsRayCastAll(MonoObject* origin, MonoObject* direction, float max_distance);
+
+	//COLLIDER
+	MonoObject* ColliderGetGameObject(MonoObject* object);
+	MonoObject* ColliderGetRigidBody(MonoObject* object);
+	bool ColliderIsTrigger(MonoObject* object);
+	void ColliderSetTrigger(MonoObject* object, bool trigger);
+	MonoObject* ClosestPoint(MonoObject* object, MonoObject* position);
+
+	//DEBUG DRAW
+	void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
+
 	std::map<MonoObject*, GameObject*> created_gameobjects;
 	std::map<MonoObject*, Component*> created_components;
 	CSScript* current_script;
-
-	//Resources
-	MonoObject* LoadPrefab(MonoString* prefab_name);
 
 private:
 	
@@ -302,6 +318,8 @@ public:
 	static NSScriptImporter* ns_importer;
 
 	std::vector<DLLClassInfo> engine_dll_info;
+
+	void AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list);
 
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);
@@ -354,6 +372,8 @@ private:
 	static MonoObject* GetUp(MonoObject* object);
 	static void RotateAroundAxis(MonoObject* object, MonoObject* axis, float angle);
 	static void SetIncrementalRotation(MonoObject * object, MonoObject * vector3);
+	static void SetQuatRotation(MonoObject * object, MonoObject * quat);
+	static MonoObject* GetQuatRotation(MonoObject* object);
 
 	//RECTTRANSFORM
 	static void SetRectPosition(MonoObject * object, MonoObject * vector3);
@@ -403,6 +423,7 @@ private:
 	//VECTOR/QUATERNION
 	static MonoObject* ToQuaternion(MonoObject * object);
 	static MonoObject* ToEulerAngles(MonoObject * object);
+	static MonoObject* RotateTowards(MonoObject* current, MonoObject* target, float angle);
 
 	//TIME
 	static void SetTimeScale(MonoObject* object, float scale);
@@ -452,10 +473,6 @@ private:
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
 	static void SetAngularVelocity(MonoObject * object, float x, float y, float z);
 	static void AddTorque(MonoObject * object, float x, float y, float z, int force_type);
-	static void DisableCollider(MonoObject * object, int index);
-	static void DisableAllColliders(MonoObject * object);
-	static void EnableCollider(MonoObject * object, int index);
-	static void EnableAllColliders(MonoObject * object);
 	static bool IsKinematic(MonoObject * object);
 	static void SetKinematic(MonoObject * object, bool kinematic);
 	static void SetTransformGO(MonoObject * object, bool transform_go);
@@ -505,8 +522,23 @@ private:
 	static MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	static void CallFunction(MonoObject* object, MonoString* function_name);
 
-	//Resources
+	//RESOURCES
 	static MonoObject* LoadPrefab(MonoString* prefab_name);
+
+	//PHYSICS
+	static void Explosion(MonoObject* world_pos, float radius, float explosive_impulse);
+	static MonoObject* PhysicsRayCast(MonoObject* origin, MonoObject* direction, float max_distance);
+	static MonoArray* PhysicsRayCastAll(MonoObject* origin, MonoObject* direction, float max_distance);
+
+	//COLLIDER
+	static MonoObject* ColliderGetGameObject(MonoObject* object);
+	static MonoObject* ColliderGetRigidBody(MonoObject* object);
+	static bool ColliderIsTrigger(MonoObject* object);
+	static void ColliderSetTrigger(MonoObject* object, bool trigger);
+	static MonoObject* ClosestPoint(MonoObject* object, MonoObject* position);
+
+	//DEBUG DRAW
+	static void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
 
 private:
 	std::string mono_path;

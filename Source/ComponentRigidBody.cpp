@@ -13,7 +13,6 @@
 
 ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 {
-	SetActive(true);
 	SetName("RigidBody");
 	SetType(ComponentType::CompRigidBody);
 	SetGameObject(attached_gameobject);
@@ -23,6 +22,7 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
 	if (mesh_renderer != nullptr)
 	{
+		mesh_renderer->UpdateBoundingBox();
 		SetPosition(mesh_renderer->bounding_box.CenterPoint());
 	}
 	else
@@ -46,6 +46,8 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 		App->physics->AddNonBlastActorToList(rigidbody, attached_gameobject);
 	}
 	SetInitValues();
+
+	SetActive(true);
 }
 
 ComponentRigidBody::~ComponentRigidBody()
@@ -80,7 +82,6 @@ void ComponentRigidBody::SetInitValues()
 	SetLinearDamping(0);
 	SetAngularDamping(0.05f);
 	SetLinearVelocity(float3(0, 0, 0));
-	SetLinearDamping(0);
 }
 
 void ComponentRigidBody::SetMass(float new_mass)
@@ -620,82 +621,6 @@ bool ComponentRigidBody::GetTransformsGo() const
 	return transforms_go;
 }
 
-void ComponentRigidBody::EnableShapes()
-{
-	std::vector<physx::PxShape*> shapes = GetShapes();
-
-	for (physx::PxShape* shape : shapes)
-	{
-		ComponentCollider* collider = (ComponentCollider*)shape->userData;
-		collider->SetActive(true);
-		if (!collider->IsTrigger())
-		{
-			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
-		}
-		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-		shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
-	}
-}
-
-void ComponentRigidBody::EnableShapeByIndex(int index)
-{
-	std::vector<physx::PxShape*> shapes = GetShapes();
-
-	int count = 0;
-	for (physx::PxShape* shape : shapes)
-	{
-		if (count == index)
-		{
-			ComponentCollider* collider = (ComponentCollider*)shape->userData;
-			collider->SetActive(true);
-			if (!collider->IsTrigger())
-			{
-				shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
-			}
-			shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-			shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
-			break;
-		}
-
-		count++;
-	}
-}
-
-void ComponentRigidBody::DisableShapes()
-{
-	std::vector<physx::PxShape*> shapes = GetShapes();
-
-	for (physx::PxShape* shape : shapes)
-	{
-		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
-		shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
-		shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
-		ComponentCollider* collider = (ComponentCollider*)shape->userData;
-		collider->SetActive(false);
-	}
-}
-
-void ComponentRigidBody::DisableShapeByIndex(int index)
-{
-	std::vector<physx::PxShape*> shapes = GetShapes();
-
-	int count = 0; 
-	for (physx::PxShape* shape : shapes)
-	{
-		if (count == index)
-		{
-			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
-			shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
-			shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
-			ComponentCollider* collider = (ComponentCollider*)shape->userData;
-			collider->SetActive(false);
-			break; 
-		}
-
-		count++; 
-	}
-}
-
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
 {
 	rigidbody->release();
@@ -805,6 +730,30 @@ void ComponentRigidBody::Load(Data & data)
 			break;
 		}
 	}*/
+}
+
+void ComponentRigidBody::OnEnable()
+{
+	if (rigidbody)
+	{
+		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
+	}
+}
+
+void ComponentRigidBody::OnDisable()
+{
+	if (rigidbody)
+	{
+		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
+	}
+	
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		ComponentCollider* collider = (ComponentCollider*)shape->userData;
+		if (collider->IsActive()) collider->SetActive(false);
+	}
 }
 
 void ComponentRigidBody::DrawColliders()

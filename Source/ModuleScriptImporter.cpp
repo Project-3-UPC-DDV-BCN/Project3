@@ -28,6 +28,10 @@
 #include <mono/metadata/attrdefs.h>
 #include "TinyXML/tinyxml2.h"
 #include "Prefab.h"
+#include "ModulePhysics.h"
+#include "ComponentCollider.h"
+#include "ModuleRenderer3D.h"
+#include "DebugDraw.h"
 
 //CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -144,6 +148,10 @@ std::string ModuleScriptImporter::ImportScript(std::string path)
 			else
 			{
 				CONSOLE_LOG("%s", message.c_str());
+				if (message.find("Compiled!") != std::string::npos)
+				{
+					return lib;
+				}
 			}
 		}
 	}
@@ -231,6 +239,41 @@ std::string ModuleScriptImporter::CompileScript(std::string assets_path, std::st
 //{
 //	return current_script;
 //}
+
+void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list)
+{
+	for (GameObject* go : scene_objects_list)
+	{
+		MonoObject* exist_obejct = ns_importer->GetMonoObjectFromGameObject(go);
+		if (!exist_obejct)
+		{
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+				if (new_object)
+				{
+					ns_importer->AddCreatedGameObjectToList(new_object, go);
+				}
+			}
+		}
+
+		for (Component* comp : go->components_list)
+		{
+			std::string comp_type = ns_importer->CppComponentToCs(comp->GetType());
+
+			MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_type.c_str());
+			if (c_comp)
+			{
+				MonoObject* comp_new_object = mono_object_new(App->script_importer->GetDomain(), c_comp);
+				if (comp_new_object)
+				{
+					ns_importer->AddCreatedComponentToList(comp_new_object, comp);
+				}
+			}
+		}
+	}
+}
 
 CSScript* ModuleScriptImporter::DumpAssemblyInfo(MonoAssembly * assembly)
 {
@@ -619,6 +662,8 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
 	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
 	mono_add_internal_call("TheEngine.TheTransform::RotateAroundAxis", (const void*)RotateAroundAxis);
+	mono_add_internal_call("TheEngine.TheTransform::GetQuatRotation", (const void*)GetQuatRotation);
+	mono_add_internal_call("TheEngine.TheTransform::SetQuatRotation", (const void*)SetQuatRotation);
 
 	//RECTTRANSFORM
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectPosition", (const void*)SetRectPosition);
@@ -660,6 +705,7 @@ void ModuleScriptImporter::RegisterAPI()
 	//VECTOR/QUATERNION
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
 	mono_add_internal_call("TheEngine.TheQuaternion::ToEulerAngles", (const void*)ToEulerAngles);
+	mono_add_internal_call("TheEngine.TheVector3::RotateTowards", (const void*)RotateTowards);
 
 	//DATA SAVE/LOAD
 	mono_add_internal_call("TheEngine.TheData::AddString", (const void*)AddString);
@@ -719,8 +765,6 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRigidBody::SetAngularVelocity", (const void*)SetAngularVelocity);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetPosition", (const void*)SetRBPosition);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetRotation", (const void*)SetRBRotation);
-	mono_add_internal_call("TheEngine.TheRigidBody::DisableCollider", (const void*)DisableCollider);
-	mono_add_internal_call("TheEngine.TheRigidBody::DisableAllColliders", (const void*)DisableAllColliders);
 	mono_add_internal_call("TheEngine.TheRigidBody::IsTransformGO", (const bool*)IsTransformGO);
 	mono_add_internal_call("TheEngine.TheRigidBody::AddTorque", (const void*)AddTorque);
 	mono_add_internal_call("TheEngine.TheRigidBody::SetTransformGO", (const void*)SetTransformGO);
@@ -771,6 +815,21 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//RESOURCES
 	mono_add_internal_call("TheEngine.TheResources::LoadPrefab", (const void*)LoadPrefab);
+
+	//PHYSICS
+	mono_add_internal_call("TheEngine.ThePhysics::Explosion", (const void*)Explosion);
+	mono_add_internal_call("TheEngine.ThePhysics::InternalRayCast", (const void*)PhysicsRayCast);
+	mono_add_internal_call("TheEngine.ThePhysics::InternalRayCastAll", (const void*)PhysicsRayCastAll);
+
+	//COLLIDER
+	mono_add_internal_call("TheEngine.TheCollider::GetGameObject", (const void*)ColliderGetGameObject);
+	mono_add_internal_call("TheEngine.TheCollider::GetRigidBody", (const void*)ColliderGetRigidBody);
+	mono_add_internal_call("TheEngine.TheCollider::IsTrigger", (const void*)ColliderIsTrigger);
+	mono_add_internal_call("TheEngine.TheCollider::SetTrigger", (const void*)ColliderSetTrigger);
+	mono_add_internal_call("TheEngine.TheCollider::ClosestPoint", (const void*)ClosestPoint);
+
+	//DEBUG DRAW
+	mono_add_internal_call("TheEngine.TheDebug.TheDebugDraw::Line", (const void*)DebugDrawLine);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1103,6 +1162,16 @@ void ModuleScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObjec
 	ns_importer->SetIncrementalRotation(object, vector3);
 }
 
+void ModuleScriptImporter::SetQuatRotation(MonoObject * object, MonoObject * quat)
+{
+	ns_importer->SetQuatRotation(object, quat);
+}
+
+MonoObject * ModuleScriptImporter::GetQuatRotation(MonoObject * object)
+{
+	return ns_importer->GetQuatRotation(object);
+}
+
 void ModuleScriptImporter::StartFactory(MonoObject * object)
 {
 	ns_importer->StartFactory(object);
@@ -1136,6 +1205,11 @@ MonoObject * ModuleScriptImporter::ToQuaternion(MonoObject * object)
 MonoObject * ModuleScriptImporter::ToEulerAngles(MonoObject * object)
 {
 	return ns_importer->ToEulerAngles(object);
+}
+
+MonoObject * ModuleScriptImporter::RotateTowards(MonoObject * current, MonoObject * target, float angle)
+{
+	return ns_importer->RotateTowards(current, target, angle);
 }
 
 void ModuleScriptImporter::SetTimeScale(MonoObject * object, float scale)
@@ -1368,26 +1442,6 @@ void ModuleScriptImporter::AddTorque(MonoObject * object, float x, float y, floa
 	ns_importer->AddTorque(object, x, y, z, force_type);
 }
 
-void ModuleScriptImporter::DisableCollider(MonoObject * object, int index)
-{
-	ns_importer->DisableCollider(object, index);
-}
-
-void ModuleScriptImporter::DisableAllColliders(MonoObject * object)
-{
-	ns_importer->DisableAllColliders(object);
-}
-
-void ModuleScriptImporter::EnableCollider(MonoObject * object, int index)
-{
-	ns_importer->EnableCollider(object, index);
-}
-
-void ModuleScriptImporter::EnableAllColliders(MonoObject * object)
-{
-	ns_importer->EnableAllColliders(object);
-}
-
 bool ModuleScriptImporter::IsKinematic(MonoObject * object)
 {
 	return ns_importer->IsKinematic(object);
@@ -1593,6 +1647,50 @@ MonoObject * ModuleScriptImporter::LoadPrefab(MonoString* prefab_name)
 	return ns_importer->LoadPrefab(prefab_name);
 }
 
+void ModuleScriptImporter::Explosion(MonoObject * world_pos, float radius, float explosive_impulse)
+{
+	ns_importer->Explosion(world_pos, radius, explosive_impulse);
+}
+
+MonoObject* ModuleScriptImporter::PhysicsRayCast(MonoObject * origin, MonoObject * direction, float max_distance)
+{
+	return ns_importer->PhysicsRayCast(origin, direction, max_distance);
+}
+
+MonoArray * ModuleScriptImporter::PhysicsRayCastAll(MonoObject * origin, MonoObject * direction, float max_distance)
+{
+	return ns_importer->PhysicsRayCastAll(origin, direction, max_distance);
+}
+
+MonoObject * ModuleScriptImporter::ColliderGetGameObject(MonoObject * object)
+{
+	return ns_importer->ColliderGetGameObject(object);
+}
+
+MonoObject * ModuleScriptImporter::ColliderGetRigidBody(MonoObject * object)
+{
+	return ns_importer->ColliderGetRigidBody(object);
+}
+
+bool ModuleScriptImporter::ColliderIsTrigger(MonoObject * object)
+{
+	return ns_importer->ColliderIsTrigger(object);
+}
+
+void ModuleScriptImporter::ColliderSetTrigger(MonoObject * object, bool trigger)
+{
+	ns_importer->ColliderSetTrigger(object, trigger);
+}
+
+MonoObject * ModuleScriptImporter::ClosestPoint(MonoObject * object, MonoObject * position)
+{
+	return ns_importer->ClosestPoint(object, position);
+}
+
+void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
+{
+	ns_importer->DebugDrawLine(from, to, color);
+}
 
 
 /////////// Non Static Class Defs //////////////
@@ -1603,6 +1701,15 @@ void NSScriptImporter::AddCreatedGameObjectToList(MonoObject* object, GameObject
 	{
 		mono_gchandle_new(object, 1);
 		created_gameobjects[object] = go;
+	}
+}
+
+void NSScriptImporter::AddCreatedComponentToList(MonoObject * object, Component * comp)
+{
+	if (comp && object)
+	{
+		mono_gchandle_new(object, 1);
+		created_components[object] = comp;
 	}
 }
 
@@ -2243,9 +2350,9 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		{
 			comp_name = "TheRigidBody";
 		}
-		else if (name == "TheEngine.TheMeshCollider")
+		else if (name == "TheEngine.TheCollider")
 		{
-			comp_name = "TheMeshCollider";
+			comp_name = "TheCollider";
 		}
 		else if (name == "TheEngine.TheGOAPAgent")
 		{
@@ -2264,7 +2371,15 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			int comp_type_count = 0;
 			for (Component* comp : go->components_list)
 			{
-				if (comp->GetType() == cpp_type)
+				Component::ComponentType c_type = comp->GetType();
+				if (cpp_type == Component::CompBoxCollider)
+				{
+					if (c_type == Component::CompBoxCollider || c_type == Component::CompSphereCollider || c_type == Component::CompCapsuleCollider || c_type == Component::CompMeshCollider)
+					{
+						comp_type_count++;
+					}
+				}
+				else if (c_type == cpp_type)
 				{
 					comp_type_count++;
 				}
@@ -2970,6 +3085,62 @@ void NSScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * 
 	}
 }
 
+void NSScriptImporter::SetQuatRotation(MonoObject * object, MonoObject * quat)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_object_get_class(quat);
+		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+		MonoClassField* w_field = mono_class_get_field_from_name(c, "w");
+
+		Quat new_rot;
+
+		if (x_field) mono_field_get_value(quat, x_field, &new_rot.x);
+		if (y_field) mono_field_get_value(quat, y_field, &new_rot.y);
+		if (z_field) mono_field_get_value(quat, z_field, &new_rot.z);
+		if (w_field) mono_field_get_value(quat, w_field, &new_rot.w);
+
+		ComponentTransform* transform = (ComponentTransform*)comp;
+		transform->SetQuatRotation(new_rot);
+	}
+}
+
+MonoObject * NSScriptImporter::GetQuatRotation(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheQuaternion");
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
+			{
+				MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+				MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+				MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+				MonoClassField* w_field = mono_class_get_field_from_name(c, "w");
+
+				ComponentTransform* transform = (ComponentTransform*)comp;
+				Quat rot = transform->GetQuatRotation();
+
+				if (x_field) mono_field_set_value(new_object, x_field, &rot.x);
+				if (y_field) mono_field_set_value(new_object, y_field, &rot.y);
+				if (z_field) mono_field_set_value(new_object, z_field, &rot.z);
+				if (w_field) mono_field_set_value(new_object, w_field, &rot.w);
+
+				return new_object;
+			}
+		}
+	}
+	return nullptr;
+}
+
 void NSScriptImporter::SetPercentageProgress(MonoObject * object, float progress)
 {
 	Component* comp = GetComponentFromMonoObject(object);
@@ -3371,6 +3542,80 @@ MonoObject * NSScriptImporter::ToEulerAngles(MonoObject * object)
 	return nullptr;
 }
 
+MonoObject * NSScriptImporter::RotateTowards(MonoObject * current, MonoObject * target, float angle)
+{
+	MonoClass* c = mono_object_get_class(current);
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 from_vec;
+
+	if (x_field) mono_field_get_value(current, x_field, &from_vec.x);
+	if (y_field) mono_field_get_value(current, y_field, &from_vec.y);
+	if (z_field) mono_field_get_value(current, z_field, &from_vec.z);
+
+	MonoClass* c2 = mono_object_get_class(target);
+	MonoClassField* x_field2 = mono_class_get_field_from_name(c2, "x");
+	MonoClassField* y_field2 = mono_class_get_field_from_name(c2, "y");
+	MonoClassField* z_field2 = mono_class_get_field_from_name(c2, "z");
+
+	float3 to_vec;
+
+	if (x_field) mono_field_get_value(target, x_field2, &to_vec.x);
+	if (y_field) mono_field_get_value(target, y_field2, &to_vec.y);
+	if (z_field) mono_field_get_value(target, z_field2, &to_vec.z);
+
+	float rad_angle = angle * DEGTORAD;
+	float3 final_vec;
+	float3 final_cross;
+
+	float3 to_vec2 = to_vec;
+	float3 from_vec2 = from_vec;
+
+	float3 ab_component = from_vec.Mul(to_vec).Div(to_vec.Mul(to_vec)).Mul(to_vec);
+	float3 ortho_vec = from_vec - (from_vec.Mul(to_vec).Div(to_vec.Mul(to_vec))).Mul(to_vec);
+	float3 w_vec = to_vec.Mul(ortho_vec);
+	float x1 = math::Cos(rad_angle) / ortho_vec.Length();
+	float x2 = math::Sin(rad_angle) / w_vec.Length();
+
+	float3 ortho_angle = ortho_vec.Length() * (x1 * ortho_vec + x2 * w_vec);
+
+	final_vec = ortho_angle + ab_component;
+
+	to_vec2 = math::Cross(from_vec2, to_vec2);
+
+	float3 ab_component2 = from_vec2.Mul(to_vec2).Div(to_vec2.Mul(to_vec2)).Mul(to_vec2);
+	float3 ortho_vec2 = from_vec2 - (from_vec2.Mul(to_vec2).Div(to_vec2.Mul(to_vec2))).Mul(to_vec2);
+	float3 w_vec2 = to_vec2.Mul(ortho_vec2);
+	float x12 = math::Cos(rad_angle) / ortho_vec2.Length();
+	float x22 = math::Sin(rad_angle) / w_vec2.Length();
+
+	float3 ortho_angle2 = ortho_vec2.Length() * (x12 * ortho_vec2 + x22 * w_vec2);
+
+	final_cross = ortho_angle2 + ab_component2;
+
+	MonoClass* vector = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+	if (vector)
+	{
+		MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), vector);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(vector, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(vector, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(vector, "z");
+
+			if (x_field) mono_field_set_value(new_object, x_field, &final_vec.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &final_vec.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &final_vec.z);
+
+			return new_object;
+		}
+	}
+
+	return nullptr;
+}
+
 void NSScriptImporter::SetTimeScale(MonoObject * object, float scale)
 {
 	App->time->time_scale = scale;
@@ -3768,58 +4013,6 @@ void NSScriptImporter::AddTorque(MonoObject* object, float x, float y, float z, 
 			float3 force = { x,y,z }; 
 			rb->AddTorque(force, force_type);
 		}			
-	}
-}
-
-void NSScriptImporter::DisableCollider(MonoObject * object, int index)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
-
-		if (rb != nullptr)
-			rb->DisableShapeByIndex(index);
-	}
-}
-
-void NSScriptImporter::DisableAllColliders(MonoObject * object)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
-
-		if (rb != nullptr)
-			rb->DisableShapes();
-	}
-}
-
-void NSScriptImporter::EnableCollider(MonoObject * object, int index)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
-
-		if (rb != nullptr)
-			rb->EnableShapeByIndex(index);
-	}
-}
-
-void NSScriptImporter::EnableAllColliders(MonoObject * object)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
-
-		if (rb != nullptr)
-			rb->EnableShapes();
 	}
 }
 
@@ -4676,6 +4869,330 @@ MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
 	return nullptr;
 }
 
+void NSScriptImporter::Explosion(MonoObject * world_pos, float radius, float explosive_impulse)
+{
+	MonoClass* c = mono_object_get_class(world_pos);
+	
+	MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+	MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+	MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+	float3 pos;
+
+	if (x_field) mono_field_get_value(world_pos, x_field, &pos.x);
+	if (y_field) mono_field_get_value(world_pos, y_field, &pos.y);
+	if (z_field) mono_field_get_value(world_pos, z_field, &pos.z);
+
+	physx::PxVec3 phs_pos(pos.x, pos.y, pos.z);
+	App->physics->Explode(phs_pos, radius, explosive_impulse);
+}
+
+MonoObject * NSScriptImporter::PhysicsRayCast(MonoObject * origin, MonoObject * direction, float max_distance)
+{
+	physx::PxVec3 origin_pos;
+	physx::PxVec3 direction_pos;
+
+	MonoClass* origin_class = mono_object_get_class(origin);
+	MonoType* origin_type = mono_class_get_type(origin_class);
+	std::string origin_name = mono_type_get_name(origin_type);
+	if (origin_class && origin_name == "TheEngine.TheVector3")
+	{
+		MonoClassField* x_field = mono_class_get_field_from_name(origin_class, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(origin_class, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(origin_class, "z");
+
+		if (x_field) mono_field_get_value(origin, x_field, &origin_pos.x);
+		if (y_field) mono_field_get_value(origin, y_field, &origin_pos.y);
+		if (z_field) mono_field_get_value(origin, z_field, &origin_pos.z);
+	}
+
+	MonoClass* direction_class = mono_object_get_class(direction);
+	MonoType* direction_type = mono_class_get_type(direction_class);
+	std::string direction_name = mono_type_get_name(direction_type);
+	if (direction_class && direction_name == "TheEngine.TheVector3")
+	{
+		MonoClassField* x_field = mono_class_get_field_from_name(direction_class, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(direction_class, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(direction_class, "z");
+
+		if (x_field) mono_field_get_value(direction, x_field, &direction_pos.x);
+		if (y_field) mono_field_get_value(direction, y_field, &direction_pos.y);
+		if (z_field) mono_field_get_value(direction, z_field, &direction_pos.z);
+	}
+
+	physx::PxReal distance = max_distance;
+
+	RayCastInfo ray_info = App->physics->RayCast(origin_pos, direction_pos, distance);
+
+	if (ray_info.colldier)
+	{
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRayCastHit");
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
+			{
+				mono_runtime_object_init(new_object);
+				MonoClassField* contact_point_field = mono_class_get_field_from_name(c, "ContactPoint");
+				MonoClassField* normal_field = mono_class_get_field_from_name(c, "Normal");
+				MonoClassField* distance_field = mono_class_get_field_from_name(c, "Distance");
+				MonoClassField* collider_field = mono_class_get_field_from_name(c, "Collider");
+
+				if (contact_point_field)
+				{
+					MonoObject* contact_point_object = mono_field_get_value_object(App->script_importer->GetDomain(), contact_point_field, new_object);
+					MonoClass* contact_point_class = mono_object_get_class(contact_point_object);
+
+					MonoClassField* x_field = mono_class_get_field_from_name(contact_point_class, "x");
+					MonoClassField* y_field = mono_class_get_field_from_name(contact_point_class, "y");
+					MonoClassField* z_field = mono_class_get_field_from_name(contact_point_class, "z");
+
+					mono_field_set_value(contact_point_object, x_field, &ray_info.position.x);
+					mono_field_set_value(contact_point_object, y_field, &ray_info.position.y);
+					mono_field_set_value(contact_point_object, z_field, &ray_info.position.z);
+				}
+
+				if (normal_field)
+				{
+					MonoObject* normal_object = mono_field_get_value_object(App->script_importer->GetDomain(), normal_field, new_object);
+					MonoClass* normal_class = mono_object_get_class(normal_object);
+
+					MonoClassField* x_field = mono_class_get_field_from_name(normal_class, "x");
+					MonoClassField* y_field = mono_class_get_field_from_name(normal_class, "y");
+					MonoClassField* z_field = mono_class_get_field_from_name(normal_class, "z");
+
+					mono_field_set_value(normal_object, x_field, &ray_info.normal.x);
+					mono_field_set_value(normal_object, y_field, &ray_info.normal.y);
+					mono_field_set_value(normal_object, z_field, &ray_info.normal.z);
+
+				}
+				if (distance_field) mono_field_set_value(new_object, distance_field, &ray_info.distance);
+
+				if (collider_field)
+				{
+					MonoObject* collider_object = nullptr;
+					collider_object = GetMonoObjectFromComponent((Component*)ray_info.colldier);
+					mono_field_set_value(new_object, collider_field, collider_object);
+				}
+				return new_object;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+MonoArray * NSScriptImporter::PhysicsRayCastAll(MonoObject * origin, MonoObject * direction, float max_distance)
+{
+	physx::PxVec3 origin_pos;
+	physx::PxVec3 direction_pos;
+
+	MonoClass* origin_class = mono_object_get_class(origin);
+	MonoType* origin_type = mono_class_get_type(origin_class);
+	std::string origin_name = mono_type_get_name(origin_type);
+	if (origin_class && origin_name == "TheEngine.TheVector3")
+	{
+		MonoClassField* x_field = mono_class_get_field_from_name(origin_class, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(origin_class, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(origin_class, "z");
+
+		if (x_field) mono_field_get_value(origin, x_field, &origin_pos.x);
+		if (y_field) mono_field_get_value(origin, y_field, &origin_pos.y);
+		if (z_field) mono_field_get_value(origin, z_field, &origin_pos.z);
+	}
+
+	MonoClass* direction_class = mono_object_get_class(direction);
+	MonoType* direction_type = mono_class_get_type(direction_class);
+	std::string direction_name = mono_type_get_name(direction_type);
+	if (direction_class && direction_name == "TheEngine.TheVector3")
+	{
+		MonoClassField* x_field = mono_class_get_field_from_name(direction_class, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(direction_class, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(direction_class, "z");
+
+		if (x_field) mono_field_get_value(direction, x_field, &direction_pos.x);
+		if (y_field) mono_field_get_value(direction, y_field, &direction_pos.y);
+		if (z_field) mono_field_get_value(direction, z_field, &direction_pos.z);
+	}
+
+	physx::PxReal distance = max_distance;
+
+	std::vector<RayCastInfo> ray_info_list = App->physics->RayCastAll(origin_pos, direction_pos, distance);
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRayCastHit");
+	MonoArray* ray_hits = mono_array_new(App->script_importer->GetDomain(), c, ray_info_list.size());
+	if (ray_hits)
+	{
+		int index = 0;
+		for (RayCastInfo ray_info : ray_info_list)
+		{
+			if (ray_info.colldier)
+			{
+				if (c)
+				{
+					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+					if (new_object)
+					{
+						mono_runtime_object_init(new_object);
+						MonoClassField* contact_point_field = mono_class_get_field_from_name(c, "ContactPoint");
+						MonoClassField* normal_field = mono_class_get_field_from_name(c, "Normal");
+						MonoClassField* distance_field = mono_class_get_field_from_name(c, "Distance");
+						MonoClassField* collider_field = mono_class_get_field_from_name(c, "Collider");
+
+						if (contact_point_field)
+						{
+							MonoObject* contact_point_object = mono_field_get_value_object(App->script_importer->GetDomain(), contact_point_field, new_object);
+							MonoClass* contact_point_class = mono_object_get_class(contact_point_object);
+
+							MonoClassField* x_field = mono_class_get_field_from_name(contact_point_class, "x");
+							MonoClassField* y_field = mono_class_get_field_from_name(contact_point_class, "y");
+							MonoClassField* z_field = mono_class_get_field_from_name(contact_point_class, "z");
+
+							mono_field_set_value(contact_point_object, x_field, &ray_info.position.x);
+							mono_field_set_value(contact_point_object, y_field, &ray_info.position.y);
+							mono_field_set_value(contact_point_object, z_field, &ray_info.position.z);
+						}
+
+						if (normal_field)
+						{
+							MonoObject* normal_object = mono_field_get_value_object(App->script_importer->GetDomain(), normal_field, new_object);
+							MonoClass* normal_class = mono_object_get_class(normal_object);
+
+							MonoClassField* x_field = mono_class_get_field_from_name(normal_class, "x");
+							MonoClassField* y_field = mono_class_get_field_from_name(normal_class, "y");
+							MonoClassField* z_field = mono_class_get_field_from_name(normal_class, "z");
+
+							mono_field_set_value(normal_object, x_field, &ray_info.normal.x);
+							mono_field_set_value(normal_object, y_field, &ray_info.normal.y);
+							mono_field_set_value(normal_object, z_field, &ray_info.normal.z);
+
+						}
+						if (distance_field) mono_field_set_value(new_object, distance_field, &ray_info.distance);
+
+						if (collider_field)
+						{
+							MonoObject* collider_object = nullptr;
+							collider_object = GetMonoObjectFromComponent((Component*)ray_info.colldier);
+							mono_field_set_value(new_object, collider_field, collider_object);
+						}
+
+						mono_array_set(ray_hits, MonoObject*, index, new_object);
+						index++;
+					}
+				}
+			}
+		}
+		return ray_hits;
+	}
+
+	return nullptr;
+}
+
+MonoObject * NSScriptImporter::ColliderGetGameObject(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		GameObject* go = comp->GetGameObject();
+		return GetMonoObjectFromGameObject(go);
+	}
+	return nullptr;
+}
+
+MonoObject * NSScriptImporter::ColliderGetRigidBody(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		GameObject* go = comp->GetGameObject();
+		ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
+		if (rb)
+		{
+			return GetMonoObjectFromComponent(rb);
+		}
+	}
+	return nullptr;
+}
+
+bool NSScriptImporter::ColliderIsTrigger(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentCollider* col = (ComponentCollider*)comp;
+		return col->IsTrigger();
+	}
+	return false;
+}
+
+void NSScriptImporter::ColliderSetTrigger(MonoObject * object, bool trigger)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentCollider* col = (ComponentCollider*)comp;
+		col->SetTrigger(trigger);
+	}
+}
+MonoObject * NSScriptImporter::ClosestPoint(MonoObject * object, MonoObject * position)
+{
+	return nullptr;
+}
+
+void NSScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
+{
+	if (from && to && color)
+	{
+		float3 from_pos;
+		float3 to_pos;
+		float4 color_data;
+
+		MonoClass* from_class = mono_object_get_class(from);
+		if (from_class)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(from_class, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(from_class, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(from_class, "z");
+
+			if (x_field) mono_field_get_value(from, x_field, &from_pos.x);
+			if (y_field) mono_field_get_value(from, y_field, &from_pos.y);
+			if (z_field) mono_field_get_value(from, z_field, &from_pos.z);
+		}
+
+		MonoClass* to_class = mono_object_get_class(to);
+		if (to_class)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(to_class, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(to_class, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(to_class, "z");
+
+			if (x_field) mono_field_get_value(to, x_field, &to_pos.x);
+			if (y_field) mono_field_get_value(to, y_field, &to_pos.y);
+			if (z_field) mono_field_get_value(to, z_field, &to_pos.z);
+		}
+
+		MonoClass* color_class = mono_object_get_class(color);
+		if (color_class)
+		{
+			MonoClassField* r_field = mono_class_get_field_from_name(color_class, "r");
+			MonoClassField* g_field = mono_class_get_field_from_name(color_class, "g");
+			MonoClassField* b_field = mono_class_get_field_from_name(color_class, "b");
+			MonoClassField* a_field = mono_class_get_field_from_name(color_class, "a");
+
+			if (r_field) mono_field_get_value(color, r_field, &color_data.x);
+			if (g_field) mono_field_get_value(color, g_field, &color_data.y);
+			if (b_field) mono_field_get_value(color, b_field, &color_data.z);
+			if (a_field) mono_field_get_value(color, a_field, &color_data.w);
+		}
+
+		App->renderer3D->debug_draw->Line(from_pos, to_pos, color_data);
+	}
+}
+
 
 Component::ComponentType NSScriptImporter::CsToCppComponent(std::string component_type)
 {
@@ -4713,9 +5230,9 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	{
 		type = Component::CompRigidBody;
 	}
-	else if (component_type == "TheMeshCollider")
+	else if (component_type == "TheCollider")
 	{
-		type = Component::CompMeshCollider;
+		type = Component::CompBoxCollider;
 	}
 	else if (component_type == "TheGOAPAgent")
 	{
@@ -4730,4 +5247,59 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 		type = Component::CompUnknown;
 	}
 	return type;
+}
+
+std::string NSScriptImporter::CppComponentToCs(Component::ComponentType component_type)
+{
+	std::string cs_name;
+
+	switch (component_type)
+	{
+	case Component::CompTransform:
+		cs_name = "TheTransform";
+		break;
+	case Component::CompFactory:
+		cs_name = "TheFactory";
+		break;
+	case Component::CompRectTransform:
+		cs_name = "TheRectTransform";
+		break;
+	case Component::CompProgressBar:
+		cs_name = "TheProgressBar";
+		break;
+	case Component::CompAudioSource:
+		cs_name = "TheAudioSource";
+		break;
+	case Component::CompParticleSystem:
+		cs_name = "TheParticleSystem";
+		break;
+	case Component::CompText:
+		cs_name = "TheText";
+		break;
+	case Component::CompBoxCollider:
+		cs_name = "TheCollider";
+		break;
+	case Component::CompCapsuleCollider:
+		cs_name = "TheCollider";
+		break;
+	case Component::CompMeshCollider:
+		cs_name = "TheCollider";
+		break;
+	case Component::CompSphereCollider:
+		cs_name = "TheCollider";
+		break;
+	case Component::CompRigidBody:
+		cs_name = "TheRigidBody";
+		break;
+	case Component::CompGOAPAgent:
+		cs_name = "TheGOAPAgent";
+		break;
+	case Component::CompScript:
+		cs_name = "TheScript";
+		break;
+	default:
+		break;
+	}
+
+	return cs_name;
 }

@@ -10,6 +10,7 @@ namespace TheEngine.TheMath
         public const float DegToRad = 0.0174532925199432957f;
         public const float RadToDeg = 57.295779513082320876f;
         public const float Epsilon = 1.401298E-45f;
+        public const float MaxValue = float.MaxValue;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsPowerOfTwo(int value);

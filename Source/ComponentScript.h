@@ -4,6 +4,7 @@
 class Script;
 struct ScriptField;
 class ComponentRectTransform;
+struct CollisionData;
 
 class ComponentScript :
 	public Component
@@ -15,12 +16,12 @@ public:
 	void InitScript();
 	void StartScript();
 	void UpdateScript();
-	void OnCollisionEnter(GameObject* other_collider);
-	void OnCollisionStay(GameObject* other_collider);
-	void OnCollisionExit(GameObject* other_collider);
-	void OnTriggerEnter(GameObject* other_collider);
-	void OnTriggerStay(GameObject* other_collider);
-	void OnTriggerExit(GameObject* other_collider);
+	void OnCollisionEnter(CollisionData& col_data);
+	void OnCollisionStay(CollisionData& col_data);
+	void OnCollisionExit(CollisionData& col_data);
+	void OnTriggerEnter(CollisionData& col_data);
+	void OnTriggerStay(CollisionData& col_data);
+	void OnTriggerExit(CollisionData& col_data);
 	void OnEnable();
 	void OnDisable();
 

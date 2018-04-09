@@ -10,6 +10,7 @@
 #include <mono/metadata/reflection.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/exception.h>
+#include "ModulePhysics.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -95,8 +96,6 @@ void CSScript::SetAttachedGameObject(GameObject * gameobject)
 
 void CSScript::InitScript()
 {
-	AddFieldsToMonoObjectList();
-
 	if (init != nullptr)
 	{
 		CallFunction(init, nullptr);
@@ -123,35 +122,11 @@ void CSScript::UpdateScript()
 	}
 }
 
-void CSScript::OnCollisionEnter(GameObject* other_collider)
+void CSScript::OnCollisionEnter(CollisionData& col_data)
 {
 	if (on_collision_enter != nullptr)
 	{
-		MonoObject* new_object = nullptr;
-		bool exist = false;
-		std::map<MonoObject*, GameObject*> objects = App->script_importer->ns_importer->created_gameobjects;
-		for (std::map<MonoObject*, GameObject*>::iterator it = objects.begin(); it != objects.end(); it++)
-		{
-			if (it->second == other_collider)
-			{
-				new_object = it->first;
-				exist = true;
-				break;
-			}
-		}
-		if (!exist)
-		{
-			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
-				}
-			}
-		}
+		MonoObject* new_object = FillCollisionData(col_data);
 
 		void* param = new_object;
 		CallFunction(on_collision_enter, &param);
@@ -159,35 +134,11 @@ void CSScript::OnCollisionEnter(GameObject* other_collider)
 	}
 }
 
-void CSScript::OnCollisionStay(GameObject* other_collider)
+void CSScript::OnCollisionStay(CollisionData& col_data)
 {
 	if (on_collision_stay != nullptr)
 	{
-		MonoObject* new_object = nullptr;
-		bool exist = false;
-		std::map<MonoObject*, GameObject*> objects = App->script_importer->ns_importer->created_gameobjects;
-		for (std::map<MonoObject*, GameObject*>::iterator it = objects.begin(); it != objects.end(); it++)
-		{
-			if (it->second == other_collider)
-			{
-				new_object = it->first;
-				exist = true;
-				break;
-			}
-		}
-		if (!exist)
-		{
-			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
-				}
-			}
-		}
+		MonoObject* new_object = FillCollisionData(col_data);
 
 		void* param = new_object;
 		CallFunction(on_collision_stay, &param);
@@ -195,35 +146,11 @@ void CSScript::OnCollisionStay(GameObject* other_collider)
 	}
 }
 
-void CSScript::OnCollisionExit(GameObject* other_collider)
+void CSScript::OnCollisionExit(CollisionData& col_data)
 {
 	if (on_collision_exit != nullptr)
 	{
-		MonoObject* new_object = nullptr;
-		bool exist = false;
-		std::map<MonoObject*, GameObject*> objects = App->script_importer->ns_importer->created_gameobjects;
-		for (std::map<MonoObject*, GameObject*>::iterator it = objects.begin(); it != objects.end(); it++)
-		{
-			if (it->second == other_collider)
-			{
-				new_object = it->first;
-				exist = true;
-				break;
-			}
-		}
-		if (!exist)
-		{
-			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
-				}
-			}
-		}
+		MonoObject* new_object = FillCollisionData(col_data);
 
 		void* param = new_object;
 		CallFunction(on_collision_exit, &param);
@@ -231,35 +158,11 @@ void CSScript::OnCollisionExit(GameObject* other_collider)
 	}
 }
 
-void CSScript::OnTriggerEnter(GameObject * other_collider)
+void CSScript::OnTriggerEnter(CollisionData& col_data)
 {
 	if (on_trigger_enter != nullptr)
 	{
-		MonoObject * new_object = nullptr;
-		bool exist = false;
-		std::map<MonoObject*, GameObject*> objects = App->script_importer->ns_importer->created_gameobjects;
-		for (std::map<MonoObject*, GameObject*>::iterator it = objects.begin(); it != objects.end(); it++)
-		{
-			if (it->second == other_collider)
-			{
-				new_object = it->first;
-				exist = true;
-				break;
-			}
-		}
-		if (!exist)
-		{
-			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
-				}
-			}
-		}
+		MonoObject* new_object = FillCollisionData(col_data);
 
 		void* param = new_object;
 		CallFunction(on_trigger_enter, &param);
@@ -267,35 +170,11 @@ void CSScript::OnTriggerEnter(GameObject * other_collider)
 	}
 }
 
-void CSScript::OnTriggerStay(GameObject * other_collider)
+void CSScript::OnTriggerStay(CollisionData& col_data)
 {
 	if (on_trigger_stay != nullptr)
 	{
-		MonoObject * new_object = nullptr;
-		bool exist = false;
-		std::map<MonoObject*, GameObject*> objects = App->script_importer->ns_importer->created_gameobjects;
-		for (std::map<MonoObject*, GameObject*>::iterator it = objects.begin(); it != objects.end(); it++)
-		{
-			if (it->second == other_collider)
-			{
-				new_object = it->first;
-				exist = true;
-				break;
-			}
-		}
-		if (!exist)
-		{
-			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
-				}
-			}
-		}
+		MonoObject* new_object = FillCollisionData(col_data);
 
 		void* param = new_object;
 		CallFunction(on_trigger_stay, &param);
@@ -303,40 +182,133 @@ void CSScript::OnTriggerStay(GameObject * other_collider)
 	}
 }
 
-void CSScript::OnTriggerExit(GameObject * other_collider)
+void CSScript::OnTriggerExit(CollisionData& col_data)
 {
 	if (on_trigger_exit != nullptr)
 	{
-		MonoObject * new_object = nullptr;
-		bool exist = false;
-		std::map<MonoObject*, GameObject*> objects = App->script_importer->ns_importer->created_gameobjects;
-		for (std::map<MonoObject*, GameObject*>::iterator it = objects.begin(); it != objects.end(); it++)
-		{
-			if (it->second == other_collider)
-			{
-				new_object = it->first;
-				exist = true;
-				break;
-			}
-		}
-		if (!exist)
-		{
-			MonoClass * c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
-			{
-				new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					App->script_importer->ns_importer->created_gameobjects[new_object] = other_collider;
-				}
-			}
-		}
+		MonoObject* new_object = FillCollisionData(col_data);
 
 		void* param = new_object;
 		CallFunction(on_trigger_exit, &param);
 		inside_function = false;
 	}
+}
+
+MonoObject * CSScript::FillCollisionData(CollisionData & col_data)
+{
+	MonoObject* new_object = nullptr;
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheCollisionData");
+	if (c)
+	{
+		new_object = mono_object_new(mono_domain, c);
+		if (new_object)
+		{
+			mono_runtime_object_init(new_object);
+			MonoClassField* impulse_field = mono_class_get_field_from_name(c, "Impulse");
+			MonoClassField* contact_points_field = mono_class_get_field_from_name(c, "ContactPoints");
+			MonoClassField* collider_field = mono_class_get_field_from_name(c, "Collider");
+
+			if (impulse_field)
+			{
+				MonoObject* impulse_object = mono_field_get_value_object(App->script_importer->GetDomain(), impulse_field, new_object);
+				MonoClass* impulse_class = mono_object_get_class(impulse_object);
+
+				MonoClassField* x_field = mono_class_get_field_from_name(impulse_class, "x");
+				MonoClassField* y_field = mono_class_get_field_from_name(impulse_class, "y");
+				MonoClassField* z_field = mono_class_get_field_from_name(impulse_class, "z");
+
+				mono_field_set_value(impulse_object, x_field, &col_data.impulse.x);
+				mono_field_set_value(impulse_object, y_field, &col_data.impulse.y);
+				mono_field_set_value(impulse_object, z_field, &col_data.impulse.z);
+			}
+
+			if (contact_points_field)
+			{
+				/*MonoObject* contact_points_field_object = mono_field_get_value_object(App->script_importer->GetDomain(), contact_points_field, new_object);
+				MonoClass* contact_points_field_class = mono_object_get_class(contact_points_field_object);*/
+				MonoClass* contact_point_class = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheContactPoint");
+
+				MonoArray* contact_points_array = mono_array_new(App->script_importer->GetDomain(), contact_point_class, col_data.contacts.size());
+				int index = 0;
+				if (contact_points_array)
+				{
+					for (ContactPoint point : col_data.contacts)
+					{
+						if (contact_point_class)
+						{
+							MonoObject* contact_point_object = mono_object_new(App->script_importer->GetDomain(), contact_point_class);
+							if (contact_point_object)
+							{
+								mono_runtime_object_init(contact_point_object);
+								MonoClassField* cp_position_field = mono_class_get_field_from_name(contact_point_class, "Position");
+								MonoClassField* cp_normal_field = mono_class_get_field_from_name(contact_point_class, "Normal");
+								MonoClassField* cp_separation_field = mono_class_get_field_from_name(contact_point_class, "Separation");
+								MonoClassField* cp_impulse_field = mono_class_get_field_from_name(contact_point_class, "Impulse");
+
+								if (cp_position_field)
+								{
+									MonoObject* cp_position_object = mono_field_get_value_object(App->script_importer->GetDomain(), cp_position_field, contact_point_object);
+									MonoClass* cp_position_class = mono_object_get_class(cp_position_object);
+
+									MonoClassField* x_field = mono_class_get_field_from_name(cp_position_class, "x");
+									MonoClassField* y_field = mono_class_get_field_from_name(cp_position_class, "y");
+									MonoClassField* z_field = mono_class_get_field_from_name(cp_position_class, "z");
+
+									mono_field_set_value(cp_position_object, x_field, &point.position.x);
+									mono_field_set_value(cp_position_object, y_field, &point.position.y);
+									mono_field_set_value(cp_position_object, z_field, &point.position.z);
+								}
+
+								if (cp_normal_field)
+								{
+									MonoObject* cp_normal_object = mono_field_get_value_object(App->script_importer->GetDomain(), cp_normal_field, contact_point_object);
+									MonoClass* cp_normal_class = mono_object_get_class(cp_normal_object);
+
+									MonoClassField* x_field = mono_class_get_field_from_name(cp_normal_class, "x");
+									MonoClassField* y_field = mono_class_get_field_from_name(cp_normal_class, "y");
+									MonoClassField* z_field = mono_class_get_field_from_name(cp_normal_class, "z");
+
+									mono_field_set_value(cp_normal_object, x_field, &point.normal.x);
+									mono_field_set_value(cp_normal_object, y_field, &point.normal.y);
+									mono_field_set_value(cp_normal_object, z_field, &point.normal.z);
+								}
+
+								if (cp_separation_field) mono_field_set_value(contact_point_object, cp_separation_field, &point.separation);
+
+								if (cp_impulse_field)
+								{
+									MonoObject* cp_impulse_object = mono_field_get_value_object(App->script_importer->GetDomain(), cp_impulse_field, contact_point_object);
+									MonoClass* cp_impulse_class = mono_object_get_class(cp_impulse_object);
+
+									MonoClassField* x_field = mono_class_get_field_from_name(cp_impulse_class, "x");
+									MonoClassField* y_field = mono_class_get_field_from_name(cp_impulse_class, "y");
+									MonoClassField* z_field = mono_class_get_field_from_name(cp_impulse_class, "z");
+
+									mono_field_set_value(cp_impulse_object, x_field, &point.impulse.x);
+									mono_field_set_value(cp_impulse_object, y_field, &point.impulse.y);
+									mono_field_set_value(cp_impulse_object, z_field, &point.impulse.z);
+								}
+
+								mono_array_set(contact_points_array, MonoObject*, index, contact_point_object);
+								index++;
+							}
+						}
+					}
+				}
+				mono_field_set_value(new_object, contact_points_field, contact_points_array);
+			}
+
+			if (collider_field)
+			{
+				MonoObject* collider_object = nullptr;
+				collider_object = App->script_importer->ns_importer->GetMonoObjectFromComponent((Component*)col_data.other_collider);
+				mono_field_set_value(new_object, collider_field, collider_object);
+			}
+		}
+	}
+
+	return new_object;
 }
 
 void CSScript::OnEnable()
@@ -602,14 +574,11 @@ void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * val
 	{
 		void* params = value;
 		mono_field_set_value(mono_object, field, params);
-		if (App->IsPlaying())
+		MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
+		if (object && value)
 		{
-			MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
-			if (object && value)
-			{
-				mono_gchandle_new(object, 1);
-				App->script_importer->ns_importer->created_gameobjects[object] = value;
-			}
+			mono_gchandle_new(object, 1);
+			App->script_importer->ns_importer->created_gameobjects[object] = value;
 		}
 	}
 	else
@@ -651,13 +620,21 @@ void CSScript::SetVec2Property(const char * propertyName, float2 value)
 	if (field)
 	{
 		MonoType* type = mono_field_get_type(field);
-		MonoClass* eclass = mono_class_get_element_class(mono_type_get_class(type));
-		MonoArray* array_value = mono_array_new(mono_domain, eclass, 2);
+		MonoClass* eclass = mono_type_get_class(type);
 
-		mono_array_set(array_value, float, 0, value.x);
-		mono_array_set(array_value, float, 1, value.y);
+		MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), eclass);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(eclass, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(eclass, "y");
 
-		mono_field_set_value(mono_object, field, array_value);
+			if (x_field) mono_field_set_value(new_object, x_field, &value.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &value.y);
+
+			mono_field_set_value(mono_object, field, new_object);
+
+			mono_gchandle_new(new_object, 1);
+		}
 	}
 	else
 	{
@@ -673,13 +650,18 @@ float2 CSScript::GetVec2Property(const char * propertyName)
 
 	if (field)
 	{
-		MonoArray* array_value = nullptr;
-		mono_field_get_value(mono_object, field, &array_value);
+		MonoObject* vector = nullptr;
+		mono_field_get_value(mono_object, field, &vector);
 
-		if (array_value != nullptr)
+		if (vector)
 		{
-			value.x = mono_array_get(array_value, float, 0);
-			value.y = mono_array_get(array_value, float, 1);
+			MonoClass* c = mono_object_get_class(vector);
+
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+
+			if (x_field) mono_field_get_value(vector, x_field, &value.x);
+			if (y_field) mono_field_get_value(vector, y_field, &value.y);
 		}
 	}
 	else
@@ -697,14 +679,23 @@ void CSScript::SetVec3Property(const char * propertyName, float3 value)
 	if (field)
 	{
 		MonoType* type = mono_field_get_type(field);
-		MonoClass* eclass = mono_class_get_element_class(mono_type_get_class(type));
-		MonoArray* array_value = mono_array_new(mono_domain, eclass, 3);
+		MonoClass* eclass = mono_type_get_class(type);
 
-		mono_array_set(array_value, float, 0, value.x);
-		mono_array_set(array_value, float, 1, value.y);
-		mono_array_set(array_value, float, 2, value.z);
+		MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), eclass);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(eclass, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(eclass, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(eclass, "z");
 
-		mono_field_set_value(mono_object, field, array_value);
+			if (x_field) mono_field_set_value(new_object, x_field, &value.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &value.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &value.z);
+
+			mono_field_set_value(mono_object, field, new_object);
+
+			mono_gchandle_new(new_object, 1);
+		}
 	}
 	else
 	{
@@ -720,14 +711,20 @@ float3 CSScript::GetVec3Property(const char * propertyName)
 
 	if (field)
 	{
-		MonoArray* array_value = nullptr;
-		mono_field_get_value(mono_object, field, &array_value);
+		MonoObject* vector = nullptr;
+		mono_field_get_value(mono_object, field, &vector);
 
-		if (array_value != nullptr)
+		if (vector)
 		{
-			value.x = mono_array_get(array_value, float, 0);
-			value.y = mono_array_get(array_value, float, 1);
-			value.z = mono_array_get(array_value, float, 2);
+			MonoClass* c = mono_object_get_class(vector);
+
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+			if (x_field) mono_field_get_value(vector, x_field, &value.x);
+			if (y_field) mono_field_get_value(vector, y_field, &value.y);
+			if (z_field) mono_field_get_value(vector, z_field, &value.z);
 		}
 	}
 	else
@@ -745,15 +742,25 @@ void CSScript::SetVec4Property(const char * propertyName, float4 value)
 	if (field)
 	{
 		MonoType* type = mono_field_get_type(field);
-		MonoClass* eclass = mono_class_get_element_class(mono_type_get_class(type));
-		MonoArray* array_value = mono_array_new(mono_domain, eclass, 3);
+		MonoClass* eclass = mono_type_get_class(type);
 
-		mono_array_set(array_value, float, 0, value.x);
-		mono_array_set(array_value, float, 1, value.y);
-		mono_array_set(array_value, float, 2, value.z);
-		mono_array_set(array_value, float, 3, value.w);
+		MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), eclass);
+		if (new_object)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(eclass, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(eclass, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(eclass, "z");
+			MonoClassField* w_field = mono_class_get_field_from_name(eclass, "w");
 
-		mono_field_set_value(mono_object, field, array_value);
+			if (x_field) mono_field_set_value(new_object, x_field, &value.x);
+			if (y_field) mono_field_set_value(new_object, y_field, &value.y);
+			if (z_field) mono_field_set_value(new_object, z_field, &value.z);
+			if (w_field) mono_field_set_value(new_object, w_field, &value.w);
+
+			mono_field_set_value(mono_object, field, new_object);
+
+			mono_gchandle_new(new_object, 1);
+		}
 	}
 	else
 	{
@@ -769,15 +776,22 @@ float4 CSScript::GetVec4Property(const char * propertyName)
 
 	if (field)
 	{
-		MonoArray* array_value = nullptr;
-		mono_field_get_value(mono_object, field, &array_value);
+		MonoObject* vector = nullptr;
+		mono_field_get_value(mono_object, field, &vector);
 
-		if (array_value != nullptr)
+		if (vector)
 		{
-			value.x = mono_array_get(array_value, float, 0);
-			value.y = mono_array_get(array_value, float, 1);
-			value.z = mono_array_get(array_value, float, 2);
-			value.w = mono_array_get(array_value, float, 3);
+			MonoClass* c = mono_object_get_class(vector);
+
+			MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+			MonoClassField* w_field = mono_class_get_field_from_name(c, "w");
+
+			if (x_field) mono_field_get_value(vector, x_field, &value.x);
+			if (y_field) mono_field_get_value(vector, y_field, &value.y);
+			if (z_field) mono_field_get_value(vector, z_field, &value.z);
+			if (w_field) mono_field_get_value(vector, w_field, &value.w);
 		}
 	}
 	else
@@ -900,26 +914,6 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 		if (exception)
 		{
 			mono_print_unhandled_exception(exception);
-		}
-	}
-}
-
-void CSScript::AddFieldsToMonoObjectList()
-{
-	std::vector<ScriptField*> script_fields = GetScriptFields();
-
-	for (std::vector<ScriptField*>::iterator it = script_fields.begin(); it != script_fields.end(); it++)
-	{
-		if ((*it)->propertyType == ScriptField::GameObject)
-		{
-			GameObject* gameobject = GetGameObjectProperty((*it)->fieldName.c_str());
-			MonoClassField* field = mono_class_get_field_from_name(mono_class, (*it)->fieldName.c_str());
-			MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
-			if (object && gameobject)
-			{
-				mono_gchandle_new(object, 1);
-				App->script_importer->ns_importer->created_gameobjects[object] = gameobject;
-			}
 		}
 	}
 }

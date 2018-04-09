@@ -74,15 +74,13 @@ public:
 	void SetTransformsGo(bool transforms);
 	bool GetTransformsGo() const;
 
-	void EnableShapes();
-	void EnableShapeByIndex(int index);
-	void DisableShapes();
-	void DisableShapeByIndex(int index); 
-
 	void SetNewRigidBody(physx::PxRigidDynamic* new_rigid);
 
 	void Save(Data& data) const;
 	void Load(Data& data);
+
+	void OnEnable();
+	void OnDisable();
 
 	void DrawColliders();
 	

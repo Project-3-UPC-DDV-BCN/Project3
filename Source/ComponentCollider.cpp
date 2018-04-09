@@ -13,7 +13,6 @@
 
 ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderType type)
 {
-	SetActive(true);
 	SetGameObject(attached_gameobject);
 	collider_type = type;
 	std::string name;
@@ -26,6 +25,8 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 	is_convex = false;
 	phys_material = nullptr;
 	rb_is_released = false;
+
+	rigidbody = nullptr;
 
 	rigidbody = (ComponentRigidBody*)attached_gameobject->GetComponent(Component::CompRigidBody);
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
@@ -82,7 +83,20 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 			SetType(ComponentType::CompMeshCollider);
 			name += "Mesh_";
 			float3 global = transform->GetGlobalPosition();
-			rigidbody->SetPosition(global);
+			if (!attached_gameobject->IsRoot())
+			{
+				ComponentTransform* parent_transform = (ComponentTransform*)attached_gameobject->GetParent()->GetComponent(Component::CompTransform);
+				if (parent_transform)
+				{
+					float3 final_pos = parent_transform->GetGlobalPosition() - global;
+					global += final_pos;
+					rigidbody->SetPosition(global);
+				}
+			}
+			else
+			{
+				rigidbody->SetPosition(global);
+			}
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_triangle_mesh, *collider_material);
 		}
 			break;
@@ -105,6 +119,8 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 		collider_shape->userData = this;
 		//rigidbody->GetRigidBody()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
 	}
+
+	SetActive(true);
 }
 
 ComponentCollider::~ComponentCollider()
@@ -564,6 +580,29 @@ void ComponentCollider::Load(Data & data)
 ComponentRigidBody * ComponentCollider::GetRigidBody() const
 {
 	return rigidbody;
+}
+
+void ComponentCollider::OnEnable()
+{
+	if (collider_shape)
+	{
+		if (!IsTrigger())
+		{
+			collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, true);
+		}
+		collider_shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+		collider_shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, true);
+	}
+}
+
+void ComponentCollider::OnDisable()
+{
+	if (collider_shape)
+	{
+		collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
+		collider_shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, false);
+		collider_shape->setFlag(physx::PxShapeFlag::eVISUALIZATION, false);
+	}
 }
 
 

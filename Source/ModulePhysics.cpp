@@ -13,6 +13,8 @@
 #include "ComponentRigidBody.h"
 #include "ModuleRenderer3D.h"
 #include "DebugDraw.h"
+#include <set>
+#include "ComponentCollider.h"
 
 #if _DEBUG
 #pragma comment (lib, "Nvidia/PhysX/lib/lib_debug/PhysX3DEBUG_x86.lib")
@@ -155,19 +157,22 @@ update_status ModulePhysics::Update(float dt)
 			}
 		}
 
-		for (std::map<physx::PxRigidActor*, physx::PxRigidActor*>::iterator it = trigger_stay_pairs.begin(); it != trigger_stay_pairs.end(); it++)
+		for (std::vector<physx::PxTriggerPair>::iterator it = trigger_stay_pairs.begin(); it != trigger_stay_pairs.end(); it++)
 		{
-			//Call OnTriggerStay in script module
 			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
 			{
-				if (it->second == it2->first)
+				if (it->otherActor == it2->first)
 				{
 					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it3 = physics_objects.begin(); it3 != physics_objects.end(); it3++)
 					{
-						if (it->first == it3->first)
+						if (it->triggerActor == it3->first)
 						{
-							it2->second->OnTriggerStay(it3->second);
-							it3->second->OnTriggerStay(it2->second);
+							CollisionData data1;
+							CollisionData data2;
+							data1.other_collider = (ComponentCollider*)it->otherShape->userData;
+							data2.other_collider = (ComponentCollider*)it->triggerShape->userData;
+							it3->second->OnTriggerStay(data1);
+							it2->second->OnTriggerStay(data2);
 							break;
 						}
 					}
@@ -546,6 +551,10 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 		float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
 		Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
 		float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
+		if (!go->IsRoot())
+		{
+			position = position - transform->GetGlobalPosition();
+		}
 		transform->SetPositionFromRB(position);
 		transform->SetRotationFromRB(rotation);
 		//CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
@@ -573,15 +582,19 @@ void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 					{
 						if (pairs[i].triggerActor == it2->first)
 						{
-							it2->second->OnTriggerEnter(it->second);
-							it->second->OnTriggerEnter(it2->second);
+							CollisionData data1;
+							CollisionData data2;
+							data1.other_collider = (ComponentCollider*)pairs[i].otherShape->userData;
+							data2.other_collider = (ComponentCollider*)pairs[i].triggerShape->userData;
+							it2->second->OnTriggerEnter(data1);
+							it->second->OnTriggerEnter(data2);
 							break;
 						}
 					}
 					break;
 				}
 			}
-			trigger_stay_pairs.insert(std::pair<physx::PxRigidActor*, physx::PxRigidActor*>(pairs[i].triggerActor, pairs[i].otherActor));
+			trigger_stay_pairs.push_back(pairs[i]);
 		}
 		else if (pairs[i].status == physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 		{ 
@@ -594,15 +607,26 @@ void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
 					{
 						if (pairs[i].triggerActor == it2->first)
 						{
-							it2->second->OnTriggerExit(it->second);
-							it->second->OnTriggerExit(it2->second);
+							CollisionData data1;
+							CollisionData data2;
+							data1.other_collider = (ComponentCollider*)pairs[i].otherShape->userData;
+							data2.other_collider = (ComponentCollider*)pairs[i].triggerShape->userData;
+							it2->second->OnTriggerExit(data1);
+							it->second->OnTriggerExit(data2);
 							break;
 						}
 					}
 					break;
 				}
 			}
-			trigger_stay_pairs.erase(pairs[i].triggerActor);
+			for (std::vector<physx::PxTriggerPair>::iterator it = trigger_stay_pairs.begin(); it != trigger_stay_pairs.end(); it++)
+			{
+				if (it->otherActor == pairs[i].otherActor && it->triggerActor == pairs[i].triggerActor)
+				{
+					trigger_stay_pairs.erase(it);
+					break;
+				}
+			}
 		}
 	}
 }
@@ -622,6 +646,9 @@ void ModulePhysics::onSleep(physx::PxActor ** actors, physx::PxU32 count)
 void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
 {
 	if (!App->IsPlaying()) return;
+
+	const physx::PxU32 bufferSize = 64;
+	physx::PxContactPairPoint contacts[bufferSize];
 	for (physx::PxU32 i = 0; i < nbPairs; i++)
 	{
 		const physx::PxContactPair& cp = pairs[i];
@@ -637,8 +664,27 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 					{
 						if (pairHeader.actors[1] == it2->first)
 						{
-							it2->second->OnCollisionEnter(it->second);
-							it->second->OnCollisionEnter(it2->second);
+							CollisionData data1;
+							CollisionData data2;
+							physx::PxVec3 total_impulse(0,0,0);
+							physx::PxU32 nbContacts = cp.extractContacts(contacts, bufferSize);
+							for (physx::PxU32 j = 0; j < nbContacts; j++)
+							{
+								ContactPoint contact_point;
+								contact_point.position = contacts[j].position;
+								contact_point.impulse = contacts[j].impulse;
+								contact_point.normal = contacts[j].normal;
+								contact_point.separation = contacts[j].separation;
+								data1.contacts.push_back(contact_point);
+								data2.contacts.push_back(contact_point);
+								total_impulse += contacts[j].impulse;
+							}
+							data1.impulse = total_impulse;
+							data2.impulse = total_impulse;
+							data1.other_collider = (ComponentCollider*)cp.shapes[0]->userData;
+							data2.other_collider = (ComponentCollider*)cp.shapes[1]->userData;
+							it2->second->OnCollisionEnter(data1);
+							it->second->OnCollisionEnter(data2);
 							break;
 						}
 					}
@@ -657,8 +703,27 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 					{
 						if (pairHeader.actors[1] == it2->first)
 						{
-							it2->second->OnCollisionStay(it->second);
-							it->second->OnCollisionStay(it2->second);
+							CollisionData data1;
+							CollisionData data2;
+							physx::PxVec3 total_impulse(0, 0, 0);
+							physx::PxU32 nbContacts = cp.extractContacts(contacts, bufferSize);
+							for (physx::PxU32 j = 0; j < nbContacts; j++)
+							{
+								ContactPoint contact_point;
+								contact_point.position = contacts[j].position;
+								contact_point.impulse = contacts[j].impulse;
+								contact_point.normal = contacts[j].normal;
+								contact_point.separation = contacts[j].separation;
+								data1.contacts.push_back(contact_point);
+								data2.contacts.push_back(contact_point);
+								total_impulse += contacts[j].impulse;
+							}
+							data1.impulse = total_impulse;
+							data2.impulse = total_impulse;
+							data1.other_collider = (ComponentCollider*)cp.shapes[0]->userData;
+							data2.other_collider = (ComponentCollider*)cp.shapes[1]->userData;
+							it2->second->OnCollisionEnter(data1);
+							it->second->OnCollisionEnter(data2);
 							break;
 						}
 					}
@@ -677,8 +742,27 @@ void ModulePhysics::onContact(const physx::PxContactPairHeader& pairHeader, cons
 					{
 						if (pairHeader.actors[1] == it2->first)
 						{
-							it2->second->OnCollisionExit(it->second);
-							it->second->OnCollisionExit(it2->second);
+							CollisionData data1;
+							CollisionData data2;
+							physx::PxVec3 total_impulse(0, 0, 0);
+							physx::PxU32 nbContacts = cp.extractContacts(contacts, bufferSize);
+							for (physx::PxU32 j = 0; j < nbContacts; j++)
+							{
+								ContactPoint contact_point;
+								contact_point.position = contacts[j].position;
+								contact_point.impulse = contacts[j].impulse;
+								contact_point.normal = contacts[j].normal;
+								contact_point.separation = contacts[j].separation;
+								data1.contacts.push_back(contact_point);
+								data2.contacts.push_back(contact_point);
+								total_impulse += contacts[j].impulse;
+							}
+							data1.impulse = total_impulse;
+							data2.impulse = total_impulse;
+							data1.other_collider = (ComponentCollider*)cp.shapes[0]->userData;
+							data2.other_collider = (ComponentCollider*)cp.shapes[1]->userData;
+							it2->second->OnCollisionEnter(data1);
+							it->second->OnCollisionEnter(data2);
 							break;
 						}
 					}
@@ -806,4 +890,107 @@ void ModulePhysics::CleanPhysScene()
 	non_blast_objects.clear();
 	trigger_stay_pairs.clear();
 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//													Explosion
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class ExplodeOverlapCallback : public physx::PxOverlapCallback
+{
+public:
+	ExplodeOverlapCallback(physx::PxVec3 worldPos, float radius, float explosiveImpulse)
+		: world_pos(worldPos)
+		, radius(radius)
+		, explosive_impulse(explosiveImpulse)
+		, physx::PxOverlapCallback(hit_buffer, sizeof(hit_buffer) / sizeof(hit_buffer[0])) {}
+
+	physx::PxAgain processTouches(const physx::PxOverlapHit* buffer, physx::PxU32 nbHits)
+	{
+		for (physx::PxU32 i = 0; i < nbHits; ++i)
+		{
+			physx::PxRigidActor* actor = buffer[i].actor;
+			physx::PxRigidDynamic* rigidDynamic = actor->is<physx::PxRigidDynamic>();
+			if (rigidDynamic && !(rigidDynamic->getRigidBodyFlags() & physx::PxRigidBodyFlag::eKINEMATIC))
+			{
+				if (actor_buffer.find(rigidDynamic) == actor_buffer.end())
+				{
+					actor_buffer.insert(rigidDynamic);
+					physx::PxTransform t = rigidDynamic->getGlobalPose();
+					physx::PxTransform t2 = rigidDynamic->getGlobalPose().transform(rigidDynamic->getCMassLocalPose());
+					physx::PxVec3 dr = rigidDynamic->getGlobalPose().transform(rigidDynamic->getCMassLocalPose()).p - world_pos;
+					float distance = dr.magnitude();
+					float factor = physx::PxClamp(1.0f - (distance * distance) / (radius * radius), 0.0f, 1.0f);
+					float impulse = factor * explosive_impulse;
+					physx::PxVec3 vel = dr.getNormalized() * impulse / rigidDynamic->getMass();
+					rigidDynamic->setLinearVelocity(rigidDynamic->getLinearVelocity() + vel);
+				}
+			}
+		}
+		return true;
+	}
+
+private:
+	physx::PxOverlapHit	hit_buffer[1000];
+	float explosive_impulse;
+	std::set<physx::PxRigidDynamic*> actor_buffer;
+	physx::PxVec3 world_pos;
+	float radius;
+};
+
+void ModulePhysics::Explode(physx::PxVec3 world_pos, float damage_radius, float explosive_impulse)
+{
+	ExplodeOverlapCallback overlapCallback(world_pos, damage_radius, explosive_impulse);
+	main_scene->overlap(physx::PxSphereGeometry(damage_radius), physx::PxTransform(world_pos), overlapCallback);
+}
+
+RayCastInfo ModulePhysics::RayCast(physx::PxVec3 origin, physx::PxVec3 direction, float distance)
+{
+	RayCastInfo info;
+
+	physx::PxRaycastBuffer hit;
+	if (main_scene->raycast(origin, direction, distance, hit))
+	{
+		float3 pos(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+		info.position = pos;
+
+		float3 normal(hit.block.normal.x, hit.block.normal.y, hit.block.normal.z);
+		info.normal = normal;
+
+		info.distance = hit.block.distance;
+		info.colldier = (ComponentCollider*)hit.block.shape->userData;
+	}
+
+	return info;
+}
+
+std::vector<RayCastInfo> ModulePhysics::RayCastAll(physx::PxVec3 origin, physx::PxVec3 direction, float distance)
+{
+	std::vector<RayCastInfo> info_list;
+
+	const physx::PxU32 bufferSize = 256;
+	physx::PxRaycastHit hitBuffer[bufferSize];
+	physx::PxRaycastBuffer hit(hitBuffer, bufferSize);
+	
+	if (main_scene->raycast(origin, direction, distance, hit, physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_MULTIPLE))
+	{
+		for (int i = 0; i < hit.nbTouches; i++)
+		{
+			RayCastInfo info;
+
+			float3 pos(hit.touches[i].position.x, hit.touches[i].position.y, hit.touches[i].position.z);
+			info.position = pos;
+
+			float3 normal(hit.touches[i].normal.x, hit.touches[i].normal.y, hit.touches[i].normal.z);
+			info.normal = normal;
+
+			info.distance = hit.touches[i].distance;
+			info.colldier = (ComponentCollider*)hit.touches[i].shape->userData;
+
+			info_list.push_back(info);
+		}
+	}
+
+	return info_list;
 }

@@ -3,6 +3,7 @@
 #include "ModuleResources.h"
 #include "Application.h"
 #include "ModuleScriptImporter.h"
+#include "ModulePhysics.h"
 
 ComponentScript::ComponentScript(GameObject* attached_gameobject)
 {
@@ -51,68 +52,68 @@ void ComponentScript::UpdateScript()
 	}
 }
 
-void ComponentScript::OnCollisionEnter(GameObject* other_collider)
+void ComponentScript::OnCollisionEnter(CollisionData& col_data)
 {
 	if (script)
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
-		script->OnCollisionEnter(other_collider);
+		script->OnCollisionEnter(col_data);
 		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
-void ComponentScript::OnCollisionStay(GameObject* other_collider)
+void ComponentScript::OnCollisionStay(CollisionData& col_data)
 {
 	if (script)
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
-		script->OnCollisionStay(other_collider);
+		script->OnCollisionStay(col_data);
 		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
-void ComponentScript::OnCollisionExit(GameObject* other_collider)
+void ComponentScript::OnCollisionExit(CollisionData& col_data)
 {
 	if (script)
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
-		script->OnCollisionExit(other_collider);
+		script->OnCollisionExit(col_data);
 		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
-void ComponentScript::OnTriggerEnter(GameObject * other_collider)
+void ComponentScript::OnTriggerEnter(CollisionData& col_data)
 {
 	if (script)
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
-		script->OnTriggerEnter(other_collider);
+		script->OnTriggerEnter(col_data);
 		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
-void ComponentScript::OnTriggerStay(GameObject * other_collider)
+void ComponentScript::OnTriggerStay(CollisionData& col_data)
 {
 	if (script)
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
-		script->OnTriggerStay(other_collider);
+		script->OnTriggerStay(col_data);
 		App->script_importer->ns_importer->current_script = last_script;
 	}
 }
 
-void ComponentScript::OnTriggerExit(GameObject * other_collider)
+void ComponentScript::OnTriggerExit(CollisionData& col_data)
 {
 	if (script)
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
-		script->OnTriggerExit(other_collider);
+		script->OnTriggerExit(col_data);
 		App->script_importer->ns_importer->current_script = last_script;
 	}
 }

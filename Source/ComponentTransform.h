@@ -20,6 +20,7 @@ public:
 	Quat GetGlobalQuatRotation() const;
 	float3 GetLocalRotation() const;
 	Quat GetQuatRotation() const;
+	void SetQuatRotation(Quat q);
 	void SetScale(float3 scale);
 	void SetScaleFromRB(float3 scale);
 	float3 GetGlobalScale() const;

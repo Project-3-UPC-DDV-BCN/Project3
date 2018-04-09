@@ -698,6 +698,8 @@ void ModuleScene::DrawSkyBox(float3 pos, ComponentCamera* active_camera)
 
 void ModuleScene::InitScripts()
 {
+	App->script_importer->AddGameObjectsInfoToMono(scene_gameobjects);
+
 	for (std::list<GameObject*>::iterator it = scene_gameobjects.begin(); it != scene_gameobjects.end(); it++)
 	{
 		bool active_parents = RecursiveCheckActiveParents((*it));

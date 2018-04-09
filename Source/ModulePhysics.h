@@ -8,6 +8,30 @@ struct NvFlowContext;
 struct NvFlowGrid;
 class Mesh;
 class GameObject;
+class ComponentCollider;
+
+struct RayCastInfo
+{
+	float3 position = float3::zero;
+	float3 normal = float3::zero;
+	float distance = 0;
+	ComponentCollider* colldier = nullptr;
+};
+
+struct ContactPoint
+{
+	physx::PxVec3 position = physx::PxVec3(0, 0, 0);
+	physx::PxVec3 normal = physx::PxVec3(0, 0, 0);
+	physx::PxReal separation = 0;
+	physx::PxVec3 impulse = physx::PxVec3(0, 0, 0);
+};
+
+struct CollisionData
+{
+	std::vector<ContactPoint> contacts;
+	physx::PxVec3 impulse = physx::PxVec3(0, 0, 0);
+	ComponentCollider* other_collider = nullptr;;
+};
 
 class ModulePhysics :
 	public Module, public physx::PxSimulationEventCallback
@@ -51,6 +75,10 @@ public:
 	void AddNonBlastActorToList(physx::PxRigidActor* body, GameObject* gameobject);
 	void RemoveNonBlastActorFromList(physx::PxRigidActor* body);
 
+	void Explode(physx::PxVec3 world_pos, float damage_radius, float explosive_impulse);
+	RayCastInfo RayCast(physx::PxVec3 origin, physx::PxVec3 direction, float distance);
+	std::vector<RayCastInfo> RayCastAll(physx::PxVec3 origin, physx::PxVec3 direction, float distance);
+
 	void CleanPhysScene();
 
 private:
@@ -76,7 +104,7 @@ private:
 	physx::PxDefaultErrorCallback gDefaultErrorCallback;
 	physx::PxDefaultAllocator gDefaultAllocatorCallback;
 
-	std::map<physx::PxRigidActor*, physx::PxRigidActor*> trigger_stay_pairs;
+	std::vector<physx::PxTriggerPair> trigger_stay_pairs;
 
 	std::map<physx::PxRigidActor*, GameObject*> physics_objects;
 	std::map<physx::PxRigidActor*, GameObject*> non_blast_objects;

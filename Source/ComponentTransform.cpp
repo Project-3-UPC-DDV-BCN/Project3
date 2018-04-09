@@ -125,6 +125,22 @@ Quat ComponentTransform::GetQuatRotation() const
 	return rotation;
 }
 
+void ComponentTransform::SetQuatRotation(Quat q)
+{
+	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
+	{
+		this->rotation = q;
+
+		shown_rotation = rotation.ToEulerXYZ() * RADTODEG;
+		UpdateGlobalMatrix();
+		dirty = true;
+	}
+	else
+	{
+		CONSOLE_ERROR("SetIncrementalRotation: RigidBody is in charge of transforms");
+	}
+}
+
 void ComponentTransform::SetScale(float3 scale)
 {
 	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
@@ -299,7 +315,7 @@ void ComponentTransform::LookAt(float3 dir, float3 up)
 	//mat.ToQuat crashes and need to do this workaround...
 	float3 eulers = mat.ToEulerXYZ();
 	Quat q = Quat::FromEulerXYZ(eulers.x, eulers.y, eulers.z);
-	SetRotation(q.ToEulerXYZ() * RADTODEG);
+	SetQuatRotation(q);
 	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
 }
 
