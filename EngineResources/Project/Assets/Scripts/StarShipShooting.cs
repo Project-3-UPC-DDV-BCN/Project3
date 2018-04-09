@@ -237,6 +237,7 @@ public class StarShipShooting {
 
         if(TheInput.IsKeyDown("C"))
         {
+			audio_source.Play("Play_change_weapon");
             weapon++;
             weapon %= num_weapons;
 

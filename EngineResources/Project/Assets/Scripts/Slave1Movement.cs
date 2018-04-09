@@ -265,6 +265,7 @@ public class Slave1Movement {
 	{
 		if(TheInput.IsKeyDown("UP_ARROW"))
 		{
+			audio_source.Play("Play_droid_speed_up");
 			if(shield_energy < max_energy_on_system-1)
 			{
 				shield_energy += 2;
@@ -283,6 +284,7 @@ public class Slave1Movement {
 		
 		if(TheInput.IsKeyDown("LEFT_ARROW"))
 		{
+			audio_source.Play("Play_Shield_up");
 			if(weapon_energy < max_energy_on_system-1)
 			{
 				weapon_energy += 2;
@@ -301,6 +303,7 @@ public class Slave1Movement {
 
 		if(TheInput.IsKeyDown("RIGHT_ARROW"))
 		{
+			audio_source.Play("Play_Potency_up");
 			if(engine_energy < max_energy_on_system-1)
 			{
 				engine_energy += 2;
@@ -318,6 +321,7 @@ public class Slave1Movement {
 
 		if(TheInput.IsKeyDown("DOWN_ARROW"))
 		{
+			audio_source.Play("Play_droid_speed_down");
 			shield_energy = 4;
 			weapon_energy = 4;
 			engine_energy = 4;
