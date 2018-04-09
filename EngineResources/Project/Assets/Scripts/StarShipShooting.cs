@@ -21,12 +21,14 @@ public class StarShipShooting {
 	public TheGameObject weapon_icon_1;
 	public TheGameObject weapon_icon_2;
 
+	public TheGameObject laser_light;
 	TheAudioSource audio_source;	
 
 	public float spawn_time = 0.01f;
 
 	float timer = 0.1f;
-
+	float light_duration = 0.2f;
+	bool light_on = false;
 	bool used_left_laser = false;
 
     public TheGameObject weapons_energy;
@@ -154,10 +156,15 @@ public class StarShipShooting {
                             timer = spawn_time;
 							
 							if(audio_source != null)
-                            {	
-								audio_source.Stop("Play_shot");
-								audio_source.Play("Play_shot");
+                            	audio_source.Play("Play_shot");
+							
+
+							if (laser_light != null){
+								laser_light.GetComponent<TheLight>().SetComponentActive(true);
+								light_duration = 0.2f;
+								light_on = true;
 							}
+							
                             //Add heat
                             overheat += curr_overheat_inc;
                             if (overheat >= 1.0f)
@@ -170,11 +177,6 @@ public class StarShipShooting {
                         }
                     case 1:
                         {
-							if(audio_source != null)
-                            {	
-								audio_source.Stop("Play_shot_2");
-								audio_source.Play("Play_shot_2");
-							}
                             if (!cooling)
                             {
                                 overheat += curr_overheat_inc;
@@ -205,7 +207,7 @@ public class StarShipShooting {
 
                     	go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
 					}
-
+					
                     overheat_timer = 0.0f;
                     cooling = true;
                 }
@@ -239,7 +241,14 @@ public class StarShipShooting {
                 cooling = false;
             }
         }
-
+		
+		light_duration -= TheTime.DeltaTime;
+		
+		if (light_duration <= 0.0f && laser_light != null && light_on == true)
+		{
+			light_on = false;
+			laser_light.GetComponent<TheLight>().SetComponentActive(false);
+		}
         overheat_timer -= TheTime.DeltaTime;
 
         if(TheInput.IsKeyDown("C"))
