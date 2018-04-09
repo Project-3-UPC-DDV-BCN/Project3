@@ -439,9 +439,6 @@ void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
 
-	if (show_shockwave)
-		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
-
 	Start();
 }
 
