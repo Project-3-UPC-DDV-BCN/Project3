@@ -104,7 +104,6 @@ public class Ai_Starship_Shooting
 			timer += TheTime.DeltaTime;
 			if(timer >= time_between_lasers) 
 			{
-				
 				if(laser_spawned_left) 
 				{
 					spawn_pos = laser_spawner_R.GetComponent<TheTransform>().GlobalPosition;
@@ -132,7 +131,10 @@ public class Ai_Starship_Shooting
 				timer = 0.0f;
 			}
 			if(in_range) 
+			{
+				audio_source.Stop("Play_Shoot");
 				audio_source.Play("Play_Shoot");
+			}
 		}
 	}
 }
