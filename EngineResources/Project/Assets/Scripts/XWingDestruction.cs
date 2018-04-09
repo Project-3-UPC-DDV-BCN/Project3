@@ -93,8 +93,11 @@ public class XWingDestruction {
 			ship_parts[i].DestroyComponent(mesh_col); 
 
 			//Modify RigidBody
-			piece_rb.Kinematic = false; 
-			piece_rb.TransformGO = true; 
+			if(piece_rb != null)
+			{
+				piece_rb.Kinematic = false; 
+				piece_rb.TransformGO = true; 
+			}
 			
 			direction = direction.Normalized * explosion_v;
 			
@@ -114,7 +117,8 @@ public class XWingDestruction {
 			rotation.y = rotation.y * dest_factor;  
 			rotation.z = rotation.z * dest_factor; 
 			
-			piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
+			if(piece_rb != null)
+				piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
 		}
 	}
 }

@@ -638,8 +638,8 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 							if (z_offset != 0)
 							{
 								float scaled_size_z = (max_distance * markers_size) / z_offset;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 1.5f)
-									scaled_size_z = radar_scaled_size / (1.5f * entity_scaled_size);
+								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 3)
+									scaled_size_z = radar_scaled_size / (3 * entity_scaled_size);
 
 								if (scaled_size_z * entity_scaled_size > 0)
 								{
