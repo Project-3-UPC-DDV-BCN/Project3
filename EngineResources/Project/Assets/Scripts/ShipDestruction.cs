@@ -11,6 +11,7 @@ public class ShipDestruction
 
 	private TheTimer destroy_timer = new TheTimer();
 	private TheScript hp_tracker; 
+	private TheScript game_manager; 
 
 	List<TheGameObject> ship_parts; 
 
@@ -24,7 +25,8 @@ public class ShipDestruction
 	void Start () 
 	{
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
-		hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0); 
+		hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0);
+		game_manager = TheGameObject.Find("GameManager");
 
         ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
@@ -36,6 +38,12 @@ public class ShipDestruction
 		if(hp_tracker.GetIntField("amount") <= 0 && exploted == false)
 		{                     	
 			PlayDestruction(); 
+			
+			int score_to_add = GetRewardFromTeams(TheGameObject.Self.tag, hp_tracker.GetStringField("last_collided_team")); 
+			
+			game_manager.SetIntField("score_to_inc", score_to_add); 
+			game_manager.CallFunction("AddToScore"); 
+			game_manager.SetIntField("score_to_inc", 0); 
 		}
 
 		if(exploted)
@@ -57,23 +65,29 @@ public class ShipDestruction
 		destroy_timer.Start();
 	}
 
-    TheGameObject SwapModel()
-    {
-        TheGameObject obj_to_ret = null; 
-        TheGameObject.Self.SetActive(false);
-
-        if (ship_tag == "TIEFIGHTER")
-        {
-            TheVector3 ship_pos = transform.GlobalPosition; 
-
-            TheGameObject.Self.SetActive(false);
-            TheGameObject ship_to_spaw = TheResources.LoadPrefab("TieFighterDestruct");
-            obj_to_ret = TheGameObject.Duplicate(ship_to_spaw);
-            obj_to_ret.GetComponent<TheTransform>().GlobalPosition = ship_pos;
-        }
-
-        return obj_to_ret; 
-    }
+	int GetRewardFromTeams(string ship1, string ship2)
+	{
+		int return_value = 0; 
+		
+		string team1, team2; 
+		
+		if(ship1 == "XWING")
+			team1 = "Alliance"; 
+		else if (ship1 == "TIEFIGHTER")
+			team1 = "Empire"
+		
+		if(ship2 == "XWING")
+			team2 = "Alliance"; 
+		else if (ship2 == "TIEFIGHTER")
+			team2 = "Empire"
+			
+		if(team1 == team2)
+			return_value = 100; 
+		else
+			return_value = -20; 
+					
+		return return_value; 
+	}
 
 	void FillPartList()
 	{

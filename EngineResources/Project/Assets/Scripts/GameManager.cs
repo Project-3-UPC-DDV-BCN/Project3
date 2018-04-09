@@ -189,6 +189,9 @@ public class GameManager
 	void AddToScore()
 	{
 		score += score_to_inc;
+		
+		if(score < 0)
+			score = 0; 
 
 		if(show_score != null)
        		show_score.Text = score.ToString();
