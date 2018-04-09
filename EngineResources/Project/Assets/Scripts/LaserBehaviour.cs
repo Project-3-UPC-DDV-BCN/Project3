@@ -34,6 +34,7 @@ public class LaserBehaviour
 		{
 			hp_tracker = other_ship_parent.GetComponent<TheScript>(0); 
 			
+			TheConsole.Log(parent_team); 
 			hp_tracker.SetStringField("last_collided_team", parent_team);
 			
 			hp_tracker.SetIntField("inc", 10);  

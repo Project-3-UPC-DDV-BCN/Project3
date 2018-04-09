@@ -9,7 +9,6 @@ public class ShipDestruction
 	public float explosion_v; 
 	public float time_to_destroy; 
 
-
 	private TheTimer destroy_timer = new TheTimer();
 	private TheScript hp_tracker; 
 	private TheScript game_manager; 
@@ -41,7 +40,6 @@ public class ShipDestruction
 			PlayDestruction(); 
 			
 			int score_to_add = GetRewardFromTeams(TheGameObject.Self.tag, hp_tracker.GetStringField("last_collided_team")); 
-			
 			game_manager.SetIntField("score_to_inc", score_to_add); 
 			game_manager.CallFunction("AddToScore"); 
 			game_manager.SetIntField("score_to_inc", 0); 
@@ -70,6 +68,9 @@ public class ShipDestruction
 	{
 		int return_value = 0; 
 		
+		TheConsole.Log(ship1); 
+		TheConsole.Log(ship2); 
+		
 		string team1, team2; 
 		team1 = team2 = "";
 		
@@ -84,9 +85,9 @@ public class ShipDestruction
 			team2 = "Empire";
 			
 		if(team1 == team2)
-			return_value = 100; 
-		else
 			return_value = -20; 
+		else
+			return_value = 100; 
 					
 		return return_value; 
 	}
