@@ -30,14 +30,7 @@ public class LaserBehaviour
 		//Enemy hitç
 		
 		TheGameObject other_ship_parent = other_ship.GetParent(); 
-		
-		if(other_ship.tag == "Default")
-		{
-			TheConsole.Log("NullTag: ALL tags need to be set for laser to interact"); 
-			return;
-		}
 			
-
 		if(other_ship_parent.tag == "XWING" || other_ship_parent.tag == "TIEFIGHTER")
 		{
 			hp_tracker = other_ship_parent.GetComponent<TheScript>(0); 
