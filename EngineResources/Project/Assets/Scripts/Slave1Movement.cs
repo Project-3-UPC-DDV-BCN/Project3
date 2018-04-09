@@ -333,7 +333,7 @@ public class Slave1Movement {
 
 		if(TheInput.IsKeyDown("F1"))
 		{
-			DamageBody(10.0f);
+			DamageSlaveOne(10.0f);
 		}
 	}
 
@@ -969,6 +969,28 @@ public class Slave1Movement {
 				
 				if(exterior_ring != null)
             		exterior_ring.SetActive(true);
+
+                ring_interior_pos = TheRandom.RandomInt() % 4;
+                ring_center_pos = TheRandom.RandomInt() % 4;
+                ring_exterior_pos = TheRandom.RandomInt() % 4;
+
+                if (inner_ring_trans != null)
+                    inner_ring_trans.Rotation = new TheVector3(0, 180, ring_interior_pos * -90);
+
+                if (center_ring_trans != null)
+                    center_ring_trans.Rotation = new TheVector3(0, 180, ring_center_pos * -90);
+
+                if (exterior_ring_trans != null)
+                    exterior_ring_trans.Rotation = new TheVector3(0, 180, ring_exterior_pos * -90);
+
+                if (selected_inner_ring_trans != null)
+                    selected_inner_ring_trans.Rotation = new TheVector3(0, 180, ring_interior_pos * -90);
+
+                if (selected_center_ring_trans != null)
+                    selected_center_ring_trans.Rotation = new TheVector3(0, 180, ring_center_pos * -90);
+
+                if (selected_exterior_ring_trans != null)
+                    selected_exterior_ring_trans.Rotation = new TheVector3(0, 180, ring_exterior_pos * -90);
             }
 
             switch(repair_part)
