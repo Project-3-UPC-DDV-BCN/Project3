@@ -26,6 +26,7 @@ public class Ai_Starship_Shooting
 	public float far_plane_offset = 500f;
 
 	public float shooting_range = 500f;
+    public float shooting_angle = 60f;
 
 	TheGameObject player = null;
 
@@ -91,7 +92,7 @@ public class Ai_Starship_Shooting
 		if(movement != null) 
 		{
 			TheVector3 tOffset = movement.GetVector3Field("target_pos") - transform.GlobalPosition;
-			if(TheVector3.Magnitude(tOffset) < shooting_range)	
+			if(TheVector3.Magnitude(tOffset) < shooting_range && TheVector3.AngleBetween(transform.ForwardDirection, tOffset) < shooting_angle / 2)	
 				shooting = true;	
 			else
 			{
