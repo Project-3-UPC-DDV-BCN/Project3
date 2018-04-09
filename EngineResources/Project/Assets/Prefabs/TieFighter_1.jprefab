@@ -1,11 +1,11 @@
 {
-    "UUID": "1777438323",
+    "UUID": "343644606",
     "assets_path": "./Project/Assets/Prefabs/TieFighter_1.jprefab",
     "library_path": "./Project/Library/Prefabs/TieFighter_1.jprefab",
     "prefab_name": "TieFighter_1",
     "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "435810855",
+        "UUID": "1913286746",
         "Name": "TieFighter_1",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -51,10 +51,10 @@
                     "UUID": "564736164",
                     "int_fields_count": "1",
                     "double_fields_count": "0",
-                    "float_fields_count": "3",
+                    "float_fields_count": "4",
                     "bool_fields_count": "0",
-                    "string_fields_count": "1",
-                    "gameobject_fields_count": "2",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "1",
                     "vec4_fields_count": "0",
@@ -67,31 +67,26 @@
                     "double_fields": {},
                     "float_fields": {
                         "field_0": {
-                            "field_name": "max_distance_to_center_object",
-                            "field_value": "2000.000000"
+                            "field_name": "desertor_distance",
+                            "field_value": "10000.000000"
                         },
                         "field_1": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "5000.000000"
+                        },
+                        "field_2": {
                             "field_name": "move_speed",
                             "field_value": "300.000000"
                         },
-                        "field_2": {
+                        "field_3": {
                             "field_name": "rotation_speed",
                             "field_value": "60.000000"
                         }
                     },
                     "bool_fields": {},
-                    "string_fields": {
-                        "field_0": {
-                            "field_name": "center_go_name",
-                            "field_value": "Slave1"
-                        }
-                    },
+                    "string_fields": {},
                     "gameobject_fields": {
                         "field_0": {
-                            "field_name": "center_object",
-                            "field_value": "0"
-                        },
-                        "field_1": {
                             "field_name": "force_target",
                             "field_value": "0"
                         }
@@ -121,7 +116,7 @@
                     "UUID": "467168228",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "5",
+                    "float_fields_count": "6",
                     "bool_fields_count": "1",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "3",
@@ -144,10 +139,14 @@
                             "field_value": "50.000000"
                         },
                         "field_3": {
+                            "field_name": "shooting_angle",
+                            "field_value": "60.000000"
+                        },
+                        "field_4": {
                             "field_name": "shooting_range",
                             "field_value": "500.000000"
                         },
-                        "field_4": {
+                        "field_5": {
                             "field_name": "time_between_lasers",
                             "field_value": "0.100000"
                         }
@@ -162,15 +161,15 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "LaserFactoryGO",
-                            "field_value": "478263373"
+                            "field_value": "465222747"
                         },
                         "field_1": {
                             "field_name": "laser_spawner_L",
-                            "field_value": "209021663"
+                            "field_value": "1972539"
                         },
                         "field_2": {
                             "field_name": "laser_spawner_R",
-                            "field_value": "948007651"
+                            "field_value": "2038667958"
                         }
                     },
                     "vec2_fields": {},
@@ -184,7 +183,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1938571139",
+        "UUID": "820887150",
         "Name": "TIE_FIGHTER",
         "Tag": "TIEFIGHTER",
         "Layer": "Default",
@@ -232,13 +231,13 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "435810855",
+        "ParentID": "1913286746",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "209021663",
-        "Name": "Laser_Spawner_L(20)",
+        "UUID": "1972539",
+        "Name": "Laser_Spawner_L(56)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -266,13 +265,13 @@
                 }
             }
         },
-        "ParentID": "435810855",
+        "ParentID": "1913286746",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "948007651",
-        "Name": "Laser_Spawner_R(20)",
+        "UUID": "2038667958",
+        "Name": "Laser_Spawner_R(56)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -300,13 +299,13 @@
                 }
             }
         },
-        "ParentID": "435810855",
+        "ParentID": "1913286746",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "478263373",
-        "Name": "REDLaser_Factory(3)",
+        "UUID": "465222747",
+        "Name": "REDLaser_Factory(41)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -354,10 +353,10 @@
                     "value_Z": "0.000000"
                 },
                 "Life_time": "2.000000",
-                "Prefab_UID": "104583042"
+                "Prefab_UID": "0"
             }
         },
-        "ParentID": "435810855",
+        "ParentID": "1913286746",
         "IsRoot": "0",
         "IsStatic": "0"
     }
