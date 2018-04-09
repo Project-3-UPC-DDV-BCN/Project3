@@ -300,7 +300,12 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
 	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
 
-	data.AddString("Template", this->data->GetName()); 
+	int rate = GetEmmisionRate(); 
+	data.AddInt("Rate", rate);
+
+	string name = this->data->GetName(); 
+
+	data.AddString("Template", name); 
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -315,7 +320,11 @@ void ComponentParticleEmmiter::Load(Data & data)
 	float3 rot = data.GetVector3("Rotation");
 
 	//Load Template 
-	this->data = App->resources->GetParticleTemplate(data.GetString("Template")); 
+	SetFrequencyFromRate(data.GetInt("Rate"));
+	string template_name = data.GetString("Template");
+	this->data = App->resources->GetParticleTemplate(template_name);
+
+
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
