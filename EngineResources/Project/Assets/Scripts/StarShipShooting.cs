@@ -154,8 +154,10 @@ public class StarShipShooting {
                             timer = spawn_time;
 							
 							if(audio_source != null)
-                            	audio_source.Play("Play_shot");
-
+                            {	
+								audio_source.Stop("Play_shot");
+								audio_source.Play("Play_shot");
+							}
                             //Add heat
                             overheat += curr_overheat_inc;
                             if (overheat >= 1.0f)
@@ -168,6 +170,11 @@ public class StarShipShooting {
                         }
                     case 1:
                         {
+							if(audio_source != null)
+                            {	
+								audio_source.Stop("Play_shot_2");
+								audio_source.Play("Play_shot_2");
+							}
                             if (!cooling)
                             {
                                 overheat += curr_overheat_inc;
