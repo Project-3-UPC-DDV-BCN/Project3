@@ -54,7 +54,7 @@ public class GameManager
 		team = TheData.GetString("faction");
 
 		if(team == "no_str")
-			team = "Alliance";
+			team = "rebels";
 
         TheConsole.Log(team); 
 	}
