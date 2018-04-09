@@ -31,11 +31,16 @@
 
 GameObject::GameObject(GameObject* parent)
 {
+	ComponentTransform* transform = (ComponentTransform*)AddComponent(Component::CompTransform);
 	active = true;
 	this->parent = nullptr;
 	if (parent != nullptr)
 	{
 		SetParent(parent);
+		if (transform)
+		{
+			transform->SetPosition({ 0,0,0 });
+		}
 	}
 	else
 	{
@@ -49,7 +54,6 @@ GameObject::GameObject(GameObject* parent)
 	is_static = false;
 	is_used_in_prefab = false;
 	is_ui = false;
-	AddComponent(Component::CompTransform);
 	used_in_scene = false;
 	uuid = App->RandomNumber().Int();
 }

@@ -925,6 +925,7 @@ public:
 					float impulse = factor * explosive_impulse;
 					physx::PxVec3 vel = dr.getNormalized() * impulse / rigidDynamic->getMass();
 					rigidDynamic->setLinearVelocity(rigidDynamic->getLinearVelocity() + vel);
+					rigidDynamic->addTorque(rigidDynamic->getLinearVelocity());
 				}
 			}
 		}

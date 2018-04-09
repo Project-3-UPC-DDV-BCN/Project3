@@ -2,7 +2,7 @@
     "Scene_Name": "collision scene",
     "GameObjects_Count": "19",
     "GameObject_0": {
-        "UUID": "689096739",
+        "UUID": "572346979",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -58,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "819391939",
+        "UUID": "809954874",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1130586211",
+        "UUID": "1242679828",
         "Name": "Main Camera(2)",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -165,7 +165,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "824482540",
+        "UUID": "938618499",
         "Name": "Directional Light(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -216,13 +216,13 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1208516677",
+        "UUID": "1778624316",
         "Name": "xwing prefab",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "4",
+            "Components_Count": "1",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -243,108 +243,6 @@
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
-            },
-            "Component_1": {
-                "Type": "2",
-                "Active": "1",
-                "UUID": "153697480",
-                "Mass": "1.000000",
-                "IsUsingGravity": "0",
-                "IsKinematic": "0",
-                "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "MaxAngularVelocity": "7.000000",
-                "LinearDamping": "0.000000",
-                "AngularDamping": "0.050000",
-                "CenterMass": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "InertiaTensor": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                },
-                "SleepThreshold": "0.005000",
-                "SolverIterations": "4",
-                "VelocitySolverIterations": "1",
-                "LinearXLock": "0",
-                "LinearYLock": "0",
-                "LinearZLock": "0",
-                "AngularXLock": "0",
-                "AngularYLock": "0",
-                "AngularZLock": "0",
-                "IsCCDMode": "0",
-                "Transforms": "0"
-            },
-            "Component_2": {
-                "Type": "4",
-                "Active": "1",
-                "UUID": "1808725726",
-                "IsConvex": "0",
-                "IsTrigger": "0",
-                "CapsuleDir": "0",
-                "HaveMaterial": "0",
-                "ColliderCenter": {
-                    "value_X": "0.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "12.750001"
-                },
-                "Box": {
-                    "BoxSize": {
-                        "value_X": "5.000000",
-                        "value_Y": "5.000000",
-                        "value_Z": "36.000000"
-                    }
-                }
-            },
-            "Component_3": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "1507186742",
-                "Script": {
-                    "library_path": ".\\Project\\Library\\Scripts\\Xwing_Movement.dll",
-                    "assets_path": "",
-                    "script_name": "Xwing_Movement",
-                    "UUID": "1502205068",
-                    "int_fields_count": "1",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "1",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {
-                        "field_0": {
-                            "field_name": "hp",
-                            "field_value": "50"
-                        }
-                    },
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {
-                        "field_0": {
-                            "field_name": "is_dead",
-                            "field_value": "0"
-                        }
-                    },
-                    "string_fields": {},
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
             }
         },
         "ParentID": "0",
@@ -352,7 +250,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1877763604",
+        "UUID": "1401450922",
         "Name": "factory",
         "Tag": "Default",
         "Layer": "Default",
@@ -438,7 +336,7 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1565379312",
+        "UUID": "1642622764",
         "Name": "xwing prefab(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -532,18 +430,18 @@
             "Component_3": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1507186742",
+                "UUID": "1983493272",
                 "Script": {
-                    "library_path": ".\\Project\\Library\\Scripts\\Xwing_Movement.dll",
+                    "library_path": "./Project/Library/Scripts/collision_test.dll",
                     "assets_path": "",
-                    "script_name": "Xwing_Movement",
-                    "UUID": "1502205068",
+                    "script_name": "collision_test",
+                    "UUID": "996653224",
                     "int_fields_count": "1",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
-                    "bool_fields_count": "1",
+                    "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
+                    "gameobject_fields_count": "4",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -555,14 +453,26 @@
                     },
                     "double_fields": {},
                     "float_fields": {},
-                    "bool_fields": {
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
                         "field_0": {
-                            "field_name": "is_dead",
+                            "field_name": "bot_left",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "bot_right",
+                            "field_value": "0"
+                        },
+                        "field_2": {
+                            "field_name": "top_left",
+                            "field_value": "0"
+                        },
+                        "field_3": {
+                            "field_name": "top_right",
                             "field_value": "0"
                         }
                     },
-                    "string_fields": {},
-                    "gameobject_fields": {},
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -574,7 +484,7 @@
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "625479149",
+        "UUID": "1092798753",
         "Name": "Xwing_XWING",
         "Tag": "Default",
         "Layer": "Default",
@@ -603,12 +513,12 @@
                 }
             }
         },
-        "ParentID": "1208516677",
+        "ParentID": "1778624316",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1957922310",
+        "UUID": "691336697",
         "Name": "Xwing_XWING(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -637,18 +547,18 @@
                 }
             }
         },
-        "ParentID": "1565379312",
+        "ParentID": "1642622764",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "984651185",
+        "UUID": "1201626",
         "Name": "Body_XWING",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "5",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -730,20 +640,92 @@
                 "AngularZLock": "0",
                 "IsCCDMode": "0",
                 "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1949535438",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/collision_test.dll",
+                    "assets_path": "",
+                    "script_name": "collision_test",
+                    "UUID": "1197787657",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "4",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "hp",
+                            "field_value": "50"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "bot_left",
+                            "field_value": "202126983"
+                        },
+                        "field_1": {
+                            "field_name": "bot_right",
+                            "field_value": "2054025160"
+                        },
+                        "field_2": {
+                            "field_name": "top_left",
+                            "field_value": "962823612"
+                        },
+                        "field_3": {
+                            "field_name": "top_right",
+                            "field_value": "1969828299"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_4": {
+                "Type": "4",
+                "Active": "1",
+                "UUID": "318725638",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "9.463000",
+                        "value_Y": "6.323427",
+                        "value_Z": "37.891720"
+                    }
+                }
             }
         },
-        "ParentID": "625479149",
+        "ParentID": "1092798753",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "427171351",
+        "UUID": "2054025160",
         "Name": "BotRight_Wing_XWING",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -825,20 +807,41 @@
                 "AngularZLock": "0",
                 "IsCCDMode": "0",
                 "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "4",
+                "Active": "0",
+                "UUID": "1446209610",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "-2.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "-3.750000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "2.000000",
+                        "value_Y": "2.000000",
+                        "value_Z": "2.000000"
+                    }
+                }
             }
         },
-        "ParentID": "625479149",
+        "ParentID": "1092798753",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_11": {
-        "UUID": "1743084315",
+        "UUID": "202126983",
         "Name": "BotLeft_Wing_XWING",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -920,20 +923,41 @@
                 "AngularZLock": "0",
                 "IsCCDMode": "0",
                 "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "4",
+                "Active": "0",
+                "UUID": "1788468215",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "2.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "-3.750000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "2.000000",
+                        "value_Y": "2.000000",
+                        "value_Z": "2.000000"
+                    }
+                }
             }
         },
-        "ParentID": "625479149",
+        "ParentID": "1092798753",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_12": {
-        "UUID": "972202645",
+        "UUID": "1969828299",
         "Name": "TopRight_Wing_XWING",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1015,20 +1039,41 @@
                 "AngularZLock": "0",
                 "IsCCDMode": "0",
                 "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "4",
+                "Active": "0",
+                "UUID": "1696259808",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "-2.750000",
+                    "value_Y": "0.000000",
+                    "value_Z": "-4.250000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "2.000000",
+                        "value_Y": "2.000000",
+                        "value_Z": "2.000000"
+                    }
+                }
             }
         },
-        "ParentID": "625479149",
+        "ParentID": "1092798753",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_13": {
-        "UUID": "1330761399",
+        "UUID": "962823612",
         "Name": "TopLeft_Wing_XWING",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1110,14 +1155,35 @@
                 "AngularZLock": "0",
                 "IsCCDMode": "0",
                 "Transforms": "0"
+            },
+            "Component_3": {
+                "Type": "4",
+                "Active": "0",
+                "UUID": "883376944",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "2.250000",
+                    "value_Y": "0.000000",
+                    "value_Z": "-4.750000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "2.000000",
+                        "value_Y": "2.000000",
+                        "value_Z": "2.000000"
+                    }
+                }
             }
         },
-        "ParentID": "625479149",
+        "ParentID": "1092798753",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_14": {
-        "UUID": "52377258",
+        "UUID": "1188133594",
         "Name": "Body_XWING(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1207,12 +1273,12 @@
                 "Transforms": "0"
             }
         },
-        "ParentID": "1957922310",
+        "ParentID": "691336697",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_15": {
-        "UUID": "129846612",
+        "UUID": "126349081",
         "Name": "BotRight_Wing_XWING(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1302,12 +1368,12 @@
                 "Transforms": "0"
             }
         },
-        "ParentID": "1957922310",
+        "ParentID": "691336697",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_16": {
-        "UUID": "1292303829",
+        "UUID": "456350189",
         "Name": "BotLeft_Wing_XWING(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1397,12 +1463,12 @@
                 "Transforms": "0"
             }
         },
-        "ParentID": "1957922310",
+        "ParentID": "691336697",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_17": {
-        "UUID": "510004097",
+        "UUID": "1683434651",
         "Name": "TopRight_Wing_XWING(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1492,12 +1558,12 @@
                 "Transforms": "0"
             }
         },
-        "ParentID": "1957922310",
+        "ParentID": "691336697",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_18": {
-        "UUID": "500617739",
+        "UUID": "1336318599",
         "Name": "TopLeft_Wing_XWING(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1587,7 +1653,7 @@
                 "Transforms": "0"
             }
         },
-        "ParentID": "1957922310",
+        "ParentID": "691336697",
         "IsRoot": "0",
         "IsStatic": "0"
     }
