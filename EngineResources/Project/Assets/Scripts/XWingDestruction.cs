@@ -8,7 +8,7 @@ public class XWingDestruction {
 	public float time_to_destroy; 
 
 	private TheTimer destroy_timer = new TheTimer();
-    private TheScript properties; 
+    private TheScript hp_tracker; 
 
 	List<TheGameObject> ship_parts; 
 
@@ -22,7 +22,7 @@ public class XWingDestruction {
 	void Start () 
 	{
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
-        properties = TheGameObject.Self.GetComponent<TheScript>(0);
+        hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0);
 
         ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
@@ -31,12 +31,9 @@ public class XWingDestruction {
 	
 	void Update ()
 	{
-		if(need_boom == true && exploted == false)
+		if(hp_tracker.GetIntField("amount") <= 0 && exploted == false)
 		{
-
             TheGameObject current = TheGameObject.Self; 
-
-			TheConsole.Log("YOU KILEEEEEED MEEEEE"); 
                      	
 			FillPartList(current); 
 			SetPartsDirection(); 		
