@@ -1,8 +1,8 @@
 {
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "843002071",
-        "Name": "New GameObject(4)",
+        "UUID": "498270689",
+        "Name": "REDLaser_Factory(37)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -11,17 +11,17 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "813822366",
+                "UUID": "1289349889",
                 "position": {
-                    "value_X": "-3.347154",
-                    "value_Y": "3.510645",
-                    "value_Z": "-7.766581"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.707107",
+                    "value_X": "0.000000",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000",
-                    "value_W": "0.707107"
+                    "value_W": "1.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -30,21 +30,27 @@
                 }
             },
             "Component_1": {
-                "Type": "11",
+                "Type": "12",
                 "Active": "1",
-                "UUID": "1226472360",
-                "Position": {
-                    "value_X": "-3.347154",
-                    "value_Y": "3.510645",
-                    "value_Z": "-7.766581"
-                },
-                "Rotation": {
-                    "value_X": "-90.000008",
+                "UUID": "1279176591",
+                "Object_count": "20",
+                "Spawn_position": {
+                    "value_X": "0.000000",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
-                "Rate": "15",
-                "Template": "Default"
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Life_time": "2.000000",
+                "Prefab_UID": "203843676"
             }
         },
         "ParentID": "0",
