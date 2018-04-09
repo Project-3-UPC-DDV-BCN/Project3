@@ -133,8 +133,11 @@ public class StarShipShooting {
 
                             	//laser_factory.SetSpawnRotation(laser_rot);
                            		TheGameObject go = laser_factory.Spawn();
-	
 
+								//Set laser team parent 
+								TheScript laser_scpt = go.GetComponent<TheScript>(0); 
+								laser_scpt.SetStringField("parent_team", TheGameObject.Self.tag);
+	
 								//laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
                             	TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
 							

@@ -4,6 +4,7 @@ using TheEngine.TheConsole;
 public class HP_Tracker {
 
 	public int amount;
+
 	private int inc;
 
 	private bool death;

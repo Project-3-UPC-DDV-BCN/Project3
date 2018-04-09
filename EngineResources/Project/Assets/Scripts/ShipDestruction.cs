@@ -9,6 +9,7 @@ public class ShipDestruction
 	public float explosion_v; 
 	public float time_to_destroy; 
 
+
 	private TheTimer destroy_timer = new TheTimer();
 	private TheScript hp_tracker; 
 	private TheScript game_manager; 
@@ -26,7 +27,7 @@ public class ShipDestruction
 	{
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
 		hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0);
-		game_manager = TheGameObject.Find("GameManager");
+		game_manager = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
 
         ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
@@ -70,16 +71,17 @@ public class ShipDestruction
 		int return_value = 0; 
 		
 		string team1, team2; 
+		team1 = team2 = "";
 		
 		if(ship1 == "XWING")
 			team1 = "Alliance"; 
 		else if (ship1 == "TIEFIGHTER")
-			team1 = "Empire"
+			team1 = "Empire";
 		
 		if(ship2 == "XWING")
 			team2 = "Alliance"; 
 		else if (ship2 == "TIEFIGHTER")
-			team2 = "Empire"
+			team2 = "Empire";
 			
 		if(team1 == team2)
 			return_value = 100; 
