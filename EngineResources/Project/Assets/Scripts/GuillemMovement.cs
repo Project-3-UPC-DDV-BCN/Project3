@@ -10,7 +10,7 @@ public class GuillemMovement
 	private bool forced = false;
 
 	TheGameObject center_object;
-	public float max_distance_to_center_object;
+	public float max_distance_to_center_object = 5000f;
 	public float desertor_distance = 10000f;
 
 	public float move_speed = 300;
