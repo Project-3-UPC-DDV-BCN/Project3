@@ -386,7 +386,7 @@ void CSScript::SetIntProperty(const char * propertyName, int value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -407,12 +407,12 @@ int CSScript::GetIntProperty(const char * propertyName)
 		}
 		else
 		{
-			CONSOLE_ERROR("GetIntProperty: Trying to get a non int field");
+			//CONSOLE_ERROR("GetIntProperty: Trying to get a non int field");
 		}
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -429,7 +429,7 @@ void CSScript::SetDoubleProperty(const char * propertyName, double value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -450,12 +450,12 @@ double CSScript::GetDoubleProperty(const char * propertyName)
 		}
 		else
 		{
-			CONSOLE_ERROR("GetDoubleProperty: Trying to get a non double field");
+			//CONSOLE_ERROR("GetDoubleProperty: Trying to get a non double field");
 		}
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -472,7 +472,7 @@ void CSScript::SetFloatProperty(const char * propertyName, float value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -493,12 +493,12 @@ float CSScript::GetFloatProperty(const char * propertyName)
 		}
 		else
 		{
-			CONSOLE_ERROR("GetFloatProperty: Trying to get a non float field");
+			//CONSOLE_ERROR("GetFloatProperty: Trying to get a non float field");
 		}
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -515,7 +515,7 @@ void CSScript::SetBoolProperty(const char * propertyName, bool value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -536,12 +536,12 @@ bool CSScript::GetBoolProperty(const char * propertyName)
 		}
 		else
 		{
-			CONSOLE_ERROR("GetBoolProperty: Trying to get a non bool field");
+			//CONSOLE_ERROR("GetBoolProperty: Trying to get a non bool field");
 		}
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -558,7 +558,7 @@ void CSScript::SetStringProperty(const char * propertyName, const char * value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -579,12 +579,12 @@ std::string CSScript::GetStringProperty(const char * propertyName)
 		}
 		else
 		{
-			CONSOLE_ERROR("GetStringProperty: Trying to get a non string field");
+			//CONSOLE_ERROR("GetStringProperty: Trying to get a non string field");
 		}
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	if (value)
@@ -614,7 +614,7 @@ void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * val
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -633,12 +633,12 @@ GameObject * CSScript::GetGameObjectProperty(const char * propertyName)
 		}
 		else
 		{
-			CONSOLE_ERROR("GetGameObjectProperty: Trying to get a non GameObject field");
+			//CONSOLE_ERROR("GetGameObjectProperty: Trying to get a non GameObject field");
 		}
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -661,7 +661,7 @@ void CSScript::SetVec2Property(const char * propertyName, float2 value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -684,7 +684,7 @@ float2 CSScript::GetVec2Property(const char * propertyName)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -708,7 +708,7 @@ void CSScript::SetVec3Property(const char * propertyName, float3 value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -732,7 +732,7 @@ float3 CSScript::GetVec3Property(const char * propertyName)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -757,7 +757,7 @@ void CSScript::SetVec4Property(const char * propertyName, float4 value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -782,7 +782,7 @@ float4 CSScript::GetVec4Property(const char * propertyName)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;
@@ -798,7 +798,7 @@ void CSScript::SetTextureProperty(const char * propertyName, Texture * value)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 }
 
@@ -812,7 +812,7 @@ Texture * CSScript::GetTextureProperty(const char * propertyName)
 	}
 	else
 	{
-		CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
 	}
 
 	return value;

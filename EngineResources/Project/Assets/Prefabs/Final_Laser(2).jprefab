@@ -1,11 +1,11 @@
 {
-    "UUID": "1239656449",
+    "UUID": "947974924",
     "assets_path": "./Project/Assets/Prefabs/Final_Laser(2).jprefab",
     "library_path": "./Project/Library/Prefabs/Final_Laser(2).jprefab",
     "prefab_name": "Final_Laser(2)",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "901346546",
+        "UUID": "347260553",
         "Name": "Final_Laser(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -17,20 +17,20 @@
                 "Active": "1",
                 "UUID": "903638147",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "-0.520048",
-                    "value_Z": "0.000000"
+                    "value_X": "-11.267587",
+                    "value_Y": "-1.366812",
+                    "value_Z": "35.277885"
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.707107",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000",
-                    "value_W": "0.707107"
+                    "value_W": "1.000000"
                 },
                 "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
+                    "value_X": "4.000000",
+                    "value_Y": "4.750000",
+                    "value_Z": "8.000000"
                 }
             },
             "Component_1": {
@@ -38,10 +38,10 @@
                 "Active": "1",
                 "UUID": "1766523165",
                 "Mesh": {
-                    "mesh_name": "pCube1"
+                    "mesh_name": "Laser_Mesh_v1_1_"
                 },
                 "Material": {
-                    "Name": "laser_green"
+                    "Name": "Laser_Mesh_v1_1_"
                 },
                 "Interior_Material": {
                     "UUID": "1480464845"
@@ -50,7 +50,7 @@
                 "Mat_Indices_Start": "0",
                 "Int_Mat_Indices_Number": "0",
                 "Int_Mat_Indices_Start": "0",
-                "has_light": "0"
+                "has_light": "1"
             },
             "Component_2": {
                 "Type": "2",
@@ -118,8 +118,36 @@
             "Component_4": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "665418149",
-                "Script": {}
+                "UUID": "695722905",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\LaserBehaviour.dll",
+                    "assets_path": "",
+                    "script_name": "LaserBehaviour",
+                    "UUID": "430710920",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "1",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "parent_team",
+                            "field_value": ""
+                        }
+                    },
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
