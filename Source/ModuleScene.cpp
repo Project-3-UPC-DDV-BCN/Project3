@@ -418,6 +418,7 @@ void ModuleScene::NewScene(bool loading_scene)
 	}
 	App->renderer3D->ResetRender();
 	scene_gameobjects.clear();
+	scene_emmiters.clear(); 
 	scene_gameobjects_name_counter.clear();
 	root_gameobjects.clear();
 	selected_gameobjects.clear();
@@ -799,13 +800,11 @@ JSONTool * ModuleScene::GetJSONTool() const
 
 void ModuleScene::SetParticleSystemsState()
 {
+	CONSOLE_LOG("%d", scene_emmiters.size()); 
+
 	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
 	{
-		if ((*it)->runtime_behaviour == "Auto")
-		{
-			(*it)->SetSystemState(PARTICLE_STATE_PLAY);
-			(*it)->Start(); 
-		}
+		(*it)->PlayEmmiter(); 
 	}
 }
 

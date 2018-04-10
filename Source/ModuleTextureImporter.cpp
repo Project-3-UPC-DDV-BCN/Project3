@@ -64,10 +64,6 @@ std::string ModuleTextureImporter::ImportTexture(std::string path)
 
 Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 {
-	ILuint image_id;
-	ilGenImages(1, &image_id);
-	ilBindImage(image_id);
-
 	Texture* tmp_texture = nullptr;
 
 	if (ilLoad(IL_TYPE_UNKNOWN, path.c_str()))

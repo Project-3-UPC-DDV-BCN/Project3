@@ -146,7 +146,7 @@ private:
 	//Defines the Index Of Refraction for the material. That's not supported by most file formats.
 	float refraction;
 	float reflectivity;
-	float bump_scaling;
+	float bump_scaling = 1.0f;
 
 	ShaderProgram* shader_program = nullptr;
 

@@ -1832,10 +1832,11 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform bool has_normalmap;\n\n"
 			"uniform bool has_opacity;"
 			"uniform bool has_light;\n"
-
 			"uniform bool own_uvs_diffuse;\n"
 			"uniform bool own_uvs_diffuse2;\n"
 			"uniform bool own_uvs_normalmap;\n"
+
+			"uniform float normal_bump;\n"
 
 			"uniform sampler2D Tex_Diffuse;\n\n"
 			"uniform sampler2D Tex_Diffuse2;\n\n"
@@ -1915,9 +1916,9 @@ void ModuleResources::CreateDefaultShaders()
 			"		if (has_normalmap)\n"
 			"		{\n"
 			"			if (own_uvs_normalmap == false)\n"
-			"			normal = normalize(texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0);\n"
+				"			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0)* normal_bump);\n"
 			"			else\n"
-			"			normal = normalize(texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0);\n"
+				"			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0)* normal_bump);\n"
 			"			vec3 TangentViewPos = TBN * viewPos;\n"
 			"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
 			"			fragPosarg = TangentFragPos;\n"
@@ -2149,7 +2150,6 @@ void ModuleResources::CreateDefaultShaders()
 			"	if(has_texture)\n"
 			"	{\n"
 			"		color = texture(ourTexture, TexCoord);\n"
-			"		color.rgb = color.rgb + material_color.rgb;\n"
 			"	}\n"
 			"	else if(has_material_color)\n"
 			"		color = material_color;\n"

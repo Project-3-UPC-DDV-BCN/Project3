@@ -80,9 +80,21 @@ void ComponentLight::SetColor(Color color)
 	this->color = color;
 }
 
+void ComponentLight::SetRGBColor(float3 color)
+{
+	this->color.r = color.x;
+	this->color.g = color.y;
+	this->color.b = color.z;
+}
+
 Color ComponentLight::GetColor() const
 {
 	return color;
+}
+
+float3 ComponentLight::GetRGBColor() const
+{
+	return float3(color.r, color.g, color.b);
 }
 
 float* ComponentLight::GetColorToEdit() const

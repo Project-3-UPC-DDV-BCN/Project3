@@ -151,8 +151,6 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emmit_area.Scale({ 0,0,0 }, { 1,1,1 });
 
-
-
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
 }
@@ -301,7 +299,13 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	
 	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
 	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
-	data.AddString("Template", this->data->GetName()); 
+
+	int rate = GetEmmisionRate(); 
+	data.AddInt("Rate", rate);
+
+	string name = this->data->GetName(); 
+
+	data.AddString("Template", name); 
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -314,10 +318,13 @@ void ComponentParticleEmmiter::Load(Data & data)
 
 	float3 pos = data.GetVector3("Position"); 
 	float3 rot = data.GetVector3("Rotation");
-	float3 scale = { 1,1,1 }; 
 
 	//Load Template 
-	this->data = App->resources->GetParticleTemplate(data.GetString("Template")); 
+	SetFrequencyFromRate(data.GetInt("Rate"));
+	string template_name = data.GetString("Template");
+	this->data = App->resources->GetParticleTemplate(template_name);
+
+
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
@@ -432,7 +439,7 @@ void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
 
-	if (show_shockwave)
+	if (data != nullptr && show_shockwave)
 		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
 
 	Start();

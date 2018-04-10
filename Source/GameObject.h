@@ -52,6 +52,7 @@ public:
 	void UpdateGlobalMatrix();
 	void UpdateCamera();
 	void SetGlobalTransfomMatrix(const float4x4 &matrix);
+	math::float3 GetGlobalPosition();
 
 	void SetParentByID(UID parent_id);
 
