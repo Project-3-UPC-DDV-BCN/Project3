@@ -277,9 +277,14 @@ struct BROFILER_API Category : public Event
 #define BROFILER_CATEGORY(NAME, COLOR) ;
 #endif
 
+#ifdef QUE_PASOO
 #define BROFILER_FRAME(FRAME_NAME) static Profiler::ThreadDescription currentFrameDescription(FRAME_NAME);\
 																																				Profiler::NextFrame();						 \
 																																				BROFILER_EVENT("Frame")							\
+
+#else
+#define BROFILER_FRAME(FRAME_NAME) ;
+#endif
 
 #define BROFILER_THREAD(FRAME_NAME) Profiler::ThreadDescription currentFrameDescription(FRAME_NAME);\
 																				
