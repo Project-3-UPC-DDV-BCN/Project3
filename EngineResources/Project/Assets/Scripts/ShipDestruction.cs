@@ -50,7 +50,8 @@ public class ShipDestruction
 			if(destroy_timer.ReadTime() > time_to_destroy)
             {
                 DeleteShipParts();
-                TheGameObject.Self.SetActive(false); 
+				if (TheGameObject.GetParent())
+					TheGameObject.GetParent().SetActive(false); 
             }
 				
 		} 	
