@@ -82,6 +82,7 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
+	BROFILER_CATEGORY("Camera3D Update", Profiler::Color::Red);
 	if (App->IsGame()) return UPDATE_CONTINUE;
 	ms_timer.Start();
 	if (can_update)

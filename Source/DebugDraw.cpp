@@ -297,6 +297,7 @@ uint DebugDraw::GetLineStroke() const
 
 void DebugDraw::Render(ComponentCamera* camera)
 {
+	BROFILER_CATEGORY("Debug Render", Profiler::Color::CadetBlue);
 	// Activate
 	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
 	glActiveTexture(GL_TEXTURE0);

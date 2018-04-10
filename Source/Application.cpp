@@ -28,13 +28,15 @@
 #include "ModuleAudioImporter.h"
 
 
+
+
 Application::Application()
 {
 	frames = 0;
 	last_frame_ms = -1;
 	last_fps = 0;
 	num_fps = 0;
-	capped_ms = 1000 / 60;
+	capped_ms = 0;
 
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
@@ -279,6 +281,7 @@ void Application::PauseNow()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+	BROFILER_CATEGORY("Engine Update", Profiler::Color::DarkOrchid);
 	if (quit) return UPDATE_STOP;
 
 	update_status ret = UPDATE_CONTINUE;

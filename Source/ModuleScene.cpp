@@ -208,6 +208,7 @@ update_status ModuleScene::PostUpdate(float dt)
 // Update
 update_status ModuleScene::Update(float dt)
 {
+	BROFILER_CATEGORY("Scene Update", Profiler::Color::Wheat);
 	ms_timer.Start();
 
 	Shader * shady = App->resources->GetShader(0);
@@ -693,6 +694,7 @@ void ModuleScene::MoveGameObjectBack(GameObject * go)
 
 void ModuleScene::DrawSkyBox(float3 pos, ComponentCamera* active_camera)
 {
+	BROFILER_CATEGORY("Draw SkyBox", Profiler::Color::AliceBlue);
 	skybox->RenderCubeMap(pos, active_camera);
 }
 

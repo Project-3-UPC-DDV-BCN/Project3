@@ -5,6 +5,7 @@
 #include <list>
 #include "Timer.h"
 #include <string>
+#include "Brofiler\Brofiler.h"
 
 class Module;
 class ModuleWindow;

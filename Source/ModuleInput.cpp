@@ -55,6 +55,7 @@ bool ModuleInput::Init(Data* editor_config)
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Input PreUpdate", Profiler::Color::BlueViolet);
 	ms_timer.Start();
 	SDL_PumpEvents();
 

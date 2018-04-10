@@ -104,7 +104,7 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 		if (MSAA_level < 0) MSAA_level = 2;
 
 		//Use Vsync
-		if(use_vsync && SDL_GL_SetSwapInterval(1) < 0)
+		if(SDL_GL_SetSwapInterval(use_vsync) < 0)
 			CONSOLE_DEBUG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		App->camera->CreateEditorCamera();
@@ -177,6 +177,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	BROFILER_CATEGORY("Rendered  PostUpdate", Profiler::Color::Red);
 	ms_timer.Start();
 
 	//DrawFromLightForShadows();
@@ -213,6 +214,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 void ModuleRenderer3D::DrawEditorScene()
 {
+	BROFILER_CATEGORY("Renderer Draw Editor Scene", Profiler::Color::OrangeRed);
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -230,6 +232,7 @@ void ModuleRenderer3D::DrawEditorScene()
 
 void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 {
+	BROFILER_CATEGORY("Renderer Draw Scene Cameras", Profiler::Color::PaleVioletRed);
 	if (camera == nullptr || camera->GetViewportTexture() == nullptr) return;
 	camera->GetViewportTexture()->Bind();
 
@@ -558,6 +561,7 @@ void ModuleRenderer3D::DrawZBuffer()
 
 void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 {
+	BROFILER_CATEGORY("Draw Grid", Profiler::Color::DarkBlue);
 	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(10, 1, 10));
 
 	ShaderProgram* program = App->resources->GetShaderProgram("grid_shader_program");
@@ -599,6 +603,7 @@ float4x4 ModuleRenderer3D::OrthoProjection( float left, float right, float botto
 
 void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera)
 {
+	BROFILER_CATEGORY("Draw Scene GameObjects", Profiler::Color::CornflowerBlue);
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
 
 	std::list<ComponentMeshRenderer*> static_instersects;

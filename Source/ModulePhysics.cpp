@@ -113,6 +113,7 @@ bool ModulePhysics::Init(Data * editor_config)
 
 update_status ModulePhysics::Update(float dt)
 {
+	BROFILER_CATEGORY("Physics Update", Profiler::Color::Green);
 	if (App->IsPlaying()/* || App->IsPaused()*/)
 	{
 		if (physx_physics && physx_physics->getNbScenes() > 0) {

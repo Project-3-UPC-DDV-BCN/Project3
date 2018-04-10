@@ -96,6 +96,7 @@ update_status ModuleEditor::PreUpdate(float delta_time)
 
 update_status ModuleEditor::Update(float deltaTime)
 {
+	BROFILER_CATEGORY("Editor Update", Profiler::Color::GreenYellow);
 	bool ret = true;
 	if (!App->IsGame())
 	{
@@ -301,6 +302,7 @@ update_status ModuleEditor::Update(float deltaTime)
 
 bool ModuleEditor::DrawEditor()
 {
+	BROFILER_CATEGORY("ImGui Render", Profiler::Color::IndianRed);
 	ImGui::Render();
 	return true;
 }

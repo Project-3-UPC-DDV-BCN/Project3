@@ -88,6 +88,7 @@ bool ModuleBlast::Init(Data * editor_config)
 
 update_status ModuleBlast::Update(float dt)
 {
+	BROFILER_CATEGORY("Blast Update", Profiler::Color::Orange);
 	task_manager->process();
 	task_manager->wait();
 
