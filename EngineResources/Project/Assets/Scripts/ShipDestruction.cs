@@ -10,12 +10,12 @@ public class ShipDestruction
 	public float time_to_destroy; 
 
 	private TheTimer destroy_timer = new TheTimer();
-	private TheScript hp_tracker; 
-	private TheScript game_manager; 
+	private TheScript hp_tracker = null; 
+	private TheScript game_manager = null; 
 
-	List<TheGameObject> ship_parts; 
+	List<TheGameObject> ship_parts = new List<TheGameObject>(); 
 
-	TheTransform transform; 
+	TheTransform transform = null; 
 	string ship_tag; 
 
 	bool need_boom;
@@ -50,8 +50,10 @@ public class ShipDestruction
 			if(destroy_timer.ReadTime() > time_to_destroy)
             {
                 DeleteShipParts();
-				if (TheGameObject.GetParent())
-					TheGameObject.GetParent().SetActive(false); 
+				if (TheGameObject.Self.GetParent() != null)
+				{
+					TheGameObject.Self.GetParent().SetActive(false); 
+				}
             }
 				
 		} 	
@@ -104,7 +106,7 @@ public class ShipDestruction
 	void DeleteShipParts()
 	{
 		for(int i = 0; i < TheGameObject.Self.GetChildCount(); i++)
-		{			
+		{	
 			ship_parts.Remove(TheGameObject.Self.GetChild(i)); 
 			ship_parts[i].SetActive(false); 
 		}
@@ -126,36 +128,44 @@ public class ShipDestruction
 
 			float randz = TheRandom.RandomRange(-100,100); 
 			direction.z = randz;
+
+			if(ship_parts[i] != null)
+			{
+				TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>(); 
+				TheMeshCollider mesh_col = ship_parts[i].GetComponent<TheMeshCollider>(); 
+			
+				//Disable Colliders 
+				ship_parts[i].DestroyComponent(mesh_col); 
 	
-			TheRigidBody piece_rb = ship_parts[i].GetComponent<TheRigidBody>(); 
-			TheMeshCollider mesh_col = ship_parts[i].GetComponent<TheMeshCollider>(); 
+				//Modify RigidBody
+				if(piece_rb != null)
+				{
+					piece_rb.Kinematic = false; 
+					piece_rb.TransformGO = true;
+				} 
 			
-			//Disable Colliders 
-			ship_parts[i].DestroyComponent(mesh_col); 
-
-			//Modify RigidBody
-			piece_rb.Kinematic = false; 
-			piece_rb.TransformGO = true; 
+				direction = direction.Normalized * explosion_v;
 			
-			direction = direction.Normalized * explosion_v;
+				//Invert
+				float invert = TheRandom.RandomRange(10,20); 
+
+				if(invert >= 15) 
+					direction *= -1; 
+
+				if(piece_rb != null)
+					piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
+
+				float dest_factor = TheRandom.RandomRange(1,50); 
+
+				TheVector3 rotation = direction.Normalized; 
+
+				rotation.x = rotation.x * dest_factor; 
+				rotation.y = rotation.y * dest_factor;  
+				rotation.z = rotation.z * dest_factor; 
 			
-			//Invert
-			float invert = TheRandom.RandomRange(10,20); 
-
-			if(invert >= 15) 
-				direction *= -1; 
-
-			piece_rb.SetLinearVelocity(direction.x, direction.y, direction.z);
-
-			float dest_factor = TheRandom.RandomRange(1,50); 
-
-			TheVector3 rotation = direction.Normalized; 
-
-			rotation.x = rotation.x * dest_factor; 
-			rotation.y = rotation.y * dest_factor;  
-			rotation.z = rotation.z * dest_factor; 
-			
-			piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
+				if(piece_rb != null)
+					piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 
+			}		
 		}
 	}
 }
