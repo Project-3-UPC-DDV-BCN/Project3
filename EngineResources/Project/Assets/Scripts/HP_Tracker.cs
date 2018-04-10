@@ -13,9 +13,13 @@ public class HP_Tracker {
 
 	private TheScript destruction_scpt; 
 
+	private TheTimer last_hit_timer = new TheTimer();
+	private float hit_time = 1.0f;
+
 	void Start () 
 	{
-		destruction_scpt = TheGameObject.Self.GetComponent<TheScript>(1); 
+		destruction_scpt = TheGameObject.Self.GetComponent<TheScript>(1);
+		last_hit_timer.Start(); 
 	}
 	
 	void Update () 
@@ -34,8 +38,12 @@ public class HP_Tracker {
 	}
 
 	void SubstractHP()
-	{
-		amount -= inc; 
+	{	
+		if(last_hit_timer.ReadTime() > hit_time)
+		{
+			amount -= inc; 
+			last_hit_timer.Start();
+		}
 	}
 
 

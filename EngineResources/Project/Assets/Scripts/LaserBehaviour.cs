@@ -48,15 +48,8 @@ public class LaserBehaviour
 			//My Hit 
 			else if(other_ship_parent.tag == "Alliance" || other_ship_parent.tag == "Empire")
 			{
-				TheConsole.Log("HIT MY");
-				hp_tracker = other_ship_parent.GetComponent<TheScript>(0);
-
-				if(hp_tracker != null)
-				{
-					hp_tracker.SetIntField("inc", 10);  
-					hp_tracker.CallFunction("SubstractHP");
-					hp_tracker.SetIntField("inc", 0);	
-				}		
+				game_manager.CallFunction("HitPlayer");
+				TheConsole.Log("HIT MY");	
 			}
 		}
 	}

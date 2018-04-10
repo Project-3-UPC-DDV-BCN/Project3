@@ -49,6 +49,8 @@ public class GameManager
     List<TheGameObject> empire_ships = new List<TheGameObject>();
 
 
+	private float player_life = 100;
+
 	void Init ()
 	{
 		team = TheData.GetString("faction");
@@ -61,6 +63,8 @@ public class GameManager
 
 	void Start ()
 	{
+		player_life = 100;
+		
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
 				
@@ -180,7 +184,7 @@ public class GameManager
 			TheApplication.LoadScene("VS3 - EndGameScene");	
 		}
 
-		if(ally_killed >= 3)
+		if(ally_killed >= 3 || player_life <= 0)
 		{
 			TheApplication.LoadScene("VS3 - EndGameScene"); 
 		}
@@ -223,6 +227,11 @@ public class GameManager
 		return new_time; 
 	}
 
+	void HitPlayer()
+	{
+		player_life -= 10;
+	}
+		
 	void AddToAlliance()
 	{	
 		TheGameObject new_go = TheResources.LoadPrefab("AllianceShip");
