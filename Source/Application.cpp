@@ -27,9 +27,6 @@
 #include "ModuleBlast.h"
 #include "ModuleAudioImporter.h"
 
-
-
-
 Application::Application()
 {
 	frames = 0;
