@@ -1,17 +1,152 @@
 {
-    "GameObjects_Count": "1",
+    "GameObjects_Count": "2",
     "GameObject_0": {
-        "UUID": "498270689",
-        "Name": "REDLaser_Factory(37)",
+        "UUID": "820503744",
+        "Name": "FrontRadar(2)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "2",
+            "Components_Count": "3",
             "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1072503313",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "361.110992"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.650000",
+                    "value_Y": "0.650000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.000000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1289349889",
+                "UUID": "1137883670",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.110992",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.918791",
+                    "value_Z": "0.394744",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "30",
+                "Active": "1",
+                "UUID": "746748183",
+                "radar_type": "0",
+                "markers_size": "0.040000",
+                "max_distance": "2480.000000",
+                "transparent": "0",
+                "background_texture": "Radar_shape",
+                "center_go": "1219480080",
+                "markers_count": "2",
+                "marker_name_0": "Rebels",
+                "marker_texture_0": "RebelsMarker",
+                "marker_name_1": "Empire",
+                "marker_texture_1": "EmpireMarker",
+                "entity_go_0": "1475806275",
+                "entity_marker_name_0": "Rebels",
+                "entity_go_1": "2041482050",
+                "entity_marker_name_1": "Rebels",
+                "entity_go_2": "964110002",
+                "entity_marker_name_2": "Rebels",
+                "entity_go_3": "553578610",
+                "entity_marker_name_3": "Rebels",
+                "entity_go_4": "1954877748",
+                "entity_marker_name_4": "Rebels",
+                "entity_go_5": "1620081236",
+                "entity_marker_name_5": "Rebels",
+                "entity_go_6": "1539623822",
+                "entity_marker_name_6": "Rebels",
+                "entity_go_7": "651355104",
+                "entity_marker_name_7": "Rebels",
+                "entity_go_8": "1729005532",
+                "entity_marker_name_8": "Rebels",
+                "entity_go_9": "528221362",
+                "entity_marker_name_9": "Empire",
+                "entity_go_10": "1789472574",
+                "entity_marker_name_10": "Empire",
+                "entity_go_11": "45794434",
+                "entity_marker_name_11": "Empire",
+                "entity_go_12": "1388557366",
+                "entity_marker_name_12": "Empire",
+                "entity_go_13": "1628524934",
+                "entity_marker_name_13": "Empire",
+                "entity_go_14": "987803002",
+                "entity_marker_name_14": "Empire",
+                "entity_go_15": "816490714",
+                "entity_marker_name_15": "Empire",
+                "entity_go_16": "1007863304",
+                "entity_marker_name_16": "Empire",
+                "entity_go_17": "1570405706",
+                "entity_marker_name_17": "Empire",
+                "entity_go_18": "753777396",
+                "entity_marker_name_18": "Rebels",
+                "entity_go_19": "678205177",
+                "entity_marker_name_19": "Empire",
+                "entities_count": "20"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_1": {
+        "UUID": "1226150824",
+        "Name": "RadarAnimation(4)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1649209449",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.650000",
+                    "value_Y": "0.650000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1325611277",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -29,32 +164,33 @@
                     "value_Z": "1.000000"
                 }
             },
-            "Component_1": {
-                "Type": "12",
+            "Component_2": {
+                "Type": "26",
                 "Active": "1",
-                "UUID": "1279176591",
-                "Object_count": "20",
-                "Spawn_position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                "UUID": "102894680",
+                "mode": "1",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
                 },
-                "Spawn_rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "Spawn_scale": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "Life_time": "2.000000",
-                "Prefab_UID": "203843676"
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "0.150000",
+                "anim_textures_count": "8",
+                "anim_texture_0": "Radar_1",
+                "anim_texture_1": "Radar_2",
+                "anim_texture_2": "Radar_3",
+                "anim_texture_3": "Radar_4",
+                "anim_texture_4": "Radar_5",
+                "anim_texture_5": "Radar_6",
+                "anim_texture_6": "Radar_7",
+                "anim_texture_7": "Radar_8"
             }
         },
-        "ParentID": "0",
-        "IsRoot": "1",
+        "ParentID": "820503744",
+        "IsRoot": "0",
         "IsStatic": "0"
     }
 }
