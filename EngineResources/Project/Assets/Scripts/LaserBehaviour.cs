@@ -22,14 +22,17 @@ public class LaserBehaviour
 	void OnTriggerEnter(TheGameObject other_ship)
 	{
 
-		//Enemy hitç
+		//Enemy hit
 		
 		TheGameObject other_ship_parent = other_ship.GetParent(); 
 
 		if(other_ship_parent != null)
 		{
+			TheConsole.Log("se hiteo algo");
+			TheConsole.Log(other_ship_parent.tag);
 			if(other_ship_parent.tag == "XWING" || other_ship_parent.tag == "TIEFIGHTER")
 			{
+				TheConsole.Log("hiteo la ia");
 				hp_tracker = other_ship_parent.GetComponent<TheScript>(0); 
 
 				if(hp_tracker != null)

@@ -49,8 +49,6 @@ public class ShipProperties
 			
 				
 		}
-
-		TheConsole.Log(hp.ToString());
 			
 	}
 

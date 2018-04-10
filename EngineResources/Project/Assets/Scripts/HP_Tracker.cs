@@ -25,8 +25,6 @@ public class HP_Tracker {
 			amount = 0; 
 			death = true; 
 		}
-
-	 TheConsole.Log(amount); 
 		
 	}
 
