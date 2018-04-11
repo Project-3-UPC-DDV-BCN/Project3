@@ -577,6 +577,7 @@ void GameObject::StartScripts()
 
 void GameObject::UpdateScripts()
 {
+	BROFILER_CATEGORY("GameObjecct Update Scripts", Profiler::Color::IndianRed);
 	ComponentScript* comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
@@ -654,6 +655,7 @@ void GameObject::OnTriggerExit(CollisionData& col_data)
 
 void GameObject::UpdateFactory()
 {
+	BROFILER_CATEGORY("GameObject Update Factory", Profiler::Color::DarkOrange);
 	ComponentFactory* comp_factory = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompFactory) {
@@ -895,6 +897,7 @@ void GameObject::Load(Data & data)
 
 bool GameObject::Update()
 {
+	BROFILER_CATEGORY("GameObject Update", Profiler::Color::HotPink);
 	bool ret = true;
 
 	for (std::list<Component*>::iterator c = components_list.begin(); c != components_list.end(); ++c)

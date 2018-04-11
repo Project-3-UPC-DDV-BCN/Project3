@@ -758,6 +758,7 @@ void ComponentRigidBody::OnDisable()
 
 void ComponentRigidBody::DrawColliders()
 {
+	BROFILER_CATEGORY("Rigid Body Draw Colliders", Profiler::Color::Black);
 	std::vector<physx::PxShape*> shapes = GetShapes();
 	for (std::vector<physx::PxShape*>::iterator it = shapes.begin(); it != shapes.end(); it++)
 	{

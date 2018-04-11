@@ -211,8 +211,6 @@ update_status ModuleScene::Update(float dt)
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Wheat);
 	ms_timer.Start();
 
-	Shader * shady = App->resources->GetShader(0);
-
 	HandleInput();
 
 	for (std::list<GameObject*>::iterator it = scene_gameobjects.begin(); it != scene_gameobjects.end(); it++)
@@ -810,6 +808,7 @@ void ModuleScene::SetParticleSystemsState()
 
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
+	BROFILER_CATEGORY("Scene Recursive Check Active Parents", Profiler::Color::SteelBlue);
 	bool ret = true;
 
 	if (gameobject != nullptr)
@@ -830,6 +829,7 @@ bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 
 void ModuleScene::HandleInput()
 {
+	BROFILER_CATEGORY("Scene Handel Input", Profiler::Color::LightSkyBlue);
 	if (!App->IsGame())
 	{
 		if (App->editor->scene_window->IsWindowFocused() && App->editor->scene_window->IsMouseHoveringWindow())
