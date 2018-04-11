@@ -23,6 +23,7 @@ public:
 	std::string GetDirectoryName(std::string directory_path);
 	std::vector<std::string> GetSubDirectories(std::string directory_path);
 	std::vector<std::string> GetAllSubDirectoriesRecursively(std::string directory_path);
+	void CreateCSVFromProf(const char* path);
 
 	bool FileExist(std::string file_path);
 	bool Delete_File(std::string file_path);

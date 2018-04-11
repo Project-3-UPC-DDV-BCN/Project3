@@ -404,6 +404,7 @@ void ModuleResources::ImportFile(std::string path)
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::MeshResource;
 	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
 	else if (extension == ".bnk") type = Resource::SoundBankResource;
+	else if (extension == ".prof") type = Resource::ProfilerResoruce;
 
 	bool exist = false;
 
@@ -496,6 +497,9 @@ void ModuleResources::ImportFile(std::string path)
 		}
 		App->file_system->Copy(path, ASSETS_SOUNDBANK_FOLDER + file_name);
 		path = ASSETS_SOUNDBANK_FOLDER + file_name;
+		break;
+	case Resource::ProfilerResoruce:
+		App->file_system->CreateCSVFromProf(path.c_str());
 		break;
 	default:
 		break;
