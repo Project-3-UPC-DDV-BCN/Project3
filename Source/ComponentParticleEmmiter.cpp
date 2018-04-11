@@ -34,6 +34,7 @@ void ComponentParticleEmmiter::GenerateParticles()
 
 Particle * ComponentParticleEmmiter::CreateParticle()
 {
+	BROFILER_CATEGORY("CreateParticle", Profiler::Color::Blue); 
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
@@ -234,12 +235,6 @@ bool ComponentParticleEmmiter::Update()
 			}
 				
 		}
-	}
-
-	if (data->shock_wave.active && data->shock_wave.done == false && system_state == PARTICLE_STATE_PLAY)
-	{
-		UpdateShockWave();
-		DrawShockWave(App->renderer3D->editor_camera);
 	}
 
 	return true;
