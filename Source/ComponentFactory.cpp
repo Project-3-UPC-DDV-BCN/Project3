@@ -65,6 +65,8 @@ void ComponentFactory::SetLifeTime(float life_time)
 
 GameObject* ComponentFactory::Spawn()
 {
+	BROFILER_CATEGORY("Component - Factory - Spawn", Profiler::Color::Beige);
+
 	GameObject* go = nullptr;
 	if(!spawn_objects_list.empty()) go = spawn_objects_list.front();
 	if (go != nullptr)
@@ -138,6 +140,8 @@ float3 ComponentFactory::GetSpawnScale() const
 
 void ComponentFactory::StartFactory()
 {
+	BROFILER_CATEGORY("Component - Factory - StartFactory", Profiler::Color::Beige);
+
 	if (object_to_spawn && object_to_spawn->GetRootGameObject())
 	{
 		ComponentTransform* transform = (ComponentTransform*)object_to_spawn->GetRootGameObject()->GetComponent(Component::CompTransform);
@@ -196,6 +200,8 @@ void ComponentFactory::StartFactory()
 
 void ComponentFactory::CheckLifeTimes()
 {
+	BROFILER_CATEGORY("Component - Factory - CheckLifeTimes", Profiler::Color::Beige);
+
 	for (std::map<GameObject*, float>::iterator it = spawned_objects.begin(); it != spawned_objects.end();)
 	{
 		if (it->second <= 0)

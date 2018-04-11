@@ -96,6 +96,8 @@ bool ComponentCamera::ContainsGameObjectAABB(AABB& gameobject_bounding_box)
 
 void ComponentCamera::UpdatePosition()
 {
+	BROFILER_CATEGORY("Component - Camera - Update", Profiler::Color::Beige);
+
 	camera_frustum.SetPos(GetGameObject()->GetGlobalTransfomMatrix().TranslatePart());
 	camera_frustum.SetFront(GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized());
 	camera_frustum.SetUp(GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized());

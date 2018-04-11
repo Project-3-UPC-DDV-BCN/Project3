@@ -35,6 +35,8 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Component - Audio Source - Update", Profiler::Color::Beige);
+
 	ComponentListener* default_listener =  App->audio->GetDefaultListener();
 	if (default_listener != nullptr)
 	{

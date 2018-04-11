@@ -58,6 +58,8 @@ bool ComponentBillboard::RotateObject()
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Component - Billboard - RotateObject", Profiler::Color::Beige);
+
 	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
 		return false;
 

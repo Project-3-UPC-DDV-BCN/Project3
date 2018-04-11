@@ -584,6 +584,8 @@ ComponentRigidBody * ComponentCollider::GetRigidBody() const
 
 void ComponentCollider::OnEnable()
 {
+	BROFILER_CATEGORY("Component - Collider - OnEnable", Profiler::Color::Beige);
+
 	if (collider_shape)
 	{
 		if (!IsTrigger())
@@ -597,6 +599,8 @@ void ComponentCollider::OnEnable()
 
 void ComponentCollider::OnDisable()
 {
+	BROFILER_CATEGORY("Component - Collider - OnDisable", Profiler::Color::Beige);
+	
 	if (collider_shape)
 	{
 		collider_shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, false);
