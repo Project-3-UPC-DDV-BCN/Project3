@@ -177,6 +177,7 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
+	BROFILER_CATEGORY("Particle Emmiter Update", Profiler::Color::Thistle);
 	if (data == nullptr)
 		return false;
 

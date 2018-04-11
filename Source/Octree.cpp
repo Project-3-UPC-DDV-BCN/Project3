@@ -4,6 +4,7 @@
 #include "MathGeoLib/OBB.h"
 #include "Mesh.h"
 #include "ComponentMeshRenderer.h"
+#include "Brofiler\Brofiler.h"
 
 OctreeNode::OctreeNode(AABB& box)
 {
@@ -201,11 +202,13 @@ void Octree::Clear()
 
 void Octree::Update()
 {
+	BROFILER_CATEGORY("Octree Update", Profiler::Color::Snow);
 	Create(min_point, max_point);
 }
 
 void Octree::Insert(ComponentMeshRenderer * mesh)
 {
+	BROFILER_CATEGORY("Octree Insert", Profiler::Color::NavajoWhite);
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	update_tree = false;
 	if (root_node != nullptr)
@@ -290,6 +293,7 @@ void Octree::DebugDraw()
 
 void Octree::CalculateNewSize(float3 box_min_point, float3 box_max_point)
 {
+	BROFILER_CATEGORY("Octree Calculate New Size", Profiler::Color::Sienna);
 	if (min_point.x == 0 && min_point.y == 0 && min_point.z == 0 && max_point.x == 0 && max_point.y == 0 && max_point.z == 0)
 	{
 		min_point = box_min_point;

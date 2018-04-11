@@ -800,6 +800,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 
 void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
 {
+	BROFILER_CATEGORY("Rendered Add Mesh To Draw", Profiler::Color::Wheat);
 	dynamic_mesh_to_draw.push_back(mesh);
 }
 
@@ -855,7 +856,7 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height, ComponentCamera* camera)
 {
-
+	BROFILER_CATEGORY("Renderer On Resize", Profiler::Color::Violet);
 	int msaa_level = camera->GetViewportTexture()->GetCurrentMSAALevel();
 	camera->GetViewportTexture()->Destroy();
 	camera->GetViewportTexture()->Create(width, height, msaa_level);
@@ -1452,6 +1453,7 @@ void ModuleRenderer3D::DeleteProgram(uint program_id)
 
 void ModuleRenderer3D::AddParticleToDraw(ComponentParticleEmmiter * particle)
 {
+	BROFILER_CATEGORY("Renderer Add Prticle to Draw", Profiler::Color::Brown);
 	particles_to_draw.push_back(particle);
 }
 
