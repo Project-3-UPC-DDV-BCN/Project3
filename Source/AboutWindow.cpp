@@ -1,5 +1,5 @@
 #include "AboutWindow.h"
-
+#include "Brofiler\Brofiler.h"
 
 AboutWindow::AboutWindow()
 {
@@ -13,6 +13,8 @@ AboutWindow::~AboutWindow()
 
 void AboutWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - About: DrawWindow", Profiler::Color::Black);
+	
 	ImGui::Begin(window_name.c_str(), &active,
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoCollapse |
