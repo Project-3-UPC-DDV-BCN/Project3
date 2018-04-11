@@ -37,6 +37,7 @@
 #include "ComponentRigidBody.h"
 #include "glmath.h"
 #include "OpenGL.h"
+#include "Brofiler\Brofiler.h"
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -177,7 +178,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	BROFILER_CATEGORY("Rendered  PostUpdate", Profiler::Color::Red);
+	BROFILER_CATEGORY("Renderer  PostUpdate", Profiler::Color::Red);
 	ms_timer.Start();
 
 	//DrawFromLightForShadows();
@@ -481,7 +482,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	}
 
 	// DeActivate
-	glUseProgram(last_program);
+	App->renderer3D->UseShaderProgram(last_program);
 	glBindTexture(GL_TEXTURE_2D, last_texture);
 	glBindSampler(0, last_sampler);
 	glActiveTexture(last_active_texture);
@@ -1263,7 +1264,11 @@ void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uin
 
 void ModuleRenderer3D::UseShaderProgram(uint id)
 {
-	glUseProgram(id);
+	if (id == current_shaderprogram) return;
+
+	current_shaderprogram = id;
+
+	glUseProgram(current_shaderprogram);
 	GLenum error = glGetError();
 
 	//Check for error

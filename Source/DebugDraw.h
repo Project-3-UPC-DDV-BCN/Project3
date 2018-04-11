@@ -65,7 +65,6 @@ public:
 
 private:
 	void AddShape(DebugShape shape);
-
 private:
 	std::vector<DebugShape> shapes;
 

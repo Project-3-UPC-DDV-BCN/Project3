@@ -332,9 +332,8 @@ void DebugDraw::Render(ComponentCamera* camera)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// Render ----
-
-	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
-	glUseProgram(program->GetProgramID());
+	uint program = App->resources->GetShaderProgram("default_debug_program")->GetProgramID();
+	App->renderer3D->UseShaderProgram(program);
 
 	glLineWidth(2);
 
@@ -349,11 +348,11 @@ void DebugDraw::Render(ComponentCamera* camera)
 		float4 colour = (*it).GetColour();
 		int mode = (*it).GetMode();
 
-		App->renderer3D->SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
-		App->renderer3D->SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
-		App->renderer3D->SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
+		App->renderer3D->SetUniformMatrix(program, "view", camera->GetViewMatrix());
+		App->renderer3D->SetUniformMatrix(program, "projection", camera->GetProjectionMatrix());
+		App->renderer3D->SetUniformMatrix(program, "Model", trans.Transposed().ptr());
 
-		App->renderer3D->SetUniformVector4(program->GetProgramID(), "debug_color", colour);
+		App->renderer3D->SetUniformVector4(program, "debug_color", colour);
 
 		uint vao = App->renderer3D->GenVertexArrayObject();
 
@@ -384,7 +383,7 @@ void DebugDraw::Render(ComponentCamera* camera)
 
 	// DeActivate
 	glLineWidth(1);
-	glUseProgram(last_program);
+	App->renderer3D->UseShaderProgram(last_program);
 	glBindTexture(GL_TEXTURE_2D, last_texture);
 	glBindSampler(0, last_sampler);
 	glActiveTexture(last_active_texture);
