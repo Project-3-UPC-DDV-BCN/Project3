@@ -303,7 +303,9 @@ update_status ModuleEditor::Update(float deltaTime)
 bool ModuleEditor::DrawEditor()
 {
 	BROFILER_CATEGORY("ImGui Render", Profiler::Color::IndianRed);
+	ms_timer.Start();
 	ImGui::Render();
+	performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 	return true;
 }
 

@@ -504,13 +504,13 @@ void ModulePhysics::CreateMainScene()
 		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS;
 		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eGPU;
 
-		sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
-		sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
-		sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
+		//sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
+		//sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;
 	}
 	else
 	{

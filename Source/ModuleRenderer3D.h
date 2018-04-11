@@ -155,6 +155,8 @@ private:
 
 	int lights_count;
 
+	uint current_shader_program;
+
 	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
 
 	ComponentLight* dir_lights[MAX_DIR_LIGHT];

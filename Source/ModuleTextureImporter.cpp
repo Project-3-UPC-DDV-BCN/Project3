@@ -81,6 +81,7 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 			CONSOLE_LOG("DeviL: Failed to convert image %s. Error: %s", path.c_str(), iluErrorString(ilGetError()));
 		}
 
+		ILubyte *data = ilGetData();
 		int width = ilGetInteger(IL_IMAGE_WIDTH);
 		int height = ilGetInteger(IL_IMAGE_HEIGHT);
 		int format = ilGetInteger(IL_IMAGE_FORMAT);
@@ -88,9 +89,6 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 		int file_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
 		if (file_size > 0)
 		{
-			byte* data = new byte[file_size];
-			ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
-
 			tmp_texture = new Texture();
 			tmp_texture->SetWidth(width);
 			tmp_texture->SetHeight(height);
@@ -103,7 +101,7 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 
 			CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
 
-			tmp_texture->RecreateTexture();
+			//tmp_texture->RecreateTexture();
 		}
 
 		ilDeleteImages(1, &ImageInfo.Id);
