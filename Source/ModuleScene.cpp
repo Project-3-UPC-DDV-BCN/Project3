@@ -190,6 +190,7 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject * gameObject)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Wheat);
 	LoadSceneNow();
 
 	DestroyGameObjectNow();
@@ -901,6 +902,7 @@ void ModuleScene::HandleInput()
 
 void ModuleScene::LoadSceneNow()
 {
+	BROFILER_CATEGORY("Scene Load Scene Now", Profiler::Color::Turquoise);
 	if (to_load_scene)
 	{
 		Data data;
@@ -916,6 +918,7 @@ void ModuleScene::LoadSceneNow()
 
 void ModuleScene::DestroyGameObjectNow()
 {
+	BROFILER_CATEGORY("Scene Destroy gameObject Now", Profiler::Color::Chartreuse);
 	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) 
 	{
 		if((*it) != nullptr)
