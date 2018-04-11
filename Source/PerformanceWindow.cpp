@@ -1,4 +1,5 @@
 #include "PerformanceWindow.h"
+#include "Brofiler\Brofiler.h"
 
 PerformanceWindow::PerformanceWindow()
 {
@@ -16,6 +17,8 @@ PerformanceWindow::~PerformanceWindow()
 
 void PerformanceWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Performance: DrawWindow", Profiler::Color::Black);
+
 	ImGui::Begin(window_name.c_str(), &active,
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoCollapse |

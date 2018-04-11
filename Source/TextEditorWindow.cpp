@@ -24,6 +24,8 @@ TextEditorWindow::~TextEditorWindow()
 
 void TextEditorWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Text Editor: DrawWindow", Profiler::Color::Black);
+
 	auto cpos = editor.GetCursorPosition();
 
 	ImGui::SetNextWindowSize({ 600,500 }, ImGuiCond_Once);

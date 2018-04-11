@@ -66,6 +66,8 @@ AssetsWindow::~AssetsWindow()
 
 void AssetsWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Assets: DrawWindow", Profiler::Color::Black);
+
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) {
 		ImGui::Columns(2);
 		node = 0;

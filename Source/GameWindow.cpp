@@ -20,6 +20,8 @@ GameWindow::~GameWindow()
 
 void GameWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Game: DrawWindow", Profiler::Color::Black);
+
 	if (App->IsGame())
 	{
 		float width = App->window->GetWidth();

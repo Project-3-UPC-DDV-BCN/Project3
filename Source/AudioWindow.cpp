@@ -1,4 +1,5 @@
 #include "AudioWindow.h"
+#include "Brofiler\Brofiler.h"
 
 AudioWindow::AudioWindow()
 {
@@ -12,6 +13,8 @@ AudioWindow::~AudioWindow()
 
 void AudioWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Audio: DrawWindow", Profiler::Color::Black);
+
 	ImGui::Begin(window_name.c_str(), &active,
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoCollapse |

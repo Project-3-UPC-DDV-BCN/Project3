@@ -65,6 +65,8 @@ ResourcesWindow::~ResourcesWindow()
 
 void ResourcesWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Resources: DrawWindow", Profiler::Color::Black);
+
 	ImGui::SetNextWindowSize({ 300,400 });
 	ImGui::Begin(window_name.c_str(), &active,
 		ImGuiWindowFlags_AlwaysAutoResize |

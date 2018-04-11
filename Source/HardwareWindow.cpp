@@ -1,6 +1,7 @@
 #include "HardwareWindow.h"
 #include "SDL\include\SDL.h"
 #include "SDL\include\SDL_opengl.h"
+#include "Brofiler\Brofiler.h"
 
 HardwareWindow::HardwareWindow()
 {
@@ -14,6 +15,8 @@ HardwareWindow::~HardwareWindow()
 
 void HardwareWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Hardware: DrawWindow", Profiler::Color::Black);
+
 	ImGui::Begin(window_name.c_str(), &active,
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoCollapse |
