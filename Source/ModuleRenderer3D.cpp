@@ -210,6 +210,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 
 	SDL_GL_SwapWindow(App->window->window);
+	using_program = false;
+
 	return UPDATE_CONTINUE;
 }
 
@@ -1264,8 +1266,9 @@ void ModuleRenderer3D::SetVertexAttributePointer(uint id, uint element_size, uin
 
 void ModuleRenderer3D::UseShaderProgram(uint id)
 {
-	if (id == current_shaderprogram) return;
+	if (using_program == true && id == current_shaderprogram) return;
 
+	using_program = true;
 	current_shaderprogram = id;
 
 	glUseProgram(current_shaderprogram);

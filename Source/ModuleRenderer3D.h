@@ -154,6 +154,7 @@ private:
 	bool use_skybox;
 
 	uint current_shaderprogram = 0;
+	bool using_program = false;
 
 	int lights_count;
 
