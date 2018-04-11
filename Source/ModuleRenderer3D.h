@@ -127,7 +127,7 @@ private:
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
 	void DrawColliders();
-	
+
 public:
 	Light lights[MAX_LIGHTS];
 	void DrawZBuffer();
@@ -152,8 +152,6 @@ private:
 
 	bool testing_light;
 	bool use_skybox;
-
-	uint current_shaderprogram = 0;
 
 	int lights_count;
 
