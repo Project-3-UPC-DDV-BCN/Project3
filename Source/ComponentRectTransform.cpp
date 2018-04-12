@@ -45,6 +45,8 @@ ComponentRectTransform::~ComponentRectTransform()
 
 bool ComponentRectTransform::Update()
 {
+	BROFILER_CATEGORY("Component - RectTransform - Update", Profiler::Color::Beige);
+
 	bool ret = true;
 
 	bool is_canvas;
