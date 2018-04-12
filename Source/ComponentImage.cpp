@@ -42,6 +42,8 @@ bool ComponentImage::Update()
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Component - Image - Update", Profiler::Color::Beige);
+
 	if (App->IsPlaying() && !was_in_play_mode)
 	{
 		was_in_play_mode = true;

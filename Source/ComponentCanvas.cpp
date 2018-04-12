@@ -38,6 +38,8 @@ bool ComponentCanvas::Update()
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Component - Canvas - Update", Profiler::Color::Beige);
+
 	App->renderer3D->AddCanvasToDraw(this);
 
 	UpdateSize();

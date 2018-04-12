@@ -43,6 +43,8 @@ bool ComponentRadar::Update()
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Component - Radar - Update", Profiler::Color::Beige);
+
 	ComponentCanvas* canvas = GetCanvas();
 
 	if (canvas != nullptr)

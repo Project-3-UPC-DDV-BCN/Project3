@@ -40,6 +40,8 @@ ComponentButton::~ComponentButton()
 
 bool ComponentButton::Update()
 {
+	BROFILER_CATEGORY("Component - Button - Update", Profiler::Color::Beige);
+
 	bool ret = true;
 
 	UpdateState();
