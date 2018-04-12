@@ -78,6 +78,7 @@ void AssetsWindow::DrawWindow()
 			CheckDirectory(*directories[i]);
 		}
 
+		BROFILER_CATEGORY("directories draw", Profiler::Color::BlanchedAlmond);
 		DrawChilds(*directories.front());
 
 		if (ImGui::IsMouseClicked(1) && ImGui::IsMouseHoveringWindow()) {
@@ -125,10 +126,12 @@ void AssetsWindow::DrawWindow()
 		{
 			if (!selected_folder->directory_files.empty())
 			{
+				BROFILER_CATEGORY("Assets file draw", Profiler::Color::Aquamarine);
 				for (std::vector<File*>::iterator it = selected_folder->directory_files.begin(); it != selected_folder->directory_files.end(); it++)
 				{
 					bool selected = false;
 					float font_size = ImGui::GetFontSize();
+
 					Resource::ResourceType type = (Resource::ResourceType)App->resources->AssetExtensionToResourceType((*it)->extension);
 					switch (type)
 					{

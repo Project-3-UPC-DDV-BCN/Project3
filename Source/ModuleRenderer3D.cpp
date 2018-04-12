@@ -69,6 +69,7 @@ ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled, bool is
 	directional_light_count = 0;
 	point_light_count = 0;
 	spot_light_count = 0;
+	current_shader_program = 0;
 }
 
 // Destructor
@@ -236,9 +237,14 @@ void ModuleRenderer3D::DrawEditorScene()
 void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 {
 	BROFILER_CATEGORY("Renderer Draw Scene Cameras", Profiler::Color::PaleVioletRed);
-	if (camera == nullptr || camera->GetViewportTexture() == nullptr) return;
-	camera->GetViewportTexture()->Bind();
+	if (camera == nullptr || camera->GetViewportTexture() == nullptr); 
+	if (camera != game_camera)
+	{
+		if (!camera->IsActive() || !camera->GetGameObject()->IsActive()) return;
+		if (!App->IsGame() && !camera->GetGameObject()->IsSelected()) return;
+	}
 
+	camera->GetViewportTexture()->Bind();
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -287,6 +293,8 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 
 void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 {
+	if (canvas_to_draw.empty()) return;
+
 	// Activate
 	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
 	glActiveTexture(GL_TEXTURE0);
@@ -484,7 +492,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	}
 
 	// DeActivate
-	App->renderer3D->UseShaderProgram(last_program);
+	UseShaderProgram(last_program);
 	glBindTexture(GL_TEXTURE_2D, last_texture);
 	glBindSampler(0, last_sampler);
 	glActiveTexture(last_active_texture);
@@ -616,7 +624,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	{
 		if (!is_editor_camera)
 		{
-			if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
+			//if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
 		}
 		else
 		{
@@ -636,7 +644,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			{
 				if (active_camera->ContainsGameObjectAABB((*it)->bounding_box))
 				{
-					if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
+					//if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
 					DrawMesh(*it, active_camera);
 				}
 			}
@@ -667,18 +675,18 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 	}
 
-	if (is_editor_camera)
-	{
-		for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
-		{
-			if ((*it)->GetGameObject()->IsSelected())
-			{
-				DebugFrustum frustum((*it)->camera_frustum);
-				frustum.color = { 0,1,0,1 };
-				//frustum.Render();
-			}
-		}
-	}
+	//if (is_editor_camera)
+	//{
+	//	for (std::list<ComponentCamera*>::iterator it = rendering_cameras.begin(); it != rendering_cameras.end(); it++)
+	//	{
+	//		if ((*it)->GetGameObject()->IsSelected())
+	//		{
+	//			DebugFrustum frustum((*it)->camera_frustum);
+	//			frustum.color = { 0,1,0,1 };
+	//			//frustum.Render();
+	//		}
+	//	}
+	//}
 	if (App->scene->draw_octree)
 	{
 		//App->scene->octree.DebugDraw();
@@ -690,8 +698,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		DrawCanvas(active_camera, true);
 
 	// Debug Draw render
-	if(is_editor_camera)
-		debug_draw->Render(editor_camera);
+	/*if(is_editor_camera)
+		debug_draw->Render(editor_camera);*/
 
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
@@ -699,8 +707,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
@@ -831,6 +839,8 @@ std::list<ComponentCanvas*> ModuleRenderer3D::GetCanvasToDraw() const
 
 void ModuleRenderer3D::ResetRender()
 {
+	BROFILER_CATEGORY("reset renderer", Profiler::Color::Beige);
+
 	dynamic_mesh_to_draw.clear();
 	debug_draw->Clear();
 
@@ -1272,12 +1282,17 @@ void ModuleRenderer3D::UseShaderProgram(uint id)
 	current_shaderprogram = id;
 
 	glUseProgram(current_shaderprogram);
+	
 	GLenum error = glGetError();
 
 	//Check for error
 	if (error != GL_NO_ERROR)
 	{
 		CONSOLE_ERROR("Error at use shader program: %s\n", gluErrorString(error));
+	}
+	else
+	{
+		current_shader_program = id;
 	}
 }
 

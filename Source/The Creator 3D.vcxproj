@@ -84,6 +84,8 @@
       </LanguageStandard>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -103,6 +105,8 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_ALLOW_RUNTIME_LIBRARY_MISMATCH;_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\EngineResources\mono\include\mono-2.0;.\Nvidia\Blast\Include\common;.\Nvidia\Blast\Include\globals\include;.\Nvidia\Blast\Include\lowlevel\include;.\Nvidia\Blast\Include\toolkit\include;.\Nvidia\PhysX\Include;.\Nvidia\PhysX\Include\characterkinematic;.\Nvidia\PhysX\Include\cloth;.\Nvidia\PhysX\Include\collision;.\Nvidia\PhysX\Include\common\windows;.\Nvidia\PhysX\Include\common;.\Nvidia\PhysX\Include\cooking;.\Nvidia\PhysX\Include\extensions;.\Nvidia\PhysX\Include\geometry;.\Nvidia\PhysX\Include\GeomUtils;.\Nvidia\PhysX\Include\gpu;.\Nvidia\PhysX\Include\particles;.\Nvidia\PhysX\Include\pvd;.\Nvidia\PhysX\Include\solver;.\Nvidia\PhysX\Include\vehicle;.\Nvidia\Blast\Include\extensions\assetutils\include;.\Nvidia\Blast\Include\extensions\authoring\include;.\Nvidia\Blast\Include\extensions\exporter\include;.\Nvidia\Blast\Include\extensions\physx\include;.\Nvidia\Blast\Include\extensions\serialization\include;.\Nvidia\Blast\Include\extensions\shaders\include;.\Nvidia\Blast\Include\extensions\stress\include;.\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,6 +132,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

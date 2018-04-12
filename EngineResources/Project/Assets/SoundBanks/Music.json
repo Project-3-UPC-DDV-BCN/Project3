@@ -1,0 +1,55 @@
+{
+    "SoundBanksInfo": {
+        "Platform": "Windows",
+        "BasePlatform": "Windows",
+        "SchemaVersion": "11",
+        "SoundbankVersion": "128",
+        "RootPaths": {
+            "ProjectRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Music\\",
+            "SourceFilesRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Music\\.cache\\Windows\\",
+            "SoundBanksRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Music\\GeneratedSoundBanks\\Windows\\",
+            "ExternalSourcesInputFile": "",
+            "ExternalSourcesOutputRoot": "C:\\Users\\Simón Stoyanov\\Downloads\\Music\\GeneratedSoundBanks\\Windows\\"
+        },
+        "SoundBanks": [
+            {
+                "Id": "3991942870",
+                "Language": "SFX",
+                "ObjectPath": "\\SoundBanks\\Default Work Unit\\Music",
+                "ShortName": "Music",
+                "Path": "Music.bnk",
+                "IncludedEvents": [
+                    {
+                        "Id": "3788820893",
+                        "Name": "Play_Calm_song",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Calm_song"
+                    },
+                    {
+                        "Id": "770496458",
+                        "Name": "Play_Combat_song",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Combat_song"
+                    },
+                    {
+                        "Id": "2932040671",
+                        "Name": "Play_Music",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Music"
+                    }
+                ],
+                "IncludedMemoryFiles": [
+                    {
+                        "Id": "284944787",
+                        "Language": "SFX",
+                        "ShortName": "Calm_song.wav",
+                        "Path": "SFX\\Calm_song_F17FB28C.wem"
+                    },
+                    {
+                        "Id": "950113381",
+                        "Language": "SFX",
+                        "ShortName": "Combat_song.wav",
+                        "Path": "SFX\\Combat_song_F17FB28C.wem"
+                    }
+                ]
+            }
+        ]
+    }
+}

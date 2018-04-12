@@ -183,7 +183,7 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 
-	DrawColliders();
+	//DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -504,13 +504,13 @@ void ModulePhysics::CreateMainScene()
 		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS;
 		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eGPU;
 
-		sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
-		sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
-		sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
-		sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
+		//sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
+		//sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
+		//sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;
 	}
 	else
 	{
@@ -803,6 +803,7 @@ physx::PxFoundation * ModulePhysics::GetPhysXFoundation() const
 
 void ModulePhysics::DrawColliders()
 {
+	BROFILER_CATEGORY("Physics Draw Colliders", Profiler::Color::Green);
 	if (physx_physics && physx_physics->getNbScenes() > 0) {
 		int scene_mum = physx_physics->getNbScenes();
 		for (int i = 0; i < scene_mum; i++)

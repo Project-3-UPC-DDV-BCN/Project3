@@ -33,7 +33,7 @@ Application::Application()
 	last_frame_ms = -1;
 	last_fps = 0;
 	num_fps = 0;
-	capped_ms = 0;
+	capped_ms = 1000 / 60;
 
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);

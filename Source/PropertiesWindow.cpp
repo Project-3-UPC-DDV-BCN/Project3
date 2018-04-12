@@ -74,7 +74,6 @@ PropertiesWindow::~PropertiesWindow()
 void PropertiesWindow::DrawWindow()
 {
 	BROFILER_CATEGORY("Editor - Properties: DrawWindow", Profiler::Color::Black);
-
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar))
 	{
 		GameObject* selected_gameobject = nullptr;

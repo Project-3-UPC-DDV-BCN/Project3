@@ -38,13 +38,6 @@ ComponentCamera::ComponentCamera(GameObject* attached_gameobject)
 	{
 		layers_to_draw.push_back(App->tags_and_layers->layers_list[i]);
 	}
-
-	if (attached_gameobject)
-	{
-		render_order = App->scene->GetNumCameras();
-		App->scene->scene_cameras.push_back(this);
-		App->renderer3D->rendering_cameras.push_back(this);
-	}
 }
 
 ComponentCamera::~ComponentCamera()
