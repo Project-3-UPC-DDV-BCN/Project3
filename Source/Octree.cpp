@@ -134,7 +134,7 @@ void OctreeNode::ClearNode()
 	}
 }
 
-void OctreeNode::CollectIntersections(std::list<ComponentMeshRenderer*>& intersections_list, AABB * bounding_box)
+void OctreeNode::CollectIntersections(std::vector<ComponentMeshRenderer*>& intersections_list, AABB * bounding_box)
 {
 	if (node_childs[0] != nullptr)
 	{
@@ -272,7 +272,7 @@ void Octree::Erase(ComponentMeshRenderer * mesh)
 	}
 }
 
-void Octree::CollectIntersections(std::list<ComponentMeshRenderer*>& intersections_list, AABB* bounding_box)
+void Octree::CollectIntersections(std::vector<ComponentMeshRenderer*>& intersections_list, AABB* bounding_box)
 {
 	if (root_node != nullptr)
 	{

@@ -52,7 +52,7 @@ public:
 
 	void AddCanvasToDraw(ComponentCanvas* canvas);
 	void RemoveCanvasToDraw(ComponentCanvas* canvas);
-	std::list<ComponentCanvas*> GetCanvasToDraw() const;
+	std::vector<ComponentCanvas*> GetCanvasToDraw() const;
 
 
 	void BindArrayBuffer(uint id) const;
@@ -160,7 +160,7 @@ private:
 
 	uint current_shader_program;
 
-	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
+	std::vector<ComponentMeshRenderer*> dynamic_mesh_to_draw;
 
 	ComponentLight* dir_lights[MAX_DIR_LIGHT];
 	ComponentLight* poi_lights[MAX_POI_LIGHT];
@@ -170,9 +170,9 @@ private:
 	int point_light_count;
 	int spot_light_count;
 
-	std::list<Primitive*> debug_primitive_to_draw;
-	std::list<ComponentCanvas*> canvas_to_draw;
-	std::list<ComponentParticleEmmiter*> particles_to_draw;
+	std::vector<Primitive*> debug_primitive_to_draw;
+	std::vector<ComponentCanvas*> canvas_to_draw;
+	std::vector<ComponentParticleEmmiter*> particles_to_draw;
 
 
 	// SHADOW MAPPING DON'T TOUCH

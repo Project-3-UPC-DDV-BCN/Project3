@@ -325,7 +325,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	glEnable(GL_SCISSOR_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+	for (std::vector<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 	{
 		ComponentCanvas* canvas = (*cv);
 
@@ -617,10 +617,10 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	BROFILER_CATEGORY("Draw Scene GameObjects", Profiler::Color::CornflowerBlue);
 	std::vector<std::string> layer_masks = active_camera->GetAllLayersToDraw();
 
-	std::list<ComponentMeshRenderer*> static_instersects;
+	std::vector<ComponentMeshRenderer*> static_instersects;
 	App->scene->GetOctreeIntersects(static_instersects, active_camera->camera_frustum.MinimalEnclosingAABB());
 
-	for (std::list<ComponentMeshRenderer*>::iterator it = static_instersects.begin(); it != static_instersects.end(); it++)
+	for (std::vector<ComponentMeshRenderer*>::iterator it = static_instersects.begin(); it != static_instersects.end(); it++)
 	{
 		if (!is_editor_camera)
 		{
@@ -636,7 +636,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		}
 		DrawMesh(*it, active_camera);
 	}
-	for (std::list<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
+	for (std::vector<ComponentMeshRenderer*>::iterator it = dynamic_mesh_to_draw.begin(); it != dynamic_mesh_to_draw.end(); it++)
 	{
 		if (!is_editor_camera)
 		{
@@ -661,7 +661,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	}
 
 	//Draw Particles
-	for (std::list<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
+	for (std::vector<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
 
 		(*it)->AddaptEmmitAreaAABB();
@@ -822,7 +822,7 @@ void ModuleRenderer3D::AddCanvasToDraw(ComponentCanvas * canvas)
 
 void ModuleRenderer3D::RemoveCanvasToDraw(ComponentCanvas * canvas)
 {
-	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+	for (std::vector<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 	{
 		if ((*cv == canvas))
 		{
@@ -832,7 +832,7 @@ void ModuleRenderer3D::RemoveCanvasToDraw(ComponentCanvas * canvas)
 	}
 }
 
-std::list<ComponentCanvas*> ModuleRenderer3D::GetCanvasToDraw() const
+std::vector<ComponentCanvas*> ModuleRenderer3D::GetCanvasToDraw() const
 {
 	return canvas_to_draw;
 }
@@ -844,7 +844,7 @@ void ModuleRenderer3D::ResetRender()
 	dynamic_mesh_to_draw.clear();
 	debug_draw->Clear();
 
-	for (std::list<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
+	for (std::vector<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 		(*cv)->ClearDrawElements();
 	
 	canvas_to_draw.clear();

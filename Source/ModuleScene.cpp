@@ -410,7 +410,7 @@ void ModuleScene::EraseGoInOctree(ComponentMeshRenderer* mesh)
 	octree.Erase(mesh);
 }
 
-void ModuleScene::GetOctreeIntersects(std::list<ComponentMeshRenderer*>& list, AABB & box)
+void ModuleScene::GetOctreeIntersects(std::vector<ComponentMeshRenderer*>& list, AABB & box)
 {
 	return octree.CollectIntersections(list, &box);
 }

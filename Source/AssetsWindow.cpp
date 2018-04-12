@@ -73,10 +73,10 @@ void AssetsWindow::DrawWindow()
 		node = 0;
 		ImGui::Spacing();
 
-		for (int i = 0; i < directories.size(); i++)
+		/*for (int i = 0; i < directories.size(); i++)
 		{
 			CheckDirectory(*directories[i]);
-		}
+		}*/
 
 		BROFILER_CATEGORY("directories draw", Profiler::Color::BlanchedAlmond);
 		DrawChilds(*directories.front());

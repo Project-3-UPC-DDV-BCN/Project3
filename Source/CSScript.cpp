@@ -116,7 +116,6 @@ void CSScript::UpdateScript()
 {
 	if (update != nullptr)
 	{
-		GetFunction("Update", 0);
 		CallFunction(update, nullptr);
 		inside_function = false;
 	}
