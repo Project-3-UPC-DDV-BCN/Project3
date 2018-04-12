@@ -81,5 +81,7 @@ private:
 	Shader::ShaderType shader_type;
 
 	std::vector<Directory*> directories;
+
+	float current_item_y_pos = 0;
 };
 

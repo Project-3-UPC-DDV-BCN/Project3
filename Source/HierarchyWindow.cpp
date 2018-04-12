@@ -25,6 +25,7 @@ HierarchyWindow::~HierarchyWindow()
 
 void HierarchyWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("hierarchy draw", Profiler::Color::BlanchedAlmond);
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) 
 	{
 		if (ImGui::IsMouseClicked(1) && ImGui::IsMouseHoveringWindow() && !App->IsPlaying()) {

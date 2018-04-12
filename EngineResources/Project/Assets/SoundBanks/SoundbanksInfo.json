@@ -1,0 +1,190 @@
+{
+ "SoundBanksInfo": {
+  "Platform": "Windows",
+  "BasePlatform": "Windows",
+  "SchemaVersion": "11",
+  "SoundbankVersion": "128",
+  "RootPaths": {
+   "ProjectRoot": "C:\\Users\\rogerbd1\\Desktop\\StarWars\\",
+   "SourceFilesRoot": "C:\\Users\\rogerbd1\\Desktop\\StarWars\\.cache\\Windows\\",
+   "SoundBanksRoot": "C:\\Users\\rogerbd1\\Desktop\\StarWars\\..\\soundbank\\",
+   "ExternalSourcesInputFile": "",
+   "ExternalSourcesOutputRoot": "C:\\Users\\rogerbd1\\Desktop\\StarWars\\GeneratedSoundBanks\\Windows\\"
+  },
+  "DialogueEvents": [],
+  "StreamedFiles": [],
+  "MediaFilesNotInAnyBank": [],
+  "SoundBanks": [
+  {
+    "Id": "1069431850",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Player",
+    "ShortName": "Player",
+    "Path": "Player.bnk"
+   },
+   {
+    "Id": "547480325",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Ship_Soundbank",
+    "ShortName": "Ship_Soundbank",
+    "Path": "Ship_Soundbank.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "2233744274",
+      "Name": "Play_long_shatter",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_long_shatter"
+     },
+     {
+      "Id": "2529436265",
+      "Name": "Play_recharge",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_recharge"
+     },
+     {
+      "Id": "3957279042",
+      "Name": "Play_short_chatter",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_short_chatter"
+     },
+     {
+      "Id": "3061091135",
+      "Name": "Play_shot1",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_shot1"
+     },
+     {
+      "Id": "3061091132",
+      "Name": "Play_shot2",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_shot2"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "462969167",
+      "Language": "SFX",
+      "ShortName": "droid_r5_chatter_04.wav",
+      "Path": "SFX\\droid_r5_chatter_04_1C9C67B2.wem"
+     },
+     {
+      "Id": "466525598",
+      "Language": "SFX",
+      "ShortName": "wpn_geonFighter_blaster_fire.wav",
+      "Path": "SFX\\wpn_geonFighter_blaster_fire_1C9C67B2.wem"
+     },
+     {
+      "Id": "571222723",
+      "Language": "SFX",
+      "ShortName": "droid_fx7_recharge_01.wav",
+      "Path": "SFX\\droid_fx7_recharge_01_1C9C67B2.wem"
+     },
+     {
+      "Id": "762634605",
+      "Language": "SFX",
+      "ShortName": "droid_r5_chatter_01.wav",
+      "Path": "SFX\\droid_r5_chatter_01_1C9C67B2.wem"
+     },
+     {
+      "Id": "982564443",
+      "Language": "SFX",
+      "ShortName": "wpn_gunship_blaster_fire.wav",
+      "Path": "SFX\\wpn_gunship_blaster_fire_1C9C67B2.wem"
+     }
+    ]
+   },
+   {
+    "Id": "3991942870",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Music",
+    "ShortName": "Music",
+    "Path": "Music.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "2932040671",
+      "Name": "Play_Music",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Music"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "284944787",
+      "Language": "SFX",
+      "ShortName": "Calm_song.wav",
+      "Path": "SFX\\Calm_song_F17FB28C.wem"
+     },
+     {
+      "Id": "950113381",
+      "Language": "SFX",
+      "ShortName": "Combat_song.wav",
+      "Path": "SFX\\Combat_song_F17FB28C.wem"
+     }
+    ]
+   },
+   {
+    "Id": "2045292196",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Rebel_dialogue",
+    "ShortName": "Rebel_dialogue",
+    "Path": "Rebel_dialogue.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "1287401009",
+      "Name": "Play_Ackbar_dialogue_01",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_01"
+     },
+     {
+      "Id": "1287401010",
+      "Name": "Play_Ackbar_dialogue_02",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_02"
+     },
+     {
+      "Id": "1287401011",
+      "Name": "Play_Ackbar_dialogue_03",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_03"
+     },
+     {
+      "Id": "1287401012",
+      "Name": "Play_Ackbar_dialogue_04",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_04"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "236546423",
+      "Language": "SFX",
+      "ShortName": "Dialogue2.wav",
+      "Path": "SFX\\Dialogue2_1C9C67B2.wem"
+     },
+     {
+      "Id": "742823025",
+      "Language": "SFX",
+      "ShortName": "Dialogue1.wav",
+      "Path": "SFX\\Dialogue1_1C9C67B2.wem"
+     },
+     {
+      "Id": "862128156",
+      "Language": "SFX",
+      "ShortName": "Dialogue3.wav",
+      "Path": "SFX\\Dialogue3_1C9C67B2.wem"
+     },
+     {
+      "Id": "948668134",
+      "Language": "SFX",
+      "ShortName": "Dialogue4.wav",
+      "Path": "SFX\\Dialogue4_1C9C67B2.wem"
+     }
+    ]
+   },
+   {
+    "Id": "2299321487",
+    "Language": "SFX",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Enemy",
+    "ShortName": "Enemy",
+    "Path": "Enemy.bnk"
+   },
+   {
+    "Id": "1355168291",
+    "Language": "SFX",
+    "ObjectPath": "Init",
+    "ShortName": "Init",
+    "Path": "Init.bnk"
+   }
+  ]
+ }
+}

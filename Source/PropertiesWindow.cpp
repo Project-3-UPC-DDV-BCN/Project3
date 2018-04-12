@@ -73,6 +73,7 @@ PropertiesWindow::~PropertiesWindow()
 
 void PropertiesWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("properties draw", Profiler::Color::BlanchedAlmond);
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar))
 	{
 		GameObject* selected_gameobject = nullptr;

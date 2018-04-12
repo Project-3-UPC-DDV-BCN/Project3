@@ -1,4 +1,5 @@
 #include "ConsoleWindow.h"
+#include "Brofiler/Brofiler.h"
 
 ConsoleWindow::ConsoleWindow()
 {
@@ -29,6 +30,9 @@ void ConsoleWindow::DrawWindow()
 {
 	ImGui::SetNextWindowContentSize(ImGui::GetContentRegionAvail());
 	if (ImGui::BeginDock(window_name.c_str(), false, false, false, ImGuiWindowFlags_HorizontalScrollbar)) {
+		
+		BROFILER_CATEGORY("console draw", Profiler::Color::BlanchedAlmond);
+
 		if (ImGui::Button(logs_label.c_str())) {
 			show_logs = !show_logs;
 		}

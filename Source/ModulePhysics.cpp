@@ -183,7 +183,7 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 
-	DrawColliders();
+	//DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -803,6 +803,7 @@ physx::PxFoundation * ModulePhysics::GetPhysXFoundation() const
 
 void ModulePhysics::DrawColliders()
 {
+	BROFILER_CATEGORY("Physics Draw Colliders", Profiler::Color::Green);
 	if (physx_physics && physx_physics->getNbScenes() > 0) {
 		int scene_mum = physx_physics->getNbScenes();
 		for (int i = 0; i < scene_mum; i++)

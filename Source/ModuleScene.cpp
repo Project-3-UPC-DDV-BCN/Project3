@@ -302,6 +302,14 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 			}
 		}
 
+		ComponentCamera* camera = (ComponentCamera*)gameobject->GetComponent(Component::CompCamera);
+		if (camera)
+		{
+			camera->SetRenderOrder(GetNumCameras());
+			scene_cameras.push_back(camera);
+			App->renderer3D->rendering_cameras.push_back(camera);
+		}
+
 		CONSOLE_DEBUG("GameObject Created: %s", gameobject->GetName().c_str());
 	}
 	

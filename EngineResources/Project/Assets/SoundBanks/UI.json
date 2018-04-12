@@ -1,0 +1,61 @@
+{
+    "SoundBanksInfo": {
+        "Platform": "Windows",
+        "BasePlatform": "Windows",
+        "SchemaVersion": "11",
+        "SoundbankVersion": "128",
+        "RootPaths": {
+            "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\",
+            "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\.cache\\Windows\\",
+            "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\..\\UI_Soundbank\\",
+            "ExternalSourcesInputFile": "",
+            "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\GeneratedSoundBanks\\Windows\\"
+        },
+        "SoundBanks": [
+            {
+                "Id": "1551306167",
+                "Language": "SFX",
+                "ObjectPath": "\\SoundBanks\\Default Work Unit\\UI",
+                "ShortName": "UI",
+                "Path": "UI.bnk",
+                "IncludedEvents": [
+                    {
+                        "Id": "311910498",
+                        "Name": "Play_click",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_click"
+                    },
+                    {
+                        "Id": "1962302600",
+                        "Name": "Play_hover",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_hover"
+                    },
+                    {
+                        "Id": "1120539161",
+                        "Name": "Play_Menu_song",
+                        "ObjectPath": "\\Events\\Default Work Unit\\Play_Menu_song"
+                    }
+                ],
+                "IncludedMemoryFiles": [
+                    {
+                        "Id": "424413111",
+                        "Language": "SFX",
+                        "ShortName": "220206__gameaudio__beep-space-button.wav",
+                        "Path": "SFX\\220206__gameaudio__beep-space-button_1C9C67B2.wem"
+                    },
+                    {
+                        "Id": "853219745",
+                        "Language": "SFX",
+                        "ShortName": "220177__gameaudio__quick-ui-or-event-deep.wav",
+                        "Path": "SFX\\220177__gameaudio__quick-ui-or-event-deep_1C9C67B2.wem"
+                    },
+                    {
+                        "Id": "954687562",
+                        "Language": "SFX",
+                        "ShortName": "11_-_Cantina_Band.wav",
+                        "Path": "SFX\\11_-_Cantina_Band_F17FB28C.wem"
+                    }
+                ]
+            }
+        ]
+    }
+}

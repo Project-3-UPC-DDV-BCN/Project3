@@ -228,7 +228,7 @@ void ModuleRenderer3D::DrawEditorScene()
 
 	DrawGrid(editor_camera);
 
-	DrawSceneGameObjects(editor_camera, true);
+	//DrawSceneGameObjects(editor_camera, true);
 }
 
 void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)

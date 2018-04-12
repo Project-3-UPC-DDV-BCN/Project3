@@ -28,6 +28,7 @@ SceneWindow::~SceneWindow()
 
 void SceneWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("scene window draw", Profiler::Color::BlanchedAlmond);
 	if (ImGui::BeginDock(window_name.c_str(), false, false, false,
 		ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar)) 
 	{
