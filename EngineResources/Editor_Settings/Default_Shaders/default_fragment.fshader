@@ -78,7 +78,7 @@ struct SpotLight {
 #define NR_DIREC_LIGHTS 2
 #define NR_SPOT_LIGHTS 8
 
-#define AMBIENT_LIGHT 0.35
+#define AMBIENT_LIGHT 0.25
 uniform vec3 viewPos;
 uniform DirLight dirLights[NR_DIREC_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
@@ -98,9 +98,9 @@ void main()
 		if (has_normalmap)
 		{
 			if (own_uvs_normalmap == false)
-			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0)* normal_bump);
+			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0));
 			else
-			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0)* normal_bump);
+			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0));
 			vec3 TangentViewPos = TBN * viewPos;
 			viewDir = normalize(TangentViewPos - TangentFragPos);
 			fragPosarg = TangentFragPos;
@@ -112,15 +112,15 @@ void main()
 			fragPosarg = FragPos;
 		}
 			vec3 result = vec3(0.0, 0.0, 0.0); 
+			if (has_light){
 			for (int i = 0; i < NR_DIREC_LIGHTS; i++)
 				result += CalcDirLight(dirLights[i], normal, viewDir);
 			for (int k = 0; k < NR_POINT_LIGHTS; k++)
 				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);
 			for (int j = 0; j < NR_SPOT_LIGHTS; j++)
 				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);
-			if (has_light)
 				color = vec4((color.rgb * AMBIENT_LIGHT + result), color.a);  
-			else color = color;
+			}
 			if (has_opacity)			{
 				ApplyOpacity();
 }

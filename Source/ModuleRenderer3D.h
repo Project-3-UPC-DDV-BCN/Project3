@@ -12,6 +12,7 @@ class Primitive;
 class ComponentCamera;
 class ComponentCanvas;
 class DebugDraw;
+class Material;
 
 #define MAX_LIGHTS 8
 
@@ -128,6 +129,8 @@ private:
 
 	void DrawColliders();
 	
+	void OrderByMaterials(ComponentMeshRenderer* mesh);
+
 public:
 	Light lights[MAX_LIGHTS];
 	void DrawZBuffer();
@@ -174,7 +177,9 @@ private:
 	std::vector<ComponentCanvas*> canvas_to_draw;
 	std::vector<ComponentParticleEmmiter*> particles_to_draw;
 
-
+	std::vector<std::vector<ComponentMeshRenderer*>> ordering_by_materials;
+	Material* current_material = nullptr;
+	bool changed_material = true;
 	// SHADOW MAPPING DON'T TOUCH
 
 	uint depth_map;
