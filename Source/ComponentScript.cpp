@@ -47,6 +47,7 @@ void ComponentScript::UpdateScript()
 	{
 		CSScript* last_script = App->script_importer->ns_importer->current_script;
 		App->script_importer->ns_importer->current_script = (CSScript*)script;
+		BROFILER_CATEGORY(script->GetName().c_str(), Profiler::Color::Black);
 		script->UpdateScript();
 		App->script_importer->ns_importer->current_script = last_script;
 	}
