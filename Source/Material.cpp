@@ -377,12 +377,21 @@ void Material::LoadToMemory()
 	
 		has_tex = true;
 
+		App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
+
+		if (own_diffuse_uvs == true)
+			App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
+
 		if (diffuse2_texture != nullptr && diffuse2_texture->GetID() != 0)
 		{
 			glActiveTexture(GL_TEXTURE3);
 			glBindTexture(GL_TEXTURE_2D, diffuse2_texture->GetID());
 
 			has_tex2 = true;
+
+			App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse2", own_diffuse2_uvs);
+			if (own_diffuse2_uvs == true)
+				App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse2_UV", diffuse2_UV);
 		}
 	}
 
@@ -392,6 +401,10 @@ void Material::LoadToMemory()
 		glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
 	
 		has_normalmap = true;
+
+		App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_normalmap", own_normal_uvs);
+		if (own_normal_uvs == true)
+			App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
 	}
 
 	if (opacity_texture != nullptr && opacity_texture->GetID() != 0)
@@ -420,17 +433,6 @@ void Material::LoadToMemory()
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_opacity", has_opacity);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
-
-	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
-	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse2", own_diffuse2_uvs);
-	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_normalmap", own_normal_uvs);
-	
-	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
-	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse2_UV", diffuse2_UV);
-	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
-
-	App->renderer3D->SetUniformFloat(GetShaderProgramID(), "normal_bump", bump_scaling);
-
 }
 
 void Material::UnloadFromMemory()
