@@ -530,6 +530,7 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					{
 						App->renderer3D->game_camera = camera;
 						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+						App->renderer3D->rendering_cameras.push_back(camera);
 					}
 				}
 				data.LeaveSection();
