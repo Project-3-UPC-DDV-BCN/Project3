@@ -684,7 +684,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			if ((*it)->GetGameObject()->IsSelected())
 			{
 				if ((*it)->GetMesh() != nullptr)
-					DrawDebugCube((*it)->bounding_box, active_camera);
+					cubes_to_draw.push_back((*it)->bounding_box);
 			}
 		}
 		OrderByMaterials(*it);
@@ -712,7 +712,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if ((*it2)->GetGameObject()->IsSelected())
 				{
 					if ((*it2)->GetMesh() != nullptr)
-						DrawDebugCube((*it2)->bounding_box, active_camera);
+						cubes_to_draw.push_back((*it2)->bounding_box);
 				}
 			}
 		}
@@ -739,6 +739,10 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		changed_material = true;
 	}
 
+	for (uint i = 0; i < cubes_to_draw.size(); ++i)
+	{
+		DrawDebugCube(cubes_to_draw[i], active_camera);
+	}
 
 
 	//Draw Particles
@@ -917,6 +921,7 @@ void ModuleRenderer3D::ResetRender()
 	debug_primitive_to_draw.clear();
 	particles_to_draw.clear();
 	ordering_by_materials.clear();
+	cubes_to_draw.clear();
 	using_program = false;
 	changed_material = true;
 	current_material = nullptr;
