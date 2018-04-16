@@ -87,9 +87,11 @@ public:
 	//Emmit area AABB
 	AABB emmit_area; 
 
-	float prev_emmiter_width;
-	float prev_emmiter_height;
-	float prev_emmiter_depth; 
+	float show_width; 
+	float show_height; 
+	float show_depth; 
+
+	bool scale_dirty; 
 
 	string runtime_behaviour; 
 

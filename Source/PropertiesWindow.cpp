@@ -2181,21 +2181,35 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Emit Area"))
 			{
+				current_emmiter->show_width = current_emmiter->data->emmit_width;
+				current_emmiter->show_height = current_emmiter->data->emmit_height;
+				current_emmiter->show_depth = current_emmiter->data->emmit_depth;
+
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);
 				current_emmiter->SetShowEmmisionArea(show);
 
-				float width_cpy = current_emmiter->data->emmit_width; 
-				float height_cpy = current_emmiter->data->emmit_height;
-				float depth_cpy = current_emmiter->data->emmit_depth;
+				CONSOLE_LOG("Emmit_Width: %f", current_emmiter->data->emmit_width); 
 
-				ImGui::InputFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.0f, 2); 
-				ImGui::InputFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.0f, 2);
-				ImGui::InputFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Width (X)", &current_emmiter->show_width, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Height (X)", &current_emmiter->show_height, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Depth (X)", &current_emmiter->show_depth, 0.1f, 0.0f, 2);
 
-				current_emmiter->data->width_increment = current_emmiter->data->emmit_width - width_cpy; 
-				current_emmiter->data->height_increment = current_emmiter->data->emmit_height - height_cpy;
-				current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - depth_cpy;
+				if (current_emmiter->show_width != current_emmiter->data->emmit_width)
+				{
+					current_emmiter->scale_dirty = true;
+				}
+					
+				if (current_emmiter->show_height != current_emmiter->data->emmit_width)
+				{
+					current_emmiter->scale_dirty = true;
+				}
+					
+				if (current_emmiter->show_depth != current_emmiter->data->emmit_width)
+				{
+					current_emmiter->scale_dirty = true;
+				}
+					
 
 				static int style = 1; 
 				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 

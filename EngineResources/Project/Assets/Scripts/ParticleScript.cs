@@ -21,7 +21,7 @@ public class ParticleScript {
 		TheConsole.Log(time.ToString()); 
 		if(time > 500 && done == false)
 		{	
-			test.SetParticleSpeed(0.1f);
+			test.SetParticleSpeed(70.0f);
 			done = true; 
 		}
 	}

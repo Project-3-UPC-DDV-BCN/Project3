@@ -255,23 +255,33 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
 	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	if (parent_transform->AnyDirty())
+	if (parent_transform->AnyDirty() || scale_dirty)
 	{
 		//Position increment
 		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
 
-		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {1,1,1});
+		float percentage_width = data->emmit_width / show_width; 
+		//percentage_width += (0.0f % 7.0f); 
+		float percentage_height = data->emmit_height / show_height;
+		float percentage_depth = data->emmit_depth / show_depth;
+
+		CONSOLE_LOG("Width: %f", percentage_width);
+		//CONSOLE_LOG("Height: %f", percentage_height);
+		//CONSOLE_LOG("Depth: %f", percentage_depth);
+
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, { percentage_width,percentage_height,percentage_depth });
 
 		emmit_area.TransformAsAABB(transform_to_apply);
 
-		float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
-		emmit_area.Scale(emmit_area.CenterPoint(), asd);
+		//float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
+		//emmit_area.Scale(emmit_area.CenterPoint(), asd);
 
-		data->width_increment = 0; 
-		data->height_increment = 0; 
-		data->depth_increment = 0; 
+		//data->width_increment = 0; 
+		//data->height_increment = 0; 
+		//data->depth_increment = 0; 
 
 		parent_transform->dirty = false; 
+		scale_dirty = false; 
 	}
 
 }
