@@ -73,11 +73,6 @@ void AssetsWindow::DrawWindow()
 		node = 0;
 		ImGui::Spacing();
 
-		/*for (int i = 0; i < directories.size(); i++)
-		{
-			CheckDirectory(*directories[i]);
-		}*/
-
 		BROFILER_CATEGORY("directories draw", Profiler::Color::BlanchedAlmond);
 		DrawChilds(*directories.front());
 
@@ -136,17 +131,17 @@ void AssetsWindow::DrawWindow()
 					switch (type)
 					{
 					case Resource::TextureResource:
-						texture_icon = App->resources->GetTexture((*it)->name);
+						//texture_icon = App->resources->GetTexture((*it)->name);
 						//ImGui::Image((ImTextureID)texture_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
+						//ImGui::SameLine();
 						break;
 					case Resource::MeshResource:
 						//ImGui::Image((ImTextureID)mesh_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
+						//ImGui::SameLine();
 						break;
 					case Resource::FontResource:
 						//ImGui::Image((ImTextureID)font_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
+						//ImGui::SameLine();
 						break;
 					case Resource::Unknown:
 						continue; //if the type is unknown skip and don't draw the file in the panel
@@ -1066,6 +1061,14 @@ void AssetsWindow::CleanUp(Directory & directory)
 	{
 		CleanUp(*dir);
 		RELEASE(dir);
+	}
+}
+
+void AssetsWindow::CheckDirectories()
+{
+	for (int i = 0; i < directories.size(); i++)
+	{
+		CheckDirectory(*directories[i]);
 	}
 }
 

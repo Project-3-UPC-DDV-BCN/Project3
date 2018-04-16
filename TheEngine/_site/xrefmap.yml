@@ -205,6 +205,96 @@ references:
   commentId: Overload:TheEngine.TheAudioSource.Stop
   fullName: TheEngine.TheAudioSource.Stop
   nameWithType: TheAudioSource.Stop
+- uid: TheEngine.TheBoxCollider
+  name: TheBoxCollider
+  href: api/TheEngine.TheBoxCollider.html
+  commentId: T:TheEngine.TheBoxCollider
+  fullName: TheEngine.TheBoxCollider
+  nameWithType: TheBoxCollider
+- uid: TheEngine.TheBoxCollider.Center
+  name: Center
+  href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Center
+  commentId: P:TheEngine.TheBoxCollider.Center
+  fullName: TheEngine.TheBoxCollider.Center
+  nameWithType: TheBoxCollider.Center
+- uid: TheEngine.TheBoxCollider.Center*
+  name: Center
+  href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Center_
+  commentId: Overload:TheEngine.TheBoxCollider.Center
+  isSpec: "True"
+  fullName: TheEngine.TheBoxCollider.Center
+  nameWithType: TheBoxCollider.Center
+- uid: TheEngine.TheBoxCollider.Size
+  name: Size
+  href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Size
+  commentId: P:TheEngine.TheBoxCollider.Size
+  fullName: TheEngine.TheBoxCollider.Size
+  nameWithType: TheBoxCollider.Size
+- uid: TheEngine.TheBoxCollider.Size*
+  name: Size
+  href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Size_
+  commentId: Overload:TheEngine.TheBoxCollider.Size
+  isSpec: "True"
+  fullName: TheEngine.TheBoxCollider.Size
+  nameWithType: TheBoxCollider.Size
+- uid: TheEngine.TheCapsuleCollider
+  name: TheCapsuleCollider
+  href: api/TheEngine.TheCapsuleCollider.html
+  commentId: T:TheEngine.TheCapsuleCollider
+  fullName: TheEngine.TheCapsuleCollider
+  nameWithType: TheCapsuleCollider
+- uid: TheEngine.TheCapsuleCollider.Center
+  name: Center
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Center
+  commentId: P:TheEngine.TheCapsuleCollider.Center
+  fullName: TheEngine.TheCapsuleCollider.Center
+  nameWithType: TheCapsuleCollider.Center
+- uid: TheEngine.TheCapsuleCollider.Center*
+  name: Center
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Center_
+  commentId: Overload:TheEngine.TheCapsuleCollider.Center
+  isSpec: "True"
+  fullName: TheEngine.TheCapsuleCollider.Center
+  nameWithType: TheCapsuleCollider.Center
+- uid: TheEngine.TheCapsuleCollider.Direction
+  name: Direction
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Direction
+  commentId: P:TheEngine.TheCapsuleCollider.Direction
+  fullName: TheEngine.TheCapsuleCollider.Direction
+  nameWithType: TheCapsuleCollider.Direction
+- uid: TheEngine.TheCapsuleCollider.Direction*
+  name: Direction
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Direction_
+  commentId: Overload:TheEngine.TheCapsuleCollider.Direction
+  isSpec: "True"
+  fullName: TheEngine.TheCapsuleCollider.Direction
+  nameWithType: TheCapsuleCollider.Direction
+- uid: TheEngine.TheCapsuleCollider.Height
+  name: Height
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Height
+  commentId: P:TheEngine.TheCapsuleCollider.Height
+  fullName: TheEngine.TheCapsuleCollider.Height
+  nameWithType: TheCapsuleCollider.Height
+- uid: TheEngine.TheCapsuleCollider.Height*
+  name: Height
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Height_
+  commentId: Overload:TheEngine.TheCapsuleCollider.Height
+  isSpec: "True"
+  fullName: TheEngine.TheCapsuleCollider.Height
+  nameWithType: TheCapsuleCollider.Height
+- uid: TheEngine.TheCapsuleCollider.Radius
+  name: Radius
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Radius
+  commentId: P:TheEngine.TheCapsuleCollider.Radius
+  fullName: TheEngine.TheCapsuleCollider.Radius
+  nameWithType: TheCapsuleCollider.Radius
+- uid: TheEngine.TheCapsuleCollider.Radius*
+  name: Radius
+  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Radius_
+  commentId: Overload:TheEngine.TheCapsuleCollider.Radius
+  isSpec: "True"
+  fullName: TheEngine.TheCapsuleCollider.Radius
+  nameWithType: TheCapsuleCollider.Radius
 - uid: TheEngine.TheCollider
   name: TheCollider
   href: api/TheEngine.TheCollider.html
@@ -1070,6 +1160,33 @@ references:
   fullName.vb: TheEngine.TheGameObject.GetComponent(Of T)(System.Int32)
   nameWithType: TheGameObject.GetComponent<T>(Int32)
   nameWithType.vb: TheGameObject.GetComponent(Of T)(Int32)
+- uid: TheEngine.TheGameObject.GetGameObjectsMultipleTags(System.String[])
+  name: GetGameObjectsMultipleTags(String[])
+  href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetGameObjectsMultipleTags_System_String___
+  commentId: M:TheEngine.TheGameObject.GetGameObjectsMultipleTags(System.String[])
+  name.vb: GetGameObjectsMultipleTags(String())
+  fullName: TheEngine.TheGameObject.GetGameObjectsMultipleTags(System.String[])
+  fullName.vb: TheEngine.TheGameObject.GetGameObjectsMultipleTags(System.String())
+  nameWithType: TheGameObject.GetGameObjectsMultipleTags(String[])
+  nameWithType.vb: TheGameObject.GetGameObjectsMultipleTags(String())
+- uid: TheEngine.TheGameObject.GetGameObjectsMultipleTags*
+  name: GetGameObjectsMultipleTags
+  href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetGameObjectsMultipleTags_
+  commentId: Overload:TheEngine.TheGameObject.GetGameObjectsMultipleTags
+  fullName: TheEngine.TheGameObject.GetGameObjectsMultipleTags
+  nameWithType: TheGameObject.GetGameObjectsMultipleTags
+- uid: TheEngine.TheGameObject.GetGameObjectsWithTag(System.String)
+  name: GetGameObjectsWithTag(String)
+  href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetGameObjectsWithTag_System_String_
+  commentId: M:TheEngine.TheGameObject.GetGameObjectsWithTag(System.String)
+  fullName: TheEngine.TheGameObject.GetGameObjectsWithTag(System.String)
+  nameWithType: TheGameObject.GetGameObjectsWithTag(String)
+- uid: TheEngine.TheGameObject.GetGameObjectsWithTag*
+  name: GetGameObjectsWithTag
+  href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetGameObjectsWithTag_
+  commentId: Overload:TheEngine.TheGameObject.GetGameObjectsWithTag
+  fullName: TheEngine.TheGameObject.GetGameObjectsWithTag
+  nameWithType: TheGameObject.GetGameObjectsWithTag
 - uid: TheEngine.TheGameObject.GetObjectsInFrustum(TheEngine.TheVector3,TheEngine.TheVector3,TheEngine.TheVector3,System.Single,System.Single)
   name: GetObjectsInFrustum(TheVector3, TheVector3, TheVector3, Single, Single)
   href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetObjectsInFrustum_TheEngine_TheVector3_TheEngine_TheVector3_TheEngine_TheVector3_System_Single_System_Single_
@@ -1094,18 +1211,6 @@ references:
   commentId: Overload:TheEngine.TheGameObject.GetParent
   fullName: TheEngine.TheGameObject.GetParent
   nameWithType: TheGameObject.GetParent
-- uid: TheEngine.TheGameObject.GetSceneGameObjects
-  name: GetSceneGameObjects()
-  href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetSceneGameObjects
-  commentId: M:TheEngine.TheGameObject.GetSceneGameObjects
-  fullName: TheEngine.TheGameObject.GetSceneGameObjects()
-  nameWithType: TheGameObject.GetSceneGameObjects()
-- uid: TheEngine.TheGameObject.GetSceneGameObjects*
-  name: GetSceneGameObjects
-  href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_GetSceneGameObjects_
-  commentId: Overload:TheEngine.TheGameObject.GetSceneGameObjects
-  fullName: TheEngine.TheGameObject.GetSceneGameObjects
-  nameWithType: TheGameObject.GetSceneGameObjects
 - uid: TheEngine.TheGameObject.IsActive
   name: IsActive()
   href: api/TheEngine.TheGameObject.html#TheEngine_TheGameObject_IsActive
@@ -1876,6 +1981,25 @@ references:
   isSpec: "True"
   fullName: TheEngine.TheMath.TheMath.Tan
   nameWithType: TheMath.Tan
+- uid: TheEngine.TheMeshCollider
+  name: TheMeshCollider
+  href: api/TheEngine.TheMeshCollider.html
+  commentId: T:TheEngine.TheMeshCollider
+  fullName: TheEngine.TheMeshCollider
+  nameWithType: TheMeshCollider
+- uid: TheEngine.TheMeshCollider.Convex
+  name: Convex
+  href: api/TheEngine.TheMeshCollider.html#TheEngine_TheMeshCollider_Convex
+  commentId: P:TheEngine.TheMeshCollider.Convex
+  fullName: TheEngine.TheMeshCollider.Convex
+  nameWithType: TheMeshCollider.Convex
+- uid: TheEngine.TheMeshCollider.Convex*
+  name: Convex
+  href: api/TheEngine.TheMeshCollider.html#TheEngine_TheMeshCollider_Convex_
+  commentId: Overload:TheEngine.TheMeshCollider.Convex
+  isSpec: "True"
+  fullName: TheEngine.TheMeshCollider.Convex
+  nameWithType: TheMeshCollider.Convex
 - uid: TheEngine.TheMeshRenderer
   name: TheMeshRenderer
   href: api/TheEngine.TheMeshRenderer.html
@@ -3145,6 +3269,38 @@ references:
   commentId: Overload:TheEngine.TheScript.SetVector3Field
   fullName: TheEngine.TheScript.SetVector3Field
   nameWithType: TheScript.SetVector3Field
+- uid: TheEngine.TheSphereCollider
+  name: TheSphereCollider
+  href: api/TheEngine.TheSphereCollider.html
+  commentId: T:TheEngine.TheSphereCollider
+  fullName: TheEngine.TheSphereCollider
+  nameWithType: TheSphereCollider
+- uid: TheEngine.TheSphereCollider.Center
+  name: Center
+  href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Center
+  commentId: P:TheEngine.TheSphereCollider.Center
+  fullName: TheEngine.TheSphereCollider.Center
+  nameWithType: TheSphereCollider.Center
+- uid: TheEngine.TheSphereCollider.Center*
+  name: Center
+  href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Center_
+  commentId: Overload:TheEngine.TheSphereCollider.Center
+  isSpec: "True"
+  fullName: TheEngine.TheSphereCollider.Center
+  nameWithType: TheSphereCollider.Center
+- uid: TheEngine.TheSphereCollider.Radius
+  name: Radius
+  href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Radius
+  commentId: P:TheEngine.TheSphereCollider.Radius
+  fullName: TheEngine.TheSphereCollider.Radius
+  nameWithType: TheSphereCollider.Radius
+- uid: TheEngine.TheSphereCollider.Radius*
+  name: Radius
+  href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Radius_
+  commentId: Overload:TheEngine.TheSphereCollider.Radius
+  isSpec: "True"
+  fullName: TheEngine.TheSphereCollider.Radius
+  nameWithType: TheSphereCollider.Radius
 - uid: TheEngine.TheText
   name: TheText
   href: api/TheEngine.TheText.html

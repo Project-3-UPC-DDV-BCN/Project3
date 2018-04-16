@@ -1762,7 +1762,6 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 			}
 			else
 			{
-				rigidbody->SetTransformsGo(false);
 				components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
 				rigidbody = nullptr;
 				return;
@@ -1803,11 +1802,6 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		if (ImGui::Checkbox("CCD", &is_ccd))
 		{
 			rigidbody->SetCCDMode(is_ccd);
-		}
-		bool transforms_go = rigidbody->GetTransformsGo();
-		if (ImGui::Checkbox("Transforms GO", &transforms_go))
-		{
-			rigidbody->SetTransformsGo(transforms_go);
 		}
 
 		ImGui::Text("Axis Lock");

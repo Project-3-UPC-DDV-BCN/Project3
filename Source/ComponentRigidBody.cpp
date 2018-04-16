@@ -36,7 +36,7 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	physx::PxTransform phys_transform(mat);
 	rigidbody->setGlobalPose(phys_transform);*/
 	
-	SetRotation(transform->GetGlobalRotation());
+	SetRotation(transform->GetQuatRotation());
 	/*rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);*/
 	//rigidbody->setActorFlag(physx::PxActorFlag::eVISUALIZATION, false);
 	transforms_go = false;
@@ -289,7 +289,7 @@ float3 ComponentRigidBody::GetPosition() const
 		return float3::zero;
 }
 
-void ComponentRigidBody::SetRotation(float3 new_rotation)
+void ComponentRigidBody::SetRotation(Quat new_rotation)
 {
 	if (rigidbody != nullptr)
 	{
@@ -311,6 +311,18 @@ float3 ComponentRigidBody::GetRotation() const
 	}
 	else
 		return float3::zero;
+}
+
+Quat ComponentRigidBody::GetQuatRotation() const
+{
+	if (rigidbody != nullptr)
+	{
+		physx::PxTransform phys_rotation = rigidbody->getGlobalPose();
+		Quat q(phys_rotation.q.x, phys_rotation.q.y, phys_rotation.q.z, phys_rotation.q.w);
+		return q;
+	}
+	else
+		return Quat::identity;
 }
 
 void ComponentRigidBody::SetCenterOfMass(float3 center)
@@ -601,26 +613,6 @@ bool ComponentRigidBody::IsCCDMode() const
 	return flag.isSet(physx::PxRigidBodyFlag::eENABLE_CCD);
 }
 
-void ComponentRigidBody::SetTransformsGo(bool transforms)
-{
-	transforms_go = transforms;
-	ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
-	transform->SetTransformedFromRB(transforms);
-	/*if (transforms)
-	{
-		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
-	}
-	else
-	{
-		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
-	}*/
-}
-
-bool ComponentRigidBody::GetTransformsGo() const
-{
-	return transforms_go;
-}
-
 void ComponentRigidBody::SetNewRigidBody(physx::PxRigidDynamic * new_rigid)
 {
 	rigidbody->release();
@@ -694,7 +686,6 @@ void ComponentRigidBody::Load(Data & data)
 	SetDynamicLocks(AngularY, data.GetBool("AngularYLock"));
 	SetDynamicLocks(AngularZ, data.GetBool("AngularZLock"));
 	SetCCDMode(data.GetBool("IsCCDMode"));
-	SetTransformsGo(data.GetBool("Transforms"));
 	/*int shapes_count = data.GetInt("ShapesCount");
 	for (int i = 0; i < shapes_count; i++)
 	{

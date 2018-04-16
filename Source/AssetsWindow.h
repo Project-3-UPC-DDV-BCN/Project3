@@ -33,6 +33,8 @@ public:
 
 	void DrawWindow();
 
+	void CheckDirectories();
+
 private:
 	void DrawChilds(Directory& directory);
 	void DeleteWindow(std::string path);
