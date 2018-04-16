@@ -679,6 +679,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::RotateAroundAxis", (const void*)RotateAroundAxis);
 	mono_add_internal_call("TheEngine.TheTransform::GetQuatRotation", (const void*)GetQuatRotation);
 	mono_add_internal_call("TheEngine.TheTransform::SetQuatRotation", (const void*)SetQuatRotation);
+	mono_add_internal_call("TheEngine.TheTransform::SetIncrementalRotation", (const void*)SetIncrementalRotation);
 
 	//RECTTRANSFORM
 	mono_add_internal_call("TheEngine.TheRectTransform::SetRectPosition", (const void*)SetRectPosition);
@@ -840,6 +841,32 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCollider::IsTrigger", (const void*)ColliderIsTrigger);
 	mono_add_internal_call("TheEngine.TheCollider::SetTrigger", (const void*)ColliderSetTrigger);
 	mono_add_internal_call("TheEngine.TheCollider::ClosestPoint", (const void*)ClosestPoint);
+
+	//BOX COLLIDER
+	mono_add_internal_call("TheEngine.TheBoxCollider::GetBoxColliderCenter", (const void*)GetBoxColliderCenter);
+	mono_add_internal_call("TheEngine.TheBoxCollider::SetBoxColliderCenter", (const void*)SetBoxColliderCenter);
+	mono_add_internal_call("TheEngine.TheBoxCollider::GetBoxColliderSize", (const void*)GetBoxColliderSize);
+	mono_add_internal_call("TheEngine.TheBoxCollider::SetBoxColliderSize", (const void*)SetBoxColliderSize);
+
+	//CAPSULE COLLIDER
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderCenter", (const void*)GetCapsuleColliderCenter);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderCenter", (const void*)SetCapsuleColliderCenter);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderRadius", (const void*)GetCapsuleColliderRadius);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderRadius", (const void*)SetCapsuleColliderRadius);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderHeight", (const void*)GetCapsuleColliderHeight);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderHeight", (const void*)SetCapsuleColliderHeight);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderDirection", (const void*)GetCapsuleColliderDirection);
+	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderDirection", (const void*)SetCapsuleColliderDirection);
+
+	//SPHERE COLLIDER
+	mono_add_internal_call("TheEngine.TheSphereCollider::GetSphereColliderCenter", (const void*)GetSphereColliderCenter);
+	mono_add_internal_call("TheEngine.TheSphereCollider::SetSphereColliderCenter", (const void*)SetSphereColliderCenter);
+	mono_add_internal_call("TheEngine.TheSphereCollider::GetSphereColliderRadius", (const void*)GetSphereColliderRadius);
+	mono_add_internal_call("TheEngine.TheSphereCollider::SetSphereColliderRadius", (const void*)SetSphereColliderRadius);
+
+	//MESH COLLIDER
+	mono_add_internal_call("TheEngine.TheMeshCollider::GetMeshColliderConvex", (const void*)GetMeshColliderConvex);
+	mono_add_internal_call("TheEngine.TheMeshCollider::SetMeshColliderConvex", (const void*)SetMeshColliderConvex);
 
 	//DEBUG DRAW
 	mono_add_internal_call("TheEngine.TheDebug.TheDebugDraw::Line", (const void*)DebugDrawLine);
