@@ -123,7 +123,7 @@ update_status ModulePhysics::Update(float dt)
 				physx::PxScene* scene;
 				physx_physics->getScenes(&scene, 1, i);
 				scene->simulate(dt);
-				App->blast->ApplyDamage();
+				//App->blast->ApplyDamage();
 				scene->fetchResults(true);
 
 				physx::PxU32 active_actors_num;
@@ -183,7 +183,7 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 
-	//DrawColliders();
+	DrawColliders();
 	
 	return UPDATE_CONTINUE;
 }
@@ -546,20 +546,15 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	if (go == nullptr) return;
 
 	ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-	if (transform->GetTransformedFromRB())
+	physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
+	float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
+	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
+	if (!go->IsRoot())
 	{
-		physx::PxTransform phys_transform = rigid_actor->getGlobalPose();
-		float3 position(phys_transform.p.x, phys_transform.p.y, phys_transform.p.z);
-		Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
-		float3 rotation = rot_quat.ToEulerXYZ() * RADTODEG;
-		if (!go->IsRoot())
-		{
-			position = position - transform->GetGlobalPosition();
-		}
-		transform->SetPositionFromRB(position);
-		transform->SetRotationFromRB(rotation);
-		//CONSOLE_LOG("Phys Set rot: %.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z);
+		position = position - transform->GetGlobalPosition();
 	}
+	transform->SetPositionFromRB(position);
+	transform->SetRotationFromRB(rot_quat);
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)
@@ -810,45 +805,27 @@ void ModulePhysics::DrawColliders()
 		{
 			physx::PxScene* scene;
 			physx_physics->getScenes(&scene, 1, i);
-			if (!App->IsPlaying())
+			if (scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC) > 0 || scene->getNbActors(physx::PxActorTypeFlag::eRIGID_STATIC) > 0)
 			{
-				physx::PxU32 result;
-				scene->simulate(0.00000000000000000000000000001); //enough to draw shapes but not to move bodies/colliders
-				scene->fetchResults(true, &result);
-				if (result != 0)
+				if (!App->IsPlaying())
 				{
-					CONSOLE_LOG("Simulation error: %zu", result);
+					physx::PxU32 result;
+					scene->simulate(0.00000000000000000000000000001); //enough to draw shapes but not to move bodies/colliders
+					scene->fetchResults(true, &result);
+					if (result != 0)
+					{
+						CONSOLE_LOG("Simulation error: %zu", result);
+					}
+				}
+
+				const physx::PxRenderBuffer& rb = scene->getRenderBuffer();
+
+				for (uint i = 0; i < rb.getNbLines(); i++)
+				{
+					const physx::PxDebugLine& line = rb.getLines()[i];
+					App->renderer3D->debug_draw->Line({ line.pos0.x, line.pos0.y, line.pos0.z }, { line.pos1.x, line.pos1.y, line.pos1.z }, float4(0, 1, 0, 1));
 				}
 			}
-
-			const physx::PxRenderBuffer& rb = scene->getRenderBuffer();
-
-			for (uint i = 0; i < rb.getNbLines(); i++)
-			{
-				const physx::PxDebugLine& line = rb.getLines()[i];
-				App->renderer3D->debug_draw->Line({ line.pos0.x, line.pos0.y, line.pos0.z }, { line.pos1.x, line.pos1.y, line.pos1.z }, float4(0,1,0,1));
-			}
-			
-			/*glBegin(GL_TRIANGLES);
-			for (uint i = 0; i < rb.getNbTriangles(); i++)
-			{
-				const physx::PxDebugTriangle& triangles = rb.getTriangles()[i];
-
-				glVertex3f(triangles.pos0.x, triangles.pos0.y, triangles.pos0.z);
-				glVertex3f(triangles.pos1.x, triangles.pos1.y, triangles.pos1.z);
-				glVertex3f(triangles.pos2.x, triangles.pos2.y, triangles.pos2.z);
-			}
-			glEnd();
-			glBegin(GL_POINTS);
-			for (uint i = 0; i < rb.getNbPoints(); i++)
-			{
-				const physx::PxDebugPoint& point = rb.getPoints()[i];
-
-				glVertex3f(point.pos.x, point.pos.y, point.pos.z);
-			}
-			glEnd();
-			glLineWidth(1.0f);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);*/
 		}
 	}
 }

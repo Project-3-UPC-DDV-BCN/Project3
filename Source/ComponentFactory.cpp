@@ -75,21 +75,9 @@ GameObject* ComponentFactory::Spawn()
 		if (transform)
 		{
 			//CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
-			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
-			if (rb && transform->GetTransformedFromRB())
-			{
-				//float4x4 m = transform->GetOpenGLMatrix();
-				//rb->SetTransform(m.ptr());
-				rb->SetLinearVelocity({ 0,0,0 });
-				rb->SetPosition(spawn_position);
-				rb->SetRotation(spawn_rotation);
-			}
-			else
-			{
-				transform->SetPosition(spawn_position);
-				transform->SetRotation(spawn_rotation);
-				transform->SetScale(spawn_scale);
-			}
+			transform->SetPosition(spawn_position);
+			transform->SetRotation(spawn_rotation);
+			transform->SetScale(spawn_scale);
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
 			go->SetActive(true);
@@ -210,19 +198,9 @@ void ComponentFactory::CheckLifeTimes()
 			if (transform)
 			{
 				it->first->SetActive(false);
-				ComponentRigidBody* rb = (ComponentRigidBody*)it->first->GetComponent(Component::CompRigidBody);
-				if (rb && transform->GetTransformedFromRB())
-				{
-					rb->SetLinearVelocity({ 0,0,0 });
-					rb->SetPosition(original_position);
-					rb->SetRotation(original_rotation);
-				}
-				else
-				{
-					transform->SetPosition(original_position);
-					transform->SetRotation(original_rotation);
-					transform->SetScale(original_scale);
-				}
+				transform->SetPosition(original_position);
+				transform->SetRotation(original_rotation);
+				transform->SetScale(original_scale);
 				spawn_objects_list.push_back(it->first);
 				it = spawned_objects.erase(it);
 			}

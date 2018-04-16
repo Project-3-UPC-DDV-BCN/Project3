@@ -359,8 +359,8 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
 
             if (invert_axis)
-            {	
-               	trans.RotateAroundAxis(TheVector3.Right, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+            {
+                new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
 
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
@@ -373,7 +373,7 @@ public class Slave1Movement {
             }
             else
             {
-                trans.RotateAroundAxis(TheVector3.Left, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+                new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
                     cam_rot.x += camera_rot_step * TheTime.DeltaTime;
@@ -381,7 +381,7 @@ public class Slave1Movement {
                         cam_rot.x = max_camera_rot * move_percentage;
                 }
             }
-			//trans.LocalRotation = new_rot;
+            trans.SetIncrementalRotation(new_rot);
 
 		}
         else
@@ -413,7 +413,7 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
             if (invert_axis)
             {
-                trans.RotateAroundAxis(TheVector3.Left, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+                new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
                     cam_rot.x += camera_rot_step * TheTime.DeltaTime;
@@ -423,7 +423,7 @@ public class Slave1Movement {
             }
             else
             {
-                trans.RotateAroundAxis(TheVector3.Right, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+                new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
                     cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
@@ -433,8 +433,8 @@ public class Slave1Movement {
                     }
                 }
             }
-			//trans.LocalRotation = new_rot;
-		}
+            trans.SetIncrementalRotation(new_rot);
+        }
         else
         {
             if (invert_axis)
@@ -460,7 +460,9 @@ public class Slave1Movement {
         if (ljoy_right > controller_sensibility)
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			trans.RotateAroundAxis(TheVector3.Down, yaw_rotate_speed * move_percentage * TheTime.DeltaTime);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.y -= yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
             if (cam_rot.y < max_camera_rot * move_percentage && cam_rot.y >= 0.0f)
             {
                 cam_rot.y += camera_rot_step * TheTime.DeltaTime;
@@ -481,7 +483,9 @@ public class Slave1Movement {
         if (ljoy_left > controller_sensibility)
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			trans.RotateAroundAxis(TheVector3.Up, yaw_rotate_speed * move_percentage * TheTime.DeltaTime);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.y += yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
             if (cam_rot.y > -max_camera_rot * move_percentage && cam_rot.y <= 0.0f)
             {
                 cam_rot.y -= camera_rot_step * TheTime.DeltaTime;
@@ -510,8 +514,8 @@ public class Slave1Movement {
 		{
 			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
-			trans.LocalRotation = new_rot;
-			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
+            trans.SetIncrementalRotation(new_rot);
+            TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z > -max_camera_rot && cam_rot.z <= 0.0f)
             {
                 cam_rot.z -= camera_rot_step * TheTime.DeltaTime;
@@ -533,8 +537,8 @@ public class Slave1Movement {
 		{
 			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
-			trans.LocalRotation = new_rot;
-			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
+            trans.SetIncrementalRotation(new_rot);
+            TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z < max_camera_rot && cam_rot.z >= 0.0f)
             {
                 cam_rot.z += camera_rot_step * TheTime.DeltaTime;
