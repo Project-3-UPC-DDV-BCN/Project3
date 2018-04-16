@@ -147,6 +147,8 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	wave_launched = false; 
 	show_emit_area = true; 
 
+	show_width = show_height = show_depth = 1; 
+
 	//Make the aabb enclose a primitive cube
 	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
 	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
@@ -258,27 +260,18 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 	if (parent_transform->AnyDirty() || scale_dirty)
 	{
 		//Position increment
-		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
+		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint(); 
 
-		float percentage_width = data->emmit_width / show_width; 
-		//percentage_width += (0.0f % 7.0f); 
-		float percentage_height = data->emmit_height / show_height;
-		float percentage_depth = data->emmit_depth / show_depth;
-
-		CONSOLE_LOG("Width: %f", percentage_width);
-		//CONSOLE_LOG("Height: %f", percentage_height);
-		//CONSOLE_LOG("Depth: %f", percentage_depth);
+		float percentage_width = show_width / data->emmit_width;
+		float percentage_height = show_height / data->emmit_height;
+		float percentage_depth = show_depth / data->emmit_depth;
 
 		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, { percentage_width,percentage_height,percentage_depth });
-
 		emmit_area.TransformAsAABB(transform_to_apply);
 
-		//float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
-		//emmit_area.Scale(emmit_area.CenterPoint(), asd);
-
-		//data->width_increment = 0; 
-		//data->height_increment = 0; 
-		//data->depth_increment = 0; 
+		data->emmit_width = show_width;
+		data->emmit_height = show_height;
+		data->emmit_depth = show_depth;
 
 		parent_transform->dirty = false; 
 		scale_dirty = false; 
