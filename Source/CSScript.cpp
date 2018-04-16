@@ -1068,7 +1068,7 @@ void CSScript::Save(Data & data) const
 
 	data.CreateSection("int_fields");
 	int i = 0;
-	for (std::map<std::string, int>::const_iterator it = int_fields.begin(); it != int_fields.end(); it++)
+	for (std::map<std::string, int>::const_iterator it = int_fields.begin(); it != int_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1079,7 +1079,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("double_fields");
 	i = 0;
-	for (std::map<std::string, double>::const_iterator it = double_fields.begin(); it != double_fields.end(); it++)
+	for (std::map<std::string, double>::const_iterator it = double_fields.begin(); it != double_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1090,7 +1090,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("float_fields");
 	i = 0;
-	for (std::map<std::string, float>::const_iterator it = float_fields.begin(); it != float_fields.end(); it++)
+	for (std::map<std::string, float>::const_iterator it = float_fields.begin(); it != float_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1101,7 +1101,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("bool_fields");
 	i = 0;
-	for (std::map<std::string, bool>::const_iterator it = bool_fields.begin(); it != bool_fields.end(); it++)
+	for (std::map<std::string, bool>::const_iterator it = bool_fields.begin(); it != bool_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1112,7 +1112,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("string_fields");
 	i = 0;
-	for (std::map<std::string, std::string>::const_iterator it = string_fields.begin(); it != string_fields.end(); it++)
+	for (std::map<std::string, std::string>::const_iterator it = string_fields.begin(); it != string_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1123,7 +1123,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("gameobject_fields");
 	i = 0;
-	for (std::map<std::string, GameObject*>::const_iterator it = gameobject_fields.begin(); it != gameobject_fields.end(); it++)
+	for (std::map<std::string, GameObject*>::const_iterator it = gameobject_fields.begin(); it != gameobject_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1134,7 +1134,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("vec2_fields");
 	i = 0;
-	for (std::map<std::string, float2>::const_iterator it = vec2_fields.begin(); it != vec2_fields.end(); it++)
+	for (std::map<std::string, float2>::const_iterator it = vec2_fields.begin(); it != vec2_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1145,7 +1145,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("vec3_fields");
 	i = 0;
-	for (std::map<std::string, float3>::const_iterator it = vec3_fields.begin(); it != vec3_fields.end(); it++)
+	for (std::map<std::string, float3>::const_iterator it = vec3_fields.begin(); it != vec3_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
@@ -1156,7 +1156,7 @@ void CSScript::Save(Data & data) const
 	data.CloseSection();
 	data.CreateSection("vec4_fields");
 	i = 0;
-	for (std::map<std::string, float4>::const_iterator it = vec4_fields.begin(); it != vec4_fields.end(); it++)
+	for (std::map<std::string, float4>::const_iterator it = vec4_fields.begin(); it != vec4_fields.end(); ++it)
 	{
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);

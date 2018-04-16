@@ -178,6 +178,7 @@ private:
 	std::vector<ComponentParticleEmmiter*> particles_to_draw;
 
 	std::vector<std::vector<ComponentMeshRenderer*>> ordering_by_materials;
+	std::vector<AABB> cubes_to_draw;
 	Material* current_material = nullptr;
 	bool changed_material = true;
 	// SHADOW MAPPING DON'T TOUCH
