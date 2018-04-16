@@ -1345,6 +1345,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				Texture* diffuse = material->GetDiffuseTexture();
 				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
 				{
+					diffuse->LoadToMemory(); 
 					material->SetDiffuseTexture(diffuse);
 				}
 
@@ -1696,6 +1697,34 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				break;
 			}
 		}
+
+		if (ImGui::TreeNode(("Script Times##" + comp_script->GetScriptName() + std::to_string(scripts_count)).c_str()))
+		{
+			std::vector<double> script_times = comp_script->GetScriptTimes();
+			ImVec4 slow = ImVec4(1.0, 0.0, 0.0, 1.0);
+			ImVec4 nice = ImVec4(0.0, 1.0, 0.0, 1.0);
+			ImVec4 unused = ImVec4(1.0, 0.5, 0.0, 1.0);
+			ImVec4 color_to_use = ImVec4(0.0, 0.0, 0.0, 1.0);
+
+			ImGui::Text("Needs to be on Play to read the times");
+			ImGui::TextColored(slow, "Slow: >= 0.5ms\t");				ImGui::SameLine();
+			ImGui::TextColored(nice, "Fast Enough: < 0.5ms\t");			ImGui::SameLine();
+			ImGui::TextColored(unused, "Unused");			
+
+			ImGui::Text("Init:");					ImGui::SameLine();		if (script_times[0]  >= 0.5) 	color_to_use = slow;	else if (script_times[0]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[0]); 
+			ImGui::Text("Start:");					ImGui::SameLine();		if (script_times[1]  >= 0.5)	color_to_use = slow;	else if (script_times[1]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[1]);
+			ImGui::Text("Update:");					ImGui::SameLine();		if (script_times[2]  >= 0.5)	color_to_use = slow;	else if (script_times[2]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[2]);
+			ImGui::Text("On Collision Enter:");		ImGui::SameLine();		if (script_times[3]  >= 0.5)	color_to_use = slow;	else if (script_times[3]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[3]);
+			ImGui::Text("On Collision Stay:");		ImGui::SameLine();		if (script_times[4]  >= 0.5)	color_to_use = slow;	else if (script_times[4]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[4]);
+			ImGui::Text("On Collision Exit:");		ImGui::SameLine();		if (script_times[5]  >= 0.5)	color_to_use = slow;	else if (script_times[5]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[5]);
+			ImGui::Text("On Trigger Enter:");		ImGui::SameLine();		if (script_times[6]  >= 0.5)	color_to_use = slow;	else if (script_times[6]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[6]);
+			ImGui::Text("On Trigger Stay:");		ImGui::SameLine();		if (script_times[7]  >= 0.5)	color_to_use = slow;	else if (script_times[7]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[7]);
+			ImGui::Text("On Trigger Exit:");		ImGui::SameLine();		if (script_times[8]  >= 0.5)	color_to_use = slow;	else if (script_times[8]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[8]);
+			ImGui::Text("On Enable:");				ImGui::SameLine();		if (script_times[9]	 >= 0.5)	color_to_use = slow;	else if (script_times[9]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms",	script_times[9]);
+			ImGui::Text("On Disable:");				ImGui::SameLine();		if (script_times[10] >= 0.5)	color_to_use = slow;	else if (script_times[10] > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms",	script_times[10]);
+
+			ImGui::TreePop();
+		}
 	}
 }
 
@@ -1762,7 +1791,6 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 			}
 			else
 			{
-				rigidbody->SetTransformsGo(false);
 				components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
 				rigidbody = nullptr;
 				return;
@@ -1803,11 +1831,6 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		if (ImGui::Checkbox("CCD", &is_ccd))
 		{
 			rigidbody->SetCCDMode(is_ccd);
-		}
-		bool transforms_go = rigidbody->GetTransformsGo();
-		if (ImGui::Checkbox("Transforms GO", &transforms_go))
-		{
-			rigidbody->SetTransformsGo(transforms_go);
 		}
 
 		ImGui::Text("Axis Lock");

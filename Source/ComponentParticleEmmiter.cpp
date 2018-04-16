@@ -465,6 +465,22 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 	}
 }
 
+void ComponentParticleEmmiter::SetSpawnVelocity(float v)
+{
+	data->velocity = v; 
+}
+
+void ComponentParticleEmmiter::SetParticlesVelocity(float v)
+{
+	for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();it++)
+	{
+		(*it).second->SetVelocity(v); 
+		(*it).second->SetMovement(); 
+	}
+
+	data->velocity = v; 
+}
+
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
 	//uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();

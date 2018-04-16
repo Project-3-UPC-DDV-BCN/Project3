@@ -57,11 +57,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TheBoxCollider.cs" />
+    <Compile Include="TheCapsuleCollider.cs" />
     <Compile Include="TheCollider.cs" />
     <Compile Include="TheCollisionData.cs" />
     <Compile Include="TheColor.cs" />
     <Compile Include="TheContactPoint.cs" />
     <Compile Include="TheDebugDraw.cs" />
+    <Compile Include="TheMeshCollider.cs" />
     <Compile Include="ThePhysics.cs" />
     <Compile Include="TheRay.cs" />
     <Compile Include="TheRayCastHit.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Components\TheRectTransform.cs" />
     <Compile Include="TheRigidBody.cs" />
     <Compile Include="Components\TheText.cs" />
+    <Compile Include="TheSphereCollider.cs" />
     <Compile Include="TheTimer.cs" />
     <Compile Include="TheLight.cs" />
     <Compile Include="TheTransform.cs" />

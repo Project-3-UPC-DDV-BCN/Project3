@@ -40,6 +40,7 @@ public:
 	void SetInteriorMaterial(Material* material);
 
 public:
+	bool material_changed; 
 	int material_indices_number;
 	int material_indices_start;
 	int interior_material_indices_number;

@@ -325,7 +325,7 @@ void Particle::UpdateRotation()
 
 void Particle::SetMovementFromStats()
 {
-	movement += particle_data->gravity;
+	movement += (particle_data->gravity);
 
 }
 

@@ -811,13 +811,12 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 		uint program = 0;
 		if (material != nullptr)
 		{
-
 			program = material->GetShaderProgramID();
 			UseShaderProgram(program);
 
 			if (changed_material == true)
 				material->LoadToMemory();
-
+				
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 			SetUniformBool(program, "is_ui", false);

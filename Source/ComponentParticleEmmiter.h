@@ -72,10 +72,12 @@ public:
 	void PlayEmmiter();
 	void StopEmmiter(); 
 
-	//Simultaneous launching 
+	//Simultaneous launching
 	bool LaunchingAllowed(); 
 	void LaunchParticlesWave(); 
 
+	void SetSpawnVelocity(float v);
+	void SetParticlesVelocity(float v);
 
 public:
 

@@ -14,27 +14,23 @@ public:
 	float3 GetGlobalPosition() const;
 	float3 GetLocalPosition() const;
 	void SetRotation(float3 rotation);
-	void SetRotationFromRB(float3 rotation);
 	void SetIncrementalRotation(float3 rotation);
 	float3 GetGlobalRotation() const;
 	Quat GetGlobalQuatRotation() const;
 	float3 GetLocalRotation() const;
 	Quat GetQuatRotation() const;
 	void SetQuatRotation(Quat q);
+	void SetRotationFromRB(Quat q);
 	void SetScale(float3 scale);
-	void SetScaleFromRB(float3 scale);
 	float3 GetGlobalScale() const;
 	float3 GetLocalScale() const;
-	void UpdateGlobalMatrix();
+	void UpdateGlobalMatrix(bool from_rigidbody = false);
 	void UpdateLocals();
 	const float4x4 GetMatrix() const;
 	const float4x4 GetOpenGLMatrix() const;
 	void SetMatrix(const float4x4 &matrix);
 	void LookAt(float3 dir, float3 up);
 	bool AnyDirty(); 
-
-	void SetTransformedFromRB(bool transformed);
-	bool GetTransformedFromRB() const;
 
 	void RotateAroundAxis(float3 axis, float angle);
 
@@ -63,7 +59,5 @@ private:
 	float4x4 transform_matrix;
 
 	bool is_particle;
-
-	bool rb_transforms_go;
 };
 

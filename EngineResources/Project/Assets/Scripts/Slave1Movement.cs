@@ -4,6 +4,9 @@ using TheEngine.TheConsole;
 public class Slave1Movement {
 
 	TheTransform trans;
+
+    public bool casual_mode = true;
+
 	public int controller_sensibility = 2500;
 	public int trigger_sensibility = 0;
 	public float roll_rotate_speed = 45.0f;
@@ -19,6 +22,9 @@ public class Slave1Movement {
 	public int rotate_rumble_ms = 5;
 	public int accel_rumble_ms = 3;
 	public int boost_rumble_ms = 3;
+
+    public float vertical_thrust = 5.0f;
+    public float throttle_increment = 10.0f;
 
 	private float curr_vel = 0.0f;
 	private float vel_percent = 0.02f; //from 1.0f to 0.02f;
@@ -227,7 +233,11 @@ public class Slave1Movement {
 	
 	void Update () 
 	{
-		Movement();
+        if (casual_mode)
+            Movement();
+        else
+            NoCasualMovement();
+
 		EnergyManagement();
 		SetValuesWithEnergy();
         RegenShield();
@@ -359,8 +369,8 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
 
             if (invert_axis)
-            {	
-               	trans.RotateAroundAxis(TheVector3.Right, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+            {
+                new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
 
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
@@ -373,7 +383,7 @@ public class Slave1Movement {
             }
             else
             {
-                trans.RotateAroundAxis(TheVector3.Left, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+                new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
                     cam_rot.x += camera_rot_step * TheTime.DeltaTime;
@@ -381,7 +391,7 @@ public class Slave1Movement {
                         cam_rot.x = max_camera_rot * move_percentage;
                 }
             }
-			//trans.LocalRotation = new_rot;
+            trans.SetIncrementalRotation(new_rot);
 
 		}
         else
@@ -413,7 +423,7 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
             if (invert_axis)
             {
-                trans.RotateAroundAxis(TheVector3.Left, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+                new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
                     cam_rot.x += camera_rot_step * TheTime.DeltaTime;
@@ -423,7 +433,7 @@ public class Slave1Movement {
             }
             else
             {
-                trans.RotateAroundAxis(TheVector3.Right, pitch_rotate_speed * move_percentage * TheTime.DeltaTime);
+                new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
                     cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
@@ -433,8 +443,8 @@ public class Slave1Movement {
                     }
                 }
             }
-			//trans.LocalRotation = new_rot;
-		}
+            trans.SetIncrementalRotation(new_rot);
+        }
         else
         {
             if (invert_axis)
@@ -460,7 +470,9 @@ public class Slave1Movement {
         if (ljoy_right > controller_sensibility)
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			trans.RotateAroundAxis(TheVector3.Down, yaw_rotate_speed * move_percentage * TheTime.DeltaTime);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.y -= yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
             if (cam_rot.y < max_camera_rot * move_percentage && cam_rot.y >= 0.0f)
             {
                 cam_rot.y += camera_rot_step * TheTime.DeltaTime;
@@ -481,7 +493,9 @@ public class Slave1Movement {
         if (ljoy_left > controller_sensibility)
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
-			trans.RotateAroundAxis(TheVector3.Up, yaw_rotate_speed * move_percentage * TheTime.DeltaTime);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.y += yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
             if (cam_rot.y > -max_camera_rot * move_percentage && cam_rot.y <= 0.0f)
             {
                 cam_rot.y -= camera_rot_step * TheTime.DeltaTime;
@@ -510,8 +524,8 @@ public class Slave1Movement {
 		{
 			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
-			trans.LocalRotation = new_rot;
-			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
+            trans.SetIncrementalRotation(new_rot);
+            TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z > -max_camera_rot && cam_rot.z <= 0.0f)
             {
                 cam_rot.z -= camera_rot_step * TheTime.DeltaTime;
@@ -533,8 +547,8 @@ public class Slave1Movement {
 		{
 			TheVector3 new_rot = trans.LocalRotation;
 			new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
-			trans.LocalRotation = new_rot;
-			TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
+            trans.SetIncrementalRotation(new_rot);
+            TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z < max_camera_rot && cam_rot.z >= 0.0f)
             {
                 cam_rot.z += camera_rot_step * TheTime.DeltaTime;
@@ -648,6 +662,104 @@ public class Slave1Movement {
         	camera_go.GetComponent<TheTransform>().LocalPosition = original_cam_pos + cam_pos;
         	camera_go.GetComponent<TheTransform>().LocalRotation = original_cam_rot + cam_rot;
 		}
+    }
+
+    void NoCasualMovement()
+    {
+        int rjoy_up = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_UP");
+        int rjoy_down = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_DOWN");
+        int rjoy_right = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_RIGHT");
+        int rjoy_left = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_LEFT");
+
+        int ljoy_up = TheInput.GetControllerJoystickMove(0, "LEFTJOY_UP");
+        int ljoy_down = TheInput.GetControllerJoystickMove(0, "LEFTJOY_DOWN");
+        int ljoy_right = TheInput.GetControllerJoystickMove(0, "LEFTJOY_RIGHT");
+        int ljoy_left = TheInput.GetControllerJoystickMove(0, "LEFTJOY_LEFT");
+
+        int right_trigger = TheInput.GetControllerJoystickMove(0, "RIGHT_TRIGGER");
+        int left_trigger = TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER");
+
+        if (ljoy_up > controller_sensibility)
+        {
+            float move_percentage = (float)(ljoy_up - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
+        }
+
+        if (ljoy_down > controller_sensibility)
+        {
+            float move_percentage = (float)(ljoy_down - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
+        }
+
+        if (ljoy_right > controller_sensibility)
+        {
+            float move_percentage = (float)(ljoy_right - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.z += yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
+        }
+
+        if (ljoy_left > controller_sensibility)
+        {
+            float move_percentage = (float)(ljoy_left - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.z -= yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
+        }
+
+        if (rjoy_up > controller_sensibility)
+        {
+            float move_percentage = (float)(rjoy_up - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_pos = trans.LocalPosition;
+            new_pos += vertical_thrust * move_percentage * TheTime.DeltaTime * trans.UpDirection;
+            trans.LocalPosition = new_pos;
+        }
+
+        if (rjoy_down > controller_sensibility)
+        {
+            float move_percentage = (float)(rjoy_down - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_pos = trans.LocalPosition;
+            new_pos -= vertical_thrust * move_percentage * TheTime.DeltaTime * trans.UpDirection;
+            trans.LocalPosition = new_pos;
+        }
+
+        if (rjoy_right > controller_sensibility)
+        {
+            float move_percentage = (float)(rjoy_right - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.y -= roll_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
+        }
+
+        if (rjoy_left > controller_sensibility)
+        {
+            float move_percentage = (float)(rjoy_left - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            TheVector3 new_rot = trans.LocalRotation;
+            new_rot.y += roll_rotate_speed * move_percentage * TheTime.DeltaTime;
+            trans.SetIncrementalRotation(new_rot);
+        }
+
+        if (right_trigger > controller_sensibility)
+        {
+            float move_percentage = (float)(right_trigger - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            if (curr_vel < max_vel)
+                curr_vel += move_percentage * throttle_increment;
+        }
+
+        if (left_trigger > controller_sensibility)
+        {
+            float move_percentage = (float)(left_trigger - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+            if (curr_vel > -max_vel)
+                curr_vel -= move_percentage * throttle_increment;
+        }
+
+        TheVector3 new_vel_pos = trans.LocalPosition;
+        new_vel_pos += trans.ForwardDirection * curr_vel * TheTime.DeltaTime;
+        trans.LocalPosition = new_vel_pos;
     }
 
     public void DamageSlaveOne(float dmg)

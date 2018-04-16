@@ -21,7 +21,6 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-	RELEASE(image_data);
 	UnloadFromMemory();
 }
 
@@ -268,4 +267,14 @@ void Texture::RecreateTexture()
 {
 	UnloadFromMemory();
 	LoadToMemory();
+}
+
+bool Texture::IsInMemory()
+{
+	return in_memory;
+}
+
+void Texture::SetInMemory(bool is_in)
+{
+	in_memory = is_in; 
 }
