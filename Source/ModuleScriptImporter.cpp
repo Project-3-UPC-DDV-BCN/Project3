@@ -775,6 +775,8 @@ void ModuleScriptImporter::RegisterAPI()
 	//EMITER
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Play", (const void*)PlayEmmiter);
 	mono_add_internal_call("TheEngine.TheParticleEmmiter::Stop", (const void*)StopEmmiter);
+	mono_add_internal_call("TheEngine.TheParticleEmmiter::SetEmitterSpeed", (const void*)SetEmitterSpeed);
+	mono_add_internal_call("TheEngine.TheParticleEmmiter::SetParticleSpeed", (const void*)SetParticleSpeed);
 
 	//RIGIDBODY
 	mono_add_internal_call("TheEngine.TheRigidBody::SetLinearVelocity", (const void*)SetLinearVelocity);
@@ -1480,6 +1482,16 @@ void  ModuleScriptImporter::PlayEmmiter(MonoObject * object)
 void  ModuleScriptImporter::StopEmmiter(MonoObject * object)
 {
 	ns_importer->StopEmmiter(object);
+}
+
+void ModuleScriptImporter::SetEmitterSpeed(MonoObject * object, float speed)
+{
+	ns_importer->SetEmitterSpeed(object, speed);
+}
+
+void ModuleScriptImporter::SetParticleSpeed(MonoObject * object, float speed)
+{
+	ns_importer->SetParticleSpeed(object, speed);
 }
 
 void ModuleScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, float z)
@@ -4254,6 +4266,32 @@ void NSScriptImporter::StopEmmiter(MonoObject * object)
 
 		if (emmiter != nullptr)
 			emmiter->StopEmmiter();
+	}
+}
+
+void NSScriptImporter::SetEmitterSpeed(MonoObject * object, float speed)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)comp;
+
+		if (emmiter != nullptr)
+			emmiter->SetSpawnVelocity(speed);
+	}
+}
+
+void NSScriptImporter::SetParticleSpeed(MonoObject * object, float speed)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)comp;
+
+		if (emmiter != nullptr)
+			emmiter->SetParticlesVelocity(speed);
 	}
 }
 

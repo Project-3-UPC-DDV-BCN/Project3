@@ -217,6 +217,8 @@ public:
 	//PARTICLE EMMITER
 	void PlayEmmiter(MonoObject * object);
 	void StopEmmiter(MonoObject * object);
+	void SetEmitterSpeed(MonoObject * object, float speed);
+	void SetParticleSpeed(MonoObject * object, float speed);
 
 	//RIGIDBODY
 	void SetLinearVelocity(MonoObject * object, float x, float y, float z);
@@ -502,6 +504,8 @@ private:
 	//PARTICLE EMMITER
 	static void PlayEmmiter(MonoObject * object);
 	static void StopEmmiter(MonoObject * object);
+	static void SetEmitterSpeed(MonoObject * object, float speed);
+	static void SetParticleSpeed(MonoObject * object, float speed);
 
 	//RIGIDBODY
 	static void SetLinearVelocity(MonoObject * object, float x, float y, float z);
