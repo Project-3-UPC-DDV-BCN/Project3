@@ -83,7 +83,13 @@ namespace TheEngine
         ///   <para>Return all GameObjects in scene</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static TheGameObject[] GetSceneGameObjects();
+        public extern static TheGameObject[] GetGameObjectsWithTag(string tag);
+
+        /// <summary>
+        ///   <para>Return all GameObjects in scene</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static TheGameObject[] GetGameObjectsMultipleTags(string[] tag);
 
         /// <summary>
         ///   <para>Return all childs in GameObject</para>

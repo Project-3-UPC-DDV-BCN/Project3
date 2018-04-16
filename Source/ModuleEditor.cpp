@@ -311,16 +311,21 @@ bool ModuleEditor::DrawEditor()
 
 bool ModuleEditor::CleanUp()
 {
-	for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); ++it) {
+	for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end();) 
+	{
 		RELEASE(*it);
+		it = editor_windows.erase(it);
 	}
+
 	RELEASE(drag_data);
-	editor_windows.clear();
+
 	if (!App->IsGame())
 	{
 		ImGui::SaveDocks();
 	}
+
 	ImGui_ImplSdlGL3_Shutdown();
+
 	return true;
 }
 

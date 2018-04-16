@@ -93,7 +93,8 @@ public:
 	int GetGameObjectChildCount(MonoObject* object);
 	MonoObject* FindGameObject(MonoString* gameobject_name);
 	MonoObject* GetGameObjectParent(MonoObject* object);
-	MonoArray* GetSceneGameObjects(MonoObject* object);
+	MonoArray* GetGameObjectsWithTag(MonoString* tag);
+	MonoArray* GetGameObjectsMultipleTags(MonoArray* tags);
 	MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
 	MonoArray* GetAllChilds(MonoObject* object);
 
@@ -222,9 +223,7 @@ public:
 	void SetAngularVelocity(MonoObject * object, float x, float y, float z); 
 	void AddTorque(MonoObject* object, float x, float y, float z, int force_type);
 	void SetKinematic(MonoObject * object, bool kinematic);
-	void SetTransformGO(MonoObject * object, bool transform_go);
 	bool IsKinematic(MonoObject * object);
-	bool IsTransformGO(MonoObject * object);
 	void SetRBPosition(MonoObject * object, float x, float y, float z);
 	void SetRBRotation(MonoObject * object, float x, float y, float z);
 	MonoObject* GetRBPosition(MonoObject* object);
@@ -284,6 +283,32 @@ public:
 	bool ColliderIsTrigger(MonoObject* object);
 	void ColliderSetTrigger(MonoObject* object, bool trigger);
 	MonoObject* ClosestPoint(MonoObject* object, MonoObject* position);
+
+	//BOX COLLIDER
+	MonoObject* GetBoxColliderCenter(MonoObject* object);
+	void SetBoxColliderCenter(MonoObject* object, MonoObject* center);
+	MonoObject* GetBoxColliderSize(MonoObject* object);
+	void SetBoxColliderSize(MonoObject* object, MonoObject* size);
+
+	//CAPSULE COLLIDER
+	MonoObject* GetCapsuleColliderCenter(MonoObject* object);
+	void SetCapsuleColliderCenter(MonoObject* object, MonoObject* center);
+	float GetCapsuleColliderRadius(MonoObject* object);
+	void SetCapsuleColliderRadius(MonoObject* object, float radius);
+	float GetCapsuleColliderHeight(MonoObject* object);
+	void SetCapsuleColliderHeight(MonoObject* object, float height);
+	int GetCapsuleColliderDirection(MonoObject* object);
+	void SetCapsuleColliderDirection(MonoObject* object, int direction);
+
+	//SPHERE COLLIDER
+	MonoObject* GetSphereColliderCenter(MonoObject* object);
+	void SetSphereColliderCenter(MonoObject* object, MonoObject* center);
+	float GetSphereColliderRadius(MonoObject* object);
+	void SetSphereColliderRadius(MonoObject* object, float radius);
+
+	//MESH COLLIDER
+	bool GetMeshColliderConvex(MonoObject* object);
+	void SetMeshColliderConvex(MonoObject* object, bool convex);
 
 	//DEBUG DRAW
 	void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
@@ -353,7 +378,8 @@ private:
 	static MonoObject* GetGameObjectChildString(MonoObject* object, MonoString* name);
 	static int GetGameObjectChildCount(MonoObject* object);
 	static MonoObject* FindGameObject(MonoString* gameobject_name);
-	static MonoArray* GetSceneGameObjects(MonoObject* object);
+	static MonoArray* GetGameObjectsWithTag(MonoString* tag);
+	static MonoArray* GetGameObjectsMultipleTags(MonoArray* tags);
 	static MonoArray* GetObjectsInFrustum(MonoObject * pos, MonoObject* front, MonoObject* up, float nearPlaneDist, float farPlaneDist);
 	static MonoArray* GetAllChilds(MonoObject* object);
 
@@ -483,8 +509,6 @@ private:
 	static void AddTorque(MonoObject * object, float x, float y, float z, int force_type);
 	static bool IsKinematic(MonoObject * object);
 	static void SetKinematic(MonoObject * object, bool kinematic);
-	static void SetTransformGO(MonoObject * object, bool transform_go);
-	static bool IsTransformGO(MonoObject * object);
 	static void SetRBPosition(MonoObject * object, float x, float y, float z);
 	static void SetRBRotation(MonoObject * object, float x, float y, float z);
 	static MonoObject* GetRBPosition(MonoObject* object);
@@ -544,6 +568,32 @@ private:
 	static bool ColliderIsTrigger(MonoObject* object);
 	static void ColliderSetTrigger(MonoObject* object, bool trigger);
 	static MonoObject* ClosestPoint(MonoObject* object, MonoObject* position);
+
+	//BOX COLLIDER
+	static MonoObject* GetBoxColliderCenter(MonoObject* object);
+	static void SetBoxColliderCenter(MonoObject* object, MonoObject* center);
+	static MonoObject* GetBoxColliderSize(MonoObject* object);
+	static void SetBoxColliderSize(MonoObject* object, MonoObject* size);
+
+	//CAPSULE COLLIDER
+	static MonoObject* GetCapsuleColliderCenter(MonoObject* object);
+	static void SetCapsuleColliderCenter(MonoObject* object, MonoObject* center);
+	static float GetCapsuleColliderRadius(MonoObject* object);
+	static void SetCapsuleColliderRadius(MonoObject* object, float radius);
+	static float GetCapsuleColliderHeight(MonoObject* object);
+	static void SetCapsuleColliderHeight(MonoObject* object, float height);
+	static int GetCapsuleColliderDirection(MonoObject* object);
+	static void SetCapsuleColliderDirection(MonoObject* object, int direction);
+
+	//SPHERE COLLIDER
+	static MonoObject* GetSphereColliderCenter(MonoObject* object);
+	static void SetSphereColliderCenter(MonoObject* object, MonoObject* center);
+	static float GetSphereColliderRadius(MonoObject* object);
+	static void SetSphereColliderRadius(MonoObject* object, float radius);
+
+	//MESH COLLIDER
+	static bool GetMeshColliderConvex(MonoObject* object);
+	static void SetMeshColliderConvex(MonoObject* object, bool convex);
 
 	//DEBUG DRAW
 	static void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
