@@ -98,10 +98,24 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path, bool o
 			tmp_texture->SetLibraryPath(path);
 			tmp_texture->SetName(App->file_system->GetFileNameWithoutExtension(path).c_str());
 			tmp_texture->SetCompression(ilGetInteger(IL_DXTC_FORMAT));
-			tmp_texture->SetImageData(data);
+			//tmp_texture->SetImageData(data);
 			tmp_texture->SetFormat(Texture::rgba);
 			//if(on_mem) 
-			tmp_texture->LoadToMemory();
+			//tmp_texture->LoadToMemory();
+
+			uint texture_id;
+			glGenTextures(1, &texture_id);
+			glBindTexture(GL_TEXTURE_2D, texture_id);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			tmp_texture->SetID(texture_id);
 		
 			CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
 		}
