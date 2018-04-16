@@ -21,7 +21,6 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-	RELEASE(image_data);
 	UnloadFromMemory();
 }
 

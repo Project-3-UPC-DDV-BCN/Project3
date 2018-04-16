@@ -67,6 +67,8 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 {
 	Texture* tmp_texture = nullptr;
 
+
+
 	if (ilLoad(IL_TYPE_UNKNOWN, path.c_str()))
 	{
 		ILinfo ImageInfo;
@@ -101,8 +103,6 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 			tmp_texture->LoadToMemory();
 
 			CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
-
-			//tmp_texture->RecreateTexture();
 		}
 
 		ilDeleteImages(1, &ImageInfo.Id);
