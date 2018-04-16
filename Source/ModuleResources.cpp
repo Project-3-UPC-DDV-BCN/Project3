@@ -291,7 +291,7 @@ void ModuleResources::FillResourcesLists()
 	}
 
 	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
-		CreateResource(*it);
+		CreateResource(*it, false);
 
 	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
 		CreateResource(*it);
@@ -1393,7 +1393,7 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	return ret;
 }
 
-Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
+Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path, bool on_mem)
 {
 	std::string extension = App->file_system->GetFileExtension(library_path);
 	std::string name = App->file_system->GetFileNameWithoutExtension(library_path);
@@ -1408,7 +1408,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			resource = (Resource*)GetTexture(name);
 			break;
 		}
-		resource = (Resource*)App->texture_importer->LoadTextureFromLibrary(library_path);
+		resource = (Resource*)App->texture_importer->LoadTextureFromLibrary(library_path, on_mem);
 		break;
 	case Resource::MeshResource:
 		if (GetMesh(name) != nullptr)
@@ -1510,7 +1510,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 	return resource;
 }
 
-void ModuleResources::CreateResource(std::string file_path)
+void ModuleResources::CreateResource(std::string file_path, bool on_mem)
 {
 	std::string extension = App->file_system->GetFileExtension(file_path);
 	std::string library_path;
@@ -1562,7 +1562,8 @@ void ModuleResources::CreateResource(std::string file_path)
 					}
 				}
 			}
-			resource = CreateResourceFromLibrary(library_path);
+			resource = CreateResourceFromLibrary(library_path, on_mem);
+
 			if (resource != nullptr)
 			{
 				resource->SetAssetsPath(file_path);
@@ -1596,7 +1597,7 @@ void ModuleResources::CreateResource(std::string file_path)
 				}
 			}
 		}
-		resource = CreateResourceFromLibrary(path);
+		resource = CreateResourceFromLibrary(path, on_mem);
 
 		if (!App->IsGame())
 		{
@@ -2608,7 +2609,8 @@ void ModuleResources::CreateDefaultMaterial()
 
 		RELEASE(new_mat);
 	}
-	CreateResource(default_mat);
+
+	CreateResource(default_mat, false);
 }
 
 bool ModuleResources::CheckResourceName(std::string& name)

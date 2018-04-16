@@ -138,15 +138,12 @@ void AssetsWindow::DrawWindow()
 					case Resource::TextureResource:
 						texture_icon = App->resources->GetTexture((*it)->name);
 						//ImGui::Image((ImTextureID)texture_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
 						break;
 					case Resource::MeshResource:
-						//ImGui::Image((ImTextureID)mesh_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
+						//ImGui::Image((ImTextureID)mesh_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));					
 						break;
 					case Resource::FontResource:
 						//ImGui::Image((ImTextureID)font_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
 						break;
 					case Resource::Unknown:
 						continue; //if the type is unknown skip and don't draw the file in the panel

@@ -250,6 +250,10 @@ void Texture::LoadToMemory()
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		in_memory = true; 
+
+		CONSOLE_LOG("TEXTURE %s LOADED TO MEMORY", GetName()); 
 	}
 }
 
@@ -268,4 +272,14 @@ void Texture::RecreateTexture()
 {
 	UnloadFromMemory();
 	LoadToMemory();
+}
+
+bool Texture::IsInMemory()
+{
+	return in_memory;
+}
+
+void Texture::SetInMemory(bool is_in)
+{
+	in_memory = is_in; 
 }

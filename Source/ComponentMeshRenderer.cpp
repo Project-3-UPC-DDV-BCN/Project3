@@ -12,10 +12,13 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject* attached_gameobject)
 	SetType(ComponentType::CompMeshRenderer);
 	SetGameObject(attached_gameobject);
 	mesh = nullptr;
+
 	material = App->resources->GetMaterial("default_mat");
 	interior_material = App->resources->GetMaterial("default_mat");
+
 	mesh_type = NormalMesh;
 
+	material_changed = false; 
 	material_indices_number = 0;
 	material_indices_start = 0;
 	interior_material_indices_number = 0;

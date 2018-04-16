@@ -56,7 +56,11 @@ public:
 
 	void RecreateTexture();
 
+	bool IsInMemory(); 
+	void SetInMemory(bool is_in); 
+
 private:
+	bool in_memory; 
 	uint texture_id;
 	uint width;
 	uint height;

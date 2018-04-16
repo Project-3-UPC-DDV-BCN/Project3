@@ -63,7 +63,7 @@ std::string ModuleTextureImporter::ImportTexture(std::string path)
 	return ret;
 }
 
-Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
+Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path, bool on_mem)
 {
 	Texture* tmp_texture = nullptr;
 
@@ -98,8 +98,9 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 			tmp_texture->SetCompression(ilGetInteger(IL_DXTC_FORMAT));
 			tmp_texture->SetImageData(data);
 			tmp_texture->SetFormat(Texture::rgba);
+			//if(on_mem) 
 			tmp_texture->LoadToMemory();
-
+		
 			CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
 
 			//tmp_texture->RecreateTexture();

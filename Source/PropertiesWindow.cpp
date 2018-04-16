@@ -1345,6 +1345,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				Texture* diffuse = material->GetDiffuseTexture();
 				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
 				{
+					diffuse->LoadToMemory(); 
 					material->SetDiffuseTexture(diffuse);
 				}
 
