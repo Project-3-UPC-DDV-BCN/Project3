@@ -56,6 +56,6 @@ namespace TheEngine
         public extern void CallFunction(string function_name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void CallFunctionArgs(string function_name, object[] args);
+        public extern object CallFunctionArgs(string function_name, object[] args);
     }
 }
