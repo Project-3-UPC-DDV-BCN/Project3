@@ -824,6 +824,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheScript::SetQuaternionField", (const void*)SetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::CallFunction", (const void*)CallFunction);
+	mono_add_internal_call("TheEngine.TheScript::CallFunctionArgs", (const void*)CallFunctionArgs);
 
 	//APPLICATION
 	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
@@ -1697,6 +1698,11 @@ MonoObject * ModuleScriptImporter::GetQuaternionField(MonoObject * object, MonoS
 void ModuleScriptImporter::CallFunction(MonoObject * object, MonoString * function_name)
 {
 	ns_importer->CallFunction(object, function_name);
+}
+
+void ModuleScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray * arr)
+{
+	return ns_importer->CallFunctionArgs(object, function_name, arr);
 }
 
 MonoObject * ModuleScriptImporter::LoadPrefab(MonoString* prefab_name)
@@ -5123,6 +5129,32 @@ void NSScriptImporter::CallFunction(MonoObject * object, MonoString * function_n
 				}
 				/*CONSOLE_LOG("Going back to %s", last_script->GetName().c_str());
 				App->script_importer->SetCurrentScript(last_script);*/
+			}
+		}
+	}
+}
+
+void NSScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray* arr_args)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		if (comp->GetType() == Component::CompScript)
+		{
+			ComponentScript* comp_script = (ComponentScript*)comp;
+
+			const char* name = mono_string_to_utf8(function_name);
+
+			CSScript* script = (CSScript*)comp_script->GetScript();
+
+			int args_count = mono_array_length(arr_args);
+
+			MonoMethod* method = script->GetFunction(name, args_count);
+
+			if (method)
+			{
+				script->CallFunctionArray(method, arr_args);
 			}
 		}
 	}

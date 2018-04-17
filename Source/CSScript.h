@@ -67,6 +67,7 @@ public:
 
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);
+	void CallFunctionArray(MonoMethod* function, MonoArray *params);
 
 private:
 	void ConvertMonoType(MonoType* type, ScriptField& script_field);
