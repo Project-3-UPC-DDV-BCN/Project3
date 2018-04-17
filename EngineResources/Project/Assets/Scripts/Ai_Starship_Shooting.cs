@@ -91,7 +91,11 @@ public class Ai_Starship_Shooting
 
 		if(movement != null) 
 		{
-			TheVector3 tOffset = movement.GetVector3Field("target_pos") - transform.GlobalPosition;
+			TheVector3 auxTPos = TheVector3.Zero;
+			auxTPos.x = movement.GetFloatField("target_pos_x");
+			auxTPos.y = movement.GetFloatField("target_pos_y");
+			auxTPos.z = movement.GetFloatField("target_pos_z");
+			TheVector3 tOffset = auxTPos - transform.GlobalPosition;
 			if(TheVector3.Magnitude(tOffset) < shooting_range && TheVector3.AngleBetween(transform.ForwardDirection, tOffset) < shooting_angle / 2)	
 				shooting = true;	
 			else
