@@ -270,7 +270,7 @@ public:
 	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	void CallFunction(MonoObject* object, MonoString* function_name);
-	void CallFunctionArgs(MonoObject* object, MonoString* function_name, MonoArray* arr);
+	MonoObject* CallFunctionArgs(MonoObject* object, MonoString* function_name, MonoArray* arr);
 
 	//RESOURCES
 	MonoObject* LoadPrefab(MonoString* prefab_name);
@@ -558,7 +558,7 @@ private:
 	static void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	static MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	static void CallFunction(MonoObject* object, MonoString* function_name);
-	static void CallFunctionArgs(MonoObject* object, MonoString* function_name, MonoArray* arr);
+	static MonoObject* CallFunctionArgs(MonoObject* object, MonoString* function_name, MonoArray* arr);
 
 	//RESOURCES
 	static MonoObject* LoadPrefab(MonoString* prefab_name);

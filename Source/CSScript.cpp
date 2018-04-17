@@ -920,20 +920,24 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 	}
 }
 
-void CSScript::CallFunctionArray(MonoMethod * function, MonoArray * params)
+MonoObject* CSScript::CallFunctionArray(MonoMethod * function, MonoArray * params)
 {
+	MonoObject* obj = nullptr;
+
 	if (function != nullptr)
 	{
 		inside_function = true;
 		MonoObject* exception = nullptr;
 
-		MonoObject* obj = mono_runtime_invoke_array(function, mono_object, params, &exception);
+		obj = mono_runtime_invoke_array(function, mono_object, params, &exception);
 
 		if (exception)
 		{
 			mono_print_unhandled_exception(exception);
 		}
 	}
+
+	return obj;
 }
 
 void CSScript::ConvertMonoType(MonoType * type, ScriptField& script_field)

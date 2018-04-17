@@ -93,7 +93,37 @@ public class GameManager
 	{
 		UpdateAudio();
 	}
+	
+	void AddAllianceShip(TheGameObject add)
+	{
+		alliance_ships.Add(add);
+	}
 
+	void AddEmpireShip(TheGameObject add)
+	{
+		empire_ships.Add(add);
+	}
+
+	void RemoveAllianceShip(TheGameObject remove)
+	{
+		alliance_ships.Remove(remove);
+	}
+
+	void RemoveEmpireShip(TheGameObject remove)
+	{
+		empire_ships.Remove(remove);
+	}
+	
+	int AllianceShipsCount()
+	{
+		return alliance_ships.Count;
+	}
+	
+	int EmpireShipsCount()
+	{
+		return empire_ships.Count;
+	}
+	
 	string GetTimeFromSeconds(int seconds)
 	{
 		int division = seconds/60; 

@@ -1700,7 +1700,7 @@ void ModuleScriptImporter::CallFunction(MonoObject * object, MonoString * functi
 	ns_importer->CallFunction(object, function_name);
 }
 
-void ModuleScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray * arr)
+MonoObject* ModuleScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray * arr)
 {
 	return ns_importer->CallFunctionArgs(object, function_name, arr);
 }
@@ -5134,8 +5134,10 @@ void NSScriptImporter::CallFunction(MonoObject * object, MonoString * function_n
 	}
 }
 
-void NSScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray* arr_args)
+MonoObject* NSScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray* arr_args)
 {
+	MonoObject* ret = nullptr;
+
 	Component* comp = GetComponentFromMonoObject(object);
 
 	if (comp)
@@ -5148,16 +5150,21 @@ void NSScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * functi
 
 			CSScript* script = (CSScript*)comp_script->GetScript();
 
-			int args_count = mono_array_length(arr_args);
+			int args_count = 0;
+
+			if(arr_args != nullptr)
+				args_count = mono_array_length(arr_args);
 
 			MonoMethod* method = script->GetFunction(name, args_count);
 
 			if (method)
 			{
-				script->CallFunctionArray(method, arr_args);
+				ret = script->CallFunctionArray(method, arr_args);
 			}
 		}
 	}
+
+	return ret;
 }
 
 MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
