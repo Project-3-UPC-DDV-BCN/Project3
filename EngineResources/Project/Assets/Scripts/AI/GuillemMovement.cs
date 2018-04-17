@@ -225,5 +225,4 @@ public class GuillemMovement
         modified_move_speed = TheRandom.RandomRange(move_min, move_max);
         modified_rotation_speed = TheRandom.RandomRange(rotation_min, rotation_max);
     }
-
 }

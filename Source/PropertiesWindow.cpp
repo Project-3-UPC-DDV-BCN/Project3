@@ -1492,6 +1492,11 @@ void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 			return;
 		}
 
+		if (ImGui::Button("Set as main camera"))
+		{
+			comp_camera->SetAsMainCamera();
+		}
+		
 		Color background_color = comp_camera->GetBackgroundColor();
 		ImGui::Text("Background Color:");
 		if (ImGui::ColorEdit4("##Background Color", &background_color.r))

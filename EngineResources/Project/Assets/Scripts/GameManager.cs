@@ -92,6 +92,9 @@ public class GameManager
 	void Update () 
 	{
 		UpdateAudio();
+
+		UpdateTimePointsTexts();
+		
 	}
 	
 	void AddAllianceShip(TheGameObject add)
@@ -138,6 +141,17 @@ public class GameManager
 		new_time += reminder.ToString(); 
 		 
 		return new_time; 
+	}
+
+	void UpdateTimePointsTexts()
+	{
+		int time_to_end = (int)((float)game_time - game_timer.ReadTime());
+		
+		if(gametime_text != null)
+			gametime_text.Text = GetTimeFromSeconds(time_to_end); 
+
+		if(score_text != null)
+			score_text.Text = score.ToString();
 	}
 
 	void UpdateAudio()

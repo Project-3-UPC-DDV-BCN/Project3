@@ -1561,6 +1561,9 @@ void ModuleRenderer3D::SendLight(uint program)
 	// ----------------------------------------
 	// First send Camera Position, just once.
 
+	if (game_camera == nullptr || game_camera->GetGameObject() == nullptr)
+		return;
+
 	ComponentTransform * c_trans = (ComponentTransform*)game_camera->GetGameObject()->GetComponent(Component::CompTransform);
 
 	SetUniformVector3(program, "viewPos", c_trans->GetGlobalPosition());

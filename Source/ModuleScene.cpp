@@ -193,8 +193,6 @@ update_status ModuleScene::PreUpdate(float dt)
 	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Wheat);
 	LoadSceneNow();
 
-	DestroyGameObjectNow();
-
 	skybox->SetSize(skybox_size);
 
 	return UPDATE_CONTINUE;
@@ -202,6 +200,8 @@ update_status ModuleScene::PreUpdate(float dt)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
+
+	DestroyGameObjectNow();
 
 	return UPDATE_CONTINUE;
 }
