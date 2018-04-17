@@ -2004,13 +2004,17 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						if (ImGui::MenuItem(it->second->GetName().c_str()))
 						{
+							float3 tmp_size = { current_emmiter->data->emmit_width,current_emmiter->data->emmit_height,current_emmiter->data->emmit_depth };
+
 							current_emmiter->data = it->second;
 
 							current_emmiter->show_width = current_emmiter->data->emmit_width; 
 							current_emmiter->show_height = current_emmiter->data->emmit_height;
 							current_emmiter->show_depth = current_emmiter->data->emmit_depth;
 
-							current_emmiter->data->emmit_width = current_emmiter->data->emmit_height = current_emmiter->data->emmit_depth = 1; 
+							current_emmiter->data->emmit_width = tmp_size.x; 
+							current_emmiter->data->emmit_height = tmp_size.y;
+							current_emmiter->data->emmit_depth = tmp_size.z;
 							
 							current_emmiter->scale_dirty = true; 
 						}
