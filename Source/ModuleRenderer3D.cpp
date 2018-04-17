@@ -277,7 +277,7 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 
 		SetUniformBool(program->GetProgramID(), "has_texture", false);
 		SetUniformBool(program->GetProgramID(), "has_material_color", true);
-		SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+		SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.0f, 0.0f, 1.0f));
 
 		Mesh* cube = App->resources->GetMesh("PrimitiveCube");
 		if (cube->id_indices == 0) cube->LoadToMemory();
