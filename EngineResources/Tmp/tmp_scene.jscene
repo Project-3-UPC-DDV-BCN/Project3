@@ -1,8 +1,8 @@
 {
     "Scene_Name": "VS4 - 1V1",
-    "GameObjects_Count": "6",
+    "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "1218667277",
+        "UUID": "1935850366",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2050566341",
+        "UUID": "1912129213",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -109,9 +109,9 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "2061341495",
+        "UUID": "1836660743",
         "Name": "GameManager",
-        "Tag": "Default",
+        "Tag": "GameManager",
         "Layer": "Default",
         "Active": "1",
         "Components": {
@@ -193,11 +193,11 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "1843842016"
+                            "field_value": "889156525"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "2142512864"
+                            "field_value": "602818603"
                         },
                         "field_5": {
                             "field_name": "slave1",
@@ -219,7 +219,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "619061679",
+        "UUID": "391311435",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -236,8 +236,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "599.000000",
-                    "value_Y": "386.000000"
+                    "value_X": "535.000000",
+                    "value_Y": "401.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -291,7 +291,75 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1843842016",
+        "UUID": "515870293",
+        "Name": "New GameObject",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "645302198",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1452834158",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\ShipProperties.dll",
+                    "assets_path": "",
+                    "script_name": "ShipProperties",
+                    "UUID": "1287140418",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "1",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "ship_faction",
+                            "field_value": "alliance"
+                        }
+                    },
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "889156525",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -308,8 +376,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "110.848274",
-                    "value_Y": "66.508965"
+                    "value_X": "110.848091",
+                    "value_Y": "66.508858"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -325,8 +393,8 @@
                 "Active": "1",
                 "UUID": "2145012880",
                 "position": {
-                    "value_X": "182.039825",
-                    "value_Y": "165.623825",
+                    "value_X": "162.589844",
+                    "value_Y": "176.048828",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -361,12 +429,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "619061679",
+        "ParentID": "391311435",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_5": {
-        "UUID": "2142512864",
+    "GameObject_6": {
+        "UUID": "602818603",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -383,8 +451,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "94.221054",
-                    "value_Y": "66.508980"
+                    "value_X": "94.220901",
+                    "value_Y": "66.508873"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -400,8 +468,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "252.586121",
-                    "value_Y": "165.623825",
+                    "value_X": "225.598633",
+                    "value_Y": "176.048828",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -436,7 +504,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "619061679",
+        "ParentID": "391311435",
         "IsRoot": "0",
         "IsStatic": "0"
     }
