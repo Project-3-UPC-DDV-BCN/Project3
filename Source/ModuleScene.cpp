@@ -514,7 +514,10 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			{
 				GameObject* game_object = new GameObject();
 				AddGameObjectToScene(game_object);
-				
+
+				ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)game_object->GetComponent(Component::CompParticleSystem);
+				if(emmiter) emmiter->first_loaded = false; 
+
 				game_object->Load(data);
 
 				App->resources->AddGameObject(game_object);
@@ -533,6 +536,7 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 						App->renderer3D->rendering_cameras.push_back(camera);
 					}
 				}
+			
 				data.LeaveSection();
 			}
 		}

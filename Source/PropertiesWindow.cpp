@@ -2186,9 +2186,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Emit Area"))
 			{
-				current_emmiter->show_width = current_emmiter->data->emmit_width;
-				current_emmiter->show_height = current_emmiter->data->emmit_height;
-				current_emmiter->show_depth = current_emmiter->data->emmit_depth;
+				//current_emmiter->show_width = current_emmiter->data->emmit_width;
+				//current_emmiter->show_height = current_emmiter->data->emmit_height;
+				//current_emmiter->show_depth = current_emmiter->data->emmit_depth;
 
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);
@@ -2205,12 +2205,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					current_emmiter->scale_dirty = true;
 				}
 					
-				if (current_emmiter->show_height != current_emmiter->data->emmit_width)
+				if (current_emmiter->show_height != current_emmiter->data->emmit_height)
 				{
 					current_emmiter->scale_dirty = true;
 				}
 					
-				if (current_emmiter->show_depth != current_emmiter->data->emmit_width)
+				if (current_emmiter->show_depth != current_emmiter->data->emmit_depth)
 				{
 					current_emmiter->scale_dirty = true;
 				}
@@ -2224,11 +2224,11 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				else if (style == 1)
 					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
 
-				if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
-				{
-					ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-					trans->dirty = true;
-				}
+				//if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
+				//{
+				//	ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+				//	trans->dirty = true;
+				//}
 
 				ImGui::TreePop();
 			}

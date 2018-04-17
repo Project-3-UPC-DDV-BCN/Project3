@@ -97,6 +97,8 @@ public:
 
 	bool show_shockwave;
 
+	bool first_loaded; 
+
 private:
 
 private:
