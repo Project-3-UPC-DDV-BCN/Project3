@@ -1,8 +1,8 @@
 {
-    "Scene_Name": "VS4 - 1V1",
+    "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "1935850366",
+        "UUID": "2032328123",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1912129213",
+        "UUID": "1461201494",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1836660743",
+        "UUID": "1861371737",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -193,11 +193,11 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "889156525"
+                            "field_value": "462836291"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "602818603"
+                            "field_value": "133292476"
                         },
                         "field_5": {
                             "field_name": "slave1",
@@ -219,7 +219,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "391311435",
+        "UUID": "661023462",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -236,7 +236,7 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "535.000000",
+                    "value_X": "475.000000",
                     "value_Y": "401.000000"
                 },
                 "anchor": {
@@ -291,7 +291,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "515870293",
+        "UUID": "539892692",
         "Name": "New GameObject",
         "Tag": "Default",
         "Layer": "Default",
@@ -359,7 +359,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "889156525",
+        "UUID": "462836291",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -376,8 +376,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "110.848091",
-                    "value_Y": "66.508858"
+                    "value_X": "110.848068",
+                    "value_Y": "66.508842"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -393,8 +393,8 @@
                 "Active": "1",
                 "UUID": "2145012880",
                 "position": {
-                    "value_X": "162.589844",
-                    "value_Y": "176.048828",
+                    "value_X": "144.355469",
+                    "value_Y": "178.791016",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -429,12 +429,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "391311435",
+        "ParentID": "661023462",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "602818603",
+        "UUID": "133292476",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -451,8 +451,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "94.220901",
-                    "value_Y": "66.508873"
+                    "value_X": "94.220879",
+                    "value_Y": "66.508858"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -468,8 +468,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "225.598633",
-                    "value_Y": "176.048828",
+                    "value_X": "200.297852",
+                    "value_Y": "178.791016",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -504,7 +504,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "391311435",
+        "ParentID": "661023462",
         "IsRoot": "0",
         "IsStatic": "0"
     }

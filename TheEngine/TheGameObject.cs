@@ -224,6 +224,9 @@ namespace TheEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheScript GetScript(string script_name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheComponent AddComponent(Type type);
 
         /// <summary>
