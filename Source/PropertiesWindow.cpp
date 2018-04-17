@@ -1589,7 +1589,6 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			comp_script = nullptr;
 			return;
 		}
-
 		/*Script* script = comp_script->GetScript();
 		if (ImGui::InputResourceScript("Script", &script))
 		{

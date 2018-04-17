@@ -10,10 +10,12 @@ public class ShipProperties
 
 	void Init()
 	{
+		TheGameObject.Self.tag = "ShipEntity";
+			
 		game_manager = TheGameObject.Find("GameManager");
 		
 		if(game_manager != null)
-			game_manager_script = game_manager.GetComponent<TheScript>();
+			game_manager_script = game_manager.GetScript("GameManager");
 
 		SetShipFaction(ship_faction);			
 	}
@@ -31,6 +33,11 @@ public class ShipProperties
 	string GetFaction()
 	{
 		return ship_faction;
+	}
+	
+	void LaserHit()
+	{
+		DealDamage(10);
 	}
 	
 	void DealDamage(int dmg)

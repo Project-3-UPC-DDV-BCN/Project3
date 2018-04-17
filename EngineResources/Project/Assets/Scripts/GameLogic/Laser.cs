@@ -2,11 +2,17 @@ using TheEngine;
 
 public class Laser {
 
-	void Start () {
+	void OnTriggerEnter(TheGameObject other_ship)
+	{
+		if(other_ship == null)
+			return;
 		
-	}
-	
-	void Update () {
+		if(other_ship.tag != "ShipEntity")
+			return;
+
+		TheScript ship_properties = other_ship.GetScript("ShipProperties");
 		
+		if(ship_properties != null)
+			ship_properties.CallFunctionArgs("LaserHit");
 	}
 }
