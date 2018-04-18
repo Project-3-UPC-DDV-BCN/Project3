@@ -32,6 +32,7 @@ public class PointOoBArrows {
 		TheTransform ship_transform = ship.GetComponent<TheTransform>();
 		TheVector3 dv2 = ship_transform.GlobalPosition - (transform.GlobalPosition + transform.ForwardDirection.Normalized);
 		dv2 = Coord3DtoCoord2D(dv2, false);
+		dv2.x = -dv2.x;
 		arrowTrans.Position = dv2.Normalized * radius;
 	}
 
