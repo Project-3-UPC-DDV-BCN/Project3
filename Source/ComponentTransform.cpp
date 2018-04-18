@@ -131,7 +131,7 @@ float3 ComponentTransform::GetLocalScale() const
 
 void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 {	
-	if (!is_particle && (this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
+	if (is_particle || (this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 
@@ -140,10 +140,13 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 		global_rot = shown_rotation;
 		global_scale = scale;
 
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+		if (!is_particle)
 		{
-			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-			child_transform->UpdateGlobalMatrix();
+			for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+			{
+				ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+				child_transform->UpdateGlobalMatrix();
+			}
 		}
 	}
 	else
@@ -158,14 +161,11 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
-
-		if (!is_particle)
+		
+		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
 		{
-			for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
-			{
-				ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-				child_transform->UpdateGlobalMatrix();
-			}
+			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+			child_transform->UpdateGlobalMatrix();
 		}
 	}
 
