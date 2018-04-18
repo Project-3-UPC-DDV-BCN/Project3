@@ -116,6 +116,11 @@ float * ComponentCamera::GetViewMatrix()
 	return matrix.ptr();
 }
 
+void ComponentCamera::SetAsMainCamera()
+{
+	App->renderer3D->game_camera = this;
+}
+
 void ComponentCamera::SetFOV(float fov)
 {
 	camera_frustum.SetHorizontalFovAndAspectRatio(fov * DEGTORAD, aspect_ratio);

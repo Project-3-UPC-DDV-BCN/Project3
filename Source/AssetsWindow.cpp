@@ -547,7 +547,8 @@ void AssetsWindow::CreateDirectortWindow()
 		confirmed = true;
 	}
 	ImGui::Spacing();
-	if (ImGui::Button("Confirm")) {
+	if (ImGui::Button("Confirm")) 
+	{
 		confirmed = true;
 	}
 	if (confirmed)
@@ -562,6 +563,8 @@ void AssetsWindow::CreateDirectortWindow()
 			selected_folder = temp;
 		}
 		strcpy(inputText, "");
+
+		CheckDirectories();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Cancel")) {

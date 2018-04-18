@@ -223,7 +223,8 @@ Component * GameObject::GetComponent(std::string component_type)
 
 void GameObject::DestroyComponent(Component* component)
 {
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) 
+	{
 		if (*it == component) 
 		{
 			if (component->GetType() == Component::CompCanvas)
@@ -236,6 +237,34 @@ void GameObject::DestroyComponent(Component* component)
 		else 
 		{
 			it++;
+		}
+	}
+}
+
+void GameObject::MoveComponentUp(Component * component)
+{
+	int comp_pos = -1;
+	int pos_counter = 0;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it, ++pos_counter)
+	{
+		if ((*it) == component)
+		{
+			components_list.erase(it);
+			comp_pos = pos_counter;
+			break;
+		}
+	}
+
+	pos_counter = 0;
+	if (comp_pos > -1)
+	{
+		for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it, ++pos_counter)
+		{
+			if (pos_counter == comp_pos-1)
+			{
+				components_list.insert(it, component);
+				break;
+			}
 		}
 	}
 }

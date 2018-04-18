@@ -102,6 +102,7 @@ public:
 	void SetComponentActive(MonoObject* object, bool active); 
 	MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+	MonoObject* GetScript(MonoObject* object, MonoString* string);
 	void DestroyComponent(MonoObject* object, MonoObject* cmp);
 
 	//TRANSFORM
@@ -270,6 +271,7 @@ public:
 	void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	void CallFunction(MonoObject* object, MonoString* function_name);
+	MonoObject* CallFunctionArgs(MonoObject* object, MonoString* function_name, MonoArray* arr);
 
 	//RESOURCES
 	MonoObject* LoadPrefab(MonoString* prefab_name);
@@ -389,6 +391,7 @@ private:
 	static void SetComponentActive(MonoObject* object, bool active); 
 	static MonoObject* AddComponent(MonoObject* object, MonoReflectionType* type);
 	static MonoObject* GetComponent(MonoObject* object, MonoReflectionType* type, int index);
+	static MonoObject* GetScript(MonoObject* object, MonoString* string);
 	static void DestroyComponent(MonoObject * object, MonoObject* cmp);
 
 	//TRANSFORM
@@ -557,6 +560,7 @@ private:
 	static void SetQuaternionField(MonoObject* object, MonoString* field_name, MonoObject* value);
 	static MonoObject* GetQuaternionField(MonoObject* object, MonoString* field_name);
 	static void CallFunction(MonoObject* object, MonoString* function_name);
+	static MonoObject* CallFunctionArgs(MonoObject* object, MonoString* function_name, MonoArray* arr);
 
 	//RESOURCES
 	static MonoObject* LoadPrefab(MonoString* prefab_name);

@@ -130,28 +130,15 @@ float3 ComponentTransform::GetLocalScale() const
 }
 
 void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
-{
-	if (!is_particle && !(this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
-
-		global_pos = parent_transform->GetGlobalPosition() + position;
-		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
-		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
-		global_scale = parent_transform->GetGlobalScale().Mul(scale);
-
-		transform_matrix = float4x4::FromTRS(global_pos, rotation, global_scale);
-		transform_matrix = parent_transform->transform_matrix * transform_matrix;
-
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
-		{
-			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-			child_transform->UpdateGlobalMatrix();
-		}
-	}
-	else
+{	
+	if (is_particle || (this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
+
+		global_pos = position;
+		global_quat_rot = rotation;
+		global_rot = shown_rotation;
+		global_scale = scale;
 
 		if (!is_particle)
 		{
@@ -161,11 +148,25 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 				child_transform->UpdateGlobalMatrix();
 			}
 		}
+	}
+	else
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		global_quat_rot = rotation;
-		global_rot = shown_rotation;
-		global_scale = scale;
-		global_pos = position;
+		global_pos = parent_transform->GetGlobalPosition() + position;
+		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
+		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
+		global_scale = parent_transform->GetGlobalScale().Mul(scale);
+
+		transform_matrix = float4x4::FromTRS(position, rotation, scale);
+
+		transform_matrix = parent_transform->transform_matrix * transform_matrix;
+		
+		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+		{
+			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+			child_transform->UpdateGlobalMatrix();
+		}
 	}
 
 	if (!is_particle)
@@ -200,8 +201,8 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 				}
 			}
 		}
-		
 	}
+	
 }
 
 void ComponentTransform::UpdateLocals()

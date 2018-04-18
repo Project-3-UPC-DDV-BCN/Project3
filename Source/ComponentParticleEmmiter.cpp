@@ -146,6 +146,7 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	show_shockwave = false; 
 	wave_launched = false; 
 	show_emit_area = true; 
+	first_loaded = false; 
 
 	show_width = show_height = show_depth = 1; 
 
@@ -255,12 +256,17 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 
 void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
-	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
+	ComponentTransform* attached_go = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	if (parent_transform->AnyDirty() || scale_dirty)
+	if (attached_go->AnyDirty() || scale_dirty)
 	{
 		//Position increment
-		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint(); 
+		float3 attached_pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
+		float3x3 attached_rot = GetGameObject()->GetGlobalTransfomMatrix().RotatePart(); 
+
+		CONSOLE_LOG("%f, %f, %f", attached_pos.x, attached_pos.y, attached_pos.z);
+
+		float3 pos_increment = attached_pos - emmit_area.CenterPoint();
 
 		float percentage_width = show_width / data->emmit_width;
 		float percentage_height = show_height / data->emmit_height;
@@ -273,7 +279,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 		data->emmit_height = show_height;
 		data->emmit_depth = show_depth;
 
-		parent_transform->dirty = false; 
+		attached_go->dirty = false;
 		scale_dirty = false; 
 	}
 
@@ -305,6 +311,7 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	string name = this->data->GetName(); 
 
 	data.AddString("Template", name); 
+
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -321,8 +328,21 @@ void ComponentParticleEmmiter::Load(Data & data)
 	//Load Template 
 	SetFrequencyFromRate(data.GetInt("Rate"));
 	string template_name = data.GetString("Template");
+
 	this->data = App->resources->GetParticleTemplate(template_name);
 
+	if (first_loaded == false && this->data)
+	{
+		show_width = this->data->emmit_width;
+		show_height = this->data->emmit_height;
+		show_depth = this->data->emmit_depth;
+
+		scale_dirty = true;
+
+		this->data->emmit_width = this->data->emmit_height = this->data->emmit_depth = 1;
+
+		first_loaded = true; 
+	}
 
 }
 

@@ -1493,6 +1493,11 @@ void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 			return;
 		}
 
+		if (ImGui::Button("Set as main camera"))
+		{
+			comp_camera->SetAsMainCamera();
+		}
+		
 		Color background_color = comp_camera->GetBackgroundColor();
 		ImGui::Text("Background Color:");
 		if (ImGui::ColorEdit4("##Background Color", &background_color.r))
@@ -1585,7 +1590,6 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			comp_script = nullptr;
 			return;
 		}
-
 		/*Script* script = comp_script->GetScript();
 		if (ImGui::InputResourceScript("Script", &script))
 		{
@@ -2001,7 +2005,19 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						if (ImGui::MenuItem(it->second->GetName().c_str()))
 						{
+							float3 tmp_size = { current_emmiter->data->emmit_width,current_emmiter->data->emmit_height,current_emmiter->data->emmit_depth };
+
 							current_emmiter->data = it->second;
+
+							current_emmiter->show_width = current_emmiter->data->emmit_width; 
+							current_emmiter->show_height = current_emmiter->data->emmit_height;
+							current_emmiter->show_depth = current_emmiter->data->emmit_depth;
+
+							current_emmiter->data->emmit_width = tmp_size.x; 
+							current_emmiter->data->emmit_height = tmp_size.y;
+							current_emmiter->data->emmit_depth = tmp_size.z;
+							
+							current_emmiter->scale_dirty = true; 
 						}
 					}
 				}
@@ -2182,9 +2198,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Emit Area"))
 			{
-				current_emmiter->show_width = current_emmiter->data->emmit_width;
-				current_emmiter->show_height = current_emmiter->data->emmit_height;
-				current_emmiter->show_depth = current_emmiter->data->emmit_depth;
+				//current_emmiter->show_width = current_emmiter->data->emmit_width;
+				//current_emmiter->show_height = current_emmiter->data->emmit_height;
+				//current_emmiter->show_depth = current_emmiter->data->emmit_depth;
 
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);
@@ -2201,12 +2217,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					current_emmiter->scale_dirty = true;
 				}
 					
-				if (current_emmiter->show_height != current_emmiter->data->emmit_width)
+				if (current_emmiter->show_height != current_emmiter->data->emmit_height)
 				{
 					current_emmiter->scale_dirty = true;
 				}
 					
-				if (current_emmiter->show_depth != current_emmiter->data->emmit_width)
+				if (current_emmiter->show_depth != current_emmiter->data->emmit_depth)
 				{
 					current_emmiter->scale_dirty = true;
 				}
@@ -2220,11 +2236,11 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				else if (style == 1)
 					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
 
-				if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
-				{
-					ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-					trans->dirty = true;
-				}
+				//if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
+				//{
+				//	ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+				//	trans->dirty = true;
+				//}
 
 				ImGui::TreePop();
 			}

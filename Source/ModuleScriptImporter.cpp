@@ -656,6 +656,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheGameObject::AddComponent", (const void*)AddComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::DestroyComponent", (const void*)DestroyComponent);
 	mono_add_internal_call("TheEngine.TheGameObject::GetComponent", (const void*)GetComponent);
+	mono_add_internal_call("TheEngine.TheGameObject::GetScript", (const void*)GetScript);
 	mono_add_internal_call("TheEngine.TheGameObject::Find", (const void*)FindGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::GetGameObjectsWithTag", (const void*)GetGameObjectsWithTag);
 	mono_add_internal_call("TheEngine.TheGameObject::GetGameObjectsMultipleTags", (const void*)GetGameObjectsMultipleTags);
@@ -824,6 +825,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheScript::SetQuaternionField", (const void*)SetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::GetQuaternionField", (const void*)GetQuaternionField);
 	mono_add_internal_call("TheEngine.TheScript::CallFunction", (const void*)CallFunction);
+	mono_add_internal_call("TheEngine.TheScript::CallFunctionArgs", (const void*)CallFunctionArgs);
 
 	//APPLICATION
 	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
@@ -1002,6 +1004,11 @@ MonoObject* ModuleScriptImporter::AddComponent(MonoObject * object, MonoReflecti
 MonoObject* ModuleScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
 	return ns_importer->GetComponent(object, type, index);
+}
+
+MonoObject * ModuleScriptImporter::GetScript(MonoObject * object, MonoString * string)
+{
+	return ns_importer->GetScript(object, string);
 }
 
 void ModuleScriptImporter::DestroyComponent(MonoObject * object, MonoObject * cmp)
@@ -1697,6 +1704,11 @@ MonoObject * ModuleScriptImporter::GetQuaternionField(MonoObject * object, MonoS
 void ModuleScriptImporter::CallFunction(MonoObject * object, MonoString * function_name)
 {
 	ns_importer->CallFunction(object, function_name);
+}
+
+MonoObject* ModuleScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray * arr)
+{
+	return ns_importer->CallFunctionArgs(object, function_name, arr);
 }
 
 MonoObject * ModuleScriptImporter::LoadPrefab(MonoString* prefab_name)
@@ -2525,7 +2537,6 @@ MonoObject* NSScriptImporter::AddComponent(MonoObject * object, MonoReflectionTy
 
 MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionType * type, int index)
 {
-
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
 	if (go)
@@ -2630,11 +2641,11 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			{
 				if (comp_type_count == 0)
 				{
-					CONSOLE_ERROR("%s GetComponent: %s at index (%d) does not exist in %s", current_script->GetName().c_str(), comp_name, index, go->GetName().c_str());
+					//CONSOLE_ERROR("%s GetComponent: %s at index (%d) does not exist in %s", current_script->GetName().c_str(), comp_name, index, go->GetName().c_str());
 				}
 				else
 				{
-					CONSOLE_ERROR("GetComponent method: %s index is out of bounds", comp_name);
+					//CONSOLE_ERROR("GetComponent method: %s index is out of bounds", comp_name);
 				}
 				return nullptr;
 			}
@@ -2689,6 +2700,60 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			}
 		}
 		CONSOLE_ERROR("%s component type is unknown...", comp_name);
+	}
+
+	return nullptr;
+}
+
+MonoObject * NSScriptImporter::GetScript(MonoObject * object, MonoString * string)
+{
+	GameObject* go = GetGameObjectFromMonoObject(object);
+
+	const char* comp_name = "TheScript";
+	Component::ComponentType cpp_type = Component::ComponentType::CompScript;
+
+	std::string script_name = mono_string_to_utf8(string);
+
+	int comp_type_count = 0;
+	for (Component* comp : go->components_list)
+	{
+		if (cpp_type == comp->GetType())
+		{
+			ComponentScript* c_script = (ComponentScript*)comp;
+			if (c_script->GetScriptName() == script_name)
+			{
+				for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+				{
+					if (comp == it->second)
+					{
+						return it->first;
+					}
+				}
+			}
+		}
+	}
+
+	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
+	if (c)
+	{
+		MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+		if (new_object)
+		{
+			for (Component* comp : go->components_list)
+			{
+				if (comp->GetType() == cpp_type)
+				{
+					ComponentScript* c_script = (ComponentScript*)comp;
+					if (c_script->GetScriptName() == script_name)
+					{
+						mono_gchandle_new(new_object, 1);
+						created_components[new_object] = comp;
+						break;
+					}		
+				}
+			}
+			return new_object;
+		}
 	}
 
 	return nullptr;
@@ -5126,6 +5191,39 @@ void NSScriptImporter::CallFunction(MonoObject * object, MonoString * function_n
 			}
 		}
 	}
+}
+
+MonoObject* NSScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray* arr_args)
+{
+	MonoObject* ret = nullptr;
+
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		if (comp->GetType() == Component::CompScript)
+		{
+			ComponentScript* comp_script = (ComponentScript*)comp;
+
+			const char* name = mono_string_to_utf8(function_name);
+
+			CSScript* script = (CSScript*)comp_script->GetScript();
+
+			int args_count = 0;
+
+			if(arr_args != nullptr)
+				args_count = mono_array_length(arr_args);
+
+			MonoMethod* method = script->GetFunction(name, args_count);
+
+			if (method)
+			{
+				ret = script->CallFunctionArray(method, arr_args);
+			}
+		}
+	}
+
+	return ret;
 }
 
 MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)

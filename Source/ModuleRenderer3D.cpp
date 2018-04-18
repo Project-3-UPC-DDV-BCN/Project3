@@ -277,7 +277,7 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 
 		SetUniformBool(program->GetProgramID(), "has_texture", false);
 		SetUniformBool(program->GetProgramID(), "has_material_color", true);
-		SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.5f, 0.0f, 1.0f));
+		SetUniformVector4(program->GetProgramID(), "material_color", float4(1.0f, 0.0f, 0.0f, 1.0f));
 
 		Mesh* cube = App->resources->GetMesh("PrimitiveCube");
 		if (cube->id_indices == 0) cube->LoadToMemory();
@@ -323,8 +323,8 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1560,6 +1560,9 @@ void ModuleRenderer3D::SendLight(uint program)
 	// ---------- SEND LIGHTING ---------------
 	// ----------------------------------------
 	// First send Camera Position, just once.
+
+	if (game_camera == nullptr || game_camera->GetGameObject() == nullptr)
+		return;
 
 	ComponentTransform * c_trans = (ComponentTransform*)game_camera->GetGameObject()->GetComponent(Component::CompTransform);
 

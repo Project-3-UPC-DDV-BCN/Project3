@@ -18,6 +18,7 @@ public:
 	Component* GetComponent(Component::ComponentType component_type);
 	Component* GetComponent(std::string component_type);
 	void DestroyComponent(Component* component);
+	void MoveComponentUp(Component* component);
 
 	void AddChild(GameObject* gameobject);
 	bool IsActive() const;

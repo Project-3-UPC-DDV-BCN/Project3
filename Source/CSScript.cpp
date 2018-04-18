@@ -917,6 +917,26 @@ void CSScript::CallFunction(MonoMethod * function, void ** parameter)
 	}
 }
 
+MonoObject* CSScript::CallFunctionArray(MonoMethod * function, MonoArray * params)
+{
+	MonoObject* obj = nullptr;
+
+	if (function != nullptr)
+	{
+		inside_function = true;
+		MonoObject* exception = nullptr;
+
+		obj = mono_runtime_invoke_array(function, mono_object, params, &exception);
+
+		if (exception)
+		{
+			mono_print_unhandled_exception(exception);
+		}
+	}
+
+	return obj;
+}
+
 void CSScript::ConvertMonoType(MonoType * type, ScriptField& script_field)
 {
 	std::string name = mono_type_get_name(type);

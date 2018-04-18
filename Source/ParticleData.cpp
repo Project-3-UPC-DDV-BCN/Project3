@@ -39,10 +39,6 @@ void ParticleData::LoadDefaultData()
 	emmit_height = 1;
 	emmit_depth = 1;
 
-	width_increment = 0;
-	height_increment = 0;
-	depth_increment = 0;
-
 	relative_pos = false;
 	billboarding = false;
 
@@ -87,7 +83,7 @@ void ParticleData::Save(Data & data) const
 
 	data.AddString("Name", GetName()); 
 
-	data.AddFloat("Emit_Width",emmit_width);
+	data.AddFloat("Emit_Width", emmit_width);
 	data.AddFloat("Emit_Height", emmit_height);
 	data.AddFloat("Emit_Depth", emmit_depth);
 
@@ -230,10 +226,6 @@ void ParticleData::Copy(ParticleData * other)
 	emmit_width	= other->emmit_width;
 	emmit_height = other->emmit_height;
 	emmit_depth	= other->emmit_depth;
-									
-	width_increment	= other->width_increment;
-	height_increment = other->height_increment;
-	depth_increment = other->depth_increment;
 
 	autopause = other->autopause; 
 	time_to_stop = other->time_to_stop; 
@@ -373,11 +365,6 @@ bool ParticleData::Load(Data & _data)
 			final_color.Set(fin_color.x, fin_color.y, fin_color.z);
 			// ------
 		}
-
-		//Function calling ----
-		width_increment = emmit_width;
-		height_increment = emmit_height;
-		depth_increment = emmit_depth;
 
 		_data.LeaveSection();
 	}
