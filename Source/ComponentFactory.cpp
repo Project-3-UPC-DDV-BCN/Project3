@@ -16,8 +16,8 @@ ComponentFactory::ComponentFactory(GameObject* attached_gameobject)
 	SetGameObject(attached_gameobject);
 
 	object_to_spawn = nullptr;
-	object_count = 0;
-	life_time = 0;
+	object_count = 5;
+	life_time = 10;
 	spawn_position = float3::zero;
 	spawn_rotation = float3::zero;
 }
@@ -89,7 +89,7 @@ GameObject* ComponentFactory::Spawn()
 	}
 	else
 	{
-		CONSOLE_ERROR("Factory component in %s is empty. Wait for more GameObjects", GetGameObject()->GetName().c_str());
+		//CONSOLE_ERROR("Factory component in %s is empty. Wait for more GameObjects", GetGameObject()->GetName().c_str());
 	}
 
 	return go;
@@ -165,6 +165,7 @@ void ComponentFactory::StartFactory()
 				GameObject* duplicated = *new_go.begin();
 				duplicated->SetParent(GetGameObject());
 				duplicated->SetActive(false);
+				spawn_objects_list.push_back(duplicated);
 			}
 		}
 	}

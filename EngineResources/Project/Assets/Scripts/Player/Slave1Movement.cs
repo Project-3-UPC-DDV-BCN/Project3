@@ -115,8 +115,14 @@ public class Slave1Movement {
 
     //audio
     public TheGameObject audio_emiter;
-	
+
 	TheAudioSource audio_source;
+
+
+	public TheGameObject particle_emitter_go;
+
+	TheParticleEmmiter particle_emitter;
+	public float particle_base_speed;
 	
 	void Start () 
 	{
@@ -224,6 +230,11 @@ public class Slave1Movement {
 				audio_source.SetMyRTPCvalue("Speed",vel_percent);
 			}
 		}
+
+		if(particle_emitter_go != null)
+		{
+			particle_emitter = particle_emitter_go.GetComponent<TheParticleEmmiter>();
+		}
 	}
 	
 	void Update () 
@@ -255,7 +266,10 @@ public class Slave1Movement {
 
 		if(speed_bar != null)
 			speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
-
+		
+		if(particle_emitter != null)
+			particle_emitter.SetEmitterSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
+			particle_emitter.SetParticleSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
         curr_total_hp = wings_hp + body_hp + engine_hp;
 	}
 

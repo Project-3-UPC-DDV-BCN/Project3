@@ -370,8 +370,6 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	CONSOLE_LOG("Material Loaded To Memory"); 
-
 	bool has_tex = false, has_normalmap = false, has_opacity = false, has_tex2 = false;
 	if (diffuse_texture != nullptr)
 	{

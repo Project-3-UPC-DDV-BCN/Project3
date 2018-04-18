@@ -1,11 +1,11 @@
 {
-    "UUID": "596152527",
+    "UUID": "1406036996",
     "assets_path": "./Project/Assets/Prefabs/VS4 - Laser.jprefab",
     "library_path": "./Project/Library/Prefabs/VS4 - Laser.jprefab",
     "prefab_name": "VS4 - Laser",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "318636698",
+        "UUID": "954617315",
         "Name": "VS4 - Laser",
         "Tag": "Default",
         "Layer": "Default",
@@ -70,7 +70,7 @@
                     "mesh_name": "Laser_Mesh_v1_1_"
                 },
                 "Material": {
-                    "Name": "default_mat"
+                    "Name": "GreenLaser"
                 },
                 "Interior_Material": {
                     "UUID": "1480464845"
@@ -87,7 +87,7 @@
                 "UUID": "1841615759",
                 "Mass": "1.000000",
                 "IsUsingGravity": "0",
-                "IsKinematic": "1",
+                "IsKinematic": "0",
                 "LinearVelocity": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -128,7 +128,7 @@
                 "Active": "1",
                 "UUID": "1767096851",
                 "IsConvex": "0",
-                "IsTrigger": "0",
+                "IsTrigger": "1",
                 "CapsuleDir": "0",
                 "HaveMaterial": "0",
                 "ColliderCenter": {
