@@ -2,7 +2,7 @@
     "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "616323209",
+        "UUID": "1797855006",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "167383082",
+        "UUID": "231523684",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1131283300",
+        "UUID": "2045633029",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -193,11 +193,11 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "1835071792"
+                            "field_value": "246551894"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "1436103508"
+                            "field_value": "352621703"
                         },
                         "field_5": {
                             "field_name": "slave1",
@@ -219,7 +219,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2111875575",
+        "UUID": "49126616",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -291,19 +291,19 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1274031573",
+        "UUID": "1450166512",
         "Name": "ShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
                 "UUID": "645302198",
                 "position": {
-                    "value_X": "0.000000",
+                    "value_X": "0.191450",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
@@ -330,7 +330,7 @@
                     "UUID": "1287140418",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "0",
+                    "float_fields_count": "1",
                     "bool_fields_count": "0",
                     "string_fields_count": "1",
                     "gameobject_fields_count": "0",
@@ -339,7 +339,12 @@
                     "vec4_fields_count": "0",
                     "int_fields": {},
                     "double_fields": {},
-                    "float_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "laser_speed",
+                            "field_value": "10.000000"
+                        }
+                    },
                     "bool_fields": {},
                     "string_fields": {
                         "field_0": {
@@ -373,8 +378,27 @@
                     "value_Y": "-431602080.000000",
                     "value_Z": "-431602080.000000"
                 },
-                "Life_time": "0.000000",
-                "Prefab_UID": "596152527"
+                "Life_time": "10.000000",
+                "Prefab_UID": "1406036996"
+            },
+            "Component_3": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1401506640",
+                "Mesh": {
+                    "mesh_name": "A_Wing"
+                },
+                "Material": {
+                    "Name": "X_Wing_final_Mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
             }
         },
         "ParentID": "0",
@@ -382,7 +406,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1835071792",
+        "UUID": "246551894",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -399,8 +423,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "110.847816",
-                    "value_Y": "66.508690"
+                    "value_X": "110.847458",
+                    "value_Y": "66.508476"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -452,12 +476,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "2111875575",
+        "ParentID": "49126616",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1436103508",
+        "UUID": "352621703",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -474,8 +498,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "94.220665",
-                    "value_Y": "66.508705"
+                    "value_X": "94.220360",
+                    "value_Y": "66.508492"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -527,7 +551,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "2111875575",
+        "ParentID": "49126616",
         "IsRoot": "0",
         "IsStatic": "0"
     }

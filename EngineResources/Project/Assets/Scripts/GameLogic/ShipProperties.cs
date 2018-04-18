@@ -4,20 +4,29 @@ using TheEngine.TheConsole;
 /*
 	All ships should have this script with set with "alliance" or "empire"
 	It should have a component Factory attached, with the bullet using the Laser.cs script
+	Laser should have a collider and a rigid body
 */
 
 public class ShipProperties 
 {
 	public string ship_faction;
+	public float laser_speed = 30;
+
 	private int life = 100;
 
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
 	private TheFactory factory = null;
 
+	private TheTransform self_transform = null;
+
+	bool one_shoot = true;
+		
 	void Init()
 	{
 		TheGameObject.Self.tag = "ShipEntity";
+
+		self_transform = TheGameObject.Self.GetComponent<TheTransform>();
 			
 		game_manager = TheGameObject.Find("GameManager");
 		
@@ -34,6 +43,19 @@ public class ShipProperties
 		if(factory != null)
 			factory.StartFactory();
 	}
+
+	void Update()
+	{
+		if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") >= 20000)
+		{
+			if(one_shoot)
+				Shoot();
+
+			one_shoot = false;
+		}
+		else
+			one_shoot = true;
+	}
 	
 	// Shoots a laser
 	void Shoot()
@@ -48,8 +70,10 @@ public class ShipProperties
 
 				if(laser_script != null)
 				{
-					object[] args = {TheGameObject.Self};
-					laser_script.CallFunctionArgs("SetSender", args);
+					object[] args = {TheGameObject.Self, laser_speed, 
+									 self_transform.ForwardDirection, self_transform.QuatRotation};
+
+					laser_script.CallFunctionArgs("SetInfo", args);
 				}
 			}
 		}
@@ -58,7 +82,7 @@ public class ShipProperties
 	// Called when the ship is hit by a laser
 	void HitByShip(TheGameObject ship)
 	{
-		if(ship != null)
+		if(ship != null && ship != TheGameObject.Self)
 		{
 			TheScript ship_script = ship.GetScript("ShipProperties");
 			if(ship_script != null)

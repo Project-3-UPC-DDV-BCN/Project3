@@ -181,7 +181,7 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 			global_pos = renderer->bounding_box.CenterPoint();
 		}*/
 
-		if (!from_rigidbody)
+		if (from_rigidbody)
 		{
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 			if (rb)
