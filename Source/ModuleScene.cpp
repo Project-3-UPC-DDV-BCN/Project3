@@ -221,8 +221,8 @@ update_status ModuleScene::Update(float dt)
 		ComponentParticleEmmiter* p_emmiter = (ComponentParticleEmmiter*)(*it)->GetComponent(Component::CompParticleSystem);
 		ComponentRigidBody* rb = (ComponentRigidBody*)(*it)->GetComponent(Component::CompRigidBody);
 
-		bool active_parents = RecursiveCheckActiveParents((*it));
-		if (active_parents && (*it)->IsActive())
+		/*bool active_parents = RecursiveCheckActiveParents((*it));*/
+		if ((*it)->IsActive())
 		{
 			(*it)->Update();
 

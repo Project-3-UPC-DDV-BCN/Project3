@@ -69,6 +69,7 @@ private:
 	std::vector<DebugShape> shapes;
 
 	uint line_stroke = 1;
+	uint vao = 0;
 };
 
 #endif // !_H_DEBUG_DRAW__

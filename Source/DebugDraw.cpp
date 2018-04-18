@@ -301,37 +301,37 @@ void DebugDraw::Render(ComponentCamera* camera)
 
 	BROFILER_CATEGORY("Debug Render", Profiler::Color::CadetBlue);
 	// Activate
-	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
-	glActiveTexture(GL_TEXTURE0);
-	GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-	GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-	GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
-	GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-	GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
-	GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
-	GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
-	GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
-	GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
-	GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
-	GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
-	GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
-	GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
-	GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
-	GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
-	GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
-	GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
-	GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
-	GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
+	//GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
+	//glActiveTexture(GL_TEXTURE0);
+	//GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+	//GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+	//GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
+	//GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
+	//GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
+	//GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
+	//GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
+	//GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
+	//GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
+	//GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
+	//GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
+	//GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
+	//GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
+	//GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
+	//GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
+	//GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
+	//GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
+	//GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
+	//GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
 
-	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_SCISSOR_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glEnable(GL_BLEND);
+	//glBlendEquation(GL_FUNC_ADD);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glDisable(GL_CULL_FACE);
+	//glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+	//glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_SCISSOR_TEST);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// Render ----
 	uint program = App->resources->GetShaderProgram("default_debug_program")->GetProgramID();
@@ -340,11 +340,15 @@ void DebugDraw::Render(ComponentCamera* camera)
 	App->renderer3D->SetUniformMatrix(program, "view", camera->GetViewMatrix());
 	App->renderer3D->SetUniformMatrix(program, "projection", camera->GetProjectionMatrix());
 
-	glLineWidth(2);
+	App->renderer3D->SetUniformMatrix(program, "Model", float4x4::identity.Transposed().ptr());
 
-	uint vao = App->renderer3D->GenVertexArrayObject();
+	//glLineWidth(2);
+
+	if(vao == 0)
+		vao = App->renderer3D->GenVertexArrayObject();
 
 	float4 color = float4::zero;
+	float4x4 mat = float4x4::identity;
 
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
@@ -357,7 +361,11 @@ void DebugDraw::Render(ComponentCamera* camera)
 		float4 current_colour = (*it).GetColour();
 		int mode = (*it).GetMode();
 		
-		App->renderer3D->SetUniformMatrix(program, "Model", trans.Transposed().ptr());
+		if (!mat.Equals(trans))
+		{
+			App->renderer3D->SetUniformMatrix(program, "Model", trans.Transposed().ptr());
+			mat = trans;
+		}
 
 		if (!current_colour.Equals(color))
 		{
@@ -387,28 +395,26 @@ void DebugDraw::Render(ComponentCamera* camera)
 		
 	}
 
-	App->renderer3D->DeleteVertexArrayObject(vao);
-
 	// -----------
 
-	// DeActivate
-	glLineWidth(1);
-	App->renderer3D->UseShaderProgram(last_program);
-	glBindTexture(GL_TEXTURE_2D, last_texture);
-	glBindSampler(0, last_sampler);
-	glActiveTexture(last_active_texture);
-	glBindVertexArray(last_vertex_array);
-	glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
-	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
-	glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
-	if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-	if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-	if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-	if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
-	glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
+	//// DeActivate
+	//glLineWidth(1);
+	//App->renderer3D->UseShaderProgram(last_program);
+	//glBindTexture(GL_TEXTURE_2D, last_texture);
+	//glBindSampler(0, last_sampler);
+	//glActiveTexture(last_active_texture);
+	//glBindVertexArray(last_vertex_array);
+	//glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
+	//glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
+	//glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
+	//if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
+	//if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+	//if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
+	//if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+	//glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
+	//glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
+	//glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
 }
 
 void DebugDraw::Clear()

@@ -298,7 +298,7 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 {
 	if (canvas_to_draw.empty()) return;
-
+	BROFILER_CATEGORY("Draw Canvas", Profiler::Color::FloralWhite);
 	// Activate
 	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
 	glActiveTexture(GL_TEXTURE0);

@@ -116,10 +116,7 @@ void CSScript::UpdateScript()
 {
 	if (update != nullptr)
 	{
-		PerfTimer pt;
-		pt.Start();
 		CallFunction(update, nullptr);
-		CONSOLE_DEBUG("%s script update: %.3fms", GetName().c_str(), pt.ReadMs());
 		inside_function = false;
 	}
 }

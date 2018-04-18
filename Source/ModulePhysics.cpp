@@ -46,6 +46,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game)
 	cuda_context_manager = nullptr;
 	dispatcher = nullptr;
 	flow_context = nullptr;
+	draw_colliders = true;
 
 	physx_foundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
 	if (!physx_foundation)
@@ -57,39 +58,37 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled, bool is_game)
 		/*pvd = physx::PxCreatePvd(*physx_foundation);
 		if (!pvd)
 		{
-		CONSOLE_DEBUG("Error. PxCreatePvd failed!");
-		ret = false;
+			CONSOLE_DEBUG("Error. PxCreatePvd failed!");
 		}
 		else
 		{*/
-		physx::PxTolerancesScale scale;
-		physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, scale, false/*, pvd*/);
-		if (!physx_physics)
-		{
-			CONSOLE_DEBUG("Error. PxCreatePhysics failed!");
-		}
-		else
-		{
-			physx::PxCookingParams cooking_params(scale);
-			cooking_params.buildGPUData = true;
-			cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
-			if (!cooking)
+			physx::PxTolerancesScale scale;
+			physx_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *physx_foundation, scale);
+			if (!physx_physics)
 			{
-				CONSOLE_DEBUG("Error. PxCreateCooking failed!");
+				CONSOLE_DEBUG("Error. PxCreatePhysics failed!");
 			}
 			else
 			{
-				//if (!PxInitExtensions(*physx_physics/*, pvd*/))
-				//{
-				//	CONSOLE_DEBUG("Error. PxInitExtensions failed!");
-				//	ret = false;
-				//}
-				//else
-				//{
-				CreateMainScene();
-				//}
+				physx::PxCookingParams cooking_params(scale);
+				cooking_params.buildGPUData = true;
+				cooking = PxCreateCooking(PX_PHYSICS_VERSION, *physx_foundation, cooking_params);
+				if (!cooking)
+				{
+					CONSOLE_DEBUG("Error. PxCreateCooking failed!");
+				}
+				else
+				{
+					if (!PxInitExtensions(*physx_physics, nullptr))
+					{
+						CONSOLE_DEBUG("Error. PxInitExtensions failed!");
+					}
+					else
+					{
+						CreateMainScene();
+					}
+				}
 			}
-		}
 		//}
 	}
 
@@ -122,37 +121,41 @@ update_status ModulePhysics::Update(float dt)
 			{
 				physx::PxScene* scene;
 				physx_physics->getScenes(&scene, 1, i);
-				scene->simulate(dt);
-				//App->blast->ApplyDamage();
-				scene->fetchResults(true);
 
-				physx::PxU32 active_actors_num;
-				physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
-
-				for (physx::PxU32 i = 0; i < active_actors_num; ++i)
+				if (scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC) > 0 || scene->getNbActors(physx::PxActorTypeFlag::eRIGID_STATIC) > 0)
 				{
-					physx::PxActorType::Enum type = active_actors[i]->getType();
-					switch (type)
+					scene->simulate(dt);
+					//App->blast->ApplyDamage();
+					scene->fetchResults(true);
+
+					physx::PxU32 active_actors_num;
+					physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
+
+					for (physx::PxU32 i = 0; i < active_actors_num; ++i)
 					{
-					case physx::PxActorType::eRIGID_STATIC:
-						break;
-					case physx::PxActorType::eRIGID_DYNAMIC:
-						UpdateDynamicBody(active_actors[i]);
-						break;
-					case physx::PxActorType::ePARTICLE_SYSTEM:
-						break;
-					case physx::PxActorType::ePARTICLE_FLUID:
-						break;
-					case physx::PxActorType::eARTICULATION_LINK:
-						break;
-					case physx::PxActorType::eCLOTH:
-						break;
-					case physx::PxActorType::eACTOR_COUNT:
-						break;
-					case physx::PxActorType::eACTOR_FORCE_DWORD:
-						break;
-					default:
-						break;
+						physx::PxActorType::Enum type = active_actors[i]->getType();
+						switch (type)
+						{
+						case physx::PxActorType::eRIGID_STATIC:
+							break;
+						case physx::PxActorType::eRIGID_DYNAMIC:
+							UpdateDynamicBody(active_actors[i]);
+							break;
+						case physx::PxActorType::ePARTICLE_SYSTEM:
+							break;
+						case physx::PxActorType::ePARTICLE_FLUID:
+							break;
+						case physx::PxActorType::eARTICULATION_LINK:
+							break;
+						case physx::PxActorType::eCLOTH:
+							break;
+						case physx::PxActorType::eACTOR_COUNT:
+							break;
+						case physx::PxActorType::eACTOR_FORCE_DWORD:
+							break;
+						default:
+							break;
+						}
 					}
 				}
 			}
@@ -183,7 +186,10 @@ update_status ModulePhysics::Update(float dt)
 		}
 	}
 
-	DrawColliders();
+	if (draw_colliders)
+	{
+		DrawColliders();
+	}
 	
 	return UPDATE_CONTINUE;
 }
@@ -202,7 +208,7 @@ bool ModulePhysics::CleanUp()
 	dispatcher->release();
 	cuda_context_manager->release();
 	cooking->release();
-	//pvd->release();
+	PxCloseExtensions();
 	physx_physics->release();
 
 	//foundation is last
@@ -504,13 +510,13 @@ void ModulePhysics::CreateMainScene()
 		sceneDesc.flags |= physx::PxSceneFlag::eENABLE_GPU_DYNAMICS;
 		sceneDesc.broadPhaseType = physx::PxBroadPhaseType::eGPU;
 
-		//sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
-		//sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
-		//sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
-		//sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
-		//sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
-		//sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
-		//sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;
+		/*sceneDesc.gpuDynamicsConfig.constraintBufferCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.contactBufferCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.contactStreamSize *= 4;
+		sceneDesc.gpuDynamicsConfig.forceStreamCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.foundLostPairsCapacity *= 4;
+		sceneDesc.gpuDynamicsConfig.patchStreamSize *= 4;
+		sceneDesc.gpuDynamicsConfig.tempBufferCapacity *= 4;*/
 	}
 	else
 	{
@@ -536,7 +542,7 @@ void ModulePhysics::CreateScene()
 
 	physx::PxScene* scene = physx_physics->createScene(sceneDesc);
 	scene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
-	scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 2.0f);
+	scene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
 }
 
 void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)

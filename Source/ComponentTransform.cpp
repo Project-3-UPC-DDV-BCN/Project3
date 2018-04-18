@@ -165,6 +165,7 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 		global_quat_rot = rotation;
 		global_rot = shown_rotation;
 		global_scale = scale;
+		global_pos = position;
 	}
 
 	if (!is_particle)

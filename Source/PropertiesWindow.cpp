@@ -94,6 +94,7 @@ void PropertiesWindow::DrawWindow()
 			if (ImGui::Checkbox("Active", &is_gameobject_active))
 			{
 				selected_gameobject->SetActive(is_gameobject_active);
+				selected_gameobject->was_active = is_gameobject_active;
 			}
 			ImGui::SameLine();
 			bool is_static = selected_gameobject->IsStatic();

@@ -15,7 +15,7 @@ public class test1 {
 		//ship_hit_scpt = TheGameObject.Find("test").GetComponent<TheScript>();
 		//ship_hit_scpt.CallFunction("SubstractHP"); 
 		fact = TheGameObject.Self.GetComponent<TheFactory>();
-		//fact.StartFactory(); 
+		fact.StartFactory(); 
 	}
 	
 	void OnTriggerStay(TheGameObject other)
@@ -29,9 +29,7 @@ public class test1 {
 			TheGameObject go = fact.Spawn();
 			go.GetComponent<TheRigidBody>().SetLinearVelocity(0,0,5);
 		}
-		string r = TheGameObject.Self.name;
-		TheGameObject d = TheGameObject.Self;
-		TheFactory a = fact;
+		
 	}
 	
 	void Test()

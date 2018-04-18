@@ -11,6 +11,7 @@
 #include "RenderTextureMSAA.h"
 #include "ComponentRectTransform.h"
 #include "ModuleInput.h"
+#include "ModulePhysics.h"
 
 SceneWindow::SceneWindow()
 {
@@ -210,10 +211,16 @@ void SceneWindow::DrawMenuBar()
 		}
 		if (ImGui::BeginMenu("Gizmos"))
 		{
-			bool selected = App->scene->draw_octree;
-			if (ImGui::MenuItem("Octree", "", selected))
+			bool draw_octree = App->scene->draw_octree;
+			if (ImGui::MenuItem("Octree", "", draw_octree))
 			{
-				App->scene->draw_octree = !selected;
+				App->scene->draw_octree = !draw_octree;
+			}
+
+			bool draw_colliders = App->physics->draw_colliders;
+			if (ImGui::MenuItem("Colliders", "", draw_colliders))
+			{
+				App->physics->draw_colliders = !draw_colliders;
 			}
 			ImGui::EndMenu();
 		}
