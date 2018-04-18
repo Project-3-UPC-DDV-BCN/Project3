@@ -35,40 +35,53 @@ bool ComponentAudioSource::Update()
 {
 	bool ret = true;
 
-	if (obj == nullptr)
-		return ret;
+	BROFILER_CATEGORY("Component - Audio Source - Update", Profiler::Color::Beige);
 
-	if (!muted) {
-		obj->SetRTPCvalue("Volume", volume);
-		obj->SetRTPCvalue("Pitch", pitch);
-	}
-	else {
-		obj->SetRTPCvalue("Volume", 0);
-	}
-	
-	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
-	
-	if (trans)
+	ComponentListener* default_listener =  App->audio->GetDefaultListener();
+	if (default_listener != nullptr)
 	{
-		float3 pos = trans->GetGlobalPosition();
-		Quat rot = Quat::FromEulerXYZ(trans->GetGlobalRotation().x * DEGTORAD, trans->GetGlobalRotation().y * DEGTORAD, trans->GetGlobalRotation().z * DEGTORAD);
-	
-		float3 up = rot.Transform(float3(0, 1, 0));
-		float3 front = rot.Transform(float3(0, 0, 1));
-	
-		up.Normalize();
-		front.Normalize();
-	
-		obj->SetPosition(pos.x, pos.y, pos.z, front.x, front.y, front.z, up.x, up.y, up.z);
-	}
-	
-	if (!events_to_play.empty()) {
-		for (int i = 0; i < events_to_play.size(); i++) {
-			PlayEvent(events_to_play[i]->name.c_str());
+		/*GameObject* listener_go = default_listener->GetGameObject();
+		
+		float distance_list_audio = (listener_go->GetGlobalPosition() - GetGameObject()->GetGlobalPosition()).Length();
+		*/
+		if (obj == nullptr)
+			return ret;
+
+		if (!muted) {
+			obj->SetRTPCvalue("Volume", volume);
+			obj->SetRTPCvalue("Pitch", pitch);
 		}
-	
-		events_to_play.clear();
+		else {
+			obj->SetRTPCvalue("Volume", 0);
+		}
+
+		ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
+
+		if (trans)
+		{
+			float3 pos = trans->GetGlobalPosition();
+			Quat rot = Quat::FromEulerXYZ(trans->GetGlobalRotation().x * DEGTORAD, trans->GetGlobalRotation().y * DEGTORAD, trans->GetGlobalRotation().z * DEGTORAD);
+
+			float3 up = rot.Transform(float3(0, 1, 0));
+			float3 front = rot.Transform(float3(0, 0, 1));
+
+			up.Normalize();
+			front.Normalize();
+
+			obj->SetPosition(pos.x, pos.y, pos.z, front.x, front.y, front.z, up.x, up.y, up.z);
+		}
+
+		if (!events_to_play.empty()) {
+			for (int i = 0; i < events_to_play.size(); i++) {
+				PlayEvent(events_to_play[i]->name.c_str());
+			}
+
+			events_to_play.clear();
+		}
+
 	}
+	else
+		CONSOLE_WARNING("There is no listener, no sound will be reproduced");
 
 	return ret;
 }

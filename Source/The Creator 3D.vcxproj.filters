@@ -76,6 +76,9 @@
     <Filter Include="Sources\Resources">
       <UniqueIdentifier>{2edd635c-3608-4366-9052-5751a6604922}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\3d Party\Brofiler">
+      <UniqueIdentifier>{303ac3c9-4a9c-4925-b626-6b0207420762}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -1193,6 +1196,9 @@
     </ClInclude>
     <ClInclude Include="TinyXML\tinyxml2.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Brofiler\Brofiler.h">
+      <Filter>Sources\3d Party\Brofiler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

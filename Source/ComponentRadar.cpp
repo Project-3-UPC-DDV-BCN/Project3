@@ -43,6 +43,8 @@ bool ComponentRadar::Update()
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Component - Radar - Update", Profiler::Color::Beige);
+
 	ComponentCanvas* canvas = GetCanvas();
 
 	if (canvas != nullptr)
@@ -530,7 +532,7 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
-					float z_offset = rota_pos.z;
+					float z_offset = -distance_magnitude;
 
 					if (z_offset < 0)
 					{
@@ -542,9 +544,9 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 							// Scale size
 							if (z_offset != 0)
 							{
-								float scaled_size_z = (max_distance * markers_size) / -z_offset;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 1.5f)
-									scaled_size_z = radar_scaled_size / (1.5f * entity_scaled_size);
+								float scaled_size_z = (max_distance * markers_size) / -z_offset * 0.5f;
+								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 5)
+									scaled_size_z = radar_scaled_size / (5 * entity_scaled_size);
 
 								if ((float)scaled_size_z * (float)entity_scaled_size > 0)
 								{
@@ -625,7 +627,7 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
-					float z_offset = rota_pos.z;
+					float z_offset = distance_magnitude;
 
 					if (z_offset > 0)
 					{
@@ -638,8 +640,8 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 							if (z_offset != 0)
 							{
 								float scaled_size_z = (max_distance * markers_size) / z_offset;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 1.5f)
-									scaled_size_z = radar_scaled_size / (1.5f * entity_scaled_size);
+								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 5)
+									scaled_size_z = radar_scaled_size / (5 * entity_scaled_size);
 
 								if (scaled_size_z * entity_scaled_size > 0)
 								{

@@ -18,7 +18,7 @@ public:
 	void EraseInNode(ComponentMeshRenderer* mesh);
 	void DivideNode();
 	void ClearNode();
-	void CollectIntersections(std::list<ComponentMeshRenderer*>& intersections_list, AABB* bounding_box);
+	void CollectIntersections(std::vector<ComponentMeshRenderer*>& intersections_list, AABB* bounding_box);
 	void DebugDrawNode();
 
 public:
@@ -38,7 +38,7 @@ public:
 	void Update();
 	void Insert(ComponentMeshRenderer* mesh);
 	void Erase(ComponentMeshRenderer* mesh);
-	void CollectIntersections(std::list<ComponentMeshRenderer*>& intersections_list, AABB* bounding_box);
+	void CollectIntersections(std::vector<ComponentMeshRenderer*>& intersections_list, AABB* bounding_box);
 	void DebugDraw();
 	void CalculateNewSize(float3 box_min_point, float3 box_max_point);
 

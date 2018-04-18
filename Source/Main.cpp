@@ -1,10 +1,17 @@
 #include <stdlib.h>
+
 #include "Application.h"
 #include "Globals.h"
 
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/lib/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/lib/libx86/SDL2main.lib" )
+
+#ifdef QUE_PASOO
+//Brofiler implementation
+#include "Brofiler/Brofiler.h"
+#pragma comment(lib, "Brofiler/ProfilerCore32.lib")
+#endif // QUE_PASOO
 
 enum main_states
 {
@@ -26,6 +33,8 @@ int main(int argc, char ** argv)
 
 	while (state != MAIN_EXIT)
 	{
+		BROFILER_FRAME("TheCreator3D");
+
 		switch (state)
 		{
 		case MAIN_CREATION:

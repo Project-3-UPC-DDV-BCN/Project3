@@ -1,6 +1,8 @@
 #include "ModuleFileSystem.h"
-
 #include "Resource.h"
+#include <iomanip>
+#include <iostream>
+#include <fstream>
 
 ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
 {
@@ -93,6 +95,17 @@ std::vector<std::string> ModuleFileSystem::GetAllSubDirectoriesRecursively(std::
 		}
 	}
 	return directories;
+}
+
+void ModuleFileSystem::CreateCSVFromProf(const char * path)
+{
+	std::ofstream outData;
+
+	int n = 1;
+
+	outData.open("Brofiler-1.1.2/outfile.csv", std::ios::app);
+	outData << path << std::endl;
+	outData << n << std::endl;
 }
 
 bool ModuleFileSystem::FileExist(std::string file_path)

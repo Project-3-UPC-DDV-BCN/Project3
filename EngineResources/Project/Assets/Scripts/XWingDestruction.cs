@@ -8,7 +8,7 @@ public class XWingDestruction {
 	public float time_to_destroy; 
 
 	private TheTimer destroy_timer = new TheTimer();
-    private TheScript properties; 
+    private TheScript hp_tracker; 
 
 	List<TheGameObject> ship_parts; 
 
@@ -22,7 +22,7 @@ public class XWingDestruction {
 	void Start () 
 	{
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
-        properties = TheGameObject.Self.GetComponent<TheScript>(0);
+        hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0);
 
         ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
@@ -31,12 +31,9 @@ public class XWingDestruction {
 	
 	void Update ()
 	{
-		if(need_boom == true && exploted == false)
+		if(hp_tracker.GetIntField("amount") <= 0 && exploted == false)
 		{
-
             TheGameObject current = TheGameObject.Self; 
-
-			TheConsole.Log("YOU KILEEEEEED MEEEEE"); 
                      	
 			FillPartList(current); 
 			SetPartsDirection(); 		
@@ -96,8 +93,11 @@ public class XWingDestruction {
 			ship_parts[i].DestroyComponent(mesh_col); 
 
 			//Modify RigidBody
-			piece_rb.Kinematic = false; 
-			piece_rb.TransformGO = true; 
+			if(piece_rb != null)
+			{
+				piece_rb.Kinematic = false; 
+				piece_rb.TransformGO = true; 
+			}
 			
 			direction = direction.Normalized * explosion_v;
 			
@@ -117,7 +117,8 @@ public class XWingDestruction {
 			rotation.y = rotation.y * dest_factor;  
 			rotation.z = rotation.z * dest_factor; 
 			
-			piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
+			if(piece_rb != null)
+				piece_rb.SetAngularVelocity(rotation.x, rotation.y, rotation.z); 		
 		}
 	}
 }

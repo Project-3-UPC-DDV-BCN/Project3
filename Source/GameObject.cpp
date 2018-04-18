@@ -31,11 +31,16 @@
 
 GameObject::GameObject(GameObject* parent)
 {
+	ComponentTransform* transform = (ComponentTransform*)AddComponent(Component::CompTransform);
 	active = true;
 	this->parent = nullptr;
 	if (parent != nullptr)
 	{
 		SetParent(parent);
+		if (transform)
+		{
+			transform->SetPosition({ 0,0,0 });
+		}
 	}
 	else
 	{
@@ -49,7 +54,6 @@ GameObject::GameObject(GameObject* parent)
 	is_static = false;
 	is_used_in_prefab = false;
 	is_ui = false;
-	AddComponent(Component::CompTransform);
 	used_in_scene = false;
 	uuid = App->RandomNumber().Int();
 }
@@ -218,7 +222,8 @@ Component * GameObject::GetComponent(std::string component_type)
 
 void GameObject::DestroyComponent(Component* component)
 {
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end();) 
+	{
 		if (*it == component) 
 		{
 			if (component->GetType() == Component::CompCanvas)
@@ -231,6 +236,34 @@ void GameObject::DestroyComponent(Component* component)
 		else 
 		{
 			it++;
+		}
+	}
+}
+
+void GameObject::MoveComponentUp(Component * component)
+{
+	int comp_pos = -1;
+	int pos_counter = 0;
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it, ++pos_counter)
+	{
+		if ((*it) == component)
+		{
+			components_list.erase(it);
+			comp_pos = pos_counter;
+			break;
+		}
+	}
+
+	pos_counter = 0;
+	if (comp_pos > -1)
+	{
+		for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it, ++pos_counter)
+		{
+			if (pos_counter == comp_pos-1)
+			{
+				components_list.insert(it, component);
+				break;
+			}
 		}
 	}
 }
@@ -270,12 +303,12 @@ void GameObject::SetActive(bool active)
 		if (!active)
 		{
 			rb->SetToSleep();
-			rb->DisableShapes();
+			rb->OnDisable();
 		}
 		else
 		{
 			rb->WakeUp();
-			rb->EnableShapes();
+			rb->OnEnable();
 		}
 	}
 
@@ -533,6 +566,12 @@ void GameObject::SetGlobalTransfomMatrix(const float4x4 & matrix)
 	transform->SetMatrix(matrix);
 }
 
+math::float3 GameObject::GetGlobalPosition()
+{
+	ComponentTransform* transform = (ComponentTransform*)GetComponent(Component::CompTransform);
+	return transform->GetGlobalPosition();
+}
+
 void GameObject::SetParentByID(UID parent_id)
 {
 	SetParent(App->scene->FindGameObject(parent_id));
@@ -567,6 +606,7 @@ void GameObject::StartScripts()
 
 void GameObject::UpdateScripts()
 {
+	BROFILER_CATEGORY("GameObjecct Update Scripts", Profiler::Color::IndianRed);
 	ComponentScript* comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
@@ -576,74 +616,75 @@ void GameObject::UpdateScripts()
 	}
 }
 
-void GameObject::OnCollisionEnter(GameObject* other_collider)
+void GameObject::OnCollisionEnter(CollisionData& col_data)
 {
 	ComponentScript* comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
-			comp_script->OnCollisionEnter(other_collider);
+			comp_script->OnCollisionEnter(col_data);
 		}
 	}
 }
 
-void GameObject::OnCollisionStay(GameObject* other_collider)
+void GameObject::OnCollisionStay(CollisionData& col_data)
 {
 	ComponentScript* comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
-			comp_script->OnCollisionStay(other_collider);
+			comp_script->OnCollisionStay(col_data);
 		}
 	}
 }
 
-void GameObject::OnCollisionExit(GameObject* other_collider)
+void GameObject::OnCollisionExit(CollisionData& col_data)
 {
 	ComponentScript* comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
-			comp_script->OnCollisionExit(other_collider);
+			comp_script->OnCollisionExit(col_data);
 		}
 	}
 }
 
-void GameObject::OnTriggerEnter(GameObject* other_collider)
+void GameObject::OnTriggerEnter(CollisionData& col_data)
 {
 	ComponentScript * comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
-			comp_script->OnTriggerEnter(other_collider);
+			comp_script->OnTriggerEnter(col_data);
 		}
 	}
 }
 
-void GameObject::OnTriggerStay(GameObject* other_collider)
+void GameObject::OnTriggerStay(CollisionData& col_data)
 {
 	ComponentScript * comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
-			comp_script->OnTriggerStay(other_collider);
+			comp_script->OnTriggerStay(col_data);
 		}
 	}
 }
 
-void GameObject::OnTriggerExit(GameObject* other_collider)
+void GameObject::OnTriggerExit(CollisionData& col_data)
 {
 	ComponentScript * comp_script = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
-			comp_script->OnTriggerExit(other_collider);
+			comp_script->OnTriggerExit(col_data);
 		}
 	}
 }
 
 void GameObject::UpdateFactory()
 {
+	BROFILER_CATEGORY("GameObject Update Factory", Profiler::Color::DarkOrange);
 	ComponentFactory* comp_factory = nullptr;
 	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
 		if ((*it)->GetType() == Component::CompFactory) {
@@ -776,6 +817,14 @@ void GameObject::Load(Data & data)
 	tag = data.GetString("Tag");
 	layer = data.GetString("Layer");
 	active = data.GetBool("Active");
+	UID parent_id = data.GetUInt("ParentID");
+	if (parent_id != 0)
+	{
+		SetParentByID(parent_id);
+	}
+
+	is_root = data.GetBool("IsRoot");
+
 	if (data.EnterSection("Components"))
 	{
 		int componentsCount = data.GetInt("Components_Count");
@@ -822,14 +871,6 @@ void GameObject::Load(Data & data)
 		}
 		data.LeaveSection();
 	}
-
-	UID parent_id = data.GetUInt("ParentID");
-	if (parent_id != 0) 
-	{
-		SetParentByID(parent_id);
-	}
-
-	is_root = data.GetBool("IsRoot");
 	
 	////Store gameObject name to know the existing gameObjects when loading scene
 	//if (std::find(App->scene->scene_gameobjects.begin(), App->scene->scene_gameobjects.end(), this) != App->scene->scene_gameobjects.end())
@@ -885,6 +926,7 @@ void GameObject::Load(Data & data)
 
 bool GameObject::Update()
 {
+	BROFILER_CATEGORY("GameObject Update", Profiler::Color::HotPink);
 	bool ret = true;
 
 	for (std::list<Component*>::iterator c = components_list.begin(); c != components_list.end(); ++c)

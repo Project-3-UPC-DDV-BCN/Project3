@@ -45,6 +45,8 @@ ComponentText::~ComponentText()
 
 bool ComponentText::Update()
 {
+	BROFILER_CATEGORY("Component - Text - Update", Profiler::Color::Beige);
+
 	bool ret = true;
 
 	if (update_text)

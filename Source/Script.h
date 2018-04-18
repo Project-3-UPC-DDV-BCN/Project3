@@ -9,6 +9,7 @@
 class Texture;
 class GameObject;
 class ComponentRectTransform;
+struct CollisionData;
 
 struct ScriptField {
 	enum PropertyType {
@@ -35,12 +36,12 @@ public:
 	virtual void InitScript() = 0;
 	virtual void StartScript() = 0;
 	virtual void UpdateScript() = 0;
-	virtual void OnCollisionEnter(GameObject* gameobject) = 0;
-	virtual void OnCollisionStay(GameObject* gameobject) = 0;
-	virtual void OnCollisionExit(GameObject* gameobject) = 0;
-	virtual void OnTriggerEnter(GameObject* gameobject) = 0;
-	virtual void OnTriggerStay(GameObject* gameobject) = 0;
-	virtual void OnTriggerExit(GameObject* gameobject) = 0;
+	virtual void OnCollisionEnter(CollisionData& col_data) = 0;
+	virtual void OnCollisionStay(CollisionData& col_data) = 0;
+	virtual void OnCollisionExit(CollisionData& col_data) = 0;
+	virtual void OnTriggerEnter(CollisionData& col_data) = 0;
+	virtual void OnTriggerStay(CollisionData& col_data) = 0;
+	virtual void OnTriggerExit(CollisionData& col_data) = 0;
 	virtual void OnEnable() = 0;
 	virtual void OnDisable() = 0;
 

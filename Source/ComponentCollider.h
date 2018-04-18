@@ -55,6 +55,9 @@ public:
 
 	bool rb_is_released;
 
+	void OnEnable();
+	void OnDisable();
+
 private:
 	ColliderType collider_type;
 	physx::PxMaterial* collider_material;

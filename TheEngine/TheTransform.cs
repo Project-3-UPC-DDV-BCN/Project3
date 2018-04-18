@@ -99,6 +99,18 @@ namespace TheEngine
                 return GetRight();
             }
         }
+
+        public TheQuaternion QuatRotation
+        {
+            get
+            {
+                return GetQuatRotation();
+            }
+            set
+            {
+                SetQuatRotation(value);
+            }
+        }
      
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void RotateAroundAxis(TheVector3 axis, float angle);
@@ -135,6 +147,12 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetUp();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern TheQuaternion GetQuatRotation();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void SetQuatRotation(TheQuaternion value);
 
     }
 }

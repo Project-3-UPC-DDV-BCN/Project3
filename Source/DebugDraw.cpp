@@ -297,6 +297,9 @@ uint DebugDraw::GetLineStroke() const
 
 void DebugDraw::Render(ComponentCamera* camera)
 {
+	if (shapes.empty()) return;
+
+	BROFILER_CATEGORY("Debug Render", Profiler::Color::CadetBlue);
 	// Activate
 	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
 	glActiveTexture(GL_TEXTURE0);
@@ -331,11 +334,17 @@ void DebugDraw::Render(ComponentCamera* camera)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// Render ----
+	uint program = App->resources->GetShaderProgram("default_debug_program")->GetProgramID();
+	App->renderer3D->UseShaderProgram(program);
 
-	ShaderProgram* program = App->resources->GetShaderProgram("default_debug_program");
-	glUseProgram(program->GetProgramID());
+	App->renderer3D->SetUniformMatrix(program, "view", camera->GetViewMatrix());
+	App->renderer3D->SetUniformMatrix(program, "projection", camera->GetProjectionMatrix());
 
 	glLineWidth(2);
+
+	uint vao = App->renderer3D->GenVertexArrayObject();
+
+	float4 color = float4::zero;
 
 	for (std::vector<DebugShape>::iterator it = shapes.begin(); it != shapes.end(); ++it)
 	{
@@ -345,16 +354,15 @@ void DebugDraw::Render(ComponentCamera* camera)
 		uint id_indices = 0;
 
 		float4x4 trans = (*it).GetTransform();
-		float4 colour = (*it).GetColour();
+		float4 current_colour = (*it).GetColour();
 		int mode = (*it).GetMode();
+		
+		App->renderer3D->SetUniformMatrix(program, "Model", trans.Transposed().ptr());
 
-		App->renderer3D->SetUniformMatrix(program->GetProgramID(), "view", camera->GetViewMatrix());
-		App->renderer3D->SetUniformMatrix(program->GetProgramID(), "projection", camera->GetProjectionMatrix());
-		App->renderer3D->SetUniformMatrix(program->GetProgramID(), "Model", trans.Transposed().ptr());
-
-		App->renderer3D->SetUniformVector4(program->GetProgramID(), "debug_color", colour);
-
-		uint vao = App->renderer3D->GenVertexArrayObject();
+		if (!current_colour.Equals(color))
+		{
+			App->renderer3D->SetUniformVector4(program, "debug_color", current_colour);
+		}
 
 		glGenBuffers(1, &id_vertices_data);
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertices_data);
@@ -376,14 +384,16 @@ void DebugDraw::Render(ComponentCamera* camera)
 		glDeleteBuffers(1, &id_indices);
 
 		App->renderer3D->UnbindVertexArrayObject();
-		App->renderer3D->DeleteVertexArrayObject(vao);
+		
 	}
+
+	App->renderer3D->DeleteVertexArrayObject(vao);
 
 	// -----------
 
 	// DeActivate
 	glLineWidth(1);
-	glUseProgram(last_program);
+	App->renderer3D->UseShaderProgram(last_program);
 	glBindTexture(GL_TEXTURE_2D, last_texture);
 	glBindSampler(0, last_sampler);
 	glActiveTexture(last_active_texture);

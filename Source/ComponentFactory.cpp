@@ -65,29 +65,23 @@ void ComponentFactory::SetLifeTime(float life_time)
 
 GameObject* ComponentFactory::Spawn()
 {
+	BROFILER_CATEGORY("Component - Factory - Spawn", Profiler::Color::Beige);
+
 	GameObject* go = nullptr;
-	if(!spawn_objects_list.empty()) go = spawn_objects_list.front();
+
+	if(!spawn_objects_list.empty()) 
+		go = spawn_objects_list.front();
+
 	if (go != nullptr)
 	{
 		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-		if (transform)
+
+		if (transform != nullptr)
 		{
 			//CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
-			ComponentRigidBody* rb = (ComponentRigidBody*)go->GetComponent(Component::CompRigidBody);
-			if (rb && transform->GetTransformedFromRB())
-			{
-				//float4x4 m = transform->GetOpenGLMatrix();
-				//rb->SetTransform(m.ptr());
-				rb->SetLinearVelocity({ 0,0,0 });
-				rb->SetPosition(spawn_position);
-				rb->SetRotation(spawn_rotation);
-			}
-			else
-			{
-				transform->SetPosition(spawn_position);
-				transform->SetRotation(spawn_rotation);
-				transform->SetScale(spawn_scale);
-			}
+			transform->SetPosition(spawn_position);
+			transform->SetRotation(spawn_rotation);
+			transform->SetScale(spawn_scale);
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
 			go->SetActive(true);
@@ -138,10 +132,13 @@ float3 ComponentFactory::GetSpawnScale() const
 
 void ComponentFactory::StartFactory()
 {
-	if (object_to_spawn && object_to_spawn->GetRootGameObject())
+	BROFILER_CATEGORY("Component - Factory - StartFactory", Profiler::Color::Beige);
+
+	if (object_to_spawn != nullptr && object_to_spawn->GetRootGameObject())
 	{
 		ComponentTransform* transform = (ComponentTransform*)object_to_spawn->GetRootGameObject()->GetComponent(Component::CompTransform);
-		if (transform)
+
+		if (transform != nullptr)
 		{
 			original_rotation = transform->GetLocalRotation();
 			original_scale = transform->GetLocalScale();
@@ -158,35 +155,18 @@ void ComponentFactory::StartFactory()
 				SetSpawnPos(original_position);
 			}
 		}
-		
-		App->scene->saving_index = 0;
-		Data data;
-		object_to_spawn->GetRootGameObject()->Save(data, true);
 
 		for (int i = 0; i < object_count; i++)
-		{	
-			for (int j = 0; j < App->scene->saving_index; j++) {
-				if (data.EnterSection("GameObject_" + std::to_string(j)))
-				{
-					GameObject* go = new GameObject();
-					App->scene->AddGameObjectToScene(go);
-					go->Load(data);
-					if (GetGameObject() && j == 0)
-					{
-						go->SetRoot(true);
-						//go->SetParent(GetGameObject());
-						spawn_objects_list.push_back(go);
-						go->SetActive(false);
-					}
-					go->InitScripts();
-					go->StartScripts();
-					App->resources->AddGameObject(go);
-					App->scene->RenameDuplicatedGameObject(go);
-					data.LeaveSection();
-				}
+		{
+			Data data;
+			std::list<GameObject*> new_go;
+			if (App->scene->LoadPrefab(object_to_spawn->GetLibraryPath(), "jprefab", data, false, true, new_go))
+			{
+				GameObject* duplicated = *new_go.begin();
+				duplicated->SetParent(GetGameObject());
+				duplicated->SetActive(false);
 			}
 		}
-		App->scene->saving_index = 0;
 	}
 	else
 	{
@@ -196,6 +176,8 @@ void ComponentFactory::StartFactory()
 
 void ComponentFactory::CheckLifeTimes()
 {
+	BROFILER_CATEGORY("Component - Factory - CheckLifeTimes", Profiler::Color::Beige);
+
 	for (std::map<GameObject*, float>::iterator it = spawned_objects.begin(); it != spawned_objects.end();)
 	{
 		if (it->second <= 0)
@@ -204,19 +186,9 @@ void ComponentFactory::CheckLifeTimes()
 			if (transform)
 			{
 				it->first->SetActive(false);
-				ComponentRigidBody* rb = (ComponentRigidBody*)it->first->GetComponent(Component::CompRigidBody);
-				if (rb && transform->GetTransformedFromRB())
-				{
-					rb->SetLinearVelocity({ 0,0,0 });
-					rb->SetPosition(original_position);
-					rb->SetRotation(original_rotation);
-				}
-				else
-				{
-					transform->SetPosition(original_position);
-					transform->SetRotation(original_rotation);
-					transform->SetScale(original_scale);
-				}
+				transform->SetPosition(original_position);
+				transform->SetRotation(original_rotation);
+				transform->SetScale(original_scale);
 				spawn_objects_list.push_back(it->first);
 				it = spawned_objects.erase(it);
 			}

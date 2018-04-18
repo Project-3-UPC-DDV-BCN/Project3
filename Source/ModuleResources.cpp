@@ -291,7 +291,7 @@ void ModuleResources::FillResourcesLists()
 	}
 
 	for (std::vector<string>::iterator it = texture_order.begin(); it != texture_order.end(); ++it)
-		CreateResource(*it);
+		CreateResource(*it, false);
 
 	for (std::vector<string>::iterator it = material_order.begin(); it != material_order.end(); ++it)
 		CreateResource(*it);
@@ -404,6 +404,7 @@ void ModuleResources::ImportFile(std::string path)
 	if (extension == ".fbx" || extension == ".FBX") type = Resource::MeshResource;
 	else if (extension == ".vshader" || extension == ".fshader") type = Resource::ShaderResource;
 	else if (extension == ".bnk") type = Resource::SoundBankResource;
+	else if (extension == ".prof") type = Resource::ProfilerResoruce;
 
 	bool exist = false;
 
@@ -496,6 +497,9 @@ void ModuleResources::ImportFile(std::string path)
 		}
 		App->file_system->Copy(path, ASSETS_SOUNDBANK_FOLDER + file_name);
 		path = ASSETS_SOUNDBANK_FOLDER + file_name;
+		break;
+	case Resource::ProfilerResoruce:
+		App->file_system->CreateCSVFromProf(path.c_str());
 		break;
 	default:
 		break;
@@ -1389,7 +1393,7 @@ std::string ModuleResources::CreateLibraryFile(Resource::ResourceType type, std:
 	return ret;
 }
 
-Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
+Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path, bool on_mem)
 {
 	std::string extension = App->file_system->GetFileExtension(library_path);
 	std::string name = App->file_system->GetFileNameWithoutExtension(library_path);
@@ -1404,7 +1408,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 			resource = (Resource*)GetTexture(name);
 			break;
 		}
-		resource = (Resource*)App->texture_importer->LoadTextureFromLibrary(library_path);
+		resource = (Resource*)App->texture_importer->LoadTextureFromLibrary(library_path, on_mem);
 		break;
 	case Resource::MeshResource:
 		if (GetMesh(name) != nullptr)
@@ -1506,7 +1510,7 @@ Resource * ModuleResources::CreateResourceFromLibrary(std::string library_path)
 	return resource;
 }
 
-void ModuleResources::CreateResource(std::string file_path)
+void ModuleResources::CreateResource(std::string file_path, bool on_mem)
 {
 	std::string extension = App->file_system->GetFileExtension(file_path);
 	std::string library_path;
@@ -1558,7 +1562,8 @@ void ModuleResources::CreateResource(std::string file_path)
 					}
 				}
 			}
-			resource = CreateResourceFromLibrary(library_path);
+			resource = CreateResourceFromLibrary(library_path, on_mem);
+
 			if (resource != nullptr)
 			{
 				resource->SetAssetsPath(file_path);
@@ -1592,7 +1597,7 @@ void ModuleResources::CreateResource(std::string file_path)
 				}
 			}
 		}
-		resource = CreateResourceFromLibrary(path);
+		resource = CreateResourceFromLibrary(path, on_mem);
 
 		if (!App->IsGame())
 		{
@@ -1780,9 +1785,12 @@ void ModuleResources::CreateDefaultShaders()
 		"out vec3 FragPos;\n\n"
 		"out vec3 TangentFragPos;\n"
 		"out mat3 TBN;\n"
+		"out vec4 FragPosLightSpace;\n"
 		"uniform mat4 Model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n\n"
+		"uniform mat4 lightSpaceMatrix;\n"
+
 		"void main()\n"
 		"{ \n"
 		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
@@ -1797,6 +1805,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	TangentFragPos = TBN * FragPos;\n"
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
+		"	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);\n"
 		"}";
 
 		default_vert->SetContent(shader_text);
@@ -1822,6 +1831,7 @@ void ModuleResources::CreateDefaultShaders()
 			"in vec2 TexCoord;\n"
 			"in vec3 TangentFragPos;\n"
 			"in mat3 TBN;\n"
+			"in vec4 FragPosLightSpace;\n"
 			"out vec4 color;\n\n"
 
 			"uniform bool has_material_color;\n"
@@ -1842,6 +1852,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform sampler2D Tex_Diffuse2;\n\n"
 			"uniform sampler2D Tex_NormalMap;\n\n"
 			"uniform sampler2D Tex_Opacity;\n"
+			"uniform sampler2D Tex_ShadowMap;\n"
 
 			"uniform vec2 Tex_Diffuse_UV;\n"
 			"uniform vec2 Tex_Diffuse2_UV;\n"
@@ -1849,6 +1860,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform vec2 Tex_Opacity_UV;\n"
 
 			"struct DirLight {\n"
+			"	vec3 position;\n"
 			"	vec3 direction;\n\n"
 
 			"	vec3 ambient;\n"
@@ -1894,7 +1906,7 @@ void ModuleResources::CreateDefaultShaders()
 			"#define NR_POINT_LIGHTS 8\n"
 			"#define NR_DIREC_LIGHTS 2\n"
 			"#define NR_SPOT_LIGHTS 8\n\n"
-			"#define AMBIENT_LIGHT 0.35\n"
+			"#define AMBIENT_LIGHT 0.25\n"
 
 			"uniform vec3 viewPos;\n"
 			"uniform DirLight dirLights[NR_DIREC_LIGHTS];\n"
@@ -1906,6 +1918,7 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n\n"
 			"void ApplyOpacity();\n"
 			"void SetFragmentColor();\n"
+			"float ShadowCalculation();\n"
 			"void main()\n"
 			"{\n"
 			"	SetFragmentColor();\n"
@@ -1916,9 +1929,9 @@ void ModuleResources::CreateDefaultShaders()
 			"		if (has_normalmap)\n"
 			"		{\n"
 			"			if (own_uvs_normalmap == false)\n"
-				"			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0)* normal_bump);\n"
+				"			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0));\n"
 			"			else\n"
-				"			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0)* normal_bump);\n"
+				"			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0));\n"
 			"			vec3 TangentViewPos = TBN * viewPos;\n"
 			"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
 			"			fragPosarg = TangentFragPos;\n"
@@ -1930,15 +1943,17 @@ void ModuleResources::CreateDefaultShaders()
 			"			fragPosarg = FragPos;\n"
 			"		}\n"
 			"			vec3 result = vec3(0.0, 0.0, 0.0); \n"
+			"			if (has_light){\n"
 			"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
 			"				result += CalcDirLight(dirLights[i], normal, viewDir);\n"
 			"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
 			"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
 			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
-			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
-			"			if (has_light)\n"
-			"				color = vec4((color.rgb * AMBIENT_LIGHT + result), color.a);  \n"	
-			"			else color = color;\n"
+			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"	
+			"			float shadow = ShadowCalculation();\n"
+			//"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1.0 - shadow)), color.a);  \n"	
+			"			color = vec4((color.rgb * (1.0 - shadow)), color.a);  \n"
+			"			}\n"	
 			"			if (has_opacity)"
 			"			{\n"
 			"				ApplyOpacity();\n"
@@ -1946,6 +1961,30 @@ void ModuleResources::CreateDefaultShaders()
 			"}\n"
 
 			"}\n\n"
+				"float ShadowCalculation()\n"
+				" {\n"
+				"	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;\n"
+				"	projCoords = projCoords * 0.5 + 0.5;\n"
+				"	projCoords = projCoords * 0.5 + 0.5;\n"
+				"	float closestDepth = texture(Tex_ShadowMap, projCoords.xy).r;\n"
+				"	float currentDepth = projCoords.z;\n"
+				"	vec3 normal_v = normalize(Normal);"
+				"	vec3 lightDir_v = -dirLights[0].direction;\n"
+				"	float bias = max(0.05 * (1.0 - dot(normal_v, lightDir_v)), 0.005);\n"
+				"	float shadow = 0.0;\n"
+				"   vec2 texelSize = 1.0 / textureSize(Tex_ShadowMap,0);\n"
+				"	for(int x = -1; x <=1; ++x)\n"
+				"   {\n"
+				"		for(int y = -1; y<=1; ++y)\n"
+				"		{\n"
+				"			float pcfDepth = texture(Tex_ShadowMap, projCoords.xy + vec2(x,y) * texelSize).r;\n"
+				"			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;\n"
+				"		}\n"
+				"   }\n"
+				"	shadow/=9.0;\n"
+				"	if(projCoords.z > 1.0) shadow = 0.0;\n"
+				"	return shadow;\n"
+				"}\n"
 
 			"	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
 			"{\n"
@@ -2073,7 +2112,7 @@ void ModuleResources::CreateDefaultShaders()
 			"{\n"
 				"vec4 opacity = texture(Tex_Opacity, TexCoord);\n"
 				"color.a = opacity.r;\n"
-			"}\n"				
+			"}\n"		
 				;
 
 		default_frag->SetContent(shader_text);
@@ -2150,7 +2189,6 @@ void ModuleResources::CreateDefaultShaders()
 			"	if(has_texture)\n"
 			"	{\n"
 			"		color = texture(ourTexture, TexCoord);\n"
-			"		color.rgb = color.rgb + material_color.rgb;\n"
 			"	}\n"
 			"	else if(has_material_color)\n"
 			"		color = material_color;\n"
@@ -2382,14 +2420,14 @@ void ModuleResources::CreateDefaultShaders()
 
 		std::string shader_text =
 			"#version 330 core\n"
-			"layout(location = 0) in vec3 aPos;\n"
+			"layout(location = 0) in vec3 position;\n"
 
 			"uniform mat4 lightSpaceMatrix;\n"
 			"uniform mat4 model;\n"
 
 			"void main()\n"
 			"{\n"
-			"	gl_Position = lightSpaceMatrix * model * vec4(aPos, 1.0);\n"
+			"	gl_Position = lightSpaceMatrix * model * vec4(position, 1.0);\n"
 			"}\n"
 			;
 
@@ -2605,7 +2643,8 @@ void ModuleResources::CreateDefaultMaterial()
 
 		RELEASE(new_mat);
 	}
-	CreateResource(default_mat);
+
+	CreateResource(default_mat, false);
 }
 
 bool ModuleResources::CheckResourceName(std::string& name)

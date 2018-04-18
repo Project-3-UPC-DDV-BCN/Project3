@@ -5,6 +5,7 @@
 #include <list>
 #include "Timer.h"
 #include <string>
+#include "Brofiler\Brofiler.h"
 
 class Module;
 class ModuleWindow;
@@ -78,6 +79,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 	void StopNow();
+	void PauseNow();
 
 public:
 	ModuleWindow* window;
@@ -130,6 +132,7 @@ private:
 	std::string starting_scene_path;
 
 	bool to_stop = false;
+	bool to_pause = false;
 };
 
 // Give App pointer access everywhere

@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "OpenGL.h"
 
 #include "Devil/include/il.h"
 #include "Devil/include/ilut.h"
@@ -62,13 +63,11 @@ std::string ModuleTextureImporter::ImportTexture(std::string path)
 	return ret;
 }
 
-Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
+Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path, bool on_mem)
 {
-	ILuint image_id;
-	ilGenImages(1, &image_id);
-	ilBindImage(image_id);
-
 	Texture* tmp_texture = nullptr;
+
+
 
 	if (ilLoad(IL_TYPE_UNKNOWN, path.c_str()))
 	{
@@ -85,6 +84,7 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 			CONSOLE_LOG("DeviL: Failed to convert image %s. Error: %s", path.c_str(), iluErrorString(ilGetError()));
 		}
 
+		ILubyte *data = ilGetData();
 		int width = ilGetInteger(IL_IMAGE_WIDTH);
 		int height = ilGetInteger(IL_IMAGE_HEIGHT);
 		int format = ilGetInteger(IL_IMAGE_FORMAT);
@@ -92,22 +92,32 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 		int file_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
 		if (file_size > 0)
 		{
-			byte* data = new byte[file_size];
-			ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
-
 			tmp_texture = new Texture();
 			tmp_texture->SetWidth(width);
 			tmp_texture->SetHeight(height);
 			tmp_texture->SetLibraryPath(path);
 			tmp_texture->SetName(App->file_system->GetFileNameWithoutExtension(path).c_str());
 			tmp_texture->SetCompression(ilGetInteger(IL_DXTC_FORMAT));
-			tmp_texture->SetImageData(data);
+			//tmp_texture->SetImageData(data);
 			tmp_texture->SetFormat(Texture::rgba);
-			tmp_texture->LoadToMemory();
+			//if(on_mem) 
+			//tmp_texture->LoadToMemory();
 
+			uint texture_id;
+			glGenTextures(1, &texture_id);
+			glBindTexture(GL_TEXTURE_2D, texture_id);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			tmp_texture->SetID(texture_id);
+		
 			CONSOLE_DEBUG("Image loaded from library: %s", path.c_str());
-
-			tmp_texture->RecreateTexture();
 		}
 
 		ilDeleteImages(1, &ImageInfo.Id);
@@ -118,5 +128,52 @@ Texture * ModuleTextureImporter::LoadTextureFromLibrary(std::string path)
 	}
 
 	return tmp_texture;
+}
+
+void ModuleTextureImporter::CreateCubeMapTexture(std::string textures_path[6], uint& cube_map_id)
+{
+	glGenTextures(1, &cube_map_id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map_id);
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (ilLoad(IL_BMP, textures_path[i].c_str()))
+		{
+			ILinfo ImageInfo;
+			iluGetImageInfo(&ImageInfo);
+
+			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+			{
+				iluFlipImage();
+			}
+
+			if (!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
+			{
+				CONSOLE_LOG("DeviL: Failed to convert image %s. Error: %s", textures_path[i].c_str(), iluErrorString(ilGetError()));
+			}
+
+			ILubyte *data = ilGetData();
+			int width = ilGetInteger(IL_IMAGE_WIDTH);
+			int height = ilGetInteger(IL_IMAGE_HEIGHT);
+			int file_size = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
+			if (file_size > 0)
+			{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+				CONSOLE_DEBUG("CubeMap Image loaded from library: %s", textures_path[i].c_str());
+			}
+
+			ilDeleteImages(1, &ImageInfo.Id);
+		}
+		else
+		{
+			CONSOLE_DEBUG("Cannot load image %s. Error: %s", textures_path[i].c_str(), iluErrorString(ilGetError()));
+		}
+	}
 }
 

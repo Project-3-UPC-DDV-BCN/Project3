@@ -29,6 +29,8 @@ ComponentProgressBar::~ComponentProgressBar()
 
 bool ComponentProgressBar::Update()
 {
+	BROFILER_CATEGORY("Component - ProgressBar - Update", Profiler::Color::Beige);
+
 	bool ret = true;
 
 	ComponentCanvas* canvas = GetCanvas();

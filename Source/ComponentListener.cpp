@@ -46,6 +46,7 @@ ComponentListener::~ComponentListener()
 bool ComponentListener::Update()
 {
 	bool ret = true;
+	BROFILER_CATEGORY("Component - Listener - Update", Profiler::Color::Beige);
 
 	UpdatePosition();
 

@@ -23,6 +23,8 @@
 
 #include "../EngineResources/Editor_Settings/Wwise_IDs.h"
 
+#include "Brofiler\Brofiler.h"
+
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 ModuleAudio::ModuleAudio(Application* app, bool start_enabled, bool is_game) : Module(app, start_enabled, is_game)
@@ -62,6 +64,8 @@ bool ModuleAudio::Start()
 
 update_status ModuleAudio::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Audio PreUpdate", Profiler::Color::Yellow);
+
 	if ((App->IsStopped() || App->IsPaused()) && !stop_all)
 	{
 		AK::SoundEngine::StopAll();
@@ -77,6 +81,7 @@ update_status ModuleAudio::PreUpdate(float dt)
 
 update_status ModuleAudio::PostUpdate(float dt)
 {
+	BROFILER_CATEGORY("Audio PostUpdate", Profiler::Color::Yellow);
 	AK::SoundEngine::RenderAudio();
 
 	return update_status::UPDATE_CONTINUE;

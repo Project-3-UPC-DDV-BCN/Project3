@@ -25,7 +25,6 @@ ComponentTransform::ComponentTransform(GameObject* attached_gameobject, bool is_
 	transform_matrix.SetIdentity();
 
 	this->is_particle = is_particle;
-	rb_transforms_go = false;
 }
 
 ComponentTransform::~ComponentTransform()
@@ -34,22 +33,15 @@ ComponentTransform::~ComponentTransform()
 
 void ComponentTransform::SetPosition(float3 position)
 {
-	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
-	{
-		this->position = position;
-		UpdateGlobalMatrix();
-		dirty = true;
-	}
-	else
-	{
-		CONSOLE_ERROR("SetPosition: RigidBody is in charge of transforms");
-	}
+	this->position = position;
+	UpdateGlobalMatrix();
+	dirty = true;
 }
 
 void ComponentTransform::SetPositionFromRB(float3 position)
 {
 	this->position = position;
-	UpdateGlobalMatrix();
+	UpdateGlobalMatrix(true);
 	dirty = true;
 }
 
@@ -65,44 +57,21 @@ float3 ComponentTransform::GetLocalPosition() const
 
 void ComponentTransform::SetRotation(float3 rot)
 {
-	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
-	{
-		this->rotation = Quat::FromEulerXYZ(rot.x * DEGTORAD, rot.y * DEGTORAD, rot.z * DEGTORAD);
-		shown_rotation = rot;
-		UpdateGlobalMatrix();
-		dirty = true; 
-	}
-	else
-	{
-		CONSOLE_ERROR("SetRotation: RigidBody is in charge of transforms");
-	}
-}
-
-void ComponentTransform::SetRotationFromRB(float3 rotation)
-{
-	this->rotation = Quat::FromEulerXYZ(rotation.x * DEGTORAD, rotation.y * DEGTORAD, rotation.z * DEGTORAD);
-
-	shown_rotation = rotation;
+	this->rotation = Quat::FromEulerXYZ(rot.x * DEGTORAD, rot.y * DEGTORAD, rot.z * DEGTORAD);
+	shown_rotation = rot;
 	UpdateGlobalMatrix();
 	dirty = true;
 }
 
 void ComponentTransform::SetIncrementalRotation(float3 rotation)
 {
-	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
-	{
-		float3 diff = rotation - shown_rotation;
-		Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
-		this->rotation = this->rotation * q;
+	float3 diff = rotation - shown_rotation;
+	Quat q = Quat::FromEulerXYZ(diff.x * DEGTORAD, diff.y * DEGTORAD, diff.z * DEGTORAD);
+	this->rotation = this->rotation * q;
 
-		shown_rotation = rotation;
-		UpdateGlobalMatrix();
-		dirty = true;
-	}
-	else
-	{
-		CONSOLE_ERROR("SetIncrementalRotation: RigidBody is in charge of transforms");
-	}
+	shown_rotation = rotation;
+	UpdateGlobalMatrix();
+	dirty = true;
 }
 
 float3 ComponentTransform::GetGlobalRotation() const
@@ -125,21 +94,25 @@ Quat ComponentTransform::GetQuatRotation() const
 	return rotation;
 }
 
-void ComponentTransform::SetScale(float3 scale)
+void ComponentTransform::SetQuatRotation(Quat q)
 {
-	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
-	{
-		this->scale = scale;
-		UpdateGlobalMatrix();
-		dirty = true;
-	}
-	else
-	{
-		CONSOLE_ERROR("SetScale: RigidBody is in charge of transforms");
-	}
+	this->rotation = q;
+
+	shown_rotation = rotation.ToEulerXYZ() * RADTODEG;
+	UpdateGlobalMatrix();
+	dirty = true;
 }
 
-void ComponentTransform::SetScaleFromRB(float3 scale)
+void ComponentTransform::SetRotationFromRB(Quat q)
+{
+	this->rotation = q;
+
+	shown_rotation = rotation.ToEulerXYZ() * RADTODEG;
+	UpdateGlobalMatrix(true);
+	dirty = true;
+}
+
+void ComponentTransform::SetScale(float3 scale)
 {
 	this->scale = scale;
 	UpdateGlobalMatrix();
@@ -156,29 +129,16 @@ float3 ComponentTransform::GetLocalScale() const
 	return scale; //If it's the parent. local scale = global scale
 }
 
-void ComponentTransform::UpdateGlobalMatrix()
-{
-	if (!is_particle && !(this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
-	{
-		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
-
-		transform_matrix = float4x4::FromTRS(position, rotation, scale);
-		transform_matrix = parent_transform->transform_matrix * transform_matrix;
-
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
-		{
-			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
-			child_transform->UpdateGlobalMatrix();
-		}
-
-		global_pos = parent_transform->GetGlobalPosition() + position;
-		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
-		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
-		global_scale = parent_transform->GetGlobalScale().Mul(scale);
-	}
-	else
+void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
+{	
+	if (is_particle || (this->GetGameObject()->IsRoot() || this->GetGameObject()->GetParent() == nullptr))
 	{
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
+
+		global_pos = position;
+		global_quat_rot = rotation;
+		global_rot = shown_rotation;
+		global_scale = scale;
 
 		if (!is_particle)
 		{
@@ -188,11 +148,25 @@ void ComponentTransform::UpdateGlobalMatrix()
 				child_transform->UpdateGlobalMatrix();
 			}
 		}
+	}
+	else
+	{
+		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		global_pos = position;
-		global_quat_rot = rotation;
-		global_rot = shown_rotation;
-		global_scale = scale;
+		global_pos = parent_transform->GetGlobalPosition() + position;
+		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
+		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
+		global_scale = parent_transform->GetGlobalScale().Mul(scale);
+
+		transform_matrix = float4x4::FromTRS(position, rotation, scale);
+
+		transform_matrix = parent_transform->transform_matrix * transform_matrix;
+		
+		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+		{
+			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
+			child_transform->UpdateGlobalMatrix();
+		}
 	}
 
 	if (!is_particle)
@@ -201,20 +175,20 @@ void ComponentTransform::UpdateGlobalMatrix()
 		//If gameobject has a camera component
 		GetGameObject()->UpdateCamera();
 
-		ComponentMeshRenderer* renderer = (ComponentMeshRenderer*)GetGameObject()->GetComponent(Component::CompMeshRenderer);
+		/*ComponentMeshRenderer* renderer = (ComponentMeshRenderer*)GetGameObject()->GetComponent(Component::CompMeshRenderer);
 		if (renderer)
 		{
 			global_pos = renderer->bounding_box.CenterPoint();
-		}
+		}*/
 
-		if (!rb_transforms_go)
+		if (!from_rigidbody)
 		{
 			ComponentRigidBody* rb = (ComponentRigidBody*)GetGameObject()->GetComponent(Component::CompRigidBody);
 			if (rb)
 			{
 				//rb->SetTransform(transform_matrix.Transposed().ptr());
 				rb->SetPosition(global_pos);
-				rb->SetRotation(global_rot);
+				rb->SetRotation(rotation);
 			}
 			else
 			{
@@ -227,8 +201,8 @@ void ComponentTransform::UpdateGlobalMatrix()
 				}
 			}
 		}
-		
 	}
+	
 }
 
 void ComponentTransform::UpdateLocals()
@@ -272,22 +246,15 @@ const float4x4 ComponentTransform::GetOpenGLMatrix() const
 
 void ComponentTransform::SetMatrix(const float4x4 & matrix)
 {
-	if (!rb_transforms_go || rb_transforms_go && !App->IsPlaying())
-	{
-		float3 pos;
-		Quat rot;
-		float3 scale;
-		matrix.Decompose(pos, rot, scale);
-		position = pos;
-		rotation = rot;
-		shown_rotation = rot.ToEulerXYZ() * RADTODEG;
-		this->scale = scale;
-		UpdateGlobalMatrix();
-	}
-	else
-	{
-		CONSOLE_ERROR("SetMatrix: RigidBody is in charge of transforms");
-	}
+	float3 pos;
+	Quat rot;
+	float3 scale;
+	matrix.Decompose(pos, rot, scale);
+	position = pos;
+	rotation = rot;
+	shown_rotation = rot.ToEulerXYZ() * RADTODEG;
+	this->scale = scale;
+	UpdateGlobalMatrix();
 }
 
 void ComponentTransform::LookAt(float3 dir, float3 up)
@@ -299,7 +266,7 @@ void ComponentTransform::LookAt(float3 dir, float3 up)
 	//mat.ToQuat crashes and need to do this workaround...
 	float3 eulers = mat.ToEulerXYZ();
 	Quat q = Quat::FromEulerXYZ(eulers.x, eulers.y, eulers.z);
-	SetRotation(q.ToEulerXYZ() * RADTODEG);
+	SetQuatRotation(q);
 	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
 }
 
@@ -318,16 +285,6 @@ bool ComponentTransform::AnyDirty()
 	}
 
 	return false; 
-}
-
-void ComponentTransform::SetTransformedFromRB(bool transformed)
-{
-	rb_transforms_go = transformed;
-}
-
-bool ComponentTransform::GetTransformedFromRB() const
-{
-	return rb_transforms_go;
 }
 
 void ComponentTransform::RotateAroundAxis(float3 axis, float angle)

@@ -55,7 +55,7 @@ public:
 
 	void InsertGoInOctree(ComponentMeshRenderer* mesh);
 	void EraseGoInOctree(ComponentMeshRenderer* mesh);
-	void GetOctreeIntersects(std::list<ComponentMeshRenderer*>& list, AABB& box);
+	void GetOctreeIntersects(std::vector<ComponentMeshRenderer*>& list, AABB& box);
 
 	void NewScene(bool loading_scene);
 	void LoadScene(std::string path);

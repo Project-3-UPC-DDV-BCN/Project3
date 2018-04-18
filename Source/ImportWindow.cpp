@@ -1,4 +1,5 @@
 #include "ImportWindow.h"
+#include "Brofiler\Brofiler.h"
 
 ImportWindow::ImportWindow()
 {
@@ -14,6 +15,8 @@ ImportWindow::~ImportWindow()
 
 void ImportWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Import: DrawWindow", Profiler::Color::Black);
+
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::SetNextWindowPos({ (io.DisplaySize.x / 2) - 150, (io.DisplaySize.y / 2) - 50 });
 	ImGui::SetNextWindowSize({ 300,100 });

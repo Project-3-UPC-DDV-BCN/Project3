@@ -28,6 +28,8 @@ SceneWindow::~SceneWindow()
 
 void SceneWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Scene: DrawWindow", Profiler::Color::Black);
+
 	if (ImGui::BeginDock(window_name.c_str(), false, false, false,
 		ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar)) 
 	{
@@ -75,6 +77,7 @@ void SceneWindow::DrawWindow()
 			if(App->scene->selected_gameobjects.front()->IsStatic()) ImGuizmo::Enable(false);
 			
 			float4x4 selected_matrix = App->scene->selected_gameobjects.front()->GetGlobalTransfomMatrix().Transposed();
+
 			float transformation[16];
 
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
@@ -95,7 +98,7 @@ void SceneWindow::DrawWindow()
 				float3 go_position;
 				float3 go_rotation;
 				float3 go_scale;
-				if (transform->GetGameObject()->IsRoot()) {
+				/*if (transform->GetGameObject()->IsRoot()) {
 					go_position = transform->GetGlobalPosition();
 					go_rotation = transform->GetGlobalRotation();
 					go_scale = transform->GetGlobalScale();
@@ -104,7 +107,11 @@ void SceneWindow::DrawWindow()
 					go_position = transform->GetLocalPosition();
 					go_rotation = transform->GetLocalRotation();
 					go_scale = transform->GetLocalScale();
-				}
+				}*/
+
+				go_position = transform->GetGlobalPosition();
+				go_rotation = transform->GetGlobalRotation();
+				go_scale = transform->GetGlobalScale();
 
 				float3 f3_translate(translation[0], translation[1], translation[2]);
 				float3 f3_rotation(rotation[0], rotation[1], rotation[2]);

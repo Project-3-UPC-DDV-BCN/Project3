@@ -1,5 +1,5 @@
 #include "EditorStyleWindow.h"
-
+#include "Brofiler\Brofiler.h"
 
 EditorStyleWindow::EditorStyleWindow()
 {
@@ -13,6 +13,8 @@ EditorStyleWindow::~EditorStyleWindow()
 
 void EditorStyleWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Editor Style: DrawWindow", Profiler::Color::Black);
+
 	ImGui::Begin(window_name.c_str(), &active,
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoCollapse |

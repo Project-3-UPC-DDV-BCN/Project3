@@ -120,10 +120,6 @@ public:
 	float emmit_height;
 	float emmit_depth;
 
-	float width_increment;
-	float height_increment;
-	float depth_increment;
-
 	//Interpolations
 	///Size
 	bool change_size_interpolation;

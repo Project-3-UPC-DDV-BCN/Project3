@@ -27,7 +27,6 @@
 #include "ModuleBlast.h"
 #include "ModuleAudioImporter.h"
 
-
 Application::Application()
 {
 	frames = 0;
@@ -212,6 +211,7 @@ void Application::PrepareUpdate()
 void Application::FinishUpdate()
 {
 	StopNow();
+	PauseNow();
 
 	frames++;
 	num_fps++;
@@ -264,9 +264,21 @@ void Application::StopNow()
 	}
 }
 
+void Application::PauseNow()
+{
+	if (to_pause)
+	{
+		if (state == OnPlay) {
+			state == OnPause;
+			to_pause = false;
+		}
+	}
+}
+
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+	BROFILER_CATEGORY("Engine Update", Profiler::Color::DarkOrchid);
 	if (quit) return UPDATE_STOP;
 
 	update_status ret = UPDATE_CONTINUE;
@@ -455,7 +467,7 @@ void Application::Play()
 void Application::Pause()
 {
 	if (state == OnPlay) {
-		state = OnPause;
+		to_pause = true;
 	}
 }
 

@@ -1,13 +1,13 @@
 {
     "Engine_Settings": {
         "Application": {
-            "Is_Game": "1",
+            "Is_Game": "0",
             "Starting_Scene": "./Project/Library/Scenes/VS3 - MainMenu.jscene"
         },
         "Window_Config": {
             "screen_width": "1920",
             "screen_height": "1017",
-            "Fullscreen": "1",
+            "Fullscreen": "0",
             "Window_Resizable": "1",
             "Window_Borderless": "0",
             "Window_Full_Desktop": "0"
@@ -22,18 +22,16 @@
             "key_right": "CONTROLLER_L3"
         },
         "Renderer_Config": {
-            "Vsync": "1",
+            "Vsync": "0",
             "MSAA_Level": "2"
         },
         "skybox_size": "100.000000",
         "Tags": {
-            "tags_num": "6",
+            "tags_num": "4",
             "tag_0": "Default",
             "tag_1": "Main Camera",
-            "tag_2": "Alliance",
-            "tag_3": "Empire",
-            "tag_4": "XWING",
-            "tag_5": "TIEFIGHTER"
+            "tag_2": "GameManager",
+            "tag_3": "ShipEntity"
         },
         "Layers": {
             "layers_num": "3",

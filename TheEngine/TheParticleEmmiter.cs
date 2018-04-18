@@ -9,5 +9,11 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void Stop();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetEmitterSpeed(float v);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetParticleSpeed(float v);  
     }
 }

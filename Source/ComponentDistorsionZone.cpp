@@ -25,6 +25,8 @@ ComponentDistorsionZone::~ComponentDistorsionZone()
 
 bool ComponentDistorsionZone::Update()
 {
+	BROFILER_CATEGORY("Component - Distorsion Zone - Update", Profiler::Color::Beige);
+
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::ComponentType::CompTransform);
 	
 	if (trans)

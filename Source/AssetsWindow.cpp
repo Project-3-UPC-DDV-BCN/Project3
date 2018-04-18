@@ -66,16 +66,14 @@ AssetsWindow::~AssetsWindow()
 
 void AssetsWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Assets: DrawWindow", Profiler::Color::Black);
+
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar)) {
 		ImGui::Columns(2);
 		node = 0;
 		ImGui::Spacing();
 
-		for (int i = 0; i < directories.size(); i++)
-		{
-			CheckDirectory(*directories[i]);
-		}
-
+		BROFILER_CATEGORY("directories draw", Profiler::Color::BlanchedAlmond);
 		DrawChilds(*directories.front());
 
 		if (ImGui::IsMouseClicked(1) && ImGui::IsMouseHoveringWindow()) {
@@ -123,25 +121,26 @@ void AssetsWindow::DrawWindow()
 		{
 			if (!selected_folder->directory_files.empty())
 			{
+				BROFILER_CATEGORY("Assets file draw", Profiler::Color::Aquamarine);
 				for (std::vector<File*>::iterator it = selected_folder->directory_files.begin(); it != selected_folder->directory_files.end(); it++)
 				{
 					bool selected = false;
 					float font_size = ImGui::GetFontSize();
+
 					Resource::ResourceType type = (Resource::ResourceType)App->resources->AssetExtensionToResourceType((*it)->extension);
 					switch (type)
 					{
 					case Resource::TextureResource:
-						texture_icon = App->resources->GetTexture((*it)->name);
-						ImGui::Image((ImTextureID)texture_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
-						break;
+						//texture_icon = App->resources->GetTexture((*it)->name);
+						break; 
 					case Resource::MeshResource:
-						ImGui::Image((ImTextureID)mesh_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
+						//ImGui::Image((ImTextureID)mesh_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
+						//ImGui::SameLine();
 						break;
+
 					case Resource::FontResource:
-						ImGui::Image((ImTextureID)font_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
-						ImGui::SameLine();
+						//ImGui::Image((ImTextureID)font_icon->GetID(), { font_size, font_size }, ImVec2(0, 1), ImVec2(1, 0));
+						//ImGui::SameLine();
 						break;
 					case Resource::Unknown:
 						continue; //if the type is unknown skip and don't draw the file in the panel
@@ -548,7 +547,8 @@ void AssetsWindow::CreateDirectortWindow()
 		confirmed = true;
 	}
 	ImGui::Spacing();
-	if (ImGui::Button("Confirm")) {
+	if (ImGui::Button("Confirm")) 
+	{
 		confirmed = true;
 	}
 	if (confirmed)
@@ -563,6 +563,8 @@ void AssetsWindow::CreateDirectortWindow()
 			selected_folder = temp;
 		}
 		strcpy(inputText, "");
+
+		CheckDirectories();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Cancel")) {
@@ -1061,6 +1063,14 @@ void AssetsWindow::CleanUp(Directory & directory)
 	{
 		CleanUp(*dir);
 		RELEASE(dir);
+	}
+}
+
+void AssetsWindow::CheckDirectories()
+{
+	for (int i = 0; i < directories.size(); i++)
+	{
+		CheckDirectory(*directories[i]);
 	}
 }
 

@@ -47,7 +47,7 @@ void AppWindowConfigWindow::DrawWindow()
 		App->window->SetSize(width, height);
 	}
 
-	ImGui::SliderFloat("FPS Limit", &fps_cap, 1.0f, 144.0f, "%.0f");
+	ImGui::SliderFloat("FPS Limit", &fps_cap, 1.0f, 999.0f, "%.0f");
 	if (ImGui::Button("Apply FPS Cap"))
 	{
 		App->CapFPS(fps_cap);

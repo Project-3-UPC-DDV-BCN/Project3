@@ -34,6 +34,7 @@ void ComponentParticleEmmiter::GenerateParticles()
 
 Particle * ComponentParticleEmmiter::CreateParticle()
 {
+	BROFILER_CATEGORY("CreateParticle", Profiler::Color::Blue); 
 
 	//First we get the point were the particle is gonna be instanciated
 	LCG random;
@@ -145,13 +146,14 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	show_shockwave = false; 
 	wave_launched = false; 
 	show_emit_area = true; 
+	first_loaded = false; 
+
+	show_width = show_height = show_depth = 1; 
 
 	//Make the aabb enclose a primitive cube
 	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
 	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
 	emmit_area.Scale({ 0,0,0 }, { 1,1,1 });
-
-
 
 	//Add the emmiter to the scene list
 	App->scene->scene_emmiters.push_back(this);
@@ -179,6 +181,7 @@ void ComponentParticleEmmiter::DeleteLastParticle()
 
 bool ComponentParticleEmmiter::Update()
 {
+	BROFILER_CATEGORY("Particle Emmiter Update", Profiler::Color::Thistle);
 	if (data == nullptr)
 		return false;
 
@@ -237,12 +240,6 @@ bool ComponentParticleEmmiter::Update()
 		}
 	}
 
-	if (data->shock_wave.active && data->shock_wave.done == false && system_state == PARTICLE_STATE_PLAY)
-	{
-		UpdateShockWave();
-		DrawShockWave(App->renderer3D->editor_camera);
-	}
-
 	return true;
 }
 
@@ -259,25 +256,30 @@ void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
 
 void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 {
-	ComponentTransform* parent_transform = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
+	ComponentTransform* attached_go = (ComponentTransform*) GetGameObject()->GetComponent(CompTransform);
 
-	if (parent_transform->AnyDirty())
+	if (attached_go->AnyDirty() || scale_dirty)
 	{
 		//Position increment
-		float3 pos_increment = parent_transform->GetGlobalPosition() - emmit_area.CenterPoint();
+		float3 attached_pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
 
-		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, {1,1,1});
+		CONSOLE_LOG("%f, %f, %f", attached_pos.x, attached_pos.y, attached_pos.z);
 
+		float3 pos_increment = attached_pos - emmit_area.CenterPoint();
+
+		float percentage_width = show_width / data->emmit_width;
+		float percentage_height = show_height / data->emmit_height;
+		float percentage_depth = show_depth / data->emmit_depth;
+
+		float4x4 transform_to_apply = float4x4::FromTRS(pos_increment, Quat::identity, { percentage_width,percentage_height,percentage_depth });
 		emmit_area.TransformAsAABB(transform_to_apply);
 
-		float3 asd = {data->width_increment + 1, data->height_increment + 1, data->depth_increment + 1};
-		emmit_area.Scale(emmit_area.CenterPoint(), asd);
+		data->emmit_width = show_width;
+		data->emmit_height = show_height;
+		data->emmit_depth = show_depth;
 
-		data->width_increment = 0; 
-		data->height_increment = 0; 
-		data->depth_increment = 0; 
-
-		parent_transform->dirty = false; 
+		attached_go->dirty = false;
+		scale_dirty = false; 
 	}
 
 }
@@ -301,7 +303,14 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	
 	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
 	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
-	data.AddString("Template", this->data->GetName()); 
+
+	int rate = GetEmmisionRate(); 
+	data.AddInt("Rate", rate);
+
+	string name = this->data->GetName(); 
+
+	data.AddString("Template", name); 
+
 }
 
 void ComponentParticleEmmiter::Load(Data & data)
@@ -314,10 +323,26 @@ void ComponentParticleEmmiter::Load(Data & data)
 
 	float3 pos = data.GetVector3("Position"); 
 	float3 rot = data.GetVector3("Rotation");
-	float3 scale = { 1,1,1 }; 
 
 	//Load Template 
-	this->data = App->resources->GetParticleTemplate(data.GetString("Template")); 
+	SetFrequencyFromRate(data.GetInt("Rate"));
+	string template_name = data.GetString("Template");
+
+	this->data = App->resources->GetParticleTemplate(template_name);
+
+	if (first_loaded == false)
+	{
+		show_width = this->data->emmit_width;
+		show_height = this->data->emmit_height;
+		show_depth = this->data->emmit_depth;
+
+		scale_dirty = true;
+
+		this->data->emmit_width = this->data->emmit_height = this->data->emmit_depth = 1;
+
+		first_loaded = true; 
+	}
+
 }
 
 void ComponentParticleEmmiter::SaveSystemToBinary()
@@ -432,7 +457,7 @@ void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
 
-	if (show_shockwave)
+	if (data != nullptr && show_shockwave)
 		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
 
 	Start();
@@ -460,6 +485,22 @@ void ComponentParticleEmmiter::LaunchParticlesWave()
 		new_particle->components.particle_transform->SetPosition(emmit_area.CenterPoint());
 		active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
 	}
+}
+
+void ComponentParticleEmmiter::SetSpawnVelocity(float v)
+{
+	data->velocity = v; 
+}
+
+void ComponentParticleEmmiter::SetParticlesVelocity(float v)
+{
+	for (multimap<float, Particle*>::iterator it = active_particles.begin(); it != active_particles.end();it++)
+	{
+		(*it).second->SetVelocity(v); 
+		(*it).second->SetMovement(); 
+	}
+
+	data->velocity = v; 
 }
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)

@@ -27,7 +27,6 @@ public:
 	void SetSize(float s) { size = s; }
 
 private:
-	Texture* textures[6];
 	std::string textures_path[6];
 	unsigned int cube_map_id;
 	float size = 1.0f;

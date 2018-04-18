@@ -39,12 +39,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\EngineResources\Editor_Settings\Reference_Assemblies\TheEngine.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseWDebug|AnyCPU'">
-    <OutputPath>bin\ReleaseWDebug\</OutputPath>
+    <OutputPath>..\EngineResources\Editor_Settings\Reference_Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -56,12 +57,21 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TheObject.cs" />
+    <Compile Include="TheBoxCollider.cs" />
+    <Compile Include="TheCapsuleCollider.cs" />
+    <Compile Include="TheCollider.cs" />
+    <Compile Include="TheCollisionData.cs" />
+    <Compile Include="TheColor.cs" />
+    <Compile Include="TheContactPoint.cs" />
+    <Compile Include="TheDebugDraw.cs" />
+    <Compile Include="TheMeshCollider.cs" />
+    <Compile Include="ThePhysics.cs" />
+    <Compile Include="TheRay.cs" />
+    <Compile Include="TheRayCastHit.cs" />
     <Compile Include="TheResources.cs" />
     <Compile Include="TheApplication.cs" />
     <Compile Include="TheData.cs" />
     <Compile Include="TheDialogManager.cs" />
-    <Compile Include="TheMeshCollider.cs" />
     <Compile Include="TheMeshRenderer.cs" />
     <Compile Include="TheScript.cs" />
     <Compile Include="TheGOAPAgent.cs" />
@@ -81,6 +91,7 @@
     <Compile Include="Components\TheRectTransform.cs" />
     <Compile Include="TheRigidBody.cs" />
     <Compile Include="Components\TheText.cs" />
+    <Compile Include="TheSphereCollider.cs" />
     <Compile Include="TheTimer.cs" />
     <Compile Include="TheLight.cs" />
     <Compile Include="TheTransform.cs" />

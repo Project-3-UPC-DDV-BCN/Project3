@@ -38,13 +38,6 @@ ComponentCamera::ComponentCamera(GameObject* attached_gameobject)
 	{
 		layers_to_draw.push_back(App->tags_and_layers->layers_list[i]);
 	}
-
-	if (attached_gameobject)
-	{
-		render_order = App->scene->GetNumCameras();
-		App->scene->scene_cameras.push_back(this);
-		App->renderer3D->rendering_cameras.push_back(this);
-	}
 }
 
 ComponentCamera::~ComponentCamera()
@@ -96,6 +89,8 @@ bool ComponentCamera::ContainsGameObjectAABB(AABB& gameobject_bounding_box)
 
 void ComponentCamera::UpdatePosition()
 {
+	BROFILER_CATEGORY("Component - Camera - Update", Profiler::Color::Beige);
+
 	camera_frustum.SetPos(GetGameObject()->GetGlobalTransfomMatrix().TranslatePart());
 	camera_frustum.SetFront(GetGameObject()->GetGlobalTransfomMatrix().WorldZ().Normalized());
 	camera_frustum.SetUp(GetGameObject()->GetGlobalTransfomMatrix().WorldY().Normalized());
@@ -119,6 +114,11 @@ float * ComponentCamera::GetViewMatrix()
 	matrix.Transpose();
 
 	return matrix.ptr();
+}
+
+void ComponentCamera::SetAsMainCamera()
+{
+	App->renderer3D->game_camera = this;
 }
 
 void ComponentCamera::SetFOV(float fov)

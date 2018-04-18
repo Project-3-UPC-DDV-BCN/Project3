@@ -52,20 +52,11 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetLinearVelocity(float x, float y, float z);
 
-        //[MethodImpl(MethodImplOptions.InternalCall)]
-        //public extern void DisableCollider(int index);
-
-        //[MethodImpl(MethodImplOptions.InternalCall)]
-        //public extern void DisableAllColliders();
-
-        //[MethodImpl(MethodImplOptions.InternalCall)]
-        //public extern void EnableCollider(int index);
-
-        //[MethodImpl(MethodImplOptions.InternalCall)]
-        //public extern void EnableAllColliders();
-
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetPosition(float x, float y, float z);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheVector3 GetPosition();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetRotation(float x, float y, float z);

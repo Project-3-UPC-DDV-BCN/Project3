@@ -72,10 +72,12 @@ public:
 	void PlayEmmiter();
 	void StopEmmiter(); 
 
-	//Simultaneous launching 
+	//Simultaneous launching
 	bool LaunchingAllowed(); 
 	void LaunchParticlesWave(); 
 
+	void SetSpawnVelocity(float v);
+	void SetParticlesVelocity(float v);
 
 public:
 
@@ -85,13 +87,17 @@ public:
 	//Emmit area AABB
 	AABB emmit_area; 
 
-	float prev_emmiter_width;
-	float prev_emmiter_height;
-	float prev_emmiter_depth; 
+	float show_width; 
+	float show_height; 
+	float show_depth; 
+
+	bool scale_dirty; 
 
 	string runtime_behaviour; 
 
 	bool show_shockwave;
+
+	bool first_loaded; 
 
 private:
 

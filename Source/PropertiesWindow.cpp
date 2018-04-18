@@ -73,6 +73,7 @@ PropertiesWindow::~PropertiesWindow()
 
 void PropertiesWindow::DrawWindow()
 {
+	BROFILER_CATEGORY("Editor - Properties: DrawWindow", Profiler::Color::Black);
 	if (ImGui::BeginDock(window_name.c_str(), false, false, App->IsPlaying(), ImGuiWindowFlags_HorizontalScrollbar))
 	{
 		GameObject* selected_gameobject = nullptr;
@@ -188,6 +189,8 @@ void PropertiesWindow::DrawWindow()
 			{
 				if (ImGui::MenuItem("Mesh Renderer"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: Mesh Renderer", Profiler::Color::AntiqueWhite);
+
 					if (selected_gameobject->GetComponent(Component::CompMeshRenderer) == nullptr && selected_gameobject->GetComponent(Component::CompBlast) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompMeshRenderer);
 					}
@@ -198,6 +201,8 @@ void PropertiesWindow::DrawWindow()
 				}
 				if (ImGui::MenuItem("GOAP Agent"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: GOAP Agent", Profiler::Color::AntiqueWhite);
+					
 					if (selected_gameobject->GetComponent(Component::CompGOAPAgent) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompGOAPAgent);
 					}
@@ -217,6 +222,8 @@ void PropertiesWindow::DrawWindow()
 				}*/
 				if (ImGui::MenuItem("Camera"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: Camera", Profiler::Color::AntiqueWhite);
+
 					if (selected_gameobject->GetComponent(Component::CompCamera) == nullptr)
 					{
 						selected_gameobject->AddComponent(Component::CompCamera);
@@ -231,6 +238,8 @@ void PropertiesWindow::DrawWindow()
 				{
 					if (ImGui::MenuItem("Canvas"))
 					{
+						BROFILER_CATEGORY("Editor - Properties: Canvas", Profiler::Color::AntiqueWhite);
+						
 						if (selected_gameobject->GetComponent(Component::CompCanvas) == nullptr)
 						{
 							selected_gameobject->AddComponent(Component::CompCanvas);
@@ -243,6 +252,8 @@ void PropertiesWindow::DrawWindow()
 				}
 
 				if (ImGui::MenuItem("Particle Emmiter")) {
+					BROFILER_CATEGORY("Editor - Properties: Particle Emitter", Profiler::Color::AntiqueWhite);
+
 					if (selected_gameobject->GetComponent(Component::CompParticleSystem) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompParticleSystem);
 					}
@@ -253,6 +264,8 @@ void PropertiesWindow::DrawWindow()
 				}
 
 				if (ImGui::MenuItem("Billboard")) {
+					BROFILER_CATEGORY("Editor - Properties: Billboard", Profiler::Color::AntiqueWhite);
+
 					if (selected_gameobject->GetComponent(Component::CompBillboard) == nullptr) {
 						selected_gameobject->AddComponent(Component::CompBillboard);
 					}
@@ -263,6 +276,8 @@ void PropertiesWindow::DrawWindow()
 				}
 
 				if (ImGui::MenuItem("Light")) {
+					BROFILER_CATEGORY("Editor - Properties: Light", Profiler::Color::AntiqueWhite);
+
 					if (App->renderer3D->GetDirectionalLightCount() < 2 || App->renderer3D->GetSpotLightCount() < 8 || App->renderer3D->GetPointLightCount() < 8)
 					{
 						if (selected_gameobject->GetComponent(Component::CompLight) == nullptr)
@@ -293,6 +308,8 @@ void PropertiesWindow::DrawWindow()
 
 				if (ImGui::BeginMenu("Script"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: Script", Profiler::Color::AntiqueWhite);
+
 					std::map<uint, Script*> scripts = App->resources->GetScriptsList();
 					Script* script = nullptr;
 
@@ -332,6 +349,8 @@ void PropertiesWindow::DrawWindow()
 
 				if (ImGui::BeginMenu("Audio"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: Audio", Profiler::Color::AntiqueWhite);
+
 					if (ImGui::MenuItem("Audio Listener"))
 					{
 						if (App->audio->GetDefaultListener() == nullptr)
@@ -355,6 +374,8 @@ void PropertiesWindow::DrawWindow()
 
 				if (ImGui::BeginMenu("New Factory"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: New Factory", Profiler::Color::AntiqueWhite);
+
 					static char input_text[30];
 					ImGui::InputText("Factory Name", input_text, 30, ImGuiInputTextFlags_EnterReturnsTrue);
 					ImGui::Spacing();
@@ -370,6 +391,8 @@ void PropertiesWindow::DrawWindow()
 
 				if (ImGui::MenuItem("RigidBody"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: Rigid Body", Profiler::Color::AntiqueWhite);
+
 					if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr) {
 						ComponentRigidBody* rb = (ComponentRigidBody*)selected_gameobject->AddComponent(Component::CompRigidBody);
 						App->physics->AddNonBlastActorToList(rb->GetRigidBody(), selected_gameobject);
@@ -382,6 +405,8 @@ void PropertiesWindow::DrawWindow()
 
 				if (ImGui::BeginMenu("Colliders"))
 				{
+					BROFILER_CATEGORY("Editor - Properties: Colliders", Profiler::Color::AntiqueWhite);
+
 					if (ImGui::MenuItem("Box"))
 					{
 						if (selected_gameobject->GetComponent(Component::CompRigidBody) == nullptr)
@@ -562,6 +587,8 @@ void PropertiesWindow::DrawComponent(Component * component)
 
 void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Transform", Profiler::Color::AntiqueWhite);
+
 	if (transform->GetGameObject()->GetIsUI())
 		return;
 
@@ -594,6 +621,8 @@ void PropertiesWindow::DrawTransformPanel(ComponentTransform * transform)
 
 void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_transform)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Rect Transform", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("RectTransform", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
 		bool is_canvas = false;
@@ -704,6 +733,8 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 
 void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Canvas", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{	
 		const char* mode_names[] = { "Screen Space", "World Space" };
@@ -763,6 +794,8 @@ void PropertiesWindow::DrawCanvasPanel(ComponentCanvas * canvas)
 
 void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Image", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		const char* mode_names[] = { "Single", "Animation" };
@@ -859,6 +892,8 @@ void PropertiesWindow::DrawImagePanel(ComponentImage * image)
 
 void PropertiesWindow::DrawTextPanel(ComponentText * text)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Text Panel", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Label", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		Font* font = text->GetFont();
@@ -930,6 +965,8 @@ void PropertiesWindow::DrawTextPanel(ComponentText * text)
 
 void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Progress Bar", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		float progress = bar->GetProgressPercentage();
@@ -957,6 +994,8 @@ void PropertiesWindow::DrawProgressBarPanel(ComponentProgressBar * bar)
 
 void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Radar Panel", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Radar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		bool transparent = radar->GetTransparent();
@@ -1121,6 +1160,8 @@ void PropertiesWindow::DrawRadarPanel(ComponentRadar * radar)
 
 void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Button", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		const char* mode_names[] = { "Colour", "Image" };
@@ -1207,6 +1248,8 @@ void PropertiesWindow::DrawButtonPanel(ComponentButton * button)
 
 void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_renderer)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Mesh Renderer", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen)) {
 		bool is_active = mesh_renderer->IsActive();
 		if (ImGui::Checkbox("Active##Mesh_Renderer", &is_active))
@@ -1302,6 +1345,7 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 				Texture* diffuse = material->GetDiffuseTexture();
 				if (ImGui::InputResourceTexture("Change Diffuse", &diffuse))
 				{
+					diffuse->LoadToMemory(); 
 					material->SetDiffuseTexture(diffuse);
 				}
 
@@ -1431,6 +1475,8 @@ void PropertiesWindow::DrawMeshRendererPanel(ComponentMeshRenderer * mesh_render
 
 void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Camera", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
 		bool is_active = comp_camera->IsActive();
 		if (ImGui::Checkbox("Active##Camera", &is_active))
@@ -1446,6 +1492,11 @@ void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 			return;
 		}
 
+		if (ImGui::Button("Set as main camera"))
+		{
+			comp_camera->SetAsMainCamera();
+		}
+		
 		Color background_color = comp_camera->GetBackgroundColor();
 		ImGui::Text("Background Color:");
 		if (ImGui::ColorEdit4("##Background Color", &background_color.r))
@@ -1521,6 +1572,8 @@ void PropertiesWindow::DrawCameraPanel(ComponentCamera * comp_camera)
 
 void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Script", Profiler::Color::AntiqueWhite);
+
 	scripts_count++;
 	if (ImGui::CollapsingHeader((comp_script->GetScriptName() + "##" + std::to_string(scripts_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
 		bool is_active = comp_script->IsActive();
@@ -1536,7 +1589,6 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 			comp_script = nullptr;
 			return;
 		}
-
 		/*Script* script = comp_script->GetScript();
 		if (ImGui::InputResourceScript("Script", &script))
 		{
@@ -1649,11 +1701,41 @@ void PropertiesWindow::DrawScriptPanel(ComponentScript * comp_script)
 				break;
 			}
 		}
+
+		if (ImGui::TreeNode(("Script Times##" + comp_script->GetScriptName() + std::to_string(scripts_count)).c_str()))
+		{
+			std::vector<double> script_times = comp_script->GetScriptTimes();
+			ImVec4 slow = ImVec4(1.0, 0.0, 0.0, 1.0);
+			ImVec4 nice = ImVec4(0.0, 1.0, 0.0, 1.0);
+			ImVec4 unused = ImVec4(1.0, 0.5, 0.0, 1.0);
+			ImVec4 color_to_use = ImVec4(0.0, 0.0, 0.0, 1.0);
+
+			ImGui::Text("Needs to be on Play to read the times");
+			ImGui::TextColored(slow, "Slow: >= 0.5ms\t");				ImGui::SameLine();
+			ImGui::TextColored(nice, "Fast Enough: < 0.5ms\t");			ImGui::SameLine();
+			ImGui::TextColored(unused, "Unused");			
+
+			ImGui::Text("Init:");					ImGui::SameLine();		if (script_times[0]  >= 0.5) 	color_to_use = slow;	else if (script_times[0]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[0]); 
+			ImGui::Text("Start:");					ImGui::SameLine();		if (script_times[1]  >= 0.5)	color_to_use = slow;	else if (script_times[1]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[1]);
+			ImGui::Text("Update:");					ImGui::SameLine();		if (script_times[2]  >= 0.5)	color_to_use = slow;	else if (script_times[2]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[2]);
+			ImGui::Text("On Collision Enter:");		ImGui::SameLine();		if (script_times[3]  >= 0.5)	color_to_use = slow;	else if (script_times[3]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[3]);
+			ImGui::Text("On Collision Stay:");		ImGui::SameLine();		if (script_times[4]  >= 0.5)	color_to_use = slow;	else if (script_times[4]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[4]);
+			ImGui::Text("On Collision Exit:");		ImGui::SameLine();		if (script_times[5]  >= 0.5)	color_to_use = slow;	else if (script_times[5]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[5]);
+			ImGui::Text("On Trigger Enter:");		ImGui::SameLine();		if (script_times[6]  >= 0.5)	color_to_use = slow;	else if (script_times[6]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[6]);
+			ImGui::Text("On Trigger Stay:");		ImGui::SameLine();		if (script_times[7]  >= 0.5)	color_to_use = slow;	else if (script_times[7]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[7]);
+			ImGui::Text("On Trigger Exit:");		ImGui::SameLine();		if (script_times[8]  >= 0.5)	color_to_use = slow;	else if (script_times[8]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms", script_times[8]);
+			ImGui::Text("On Enable:");				ImGui::SameLine();		if (script_times[9]	 >= 0.5)	color_to_use = slow;	else if (script_times[9]  > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms",	script_times[9]);
+			ImGui::Text("On Disable:");				ImGui::SameLine();		if (script_times[10] >= 0.5)	color_to_use = slow;	else if (script_times[10] > 0.0)	color_to_use = nice;	else color_to_use = unused;		ImGui::TextColored(color_to_use, "%.5f ms",	script_times[10]);
+
+			ImGui::TreePop();
+		}
 	}
 }
 
 void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Factory", Profiler::Color::AntiqueWhite);
+
 	factories_count++;
 	if (ImGui::CollapsingHeader((factory->GetName() + "##" + std::to_string(factories_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -1693,6 +1775,8 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 
 void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Rigid Body", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader(rigidbody->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		bool is_active = rigidbody->IsActive();
@@ -1711,7 +1795,6 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 			}
 			else
 			{
-				rigidbody->SetTransformsGo(false);
 				components_to_destroy.insert(std::pair<GameObject*, Component*>(rigidbody->GetGameObject(), rigidbody));
 				rigidbody = nullptr;
 				return;
@@ -1752,11 +1835,6 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 		if (ImGui::Checkbox("CCD", &is_ccd))
 		{
 			rigidbody->SetCCDMode(is_ccd);
-		}
-		bool transforms_go = rigidbody->GetTransformsGo();
-		if (ImGui::Checkbox("Transforms GO", &transforms_go))
-		{
-			rigidbody->SetTransformsGo(transforms_go);
 		}
 
 		ImGui::Text("Axis Lock");
@@ -1803,6 +1881,8 @@ void PropertiesWindow::DrawRigidBodyPanel(ComponentRigidBody * rigidbody)
 
 void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Collider", Profiler::Color::AntiqueWhite);
+
 	colliders_count++;
 	if (ImGui::CollapsingHeader((comp_collider->GetName() + "##" + std::to_string(colliders_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -1897,6 +1977,8 @@ void PropertiesWindow::DrawColliderPanel(ComponentCollider * comp_collider)
 
 void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * current_emmiter)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Particle Emitter", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Component Particle Emmiter", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		bool active_bool = current_emmiter->IsActive();
@@ -1922,7 +2004,19 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						if (ImGui::MenuItem(it->second->GetName().c_str()))
 						{
+							float3 tmp_size = { current_emmiter->data->emmit_width,current_emmiter->data->emmit_height,current_emmiter->data->emmit_depth };
+
 							current_emmiter->data = it->second;
+
+							current_emmiter->show_width = current_emmiter->data->emmit_width; 
+							current_emmiter->show_height = current_emmiter->data->emmit_height;
+							current_emmiter->show_depth = current_emmiter->data->emmit_depth;
+
+							current_emmiter->data->emmit_width = tmp_size.x; 
+							current_emmiter->data->emmit_height = tmp_size.y;
+							current_emmiter->data->emmit_depth = tmp_size.z;
+							
+							current_emmiter->scale_dirty = true; 
 						}
 					}
 				}
@@ -2103,21 +2197,35 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Emit Area"))
 			{
+				//current_emmiter->show_width = current_emmiter->data->emmit_width;
+				//current_emmiter->show_height = current_emmiter->data->emmit_height;
+				//current_emmiter->show_depth = current_emmiter->data->emmit_depth;
+
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);
 				current_emmiter->SetShowEmmisionArea(show);
 
-				float width_cpy = current_emmiter->data->emmit_width; 
-				float height_cpy = current_emmiter->data->emmit_height;
-				float depth_cpy = current_emmiter->data->emmit_depth;
+				CONSOLE_LOG("Emmit_Width: %f", current_emmiter->data->emmit_width); 
 
-				ImGui::InputFloat("Width (X)", &current_emmiter->data->emmit_width, 0.1f, 0.0f, 2); 
-				ImGui::InputFloat("Height (X)", &current_emmiter->data->emmit_height, 0.1f, 0.0f, 2);
-				ImGui::InputFloat("Depth (X)", &current_emmiter->data->emmit_depth, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Width (X)", &current_emmiter->show_width, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Height (X)", &current_emmiter->show_height, 0.1f, 0.0f, 2);
+				ImGui::InputFloat("Depth (X)", &current_emmiter->show_depth, 0.1f, 0.0f, 2);
 
-				current_emmiter->data->width_increment = current_emmiter->data->emmit_width - width_cpy; 
-				current_emmiter->data->height_increment = current_emmiter->data->emmit_height - height_cpy;
-				current_emmiter->data->depth_increment = current_emmiter->data->emmit_depth - depth_cpy;
+				if (current_emmiter->show_width != current_emmiter->data->emmit_width)
+				{
+					current_emmiter->scale_dirty = true;
+				}
+					
+				if (current_emmiter->show_height != current_emmiter->data->emmit_height)
+				{
+					current_emmiter->scale_dirty = true;
+				}
+					
+				if (current_emmiter->show_depth != current_emmiter->data->emmit_depth)
+				{
+					current_emmiter->scale_dirty = true;
+				}
+					
 
 				static int style = 1; 
 				ImGui::Combo("Emmision Style", &style, "From Center\0From Random Position\0"); 
@@ -2127,11 +2235,11 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				else if (style == 1)
 					current_emmiter->data->emmit_style = EMMIT_FROM_RANDOM;
 
-				if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
-				{
-					ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
-					trans->dirty = true;
-				}
+				//if (current_emmiter->data->width_increment != 0.0f || current_emmiter->data->height_increment != 0.0f || current_emmiter->data->depth_increment != 0.0f)
+				//{
+				//	ComponentTransform* trans = (ComponentTransform*)current_emmiter->GetGameObject()->GetComponent(Component::CompTransform);
+				//	trans->dirty = true;
+				//}
 
 				ImGui::TreePop();
 			}
@@ -2418,6 +2526,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Billboard", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Component Billboard", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		static int billboard_type;
@@ -2439,24 +2549,34 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 
 void PropertiesWindow::DrawAudioListener(ComponentListener * listener)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Audio Listener", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Listener", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::Button("Delete Component"))
+		{
+			listener->GetGameObject()->DestroyComponent(listener);
+			App->audio->SetDefaultListener(nullptr);
+		}
+
 		ImGui::Text("GameObject Listening");
 	}
 }
 
 void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 {
-	if (ImGui::Button("Delete Component"))
-	{
-		audio_source->GetGameObject()->DestroyComponent(audio_source);
-	}
+	BROFILER_CATEGORY("Editor - Properties: Draw component Audio Source", Profiler::Color::AntiqueWhite);
 
 	if (audio_source->GetEventsVector().empty())
 		audio_source->GetEvents();
 
 	if (ImGui::CollapsingHeader("Audio Source", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
+		if (ImGui::Button("Delete Component"))
+		{
+			audio_source->GetGameObject()->DestroyComponent(audio_source);
+		}
+
 		SoundBankResource* sbk = audio_source->soundbank;
 		if (ImGui::InputResourceAudio("SoundBank", &sbk))
 		{
@@ -2493,6 +2613,8 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 
 void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Distance", Profiler::Color::AntiqueWhite);
+
 	distance_joints_count++;
 	if (ImGui::CollapsingHeader((joint->GetName() + "##" + std::to_string(distance_joints_count)).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -2505,8 +2627,15 @@ void PropertiesWindow::DrawJointDistancePanel(ComponentJointDistance * joint)
 
 void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Audio Dist Zone", Profiler::Color::AntiqueWhite);
+
 	if (ImGui::CollapsingHeader("Distorsion Zone", ImGuiTreeNodeFlags_DefaultOpen)) 
 	{
+		if (ImGui::Button("Delete Component"))
+		{
+			dist_zone->GetGameObject()->DestroyComponent(dist_zone);
+		}
+
 		char* bus_name = new char[41];
 
 		std::copy(dist_zone->bus.begin(), dist_zone->bus.end(), bus_name);
@@ -2523,6 +2652,8 @@ void PropertiesWindow::DrawAudioDistZone(ComponentDistorsionZone * dist_zone)
 
 void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component Light", Profiler::Color::AntiqueWhite);
+
 	if (comp_light != nullptr)
 	{
 		lights_count++;
@@ -2633,6 +2764,8 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 
 void PropertiesWindow::DrawGOAPAgent(ComponentGOAPAgent * goap_agent)
 {
+	BROFILER_CATEGORY("Editor - Properties: Draw component GOAP Agent", Profiler::Color::AntiqueWhite);
+
 	static GOAPAction* act_to_add_precon = nullptr;
 	static GOAPAction* act_to_add_effect = nullptr;
 	static ComponentGOAPAgent* goap_to_add_var = nullptr;

@@ -176,7 +176,7 @@ bool Material::Load(Data & data)
 	std::string library_path = data.GetString("diffuse_texture");
 	if (library_path != "value not found")
 	{
-		Texture* diffuse = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
+		Texture* diffuse = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetDiffuseTexture(diffuse);
 	}
 	diffuse_UV.x = data.GetFloat("diffuse_UVx");
@@ -194,7 +194,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("diffuse2_texture");
 	if (library_path != "value not found")
 	{
-		Texture* diffuse2 = (Texture*)App->resources->CreateResourceFromLibrary(library_path);
+		Texture* diffuse2 = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetDiffuse2Texture(diffuse2);
 	}
 	diffuse2_UV.x = data.GetFloat("diffuse2_UVx");
@@ -205,7 +205,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("specular_texture");
 	if (library_path != "value not found")
 	{
-		Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* specular = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetSpecularTexture(specular);
 	}
 	specular_UV.x = data.GetFloat("specular_UVx");
@@ -214,7 +214,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("ambient_texture");
 	if (library_path != "value not found")
 	{
-		Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* ambient = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetAmbientTexture(ambient);
 	}
 	ambient_UV.x = data.GetFloat("ambient_UVx");
@@ -223,7 +223,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("emissive_texture");
 	if (library_path != "value not found")
 	{
-		Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* emissive = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetEmissiveTexture(emissive);
 	}
 	emissive_UV.x = data.GetFloat("emissive_UVx");
@@ -232,7 +232,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("heightmap_texture");
 	if (library_path != "value not found")
 	{
-		Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* heightmap = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetHeightMapTexture(heightmap);
 	}
 	heightmap_UV.x = data.GetFloat("heightmap_UVx");
@@ -241,7 +241,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("normalmap_texture");
 	if (library_path != "value not found")
 	{
-		Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* normalmap = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetNormalMapTexture(normalmap);
 	}
 	normalmap_UV.x = data.GetFloat("normalmap_UVx");
@@ -253,7 +253,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("shininess_texture");
 	if (library_path != "value not found")
 	{
-		Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* shininess = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetShininessTexture(shininess);
 	}
 	shininess_UV.x = data.GetFloat("shininess_UVx");
@@ -262,7 +262,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("opacity_texture");
 	if (library_path != "value not found")
 	{
-		Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* opacity = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetOpacityTexture(opacity);
 	}
 	opacity_UV.x = data.GetFloat("opacity_UVx");
@@ -271,7 +271,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("displacement_texture");
 	if (library_path != "value not found")
 	{
-		Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* displacement = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetDisplacementTexture(displacement);
 	}
 	displacement_UV.x = data.GetFloat("displacement_UVx");
@@ -280,7 +280,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("lightmap_texture");
 	if (library_path != "value not found")
 	{
-		Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* lightmap = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetLightMapTexture(lightmap);
 	}
 	lightmap_UV.x = data.GetFloat("lightmap_UVx");
@@ -289,7 +289,7 @@ bool Material::Load(Data & data)
 	library_path = data.GetString("reflection_texture");
 	if (library_path != "value not found")
 	{
-		Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path);
+		Texture* reflection = App->texture_importer->LoadTextureFromLibrary(library_path, false);
 		SetReflectionTexture(reflection);
 	}
 	reflection_UV.x = data.GetFloat("reflection_UVx");
@@ -367,39 +367,75 @@ void Material::CreateMeta() const
 	data.AddFloat("bump_scaling", bump_scaling);
 }
 
+
 void Material::LoadToMemory()
 {
+	CONSOLE_LOG("Material Loaded To Memory"); 
+
 	bool has_tex = false, has_normalmap = false, has_opacity = false, has_tex2 = false;
-	if (diffuse_texture != nullptr && diffuse_texture->GetID() != 0)
+	if (diffuse_texture != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
-	
-		has_tex = true;
+		if(diffuse_texture->GetID() == 0)
+		   diffuse_texture->LoadToMemory(); 
 
-		if (diffuse2_texture != nullptr && diffuse2_texture->GetID() != 0)
+		if (diffuse_texture->GetID() != 0)
 		{
-			glActiveTexture(GL_TEXTURE3);
-			glBindTexture(GL_TEXTURE_2D, diffuse2_texture->GetID());
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
+			has_tex = true;
+			App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
+		}
 
-			has_tex2 = true;
+		if (own_diffuse_uvs == true)
+			App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
+
+		if (diffuse2_texture != nullptr)
+		{
+			if (diffuse2_texture->GetID() == 0)
+				diffuse2_texture->LoadToMemory();
+
+			if (diffuse2_texture->GetID() != 0)
+			{
+				glActiveTexture(GL_TEXTURE3);
+				glBindTexture(GL_TEXTURE_2D, diffuse2_texture->GetID());
+				has_tex2 = true;
+			}
+
+
+			App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse2", own_diffuse2_uvs);
+			if (own_diffuse2_uvs == true)
+				App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse2_UV", diffuse2_UV);
 		}
 	}
 
-	if (normalmap_texture != nullptr && normalmap_texture->GetID() != 0)
+	if (normalmap_texture != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE1);		
-		glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
+		if (normalmap_texture->GetID() == 0)
+			normalmap_texture->LoadToMemory();
+
+		if (normalmap_texture->GetID() != 0)
+		{	
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
+			has_normalmap = true;
+		}
 	
-		has_normalmap = true;
+		App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_normalmap", own_normal_uvs);
+		if (own_normal_uvs == true)
+			App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
 	}
 
-	if (opacity_texture != nullptr && opacity_texture->GetID() != 0)
+	if (opacity_texture != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, opacity_texture->GetID());
+		if (opacity_texture->GetID() == 0)
+			opacity_texture->LoadToMemory(); 
+		if (opacity_texture->GetID() != 0)
+		{
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, opacity_texture->GetID());
 
-		has_opacity = true;
+			has_opacity = true;
+		}
 	}
 
 
@@ -420,18 +456,8 @@ void Material::LoadToMemory()
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_opacity", has_opacity);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
-
-	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
-	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse2", own_diffuse2_uvs);
-	App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_normalmap", own_normal_uvs);
-	
-	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
-	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse2_UV", diffuse2_UV);
-	App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_NormalMap_UV", normalmap_UV);
-
-	App->renderer3D->SetUniformFloat(GetShaderProgramID(), "normal_bump", bump_scaling);
-
 }
+
 
 void Material::UnloadFromMemory()
 {

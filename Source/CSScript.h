@@ -8,6 +8,7 @@
 
 class GameObject;
 class Data;
+struct CollisionData;
 
 class CSScript :
 	public Script
@@ -21,16 +22,18 @@ public:
 	void InitScript();
 	void StartScript();
 	void UpdateScript();
-	void OnCollisionEnter(GameObject* other_collider);
-	void OnCollisionStay(GameObject* other_collider);
-	void OnCollisionExit(GameObject* other_collider);
-	void OnTriggerEnter(GameObject* other_collider);
-	void OnTriggerStay(GameObject* other_collider);
-	void OnTriggerExit(GameObject* other_collider);
+	void OnCollisionEnter(CollisionData& col_data);
+	void OnCollisionStay(CollisionData& col_data);
+	void OnCollisionExit(CollisionData& col_data);
+	void OnTriggerEnter(CollisionData& col_data);
+	void OnTriggerStay(CollisionData& col_data);
+	void OnTriggerExit(CollisionData& col_data);
 	void OnEnable();
 	void OnDisable();
 	void OnComplete();
 	void OnFail();
+
+	MonoObject* FillCollisionData(CollisionData& col_data);
 
 	void SetIntProperty(const char* propertyName, int value);
 	int GetIntProperty(const char* propertyName);
@@ -62,11 +65,9 @@ public:
 	void SetNameSpace(std::string name_space);
 	void SetClassName(std::string class_name);
 
-
 	MonoMethod* GetFunction(const char* functionName, int parameters);
 	void CallFunction(MonoMethod* function, void** parameter);
-
-	void AddFieldsToMonoObjectList();
+	MonoObject* CallFunctionArray(MonoMethod* function, MonoArray *params);
 
 private:
 	void ConvertMonoType(MonoType* type, ScriptField& script_field);

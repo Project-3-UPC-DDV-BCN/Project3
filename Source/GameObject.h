@@ -6,6 +6,8 @@
 #include <string>
 #include "MathGeoLib/float4x4.h"
 
+struct CollisionData;
+
 class GameObject
 {
 public:
@@ -16,6 +18,7 @@ public:
 	Component* GetComponent(Component::ComponentType component_type);
 	Component* GetComponent(std::string component_type);
 	void DestroyComponent(Component* component);
+	void MoveComponentUp(Component* component);
 
 	void AddChild(GameObject* gameobject);
 	bool IsActive() const;
@@ -50,18 +53,19 @@ public:
 	void UpdateGlobalMatrix();
 	void UpdateCamera();
 	void SetGlobalTransfomMatrix(const float4x4 &matrix);
+	math::float3 GetGlobalPosition();
 
 	void SetParentByID(UID parent_id);
 
 	void InitScripts();
 	void StartScripts();
 	void UpdateScripts();
-	void OnCollisionEnter(GameObject* other_collider);
-	void OnCollisionStay(GameObject* other_collider);
-	void OnCollisionExit(GameObject* other_collider);
-	void OnTriggerEnter(GameObject* other_collider);
-	void OnTriggerStay(GameObject* other_collider);
-	void OnTriggerExit(GameObject* other_collider);
+	void OnCollisionEnter(CollisionData& col_data);
+	void OnCollisionStay(CollisionData& col_data);
+	void OnCollisionExit(CollisionData& col_data);
+	void OnTriggerEnter(CollisionData& col_data);
+	void OnTriggerStay(CollisionData& col_data);
+	void OnTriggerExit(CollisionData& col_data);
 
 	void UpdateFactory();
 

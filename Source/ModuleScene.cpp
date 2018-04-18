@@ -190,9 +190,8 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject * gameObject)
 
 update_status ModuleScene::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Wheat);
 	LoadSceneNow();
-
-	DestroyGameObjectNow();
 
 	skybox->SetSize(skybox_size);
 
@@ -202,15 +201,16 @@ update_status ModuleScene::PreUpdate(float dt)
 update_status ModuleScene::PostUpdate(float dt)
 {
 
+	DestroyGameObjectNow();
+
 	return UPDATE_CONTINUE;
 }
 
 // Update
 update_status ModuleScene::Update(float dt)
 {
+	BROFILER_CATEGORY("Scene Update", Profiler::Color::Wheat);
 	ms_timer.Start();
-
-	Shader * shady = App->resources->GetShader(0);
 
 	HandleInput();
 
@@ -299,6 +299,14 @@ void ModuleScene::AddGameObjectToScene(GameObject* gameobject)
 				App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
 				App->physics->AddNonBlastActorToList(rb->GetRigidBody(), gameobject);
 			}
+		}
+
+		ComponentCamera* camera = (ComponentCamera*)gameobject->GetComponent(Component::CompCamera);
+		if (camera)
+		{
+			camera->SetRenderOrder(GetNumCameras());
+			scene_cameras.push_back(camera);
+			App->renderer3D->rendering_cameras.push_back(camera);
 		}
 
 		CONSOLE_DEBUG("GameObject Created: %s", gameobject->GetName().c_str());
@@ -402,7 +410,7 @@ void ModuleScene::EraseGoInOctree(ComponentMeshRenderer* mesh)
 	octree.Erase(mesh);
 }
 
-void ModuleScene::GetOctreeIntersects(std::list<ComponentMeshRenderer*>& list, AABB & box)
+void ModuleScene::GetOctreeIntersects(std::vector<ComponentMeshRenderer*>& list, AABB & box)
 {
 	return octree.CollectIntersections(list, &box);
 }
@@ -417,6 +425,7 @@ void ModuleScene::NewScene(bool loading_scene)
 	}
 	App->renderer3D->ResetRender();
 	scene_gameobjects.clear();
+	scene_emmiters.clear(); 
 	scene_gameobjects_name_counter.clear();
 	root_gameobjects.clear();
 	selected_gameobjects.clear();
@@ -505,7 +514,10 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			{
 				GameObject* game_object = new GameObject();
 				AddGameObjectToScene(game_object);
-				
+
+				ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)game_object->GetComponent(Component::CompParticleSystem);
+				if(emmiter) emmiter->first_loaded = false; 
+
 				game_object->Load(data);
 
 				App->resources->AddGameObject(game_object);
@@ -521,8 +533,10 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					{
 						App->renderer3D->game_camera = camera;
 						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+						App->renderer3D->rendering_cameras.push_back(camera);
 					}
 				}
+			
 				data.LeaveSection();
 			}
 		}
@@ -554,11 +568,11 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					data.LeaveSection();
 					++it;
 					RenameDuplicatedGameObject(game_object);
+
+					if (App->IsPlaying())
+						game_object->InitScripts();
 				}
 			}
-
-			if (App->IsPlaying())
-				InitScripts();
 
 			current_scene_path = path;
 		}
@@ -693,11 +707,14 @@ void ModuleScene::MoveGameObjectBack(GameObject * go)
 
 void ModuleScene::DrawSkyBox(float3 pos, ComponentCamera* active_camera)
 {
+	BROFILER_CATEGORY("Draw SkyBox", Profiler::Color::AliceBlue);
 	skybox->RenderCubeMap(pos, active_camera);
 }
 
 void ModuleScene::InitScripts()
 {
+	App->script_importer->AddGameObjectsInfoToMono(scene_gameobjects);
+
 	for (std::list<GameObject*>::iterator it = scene_gameobjects.begin(); it != scene_gameobjects.end(); it++)
 	{
 		bool active_parents = RecursiveCheckActiveParents((*it));
@@ -795,18 +812,17 @@ JSONTool * ModuleScene::GetJSONTool() const
 
 void ModuleScene::SetParticleSystemsState()
 {
+	CONSOLE_LOG("%d", scene_emmiters.size()); 
+
 	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
 	{
-		if ((*it)->runtime_behaviour == "Auto")
-		{
-			(*it)->SetSystemState(PARTICLE_STATE_PLAY);
-			(*it)->Start(); 
-		}
+		(*it)->PlayEmmiter(); 
 	}
 }
 
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
+	BROFILER_CATEGORY("Scene Recursive Check Active Parents", Profiler::Color::SteelBlue);
 	bool ret = true;
 
 	if (gameobject != nullptr)
@@ -827,6 +843,7 @@ bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 
 void ModuleScene::HandleInput()
 {
+	BROFILER_CATEGORY("Scene Handel Input", Profiler::Color::LightSkyBlue);
 	if (!App->IsGame())
 	{
 		if (App->editor->scene_window->IsWindowFocused() && App->editor->scene_window->IsMouseHoveringWindow())
@@ -898,6 +915,7 @@ void ModuleScene::HandleInput()
 
 void ModuleScene::LoadSceneNow()
 {
+	BROFILER_CATEGORY("Scene Load Scene Now", Profiler::Color::Turquoise);
 	if (to_load_scene)
 	{
 		Data data;
@@ -913,6 +931,7 @@ void ModuleScene::LoadSceneNow()
 
 void ModuleScene::DestroyGameObjectNow()
 {
+	BROFILER_CATEGORY("Scene Destroy gameObject Now", Profiler::Color::Chartreuse);
 	for (std::list<GameObject*>::iterator it = gameobjects_to_destroy.begin(); it != gameobjects_to_destroy.end();) 
 	{
 		if((*it) != nullptr)

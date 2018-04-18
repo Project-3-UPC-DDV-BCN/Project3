@@ -209,7 +209,12 @@
             </summary>
             <param name="gameobject_name">Name of GameObject to find</param>
         </member>
-        <member name="M:TheEngine.TheGameObject.GetSceneGameObjects">
+        <member name="M:TheEngine.TheGameObject.GetGameObjectsWithTag(System.String)">
+            <summary>
+              <para>Return all GameObjects in scene</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheGameObject.GetGameObjectsMultipleTags(System.String[])">
             <summary>
               <para>Return all GameObjects in scene</para>
             </summary>
@@ -329,6 +334,23 @@
               <para>Logs errors messages to editor console</para>
             </summary>
             <param name="message">Message to send</param>
+        </member>
+        <member name="M:TheEngine.TheLight.GetColor">
+            <summary>
+              <para>returns light's RGB color as a TheVector3</para>
+            </summary>
+        </member>
+        <member name="M:TheEngine.TheLight.SetColor(TheEngine.TheVector3)">
+            <summary>
+              <para>in RGB, from 0.0 to 255.0, sets light color</para>
+            </summary>
+            <param name="color">Color value</param>
+        </member>
+        <member name="M:TheEngine.TheLight.SetActive(System.Boolean)">
+            <summary>
+              <para>Activates/Deactivates the LightComponent</para>
+            </summary>
+            <param name="value">Active value</param>
         </member>
         <member name="M:TheEngine.TheVector3.#ctor">
             <summary>

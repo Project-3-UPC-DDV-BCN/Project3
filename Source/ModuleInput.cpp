@@ -6,6 +6,7 @@
 #include "ModuleResources.h"
 #include "PerformanceWindow.h"
 #include "ModuleRenderer3D.h"
+#include "AssetsWindow.h"
 
 #define MAX_KEYS 300
 
@@ -55,6 +56,7 @@ bool ModuleInput::Init(Data* editor_config)
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Input PreUpdate", Profiler::Color::BlueViolet);
 	ms_timer.Start();
 	SDL_PumpEvents();
 
@@ -155,6 +157,10 @@ update_status ModuleInput::PreUpdate(float dt)
 					}
 					App->window->SetWidth(e.window.data1);
 					App->window->SetHeight(e.window.data2);
+				}
+				if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
+				{
+					App->editor->assets_window->CheckDirectories();
 				}
 			}
 				break;

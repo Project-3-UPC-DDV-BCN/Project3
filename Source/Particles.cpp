@@ -325,7 +325,7 @@ void Particle::UpdateRotation()
 
 void Particle::SetMovementFromStats()
 {
-	movement += particle_data->gravity;
+	movement += (particle_data->gravity);
 
 }
 
@@ -415,6 +415,7 @@ bool Particle::CheckIfDelete()
 void Particle::Draw(ComponentCamera* active_camera)
 {
 	//Billboard to the active camera 
+	BROFILER_CATEGORY("Particle Draw", Profiler::Color::Thistle);
 	if (particle_data->billboarding)
 	{		
 		GetAtributes().billboard->RotateObject();		

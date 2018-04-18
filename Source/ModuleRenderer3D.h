@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "MathGeoLib\MathGeoLib.h"
 #include <list>
 
 class ComponentMeshRenderer;
@@ -12,12 +13,14 @@ class Primitive;
 class ComponentCamera;
 class ComponentCanvas;
 class DebugDraw;
+class Material;
 
 #define MAX_LIGHTS 8
 
 #define MAX_DIR_LIGHT 2
 #define MAX_SPO_LIGHT 8
 #define MAX_POI_LIGHT 8
+
 
 #define SHADOW_HEIGHT 1024
 #define SHADOW_WIDTH 1024
@@ -52,7 +55,7 @@ public:
 
 	void AddCanvasToDraw(ComponentCanvas* canvas);
 	void RemoveCanvasToDraw(ComponentCanvas* canvas);
-	std::list<ComponentCanvas*> GetCanvasToDraw() const;
+	std::vector<ComponentCanvas*> GetCanvasToDraw() const;
 
 
 	void BindArrayBuffer(uint id) const;
@@ -117,7 +120,7 @@ public:
 
 	void SetDepthMap();
 	void DrawFromLightForShadows();
-	void SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat);
+	void SendObjectToDepthShader(uint program, ComponentMeshRenderer* mesh);
 
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
@@ -127,6 +130,8 @@ private:
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 
 	void DrawColliders();
+	
+	void OrderByMaterials(ComponentMeshRenderer* mesh);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -135,7 +140,6 @@ public:
 	void DrawGrid(ComponentCamera* camera);
 
 public:
-
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
@@ -153,9 +157,14 @@ private:
 	bool testing_light;
 	bool use_skybox;
 
+	uint current_shaderprogram = 0;
+	bool using_program = false;
+
 	int lights_count;
 
-	std::list<ComponentMeshRenderer*> dynamic_mesh_to_draw;
+	uint current_shader_program;
+
+	std::vector<ComponentMeshRenderer*> dynamic_mesh_to_draw;
 
 	ComponentLight* dir_lights[MAX_DIR_LIGHT];
 	ComponentLight* poi_lights[MAX_POI_LIGHT];
@@ -165,17 +174,19 @@ private:
 	int point_light_count;
 	int spot_light_count;
 
-	std::list<Primitive*> debug_primitive_to_draw;
-	std::list<ComponentCanvas*> canvas_to_draw;
-	std::list<ComponentParticleEmmiter*> particles_to_draw;
+	std::vector<Primitive*> debug_primitive_to_draw;
+	std::vector<ComponentCanvas*> canvas_to_draw;
+	std::vector<ComponentParticleEmmiter*> particles_to_draw;
 
-
+	std::vector<std::vector<ComponentMeshRenderer*>> ordering_by_materials;
+	std::vector<AABB> cubes_to_draw;
+	Material* current_material = nullptr;
+	bool changed_material = true;
 	// SHADOW MAPPING DON'T TOUCH
 
 	uint depth_map;
 	uint depth_mapFBO;
 	float near_plane, far_plane;
 
-	unsigned int quadVAO = 0;
-	unsigned int quadVBO;
+	float* light_space_mat = nullptr;
 };

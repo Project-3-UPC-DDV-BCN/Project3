@@ -48,8 +48,9 @@ public:
 	void WakeUp();
 	void SetPosition(float3 new_position);
 	float3 GetPosition() const;
-	void SetRotation(float3 new_rotation);
+	void SetRotation(Quat new_rotation);
 	float3 GetRotation() const;
+	Quat GetQuatRotation() const;
 	void SetCenterOfMass(float3 center);
 	float3 GetCenterOfMass() const;
 	void SetInertiaTensor(float3 tensor);
@@ -71,18 +72,14 @@ public:
 	bool GetDynamicLocks(DynamicLocks lock_type) const;
 	void SetCCDMode(bool ccd);
 	bool IsCCDMode() const;
-	void SetTransformsGo(bool transforms);
-	bool GetTransformsGo() const;
-
-	void EnableShapes();
-	void EnableShapeByIndex(int index);
-	void DisableShapes();
-	void DisableShapeByIndex(int index); 
 
 	void SetNewRigidBody(physx::PxRigidDynamic* new_rigid);
 
 	void Save(Data& data) const;
 	void Load(Data& data);
+
+	void OnEnable();
+	void OnDisable();
 
 	void DrawColliders();
 	

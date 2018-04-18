@@ -23,6 +23,7 @@ public:
 	float* GetProjectionMatrix() const;
 	float* GetViewMatrix();
 
+	void SetAsMainCamera();
 	void SetFOV(float fov);
 	float GetFOV() const;
 	void AddLayerToDraw(std::string layer);
