@@ -470,6 +470,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
+		CONSOLE_LOG("%d", GetAtributes().texture->GetID()); 
 	}
 
 	if (GetAtributes().particle_mesh->id_indices == 0) GetAtributes().particle_mesh->LoadToMemory(); 

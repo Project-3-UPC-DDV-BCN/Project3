@@ -262,6 +262,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 	{
 		//Position increment
 		float3 attached_pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
+		float3x3 attached_rot = GetGameObject()->GetGlobalTransfomMatrix().RotatePart(); 
 
 		CONSOLE_LOG("%f, %f, %f", attached_pos.x, attached_pos.y, attached_pos.z);
 

@@ -26,7 +26,7 @@ ComponentBillboard::ComponentBillboard(Particle * attached_particle)
 	SetAttachedToParticle(true);
 	particle_attached = attached_particle; 
 
-	AttachToCamera(App->renderer3D->editor_camera);
+	AttachToCamera(App->renderer3D->game_camera);
 }
 
 void ComponentBillboard::AttachToCamera(ComponentCamera* new_reference)

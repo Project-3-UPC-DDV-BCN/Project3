@@ -1,8 +1,8 @@
 {
     "Scene_Name": "RogerScene3",
-    "GameObjects_Count": "4",
+    "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "531034056",
+        "UUID": "2128515181",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -14,8 +14,8 @@
                 "Active": "1",
                 "UUID": "536365331",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "1.000000",
+                    "value_X": "-0.240018",
+                    "value_Y": "3.672694",
                     "value_Z": "-20.000000"
                 },
                 "rotation": {
@@ -49,7 +49,8 @@
                 },
                 "render_order": "0",
                 "far_plane": "1000.000000",
-                "near_plane": "0.300000"
+                "near_plane": "0.300000",
+                "fov": "115.794006"
             }
         },
         "ParentID": "0",
@@ -57,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "43546024",
+        "UUID": "98871519",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -108,108 +109,50 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1618310987",
-        "Name": "Text",
+        "UUID": "848935664",
+        "Name": "New GameObject",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "2",
             "Component_0": {
-                "Type": "25",
+                "Type": "0",
                 "Active": "1",
-                "UUID": "35979021",
-                "pos": {
+                "UUID": "518484696",
+                "position": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000"
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
-                "z_pos": "0.000000",
-                "size": {
-                    "value_X": "60.000000",
-                    "value_Y": "40.000000"
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
                 },
-                "anchor": {
-                    "value_X": "0.500000",
-                    "value_Y": "0.500000"
-                },
-                "scale": "1.000000",
-                "interactable": "0",
-                "fixed_aspect_ratio": "1",
-                "fixed_ratio": "1.500000"
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
             },
             "Component_1": {
-                "Type": "0",
+                "Type": "11",
                 "Active": "1",
-                "UUID": "1077925549",
-                "position": {
+                "UUID": "481113277",
+                "Position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_2": {
-                "Type": "27",
-                "Active": "1",
-                "UUID": "929488639",
-                "colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "bold": "0",
-                "italic": "0",
-                "underline": "0",
-                "strikethrough": "0",
-                "text": "Text",
-                "font_size": "24",
-                "grow_dir": "2",
-                "font": "arial"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_3": {
-        "UUID": "699686072",
-        "Name": "GameManager",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "1",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1864559662",
-                "position": {
+                "Rotation": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
+                "Rate": "15",
+                "Template": "Default"
             }
         },
         "ParentID": "0",
