@@ -1,4 +1,10 @@
 using TheEngine;
+using TheEngine.TheConsole;
+
+/*
+	All ships should have this script with set with "alliance" or "empire"
+	It should have a component Factory attached, with the bullet using the Laser.cs script
+*/
 
 public class ShipProperties 
 {
@@ -7,6 +13,7 @@ public class ShipProperties
 
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
+	private TheFactory factory = null;
 
 	void Init()
 	{
@@ -20,26 +27,77 @@ public class ShipProperties
 		SetShipFaction(ship_faction);			
 	}
 
+	void Start()
+	{
+		factory = TheGameObject.Self.GetComponent<TheFactory>();
+
+		if(factory != null)
+			factory.StartFactory();
+	}
+	
+	// Shoots a laser
+	void Shoot()
+	{
+		if(factory != null)
+		{
+			TheGameObject laser = factory.Spawn();
+			
+			if(laser != null)
+			{
+				TheScript laser_script = laser.GetScript("Laser");
+
+				if(laser_script != null)
+				{
+					object[] args = {TheGameObject.Self};
+					laser_script.CallFunctionArgs("SetSender", args);
+				}
+			}
+		}
+	}
+	
+	// Called when the ship is hit by a laser
+	void HitByShip(TheGameObject ship)
+	{
+		if(ship != null)
+		{
+			TheScript ship_script = ship.GetScript("ShipProperties");
+			if(ship_script != null)
+			{
+				string hit_faction = (string)ship_script.CallFunctionArgs("GetFaction");
+
+				if(hit_faction == GetFaction())
+				{
+					TheConsole.Log("Ally hit");
+					// Ally hit
+				}
+				else
+				{
+					TheConsole.Log("Enemy hit");
+					// Enemy hit
+				}
+			}
+		}
+	}
+
+	// Returns if the ship is dead or not
 	bool IsDead()
 	{
 		return life <= 0;
 	}
 
+	// Returns life of the ship
 	int GetLife()
 	{
 		return life;
 	}
 
+	// Returns faction of the ship
 	string GetFaction()
 	{
 		return ship_faction;
 	}
 	
-	void LaserHit()
-	{
-		DealDamage(10);
-	}
-	
+	// Deals damage to the ship
 	void DealDamage(int dmg)
 	{
 		if(dmg < 0)
@@ -51,6 +109,7 @@ public class ShipProperties
 			life = 0;
 	}
 	
+	// Can be used to set ship faction dinamically
 	void SetShipFaction(string faction)
 	{	
 		if(game_manager_script != null)

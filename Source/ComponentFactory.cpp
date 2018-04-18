@@ -68,11 +68,15 @@ GameObject* ComponentFactory::Spawn()
 	BROFILER_CATEGORY("Component - Factory - Spawn", Profiler::Color::Beige);
 
 	GameObject* go = nullptr;
-	if(!spawn_objects_list.empty()) go = spawn_objects_list.front();
+
+	if(!spawn_objects_list.empty()) 
+		go = spawn_objects_list.front();
+
 	if (go != nullptr)
 	{
 		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
-		if (transform)
+
+		if (transform != nullptr)
 		{
 			//CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
 			transform->SetPosition(spawn_position);
@@ -130,10 +134,11 @@ void ComponentFactory::StartFactory()
 {
 	BROFILER_CATEGORY("Component - Factory - StartFactory", Profiler::Color::Beige);
 
-	if (object_to_spawn && object_to_spawn->GetRootGameObject())
+	if (object_to_spawn != nullptr && object_to_spawn->GetRootGameObject())
 	{
 		ComponentTransform* transform = (ComponentTransform*)object_to_spawn->GetRootGameObject()->GetComponent(Component::CompTransform);
-		if (transform)
+
+		if (transform != nullptr)
 		{
 			original_rotation = transform->GetLocalRotation();
 			original_scale = transform->GetLocalScale();
@@ -150,35 +155,18 @@ void ComponentFactory::StartFactory()
 				SetSpawnPos(original_position);
 			}
 		}
-		
-		App->scene->saving_index = 0;
-		Data data;
-		object_to_spawn->GetRootGameObject()->Save(data, true);
 
 		for (int i = 0; i < object_count; i++)
-		{	
-			for (int j = 0; j < App->scene->saving_index; j++) {
-				if (data.EnterSection("GameObject_" + std::to_string(j)))
-				{
-					GameObject* go = new GameObject();
-					App->scene->AddGameObjectToScene(go);
-					go->Load(data);
-					if (GetGameObject() && j == 0)
-					{
-						go->SetRoot(true);
-						//go->SetParent(GetGameObject());
-						spawn_objects_list.push_back(go);
-						go->SetActive(false);
-					}
-					go->InitScripts();
-					go->StartScripts();
-					App->resources->AddGameObject(go);
-					App->scene->RenameDuplicatedGameObject(go);
-					data.LeaveSection();
-				}
+		{
+			Data data;
+			std::list<GameObject*> new_go;
+			if (App->scene->LoadPrefab(object_to_spawn->GetLibraryPath(), "jprefab", data, false, true, new_go))
+			{
+				GameObject* duplicated = *new_go.begin();
+				duplicated->SetParent(GetGameObject());
+				duplicated->SetActive(false);
 			}
 		}
-		App->scene->saving_index = 0;
 	}
 	else
 	{

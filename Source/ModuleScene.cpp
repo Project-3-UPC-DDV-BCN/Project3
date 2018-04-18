@@ -568,11 +568,11 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					data.LeaveSection();
 					++it;
 					RenameDuplicatedGameObject(game_object);
+
+					if (App->IsPlaying())
+						game_object->InitScripts();
 				}
 			}
-
-			if (App->IsPlaying())
-				InitScripts();
 
 			current_scene_path = path;
 		}
