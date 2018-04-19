@@ -5,7 +5,6 @@ using TheEngine.TheConsole;
 
 public class GuillemMovement
 {
-    public int faction;
     public TheGameObject force_target;
     private bool forced = false;
 
@@ -138,39 +137,6 @@ public class GuillemMovement
 			int random = (int)TheRandom.RandomRange(0, enemy_ships.Count);
 			target_transform = enemy_ships[random].GetComponent<TheTransform>();
 		}
-
-        /*List<TheGameObject> to_check = new List<TheGameObject>();
-        TheGameObject[] scene_gos = TheGameObject.GetSceneGameObjects();
-        for (int i = 0; i < scene_gos.Length; ++i)
-        {
-            if (scene_gos[i] != null)
-            {
-				if(scene_gos[i].tag == "PlayerTarget") {
-					to_check.Add(scene_gos[i]);
-					continue;
-				}
-                if (scene_gos[i].tag == "XWING" || scene_gos[i].tag == "TIEFIGHTER")
-                {
-                    to_check.Add(scene_gos[i]);
-                    TheScript sc = scene_gos[i].GetComponent<TheScript>();
-                    if (sc != null)
-                    {
-                        int other_fac = sc.GetIntField("faction");
-
-                        if (other_fac != faction)
-                        {
-                            to_check.Add(scene_gos[i]);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (to_check.Count > 0)
-        {
-            int random = (int)TheRandom.RandomRange(0, to_check.Count);
-            target_transform = to_check[random].GetComponent<TheTransform>();
-        }*/
     }
 
     void MoveFront()
