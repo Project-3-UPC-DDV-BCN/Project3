@@ -4,50 +4,7 @@ using TheEngine.TheConsole;
 using TheEngine.TheMath;
 
 
-public class StarShipShooting {
-
-	TheFactory laser_factory;
-
-    public TheGameObject laser_spawner;
-
-	public TheGameObject audio_emiter;
-	//Heat BAR
-	public TheGameObject overheat_bar_obj;
-	TheProgressBar overheat_bar_bar = null;
-	//-----------------------------------
-	public TheGameObject crosshair_1;
-	public TheGameObject crosshair_2;
-	
-	public TheGameObject weapon_icon_1;
-	public TheGameObject weapon_icon_2;
-
-	public TheGameObject laser_light;
-	TheAudioSource audio_source;	
-
-	public float spawn_time = 0.01f;
-
-	float timer = 0.1f;
-	float light_duration = 0.2f;
-	bool light_on = false;
-	bool used_left_laser = false;
-
-    public TheGameObject weapons_energy;
-
-    TheProgressBar weapons_bar = null;
-
-    public float overheat_increment = 0.2f;
-    float curr_overheat_inc;
-    public float overheat_time = 2.0f;
-    public float overheated_time = 3.0f;
-    float overheat_timer = 0.0f;
-    float overheat = 0.0f; //from 0.0 to 1.0
-    bool overheated = false;
-    public float w1_cooling_rate = 10.0f;
-    public float w2_cooling_rate = 10.0f;
-
-    public int num_weapons = 2;
-    public int weapon = 0; //SELECTED WEAPON
-    bool cooling = false;
+public class Weapon1 {
 
     void Start () 
 	{

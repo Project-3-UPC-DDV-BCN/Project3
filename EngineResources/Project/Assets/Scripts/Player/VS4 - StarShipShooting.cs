@@ -92,7 +92,7 @@ public class StarShipShooting {
 		if(weapon_icon_2 != null)
 			weapon_icon_2.SetActive(false);
 		
-		weapon_script = TheGameObject.GetScript("VS4 - Weapon0");
+		weapon_script = TheGameObject.GetScript(weapon_0_script);
     }	
 
 	void Update () 
@@ -109,6 +109,8 @@ public class StarShipShooting {
                 {
                 	case 0:
                         {
+							weapon_script.Shoot();
+							
 						  	if(weapons_bar != null)
                            		curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
 
