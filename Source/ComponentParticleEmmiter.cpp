@@ -268,6 +268,12 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 
 		float3 pos_increment = attached_pos - emmit_area.CenterPoint();
 
+		if (data == nullptr)
+		{
+			CONSOLE_WARNING("Data in particle emitter is nullptr!");
+			return;
+		}
+
 		float percentage_width = show_width / data->emmit_width;
 		float percentage_height = show_height / data->emmit_height;
 		float percentage_depth = show_depth / data->emmit_depth;
@@ -458,9 +464,9 @@ void ComponentParticleEmmiter::PlayEmmiter()
 {
 	SetSystemState(PARTICLE_STATE_PLAY);
 
-	if (data != nullptr && show_shockwave)
+	/*if (data != nullptr && show_shockwave)
 		CreateShockWave(data->shock_wave.wave_texture, data->shock_wave.duration, data->shock_wave.final_scale);
-
+*/
 	Start();
 }
 

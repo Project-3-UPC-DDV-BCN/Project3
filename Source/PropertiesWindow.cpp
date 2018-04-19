@@ -2123,6 +2123,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			else if (runtime_behaviour_combo == 1)
 				current_emmiter->runtime_behaviour = "Manual";
 
+			if (current_emmiter->data == nullptr)
+			{
+				CONSOLE_ERROR("PARTICLE EMITTER DATA IN PROPERTIES WINDOW IS NULLPTR");
+				return;
+			}
+
 			int emmision_behaviour_combo = current_emmiter->data->emmision_type;
 
 			ImGui::Combo("Emision Behaviour", &emmision_behaviour_combo, "Continuous Emmision\0Simultaneous Emmision\0");
