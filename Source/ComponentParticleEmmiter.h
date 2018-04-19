@@ -99,6 +99,9 @@ public:
 
 	bool first_loaded; 
 
+	int time_lefting; 
+	int particles_this_frame; 
+
 private:
 
 private:
