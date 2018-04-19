@@ -3,6 +3,7 @@ using TheEngine.TheConsole;
 
 public class Laser 
 {
+	public float laser_damage = 10.0f;
 
 	private TheGameObject sender = null;
 	private TheTransform self_trans = null;
@@ -51,11 +52,16 @@ public class Laser
 
 		TheScript ship_properties = other_ship.GetScript("ShipProperties");
 		
-		if(ship_properties != null && sender != null && other_ship != sender)
+		if(ship_properties != null && sender != null)
 		{
-			object[] args = {sender};
-			ship_properties.CallFunctionArgs("HitByShip", args);
-			TheGameObject.Self.SetActive(false);
+			// I could do this comparing only the game objects but for some reason it's not working :(
+			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
+			{
+				TheConsole.Log(other_ship.name + " " + sender.name);
+				object[] args = {sender};
+				ship_properties.CallFunctionArgs("HitByShip", args);
+				TheGameObject.Self.SetActive(false);
+			}
 		}
 	}
 
