@@ -201,6 +201,21 @@ public class GameManager
 			
 	}
 
+	List<TheGameObject> GetAllianceShips()
+	{
+		return alliance_ships;
+	}
+
+	List<TheGameObject> GetEmpireShips()
+	{
+		return empire_ships;
+	}
+
+	TheGameObject GetSlave1()
+	{
+		return slave1;
+	}
+
 	List<TheGameObject> GetSlaveEnemies()
 	{
 		List<TheGameObject> ret = new List<TheGameObject>();
