@@ -160,7 +160,10 @@ update_status ModuleInput::PreUpdate(float dt)
 				}
 				if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
 				{
-					App->editor->assets_window->CheckDirectories();
+					if (!App->IsGame())
+					{
+						App->editor->assets_window->CheckDirectories();
+					}
 				}
 			}
 				break;

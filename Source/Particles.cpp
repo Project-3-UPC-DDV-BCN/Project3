@@ -469,6 +469,7 @@ void Particle::Draw(ComponentCamera* active_camera)
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
 		CONSOLE_LOG("%d", GetAtributes().texture->GetID()); 
 	}

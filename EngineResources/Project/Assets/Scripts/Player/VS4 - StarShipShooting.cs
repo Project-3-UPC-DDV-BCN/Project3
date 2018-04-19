@@ -55,6 +55,8 @@ public class StarShipShooting {
     public float w1_cooling_rate = 10.0f;
     public float w2_cooling_rate = 10.0f;
     
+	TheScript weapon_script = null;
+	
     void Start () 
 	{
 		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
@@ -89,6 +91,8 @@ public class StarShipShooting {
 		
 		if(weapon_icon_2 != null)
 			weapon_icon_2.SetActive(false);
+		
+		weapon_script = TheGameObject.GetScript("VS4 - Weapon0");
     }	
 
 	void Update () 
@@ -98,7 +102,7 @@ public class StarShipShooting {
 
 		if(timer <= 0 && !overheated)
 		{
-			if(TheInput.GetControllerJoystickMove(0,"LEFT_TRIGGER") >= 20000)
+			if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 			{
                 TheVector3 offset;
                 switch (weapon)
@@ -124,25 +128,13 @@ public class StarShipShooting {
 							
 							if(laser_factory != null && laser_spawner != null)
 							{
-                            	laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition/* + offset*/);
+                            	laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition);// + offset
 
                             	//Calculate the rotation
-                           		// TheVector3 Z = new TheVector3(0, 0, 1);
                             	TheVector3 ship_rot = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
 
-                            	/*float prod = Z.x * ship_rot.x + Z.y * ship_rot.y + Z.z * ship_rot.z;
-                           		float magnitude_prod = Z.Length * ship_rot.Length;
-
-                            	float angle = TheMath.Acos(prod / magnitude_prod);
-
-                            	/// get the axis of this rotation
-                            	TheVector3 axis = TheVector3.CrossProduct(Z, ship_rot);*/
-							
 								TheConsole.Log("ship_rot" + ship_rot);
-
-                            	//TheVector3 laser_rot = ().ToEulerAngles();// ship_rot + new TheVector3(0, 90, 0);
-
-                            	//laser_factory.SetSpawnRotation(laser_rot);
+								
                            		TheGameObject go = laser_factory.Spawn();
 
 								//Set laser team parent 
@@ -150,7 +142,6 @@ public class StarShipShooting {
 								laser_scpt.SetStringField("parent_team", TheGameObject.Self.tag);
 								laser_scpt.SetStringField("parent_team", TheGameObject.Self.GetParent().tag);
 	
-								//laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
                             	TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
 							
 								if(go != null)
@@ -160,7 +151,6 @@ public class StarShipShooting {
 									go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
 								}
 							}
-                       
 
                             timer = spawn_time;
 							
@@ -181,8 +171,9 @@ public class StarShipShooting {
                                 overheated = true;
                                 overheat_timer = overheated_time;
                             }
-                            else overheat_timer = overheat_time;
-                            break;
+                            else 
+								overheat_timer = overheat_time;              
+							break;
                         }
                     case 1:
                         {
