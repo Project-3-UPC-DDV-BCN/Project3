@@ -2,7 +2,7 @@
     "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "9",
     "GameObject_0": {
-        "UUID": "1620816483",
+        "UUID": "1235439416",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1188647681",
+        "UUID": "1512551692",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1557861756",
+        "UUID": "1353234440",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -193,11 +193,11 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "2140660768"
+                            "field_value": "2110327756"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "1725710775"
+                            "field_value": "887507324"
                         },
                         "field_5": {
                             "field_name": "slave1_audio",
@@ -215,7 +215,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1231722741",
+        "UUID": "1279869703",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -232,8 +232,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "421.000000",
-                    "value_Y": "274.000000"
+                    "value_X": "517.000000",
+                    "value_Y": "370.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -287,7 +287,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "451959157",
+        "UUID": "269627592",
         "Name": "ShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -343,7 +343,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "laser_speed",
-                            "field_value": "50.000000"
+                            "field_value": "100.000000"
                         }
                     },
                     "bool_fields": {
@@ -453,7 +453,7 @@
                 "Active": "1",
                 "UUID": "1868023099",
                 "IsConvex": "0",
-                "IsTrigger": "0",
+                "IsTrigger": "1",
                 "CapsuleDir": "0",
                 "HaveMaterial": "0",
                 "ColliderCenter": {
@@ -478,25 +478,16 @@
                     "assets_path": "",
                     "script_name": "GuillemMovement",
                     "UUID": "1314709549",
-                    "int_fields_count": "2",
+                    "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "7",
+                    "float_fields_count": "4",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
-                    "vec3_fields_count": "1",
+                    "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
-                    "int_fields": {
-                        "field_0": {
-                            "field_name": "ShipPropertiesKey",
-                            "field_value": "0"
-                        },
-                        "field_1": {
-                            "field_name": "faction",
-                            "field_value": "0"
-                        }
-                    },
+                    "int_fields": {},
                     "double_fields": {},
                     "float_fields": {
                         "field_0": {
@@ -509,23 +500,11 @@
                         },
                         "field_2": {
                             "field_name": "move_speed",
-                            "field_value": "0.000000"
+                            "field_value": "50.000000"
                         },
                         "field_3": {
                             "field_name": "rotation_speed",
-                            "field_value": "60.000000"
-                        },
-                        "field_4": {
-                            "field_name": "target_pos_x",
-                            "field_value": "0.000000"
-                        },
-                        "field_5": {
-                            "field_name": "target_pos_y",
-                            "field_value": "0.000000"
-                        },
-                        "field_6": {
-                            "field_name": "target_pos_z",
-                            "field_value": "0.000000"
+                            "field_value": "40.000000"
                         }
                     },
                     "bool_fields": {},
@@ -537,16 +516,7 @@
                         }
                     },
                     "vec2_fields": {},
-                    "vec3_fields": {
-                        "field_0": {
-                            "field_name": "target_pos",
-                            "field_value": {
-                                "value_X": "0.000000",
-                                "value_Y": "0.000000",
-                                "value_Z": "0.000000"
-                            }
-                        }
-                    },
+                    "vec3_fields": {},
                     "vec4_fields": {}
                 }
             },
@@ -562,7 +532,7 @@
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "3",
-                    "bool_fields_count": "1",
+                    "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "0",
                     "vec2_fields_count": "0",
@@ -573,7 +543,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "shooting_angle",
-                            "field_value": "60.000000"
+                            "field_value": "30.000000"
                         },
                         "field_1": {
                             "field_name": "shooting_range",
@@ -581,15 +551,10 @@
                         },
                         "field_2": {
                             "field_name": "time_between_lasers",
-                            "field_value": "0.100000"
+                            "field_value": "0.300000"
                         }
                     },
-                    "bool_fields": {
-                        "field_0": {
-                            "field_name": "shooting",
-                            "field_value": "0"
-                        }
-                    },
+                    "bool_fields": {},
                     "string_fields": {},
                     "gameobject_fields": {},
                     "vec2_fields": {},
@@ -603,7 +568,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "918073653",
+        "UUID": "588024205",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -659,7 +624,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "laser_speed",
-                            "field_value": "50.000000"
+                            "field_value": "100.000000"
                         }
                     },
                     "bool_fields": {
@@ -769,7 +734,7 @@
                 "Active": "1",
                 "UUID": "1868023099",
                 "IsConvex": "0",
-                "IsTrigger": "0",
+                "IsTrigger": "1",
                 "CapsuleDir": "0",
                 "HaveMaterial": "0",
                 "ColliderCenter": {
@@ -791,7 +756,7 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1650009852",
+        "UUID": "1352413544",
         "Name": "AiAnchor",
         "Tag": "AI_ANCHOR",
         "Layer": "Default",
@@ -825,7 +790,7 @@
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "2140660768",
+        "UUID": "2110327756",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -842,8 +807,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "110.847076",
-                    "value_Y": "66.508247"
+                    "value_X": "110.847023",
+                    "value_Y": "66.508217"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -859,8 +824,8 @@
                 "Active": "1",
                 "UUID": "2145012880",
                 "position": {
-                    "value_X": "127.944534",
-                    "value_Y": "117.758987",
+                    "value_X": "157.119522",
+                    "value_Y": "161.371490",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -895,12 +860,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1231722741",
+        "ParentID": "1279869703",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1725710775",
+        "UUID": "887507324",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -917,8 +882,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "94.220039",
-                    "value_Y": "66.508263"
+                    "value_X": "94.219994",
+                    "value_Y": "66.508232"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -934,8 +899,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "177.527145",
-                    "value_Y": "117.758987",
+                    "value_X": "218.008392",
+                    "value_Y": "161.371490",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -970,7 +935,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1231722741",
+        "ParentID": "1279869703",
         "IsRoot": "0",
         "IsStatic": "0"
     }

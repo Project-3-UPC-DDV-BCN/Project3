@@ -28,6 +28,7 @@ public class StarShipShooting {
 	
 	// Particles
 	public TheGameObject laser_light;
+	TheLight laser_light_comp;
 	
 	// Timers and durations
 	public float spawn_time = 0.01f;
@@ -92,6 +93,9 @@ public class StarShipShooting {
 		if(weapon_icon_2 != null)
 			weapon_icon_2.SetActive(false);
 		
+		if(laser_light != null)
+			laser_light_comp = laser_light.GetComponent<TheLight>();
+		
 		weapon_script = TheGameObject.GetScript("VS4 - Weapon0");
     }	
 
@@ -104,62 +108,22 @@ public class StarShipShooting {
 		{
 			if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 			{
-                TheVector3 offset;
                 switch (weapon)
                 {
                 	case 0:
                         {
-						  	if(weapons_bar != null)
-                           		curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
-
-                            if (used_left_laser)
-                            {
-                                offset = new TheVector3(1, 2, 0);
-
-                                used_left_laser = false;
-                            }
-
-                            else
-                            {
-                                offset = new TheVector3(-1, 2, 0);
-
-                                used_left_laser = true;
-                            }
+							if (weapons_bar == null && laser_factory == null && laser_spawner == null)
+								break;
 							
-							if(laser_factory != null && laser_spawner != null)
-							{
-                            	laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition);// + offset
-
-                            	//Calculate the rotation
-                            	TheVector3 ship_rot = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
-
-								TheConsole.Log("ship_rot" + ship_rot);
-								
-                           		TheGameObject go = laser_factory.Spawn();
-
-								//Set laser team parent 
-								TheScript laser_scpt = go.GetComponent<TheScript>(0); 
-								laser_scpt.SetStringField("parent_team", TheGameObject.Self.tag);
-								laser_scpt.SetStringField("parent_team", TheGameObject.Self.GetParent().tag);
-	
-                            	TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
-							
-								if(go != null)
-								{
-									go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
-									TheVector3 laser_rot = (ship_rot.ToQuaternion() * go.GetComponent<TheTransform>().GlobalRotation.ToQuaternion()).ToEulerAngles();
-									go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
-								}
-							}
-
-                            timer = spawn_time;
+							weapon_script.Shoot(weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner);		
 							
 							if(audio_source != null)
                             	audio_source.Play("Play_shot");
-							
 
-							if (laser_light != null){
-								laser_light.GetComponent<TheLight>().SetComponentActive(true);
+                            timer = spawn_time;																
+
+							if (laser_light_comp != null){
+								laser_light_comp.SetComponentActive(true);
 								light_duration = 0.2f;
 								light_on = true;
 							}
@@ -187,7 +151,7 @@ public class StarShipShooting {
                 }
             }
 
-            if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") < 20000 && weapon == 1)
+            if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
             {
                 if(overheat > 0.0f && !cooling)
                 {
