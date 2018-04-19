@@ -81,6 +81,9 @@ public:
 
 	void CleanPhysScene();
 
+public:
+	bool draw_colliders;
+
 private:
 	void CreateMainScene();
 	void UpdateDynamicBody(physx::PxActor* actor);

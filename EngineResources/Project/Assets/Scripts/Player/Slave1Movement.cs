@@ -119,10 +119,12 @@ public class Slave1Movement {
 	TheAudioSource audio_source;
 
 
-	public TheGameObject particle_emitter_go;
+	/*public TheGameObject particle_emitter_go;
 
 	TheParticleEmmiter particle_emitter;
 	public float particle_base_speed;
+	*/
+	private float delta_time = 0.0f;
 	
 	void Start () 
 	{
@@ -239,9 +241,8 @@ public class Slave1Movement {
 	
 	void Update () 
 	{
-
+		delta_time = TheTime.DeltaTime;
         Movement();
-
 
 		EnergyManagement();
 		SetValuesWithEnergy();
@@ -268,9 +269,11 @@ public class Slave1Movement {
 			speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
 		
 		if(particle_emitter != null)
+		{	
 			particle_emitter.SetEmitterSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
 			particle_emitter.SetParticleSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
-        curr_total_hp = wings_hp + body_hp + engine_hp;
+        }
+		curr_total_hp = wings_hp + body_hp + engine_hp;
 	}
 
 	void SetValuesWithEnergy()
@@ -378,11 +381,11 @@ public class Slave1Movement {
 
             if (invert_axis)
             {
-                new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
+                new_rot.x += pitch_rotate_speed * move_percentage * delta_time;
 
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
-                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * delta_time;
                     if (cam_rot.x < -max_camera_rot * move_percentage)
                     {
                         cam_rot.x = -max_camera_rot * move_percentage;
@@ -391,10 +394,10 @@ public class Slave1Movement {
             }
             else
             {
-                new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
+                new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
-                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * delta_time;
                     if (cam_rot.x > max_camera_rot * move_percentage)
                         cam_rot.x = max_camera_rot * move_percentage;
                 }
@@ -408,7 +411,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x < 0.0f)
                 {
-                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * delta_time;
                     if (cam_rot.x > 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -417,7 +420,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x > 0.0f)
                 {
-                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * delta_time;
                     if (cam_rot.x < 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -431,20 +434,20 @@ public class Slave1Movement {
 			TheVector3 new_rot = trans.LocalRotation;
             if (invert_axis)
             {
-                new_rot.x -= pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
+                new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
                 if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
                 {
-                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * delta_time;
                     if (cam_rot.x > max_camera_rot * move_percentage)
                         cam_rot.x = max_camera_rot * move_percentage;
                 }
             }
             else
             {
-                new_rot.x += pitch_rotate_speed * move_percentage * TheTime.DeltaTime;
+                new_rot.x += pitch_rotate_speed * move_percentage * delta_time;
                 if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
-                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * delta_time;
                     if (cam_rot.x < -max_camera_rot * move_percentage)
                     {
                         cam_rot.x = -max_camera_rot * move_percentage;
@@ -459,7 +462,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x > 0.0f)
                 {
-                    cam_rot.x -= camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x -= camera_rot_step * delta_time;
                     if (cam_rot.x < 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -468,7 +471,7 @@ public class Slave1Movement {
             {
                 if (cam_rot.x < 0.0f)
                 {
-                    cam_rot.x += camera_rot_step * TheTime.DeltaTime;
+                    cam_rot.x += camera_rot_step * delta_time;
                     if (cam_rot.x > 0.0f)
                         cam_rot.x = 0.0f;
                 }
@@ -479,11 +482,11 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_right - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
             TheVector3 new_rot = trans.LocalRotation;
-            new_rot.y -= yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            new_rot.y -= yaw_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
             if (cam_rot.y < max_camera_rot * move_percentage && cam_rot.y >= 0.0f)
             {
-                cam_rot.y += camera_rot_step * TheTime.DeltaTime;
+                cam_rot.y += camera_rot_step * delta_time;
                 if (cam_rot.y > max_camera_rot * move_percentage)
                     cam_rot.y = max_camera_rot * move_percentage;
             }
@@ -492,7 +495,7 @@ public class Slave1Movement {
         {
             if (cam_rot.y > 0.0f)
             {
-                cam_rot.y -= camera_rot_step * TheTime.DeltaTime;
+                cam_rot.y -= camera_rot_step * delta_time;
                 if (cam_rot.y < 0.0f)
                     cam_rot.y = 0.0f;
             }
@@ -502,11 +505,11 @@ public class Slave1Movement {
 		{
 			float move_percentage = (float)(ljoy_left - controller_sensibility)/(float)(TheInput.MaxJoystickMove - controller_sensibility);
             TheVector3 new_rot = trans.LocalRotation;
-            new_rot.y += yaw_rotate_speed * move_percentage * TheTime.DeltaTime;
+            new_rot.y += yaw_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
             if (cam_rot.y > -max_camera_rot * move_percentage && cam_rot.y <= 0.0f)
             {
-                cam_rot.y -= camera_rot_step * TheTime.DeltaTime;
+                cam_rot.y -= camera_rot_step * delta_time;
                 if (cam_rot.y < -max_camera_rot * move_percentage)
                     cam_rot.y = -max_camera_rot * move_percentage;
             }
@@ -515,7 +518,7 @@ public class Slave1Movement {
         {
             if (cam_rot.y < 0.0f)
             {
-                cam_rot.y += camera_rot_step * TheTime.DeltaTime;
+                cam_rot.y += camera_rot_step * delta_time;
                 if (cam_rot.y > 0.0f)
                     cam_rot.y = 0.0f;
             }
@@ -531,12 +534,12 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_RB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z += roll_rotate_speed*TheTime.DeltaTime;
+			new_rot.z += roll_rotate_speed*delta_time;
             trans.SetIncrementalRotation(new_rot);
             TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z > -max_camera_rot && cam_rot.z <= 0.0f)
             {
-                cam_rot.z -= camera_rot_step * TheTime.DeltaTime;
+                cam_rot.z -= camera_rot_step * delta_time;
                 if (cam_rot.z < -max_camera_rot)
                     cam_rot.z = -max_camera_rot;
             }
@@ -545,7 +548,7 @@ public class Slave1Movement {
         {
             if(cam_rot.z<0.0f)
             {
-                cam_rot.z += camera_rot_step * TheTime.DeltaTime;
+                cam_rot.z += camera_rot_step * delta_time;
                 if (cam_rot.z > 0.0f)
                     cam_rot.z = 0.0f;
             }
@@ -554,12 +557,12 @@ public class Slave1Movement {
 		if(TheInput.GetControllerButton(0,"CONTROLLER_LB") == 2)
 		{
 			TheVector3 new_rot = trans.LocalRotation;
-			new_rot.z -= roll_rotate_speed*TheTime.DeltaTime;
+			new_rot.z -= roll_rotate_speed*delta_time;
             trans.SetIncrementalRotation(new_rot);
             TheInput.RumbleController(0,rotate_rumble_strength,rotate_rumble_ms);
             if (cam_rot.z < max_camera_rot && cam_rot.z >= 0.0f)
             {
-                cam_rot.z += camera_rot_step * TheTime.DeltaTime;
+                cam_rot.z += camera_rot_step * delta_time;
                 if (cam_rot.z > max_camera_rot)
                     cam_rot.z = max_camera_rot;
             }
@@ -568,7 +571,7 @@ public class Slave1Movement {
         {
             if (cam_rot.z > 0.0f)
             {
-                cam_rot.z -= camera_rot_step * TheTime.DeltaTime;
+                cam_rot.z -= camera_rot_step * delta_time;
                 if (cam_rot.z < 0.0f)
                     cam_rot.z = 0.0f;
             }
@@ -584,7 +587,7 @@ public class Slave1Movement {
 		slowing = false;
 		if(TheInput.GetControllerButton(0,"CONTROLLER_X") == 2)
 		{
-			slow_timer+=TheTime.DeltaTime;
+			slow_timer+=delta_time;
 
 			if(slow_timer <= slow_time)
 			{
@@ -598,7 +601,7 @@ public class Slave1Movement {
 		{
 			if(slow_timer > 0.0f)
 			{
-				slow_timer-= slow_regen*TheTime.DeltaTime;
+				slow_timer-= slow_regen*delta_time;
 			}
 		}
 
@@ -622,7 +625,7 @@ public class Slave1Movement {
 			}
 
 			if(curr_vel>= target_vel)
-				boost_timer -= TheTime.DeltaTime;
+				boost_timer -= delta_time;
 		}
 		else
 		{
@@ -635,13 +638,13 @@ public class Slave1Movement {
 				boost_cd_timer -= TheTime.DeltaTime*(1-(0.75f/4) * (engine_energy));
 			}
 			else
-				boost_cd_timer -= TheTime.DeltaTime;
+				boost_cd_timer -= delta_time;
 		
 		}
 
 		if(curr_vel < target_vel) 
 		{
-			curr_vel += curr_accel*TheTime.DeltaTime;
+			curr_vel += curr_accel*delta_time;
 
 			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
 
@@ -650,10 +653,10 @@ public class Slave1Movement {
 		else if(curr_vel > target_vel)
 		{
 			if(!slowing)
-				curr_vel-=curr_accel*TheTime.DeltaTime;
+				curr_vel-=curr_accel*delta_time;
 			else
 			{
-				curr_vel-=slow_acceleration*TheTime.DeltaTime;
+				curr_vel-=slow_acceleration*delta_time;
 
 				float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
 
@@ -662,7 +665,7 @@ public class Slave1Movement {
 		}
 		
 		TheVector3 new_vel_pos = trans.LocalPosition;
-		new_vel_pos += trans.ForwardDirection*curr_vel*TheTime.DeltaTime;
+		new_vel_pos += trans.ForwardDirection*curr_vel*delta_time;
 		trans.LocalPosition = new_vel_pos;
 		
 		if(camera_go != null)
@@ -748,13 +751,13 @@ public class Slave1Movement {
     {
         if(shield_regen_timer <= 0.0f && curr_shield_hp < shield_hp)
         {
-            curr_shield_hp += shield_regen_energy * TheTime.DeltaTime;
+            curr_shield_hp += shield_regen_energy * delta_time;
 
             if (curr_shield_hp > shield_hp)
                 curr_shield_hp = shield_hp;
         }
 
-        shield_regen_timer -= TheTime.DeltaTime;
+        shield_regen_timer -= delta_time;
     }
 
     void RepairPuzzle()
@@ -875,7 +878,7 @@ public class Slave1Movement {
                 switch(repair_part)
                 {
                     case 0:
-                        wings_hp += repair_hp * TheTime.DeltaTime;
+                        wings_hp += repair_hp * delta_time;
                         if(wings_hp >= total_hp/3.0f)
                         {
                             wings_hp = total_hp / 3.0f;
@@ -901,7 +904,7 @@ public class Slave1Movement {
                         }
                         break;
                     case 1:
-                        body_hp += repair_hp * TheTime.DeltaTime;
+                        body_hp += repair_hp * delta_time;
                         if (body_hp >= total_hp / 3.0f)
                         {
                             body_hp = total_hp / 3.0f;
@@ -927,7 +930,7 @@ public class Slave1Movement {
                         }
                         break;
                     case 2:
-                        engine_hp += repair_hp * TheTime.DeltaTime;
+                        engine_hp += repair_hp * delta_time;
                         if (engine_hp >= total_hp / 3.0f)
                         {
                             engine_hp = total_hp / 3.0f;

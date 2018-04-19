@@ -94,6 +94,7 @@ void PropertiesWindow::DrawWindow()
 			if (ImGui::Checkbox("Active", &is_gameobject_active))
 			{
 				selected_gameobject->SetActive(is_gameobject_active);
+				selected_gameobject->was_active = is_gameobject_active;
 			}
 			ImGui::SameLine();
 			bool is_static = selected_gameobject->IsStatic();
@@ -2121,6 +2122,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			
 			else if (runtime_behaviour_combo == 1)
 				current_emmiter->runtime_behaviour = "Manual";
+
+			if (current_emmiter->data == nullptr)
+			{
+				CONSOLE_ERROR("PARTICLE EMITTER DATA IN PROPERTIES WINDOW IS NULLPTR");
+				return;
+			}
 
 			int emmision_behaviour_combo = current_emmiter->data->emmision_type;
 

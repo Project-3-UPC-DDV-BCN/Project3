@@ -94,6 +94,7 @@ public:
 	std::list<Component*> components_list;
 	bool is_on_destroy;
 	bool used_in_scene;
+	bool was_active;
 
 private:
 	bool active;

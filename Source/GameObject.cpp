@@ -56,6 +56,7 @@ GameObject::GameObject(GameObject* parent)
 	is_ui = false;
 	used_in_scene = false;
 	uuid = App->RandomNumber().Int();
+	was_active = true;
 }
 
 GameObject::~GameObject()
@@ -307,8 +308,8 @@ void GameObject::SetActive(bool active)
 		}
 		else
 		{
-			rb->WakeUp();
 			rb->OnEnable();
+			rb->WakeUp();
 		}
 	}
 
@@ -327,6 +328,21 @@ void GameObject::SetActive(bool active)
 					comp_script->OnDisable();
 				}
 			}
+		}
+	}
+
+	for (GameObject* go : childs)
+	{
+		if (active)
+		{
+			if (go->was_active)
+			{
+				go->SetActive(active);
+			}
+		}
+		else
+		{
+			go->SetActive(active);
 		}
 	}
 }

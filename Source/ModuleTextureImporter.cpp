@@ -16,8 +16,8 @@ ModuleTextureImporter::ModuleTextureImporter(Application* app, bool start_enable
 
 	ilInit();
 	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
+	//ilutInit();
+	//ilutRenderer(ILUT_OPENGL);
 }
 
 ModuleTextureImporter::~ModuleTextureImporter()

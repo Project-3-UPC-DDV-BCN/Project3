@@ -16,8 +16,8 @@ ComponentFactory::ComponentFactory(GameObject* attached_gameobject)
 	SetGameObject(attached_gameobject);
 
 	object_to_spawn = nullptr;
-	object_count = 5;
-	life_time = 10;
+	object_count = 0;
+	life_time = 1;
 	spawn_position = float3::zero;
 	spawn_rotation = float3::zero;
 }
@@ -75,13 +75,14 @@ GameObject* ComponentFactory::Spawn()
 	if (go != nullptr)
 	{
 		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+		ComponentTransform* factory_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
 		if (transform != nullptr)
 		{
-			//CONSOLE_LOG("%.3f,%.3f,%.3f", transform->GetGlobalRotation().x, transform->GetGlobalRotation().y, transform->GetGlobalRotation().z);
-			transform->SetPosition(spawn_position);
-			transform->SetRotation(spawn_rotation);
-			transform->SetScale(spawn_scale);
+			transform->SetPosition(float3(factory_trans->GetGlobalPosition()));
+			transform->SetRotation(float3(0, 0, 0));
+			go->SetParent(nullptr);
+
 			spawned_objects[go] = life_time;
 			spawn_objects_list.remove(go);
 			go->SetActive(true);
@@ -186,9 +187,10 @@ void ComponentFactory::CheckLifeTimes()
 			ComponentTransform* transform = (ComponentTransform*)it->first->GetComponent(Component::CompTransform);
 			if (transform)
 			{
+				it->first->SetParent(GetGameObject());
 				it->first->SetActive(false);
-				transform->SetPosition(original_position);
-				transform->SetRotation(original_rotation);
+				transform->SetPosition(float3(0, 0, 0));
+				transform->SetRotation(float3(0, 0, 0));
 				transform->SetScale(original_scale);
 				spawn_objects_list.push_back(it->first);
 				it = spawned_objects.erase(it);

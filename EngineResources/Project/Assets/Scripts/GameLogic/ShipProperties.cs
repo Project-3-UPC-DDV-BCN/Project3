@@ -10,6 +10,8 @@ using TheEngine.TheConsole;
 public class ShipProperties 
 {
 	public string ship_faction;
+	public bool is_slave1 = false;
+
 	public float laser_speed = 30;
 
 	private int life = 100;
@@ -33,7 +35,17 @@ public class ShipProperties
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
 
-		SetShipFaction(ship_faction);			
+		// Add ship to game manager
+		if(is_slave1)
+		{
+			if(game_manager_script != null)
+			{
+				object[] args = {TheGameObject.Self};
+				game_manager_script.CallFunctionArgs("AddSlave1", args);
+			}
+		}
+		else
+			SetShipFaction(ship_faction);			
 	}
 
 	void Start()
@@ -42,11 +54,13 @@ public class ShipProperties
 
 		if(factory != null)
 			factory.StartFactory();
+
+		
 	}
 
 	void Update()
 	{
-		if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") >= 20000)
+		if (TheInput.IsKeyDown("w"))
 		{
 			if(one_shoot)
 				Shoot();
@@ -55,6 +69,11 @@ public class ShipProperties
 		}
 		else
 			one_shoot = true;
+	}
+
+	bool IsSlave1()
+	{
+		return is_slave1;
 	}
 	
 	// Shoots a laser

@@ -41,6 +41,7 @@
 #include "glmath.h"
 #include "OpenGL.h"
 #include "Brofiler\Brofiler.h"
+#include <algorithm> 
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -185,7 +186,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ms_timer.Start();
 
 	// Regular rendering
-	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
+	if (!App->IsGame() && editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
 		DrawEditorScene();
@@ -298,7 +299,7 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 {
 	if (canvas_to_draw.empty()) return;
-
+	BROFILER_CATEGORY("Draw Canvas", Profiler::Color::FloralWhite);
 	// Activate
 	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
 	glActiveTexture(GL_TEXTURE0);
@@ -691,31 +692,31 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		//DrawMesh(*it, active_camera);
 	}
 
-		for (std::vector<ComponentMeshRenderer*>::iterator it2 = dynamic_mesh_to_draw.begin(); it2 != dynamic_mesh_to_draw.end(); ++it2)
+	for (std::vector<ComponentMeshRenderer*>::iterator it2 = dynamic_mesh_to_draw.begin(); it2 != dynamic_mesh_to_draw.end(); ++it2)
+	{
+		if (!is_editor_camera)
 		{
-			if (!is_editor_camera)
+			if (active_camera->GetGameObject() && (*it2)->GetMesh())
 			{
-				if (active_camera->GetGameObject() && (*it2)->GetMesh())
+				if (active_camera->ContainsGameObjectAABB((*it2)->bounding_box))
 				{
-					if (active_camera->ContainsGameObjectAABB((*it2)->bounding_box))
-					{
-						//if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-						OrderByMaterials(*it2);
-						//DrawMesh(*it2, active_camera);
-					}
-				}
-			}
-			else
-			{
-				OrderByMaterials(*it2);
-				//DrawMesh(*it2, active_camera);
-				if ((*it2)->GetGameObject()->IsSelected())
-				{
-					if ((*it2)->GetMesh() != nullptr)
-						cubes_to_draw.push_back((*it2)->bounding_box);
+					//if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
+					OrderByMaterials(*it2);
+					//DrawMesh(*it2, active_camera);
 				}
 			}
 		}
+		else
+		{
+			OrderByMaterials(*it2);
+			//DrawMesh(*it2, active_camera);
+			if ((*it2)->GetGameObject()->IsSelected())
+			{
+				if ((*it2)->GetMesh() != nullptr)
+					cubes_to_draw.push_back((*it2)->bounding_box);
+			}
+		}
+	}
 
 	//Draw Meshes
 	uint program = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
@@ -723,6 +724,10 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	SendLight(program);
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+	SetUniformBool(program, "is_ui", false);
+
+	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	for (uint i = 0; i < ordering_by_materials.size(); ++i)
 	{
@@ -731,12 +736,9 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		if (ordering_by_materials[i][0]->GetMaterial() != nullptr)
 			current_material = ordering_by_materials[i][0]->GetMaterial();
 
-		for (uint j = 0; j < ordering_by_materials[i].size(); ++j)
-		{
-			DrawMesh(ordering_by_materials[i][j], active_camera);
-			changed_material = false;
-		}
-		changed_material = true;
+		DrawMesh(ordering_by_materials[i], active_camera);
+		//changed_material = false;
+		//changed_material = true;
 	}
 
 	for (uint i = 0; i < cubes_to_draw.size(); ++i)
@@ -748,6 +750,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Particles
 	for (std::vector<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
+		if (*it == nullptr)
+			continue;
 
 		(*it)->AddaptEmmitAreaAABB();
 
@@ -790,92 +794,58 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	active_camera->GetViewportTexture()->Unbind();
 }
 
-void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* active_camera)
+void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, ComponentCamera* active_camera)
 {
-	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
-	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
-
-	ComponentBillboard* billboard = (ComponentBillboard*)mesh->GetGameObject()->GetComponent(Component::CompBillboard);
-	if (billboard != nullptr)
+	if (current_material != nullptr)
 	{
-		billboard->RotateObject(); 
-	}
-	
-	if (mesh->GetMeshType() == ComponentMeshRenderer::NormalMesh)
-	{
-		Material* material = current_material;
-
+		current_material->LoadToMemory();
 		uint program = 0;
-		if (material != nullptr)
-		{
-			program = material->GetShaderProgramID();
-			UseShaderProgram(program);
+		program = current_material->GetShaderProgramID();
+		UseShaderProgram(program);
 
-			if (changed_material == true)
-				material->LoadToMemory();
-				
-			SetUniformBool(program, "has_light", mesh->has_light);
+		bool has_light = true;
+		SetUniformBool(program, "has_light", true);
+
+		uint current_vao = meshes[0]->GetMesh()->id_vao;
+
+		BindVertexArrayObject(meshes[0]->GetMesh()->id_vao);
+
+		for (ComponentMeshRenderer* mesh : meshes)
+		{
+			if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
+			if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+
+			ComponentBillboard* billboard = (ComponentBillboard*)mesh->GetGameObject()->GetComponent(Component::CompBillboard);
+			if (billboard != nullptr)
+			{
+				billboard->RotateObject();
+			}
+
+			if (has_light != mesh->has_light)
+			{
+				SetUniformBool(program, "has_light", mesh->has_light);
+				has_light = mesh->has_light;
+			}
+			
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-			SetUniformBool(program, "is_ui", false);
+
 
 			//TODO: Calculate Normal Matrix here and send it as uniform.
 			// We need this because transitioning to World Space gives a non accurate Normal.
 			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
-			BindVertexArrayObject(mesh->GetMesh()->id_vao);
+			if (mesh->GetMesh()->id_vao != current_vao)
+			{
+				UnbindVertexArrayObject();
+				BindVertexArrayObject(mesh->GetMesh()->id_vao);
+				current_vao = mesh->GetMesh()->id_vao;
+			}
+
 			glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 		}
+
+		UnbindVertexArrayObject();
 	}
-	else
-	{
-		Material* material = current_material;
-		Material* interior_material = mesh->GetInteriorMaterial();
-
-		BindVertexArrayObject(mesh->GetMesh()->id_vao);
-
-		uint program = 0;
-		if (material != nullptr)
-		{
-			interior_material->SetDiffuseColor(0, 0.5, 0.5);
-			program = material->GetShaderProgramID();
-			UseShaderProgram(program);
-
-			if (changed_material == true)
-				material->LoadToMemory();
-
-			SetUniformBool(program, "has_light", mesh->has_light);
-			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-
-			//TODO: Calculate Normal Matrix here and send it as uniform.
-			// We need this because transitioning to World Space gives a non accurate Normal.
-			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
-
-			glDrawElements(GL_TRIANGLES, mesh->material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->material_indices_start));
-		}
-
-		program = 0;
-		if (interior_material != nullptr)
-		{
-			interior_material->SetDiffuseColor(1, 1, 1);
-			program = interior_material->GetShaderProgramID();
-			UseShaderProgram(program);
-			interior_material->LoadToMemory();
-
-			SetUniformBool(program, "has_light", mesh->has_light);
-			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-
-			//TODO: Calculate Normal Matrix here and send it as uniform.
-			// We need this because transitioning to World Space gives a non accurate Normal.
-			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
-
-			glDrawElements(GL_TRIANGLES, mesh->interior_material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->interior_material_indices_start));
-		}
-	}
-	
-	UnbindVertexArrayObject();
 }
 
 void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)

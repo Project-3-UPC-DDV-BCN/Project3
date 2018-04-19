@@ -3,6 +3,7 @@ using TheEngine.TheConsole;
 
 public class Laser 
 {
+	public float laser_damage = 10.0f;
 
 	private TheGameObject sender = null;
 	private TheTransform self_trans = null;
@@ -53,9 +54,14 @@ public class Laser
 		
 		if(ship_properties != null && sender != null)
 		{
-			object[] args = {sender};
-			ship_properties.CallFunctionArgs("HitByShip", args);
-			TheGameObject.Self.SetActive(false);
+			// I could do this comparing only the game objects but for some reason it's not working :(
+			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
+			{
+				TheConsole.Log(other_ship.name + " " + sender.name);
+				object[] args = {sender};
+				ship_properties.CallFunctionArgs("HitByShip", args);
+				TheGameObject.Self.SetActive(false);
+			}
 		}
 	}
 
@@ -74,6 +80,7 @@ public class Laser
 
 				TheVector3 curr = self_trans.LocalPosition;
 				self_trans.LocalPosition = new TheVector3(curr.x + add.x, curr.y + add.y, curr.z + add.z);
+				self_trans.QuatRotation = orientation;
 			}
 		}
     }
