@@ -2,7 +2,7 @@
     "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "7",
     "GameObject_0": {
-        "UUID": "481398004",
+        "UUID": "1502141614",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1780641402",
+        "UUID": "295183041",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "99074626",
+        "UUID": "1667479318",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -151,7 +151,7 @@
                     "float_fields_count": "1",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "7",
+                    "gameobject_fields_count": "6",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -193,17 +193,13 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "1708066473"
+                            "field_value": "972792630"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "388964108"
+                            "field_value": "1603917791"
                         },
                         "field_5": {
-                            "field_name": "slave1",
-                            "field_value": "0"
-                        },
-                        "field_6": {
                             "field_name": "slave1_audio",
                             "field_value": "0"
                         }
@@ -219,7 +215,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2104546229",
+        "UUID": "759125305",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -291,7 +287,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "2098741693",
+        "UUID": "1490306735",
         "Name": "ShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -331,7 +327,7 @@
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "1",
-                    "bool_fields_count": "0",
+                    "bool_fields_count": "1",
                     "string_fields_count": "1",
                     "gameobject_fields_count": "0",
                     "vec2_fields_count": "0",
@@ -345,7 +341,12 @@
                             "field_value": "300.000000"
                         }
                     },
-                    "bool_fields": {},
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "is_slave1",
+                            "field_value": "1"
+                        }
+                    },
                     "string_fields": {
                         "field_0": {
                             "field_name": "ship_faction",
@@ -378,7 +379,7 @@
                     "value_Y": "-431602080.000000",
                     "value_Z": "-431602080.000000"
                 },
-                "Life_time": "300.000000",
+                "Life_time": "10.000000",
                 "Prefab_UID": "1406036996"
             },
             "Component_3": {
@@ -406,7 +407,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1708066473",
+        "UUID": "972792630",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -476,12 +477,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "2104546229",
+        "ParentID": "759125305",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "388964108",
+        "UUID": "1603917791",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -551,7 +552,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "2104546229",
+        "ParentID": "759125305",
         "IsRoot": "0",
         "IsStatic": "0"
     }
