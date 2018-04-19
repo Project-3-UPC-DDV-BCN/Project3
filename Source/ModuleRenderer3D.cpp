@@ -750,6 +750,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Particles
 	for (std::vector<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
+		if (*it == nullptr)
+			continue;
 
 		(*it)->AddaptEmmitAreaAABB();
 

@@ -275,7 +275,7 @@ update_status ModuleEditor::Update(float deltaTime)
 		ImGui::Separator();
 		ImGui::BeginDockspace();
 		for (std::list<Window*>::iterator it = editor_windows.begin(); it != editor_windows.end(); it++) {
-			if ((*it)->IsActive())
+			if ((*it)->IsActive() && *it != nullptr)
 			{
 				(*it)->DrawWindow();
 			}
