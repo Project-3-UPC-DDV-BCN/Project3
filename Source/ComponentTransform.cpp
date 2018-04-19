@@ -187,9 +187,9 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 			if (rb)
 			{
 				//rb->SetTransform(transform_matrix.Transposed().ptr());
-				rb->SetTransform(transform_matrix.Transposed().ptr());
-				//rb->SetPosition(global_pos);
-				//rb->SetRotation(rotation);
+				//rb->SetTransform(transform_matrix.Transposed().ptr());
+				rb->SetPosition(global_pos);
+				rb->SetRotation(rotation);
 			}
 			else
 			{
