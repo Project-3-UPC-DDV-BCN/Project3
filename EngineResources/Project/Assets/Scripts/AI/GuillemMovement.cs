@@ -10,7 +10,7 @@ public class GuillemMovement
     private bool forced = false;
 
     TheGameObject center_object;
-    public float max_distance_to_center_object;
+    public float max_distance_to_center_object = 2000f;
     public float desertor_distance = 10000f;
 
     public float move_speed = 300;
@@ -42,7 +42,7 @@ public class GuillemMovement
     void Start()
     {
 
-		ShipProperties = TheGameObject.Self.GetComponent<TheScript>(ShipPropertiesKey);
+		ShipProperties = TheGameObject.Self.GetComponent<TheScript>(0);
 		TheGameObject GM = TheGameObject.Find("GameManager");
 		GameManager = GM.GetComponent<TheScript>();
 
@@ -56,6 +56,7 @@ public class GuillemMovement
         {
             TheGameObject[] anchors = TheGameObject.GetGameObjectsWithTag("AI_ANCHOR");
           	if(anchors.Length > 0) center_object = anchors[0];
+ 			 center_transform = center_object.GetComponent<TheTransform>();
         }
 
         if (force_target != null)
@@ -128,6 +129,14 @@ public class GuillemMovement
 		else if(factionStr == "empire") {
 			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetAllianceShips");
 		}		
+
+		TheGameObject PlayerGo = (TheGameObject)GameManager.CallFunctionArgs("GetSlave1");
+		
+		if(PlayerGo != null) {
+			// Player faction Filter Here ...
+			// ...
+			enemy_ships.Add(PlayerGo);
+		}
 
 		if(enemy_ships.Count > 0) {
 			int random = (int)TheRandom.RandomRange(0, enemy_ships.Count);
