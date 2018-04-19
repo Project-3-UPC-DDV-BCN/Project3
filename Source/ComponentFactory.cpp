@@ -74,12 +74,12 @@ GameObject* ComponentFactory::Spawn()
 
 	if (go != nullptr)
 	{
-
 		ComponentTransform* transform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
+		ComponentTransform* factory_trans = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
 
 		if (transform != nullptr)
 		{
-			transform->SetPosition(float3(0, 0, 0));
+			transform->SetPosition(float3(factory_trans->GetGlobalPosition()));
 			transform->SetRotation(float3(0, 0, 0));
 			go->SetParent(nullptr);
 

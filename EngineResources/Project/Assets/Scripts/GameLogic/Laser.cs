@@ -80,6 +80,7 @@ public class Laser
 
 				TheVector3 curr = self_trans.LocalPosition;
 				self_trans.LocalPosition = new TheVector3(curr.x + add.x, curr.y + add.y, curr.z + add.z);
+				self_trans.QuatRotation = orientation;
 			}
 		}
     }

@@ -7,6 +7,7 @@
 #include "ComponentCollider.h"
 #include "Nvidia/PhysX/Include/PxRigidDynamic.h"
 #include "Nvidia/PhysX/Include/PxShape.h"
+#include "Nvidia\PhysX\Include\foundation\PxVec4.h"
 #include "ModuleRenderer3D.h"
 #include "DebugDraw.h"
 #include "ModuleScene.h"
@@ -293,8 +294,7 @@ void ComponentRigidBody::SetRotation(Quat new_rotation)
 {
 	if (rigidbody != nullptr)
 	{
-		Quat final_rot = math::Quat::FromEulerXYZ(new_rotation.x * DEGTORAD, new_rotation.y * DEGTORAD, new_rotation.z * DEGTORAD);
-		physx::PxQuat rotation(final_rot.x, final_rot.y, final_rot.z, final_rot.w);
+		physx::PxQuat rotation(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
 		physx::PxTransform transform(rigidbody->getGlobalPose().p, rotation);
 		rigidbody->setGlobalPose(transform);
 	}
