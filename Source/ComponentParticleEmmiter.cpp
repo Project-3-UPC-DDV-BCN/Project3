@@ -23,12 +23,35 @@ void ComponentParticleEmmiter::GenerateParticles()
 	if (system_state == PARTICLE_STATE_PAUSE)
 		return;
 
+	CONSOLE_LOG("Timer: %d", spawn_timer.Read()); 
+	CONSOLE_LOG("DT: %f", App->GetDt()*1000);
+	CONSOLE_LOG("Freq: %f", emmision_frequency);
+
+	if (App->GetDt()*1000 > emmision_frequency)
+	{
+		time_lefting += (App->GetDt() * 1000) - emmision_frequency;
+
+		if (time_lefting > emmision_frequency)
+		{		
+			particles_this_frame += time_lefting / emmision_frequency;
+			time_lefting = 0;
+		}
+
+	}
+
+	CONSOLE_LOG("particles: %d", particles_this_frame);
+
 	if (spawn_timer.Read() > emmision_frequency)
 	{
-		Particle* new_particle = CreateParticle();
-		active_particles.insert(pair<float, Particle* > (new_particle->GetDistanceToCamera(),new_particle));
+		for (int i = 0; i < particles_this_frame; i++)
+		{
+			Particle* new_particle = CreateParticle();
+			active_particles.insert(pair<float, Particle* >(new_particle->GetDistanceToCamera(), new_particle));
+		}	
 		spawn_timer.Start();
 	}
+
+	particles_this_frame = 1;
 
 }
 
@@ -149,6 +172,9 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	first_loaded = false; 
 
 	show_width = show_height = show_depth = 1; 
+
+	time_lefting = 0; 
+	particles_this_frame = 1; 
 
 	//Make the aabb enclose a primitive cube
 	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
