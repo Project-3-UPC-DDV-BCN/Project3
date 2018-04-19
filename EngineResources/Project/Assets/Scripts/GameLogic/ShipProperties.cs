@@ -10,6 +10,8 @@ using TheEngine.TheConsole;
 public class ShipProperties 
 {
 	public string ship_faction;
+	public bool is_slave1 = false;
+
 	public float laser_speed = 30;
 
 	private int life = 100;
@@ -19,8 +21,6 @@ public class ShipProperties
 	private TheFactory factory = null;
 
 	private TheTransform self_transform = null;
-
-	public bool is_slave1 = false;
 
 	bool one_shoot = true;
 		
