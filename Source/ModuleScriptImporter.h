@@ -157,6 +157,7 @@ public:
 
 	//FACTORY
 	void StartFactory(MonoObject * object);
+	void ClearFactory(MonoObject * object);
 	MonoObject* Spawn(MonoObject* object);
 	void SetSpawnPosition(MonoObject * object, MonoObject * vector3);
 	void SetSpawnRotation(MonoObject * object, MonoObject * vector3);
@@ -454,6 +455,7 @@ private:
 
 	//FACTORY
 	static void StartFactory(MonoObject * object);
+	static void ClearFactory(MonoObject * object);
 	static MonoObject* Spawn(MonoObject* object);
 	static void SetSpawnPosition(MonoObject * object, MonoObject * vector3);
 	static void SetSpawnRotation(MonoObject * object, MonoObject * vector3);

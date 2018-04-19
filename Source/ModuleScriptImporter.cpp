@@ -714,6 +714,7 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//FACTORY
 	mono_add_internal_call("TheEngine.TheFactory::StartFactory", (const void*)StartFactory);
+	mono_add_internal_call("TheEngine.TheFactory::ClearFactory", (const void*)ClearFactory);
 	mono_add_internal_call("TheEngine.TheFactory::Spawn", (const void*)Spawn);
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnPosition", (const void*)SetSpawnPosition);
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnRotation", (const void*)SetSpawnRotation);
@@ -1239,6 +1240,11 @@ MonoObject * ModuleScriptImporter::GetQuatRotation(MonoObject * object)
 void ModuleScriptImporter::StartFactory(MonoObject * object)
 {
 	ns_importer->StartFactory(object);
+}
+
+void ModuleScriptImporter::ClearFactory(MonoObject * object)
+{
+	ns_importer->ClearFactory(object);
 }
 
 MonoObject * ModuleScriptImporter::Spawn(MonoObject * object)
@@ -3623,6 +3629,17 @@ void NSScriptImporter::StartFactory(MonoObject * object)
 	{
 		ComponentFactory* factory = (ComponentFactory*)comp;
 		if (factory) factory->StartFactory();
+	}
+}
+
+void NSScriptImporter::ClearFactory(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp)
+	{
+		ComponentFactory* factory = (ComponentFactory*)comp;
+		if (factory) factory->ClearFactory();
 	}
 }
 

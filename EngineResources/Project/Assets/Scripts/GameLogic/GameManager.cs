@@ -116,11 +116,13 @@ public class GameManager
 
 	void Win()
 	{
+		TheConsole.Log("You win!");
 		TheApplication.LoadScene("VS4 - MainMenu");
 	}
 
 	void Lose()
 	{
+		TheConsole.Log("You lose!");
 		TheApplication.LoadScene("VS4 - MainMenu");
 	}
 
@@ -199,10 +201,10 @@ public class GameManager
 	void RemoveShip(TheGameObject remove)
 	{
 		if(empire_ships.Remove(remove))
-			TheConsole.Log("Ship destroyed from empire!: " + EmpireShipsCount());
+			TheConsole.Log("Ship destroyed from empire! Remaining: " + EmpireShipsCount());
 
 		if(alliance_ships.Remove(remove))
-			TheConsole.Log("Ship destroyed from alliance!: " + AllianceShipsCount());
+			TheConsole.Log("Ship destroyed from alliance! Remaining: " + AllianceShipsCount());
 			
 	}
 

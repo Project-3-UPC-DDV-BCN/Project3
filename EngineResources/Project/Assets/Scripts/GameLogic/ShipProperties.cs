@@ -16,6 +16,7 @@ public class ShipProperties
 	public int base_laser_damage = 10;
 
 	private int life = 100;
+	private bool dead = false;
 
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
@@ -104,7 +105,7 @@ public class ShipProperties
 	// Called when the ship is hit by a laser
 	void HitByShip(TheGameObject ship, int dmg)
 	{
-		if(ship != null && ship != TheGameObject.Self)
+		if(ship != null && !IsDead())
 		{
 			TheScript ship_script = ship.GetScript("ShipProperties");
 			if(ship_script != null)
@@ -113,13 +114,15 @@ public class ShipProperties
 
 				if(hit_faction == GetFaction())
 				{
-					TheConsole.Log("Ally hit. Dmg: " + dmg);
+					// Ally hit
 					DealDamage(dmg);
+					TheConsole.Log("Ally hit. Dmg: " + dmg + "  | Ship now has: " + GetLife() + " Life");
 				}
 				else
 				{
-					TheConsole.Log("Enemy hit. Dmg: " + dmg);
 					// Enemy hit
+					DealDamage(dmg);
+					TheConsole.Log("Enemy hit. Dmg: " + dmg+ "  | Ship now has: " + GetLife() + " Life");
 				}
 			}
 		}
@@ -186,5 +189,22 @@ public class ShipProperties
 
 	void CheckDeath()
 	{
+		if(IsDead() && game_manager_script != null && !dead)
+		{
+			dead = true;
+
+			if(factory != null)
+				factory.ClearFactory();
+			
+			if(IsSlave1())
+			{
+				game_manager_script.CallFunctionArgs("Lose");
+			}
+			else
+			{
+				object[] args = {TheGameObject.Self};
+				game_manager_script.CallFunctionArgs("RemoveShip", args);					
+			}
+		}
 	}
 }

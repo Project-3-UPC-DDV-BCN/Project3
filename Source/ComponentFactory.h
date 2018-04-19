@@ -29,6 +29,7 @@ public:
 	float3 GetSpawnRotation() const;
 	float3 GetSpawnScale() const;
 	void StartFactory();
+	void ClearFactory();
 	void CheckLifeTimes();
 
 	void Save(Data& data) const;

@@ -14,6 +14,12 @@ namespace TheEngine
         public extern void StartFactory();
 
         /// <summary>
+        ///   <para>Clears factory and deleted created gamebjects</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void ClearFactory();
+
+        /// <summary>
         ///   <para>Spawns a GameObject</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]

@@ -176,6 +176,22 @@ void ComponentFactory::StartFactory()
 	}
 }
 
+void ComponentFactory::ClearFactory()
+{
+	for (std::list<GameObject*>::iterator it = spawn_objects_list.begin(); it != spawn_objects_list.end(); ++it)
+	{
+		(*it)->Destroy();
+	}
+
+	for (std::map<GameObject*, float>::iterator it = spawned_objects.begin(); it != spawned_objects.end(); ++it)
+	{
+		it->first->Destroy();
+	}
+
+	spawned_objects.clear();
+	spawn_objects_list.clear();
+}
+
 void ComponentFactory::CheckLifeTimes()
 {
 	BROFILER_CATEGORY("Component - Factory - CheckLifeTimes", Profiler::Color::Beige);
