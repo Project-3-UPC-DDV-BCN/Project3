@@ -109,7 +109,7 @@ public:
 	//Debug
 	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
 	void DrawDebugOBB(OBB& aabb, ComponentCamera* active_camera);
-	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+	void DrawMesh(std::vector<ComponentMeshRenderer*> mesh, ComponentCamera* active_camera);
 
 	void SendLight(uint program_id);
 	int GetDirectionalLightCount() const;
