@@ -557,7 +557,8 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 	Quat rot_quat(phys_transform.q.x, phys_transform.q.y, phys_transform.q.z, phys_transform.q.w);
 	if (!go->IsRoot())
 	{
-		position = position - transform->GetGlobalPosition();
+		ComponentTransform* parent_transform = (ComponentTransform*)go->GetParent()->GetComponent(Component::CompTransform);
+		position = position - parent_transform->GetGlobalPosition();
 	}
 	transform->SetPositionFromRB(position);
 	transform->SetRotationFromRB(rot_quat);

@@ -186,7 +186,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	ms_timer.Start();
 
 	// Regular rendering
-	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
+	if (!App->IsGame() && editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
 		DrawEditorScene();
@@ -750,6 +750,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Particles
 	for (std::vector<ComponentParticleEmmiter*>::iterator it = particles_to_draw.begin(); it != particles_to_draw.end(); it++)
 	{
+		if (*it == nullptr)
+			continue;
 
 		(*it)->AddaptEmmitAreaAABB();
 
