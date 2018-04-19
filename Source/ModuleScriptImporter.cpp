@@ -1915,11 +1915,24 @@ MonoObject * NSScriptImporter::GetMonoObjectFromGameObject(GameObject * go)
 				return it->first;
 			}
 		}
+
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
+			{
+				mono_gchandle_new(new_object, 1);
+				created_gameobjects[new_object] = go;
+				return new_object;
+			}
+		}
 	}
+
 	return nullptr;
 }
 
-MonoObject * NSScriptImporter::GetMonoObjectFromComponent(Component * component)
+MonoObject* NSScriptImporter::GetMonoObjectFromComponent(Component * component)
 {
 	if (component)
 	{
