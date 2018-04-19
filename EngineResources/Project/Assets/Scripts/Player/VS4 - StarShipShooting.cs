@@ -28,6 +28,7 @@ public class StarShipShooting {
 	
 	// Particles
 	public TheGameObject laser_light;
+	TheLight laser_light_comp;
 	
 	// Timers and durations
 	public float spawn_time = 0.01f;
@@ -92,6 +93,9 @@ public class StarShipShooting {
 		if(weapon_icon_2 != null)
 			weapon_icon_2.SetActive(false);
 		
+		if(laser_light != null)
+			laser_light_comp = laser_light.GetComponent<TheLight>();
+		
 		weapon_script = TheGameObject.GetScript("VS4 - Weapon0");
     }	
 
@@ -115,15 +119,11 @@ public class StarShipShooting {
 							
 							if(audio_source != null)
                             	audio_source.Play("Play_shot");
-							
 
-                            timer = spawn_time;
-							
-							
-							
+                            timer = spawn_time;																
 
-							if (laser_light != null){
-								laser_light.GetComponent<TheLight>().SetComponentActive(true);
+							if (laser_light_comp != null){
+								laser_light_comp.SetComponentActive(true);
 								light_duration = 0.2f;
 								light_on = true;
 							}
