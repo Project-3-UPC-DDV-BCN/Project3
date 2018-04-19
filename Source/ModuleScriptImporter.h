@@ -77,6 +77,7 @@ public:
 	void SetGameObjectName(MonoObject * object, MonoString* name);
 	MonoString* GetGameObjectName(MonoObject* object);
 	void CreateGameObject(MonoObject * object);
+	void DestroyGameObject(MonoObject* object);
 	MonoObject* GetSelfGameObject();
 	void SetGameObjectActive(MonoObject * object, mono_bool active);
 	mono_bool GetGameObjectIsActive(MonoObject* object);
