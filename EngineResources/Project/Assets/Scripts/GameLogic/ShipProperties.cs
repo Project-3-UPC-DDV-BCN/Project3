@@ -203,7 +203,8 @@ public class ShipProperties
 			else
 			{
 				object[] args = {TheGameObject.Self};
-				game_manager_script.CallFunctionArgs("RemoveShip", args);					
+				game_manager_script.CallFunctionArgs("RemoveShip", args);
+				TheGameObject.Destroy(TheGameObject.Self);					
 			}
 		}
 	}

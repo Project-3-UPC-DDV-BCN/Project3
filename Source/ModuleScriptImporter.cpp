@@ -4198,6 +4198,11 @@ void NSScriptImporter::CreateGameObject(MonoObject * object)
 	mono_gchandle_new(object, 1);
 }
 
+void NSScriptImporter::DestroyGameObject(MonoObject * object)
+{
+	GameObject* go = GetGameObjectFromMonoObject(object);
+}
+
 MonoObject* NSScriptImporter::GetSelfGameObject()
 {
 	if (current_script)
