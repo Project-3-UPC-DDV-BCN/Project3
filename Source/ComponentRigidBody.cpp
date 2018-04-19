@@ -729,6 +729,14 @@ void ComponentRigidBody::OnEnable()
 	{
 		rigidbody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
 	}
+
+	std::vector<physx::PxShape*> shapes = GetShapes();
+
+	for (physx::PxShape* shape : shapes)
+	{
+		ComponentCollider* collider = (ComponentCollider*)shape->userData;
+		if (!collider->IsActive()) collider->SetActive(true);
+	}
 }
 
 void ComponentRigidBody::OnDisable()
