@@ -35,14 +35,10 @@ public class GuillemMovement
 	TheScript ShipProperties = null;
 	TheScript GameManager = null;
 
-	// Self Scripts Keys ---
-	public int ShipPropertiesKey = 0;
-
-
     void Start()
     {
 
-		ShipProperties = TheGameObject.Self.GetComponent<TheScript>(ShipPropertiesKey);
+        ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
 		TheGameObject GM = TheGameObject.Find("GameManager");
 		GameManager = GM.GetComponent<TheScript>();
 
