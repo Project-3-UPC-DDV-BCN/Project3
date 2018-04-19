@@ -201,11 +201,28 @@ public class GameManager
 	void RemoveShip(TheGameObject remove)
 	{
 		if(empire_ships.Remove(remove))
+		{
+			for(int i = 0; i < alliance_ships.Count; ++i)
+			{
+				TheScript ship_prop = alliance_ships[i].GetScript("ShipProperties");
+				if(ship_prop != null)
+				{
+					object[] args = {remove};
+					ship_prop.CallFunctionArgs("OnShipDestroyedCallback", args);
+				}
+			}
+
 			TheConsole.Log("Ship destroyed from empire! Remaining: " + EmpireShipsCount());
+		}
 
 		if(alliance_ships.Remove(remove))
-			TheConsole.Log("Ship destroyed from alliance! Remaining: " + AllianceShipsCount());
+		{
+			for(int i = 0; i < empire_ships.Count; ++i)
+			{
+			}
 			
+			TheConsole.Log("Ship destroyed from alliance! Remaining: " + AllianceShipsCount());
+		}		
 	}
 
 	List<TheGameObject> GetAllianceShips()

@@ -210,4 +210,9 @@ public class ShipProperties
 			}
 		}
 	}
+
+	void OnShipDestroyedCallback(TheGameObject ship)
+	{
+		
+	}
 }

@@ -186,7 +186,14 @@ public class GuillemMovement
     {
         TheVector3 self_pos = self_transform.GlobalPosition;
         TheVector3 target_pos = target_transform.GlobalPosition;
+		
+		TheQuaternion quat = TheQuaternion.FromTwoVectors(self_pos, target_pos);
 
+		TheVector3 angles = quat.ToEulerAngles();
+
+		TheConsole.Log(angles.x + " " + angles.y + " " + angles.z + 90);		
+
+		/*
         // x
         float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z + 30) - 270;
 
@@ -215,6 +222,7 @@ public class GuillemMovement
             if (self_transform.LocalRotation.x > 180 || self_transform.LocalRotation.x < -180)
                 self_transform.LocalRotation = new TheVector3(0, self_transform.LocalRotation.y, self_transform.LocalRotation.z);
         }
+		*/
     }
 
     float GetAngleFromTwoPoints(float x1, float y1, float x2, float y2)
