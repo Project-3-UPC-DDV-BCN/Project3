@@ -47,7 +47,7 @@ public class GameManager
 		team = TheData.GetString("faction");
 
 		if(team == "no_str")
-			team = "rebels";
+			team = "alliance";
 
         TheConsole.Log(team); 
 	}
@@ -143,12 +143,17 @@ public class GameManager
 		
 				if(is_slave)
 				{
-					slave1 = slave;
-		
-					TheConsole.Log("Slave1 added!");
+					if(team == alliance_name || team == empire_name)
+					{
+						object[] args = {team};
+						slave1_properties.CallFunctionArgs("SetShipFaction", args);
+				
+						slave1 = slave;
+
+						TheConsole.Log("Slave1 added to " + team);
+					}
 				}
 			}
-			
 		}
 	}
 

@@ -233,7 +233,7 @@ public class MainMenuVS2
 			if(rebels_idle_rect.OnClickUp)
 			{
 				pressed_sound = true;
-				faction = "rebels";
+				faction = "alliance";
 
 				if(rebels_idle_image_go != null)
 					rebels_idle_image_go.SetActive(false);
