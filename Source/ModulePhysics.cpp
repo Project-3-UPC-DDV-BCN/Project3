@@ -561,7 +561,9 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 		position = position - parent_transform->GetGlobalPosition();
 	}
 	transform->SetPositionFromRB(position);
-	transform->SetRotationFromRB(rot_quat);
+
+	// This is causing gimball lock on the game object (idk why)
+	//transform->SetRotationFromRB(rot_quat);
 }
 
 void ModulePhysics::onTrigger(physx::PxTriggerPair * pairs, physx::PxU32 count)

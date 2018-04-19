@@ -3,7 +3,7 @@ using TheEngine.TheConsole;
 
 public class Laser 
 {
-	public float laser_damage = 10.0f;
+	public int laser_damage = 10;
 
 	private TheGameObject sender = null;
 	private TheTransform self_trans = null;
@@ -23,12 +23,13 @@ public class Laser
 	}
 
 	// Set laser info
-	void SetInfo(TheGameObject send, float sp, TheVector3 dir, TheQuaternion ori)
+	void SetInfo(TheGameObject _sender, float _speed, int _damage, TheVector3 dir, TheQuaternion ori)
 	{
-		sender = send;
-		speed = sp;
+		sender = _sender;
+		speed = _speed;
 		direction = dir; 
 		orientation = ori;
+		laser_damage = _damage;
 	}
 
 	TheGameObject GetSender()
@@ -57,8 +58,7 @@ public class Laser
 			// I could do this comparing only the game objects but for some reason it's not working :(
 			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
 			{
-				TheConsole.Log(other_ship.name + " " + sender.name);
-				object[] args = {sender};
+				object[] args = {sender, laser_damage};
 				ship_properties.CallFunctionArgs("HitByShip", args);
 				TheGameObject.Self.SetActive(false);
 			}

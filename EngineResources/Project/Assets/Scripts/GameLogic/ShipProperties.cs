@@ -13,6 +13,7 @@ public class ShipProperties
 	public bool is_slave1 = false;
 
 	public float laser_speed = 30;
+	public int base_laser_damage = 10;
 
 	private int life = 100;
 
@@ -53,13 +54,12 @@ public class ShipProperties
 		factory = TheGameObject.Self.GetComponent<TheFactory>();
 
 		if(factory != null)
-			factory.StartFactory();
-
-		
+			factory.StartFactory();		
 	}
 
 	void Update()
 	{
+		// Temp ----------------------
 		if (TheInput.IsKeyDown("w"))
 		{
 			if(one_shoot)
@@ -69,6 +69,9 @@ public class ShipProperties
 		}
 		else
 			one_shoot = true;
+		// ---------------------------
+		
+		CheckDeath();
 	}
 
 	bool IsSlave1()
@@ -89,7 +92,7 @@ public class ShipProperties
 
 				if(laser_script != null)
 				{
-					object[] args = {TheGameObject.Self, laser_speed, 
+					object[] args = {TheGameObject.Self, laser_speed, base_laser_damage,
 									 self_transform.ForwardDirection, self_transform.QuatRotation};
 
 					laser_script.CallFunctionArgs("SetInfo", args);
@@ -99,7 +102,7 @@ public class ShipProperties
 	}
 	
 	// Called when the ship is hit by a laser
-	void HitByShip(TheGameObject ship)
+	void HitByShip(TheGameObject ship, int dmg)
 	{
 		if(ship != null && ship != TheGameObject.Self)
 		{
@@ -110,12 +113,12 @@ public class ShipProperties
 
 				if(hit_faction == GetFaction())
 				{
-					TheConsole.Log("Ally hit");
-					// Ally hit
+					TheConsole.Log("Ally hit. Dmg: " + dmg);
+					DealDamage(dmg);
 				}
 				else
 				{
-					TheConsole.Log("Enemy hit");
+					TheConsole.Log("Enemy hit. Dmg: " + dmg);
 					// Enemy hit
 				}
 			}
@@ -140,6 +143,14 @@ public class ShipProperties
 		return ship_faction;
 	}
 	
+	void SetLife(int set)
+	{
+		life = set;
+
+		if(life < 0)
+			life = 0;
+	}
+
 	// Deals damage to the ship
 	void DealDamage(int dmg)
 	{
@@ -171,5 +182,9 @@ public class ShipProperties
 
 			
 		}
+	}
+
+	void CheckDeath()
+	{
 	}
 }
