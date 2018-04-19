@@ -186,6 +186,7 @@ private:
 
 	uint depth_map;
 	uint depth_mapFBO;
+	uint curr_frame;
 	float near_plane, far_plane;
 
 	float* light_space_mat = nullptr;

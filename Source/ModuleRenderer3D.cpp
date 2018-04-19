@@ -194,6 +194,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
+		curr_frame = editor_camera->GetViewportTexture()->GetFrameBufferID();
 		DrawEditorScene();
 	}
 
@@ -255,6 +256,8 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	}
 
 	camera->GetViewportTexture()->Bind();
+	curr_frame = camera->GetViewportTexture()->GetFrameBufferID();
+
 	if (use_skybox)
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -827,9 +830,12 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh, ComponentCamera* a
 			if (changed_material == true)
 			{
 				material->LoadToMemory();
+				glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 				glActiveTexture(GL_TEXTURE4);
 				glBindTexture(GL_TEXTURE_2D, depth_map);
 				App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				glBindFramebuffer(GL_FRAMEBUFFER, curr_frame);
 			}
 				
 			SetUniformBool(program, "has_light", mesh->has_light);
