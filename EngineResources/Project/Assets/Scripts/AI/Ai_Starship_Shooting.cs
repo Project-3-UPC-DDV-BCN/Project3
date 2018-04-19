@@ -40,7 +40,7 @@ public class Ai_Starship_Shooting
 	void Start () 
 	{
 		ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
-		movement = TheGameObject.Self.GetComponent<TheScript>(0);
+		movement = TheGameObject.Self.GetScript("GuillemMovement");
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
@@ -54,7 +54,7 @@ public class Ai_Starship_Shooting
 
 		TheGameObject GM = TheGameObject.Find("GameManager");
 		if(GM != null)
-			GameManager = GM.GetComponent<TheScript>();
+			GameManager = GM.GetComponent<TheScript>("GameManager");
 		if(GameManager != null)
 			player = (TheGameObject)GameManager.CallFunctionArgs("GetPlayer");	
 
