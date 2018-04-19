@@ -19,13 +19,11 @@ public class GuillemMovement
     private float modified_rotation_speed = 0;
 
     TheTransform self_transform = null;
-    TheTransform target_transform = null;
-    TheTransform center_transform = null;
 
-    public TheVector3 target_pos;
-	public float target_pos_x = 0;
-	public float target_pos_y = 0;
-	public float target_pos_z = 0;
+	TheGameObject target_go = null;
+    TheTransform target_transform = null;
+
+    TheTransform center_transform = null;
 
     TheTimer timer = new TheTimer();
     float random_time = 0;
@@ -33,14 +31,22 @@ public class GuillemMovement
 	// Scripts ---
 	TheScript ShipProperties = null;
 	TheScript GameManager = null;
+	TheScript shooting_script = null;
+
+	void Init()
+	{
+        ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
+
+		TheGameObject GM = TheGameObject.Find("GameManager");
+		
+		if(GM != null)
+			GameManager = GM.GetScript("GameManager");
+
+		shooting_script = TheGameObject.Self.GetScript("Ai_Starship_Shooting");
+	}
 
     void Start()
     {
-
-        ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
-		TheGameObject GM = TheGameObject.Find("GameManager");
-		GameManager = GM.GetComponent<TheScript>();
-
         RandomizeStats();
 
         self_transform = TheGameObject.Self.GetComponent<TheTransform>();
@@ -102,29 +108,46 @@ public class GuillemMovement
         {
             MoveFront();
             OrientateToTarget();
-            target_pos = target_transform.GlobalPosition;
-			target_pos_x = target_pos.x;
-			target_pos_y = target_pos.y;
-			target_pos_z = target_pos.z;
         }
     }
 
+	void ClearTarget()
+	{		
+		target_go = null;
+		target_transform = null;
+
+		if(shooting_script != null)
+			shooting_script.CallFunctionArgs("ClearTargetTransform");
+	}
+
+	void ClearIfTarget(TheGameObject go)
+	{
+		if(go.GetComponent<TheTransform>() == target_transform)
+		{
+			ClearTarget();
+		}
+	}
+
+	TheTransform GetTargetTransform()
+	{
+		return target_transform;
+	}
+
     void LookForTarget()
     {
-
-		if(ShipProperties == null) return;
+		if(ShipProperties == null) 
+			return;
 
 		string factionStr = (string)ShipProperties.CallFunctionArgs("GetFaction");
 
 		List<TheGameObject> enemy_ships = new List<TheGameObject>();	
 
-		if(factionStr == "alliance") {
+		if(factionStr == "alliance") 
 			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetEmpireShips");
-		}
-		else if(factionStr == "empire") {
+		
+		else if(factionStr == "empire") 
 			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetAllianceShips");
-		}		
-
+			
 		TheGameObject PlayerGo = (TheGameObject)GameManager.CallFunctionArgs("GetSlave1");
 		
 		if(PlayerGo != null) {
@@ -133,9 +156,16 @@ public class GuillemMovement
 			enemy_ships.Add(PlayerGo);
 		}
 
-		if(enemy_ships.Count > 0) {
+		if(enemy_ships.Count > 0) 
+		{
 			int random = (int)TheRandom.RandomRange(0, enemy_ships.Count);
-			target_transform = enemy_ships[random].GetComponent<TheTransform>();
+
+			target_go = enemy_ships[random];
+			target_transform = target_go.GetComponent<TheTransform>();
+			
+			object[] args = {target_transform};
+			if(shooting_script != null)
+				shooting_script.CallFunctionArgs("SetTargetTransform", args);
 		}
     }
 
