@@ -20,6 +20,8 @@ public class ShipProperties
 
 	private TheTransform self_transform = null;
 
+	public bool is_slave1 = false;
+
 	bool one_shoot = true;
 		
 	void Init()
@@ -46,7 +48,7 @@ public class ShipProperties
 
 	void Update()
 	{
-		if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") >= 20000)
+		if (TheInput.IsKeyDown("w"))
 		{
 			if(one_shoot)
 				Shoot();
@@ -55,6 +57,11 @@ public class ShipProperties
 		}
 		else
 			one_shoot = true;
+	}
+
+	bool IsSlave1()
+	{
+		return is_slave1;
 	}
 	
 	// Shoots a laser

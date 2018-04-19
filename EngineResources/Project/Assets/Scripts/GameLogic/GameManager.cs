@@ -31,13 +31,13 @@ public class GameManager
 	public TheGameObject background_music;
 	TheAudioSource audio_source = null;
 	
-	public TheGameObject slave1;
 	public TheGameObject slave1_audio;
 	TheTransform slave1_trans = null;
 	TheAudioSource slave1_audiosource = null;
 
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
     List<TheGameObject> empire_ships = new List<TheGameObject>();
+	TheGameObject slave1 = null;
 
 	void Init ()
 	{
@@ -126,6 +126,13 @@ public class GameManager
 		score += add;
 	}
 	
+	void AddSlave1(TheGameObject slave)
+	{
+		slave1 = slave;
+
+		TheConsole.Log("Slave1 added!");
+	}
+
 	void AddAllianceShip(TheGameObject add)
 	{
 		alliance_ships.Add(add);

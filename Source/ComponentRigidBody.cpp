@@ -273,7 +273,7 @@ void ComponentRigidBody::SetPosition(float3 new_position)
 	if (rigidbody != nullptr)
 	{
 		physx::PxTransform transform(position, rigidbody->getGlobalPose().q);
-		rigidbody->setGlobalPose(transform);
+		rigidbody->setGlobalPose(transform, true);
 	}
 }
 

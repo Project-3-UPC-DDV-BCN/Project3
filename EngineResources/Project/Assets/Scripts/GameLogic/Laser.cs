@@ -51,7 +51,7 @@ public class Laser
 
 		TheScript ship_properties = other_ship.GetScript("ShipProperties");
 		
-		if(ship_properties != null && sender != null)
+		if(ship_properties != null && sender != null && other_ship != sender)
 		{
 			object[] args = {sender};
 			ship_properties.CallFunctionArgs("HitByShip", args);
