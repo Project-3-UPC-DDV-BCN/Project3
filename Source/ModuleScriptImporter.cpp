@@ -636,6 +636,7 @@ void ModuleScriptImporter::RegisterAPI()
 {
 	//GAMEOBJECT
 	mono_add_internal_call("TheEngine.TheGameObject::CreateNewGameObject", (const void*)CreateGameObject);
+	mono_add_internal_call("TheEngine.TheGameObject::Destroy", (const void*)DestroyGameObject);
 	mono_add_internal_call("TheEngine.TheGameObject::SetName", (const void*)SetGameObjectName);
 	mono_add_internal_call("TheEngine.TheGameObject::GetName", (const void*)GetGameObjectName);
 	mono_add_internal_call("TheEngine.TheGameObject::SetActive", (const void*)SetGameObjectActive);
@@ -900,6 +901,11 @@ mono_bool ModuleScriptImporter::GetGameObjectIsActive(MonoObject * object)
 void ModuleScriptImporter::CreateGameObject(MonoObject * object)
 {
 	ns_importer->CreateGameObject(object);
+}
+
+void ModuleScriptImporter::DestroyGameObject(MonoObject * object)
+{
+	ns_importer->DestroyGameObject(object);
 }
 
 MonoObject* ModuleScriptImporter::GetSelfGameObject()
@@ -1869,12 +1875,42 @@ void NSScriptImporter::AddCreatedGameObjectToList(MonoObject* object, GameObject
 	}
 }
 
+void NSScriptImporter::RemoveGameObjectFromMonoObjectList(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+		{
+			if (it->second == go)
+			{
+				created_gameobjects.erase(it);
+				break;
+			}
+		}
+	}
+}
+
 void NSScriptImporter::AddCreatedComponentToList(MonoObject * object, Component * comp)
 {
 	if (comp && object)
 	{
 		mono_gchandle_new(object, 1);
 		created_components[object] = comp;
+	}
+}
+
+void NSScriptImporter::RemoveComponentFromMonoObjectList(Component * comp)
+{
+	if (comp != nullptr)
+	{
+		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		{
+			if (comp == it->second)
+			{
+				created_components.erase(it);
+				break;
+			}
+		}
 	}
 }
 
@@ -4201,6 +4237,41 @@ void NSScriptImporter::CreateGameObject(MonoObject * object)
 void NSScriptImporter::DestroyGameObject(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
+
+	if (go != nullptr)
+	{
+		for (std::list<Component*>::iterator it = go->components_list.begin(); it != go->components_list.end(); ++it)
+		{
+			RemoveComponentFromMonoObjectList(*it);
+		}
+
+		RemoveGameObjectFromMonoObjectList(go);
+
+		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+		{
+			DestroyGameObject(*it);
+		}
+
+		go->Destroy();
+	}
+}
+
+void NSScriptImporter::DestroyGameObject(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::list<Component*>::iterator it = go->components_list.begin(); it != go->components_list.end(); ++it)
+		{
+			RemoveComponentFromMonoObjectList(*it);
+		}
+
+		RemoveGameObjectFromMonoObjectList(go);
+
+		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+		{
+			DestroyGameObject(*it);
+		}
+	}
 }
 
 MonoObject* NSScriptImporter::GetSelfGameObject()

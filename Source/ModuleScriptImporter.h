@@ -65,7 +65,9 @@ public:
 	~NSScriptImporter() {};
 
 	void AddCreatedGameObjectToList(MonoObject* object, GameObject* go);
+	void RemoveGameObjectFromMonoObjectList(GameObject* go);
 	void AddCreatedComponentToList(MonoObject* object, Component* comp);
+	void RemoveComponentFromMonoObjectList(Component* comp);
 	GameObject* GetGameObjectFromMonoObject(MonoObject* object);
 	Component* GetComponentFromMonoObject(MonoObject* object);
 	MonoObject* GetMonoObjectFromGameObject(GameObject* go);
@@ -78,6 +80,7 @@ public:
 	MonoString* GetGameObjectName(MonoObject* object);
 	void CreateGameObject(MonoObject * object);
 	void DestroyGameObject(MonoObject* object);
+	void DestroyGameObject(GameObject* object);
 	MonoObject* GetSelfGameObject();
 	void SetGameObjectActive(MonoObject * object, mono_bool active);
 	mono_bool GetGameObjectIsActive(MonoObject* object);
@@ -368,6 +371,7 @@ private:
 	static void SetGameObjectName(MonoObject * object, MonoString* name);
 	static MonoString* GetGameObjectName(MonoObject* object);
 	static void CreateGameObject(MonoObject * object);
+	static void DestroyGameObject(MonoObject* object);
 	static MonoObject* GetSelfGameObject();
 	static void SetGameObjectActive(MonoObject * object, mono_bool active);
 	static mono_bool GetGameObjectIsActive(MonoObject* object);
