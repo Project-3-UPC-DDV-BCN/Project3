@@ -33,6 +33,8 @@ public class Ai_Starship_Shooting
 	TheScript movement = null;
 	bool in_range = false;
 
+	TheScript GameManager = null;
+
 	void Start () 
 	{
 		movement = TheGameObject.Self.GetComponent<TheScript>(0);
@@ -46,6 +48,13 @@ public class Ai_Starship_Shooting
 		if(LaserFactoryGO != null)
 			laser_factory = LaserFactoryGO.GetComponent<TheFactory>();
 		if(laser_factory != null) laser_factory.StartFactory();
+
+		TheGameObject GM = TheGameObject.Find("GameManager");
+		if(GM != null)
+			GameManager = GM.GetComponent<TheScript>();
+		if(GameManager != null)
+			player = (TheGameObject)GameManager.CallFunctionArgs("GetPlayer");	
+
 	}
 	
 	void Update () 
@@ -55,19 +64,6 @@ public class Ai_Starship_Shooting
 
 		if(laser_spawner_L == null || laser_spawner_R == null) 
 			return;
-
-		if(player == null)
-		{
-			TheGameObject[] scene_obj = TheGameObject.GetSceneGameObjects();
-			for(int i = 0; i < scene_obj.Length;i++)
-			{
-				if(scene_obj[i].tag == "Player") 
-				{
-					player = scene_obj[i];
-					break;
-				}
-			}
-		}
 
 		if(player != null)
 		{
@@ -86,9 +82,7 @@ public class Ai_Starship_Shooting
 				}
 			}
 		}
-		//TheGameObject[] gosInFrustrum = TheGameObject.GetObjectsInFrustum(transform.GlobalPosition, transform.ForwardDirection, transform.UpDirection, near_plane_offset, far_plane_offset);
-		//if(gosInFrustrum.Length > 0) shooting = true; else shooting = false;
-
+	
 		if(movement != null) 
 		{
 			TheVector3 auxTPos = TheVector3.Zero;

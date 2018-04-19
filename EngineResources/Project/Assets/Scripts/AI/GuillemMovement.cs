@@ -30,9 +30,22 @@ public class GuillemMovement
 
     TheTimer timer = new TheTimer();
     float random_time = 0;
+	
+	// Scripts ---
+	TheScript ShipProperties = null;
+	TheScript GameManager = null;
+
+	// Self Scripts Keys ---
+	public int ShipPropertiesKey = 0;
+
 
     void Start()
     {
+
+		ShipProperties = TheGameObject.Self.GetComponent<TheScript>(ShipPropertiesKey);
+		TheGameObject GM = TheGameObject.Find("GameManager");
+		GameManager = GM.GetComponent<TheScript>();
+
         RandomizeStats();
 
         self_transform = TheGameObject.Self.GetComponent<TheTransform>();
@@ -41,16 +54,8 @@ public class GuillemMovement
             center_transform = center_object.GetComponent<TheTransform>();
         else
         {
-            TheGameObject[] gos = TheGameObject.GetSceneGameObjects();
-            for (int i = 0; i < gos.Length; i++)
-            {
-                if (gos[i].tag == "AI_ANCHOR")
-                {
-                    center_object = gos[i];
-                    center_transform = gos[i].GetComponent<TheTransform>();
-                    break;
-                }
-            }
+            TheGameObject[] anchors = TheGameObject.GetGameObjectsWithTag("AI_ANCHOR");
+          	if(anchors.Length > 0) center_object = anchors[0];
         }
 
         if (force_target != null)
@@ -62,6 +67,7 @@ public class GuillemMovement
         timer.Start();
         random_time = TheRandom.RandomRange(20, 30);
 		LookForTarget();
+
     }
 
     void Update()
@@ -109,7 +115,26 @@ public class GuillemMovement
 
     void LookForTarget()
     {
-        List<TheGameObject> to_check = new List<TheGameObject>();
+
+		if(ShipProperties == null) return;
+
+		string factionStr = (string)ShipProperties.CallFunctionArgs("GetFaction");
+
+		List<TheGameObject> enemy_ships = new List<TheGameObject>();	
+
+		if(factionStr == "alliance") {
+			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetEmpireShips");
+		}
+		else if(factionStr == "empire") {
+			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetAllianceShips");
+		}		
+
+		if(enemy_ships.Count > 0) {
+			int random = (int)TheRandom.RandomRange(0, enemy_ships.Count);
+			target_transform = enemy_ships[random].GetComponent<TheTransform>();
+		}
+
+        /*List<TheGameObject> to_check = new List<TheGameObject>();
         TheGameObject[] scene_gos = TheGameObject.GetSceneGameObjects();
         for (int i = 0; i < scene_gos.Length; ++i)
         {
@@ -140,7 +165,7 @@ public class GuillemMovement
         {
             int random = (int)TheRandom.RandomRange(0, to_check.Count);
             target_transform = to_check[random].GetComponent<TheTransform>();
-        }
+        }*/
     }
 
     void MoveFront()
