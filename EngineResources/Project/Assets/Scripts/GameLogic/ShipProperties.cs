@@ -204,6 +204,8 @@ public class ShipProperties
 			{
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
+				
+				
 				TheGameObject.Destroy(TheGameObject.Self);					
 			}
 		}

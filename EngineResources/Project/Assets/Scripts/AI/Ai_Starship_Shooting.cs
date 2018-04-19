@@ -1,93 +1,110 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class Ai_Starship_Shooting 
 {
 	TheAudioSource audio_source = null;
 
 	public float time_between_lasers = 0.100f;
-
-	float timer = 0.0f;
-
-	public bool shooting = false;
-
-	TheTransform transform = null;
-
 	public float shooting_range = 500f;
     public float shooting_angle = 60f;
 
-	TheGameObject player = null;
+	bool shooting = false;
+
+	TheGameObject slave1 = null;
+	TheTransform slave1_transform = null;
+
+	TheTransform transform = null;
+	TheTransform target_transform = null;
 
 	bool in_range = false;
 
 	// Scripts ---
-	TheScript GameManager = null;
 	TheScript movement = null;
-	TheScript ShipProperties = null;
+	TheScript game_manager_script = null;
+	TheScript ship_properties = null;
 
-	void Start () 
+	TheTimer timer = new TheTimer();
+	
+	void Init()
 	{
-		ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
-		movement = TheGameObject.Self.GetScript("GuillemMovement");
+		TheGameObject game_manager = TheGameObject.Find("GameManager");
+		if(game_manager != null)
+			game_manager_script = game_manager.GetScript("GameManager");
+
+		ship_properties = TheGameObject.Self.GetScript("ShipProperties");
+
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
+
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
-		TheGameObject GM = TheGameObject.Find("GameManager");
-		if(GM != null)
-			GameManager = GM.GetComponent<TheScript>("GameManager");
-		if(GameManager != null)
-			player = (TheGameObject)GameManager.CallFunctionArgs("GetPlayer");	
+	}
+	
+	void Start () 
+	{
+		if(game_manager_script != null)
+			slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");	
 
+		if(slave1 != null)
+			slave1_transform = slave1.GetComponent<TheTransform>();
+
+		timer.Start();
 	}
 	
 	void Update () 
 	{
-		if(player != null)
+		if(slave1_transform != null)
 		{
-			TheTransform player_trans = player.GetComponent<TheTransform>();
-			if(player_trans != null)
-			{
-				float mag_distance = TheVector3.Distance(player_trans.GlobalPosition, transform.GlobalPosition);
+			float mag_distance = TheVector3.Distance(slave1_transform.GlobalPosition, transform.GlobalPosition);
 
-				if(mag_distance < 50000)
-				{
-					in_range = true;
-				}
-				else
-				{
-					in_range = false;
-				}
+			if(mag_distance < 50000)
+			{
+				in_range = true;
+			}
+			else
+			{
+				in_range = false;
 			}
 		}
 	
-		if(movement != null) 
-		{
-			TheVector3 auxTPos = TheVector3.Zero;
-			auxTPos.x = movement.GetFloatField("target_pos_x");
-			auxTPos.y = movement.GetFloatField("target_pos_y");
-			auxTPos.z = movement.GetFloatField("target_pos_z");
-			TheVector3 tOffset = auxTPos - transform.GlobalPosition;
+		if(target_transform != null) 
+		{	
+			TheVector3 tOffset = target_transform.GlobalPosition - transform.GlobalPosition;
+
 			if(TheVector3.Magnitude(tOffset) < shooting_range && TheVector3.AngleBetween(transform.ForwardDirection, tOffset) < shooting_angle / 2)	
 				shooting = true;	
 			else
-			{
 				shooting = false;
-			}
+			
 		}
 
 		if(shooting) 
 		{
-			timer += TheTime.DeltaTime;
-			if(timer >= time_between_lasers) 
+			if(timer.ReadTime() >= time_between_lasers) 
 			{
-				if(ShipProperties != null)
-					ShipProperties.CallFunctionArgs("Shoot");
-				timer = 0.0f;
+				if(ship_properties != null)
+					ship_properties.CallFunctionArgs("Shoot");
+
+				timer.Start();
 			}
+
 			if(in_range) 
 			{
 				audio_source.Stop("Play_Shoot");
 				audio_source.Play("Play_Shoot");
 			}
 		}
+	}
+
+	void SetTargetTransform(TheTransform trans)
+	{
+		target_transform = trans;
+
+		TheConsole.Log("Shooting target set!");
+	}
+
+	void ClearTargetTransform()
+	{
+		target_transform = null;
 	}
 }
