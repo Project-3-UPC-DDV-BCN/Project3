@@ -4,50 +4,53 @@ public class Ai_Starship_Shooting
 {
 	TheAudioSource audio_source = null;
 
-	public TheGameObject laser_spawner_L = null;
-	public TheGameObject laser_spawner_R = null;
+	//public TheGameObject laser_spawner_L = null;
+	//public TheGameObject laser_spawner_R = null;
 
-	bool laser_spawned_left = false;
+	//bool laser_spawned_left = false;
 
-	public float laser_speed = 50000.0f;
+	//public float laser_speed = 50000.0f;
 	public float time_between_lasers = 0.100f;
-	TheVector3 spawn_pos = new TheVector3(0, 0, 0);
-	TheVector3 spawn_dir = new TheVector3(0, 0, 0);
+	//TheVector3 spawn_pos = new TheVector3(0, 0, 0);
+	//TheVector3 spawn_dir = new TheVector3(0, 0, 0);
 	float timer = 0.0f;
 
 	public bool shooting = false;
 
-	public TheGameObject LaserFactoryGO = null;
-	TheFactory laser_factory = null;
+	//public TheGameObject LaserFactoryGO = null;
+	//TheFactory laser_factory = null;
 
 	TheTransform transform = null;
 
-	public float near_plane_offset = 50f;
-	public float far_plane_offset = 500f;
+	//public float near_plane_offset = 50f;
+	//public float far_plane_offset = 500f;
 
 	public float shooting_range = 500f;
     public float shooting_angle = 60f;
 
 	TheGameObject player = null;
 
-	TheScript movement = null;
 	bool in_range = false;
 
+	// Scripts ---
 	TheScript GameManager = null;
+	TheScript movement = null;
+	TheScript ShipProperties = null;
 
 	void Start () 
 	{
+		ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
 		movement = TheGameObject.Self.GetComponent<TheScript>(0);
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
-		if(laser_spawner_L == null)
-			laser_spawner_L = laser_spawner_R;
-		if(laser_spawner_R == null)
-			laser_spawner_R = laser_spawner_L;
-		if(LaserFactoryGO != null)
-			laser_factory = LaserFactoryGO.GetComponent<TheFactory>();
-		if(laser_factory != null) laser_factory.StartFactory();
+		//if(laser_spawner_L == null)
+		//	laser_spawner_L = laser_spawner_R;
+		//if(laser_spawner_R == null)
+		//	laser_spawner_R = laser_spawner_L;
+		//if(LaserFactoryGO != null)
+		//	laser_factory = LaserFactoryGO.GetComponent<TheFactory>();
+		//if(laser_factory != null) laser_factory.StartFactory();
 
 		TheGameObject GM = TheGameObject.Find("GameManager");
 		if(GM != null)
@@ -59,11 +62,11 @@ public class Ai_Starship_Shooting
 	
 	void Update () 
 	{
-		if(LaserFactoryGO == null || laser_factory == null) 
-			return;
+		//if(LaserFactoryGO == null || laser_factory == null) 
+		//	return;
 
-		if(laser_spawner_L == null || laser_spawner_R == null) 
-			return;
+		//if(laser_spawner_L == null || laser_spawner_R == null) 
+		//	return;
 
 		if(player != null)
 		{
@@ -103,7 +106,9 @@ public class Ai_Starship_Shooting
 			timer += TheTime.DeltaTime;
 			if(timer >= time_between_lasers) 
 			{
-				if(laser_spawned_left) 
+				if(ShipProperties != null)
+					ShipProperties.CallFunctionArgs("Shoot");
+				/*if(laser_spawned_left) 
 				{
 					spawn_pos = laser_spawner_R.GetComponent<TheTransform>().GlobalPosition;
 					spawn_dir = laser_spawner_R.GetComponent<TheTransform>().ForwardDirection;
@@ -126,7 +131,8 @@ public class Ai_Starship_Shooting
 				{
 					laserBody.SetLinearVelocity(laser_velocity.x, laser_velocity.y, laser_velocity.z);			
 				}	
-
+				*/
+				
 				timer = 0.0f;
 			}
 			if(in_range) 
