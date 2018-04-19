@@ -35,7 +35,17 @@ public class ShipProperties
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
 
-		SetShipFaction(ship_faction);			
+		// Add ship to game manager
+		if(is_slave1)
+		{
+			if(game_manager_script != null)
+			{
+				object[] args = {TheGameObject.Self};
+				game_manager_script.CallFunctionArgs("AddSlave1", args);
+			}
+		}
+		else
+			SetShipFaction(ship_faction);			
 	}
 
 	void Start()
@@ -44,6 +54,8 @@ public class ShipProperties
 
 		if(factory != null)
 			factory.StartFactory();
+
+		
 	}
 
 	void Update()

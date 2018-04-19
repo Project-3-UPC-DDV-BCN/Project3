@@ -38,6 +38,9 @@ public class GameManager
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
     List<TheGameObject> empire_ships = new List<TheGameObject>();
 	TheGameObject slave1 = null;
+	
+	string alliance_name = "alliance";
+	string empire_name = "empire";
 
 	void Init ()
 	{
@@ -130,22 +133,63 @@ public class GameManager
 	{
 		slave1 = slave;
 
-		TheConsole.Log("Slave1 added!");
+		if(slave != null)
+		{
+			TheScript slave1_properties = slave.GetScript("ShipProperties");
+	
+			if(slave1_properties != null)
+			{
+				bool is_slave = (bool)slave1_properties.CallFunctionArgs("IsSlave1");		
+		
+				if(is_slave)
+				{
+					slave1 = slave;
+		
+					TheConsole.Log("Slave1 added!");
+				}
+			}
+			
+		}
 	}
 
 	void AddAllianceShip(TheGameObject add)
 	{
-		alliance_ships.Add(add);
+		if(add != null)
+		{
+			TheScript ship_properties = add.GetScript("ShipProperties");
 
-		TheConsole.Log("Ship added to alliance!: " + AllianceShipsCount());
+			if(ship_properties != null)
+			{	
+				bool is_slave = (bool)ship_properties.CallFunctionArgs("IsSlave1");		
+				if(!is_slave)
+				{
+					alliance_ships.Add(add);
+
+					TheConsole.Log("Ship added to alliance!: " + AllianceShipsCount());
+				}
+			}
+		}
 	}
 
 	void AddEmpireShip(TheGameObject add)
 	{
-		empire_ships.Add(add);
+		if(add != null)
+		{
+			TheScript ship_properties = add.GetScript("ShipProperties");
+			
+			if(ship_properties != null)
+			{
+				bool is_slave = (bool)ship_properties.CallFunctionArgs("IsSlave1");		
+				if(!is_slave)
+				{
+					empire_ships.Add(add);
 
-		TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
+					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
+				}
+			}
+		}
 	}
+
 
 	void RemoveShip(TheGameObject remove)
 	{
@@ -155,6 +199,47 @@ public class GameManager
 		if(alliance_ships.Remove(remove))
 			TheConsole.Log("Ship destroyed from alliance!: " + AllianceShipsCount());
 			
+	}
+
+	List<TheGameObject> GetAllianceShips()
+	{
+		return alliance_ships;
+	}
+
+	List<TheGameObject> GetEmpireShips()
+	{
+		return empire_ships;
+	}
+
+	TheGameObject GetSlave1()
+	{
+		return slave1;
+	}
+
+	List<TheGameObject> GetSlaveEnemies()
+	{
+		List<TheGameObject> ret = new List<TheGameObject>();
+		
+		if(slave1 != null)
+		{
+			TheScript slave_script = slave1.GetScript("ShipProperties");
+
+			if(slave_script != null)
+			{
+				string faction = (string)slave_script.CallFunctionArgs("GetFaction");
+
+				if(faction == alliance_name)
+				{
+					ret = empire_ships;
+				}
+				else if(faction == empire_name)
+				{
+					ret = alliance_ships;
+				}
+			}
+		}
+
+		return ret;
 	}
 	
 	int AllianceShipsCount()
