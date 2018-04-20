@@ -31,12 +31,13 @@ public:
 	void SaveAsMeta(std::string path);
 	bool LoadMeta(std::string path);
 
+	void ResetData();
 	void ClearData();
 
 	void CreateSection(std::string sectionName);
 	void CloseSection();
 	bool EnterSection(std::string sectionName);
-	void LeaveSection();
+	bool LeaveSection();
 
 	bool GetBool(std::string valueName);
 	int GetInt(std::string valueName);
