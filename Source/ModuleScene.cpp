@@ -551,19 +551,18 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					RenameDuplicatedGameObject(game_object);
 
 					if (App->IsPlaying())
+					{
+						App->script_importer->AddGameObjectInfoToMono(game_object);
 						to_init.push_back(game_object);
+					}
 				}
 			}
 			
 			if (App->IsPlaying())
 			{
-				App->script_importer->AddGameObjectsInfoToMono(to_init);
-
 				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
-				{
 					(*it)->InitScripts();
-				}
-
+			
 				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
 					(*it)->StartScripts();
 			}

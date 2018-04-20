@@ -63,7 +63,7 @@ public class ShipProperties
 	void Update()
 	{
 		// Temp ----------------------
-		if (TheInput.IsKeyDown("w"))
+		/*if (TheInput.IsKeyDown("w"))
 		{
 			if(one_shoot)
 				Shoot();
@@ -72,6 +72,7 @@ public class ShipProperties
 		}
 		else
 			one_shoot = true;
+		*/
 		// ---------------------------
 		
 		CheckDeath();
