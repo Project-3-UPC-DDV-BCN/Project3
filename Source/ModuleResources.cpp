@@ -1805,6 +1805,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	TangentFragPos = TBN * FragPos;\n"
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
+		"	Normal = transpose(inverse(mat3(Model))) * normals;\n"
 		"	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);\n"
 		"}";
 
@@ -1950,6 +1951,7 @@ void ModuleResources::CreateDefaultShaders()
 			"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
 			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
 			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"	
+
 			"			float shadow = ShadowCalculation();\n"
 		//	"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1.0 - shadow)), color.a);  \n"	
 		//	"			color = vec4((color.rgb * (1.0 - shadow)), color.a);  \n"
@@ -1966,11 +1968,11 @@ void ModuleResources::CreateDefaultShaders()
 				" {\n"
 				"	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;\n"
 				"	projCoords = projCoords * 0.5 + 0.5;\n"
-				"	projCoords = projCoords * 0.5 + 0.5;\n"
 				"	float closestDepth = texture(Tex_ShadowMap, projCoords.xy).r;\n"
 				"	float currentDepth = projCoords.z;\n"
 				"	vec3 normal_v = normalize(Normal);"
-				"	vec3 lightDir_v = -dirLights[0].direction;\n"
+				//"	vec3 lightDir_v = -dirLights[0].direction;\n"
+				"	vec3 lightDir_v = normalize(dirLights[0].position - FragPos);\n"
 				"	float bias = max(0.05 * (1.0 - dot(normal_v, lightDir_v)), 0.005);\n"
 				"	float shadow = 0.0;\n"
 				"   vec2 texelSize = 1.0 / textureSize(Tex_ShadowMap,0);\n"
@@ -1983,7 +1985,7 @@ void ModuleResources::CreateDefaultShaders()
 				"		}\n"
 				"   }\n"
 				"	shadow/=9.0;\n"
-				"	if(projCoords.z > 1.0) shadow = 0.0;\n"
+	//			"	if(projCoords.z > 1.0) shadow = 0.0;\n"
 				"	return shadow;\n"
 				"}\n"
 
@@ -2132,6 +2134,69 @@ void ModuleResources::CreateDefaultShaders()
 
 	Shader* fragment = GetShader("default_fragment");	
 	prog->SetFragmentShader(fragment);
+
+	//Depth Shader
+	std::string vert_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_vertex.vshader";
+	if (!App->file_system->FileExist(vert_depth_path))
+	{
+		Shader* depth_vert = new Shader();
+		depth_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
+
+		std::string shader_text =
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+
+			"uniform mat4 lightSpaceMatrix;\n"
+			"uniform mat4 model;\n"
+
+			"void main()\n"
+			"{\n"
+			"	gl_Position = lightSpaceMatrix * model * vec4(position, 1.0);\n"
+			"}\n"
+			;
+
+		depth_vert->SetContent(shader_text);
+		std::ofstream outfile(vert_depth_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(depth_vert);
+	}
+	CreateResource(vert_depth_path);
+
+
+	std::string frag_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_fragment.fshader";
+	if (!App->file_system->FileExist(frag_depth_path))
+	{
+		Shader* depth_frag = new Shader();
+		depth_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
+
+		std::string shader_text =
+			"	#version 400 core\n"
+			"	void main()\n"
+			"{\n"
+			"	gl_FragDepth = gl_FragCoord.z;\n"
+			"}\n"
+			;
+		depth_frag->SetContent(shader_text);
+		std::ofstream outfile(frag_depth_path.c_str(), std::ofstream::out);
+		outfile << shader_text;
+		outfile.close();
+		RELEASE(depth_frag);
+	}
+	CreateResource(frag_depth_path);
+
+	ShaderProgram* depthprog = new ShaderProgram();
+	depthprog->SetName("depth_shader_program");
+
+	Shader* depthvertex = GetShader("depth_shader_vertex");
+	depthprog->SetVertexShader(depthvertex);
+
+	Shader* depthfragment = GetShader("depth_shader_fragment");
+	depthprog->SetFragmentShader(depthfragment);
+
+	depthprog->LinkShaderProgram();
+
+	AddResource(depthprog);
 
 	//Particles Shader
 	std::string vert_particle_default_path = SHADER_DEFAULT_FOLDER "default_particle_vertex.vshader";
@@ -2411,69 +2476,6 @@ void ModuleResources::CreateDefaultShaders()
 	prog->LinkShaderProgram();
 
 	AddResource(prog);
-
-	//Depth Shader
-	std::string vert_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_vertex.vshader";
-	if (!App->file_system->FileExist(vert_depth_path))
-	{
-		Shader* depth_vert = new Shader();
-		depth_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
-
-		std::string shader_text =
-			"#version 330 core\n"
-			"layout(location = 0) in vec3 position;\n"
-
-			"uniform mat4 lightSpaceMatrix;\n"
-			"uniform mat4 model;\n"
-
-			"void main()\n"
-			"{\n"
-			"	gl_Position = lightSpaceMatrix * model * vec4(position, 1.0);\n"
-			"}\n"
-			;
-
-		depth_vert->SetContent(shader_text);
-		std::ofstream outfile(vert_depth_path.c_str(), std::ofstream::out);
-		outfile << shader_text;
-		outfile.close();
-		RELEASE(depth_vert);
-	}
-	CreateResource(vert_depth_path);
-
-
-	std::string frag_depth_path = SHADER_DEFAULT_FOLDER "depth_shader_fragment.fshader";
-	if (!App->file_system->FileExist(frag_depth_path))
-	{
-		Shader* depth_frag = new Shader();
-		depth_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
-
-		std::string shader_text =
-			"	#version 330 core\n"
-			"	void main()\n"
-			"{\n"
-			"	gl_FragDepth = gl_FragCoord.z;\n"
-			"}\n"
-			;
-		depth_frag->SetContent(shader_text);
-		std::ofstream outfile(frag_depth_path.c_str(), std::ofstream::out);
-		outfile << shader_text;
-		outfile.close();
-		RELEASE(depth_frag);
-	}
-	CreateResource(frag_depth_path);
-
-	ShaderProgram* depthprog = new ShaderProgram();
-	depthprog->SetName("depth_shader_program");
-
-	Shader* depthvertex = GetShader("depth_shader_vertex");
-	depthprog->SetVertexShader(depthvertex);
-
-	Shader* depthfragment = GetShader("depth_shader_fragment");
-	depthprog->SetFragmentShader(depthfragment);
-
-	depthprog->LinkShaderProgram();
-
-	AddResource(depthprog);
 
 
 	//Depth Debug Shader

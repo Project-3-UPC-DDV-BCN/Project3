@@ -111,9 +111,9 @@ public:
 	//Debug
 	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
 	void DrawDebugOBB(OBB& aabb, ComponentCamera* active_camera);
-	void DrawMesh(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
+	void DrawMesh(ComponentMeshRenderer* mesh);
 
-	void SendLight(uint program_id);
+	void SendLight(uint program_id, ComponentCamera* current_camera);
 	int GetDirectionalLightCount() const;
 	int GetSpotLightCount() const;
 	int GetPointLightCount() const;
