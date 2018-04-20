@@ -8,9 +8,10 @@ public class StarShipShooting {
 
 	TheFactory laser_factory;
 	
+	public TheGameObject laser_spawner;
+	
 	// Audio
-    public TheGameObject laser_spawner;
-	public TheGameObject audio_emiter;
+	public TheGameObject shoot_audio_emiter;
 	TheAudioSource audio_source;
 	
 	// UI
@@ -65,7 +66,7 @@ public class StarShipShooting {
 		if(laser_factory != null)
         	laser_factory.StartFactory();
 
-		audio_source = audio_emiter.GetComponent<TheAudioSource>();
+		audio_source = shoot_audio_emiter.GetComponent<TheAudioSource>();
 		if(audio_source == null) 
 			TheConsole.Log("no audio");
 
@@ -96,88 +97,88 @@ public class StarShipShooting {
 		if(laser_light != null)
 			laser_light_comp = laser_light.GetComponent<TheLight>();
 		
-		weapon_script = TheGameObject.GetScript("VS4 - Weapon0");
+		weapon_script = TheGameObject.Self.GetScript("VS4-Weapon0");
     }	
 
 	void Update () 
 	{
 		if(overheat_bar_bar != null)
 			overheat_bar_bar.PercentageProgress = overheat * 100;
-
+		
 		if(timer <= 0 && !overheated)
 		{
-			if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
+			switch (weapon)
 			{
-                switch (weapon)
-                {
-                	case 0:
-                        {
-							if (weapons_bar == null && laser_factory == null && laser_spawner == null)
-								break;
+				case 0:
+				{	
+					if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
+					{
+						if (weapons_bar == null && laser_factory == null && laser_spawner == null)
+						break;
+						
+						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};
+						
+						if (weapon_script != null)
+							weapon_script.CallFunctionArgs("Shoot", args_shoot);		
+						
+						timer = spawn_time;																
+						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
+						
+						//Add heat
+						overheat += curr_overheat_inc;
+						if (overheat >= 1.0f)
+						{
+							overheated = true;
+							overheat_timer = overheated_time;
+						}
+						else 
+							overheat_timer = overheat_time;  
+					}
+					else if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
+					{
+						if(overheat > 0.0f && !cooling)
+						{
+							TheVector3 offset = new TheVector3(0, 2, 0);
 							
-							weapon_script.Shoot(weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner);		
-							
-							if(audio_source != null)
-                            	audio_source.Play("Play_shot");
+							if(laser_factory != null && laser_spawner != null)
+							{
+								laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
 
-                            timer = spawn_time;																
+								TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
 
-							if (laser_light_comp != null){
-								laser_light_comp.SetComponentActive(true);
-								light_duration = 0.2f;
-								light_on = true;
+								TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
+
+								laser_factory.SetSpawnScale(size);
+
+								TheGameObject go = laser_factory.Spawn();
+
+								go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
 							}
 							
-                            //Add heat
-                            overheat += curr_overheat_inc;
-                            if (overheat >= 1.0f)
-                            {
-                                overheated = true;
-                                overheat_timer = overheated_time;
-                            }
-                            else 
-								overheat_timer = overheat_time;              
-							break;
-                        }
-                    case 1:
-                        {
-                            if (!cooling)
-                            {
-                                overheat += curr_overheat_inc;
-                                overheat_timer = 1.0f;
-                            }
-                            break;
-                        }
-                }
-            }
-
-            if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
-            {
-                if(overheat > 0.0f && !cooling)
-                {
-                    TheVector3 offset = new TheVector3(0, 2, 0);
-					
-					if(laser_factory != null && laser_spawner != null)
-					{
-                    	laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
-	
-                   		TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
-
-                    	TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
-
-                   		laser_factory.SetSpawnScale(size);
-
-                    	TheGameObject go = laser_factory.Spawn();
-
-                    	go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+							overheat_timer = 0.0f;
+							cooling = true;
+						}
 					}
-					
-                    overheat_timer = 0.0f;
-                    cooling = true;
-                }
-            }
+	            
+					break;
+				}
+				case 1:
+				{
+					if (!cooling)
+					{
+						overheat += curr_overheat_inc;
+						overheat_timer = 1.0f;
+					}
+					break;
+				}
+			}
+		
+			
 
-
+			if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
+			{
+				
+			}
         }
 
 		else if(!overheated)
@@ -216,40 +217,50 @@ public class StarShipShooting {
         overheat_timer -= TheTime.DeltaTime;
 
         if(TheInput.IsKeyDown("C"))
-        {
-			audio_source.Play("Play_change_weapon");
-            weapon++;
-            weapon %= num_weapons;
-
-            TheVector3 size = new TheVector3(1, 1, 1);
-			
-			if(laser_factory != null)
-            	laser_factory.SetSpawnScale(size);
-			
-			if(crosshair_1 != null && crosshair_2 != null && crosshair_1.IsActive())
-			{
-				crosshair_1.SetActive(false);
-				crosshair_2.SetActive(true);
-							
-				if(weapon_icon_1 != null)
-					weapon_icon_1.SetActive(false);
-
-				if(weapon_icon_2 != null)
-					weapon_icon_2.SetActive(true);
-			}
-			else if(crosshair_1 != null && crosshair_2 != null)
-			{
-				crosshair_1.SetActive(true);
-				crosshair_2.SetActive(false);
-
-				if(weapon_icon_1 != null)
-					weapon_icon_1.SetActive(true);
-
-				if(weapon_icon_2 != null)
-					weapon_icon_2.SetActive(false);
-			}
-        }
+			ChangeWeapon();
     }
 
-    
+    void ChangeWeapon(){
+		audio_source.Play("Play_change_weapon");
+		weapon++;
+		weapon %= num_weapons;
+
+		TheVector3 size = new TheVector3(1, 1, 1);
+		
+		if(laser_factory != null)
+			laser_factory.SetSpawnScale(size);
+		
+		if(crosshair_1 != null && crosshair_2 != null && crosshair_1.IsActive())
+		{
+			crosshair_1.SetActive(false);
+			crosshair_2.SetActive(true);
+						
+			if(weapon_icon_1 != null)
+				weapon_icon_1.SetActive(false);
+
+			if(weapon_icon_2 != null)
+				weapon_icon_2.SetActive(true);
+		}
+		else if(crosshair_1 != null && crosshair_2 != null)
+		{
+			crosshair_1.SetActive(true);
+			crosshair_2.SetActive(false);
+
+			if(weapon_icon_1 != null)
+				weapon_icon_1.SetActive(true);
+
+			if(weapon_icon_2 != null)
+				weapon_icon_2.SetActive(false);
+		}
+		
+		switch (weapon) 
+		{
+			case 0:
+				weapon_script = TheGameObject.Self.GetScript("VS4-Weapon0");
+				break;
+			case 1:
+				weapon_script = TheGameObject.Self.GetScript("VS4-Weapon1");
+				break;
+		}
+	}
 }
