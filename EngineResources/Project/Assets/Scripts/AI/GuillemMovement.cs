@@ -85,14 +85,17 @@ public class GuillemMovement
         // Avoid leaving x point on the map 
         if (center_transform != null)
         {
-            if (TheVector3.Distance(center_transform.GlobalPosition, self_transform.GlobalPosition) > desertor_distance)
+			TheVector3 center_trans_pos = center_transform.GlobalPosition;
+			TheVector3 self_trans_pos = self_transform.GlobalPosition;
+
+            if (TheVector3.Distance(center_trans_pos, self_trans_pos) > desertor_distance)
                 TheGameObject.Destroy(TheGameObject.Self);
 
-            if (TheVector3.Distance(center_transform.GlobalPosition, self_transform.GlobalPosition) > max_distance_to_center_object)
+            if (TheVector3.Distance(center_trans_pos, self_trans_pos) > max_distance_to_center_object)
             {
                 target_transform = center_transform;
             }
-            else if (TheVector3.Distance(center_transform.GlobalPosition, self_transform.GlobalPosition) < max_distance_to_center_object / 2 &&
+            else if (TheVector3.Distance(center_trans_pos, self_trans_pos) < max_distance_to_center_object / 2 &&
                     target_transform == center_transform && !forced)
             {
                 target_transform = null;
@@ -124,6 +127,7 @@ public class GuillemMovement
 	{
 		if(go.GetComponent<TheTransform>() == target_transform)
 		{
+			TheConsole.Log("My target was destroyed! Reseting..");
 			ClearTarget();
 		}
 	}
@@ -174,10 +178,13 @@ public class GuillemMovement
         if (target_transform != null)
         {
             TheVector3 pos = self_transform.LocalPosition;
+			TheVector3 forward_dir = self_transform.ForwardDirection;
+
             TheVector3 move = new TheVector3(0, 0, 0);
-            move.x = modified_move_speed * self_transform.ForwardDirection.x;
-            move.y = modified_move_speed * self_transform.ForwardDirection.y;
-            move.z = modified_move_speed * self_transform.ForwardDirection.z;
+            move.x = modified_move_speed * forward_dir.x;
+            move.y = modified_move_speed * forward_dir.y;
+            move.z = modified_move_speed * forward_dir.z;
+
             self_transform.LocalPosition = new TheVector3(pos.x + (move.x * TheTime.DeltaTime), pos.y + (move.y * TheTime.DeltaTime), pos.z + (move.z * TheTime.DeltaTime));
         }
     }
@@ -187,24 +194,27 @@ public class GuillemMovement
 		TheVector3 self_pos = self_transform.GlobalPosition;
         TheVector3 target_pos = target_transform.GlobalPosition;
 		
-        // x
+		TheVector3 self_trans_rot = self_transform.LocalRotation;
+		
+        // X
+
         float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z) - 270;
 
-        float angle_diff_x = self_transform.LocalRotation.y - target_x_angle;
+        float angle_diff_x = self_trans_rot.y - target_x_angle;
 
 		//TheConsole.Log("x: " + NormalizeAngle(angle_diff_x));
 	
-		if((NormalizeAngle(self_transform.LocalRotation.x) < 90 && NormalizeAngle(self_transform.LocalRotation.x) > -90) || 
-		(NormalizeAngle(self_transform.LocalRotation.x) > 270 || NormalizeAngle(self_transform.LocalRotation.x) < -270))
+		if((NormalizeAngle(self_trans_rot.x) < 90 && NormalizeAngle(self_trans_rot.x) > -90) || 
+		(NormalizeAngle(self_trans_rot.x) > 270 || NormalizeAngle(self_trans_rot.x) < -270))
 		{
         	if (NormalizeAngle(angle_diff_x) > 180)
 			{
 				//TheConsole.Log("1");
-            	self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+            	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
 			}
         	else
 			{
-           	 	self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+           	 	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
 				//TheConsole.Log("2");
 			}
 		}
@@ -213,14 +223,19 @@ public class GuillemMovement
 			if (NormalizeAngle(angle_diff_x) > 0)
 			{
 				//TheConsole.Log("1-1");
-            	self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+            	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
 			}
         	else
 			{
-           	 	//self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
-				TheConsole.Log("2-2");
+           	 	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
+				//TheConsole.Log("2-2");
 			}
 		}
+		
+		
+		// Y
+	
+		self_trans_rot = self_transform.LocalRotation;
 			
 		float target_y_angle = GetAngleFromTwoPoints(self_pos.y, self_pos.z, target_pos.y, target_pos.z) - 270;
 
@@ -232,17 +247,17 @@ public class GuillemMovement
 			target_y_angle -= 180;
 		}		
 
-        float angle_diff_y = self_transform.LocalRotation.x - target_y_angle;		
+        float angle_diff_y =self_trans_rot.x - target_y_angle;		
 
 		if (NormalizeAngle(angle_diff_y) > 180)
 		{
-			TheConsole.Log("1");
-			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
+			//TheConsole.Log("1");
+			self_transform.LocalRotation = new TheVector3(self_trans_rot.x + (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.y, self_trans_rot.z);
 		}
 		else
 		{
-			TheConsole.Log("2");
-			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
+			//TheConsole.Log("2");
+			self_transform.LocalRotation = new TheVector3(self_trans_rot.x - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.y, self_trans_rot.z);
 		}
     }
 

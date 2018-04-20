@@ -495,13 +495,6 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			can_load = true;
 	}
 
-	if (data.CanLoadAsBinary(path.c_str(), ".scene"))
-	{
-		CONSOLE_LOG("Loading scene as BINARY: %s", path.c_str());
-		if (data.LoadBinary(path.c_str()))
-			can_load = true;
-	}
-
 	if (can_load)
 	{
 		if (destroy_scene)
@@ -541,23 +534,10 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			}
 		}
 
-		data.ClearData();
-		can_load = false;
-
-		if (data.CanLoadAsJSON(path.c_str(), extension))
-		{
-			if (data.LoadJSON(path.c_str()))
-				can_load = true;
-		}
-
-		if (data.CanLoadAsBinary(path.c_str(), ".scene"))
-		{
-			if (data.LoadBinary(path.c_str()))
-				can_load = true;
-		}
-
 		if (can_load)
 		{
+			data.ResetData();
+				
 			std::list<GameObject*>::iterator it = new_gos.begin();
 			for (int i = 0; i < gameObjectsCount; i++)
 			{

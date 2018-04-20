@@ -53,6 +53,11 @@ public class Ai_Starship_Shooting
 	
 	void Update () 
 	{
+		CheckForShooting();
+	}
+
+	void CheckForShooting()
+	{
 		if(slave1_transform != null)
 		{
 			float mag_distance = TheVector3.Distance(slave1_transform.GlobalPosition, transform.GlobalPosition);
@@ -76,22 +81,21 @@ public class Ai_Starship_Shooting
 			else
 				shooting = false;
 			
-		}
-
-		if(shooting) 
-		{
-			if(timer.ReadTime() >= time_between_lasers) 
+			if(shooting) 
 			{
-				if(ship_properties != null)
-					ship_properties.CallFunctionArgs("Shoot");
+				if(timer.ReadTime() >= time_between_lasers) 
+				{
+					if(ship_properties != null)
+						ship_properties.CallFunctionArgs("Shoot");
 
-				timer.Start();
-			}
+					timer.Start();
+				}
 
-			if(in_range) 
-			{
-				audio_source.Stop("Play_Shoot");
-				audio_source.Play("Play_Shoot");
+				if(in_range) 
+				{
+					audio_source.Stop("Play_Shoot");
+					audio_source.Play("Play_Shoot");
+				}
 			}
 		}
 	}
@@ -106,5 +110,6 @@ public class Ai_Starship_Shooting
 	void ClearTargetTransform()
 	{
 		target_transform = null;
+		shooting = false;
 	}
 }

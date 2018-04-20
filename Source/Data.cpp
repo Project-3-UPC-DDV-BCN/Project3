@@ -281,6 +281,17 @@ bool Data::LoadMeta(std::string path)
 	return LoadJSON(path);
 }
 
+void Data::ResetData()
+{
+	while (1)
+	{
+		if (!LeaveSection())
+			break;
+	}
+
+	current_index = 0;
+}
+
 void Data::ClearData()
 {
 	data_names.clear();
@@ -351,8 +362,10 @@ bool Data::EnterSection(std::string sectionName)
 	return ret;
 }
 
-void Data::LeaveSection()
+bool Data::LeaveSection()
 {
+	bool ret = false;
+
 	in_section_values.clear();
 	in_section_names.clear();
 
@@ -376,8 +389,12 @@ void Data::LeaveSection()
 			last_index.pop_back();
 			last_index_name.pop_back();
 			sections_open--;
+
+			ret = true;
 		}
 	}
+
+	return ret;
 }
 
 void Data::CloseSection()
