@@ -184,45 +184,66 @@ public class GuillemMovement
 
     void OrientateToTarget()
     {
-        TheVector3 self_pos = self_transform.GlobalPosition;
+		TheVector3 self_pos = self_transform.GlobalPosition;
         TheVector3 target_pos = target_transform.GlobalPosition;
 		
-		TheQuaternion quat = TheQuaternion.FromTwoVectors(self_pos, target_pos);
-
-		TheVector3 angles = quat.ToEulerAngles();
-
-		TheConsole.Log(angles.x + " " + angles.y + " " + angles.z + 90);		
-
-		/*
         // x
-        float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z + 30) - 270;
+        float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z) - 270;
 
         float angle_diff_x = self_transform.LocalRotation.y - target_x_angle;
 
-        if (NormalizeAngle(angle_diff_x) > 180)
-            self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
-        else
-            self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+		//TheConsole.Log("x: " + NormalizeAngle(angle_diff_x));
+	
+		if((NormalizeAngle(self_transform.LocalRotation.x) < 90 && NormalizeAngle(self_transform.LocalRotation.x) > -90) || 
+		(NormalizeAngle(self_transform.LocalRotation.x) > 270 || NormalizeAngle(self_transform.LocalRotation.x) < -270))
+		{
+        	if (NormalizeAngle(angle_diff_x) > 180)
+			{
+				//TheConsole.Log("1");
+            	self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+			}
+        	else
+			{
+           	 	self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+				//TheConsole.Log("2");
+			}
+		}
+		else
+		{
+			if (NormalizeAngle(angle_diff_x) > 0)
+			{
+				//TheConsole.Log("1-1");
+            	self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+			}
+        	else
+			{
+           	 	//self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
+				TheConsole.Log("2-2");
+			}
+		}
+			
+		float target_y_angle = GetAngleFromTwoPoints(self_pos.y, self_pos.z, target_pos.y, target_pos.z) - 270;
 
-        // y
-        float target_y_angle = GetAngleFromTwoPoints(self_pos.y, self_pos.z, target_pos.y, target_pos.z + 30) + 270;
+		//TheConsole.Log("y: " + NormalizeAngle(target_y_angle));	
 
-        float angle_diff_y = self_transform.LocalRotation.x - target_y_angle;
+		//TheConsole.Log("y: " + NormalizeAngle(angle_diff_y));
+		if(self_pos.z > target_pos.z)
+		{
+			target_y_angle -= 180;
+		}		
 
-        if (target_pos.z > self_pos.z)
-            angle_diff_y += 180;
+        float angle_diff_y = self_transform.LocalRotation.x - target_y_angle;		
 
-        if (NormalizeAngle(angle_diff_y) < 180 && NormalizeAngle(angle_diff_y) > -180)
-        {
-            if (NormalizeAngle(angle_diff_y) > 0)
-                self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
-            else
-                self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
-
-            if (self_transform.LocalRotation.x > 180 || self_transform.LocalRotation.x < -180)
-                self_transform.LocalRotation = new TheVector3(0, self_transform.LocalRotation.y, self_transform.LocalRotation.z);
-        }
-		*/
+		if (NormalizeAngle(angle_diff_y) > 180)
+		{
+			TheConsole.Log("1");
+			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
+		}
+		else
+		{
+			TheConsole.Log("2");
+			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
+		}
     }
 
     float GetAngleFromTwoPoints(float x1, float y1, float x2, float y2)
