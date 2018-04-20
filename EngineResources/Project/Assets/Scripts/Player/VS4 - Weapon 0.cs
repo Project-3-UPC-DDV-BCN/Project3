@@ -6,9 +6,11 @@ using TheEngine.TheMath;
 
 public class Weapon0 {	
 
-	void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
-				TheFactory laser_factory, TheGameObject laser_spawner, )
+	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
+				TheFactory laser_factory, TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
+		TheConsole.Log("Entered Shoot");
+		
 		TheVector3 offset;
 			
 		curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
@@ -46,7 +48,19 @@ public class Weapon0 {
 			TheVector3 laser_rot = (ship_rot.ToQuaternion() * go.GetComponent<TheTransform>().GlobalRotation.ToQuaternion()).ToEulerAngles();
 			go.GetComponent<TheRigidBody>().SetRotation(laser_rot.x, laser_rot.y, laser_rot.z);
 		}
+		
+		if(audio_source != null)
+			audio_source.Play("Play_shot");
 	}
 
+	public void EditLightComp(TheLight laser_light_comp, float light_duration, bool light_on)
+	{
+		if (laser_light_comp != null){
+			laser_light_comp.SetComponentActive(true);
+			light_duration = 0.2f;
+			light_on = true;
+		}
+	}
+	
     
 }
