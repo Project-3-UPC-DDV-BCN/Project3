@@ -97,7 +97,7 @@ public class StarShipShooting {
 		if(laser_light != null)
 			laser_light_comp = laser_light.GetComponent<TheLight>();
 		
-		weapon_script = TheGameObject.Self.GetScript("VS4 - Weapon0");
+		weapon_script = TheGameObject.Self.GetScript("VS4-Weapon0");
     }	
 
 	void Update () 
@@ -118,7 +118,9 @@ public class StarShipShooting {
 						
 						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};
 						
-						weapon_script.CallFunctionArgs("Shoot", args_shoot);		
+						if (weapon_script != null)
+							weapon_script.CallFunctionArgs("Shoot", args_shoot);		
+						
 						timer = spawn_time;																
 						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
 						
@@ -254,10 +256,10 @@ public class StarShipShooting {
 		switch (weapon) 
 		{
 			case 0:
-				weapon_script = TheGameObject.Self.GetScript("VS4 - Weapon0");
+				weapon_script = TheGameObject.Self.GetScript("VS4-Weapon0");
 				break;
 			case 1:
-				weapon_script = TheGameObject.Self.GetScript("VS4 - Weapon1");
+				weapon_script = TheGameObject.Self.GetScript("VS4-Weapon1");
 				break;
 		}
 	}
