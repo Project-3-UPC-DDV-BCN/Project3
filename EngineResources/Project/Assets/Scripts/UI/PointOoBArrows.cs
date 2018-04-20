@@ -1,5 +1,6 @@
 using TheEngine;
 using TheEngine.TheMath;
+using System.Collections.Generic;
 
 public class PointOoBArrows {
 
@@ -18,17 +19,25 @@ public class PointOoBArrows {
 	public float debugX = 0f;
 	public float debugY = 0f;
 
+    // Scripts ---
+    TheScript GameManager = null;
+
 	void Start () {
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
+        TheGameObject GM = TheGameObject.Find("GameManager");
+        if (GM != null)
+            GameManager = GM.GetScript("GameManager");
 	}
 	
 	void Update () {
-		TheGameObject[] scene_gos = TheGameObject.GetSceneGameObjects();
-		for(int i = 0; i < scene_gos.Length; i++) {
-			if(isShip(scene_gos[i])) {
-				MoveArrowToPosition(scene_gos[i], arrow01);	// Which ships you want to point at ?
-			}
-		}
+        List<TheGameObject> enemies = new List<TheGameObject>();
+        // For the moment I will assume Slave1 is ALWAYS ALLIANCE --- Change When Slave1 has a faction defined in code
+        // Slave1 faction filter here ...
+        // ...
+        enemies = GameManager.CallFunctionArgs("GetEmpireShips");
+        // Since we have no target, I will put the Arrow pointing to the first enemy inside the list --- Will require Changing and/or polish ---
+        if (enemies.Count > 0) MoveArrowToPosition(enemies[0], arrow01);
+        else arrow01.SetActive(false);
 	}
 
 	void MoveArrowToPosition(TheGameObject ship, TheGameObject arrow) {
