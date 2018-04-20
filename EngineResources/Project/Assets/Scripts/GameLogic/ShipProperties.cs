@@ -21,7 +21,7 @@ public class ShipProperties
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
 	private TheFactory factory = null;
-
+	private TheScript movement_script = null;
 	private TheTransform self_transform = null;
 
 	bool one_shoot = true;
@@ -36,6 +36,8 @@ public class ShipProperties
 		
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
+
+		movement_script = TheGameObject.Self.GetScript("GuillemMovement");
 
 		// Add ship to game manager
 		if(is_slave1)
@@ -213,6 +215,10 @@ public class ShipProperties
 
 	void OnShipDestroyedCallback(TheGameObject ship)
 	{
-		
+		if(movement_script != null)
+		{
+			object[] args = {ship};
+			movement_script.CallFunctionArgs("ClearIfTarget", args);
+		}
 	}
 }

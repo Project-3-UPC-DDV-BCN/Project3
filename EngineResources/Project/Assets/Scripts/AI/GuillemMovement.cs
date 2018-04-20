@@ -124,6 +124,7 @@ public class GuillemMovement
 	{
 		if(go.GetComponent<TheTransform>() == target_transform)
 		{
+			TheConsole.Log("My target was destroyed! Reseting..");
 			ClearTarget();
 		}
 	}
@@ -218,7 +219,7 @@ public class GuillemMovement
         	else
 			{
            	 	//self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x, self_transform.LocalRotation.y + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.z);
-				TheConsole.Log("2-2");
+				//TheConsole.Log("2-2");
 			}
 		}
 			
@@ -236,12 +237,12 @@ public class GuillemMovement
 
 		if (NormalizeAngle(angle_diff_y) > 180)
 		{
-			TheConsole.Log("1");
+			//TheConsole.Log("1");
 			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x + (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
 		}
 		else
 		{
-			TheConsole.Log("2");
+			//TheConsole.Log("2");
 			self_transform.LocalRotation = new TheVector3(self_transform.LocalRotation.x - (modified_rotation_speed * TheTime.DeltaTime), self_transform.LocalRotation.y, self_transform.LocalRotation.z);
 		}
     }
