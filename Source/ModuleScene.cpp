@@ -537,7 +537,8 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 		if (can_load)
 		{
 			data.ResetData();
-				
+			
+			std::list<GameObject*> to_init;
 			std::list<GameObject*>::iterator it = new_gos.begin();
 			for (int i = 0; i < gameObjectsCount; i++)
 			{
@@ -550,10 +551,23 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					RenameDuplicatedGameObject(game_object);
 
 					if (App->IsPlaying())
-						game_object->InitScripts();
+						to_init.push_back(game_object);
 				}
 			}
+			
+			if (App->IsPlaying())
+			{
+				App->script_importer->AddGameObjectsInfoToMono(to_init);
 
+				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
+				{
+					(*it)->InitScripts();
+				}
+
+				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
+					(*it)->StartScripts();
+			}
+						
 			current_scene_path = path;
 		}
 	}

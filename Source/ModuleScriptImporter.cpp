@@ -241,29 +241,42 @@ std::string ModuleScriptImporter::CompileScript(std::string assets_path, std::st
 //	return current_script;
 //}
 
-void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list)
+void ModuleScriptImporter::AddGameObjectInfoToMono(GameObject * go)
 {
-	for (GameObject* go : scene_objects_list)
+	if (go == nullptr)
+		return;
+
+	MonoObject* exist_obejct = ns_importer->GetMonoObjectFromGameObject(go);
+	if (!exist_obejct)
 	{
-		MonoObject* exist_obejct = ns_importer->GetMonoObjectFromGameObject(go);
-		if (!exist_obejct)
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+		if (c)
 		{
-			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-			if (c)
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
 			{
-				MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					ns_importer->AddCreatedGameObjectToList(new_object, go);
-				}
+				ns_importer->AddCreatedGameObjectToList(new_object, go);
+			}
+		}
+	}
+
+	for (Component* comp : go->components_list)
+	{
+		std::string comp_type = ns_importer->CppComponentToCs(comp->GetType());
+
+		MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_type.c_str());
+		if (c_comp)
+		{
+			MonoObject* comp_new_object = mono_object_new(App->script_importer->GetDomain(), c_comp);
+			if (comp_new_object)
+			{
+				ns_importer->AddCreatedComponentToList(comp_new_object, comp);
 			}
 		}
 
-		for (Component* comp : go->components_list)
+		if (comp_type == "TheBoxCollider" || comp_type == "TheSphereCollider" || comp_type == "TheCapsuleCollider" || comp_type == "TheMeshCollider")
 		{
-			std::string comp_type = ns_importer->CppComponentToCs(comp->GetType());
-
-			MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_type.c_str());
+			MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheCollider");
 			if (c_comp)
 			{
 				MonoObject* comp_new_object = mono_object_new(App->script_importer->GetDomain(), c_comp);
@@ -272,20 +285,15 @@ void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene
 					ns_importer->AddCreatedComponentToList(comp_new_object, comp);
 				}
 			}
-
-			if (comp_type == "TheBoxCollider" || comp_type == "TheSphereCollider" || comp_type == "TheCapsuleCollider" || comp_type == "TheMeshCollider")
-			{
-				MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheCollider");
-				if (c_comp)
-				{
-					MonoObject* comp_new_object = mono_object_new(App->script_importer->GetDomain(), c_comp);
-					if (comp_new_object)
-					{
-						ns_importer->AddCreatedComponentToList(comp_new_object, comp);
-					}
-				}
-			}
 		}
+	}
+}
+
+void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list)
+{
+	for (GameObject* go : scene_objects_list)
+	{
+		AddGameObjectInfoToMono(go);
 	}
 }
 

@@ -357,6 +357,7 @@ public:
 
 	std::vector<DLLClassInfo> engine_dll_info;
 
+	void AddGameObjectInfoToMono(GameObject* go);
 	void AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list);
 
 private:
