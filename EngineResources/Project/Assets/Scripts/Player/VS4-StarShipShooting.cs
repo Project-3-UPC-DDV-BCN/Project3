@@ -25,7 +25,7 @@ public class StarShipShooting {
 	public TheGameObject weapon_icon_2;
 
 	public TheGameObject weapons_energy;
-    public TheProgressBar weapons_bar = null;
+    TheProgressBar weapons_bar = null;
 	
 	// Particles
 	public TheGameObject laser_light;
@@ -38,12 +38,12 @@ public class StarShipShooting {
 	
 	public float overheat_time = 2.0f;
     public float overheated_time = 3.0f;
-    public float overheat_timer = 0.0f;
+    float overheat_timer = 0.0f;
 	
 	// Booleans	
 	bool light_on = false;
-	public bool used_left_laser = false;
-	public bool overheated = false;
+	bool used_left_laser = false;
+	bool overheated = false;
 	bool cooling = false;
    
    	// Slave 1 Properties
@@ -51,8 +51,8 @@ public class StarShipShooting {
     public int weapon = 0;
 	
 	public float overheat_increment = 0.2f;
-    public float curr_overheat_inc;
-    public float overheat = 0.0f; //from 0.0 to 1.0
+    float curr_overheat_inc;
+    float overheat = 0.0f; //from 0.0 to 1.0
     
     public float w1_cooling_rate = 10.0f;
     public float w2_cooling_rate = 10.0f;
@@ -105,7 +105,6 @@ public class StarShipShooting {
 		if(overheat_bar_bar != null)
 			overheat_bar_bar.PercentageProgress = overheat * 100;
 		
-		
 		switch (weapon)
 		{
 			case 0:
@@ -125,39 +124,28 @@ public class StarShipShooting {
 						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
 						
 						// OVERHEAT
-						object[] args_overheat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
-						weapon_script.CallFunctionArgs("Overheat", args_overheat);	
+						object[] args_heat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
+						weapon_script.CallFunctionArgs("Heat", args_heat);	
 						
-						timer = spawn_time;		
-						TheConsole.Log("overheat =" +overheat);						
+						timer = spawn_time;							
 					}
 					else if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
 					{
-						if(overheat > 0.0f && !cooling)
-						{
-							TheVector3 offset = new TheVector3(0, 2, 0);
-							
-							if(laser_factory != null && laser_spawner != null)
-							{
-								laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
-
-								TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
-
-								TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
-
-								laser_factory.SetSpawnScale(size);
-
-								TheGameObject go = laser_factory.Spawn();
-
-								go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
-							}
-							
-							overheat_timer = 0.0f;
-							cooling = true;
-						}
+						object[] args_overheat = {overheat, cooling, laser_factory, laser_spawner, overheat_timer};
+						weapon_script.CallFunctionArgs("Overheat", args_overheat);
 					}
 				}
-			
+				else
+				{	
+					//TheConsole.Log(overheat);
+					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
+					weapon_script.CallFunctionArgs("Cooling", args_cooling);
+				}
+				
+				if (overheat <= 0.0f)	
+					overheated = false;
+				
+				
 				break;
 			}
 			case 1:
@@ -170,37 +158,9 @@ public class StarShipShooting {
 				break;
 			}
 		}			
-
-		if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
-		{
-			
-		}
    
-		else if(!overheated)
-		{
-			timer -= TheTime.DeltaTime;
-		}
-
-        if(overheat_timer<=0.0f)
-        {
-            //start cooling
-            switch (weapon)
-            {
-                case 0:
-                    overheat -= w1_cooling_rate * TheTime.DeltaTime; ;
-                    break;
-                case 1:
-                    overheat -= w2_cooling_rate * TheTime.DeltaTime; ;
-                    break;
-            }
-            
-            if(overheat<=0.0f)
-            {
-                overheat = 0.0f;
-                overheated = false;
-                cooling = false;
-            }
-        }
+		timer -= TheTime.DeltaTime;
+		overheat_timer -= TheTime.DeltaTime;
 		
 		light_duration -= TheTime.DeltaTime;
 		
@@ -209,7 +169,6 @@ public class StarShipShooting {
 			light_on = false;
 			laser_light.GetComponent<TheLight>().SetComponentActive(false);
 		}
-        overheat_timer -= TheTime.DeltaTime;
 
         if(TheInput.IsKeyDown("C"))
 			ChangeWeapon();

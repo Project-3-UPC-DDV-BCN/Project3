@@ -15,6 +15,7 @@ public class Weapon0 {
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
 				TheFactory laser_factory, TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
+		TheConsole.Log("SS");
 		if (weapons_bar == null)
 			TheConsole.Log("weapons_bar == null");
 		if (curr_overheat_inc == null)
@@ -82,11 +83,9 @@ public class Weapon0 {
 		}
 	}
 	
-	public void Overheat(float overheat, float curr_overheat_inc, bool overheated, float overheat_timer, float overheat_time, float overheated_time)
+	public void Heat(float overheat, float curr_overheat_inc, bool overheated, float overheat_timer, float overheat_time, float overheated_time)
 	{	
-		TheConsole.Log("overheat =" +overheat);
 		overheat += curr_overheat_inc;
-		TheConsole.Log("overheat = " + overheat);
 		starship_shooting.SetFloatField("overheat", overheat);
 		
 		if (overheat >= 1.0f)
@@ -95,7 +94,51 @@ public class Weapon0 {
 			starship_shooting.SetFloatField("overheat_timer", overheated_time);
 		}
 		else 
-			starship_shooting.SetFloatField("overheat_timer", overheat_time);  
+			starship_shooting.SetFloatField("overheat_timer", overheat_time); 
+
+		starship_shooting.SetBoolField("cooling", false);
+	}
+	
+	public void Overheat(float overheat, bool cooling, TheFactory laser_factory, TheGameObject laser_spawner, float overheat_timer)
+	{
+		if(overheat > 0.0f && !cooling)
+		{
+			TheVector3 offset = new TheVector3(0, 2, 0);
+			
+			if(laser_factory != null && laser_spawner != null)
+			{
+				laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition + offset);
+
+				TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
+
+				TheVector3 size = new TheVector3(1 + overheat, 1 + overheat, 1 + overheat);
+
+				laser_factory.SetSpawnScale(size);
+
+				TheGameObject go = laser_factory.Spawn();
+
+				go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);
+			}
+			
+			starship_shooting.SetFloatField("overheat_timer", 0.0f);
+			starship_shooting.SetBoolField("cooling", true);		
+		}
 	}
     
+	public void Cooling(float overheat_timer, float overheat, float w1_cooling_rate)
+	{
+		if(overheat_timer <= 0.0f)
+		{
+			overheat -= w1_cooling_rate * TheTime.DeltaTime;
+			
+			if(overheat<=0.0f)
+			{
+				overheat = 0.0f;
+				starship_shooting.SetBoolField("overheated", false);
+				starship_shooting.SetBoolField("cooling", false);
+			}
+			
+			starship_shooting.SetFloatField("overheat", overheat);
+		}	
+	}
 }
