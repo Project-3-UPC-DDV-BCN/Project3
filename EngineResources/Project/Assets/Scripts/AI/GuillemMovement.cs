@@ -36,6 +36,9 @@ public class GuillemMovement
 	TheScript GameManager = null;
 	TheScript shooting_script = null;
 
+	bool avoiding = false;
+	TheVector3 avoiding_addition = new TheVector3(0, 0, 0);
+
 	void Init()
 	{
         ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
@@ -205,7 +208,25 @@ public class GuillemMovement
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
-        // X
+		// Target avoidance ----
+		bool was_avoiding = avoiding;
+		if(TheVector3.Distance(self_pos, target_pos) < 50)
+			avoiding = true;
+		else
+			avoiding = false;
+		
+		if(!was_avoiding && avoiding)
+		{
+			avoiding_addition = GetRandomAvoidance();
+		}
+ 
+		if(TheVector3.Distance(self_pos, target_pos) < 50)
+		{
+			target_pos.x += avoiding_addition.x;
+			target_pos.y += avoiding_addition.y;
+			target_pos.z += avoiding_addition.z;
+		}
+		// --------------------
 
         float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z) - 270;
 
@@ -293,6 +314,40 @@ public class GuillemMovement
 
         return angle;
     }
+	
+	TheVector3 GetRandomAvoidance()
+	{
+		TheVector3 ret = new TheVector3(0, 0, 0);
+
+		int rand = (int)TheRandom.RandomRange(0, 5);
+
+		if(rand < 1)
+		{
+			ret.x = 30;
+			ret.y = 0;
+			ret.z = 30;
+		}
+		else if(rand < 2)
+		{
+			ret.x = -30;
+			ret.y = 0;
+			ret.z = -30;
+		}
+		else if(rand < 3)
+		{
+			ret.x = 0;
+			ret.y = 30;
+			ret.z = 30;
+		}
+		else
+		{
+			ret.x = 0;
+			ret.y = -30;
+			ret.z = -30;
+		}
+
+		return ret;
+	}
 
     void RandomizeStats()
     {

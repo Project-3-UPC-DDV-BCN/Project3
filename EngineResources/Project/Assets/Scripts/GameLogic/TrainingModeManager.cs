@@ -7,12 +7,15 @@ public class TrainingModeManager
 	bool enabled = false;	
 
 	public string ship_prefab_name;
+	public float max_spawn_rad = 50;
+	public float min_spawn_rad = 30;
 	
 	TheScript game_manager_script = null;
 
+	TheTransform scene_center = null;
+
 	TheTimer check_wave_finished_timer = new TheTimer();
 
-	List<TheTransform> spawners = new List<TheTransform>();
 	int curr_wave = 0;
 
 	int ships_remaining_to_spawn = 0;
@@ -24,13 +27,23 @@ public class TrainingModeManager
 		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
+
+		TheGameObject[] anchors = TheGameObject.GetGameObjectsWithTag("AI_ANCHOR");
+		if(anchors.Length > 0)
+		{
+			TheGameObject anchor = anchors[0];
+			if(anchor != null)
+			{
+				scene_center = anchor.GetComponent<TheTransform>();
+			}
+		}
 	}
 
 	void Start () 
 	{
 		if(game_manager_script != null)
 		{
-			enabled = (bool)game_manager_script.CallFunctionArgs("GetIsTrainingMoode");
+			enabled = (bool)game_manager_script.CallFunctionArgs("GetIsTrainingMode");
 			
 			//Temporal for VS4 testing
 			enabled = true;
@@ -39,6 +52,7 @@ public class TrainingModeManager
 				TheConsole.Log("Training mode enabled!"); 
 
 			check_wave_finished_timer.Start();
+			spawn_timer.Start();
 		}
 	}
 	
@@ -66,7 +80,10 @@ public class TrainingModeManager
 				int enemies_count = (int)game_manager_script.CallFunctionArgs("GetSlaveEnemiesCount");
 		
 				if(enemies_count == 0)
+				{
+					TheConsole.Log("No enemies! Need to spawn new round");
 					ret = true;
+				}
 			}
 
 			check_wave_finished_timer.Start();
@@ -82,25 +99,26 @@ public class TrainingModeManager
 		ships_remaining_to_spawn = curr_wave;
 
 		spawn_timer.Start();
+
+		TheConsole.Log("Spawning wave: " + curr_wave);
 	}
 
 	void SpawnRemainingShips()
 	{
-		if(ships_remaining_to_spawn > 0 && spawners.Count > 0)
+		if(ships_remaining_to_spawn > 0)
 		{
 			if(spawn_timer.ReadTime() > 2)
 			{
-				TheTransform rand_spawner = spawners[(int)TheRandom.RandomRange(0, spawners.Count - 1)];
-
 				TheGameObject spawned_ship = TheResources.LoadPrefab(ship_prefab_name);
 
-				if(spawned_ship != null && rand_spawner != null)
+				if(spawned_ship != null)
 				{
 					TheTransform spawned_ship_trans = spawned_ship.GetComponent<TheTransform>();
 
-					spawned_ship_trans.GlobalPosition = rand_spawner.GlobalPosition;
-
-					TheConsole.Log("Enemy ship spawned!");
+					spawned_ship_trans.GlobalPosition = GetRandomSpawnPoint();
+			
+					TheVector3 spawned_pos = spawned_ship_trans.GlobalPosition;
+					TheConsole.Log("Enemy ship spawned! x:" + spawned_pos.x + " y: " + spawned_pos.y + " z:" + spawned_pos.z);
 
 					if(game_manager_script != null)
 					{
@@ -113,5 +131,33 @@ public class TrainingModeManager
 				ships_remaining_to_spawn--;
 			}
 		}
+	}
+
+	TheVector3 GetRandomSpawnPoint()
+	{
+		TheVector3 ret = new TheVector3(0, 0, 0);					
+		
+		float x_add = TheRandom.RandomRange(min_spawn_rad, max_spawn_rad);
+		float y_add = TheRandom.RandomRange(min_spawn_rad, max_spawn_rad);
+		float z_add = TheRandom.RandomRange(min_spawn_rad, max_spawn_rad);
+
+		if((int)TheRandom.RandomRange(1, 3) > 2)
+			x_add = -x_add;
+
+		if((int)TheRandom.RandomRange(1, 3) > 2)
+			y_add = -y_add;
+
+		if((int)TheRandom.RandomRange(1, 3) > 2)
+			z_add = -z_add;
+		
+			
+		if(scene_center != null)
+			ret = scene_center.GlobalPosition;			
+			
+		ret.x += x_add;
+		ret.y += y_add;
+		ret.z += z_add;
+
+		return ret;
 	}
 }

@@ -120,7 +120,7 @@ public class GameManager
 		*/
 	}
 
-	bool GetIsTrainingMoode()
+	bool GetIsTrainingMode()
 	{
 		return is_training_mode;
 	}
