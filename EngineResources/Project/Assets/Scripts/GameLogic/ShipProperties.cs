@@ -23,7 +23,7 @@ public class ShipProperties
 	private TheFactory factory = null;
 	private TheScript movement_script = null;
 	private TheTransform self_transform = null;
-	private TheAudioSource audio_source;
+	private TheAudioSource audio_source = null;
 
 	bool one_shoot = true;
 		
@@ -40,6 +40,10 @@ public class ShipProperties
 
 		movement_script = TheGameObject.Self.GetScript("GuillemMovement");
 
+		factory = TheGameObject.Self.GetComponent<TheFactory>();
+
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+
 		// Add ship to game manager
 		if(is_slave1)
 		{
@@ -55,8 +59,6 @@ public class ShipProperties
 
 	void Start()
 	{
-		factory = TheGameObject.Self.GetComponent<TheFactory>();
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 		if(factory != null)
 			factory.StartFactory();		
 	}
@@ -79,6 +81,7 @@ public class ShipProperties
 		CheckDeath();
 	}
 
+	// Returns if the ship is the slave1
 	bool IsSlave1()
 	{
 		return is_slave1;
@@ -93,7 +96,7 @@ public class ShipProperties
 			
 			if(laser != null)
 			{
-				if(audio_source!=null)
+				if(audio_source != null)
 					audio_source.Play("Play_Shoot");
 				
 				TheScript laser_script = laser.GetScript("Laser");
@@ -153,6 +156,7 @@ public class ShipProperties
 		return ship_faction;
 	}
 	
+	// Sets life of the ship
 	void SetLife(int set)
 	{
 		life = set;
@@ -193,7 +197,8 @@ public class ShipProperties
 			
 		}
 	}
-
+	
+	// Checks if ship is dead, and tell the game manager, then destroy it
 	void CheckDeath()
 	{
 		if(IsDead() && game_manager_script != null && !dead)
@@ -212,12 +217,13 @@ public class ShipProperties
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				
-				
 				TheGameObject.Destroy(TheGameObject.Self);					
 			}
 		}
 	}
 
+	// Function called by the game manager when a ship of the scene is killed
+	// We check if the destroyed ship is our target, and if it is, we change target
 	void OnShipDestroyedCallback(TheGameObject ship)
 	{
 		if(movement_script != null)

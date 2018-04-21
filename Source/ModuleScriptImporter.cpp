@@ -4260,6 +4260,7 @@ void NSScriptImporter::DestroyGameObject(MonoObject * object)
 			DestroyGameObject(*it);
 		}
 
+		go->SetActive(false);
 		go->Destroy();
 	}
 }

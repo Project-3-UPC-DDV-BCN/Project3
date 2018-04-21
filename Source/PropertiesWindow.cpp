@@ -2561,7 +2561,8 @@ void PropertiesWindow::DrawAudioSource(ComponentAudioSource * audio_source)
 	{
 		if (ImGui::Button("Delete Component"))
 		{
-			audio_source->GetGameObject()->DestroyComponent(audio_source);
+			components_to_destroy.insert(std::pair<GameObject*, Component*>(audio_source->GetGameObject(), audio_source));
+			return;
 		}
 
 		SoundBankResource* sbk = audio_source->soundbank;

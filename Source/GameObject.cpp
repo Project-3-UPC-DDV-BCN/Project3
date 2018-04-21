@@ -624,10 +624,14 @@ void GameObject::UpdateScripts()
 {
 	BROFILER_CATEGORY("GameObjecct Update Scripts", Profiler::Color::IndianRed);
 	ComponentScript* comp_script = nullptr;
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
-		if ((*it)->GetType() == Component::CompScript) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) 
+	{
+		if ((*it)->GetType() == Component::CompScript) 
+		{
 			comp_script = (ComponentScript*)*it;
-			comp_script->UpdateScript();
+
+			if(IsActive())
+				comp_script->UpdateScript();
 		}
 	}
 }

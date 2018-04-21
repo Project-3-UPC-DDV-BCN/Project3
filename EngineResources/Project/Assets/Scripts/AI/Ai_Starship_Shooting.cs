@@ -3,8 +3,6 @@ using TheEngine.TheConsole;
 
 public class Ai_Starship_Shooting 
 {
-	TheAudioSource audio_source = null;
-
 	public float time_between_lasers = 0.100f;
 	public float shooting_range = 500f;
     public float shooting_angle = 60f;
@@ -36,8 +34,6 @@ public class Ai_Starship_Shooting
 
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
 
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
-
 	}
 	
 	void Start () 
@@ -58,7 +54,7 @@ public class Ai_Starship_Shooting
 
 	void CheckForShooting()
 	{
-		if(slave1_transform != null)
+		if(slave1_transform != null && transform != null)
 		{
 			float mag_distance = TheVector3.Distance(slave1_transform.GlobalPosition, transform.GlobalPosition);
 
@@ -72,7 +68,7 @@ public class Ai_Starship_Shooting
 			}
 		}
 	
-		if(target_transform != null) 
+		if(target_transform != null && transform != null) 
 		{	
 			TheVector3 tOffset = target_transform.GlobalPosition - transform.GlobalPosition;
 
@@ -90,12 +86,6 @@ public class Ai_Starship_Shooting
 
 					timer.Start();
 				}
-
-				if(in_range) 
-				{
-					audio_source.Stop("Play_Shoot");
-					audio_source.Play("Play_Shoot");
-				}
 			}
 		}
 	}
@@ -111,5 +101,6 @@ public class Ai_Starship_Shooting
 	{
 		target_transform = null;
 		shooting = false;
+		transform = null;
 	}
 }

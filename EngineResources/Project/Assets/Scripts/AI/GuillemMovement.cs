@@ -27,8 +27,10 @@ public class GuillemMovement
 
     TheTimer timer = new TheTimer();
     float random_time = 0;
+
 	//Audio
-	TheAudioSource audio_source;
+	TheAudioSource audio_source = null;
+
 	// Scripts ---
 	TheScript ShipProperties = null;
 	TheScript GameManager = null;
@@ -44,14 +46,15 @@ public class GuillemMovement
 			GameManager = GM.GetScript("GameManager");
 
 		shooting_script = TheGameObject.Self.GetScript("Ai_Starship_Shooting");
+
+	    self_transform = TheGameObject.Self.GetComponent<TheTransform>();
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
 
     void Start()
     {
         RandomizeStats();
 
-        self_transform = TheGameObject.Self.GetComponent<TheTransform>();
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
         if (center_object != null)
             center_transform = center_object.GetComponent<TheTransform>();
         else
@@ -76,6 +79,9 @@ public class GuillemMovement
 
     void Update()
     {
+		if(audio_source != null)
+			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);
+
         // Change target after x seconds
         if (timer.ReadTime() > random_time && !forced)
         {
@@ -83,9 +89,9 @@ public class GuillemMovement
             timer.Start();
             RandomizeStats();
         }
-		audio_source.SetMyRTPCvalue("Speed",modified_move_speed);//Change it here also 
+
         // Avoid leaving x point on the map 
-        if (center_transform != null)
+        if (center_transform != null && self_transform != null)
         {
 			TheVector3 center_trans_pos = center_transform.GlobalPosition;
 			TheVector3 self_trans_pos = self_transform.GlobalPosition;
