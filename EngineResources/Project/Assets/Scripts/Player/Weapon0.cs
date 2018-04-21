@@ -15,7 +15,6 @@ public class Weapon0 {
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
 				TheFactory laser_factory, TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
-		TheConsole.Log("SS");
 		if (weapons_bar == null)
 			TheConsole.Log("weapons_bar == null");
 		if (curr_overheat_inc == null)
