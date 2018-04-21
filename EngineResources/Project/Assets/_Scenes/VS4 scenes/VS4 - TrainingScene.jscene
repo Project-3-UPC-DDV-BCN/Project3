@@ -2,7 +2,7 @@
     "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "14",
     "GameObject_0": {
-        "UUID": "1107987495",
+        "UUID": "47567253",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1584789155",
+        "UUID": "259937439",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -115,13 +115,13 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1190944689",
+        "UUID": "259747350",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "4",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -157,7 +157,7 @@
                     "float_fields_count": "1",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "6",
+                    "gameobject_fields_count": "5",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -190,22 +190,18 @@
                             "field_value": "0"
                         },
                         "field_1": {
-                            "field_name": "background_music",
-                            "field_value": "0"
-                        },
-                        "field_2": {
                             "field_name": "empire_spawn",
                             "field_value": "0"
                         },
-                        "field_3": {
+                        "field_2": {
                             "field_name": "gametime_go",
-                            "field_value": "1512381627"
+                            "field_value": "265109655"
+                        },
+                        "field_3": {
+                            "field_name": "score_go",
+                            "field_value": "1724828437"
                         },
                         "field_4": {
-                            "field_name": "score_go",
-                            "field_value": "250557310"
-                        },
-                        "field_5": {
                             "field_name": "slave1_audio",
                             "field_value": "0"
                         }
@@ -221,6 +217,40 @@
                 "UUID": "264021208",
                 "Sound_ID": "109",
                 "SoundBank_Name": "Music.bnk"
+            },
+            "Component_3": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1968109089",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/TrainingModeManager.dll",
+                    "assets_path": "",
+                    "script_name": "TrainingModeManager",
+                    "UUID": "1528788434",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "ship_prefab",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -228,7 +258,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "416582199",
+        "UUID": "2057946610",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -245,8 +275,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000"
+                    "value_X": "1051.000000",
+                    "value_Y": "370.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -300,7 +330,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1102623844",
+        "UUID": "486974264",
         "Name": "ShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -631,7 +661,7 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1824197462",
+        "UUID": "1310898755",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -962,7 +992,7 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "268618322",
+        "UUID": "174708002",
         "Name": "AiAnchor",
         "Tag": "AI_ANCHOR",
         "Layer": "Default",
@@ -996,7 +1026,7 @@
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "1188597886",
+        "UUID": "2145914281",
         "Name": "ShipPrototype(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1327,7 +1357,7 @@
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "238567708",
+        "UUID": "260835711",
         "Name": "ShipPrototype(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1658,7 +1688,7 @@
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "683872770",
+        "UUID": "521316499",
         "Name": "ShipPrototype(6)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1989,7 +2019,7 @@
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "46182533",
+        "UUID": "2102342579",
         "Name": "GameTimeBackground",
         "Tag": "Default",
         "Layer": "Default",
@@ -2023,8 +2053,8 @@
                 "Active": "1",
                 "UUID": "1309076046",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_X": "442.364258",
+                    "value_Y": "142.303131",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2056,12 +2086,12 @@
                 "anim_textures_count": "1"
             }
         },
-        "ParentID": "416582199",
+        "ParentID": "2057946610",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_11": {
-        "UUID": "491110434",
+        "UUID": "1149763980",
         "Name": "ScoreTimeBackground",
         "Tag": "Default",
         "Layer": "Default",
@@ -2095,8 +2125,8 @@
                 "Active": "1",
                 "UUID": "625534038",
                 "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_X": "323.716217",
+                    "value_Y": "142.303131",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2128,12 +2158,12 @@
                 "anim_textures_count": "1"
             }
         },
-        "ParentID": "416582199",
+        "ParentID": "2057946610",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_12": {
-        "UUID": "1512381627",
+        "UUID": "265109655",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -2168,7 +2198,7 @@
                 "UUID": "2145012880",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_Y": "3.900195",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2203,12 +2233,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "46182533",
+        "ParentID": "2102342579",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_13": {
-        "UUID": "250557310",
+        "UUID": "1724828437",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -2243,7 +2273,7 @@
                 "UUID": "1713982509",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_Y": "3.900195",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2278,7 +2308,7 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "491110434",
+        "ParentID": "1149763980",
         "IsRoot": "0",
         "IsStatic": "0"
     }

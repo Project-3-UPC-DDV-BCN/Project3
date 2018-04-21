@@ -99,6 +99,8 @@ public class MainMenuVS2
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 		if(menu_audio_source != null)
 			menu_audio_source.Play("Play_Menu_song");
+
+		TheData.AddInt("is_training_mode", 0);
 	}
 	
 	void Update ()
@@ -130,6 +132,8 @@ public class MainMenuVS2
 		{
 			if(training_rect.OnClickUp)
 			{	
+				TheData.AddInt("is_training_mode", 1);
+			
 				if(menu_audio_source != null)	
 					menu_audio_source.Stop("Play_Menu_song");
 

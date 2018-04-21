@@ -41,6 +41,8 @@ public class GameManager
 	string alliance_name = "alliance";
 	string empire_name = "empire";
 
+	bool is_training_mode = false;
+
 	void Init ()
 	{
 		team = TheData.GetString("faction");
@@ -48,7 +50,12 @@ public class GameManager
 		if(team == "no_str")
 			team = "alliance";
 
-        TheConsole.Log(team); 
+		is_training_mode = System.Convert.ToBoolean(TheData.GetInt("is_training_mode"));
+
+        TheConsole.Log("Team: " + team); 
+
+		if(is_training_mode)
+			TheConsole.Log("Training mode enabled!"); 
 	}
 
 	void Start ()
@@ -113,6 +120,11 @@ public class GameManager
 		*/
 	}
 
+	bool GetIsTrainingMoode()
+	{
+		return is_training_mode;
+	}
+
 	void Win()
 	{
 		TheConsole.Log("You win!");
@@ -156,6 +168,56 @@ public class GameManager
 				}
 			}
 		}
+	}
+
+	void AddSlaveEnemiesShip(TheGameObject go)
+	{
+		string faction = team;
+
+		if(team == alliance_name)
+		{
+			AddEmpireShip(go);
+		}
+		else if(team == empire_name)
+		{
+			AddAllianceShip(go);
+		}
+	}
+
+	List<TheGameObject> GetSlaveEnemies()
+	{
+		List<TheGameObject> ret = new List<TheGameObject>();
+		
+		string faction = team;
+
+		if(team == alliance_name)
+		{
+			ret = empire_ships;
+		}
+		else if(team == empire_name)
+		{
+			ret = alliance_ships;
+		}
+			
+		return ret;
+	}
+
+	int GetSlaveEnemiesCount()
+	{
+		int ret = 0;
+
+		string faction = team;
+
+		if(team == alliance_name)
+		{
+			ret = empire_ships.Count;
+		}
+		else if(team == empire_name)
+		{
+			ret = alliance_ships.Count;
+		}
+
+		return ret;
 	}
 
 	void AddAllianceShip(TheGameObject add)
@@ -250,32 +312,6 @@ public class GameManager
 	TheGameObject GetSlave1()
 	{
 		return slave1;
-	}
-
-	List<TheGameObject> GetSlaveEnemies()
-	{
-		List<TheGameObject> ret = new List<TheGameObject>();
-		
-		if(slave1 != null)
-		{
-			TheScript slave_script = slave1.GetScript("ShipProperties");
-
-			if(slave_script != null)
-			{
-				string faction = (string)slave_script.CallFunctionArgs("GetFaction");
-
-				if(faction == alliance_name)
-				{
-					ret = empire_ships;
-				}
-				else if(faction == empire_name)
-				{
-					ret = alliance_ships;
-				}
-			}
-		}
-
-		return ret;
 	}
 	
 	int AllianceShipsCount()

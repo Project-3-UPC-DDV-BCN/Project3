@@ -23,9 +23,9 @@ void ComponentParticleEmmiter::GenerateParticles()
 	if (system_state == PARTICLE_STATE_PAUSE)
 		return;
 
-	CONSOLE_LOG("Timer: %d", spawn_timer.Read()); 
-	CONSOLE_LOG("DT: %f", App->GetDt()*1000);
-	CONSOLE_LOG("Freq: %f", emmision_frequency);
+	//CONSOLE_LOG("Timer: %d", spawn_timer.Read()); 
+	//CONSOLE_LOG("DT: %f", App->GetDt()*1000);
+	//CONSOLE_LOG("Freq: %f", emmision_frequency);
 
 	if (App->GetDt()*1000 > emmision_frequency)
 	{
@@ -39,7 +39,7 @@ void ComponentParticleEmmiter::GenerateParticles()
 
 	}
 
-	CONSOLE_LOG("particles: %d", particles_this_frame);
+	//CONSOLE_LOG("particles: %d", particles_this_frame);
 
 	if (spawn_timer.Read() > emmision_frequency)
 	{
@@ -289,7 +289,7 @@ void ComponentParticleEmmiter::AddaptEmmitAreaAABB()
 		float3 attached_pos = GetGameObject()->GetGlobalTransfomMatrix().TranslatePart();
 		float3x3 attached_rot = GetGameObject()->GetGlobalTransfomMatrix().RotatePart(); 
 
-		CONSOLE_LOG("%f, %f, %f", attached_pos.x, attached_pos.y, attached_pos.z);
+		//CONSOLE_LOG("%f, %f, %f", attached_pos.x, attached_pos.y, attached_pos.z);
 
 		float3 pos_increment = attached_pos - emmit_area.CenterPoint();
 
@@ -453,8 +453,6 @@ Particle * ComponentParticleEmmiter::GetRootParticle() const
 {
 	return nullptr;
 }
-
-
 
 void ComponentParticleEmmiter::CreateShockWave(Texture* texture, float duration, float final_scale)
 {
