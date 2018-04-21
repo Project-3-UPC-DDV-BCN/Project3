@@ -9,7 +9,7 @@ public class Weapon0 {
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
 				TheFactory laser_factory, TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
-		TheConsole.Log("Entered Shoot");
+		TheConsole.Log("Entered Shoot 1");
 		
 		TheVector3 offset;
 			
@@ -31,8 +31,6 @@ public class Weapon0 {
 		//Calculate the rotation
 		TheVector3 ship_rot = laser_spawner.GetComponent<TheTransform>().GlobalRotation;
 
-		//TheConsole.Log("ship_rot" + ship_rot);
-		
 		TheGameObject go = laser_factory.Spawn();
 
 		//Set laser team parent 
@@ -50,7 +48,10 @@ public class Weapon0 {
 		}
 		
 		if(audio_source != null)
+		{	
+			audio_source.Stop("Play_shot");
 			audio_source.Play("Play_shot");
+		}
 	}
 
 	public void EditLightComp(TheLight laser_light_comp, float light_duration, bool light_on)

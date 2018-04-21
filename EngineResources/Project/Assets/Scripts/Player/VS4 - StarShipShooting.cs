@@ -57,7 +57,7 @@ public class StarShipShooting {
     public float w1_cooling_rate = 10.0f;
     public float w2_cooling_rate = 10.0f;
     
-	TheScript weapon_script = null;
+	private TheScript weapon_script = null;
 	
     void Start () 
 	{
@@ -97,7 +97,7 @@ public class StarShipShooting {
 		if(laser_light != null)
 			laser_light_comp = laser_light.GetComponent<TheLight>();
 		
-		weapon_script = TheGameObject.Self.GetScript("VS4-Weapon0");
+		weapon_script = TheGameObject.Self.GetScript("Weapon0");
     }	
 
 	void Update () 
@@ -114,12 +114,16 @@ public class StarShipShooting {
 					if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 					{
 						if (weapons_bar == null && laser_factory == null && laser_spawner == null)
-						break;
-						
+						{	
+							break;
+						}
 						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};
 						
 						if (weapon_script != null)
+						{
+							TheConsole.Log("Entered Shoot 0");
 							weapon_script.CallFunctionArgs("Shoot", args_shoot);		
+						}
 						
 						timer = spawn_time;																
 						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
@@ -256,10 +260,10 @@ public class StarShipShooting {
 		switch (weapon) 
 		{
 			case 0:
-				weapon_script = TheGameObject.Self.GetScript("VS4-Weapon0");
+				weapon_script = TheGameObject.Self.GetScript("Weapon0");
 				break;
 			case 1:
-				weapon_script = TheGameObject.Self.GetScript("VS4-Weapon1");
+				weapon_script = TheGameObject.Self.GetScript("Weapon1");
 				break;
 		}
 	}
