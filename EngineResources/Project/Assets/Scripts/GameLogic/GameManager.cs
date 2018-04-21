@@ -28,7 +28,6 @@ public class GameManager
 	public int calm_volume = 35;
 	public int combat_volume = 20;
 
-	public TheGameObject background_music;
 	TheAudioSource audio_source = null;
 	
 	public TheGameObject slave1_audio;
@@ -75,15 +74,15 @@ public class GameManager
 		if(score_text != null)
 			score_text.Text = score.ToString();
 
-		if(background_music != null)
-			audio_source = background_music.GetComponent<TheAudioSource>();
+		
+			audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
 		if(slave1_audio != null)
 			slave1_audiosource = slave1_audio.GetComponent<TheAudioSource>();
 		
 		if(audio_source != null)
 		{
-			audio_source.Play("Play_Calm_song");
+			audio_source.Play("Play_Music");
 			audio_source.SetVolume(calm_volume);
 		}
 			
@@ -328,13 +327,13 @@ public class GameManager
 
 	void UpdateAudio()
 	{
+	
 		if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") >= 20000 && !calm_combat)
 		{
 			if(audio_source != null)
 			{
 				audio_source.SetVolume(combat_volume);
-				audio_source.Stop("Play_Calm_song");
-				audio_source.Play("Play_Combat_song");
+				audio_source.SetState("Level","Combat");
 			}
 			calm_combat = true;
 		}
@@ -348,8 +347,7 @@ public class GameManager
 				if(audio_source != null)
 				{
 					audio_source.SetVolume(calm_volume);
-					audio_source.Stop("Play_Combat_song");
-					audio_source.Play("Play_Calm_song");
+					audio_source.SetState("Level","Calm");
 				}
 
 				background_music_timer = music_timer;

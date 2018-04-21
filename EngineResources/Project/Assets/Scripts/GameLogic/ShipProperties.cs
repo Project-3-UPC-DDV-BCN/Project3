@@ -23,7 +23,8 @@ public class ShipProperties
 	private TheFactory factory = null;
 	private TheScript movement_script = null;
 	private TheTransform self_transform = null;
-	private TheAudioSource audio_source;
+	private TheAudioSource audio_source = null;
+	private TheScript player_movement_script = null;
 
 	bool one_shoot = true;
 		
@@ -40,6 +41,10 @@ public class ShipProperties
 
 		movement_script = TheGameObject.Self.GetScript("GuillemMovement");
 
+		factory = TheGameObject.Self.GetComponent<TheFactory>();
+
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+
 		// Add ship to game manager
 		if(is_slave1)
 		{
@@ -47,6 +52,8 @@ public class ShipProperties
 			{
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("AddSlave1", args);
+
+				player_movement_script = TheGameObject.Self.GetScript("PlayerMovement");
 			}
 		}
 		else
@@ -55,8 +62,6 @@ public class ShipProperties
 
 	void Start()
 	{
-		factory = TheGameObject.Self.GetComponent<TheFactory>();
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 		if(factory != null)
 			factory.StartFactory();		
 	}
@@ -79,6 +84,7 @@ public class ShipProperties
 		CheckDeath();
 	}
 
+	// Returns if the ship is the slave1
 	bool IsSlave1()
 	{
 		return is_slave1;
@@ -93,7 +99,7 @@ public class ShipProperties
 			
 			if(laser != null)
 			{
-				if(audio_source!=null)
+				if(audio_source != null)
 					audio_source.Play("Play_Shoot");
 				
 				TheScript laser_script = laser.GetScript("Laser");
@@ -153,6 +159,7 @@ public class ShipProperties
 		return ship_faction;
 	}
 	
+	// Sets life of the ship
 	void SetLife(int set)
 	{
 		life = set;
@@ -164,13 +171,24 @@ public class ShipProperties
 	// Deals damage to the ship
 	void DealDamage(int dmg)
 	{
-		if(dmg < 0)
-			dmg = 0;
+		if(!is_slave1)
+		{
+			if(dmg < 0)
+				dmg = 0;
 
-		life -= dmg;
+			life -= dmg;
 
-		if(life < 0)
-			life = 0;
+			if(life < 0)
+				life = 0;
+		}
+		else
+		{
+			if(player_movement_script != null)
+			{
+				object[] args = {(float)dmg};
+				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);
+			}
+		}
 	}
 	
 	// Can be used to set ship faction dinamically
@@ -193,7 +211,8 @@ public class ShipProperties
 			
 		}
 	}
-
+	
+	// Checks if ship is dead, and tell the game manager, then destroy it
 	void CheckDeath()
 	{
 		if(IsDead() && game_manager_script != null && !dead)
@@ -209,15 +228,32 @@ public class ShipProperties
 			}
 			else
 			{
+				if(audio_source != null)
+					audio_source.Play("Play_Enemy_Explosions");
+
+				TheGameObject particle = TheResources.LoadPrefab("ParticleExplosion");
+				
+				// Particles when destroying ship
+				if(particle != null)
+				{
+					TheTransform particle_trans = particle.GetComponent<TheTransform>();
+					if(particle_trans != null && self_transform != null)
+					{
+						TheConsole.Log("Explosion particle created!");
+						particle_trans.GlobalPosition = self_transform.GlobalPosition;
+					}
+				}
+
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
-				
 				
 				TheGameObject.Destroy(TheGameObject.Self);					
 			}
 		}
 	}
 
+	// Function called by the game manager when a ship of the scene is killed
+	// We check if the destroyed ship is our target, and if it is, we change target
 	void OnShipDestroyedCallback(TheGameObject ship)
 	{
 		if(movement_script != null)
