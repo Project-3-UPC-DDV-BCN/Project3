@@ -121,7 +121,7 @@ public class StarShipShooting {
 						weapon_script.CallFunctionArgs("Shoot", args_shoot);		
 																	
 						// EDIT LIGHT COMPONENT
-						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
+						weapon_script.EditLightComp(laser_light_comp);						
 						
 						// OVERHEAT
 						object[] args_heat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};

@@ -73,12 +73,12 @@ public class Weapon0 {
 		}
 	}
 
-	public void EditLightComp(TheLight laser_light_comp, float light_duration, bool light_on)
+	public void EditLightComp(TheLight laser_light_comp)
 	{
 		if (laser_light_comp != null){
 			laser_light_comp.SetComponentActive(true);
-			light_duration = 0.2f;
-			light_on = true;
+			starship_shooting.SetFloatField("light_duration", 0.2f);
+			starship_shooting.SetBoolField("light_on", true);
 		}
 	}
 	
