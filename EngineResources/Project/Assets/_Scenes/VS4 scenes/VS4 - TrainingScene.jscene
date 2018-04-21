@@ -2,7 +2,7 @@
     "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "12",
     "GameObject_0": {
-        "UUID": "1093070296",
+        "UUID": "2086779300",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,13 +53,13 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "269079077",
+        "UUID": "2097958456",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "2",
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -102,6 +102,12 @@
                 "far_plane": "50000000.000000",
                 "near_plane": "0.300000",
                 "fov": "89.613007"
+            },
+            "Component_2": {
+                "Type": "21",
+                "Active": "1",
+                "UUID": "781299495",
+                "Object_ID": "0"
             }
         },
         "ParentID": "0",
@@ -109,7 +115,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1054567036",
+        "UUID": "865414471",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -193,11 +199,11 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "1379741214"
+                            "field_value": "492215088"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "2019529584"
+                            "field_value": "1110086469"
                         },
                         "field_5": {
                             "field_name": "slave1_audio",
@@ -215,7 +221,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1840689720",
+        "UUID": "1219685259",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -232,7 +238,7 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "371.000000",
+                    "value_X": "517.000000",
                     "value_Y": "370.000000"
                 },
                 "anchor": {
@@ -287,13 +293,13 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1719845042",
+        "UUID": "2056530812",
         "Name": "ShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "8",
+            "Components_Count": "9",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -561,6 +567,13 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_8": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "765746870",
+                "Sound_ID": "104",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
         "ParentID": "0",
@@ -568,13 +581,13 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "85963303",
+        "UUID": "701949468",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "6",
+            "Components_Count": "9",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -749,6 +762,106 @@
                         "value_Z": "10.197910"
                     }
                 }
+            },
+            "Component_6": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "1238846532",
+                "Sound_ID": "105",
+                "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_7": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "348689911",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/GuillemMovement.dll",
+                    "assets_path": "",
+                    "script_name": "GuillemMovement",
+                    "UUID": "985148043",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "4",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "desertor_distance",
+                            "field_value": "10000.000000"
+                        },
+                        "field_1": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "2000.000000"
+                        },
+                        "field_2": {
+                            "field_name": "move_speed",
+                            "field_value": "300.000000"
+                        },
+                        "field_3": {
+                            "field_name": "rotation_speed",
+                            "field_value": "60.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "force_target",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_8": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "659183817",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/Ai_Starship_Shooting.dll",
+                    "assets_path": "",
+                    "script_name": "Ai_Starship_Shooting",
+                    "UUID": "1310986967",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "3",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "shooting_angle",
+                            "field_value": "60.000000"
+                        },
+                        "field_1": {
+                            "field_name": "shooting_range",
+                            "field_value": "500.000000"
+                        },
+                        "field_2": {
+                            "field_name": "time_between_lasers",
+                            "field_value": "0.100000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -756,7 +869,7 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1961677621",
+        "UUID": "138556849",
         "Name": "AiAnchor",
         "Tag": "AI_ANCHOR",
         "Layer": "Default",
@@ -790,13 +903,13 @@
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "440153382",
+        "UUID": "2117325552",
         "Name": "ShipPrototype(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "8",
+            "Components_Count": "9",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1064,6 +1177,13 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_8": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "2021148360",
+                "Sound_ID": "106",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
         "ParentID": "0",
@@ -1071,13 +1191,13 @@
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1474449179",
+        "UUID": "602274771",
         "Name": "ShipPrototype(5)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "8",
+            "Components_Count": "9",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1345,6 +1465,13 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_8": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "504001885",
+                "Sound_ID": "107",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
         "ParentID": "0",
@@ -1352,13 +1479,13 @@
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "760480912",
+        "UUID": "1353624116",
         "Name": "ShipPrototype(6)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "8",
+            "Components_Count": "9",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1626,6 +1753,13 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_8": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "1379927252",
+                "Sound_ID": "108",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
         "ParentID": "0",
@@ -1633,7 +1767,7 @@
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "1379741214",
+        "UUID": "492215088",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -1650,8 +1784,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "110.846519",
-                    "value_Y": "66.507912"
+                    "value_X": "110.846489",
+                    "value_Y": "66.507896"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -1667,8 +1801,8 @@
                 "Active": "1",
                 "UUID": "2145012880",
                 "position": {
-                    "value_X": "112.749214",
-                    "value_Y": "168.044144",
+                    "value_X": "157.119507",
+                    "value_Y": "161.371490",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1703,12 +1837,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1840689720",
+        "ParentID": "1219685259",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_11": {
-        "UUID": "2019529584",
+        "UUID": "1110086469",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -1725,8 +1859,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "94.219559",
-                    "value_Y": "66.507927"
+                    "value_X": "94.219536",
+                    "value_Y": "66.507912"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -1742,8 +1876,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "156.443161",
-                    "value_Y": "168.044144",
+                    "value_X": "218.008392",
+                    "value_Y": "161.371490",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1778,7 +1912,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1840689720",
+        "ParentID": "1219685259",
         "IsRoot": "0",
         "IsStatic": "0"
     }

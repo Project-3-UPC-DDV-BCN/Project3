@@ -27,7 +27,8 @@ public class GuillemMovement
 
     TheTimer timer = new TheTimer();
     float random_time = 0;
-	
+	//Audio
+	TheAudioSource audio_source;
 	// Scripts ---
 	TheScript ShipProperties = null;
 	TheScript GameManager = null;
@@ -50,7 +51,7 @@ public class GuillemMovement
         RandomizeStats();
 
         self_transform = TheGameObject.Self.GetComponent<TheTransform>();
-
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
         if (center_object != null)
             center_transform = center_object.GetComponent<TheTransform>();
         else
@@ -69,7 +70,8 @@ public class GuillemMovement
         timer.Start();
         random_time = TheRandom.RandomRange(20, 30);
 		LookForTarget();
-
+		audio_source.Play("Play_Enemy_Engine");
+		audio_source.SetMyRTPCvalue("Speed",modified_move_speed);// is this the current speed of the ship? Change it if not pls
     }
 
     void Update()
@@ -81,7 +83,7 @@ public class GuillemMovement
             timer.Start();
             RandomizeStats();
         }
-
+		audio_source.SetMyRTPCvalue("Speed",modified_move_speed);//Change it here also 
         // Avoid leaving x point on the map 
         if (center_transform != null)
         {
