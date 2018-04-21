@@ -22,8 +22,6 @@ public class Weapon1 {
 			TheConsole.Log("curr_overheat_inc == null");
 		if (overheat_increment == null)
 			TheConsole.Log("overheat_increment == null");
-		if (used_left_laser == null)
-			TheConsole.Log("used_left_laser == null");
 		if (laser_factory == null)
 			TheConsole.Log("laser_factory == null");
 		if (laser_spawner == null)
@@ -34,8 +32,6 @@ public class Weapon1 {
 		TheVector3 offset = new TheVector3(0, 2, 0);
 
 		starship_shooting.SetFloatField("curr_overheat_inc", overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f));
-
-		starship_shooting.SetBoolField("used_left_laser", !used_left_laser);
 
 		laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition);// + offset
 
