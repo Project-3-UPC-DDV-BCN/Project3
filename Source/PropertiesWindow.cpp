@@ -1995,6 +1995,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 		{
 			ImGui::Separator();
 
+			ImGui::Text("CURRENT TEMPLATE: "); ImGui::SameLine(); 
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", current_emmiter->data->GetName().c_str());
+
 			if (ImGui::TreeNode("Templates"))
 			{
 				if (!App->resources->GetParticlesList().empty())
@@ -2114,15 +2117,18 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			ImGui::Separator();
 
-			static int runtime_behaviour_combo; 
-			ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0");
+			int runtime_behaviour_combo = current_emmiter->data->runtime_behaviour_;
 
-			if (runtime_behaviour_combo == 0)
-				current_emmiter->runtime_behaviour = "Auto"; 
+			if (ImGui::Combo("Runtime Behaviour", &runtime_behaviour_combo, "Always Emit\0Manual Mode (From Script)\0"))
 			
-			else if (runtime_behaviour_combo == 1)
-				current_emmiter->runtime_behaviour = "Manual";
+			if (runtime_behaviour_combo == 0)
+				current_emmiter->data->runtime_behaviour_ = runtime_behaviour::EMMIT_ALWAYS;
 
+			else if (runtime_behaviour_combo == 1)
+				current_emmiter->data->runtime_behaviour_ = runtime_behaviour::EMMIT_MANUAL;
+			
+	
+			
 			if (current_emmiter->data == nullptr)
 			{
 				CONSOLE_ERROR("PARTICLE EMITTER DATA IN PROPERTIES WINDOW IS NULLPTR");
@@ -2179,34 +2185,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Shock Wave"))
-			{
-				static Texture* st_particle_texture = nullptr;
-				ImGui::InputResourceTexture("Wave Texture", &st_particle_texture);
-
-				static float wave_duration; 
-				static float final_wave_scale; 
-
-				ImGui::SliderFloat("Duration", &wave_duration, 0.1f, 5.0f);
-				ImGui::SliderFloat("Final Scale", &final_wave_scale, 1.0f, 10.0f); 
-
-				if(ImGui::Button("Apply"))
-				{
-					current_emmiter->show_shockwave = true; 
-
-					current_emmiter->data->shock_wave.wave_texture = st_particle_texture; 
-					current_emmiter->data->shock_wave.duration = wave_duration; 
-					current_emmiter->data->shock_wave.final_scale = final_wave_scale;
-				}
-
-				ImGui::TreePop(); 
-			}
-
 			if (ImGui::TreeNode("Emit Area"))
 			{
-				//current_emmiter->show_width = current_emmiter->data->emmit_width;
-				//current_emmiter->show_height = current_emmiter->data->emmit_height;
-				//current_emmiter->show_depth = current_emmiter->data->emmit_depth;
 
 				static bool show = current_emmiter->ShowEmmisionArea();
 				ImGui::Checkbox("Show Emmiter Area", &show);

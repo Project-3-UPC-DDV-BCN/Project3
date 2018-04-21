@@ -22,6 +22,7 @@ void ParticleData::LoadDefaultData()
 	velocity = 5.0f;
 	billboard_type = BILLBOARD_NONE; 
 	emmision_type = EMMISION_CONTINUOUS; 
+	runtime_behaviour_ = EMMIT_ALWAYS; 
 	emmit_style = EMMIT_FROM_RANDOM;
 	billboarding = false;
 	gravity = { 0,0,0 };
@@ -78,6 +79,10 @@ void ParticleData::Save(Data & data) const
 		data.AddFloat("TimeStepSim", time_step_sim); 
 		data.AddInt("SimAmount", amount_to_emmit); 
 	}
+
+	//Runtime behaviour (MANUAL/AUTO)
+
+	data.AddInt("Runtime_Behaviour", (int)runtime_behaviour_);
 
 	// Emmit area -----
 
@@ -204,6 +209,7 @@ void ParticleData::Copy(ParticleData * other)
 	animation_system = other->animation_system;
 
 	emmision_type = other->emmision_type;
+	runtime_behaviour_ = other->runtime_behaviour_; 
 	emmit_style = other->emmit_style;
 	time_step_sim = other->time_step_sim; 
 	amount_to_emmit = other->amount_to_emmit; 
@@ -263,6 +269,8 @@ bool ParticleData::Load(Data & _data)
 			time_step_sim = _data.GetFloat("TimeStepSim");
 			amount_to_emmit = _data.GetInt("SimAmount");
 		}
+
+		runtime_behaviour_ = static_cast<runtime_behaviour>(_data.GetInt("Runtime_Behaviour")); 
 
 		string name = _data.GetString("Name");
 		SetName(name.c_str());

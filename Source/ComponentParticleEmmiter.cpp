@@ -164,7 +164,6 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	//Emmiter properties -------
 	emmision_frequency = 1000;
 	system_state = PARTICLE_STATE_PAUSE;
-	runtime_behaviour = "null"; 
 
 	show_shockwave = false; 
 	wave_launched = false; 
@@ -431,6 +430,16 @@ particle_system_state ComponentParticleEmmiter::GetSystemState() const
 void ComponentParticleEmmiter::SetSystemState(particle_system_state new_state)
 {
 	system_state = new_state;
+}
+
+int ComponentParticleEmmiter::GetDataBehaviour()
+{
+	if (data != nullptr)
+	{
+		return data->runtime_behaviour_; 
+	}
+
+	return -1; 
 }
 
 void Particle::ApplyRelativePos()

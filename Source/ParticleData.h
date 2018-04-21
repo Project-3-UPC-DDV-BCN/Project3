@@ -18,6 +18,12 @@ enum emmision_behaviour
 	EMMISION_SIMULTANEOUS,
 };
 
+enum runtime_behaviour
+{
+	EMMIT_ALWAYS,
+	EMMIT_MANUAL,
+};
+
 enum emmision_style
 {
 	EMMIT_FROM_CENTER,
@@ -156,6 +162,8 @@ public:
 	//Simultaneous shot 
 	emmision_behaviour emmision_type;
 	emmision_style emmit_style; 
+	runtime_behaviour runtime_behaviour_; 
+
 	float amount_to_emmit;
 	float time_step_sim;
 
