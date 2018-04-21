@@ -1,10 +1,8 @@
-using TheEngine;
-
+using TheEngine;	
 using TheEngine.TheConsole;
-using TheEngine.TheMath;
 
-
-public class StarShipShooting {
+public class VS4StarShipShooting 
+{
 
 	TheFactory laser_factory;
 	
@@ -146,6 +144,9 @@ public class StarShipShooting {
 			}
 			case 1:
 			{
+				if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
+					break;
+
 				if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 				{
 					if (!cooling)
@@ -188,16 +189,16 @@ public class StarShipShooting {
 			ChangeWeapon();
     }
 
-    void ChangeWeapon(){
-		audio_source.Play("Play_change_weapon");
+    void ChangeWeapon()
+	{
+		if(audio_source != null)
+			audio_source.Play("Play_change_weapon");
+
 		weapon++;
 		weapon %= num_weapons;
 
 		TheVector3 size = new TheVector3(1, 1, 1);
-		
-		if(laser_factory != null)
-			laser_factory.SetSpawnScale(size);
-		
+
 		if(crosshair_1 != null && crosshair_2 != null && crosshair_1.IsActive())
 		{
 			crosshair_1.SetActive(false);
