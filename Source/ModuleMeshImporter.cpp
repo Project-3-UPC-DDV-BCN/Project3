@@ -77,7 +77,7 @@ std::string ModuleMeshImporter::ImportMesh(std::string path)
 			App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 
 		std::list<GameObject*> gos;
-
+		gos.push_back(LoadMeshNode(nullptr, root_node, *scene, path.c_str()));
 		App->scene->SavePrefab(gos, library_path, "jprefab", data);
 
 		App->resources->AddPrefab(prefab);
