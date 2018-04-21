@@ -214,6 +214,8 @@ public class ShipProperties
 			}
 			else
 			{
+				if(auciodio_source != null)
+					audio_source.Play("Play_Enemy_Explosions");
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				

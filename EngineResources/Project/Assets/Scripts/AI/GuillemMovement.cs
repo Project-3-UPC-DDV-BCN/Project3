@@ -73,6 +73,7 @@ public class GuillemMovement
         timer.Start();
         random_time = TheRandom.RandomRange(20, 30);
 		LookForTarget();
+		
 		audio_source.Play("Play_Enemy_Engine");
 		audio_source.SetMyRTPCvalue("Speed",modified_move_speed);// is this the current speed of the ship? Change it if not pls
     }
