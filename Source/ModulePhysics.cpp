@@ -560,7 +560,8 @@ void ModulePhysics::UpdateDynamicBody(physx::PxActor * actor)
 		ComponentTransform* parent_transform = (ComponentTransform*)go->GetParent()->GetComponent(Component::CompTransform);
 		position = position - parent_transform->GetGlobalPosition();
 	}
-	transform->SetPositionFromRB(position);
+	
+	//transform->SetPositionFromRB(position);
 
 	// This is causing gimball lock on the game object (idk why)
 	//transform->SetRotationFromRB(rot_quat);

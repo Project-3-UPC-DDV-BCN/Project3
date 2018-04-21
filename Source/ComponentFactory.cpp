@@ -136,10 +136,7 @@ void ComponentFactory::StartFactory()
 	BROFILER_CATEGORY("Component - Factory - StartFactory", Profiler::Color::Beige);
 
 	if (object_to_spawn != nullptr )
-	{
-		SetSpawnRotation(original_rotation);
-		SetSpawnScale(original_scale);
-		
+	{		
 		if (GetGameObject() != nullptr)
 		{
 			ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
@@ -200,7 +197,6 @@ void ComponentFactory::CheckLifeTimes()
 				it->first->SetActive(false);
 				transform->SetPosition(float3(0, 0, 0));
 				transform->SetRotation(float3(0, 0, 0));
-				transform->SetScale(original_scale);
 				spawn_objects_list.push_back(it->first);
 				it = spawned_objects.erase(it);
 			}
