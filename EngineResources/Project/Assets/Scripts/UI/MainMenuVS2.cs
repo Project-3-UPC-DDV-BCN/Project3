@@ -101,6 +101,7 @@ public class MainMenuVS2
 			menu_audio_source.Play("Play_Menu_song");
 
 		TheData.AddInt("is_training_mode", 0);
+		TheData.AddString("faction", "no_str");
 	}
 	
 	void Update ()
