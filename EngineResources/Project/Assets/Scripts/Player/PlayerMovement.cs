@@ -8,7 +8,7 @@ public class PlayerMovement {
 	
 	// Controller Settings
 	public int controller_sensibility = 2500;
-	public int triggger_sensibility = 0;
+	public int trigger_sensibility = 0;
 	public bool invert_axis = false;
 	public float rotate_rumble_strength = 0.05f;
 	public float accel_max_rumble_strength = 0.3f;
@@ -29,6 +29,7 @@ public class PlayerMovement {
 	public float slow_acceleration = 50.0f;
 	public float vertical_thrust = 20.0f;
 	///boost properties
+	private bool boosting = false;
 	public float boost_extra_vel = 25.0f;
 	public float boost_accel_multiplier = 1.5f;
 	public float boost_time = 1.5f;
@@ -59,6 +60,18 @@ public class PlayerMovement {
     private TheVector3 original_cam_pos;
     private TheVector3 cam_rot;
     private TheVector3 cam_pos;
+	//hp and shield
+	private float total_hp = 100.0f;
+	private float curr_total_hp;
+	private float body_hp;
+	private float wings_hp;
+	private float engine_hp;
+	public float shield_hp = 25.0f;
+	private float curr_shield_hp;
+	public float shield_regen = 10.0f;
+    public float shield_regen_time = 10.0f;
+    private float shield_regen_energy;
+    private float shield_regen_timer;
 	
 	
 	// Ship Information Timers
@@ -98,6 +111,8 @@ public class PlayerMovement {
     private int repair_part = 0;
     private int ship_parts = 3;
     private bool repair_mode = false;
+	public int rand_rotate_pos = 50;
+    public float repair_hp = 5.0f;
 	/// rings positions
 	private int ring_exterior_pos = 0;
     private int ring_center_pos = 0;
@@ -278,7 +293,7 @@ public class PlayerMovement {
 		curr_total_hp = wings_hp + body_hp + engine_hp;
 		if(ship_properties != null)
 		{
-			object[] args = {(int)curr_total_hp}
+			object[] args = {(int)curr_total_hp};
 			if(is_dead) args[0] = 0;
 			ship_properties.CallFunctionArgs("SetLife", args);
 		}
@@ -306,13 +321,14 @@ public class PlayerMovement {
             TheVector3 new_rot = trans.LocalRotation;
 			if(invert_axis)
 			{
+				new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
 				trans.SetIncrementalRotation(new_rot);
-				if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
+				if (cam_rot.x > -pitch_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
                     cam_rot.x -= camera_rot_step * delta_time;
-                    if (cam_rot.x < -max_camera_rot * move_percentage)
+                    if (cam_rot.x < -pitch_camera_rot * move_percentage)
                     {
-                        cam_rot.x = -max_camera_rot * move_percentage;
+                        cam_rot.x = -pitch_camera_rot * move_percentage;
                     }
                 }
 			}
@@ -320,11 +336,11 @@ public class PlayerMovement {
 			{
 				new_rot.x += pitch_rotate_speed * move_percentage * delta_time;
 				trans.SetIncrementalRotation(new_rot);
-				if (cam_rot.x < max_camera_rot * move_percentage && cam_rot.x >= 0.0f)
+				if (cam_rot.x < pitch_camera_rot * move_percentage && cam_rot.x >= 0.0f)
 				{
 						cam_rot.x += camera_rot_step * delta_time;
-						if (cam_rot.x > max_camera_rot * move_percentage)
-							cam_rot.x = max_camera_rot * move_percentage;
+						if (cam_rot.x > pitch_camera_rot * move_percentage)
+							cam_rot.x = pitch_camera_rot * move_percentage;
 				}
 			}
 		}
@@ -356,12 +372,12 @@ public class PlayerMovement {
             TheVector3 new_rot = trans.LocalRotation;
             new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.x > -max_camera_rot * move_percentage && cam_rot.x <= 0.0f)
+			if (cam_rot.x > -pitch_camera_rot * move_percentage && cam_rot.x <= 0.0f)
                 {
                     cam_rot.x -= camera_rot_step * delta_time;
-                    if (cam_rot.x < -max_camera_rot * move_percentage)
+                    if (cam_rot.x < -pitch_camera_rot * move_percentage)
                     {
-                        cam_rot.x = -max_camera_rot * move_percentage;
+                        cam_rot.x = -pitch_camera_rot * move_percentage;
                     }
                 }
         }
@@ -383,11 +399,11 @@ public class PlayerMovement {
             TheVector3 new_rot = trans.LocalRotation;
             new_rot.z += roll_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.z > -max_camera_rot && cam_rot.z <= 0.0f)
+			if (cam_rot.z > -roll_camera_rot && cam_rot.z <= 0.0f)
             {
                 cam_rot.z -= camera_rot_step * delta_time;
-                if (cam_rot.z < -max_camera_rot)
-                    cam_rot.z = -max_camera_rot;
+                if (cam_rot.z < -roll_camera_rot)
+                    cam_rot.z = -roll_camera_rot;
             }
 		}
         else
@@ -406,11 +422,11 @@ public class PlayerMovement {
             TheVector3 new_rot = trans.LocalRotation;
             new_rot.z -= roll_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.z < max_camera_rot && cam_rot.z >= 0.0f)
+			if (cam_rot.z < roll_camera_rot && cam_rot.z >= 0.0f)
             {
                 cam_rot.z += camera_rot_step * delta_time;
-                if (cam_rot.z > max_camera_rot)
-                    cam_rot.z = max_camera_rot;
+                if (cam_rot.z > roll_camera_rot)
+                    cam_rot.z = roll_camera_rot;
             }
         }
         else
@@ -445,11 +461,11 @@ public class PlayerMovement {
             TheVector3 new_rot = trans.LocalRotation;
             new_rot.y -= yaw_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.y < max_camera_rot * move_percentage && cam_rot.y >= 0.0f)
+			if (cam_rot.y < yaw_camera_rot * move_percentage && cam_rot.y >= 0.0f)
             {
                 cam_rot.y += camera_rot_step * delta_time;
-                if (cam_rot.y > max_camera_rot * move_percentage)
-                    cam_rot.y = max_camera_rot * move_percentage;
+                if (cam_rot.y > yaw_camera_rot * move_percentage)
+                    cam_rot.y = yaw_camera_rot * move_percentage;
             }
         }
         else
@@ -468,11 +484,11 @@ public class PlayerMovement {
             TheVector3 new_rot = trans.LocalRotation;
             new_rot.y += yaw_rotate_speed * move_percentage * delta_time;
             trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.y > -max_camera_rot * move_percentage && cam_rot.y <= 0.0f)
+			if (cam_rot.y > -yaw_camera_rot * move_percentage && cam_rot.y <= 0.0f)
             {
                 cam_rot.y -= camera_rot_step * delta_time;
-                if (cam_rot.y < -max_camera_rot * move_percentage)
-                    cam_rot.y = -max_camera_rot * move_percentage;
+                if (cam_rot.y < -yaw_camera_rot * move_percentage)
+                    cam_rot.y = -yaw_camera_rot * move_percentage;
             }
         }
         else
