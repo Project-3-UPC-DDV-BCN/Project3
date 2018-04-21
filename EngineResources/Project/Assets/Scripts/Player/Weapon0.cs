@@ -82,5 +82,16 @@ public class Weapon0 {
 		}
 	}
 	
+	public void Overheat(float overheat, float curr_overheat_inc, bool overheated, float overheat_timer, float overheat_time)
+	{
+		overheat += curr_overheat_inc;
+		if (overheat >= 1.0f)
+		{
+			overheated = true;
+			overheat_timer = overheated_time;
+		}
+		else 
+			overheat_timer = overheat_time;  
+	}
     
 }

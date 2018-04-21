@@ -58,6 +58,7 @@ public:
 	void UpdateStep();
 
 	float GetDt(); 
+	int GetFPS();
 
 	void Play();
 	void Pause();
