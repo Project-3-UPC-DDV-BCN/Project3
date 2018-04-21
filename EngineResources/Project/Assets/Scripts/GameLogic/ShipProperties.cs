@@ -24,6 +24,7 @@ public class ShipProperties
 	private TheScript movement_script = null;
 	private TheTransform self_transform = null;
 	private TheAudioSource audio_source = null;
+	private TheScript player_movement_script = null;
 
 	bool one_shoot = true;
 		
@@ -51,6 +52,8 @@ public class ShipProperties
 			{
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("AddSlave1", args);
+
+				player_movement_script = TheGameObject.Self.GetScript("PlayerMovement");
 			}
 		}
 		else
@@ -168,13 +171,24 @@ public class ShipProperties
 	// Deals damage to the ship
 	void DealDamage(int dmg)
 	{
-		if(dmg < 0)
-			dmg = 0;
+		if(!is_slave1)
+		{
+			if(dmg < 0)
+				dmg = 0;
 
-		life -= dmg;
+			life -= dmg;
 
-		if(life < 0)
-			life = 0;
+			if(life < 0)
+				life = 0;
+		}
+		else
+		{
+			if(player_movement_script != null)
+			{
+				object[] args = {(float)dmg};
+				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);
+			}
+		}
 	}
 	
 	// Can be used to set ship faction dinamically
@@ -214,8 +228,22 @@ public class ShipProperties
 			}
 			else
 			{
-				if(auciodio_source != null)
+				if(audio_source != null)
 					audio_source.Play("Play_Enemy_Explosions");
+
+				TheGameObject particle = TheResources.LoadPrefab("ParticleExplosion");
+				
+				// Particles when destroying ship
+				if(particle != null)
+				{
+					TheTransform particle_trans = particle.GetComponent<TheTransform>();
+					if(particle_trans != null && self_transform != null)
+					{
+						TheConsole.Log("Explosion particle created!");
+						particle_trans.GlobalPosition = self_transform.GlobalPosition;
+					}
+				}
+
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				
