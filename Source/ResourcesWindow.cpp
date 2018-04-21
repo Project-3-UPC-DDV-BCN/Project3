@@ -262,7 +262,6 @@ void ResourcesWindow::DrawWindow()
 				{
 					if (ImGui::Selectable(name.c_str()))
 					{
-						gameobject_to_return = it->second->GetRootGameObject();
 						gameobject_changed = true;
 						break;
 					}

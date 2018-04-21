@@ -1664,10 +1664,6 @@ void ModuleResources::DeleteResource(std::string file_path)
 			App->file_system->Delete_File(file_path);
 			App->file_system->Delete_File(file_path + ".meta");
 			RemovePrefab(prefab);
-			if (extension == ".fbx" || extension == ".FBX")
-			{
-				DeleteFBXMeshes(prefab->GetRootGameObject());
-			}
 		}
 		break;
 	case Resource::ScriptResource:

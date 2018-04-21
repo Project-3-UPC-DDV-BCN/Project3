@@ -656,7 +656,6 @@ GameObject* ModuleScene::LoadPrefabToScene(Prefab* prefab)
 void ModuleScene::CreatePrefab(GameObject * gameobject, std::string assets_path, std::string library_path)
 {
 	Prefab* prefab = new Prefab();
-	prefab->SetRootGameObject(gameobject);
 	prefab->SetAssetsPath(assets_path);
 	prefab->SetLibraryPath(library_path);
 	prefab->SetName(gameobject->GetName());

@@ -11,36 +11,14 @@
 Prefab::Prefab()
 {
 	SetType(Resource::PrefabResource);
-	root_gameobject = nullptr;
 }
 
 Prefab::~Prefab()
 {
 }
 
-void Prefab::AddGameObject(GameObject * game_object)
-{
-	prefab_gameobjects.push_back(game_object);
-}
-
-std::vector<GameObject*> Prefab::GetGameObjects() const
-{
-	return prefab_gameobjects;
-}
-
-void Prefab::SetRootGameObject(GameObject * root)
-{
-	root_gameobject = root;
-}
-
-GameObject* Prefab::GetRootGameObject() const
-{
-	return root_gameobject;
-}
-
 void Prefab::Save(Data & data) const
 {
-	root_gameobject->Save(data);
 	data.AddInt("GameObjectsCount", App->scene->saving_index);
 	data.AddString("library_path", GetLibraryPath());
 	data.AddString("assets_path", GetAssetsPath());

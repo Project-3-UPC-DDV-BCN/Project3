@@ -135,18 +135,11 @@ void ComponentFactory::StartFactory()
 {
 	BROFILER_CATEGORY("Component - Factory - StartFactory", Profiler::Color::Beige);
 
-	if (object_to_spawn != nullptr && object_to_spawn->GetRootGameObject())
+	if (object_to_spawn != nullptr )
 	{
-		ComponentTransform* transform = (ComponentTransform*)object_to_spawn->GetRootGameObject()->GetComponent(Component::CompTransform);
-
-		if (transform != nullptr)
-		{
-			original_rotation = transform->GetLocalRotation();
-			original_scale = transform->GetLocalScale();
-			SetSpawnRotation(original_rotation);
-			SetSpawnScale(original_scale);
-		}
-
+		SetSpawnRotation(original_rotation);
+		SetSpawnScale(original_scale);
+		
 		if (GetGameObject() != nullptr)
 		{
 			ComponentTransform* transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform);
