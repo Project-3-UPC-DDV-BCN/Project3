@@ -14,6 +14,7 @@ public class GuillemMovement
 
     public float move_speed = 300;
     public float rotation_speed = 60;
+	public float avoidance_rad = 30;
 
     private float modified_move_speed = 0;
     private float modified_rotation_speed = 0;
@@ -210,7 +211,7 @@ public class GuillemMovement
 		
 		// Target avoidance ----
 		bool was_avoiding = avoiding;
-		if(TheVector3.Distance(self_pos, target_pos) < 50)
+		if(TheVector3.Distance(self_pos, target_pos) < avoidance_rad)
 			avoiding = true;
 		else
 			avoiding = false;
@@ -220,7 +221,7 @@ public class GuillemMovement
 			avoiding_addition = GetRandomAvoidance();
 		}
  
-		if(TheVector3.Distance(self_pos, target_pos) < 50)
+		if(TheVector3.Distance(self_pos, target_pos) < avoidance_rad)
 		{
 			target_pos.x += avoiding_addition.x;
 			target_pos.y += avoiding_addition.y;
@@ -323,27 +324,27 @@ public class GuillemMovement
 
 		if(rand < 1)
 		{
-			ret.x = 30;
+			ret.x = avoidance_rad;
 			ret.y = 0;
-			ret.z = 30;
+			ret.z = avoidance_rad;
 		}
 		else if(rand < 2)
 		{
-			ret.x = -30;
+			ret.x = -avoidance_rad;
 			ret.y = 0;
-			ret.z = -30;
+			ret.z = -avoidance_rad;
 		}
 		else if(rand < 3)
 		{
 			ret.x = 0;
-			ret.y = 30;
-			ret.z = 30;
+			ret.y = avoidance_rad;
+			ret.z = avoidance_rad;
 		}
 		else
 		{
 			ret.x = 0;
-			ret.y = -30;
-			ret.z = -30;
+			ret.y = -avoidance_rad;
+			ret.z = -avoidance_rad;
 		}
 
 		return ret;
