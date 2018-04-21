@@ -233,10 +233,10 @@ public class Slave1Movement {
 			}
 		}
 
-		if(particle_emitter_go != null)
+		/*if(particle_emitter_go != null)
 		{
 			particle_emitter = particle_emitter_go.GetComponent<TheParticleEmmiter>();
-		}
+		}*/
 	}
 	
 	void Update () 
@@ -268,11 +268,11 @@ public class Slave1Movement {
 		if(speed_bar != null)
 			speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
 		
-		if(particle_emitter != null)
+		/*if(particle_emitter != null)
 		{	
 			particle_emitter.SetEmitterSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
 			particle_emitter.SetParticleSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
-        }
+        }*/
 		curr_total_hp = wings_hp + body_hp + engine_hp;
 	}
 
