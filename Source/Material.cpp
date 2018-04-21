@@ -370,7 +370,7 @@ void Material::CreateMeta() const
 
 void Material::LoadToMemory()
 {
-	CONSOLE_LOG("Material Loaded To Memory"); 
+	
 
 	bool has_tex = false, has_normalmap = false, has_opacity = false, has_tex2 = false;
 	if (diffuse_texture != nullptr)
@@ -383,8 +383,8 @@ void Material::LoadToMemory()
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, diffuse_texture->GetID());
 			has_tex = true;
-			App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
 		}
+		App->renderer3D->SetUniformBool(GetShaderProgramID(), "own_uvs_diffuse", own_diffuse_uvs);
 
 		if (own_diffuse_uvs == true)
 			App->renderer3D->SetUniformVector2(GetShaderProgramID(), "Tex_Diffuse_UV", diffuse_UV);
@@ -396,7 +396,7 @@ void Material::LoadToMemory()
 
 			if (diffuse2_texture->GetID() != 0)
 			{
-				glActiveTexture(GL_TEXTURE3);
+				glActiveTexture(GL_TEXTURE0 +3);
 				glBindTexture(GL_TEXTURE_2D, diffuse2_texture->GetID());
 				has_tex2 = true;
 			}
@@ -415,7 +415,7 @@ void Material::LoadToMemory()
 
 		if (normalmap_texture->GetID() != 0)
 		{	
-			glActiveTexture(GL_TEXTURE1);
+			glActiveTexture(GL_TEXTURE0 +1);
 			glBindTexture(GL_TEXTURE_2D, normalmap_texture->GetID());
 			has_normalmap = true;
 		}
@@ -431,7 +431,7 @@ void Material::LoadToMemory()
 			opacity_texture->LoadToMemory(); 
 		if (opacity_texture->GetID() != 0)
 		{
-			glActiveTexture(GL_TEXTURE2);
+			glActiveTexture(GL_TEXTURE0 +2);
 			glBindTexture(GL_TEXTURE_2D, opacity_texture->GetID());
 
 			has_opacity = true;
@@ -457,6 +457,8 @@ void Material::LoadToMemory()
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_normalmap", has_normalmap);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_opacity", has_opacity);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_material_color", has_mat_color);
+
+	CONSOLE_LOG("Material Loaded To Memory");
 }
 
 

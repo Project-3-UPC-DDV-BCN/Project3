@@ -183,7 +183,7 @@ private:
 	bool changed_material = true;
 	// SHADOW MAPPING DON'T TOUCH
 
-	//uint depth_map;
+	uint depth_map;
 	uint depth_mapFBO;
 	uint default_buffer = 0;
 	float near_plane, far_plane;

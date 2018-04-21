@@ -21,9 +21,12 @@ public:
 
 	void CreateVerticesFromData();
 	void FillVerticesList();
-private:
+
 	//Must be call after setting the values to the mesh!!!
 	void InitializeMesh();
+
+private:
+
 
 public:
 	uint id_indices; // id in VRAM

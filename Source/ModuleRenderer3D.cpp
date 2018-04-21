@@ -814,6 +814,14 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 				material->LoadToMemory();
 			}
 
+			glActiveTexture(GL_TEXTURE0 + 0);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+
+
+			/*glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+			App->renderer3D->SetUniformInt(program, "Tex_Diffuse", 0);*/
+
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 			SetUniformBool(program, "is_ui", false);
@@ -841,6 +849,10 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 				material->LoadToMemory();
 			}
 
+		/*	glActiveTexture(GL_TEXTURE0 + 4);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+			App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);*/
+
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 
@@ -854,6 +866,10 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 			program = interior_material->GetShaderProgramID();
 			UseShaderProgram(program);
 			interior_material->LoadToMemory();
+
+			/*glActiveTexture(GL_TEXTURE0 + 4);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+			App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);*/
 
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
@@ -1682,11 +1698,14 @@ void ModuleRenderer3D::SetDepthMap()
 
 	glGenTextures(1, &depth_map);
 	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
@@ -1700,14 +1719,17 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 {
 	if (dir_lights[0] != nullptr)
 	{
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 		//glDisable(GL_BLEND);
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 
 		glm::mat4 lightProjection, lightView;
 		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 
-		lightProjection = glm::ortho(-10000.0f, 10000.0f, -10000.0f, 10000.0f, -10000.f, 10000.0f);
+		lightProjection = glm::ortho(-50000.0f, 50000.0f, -50000.0f, 50000.0f, 1.0f, 500000.0f);
 		glm::vec3 l_pos;
 		l_pos.x = trans->GetGlobalPosition().x;
 		l_pos.y = trans->GetGlobalPosition().y;
@@ -1717,6 +1739,8 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		light_space_mat = glm::value_ptr(mat);
 
 		glClear(GL_DEPTH_BUFFER_BIT);
+	//	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
+	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		uint program = 0;
 		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
@@ -1724,6 +1748,10 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		UseShaderProgram(program);
 
 		std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+		SetUniformMatrix(program, "lightSpaceMatrix", light_space_mat);
 
 		for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
 		{
@@ -1736,12 +1764,15 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		program = shader->GetProgramID();
 		UseShaderProgram(program);
 
-		glActiveTexture(GL_TEXTURE4);
+		glActiveTexture(GL_TEXTURE0 + 4);
 		glBindTexture(GL_TEXTURE_2D, depth_map);
 		App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
 
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// SAVE
 		/*GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
@@ -1848,14 +1879,13 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRenderer* mesh)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
-	mesh->GetMesh()->LoadToMemory();
-
+	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-	SetUniformMatrix(program, "lightSpaceMatrix", light_space_mat);
 
+	//mesh->GetMesh()->InitializeMesh();
 }
 // -----------------------------------------------

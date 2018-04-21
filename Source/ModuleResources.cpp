@@ -1806,7 +1806,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
 		"	Normal = transpose(inverse(mat3(Model))) * normals;\n"
-		"	FragPosLightSpace = lightSpaceMatrix * vec4(position, 1.0);\n"
+		"	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);\n"
 		"}";
 
 		default_vert->SetContent(shader_text);
@@ -1945,18 +1945,18 @@ void ModuleResources::CreateDefaultShaders()
 			"		}\n"
 			"			vec3 result = vec3(0.0, 0.0, 0.0); \n"
 			"			if (has_light){\n"
-		//	"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
-		//	"				result += CalcDirLight(dirLights[i], normal, viewDir);\n"
-		//	"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
-		//	"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
-		//	"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
-		//	"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"	
+			"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
+			"				result += CalcDirLight(dirLights[i], normal, viewDir);\n"
+			"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
+			"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
+			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
+			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"	
 
 			"			float shadow = 0.0f;\n"
 			"			shadow = ShadowCalculation(Tex_ShadowMap, FragPosLightSpace);\n"
-		//	"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1.0 - shadow)), color.a);  \n"	
+			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1.0 - shadow)), color.a);  \n"	
 		//	"			color = vec4((color.rgb * (1.0 - shadow)), color.a);  \n"
-			"			color = vec4(vec3(1.0f - shadow), 1.0f);\n"
+		//	"			color = vec4(vec3(1.0f - shadow), 1.0f);\n"
 			"			}\n"	
 		//	"			if (has_opacity)"
 		//	"			{\n"
@@ -1970,7 +1970,7 @@ void ModuleResources::CreateDefaultShaders()
 				"	vec3 projCoords = (fragposlightspace.xyz / fragposlightspace.w) * vec3(0.5f) + vec3(0.5f);\n"
 				"	float closestDepth = texture(shadow_map, projCoords.xy).r;\n"
 				"	float currentDepth = projCoords.z;\n"
-				"	float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;\n"
+				"	float shadow = currentDepth > closestDepth  ? 1.0 : 0.5;\n"
 		/*		"	vec3 normal_v = normalize(Normal);"
 				//"	vec3 lightDir_v = -dirLights[0].direction;\n"
 				"	vec3 lightDir_v = normalize(dirLights[0].position - FragPos);\n"
@@ -2145,7 +2145,7 @@ void ModuleResources::CreateDefaultShaders()
 		depth_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
 
 		std::string shader_text =
-			"#version 400 core\n"
+			"#version 330 core\n"
 			"layout(location = 0) in vec3 position;\n"
 
 			"uniform mat4 lightSpaceMatrix;\n"
@@ -2173,10 +2173,11 @@ void ModuleResources::CreateDefaultShaders()
 		depth_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
 
 		std::string shader_text =
-			"	#version 400 core\n"
+			"	#version 330 core\n"
+			"layout(location = 0) out float fragmentdepth;\n"
 			"	void main()\n"
 			"{\n"
-			"	gl_FragColor = vec4(gl_FragCoord.z);\n"
+			"	fragmentdepth = gl_FragCoord.z;\n"
 			"}\n"
 			;
 		depth_frag->SetContent(shader_text);
