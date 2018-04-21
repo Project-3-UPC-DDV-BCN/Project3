@@ -9,6 +9,11 @@ public class TrainingModeManager
 	public string ship_prefab_name;
 	public float max_spawn_rad = 50;
 	public float min_spawn_rad = 30;
+
+	public TheGameObject curr_wave_go;
+	public TheGameObject remaining_ships_go;
+	TheText curr_wave_text = null;
+	TheText remaining_ships_text = null;
 	
 	TheScript game_manager_script = null;
 
@@ -37,6 +42,12 @@ public class TrainingModeManager
 				scene_center = anchor.GetComponent<TheTransform>();
 			}
 		}
+
+		if(curr_wave_go != null)
+			curr_wave_text = curr_wave_go.GetComponent<TheText>();
+
+		if(remaining_ships_go != null)
+			remaining_ships_text = remaining_ships_go.GetComponent<TheText>();
 	}
 
 	void Start () 
@@ -78,6 +89,8 @@ public class TrainingModeManager
 			if(game_manager_script != null)
 			{
 				int enemies_count = (int)game_manager_script.CallFunctionArgs("GetSlaveEnemiesCount");
+
+				SetRemainingShipsText(enemies_count);
 		
 				if(enemies_count == 0)
 				{
@@ -101,6 +114,8 @@ public class TrainingModeManager
 		spawn_timer.Start();
 
 		TheConsole.Log("Spawning wave: " + curr_wave);
+
+		SetCurrWaveText(curr_wave);
 	}
 
 	void SpawnRemainingShips()
@@ -119,12 +134,6 @@ public class TrainingModeManager
 			
 					TheVector3 spawned_pos = spawned_ship_trans.GlobalPosition;
 					TheConsole.Log("Enemy ship spawned! x:" + spawned_pos.x + " y: " + spawned_pos.y + " z:" + spawned_pos.z);
-
-					if(game_manager_script != null)
-					{
-						object[] args = {spawned_ship};
-						game_manager_script.CallFunctionArgs("AddSlaveEnemiesShip", args);
-					}
 				}
 
 				spawn_timer.Start();
@@ -159,5 +168,21 @@ public class TrainingModeManager
 		ret.z += z_add;
 
 		return ret;
+	}
+
+	void SetCurrWaveText(int wave)
+	{
+		if(curr_wave_text != null)
+		{
+			curr_wave_text.Text = "Current wave: " + wave.ToString();
+		}
+	}
+
+	void SetRemainingShipsText(int remaining_ships)
+	{
+		if(remaining_ships_text != null)
+		{
+			remaining_ships_text.Text = "Enemies: " + remaining_ships.ToString();
+		}
 	}
 }

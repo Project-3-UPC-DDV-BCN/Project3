@@ -124,7 +124,6 @@ public class ShipProperties
 			if(ship_script != null)
 			{
 				string hit_faction = (string)ship_script.CallFunctionArgs("GetFaction");
-				bool is_slave1 = (bool)ship_script.CallFunctionArgs("IsSlave1");
 
 				if(hit_faction == GetFaction())
 				{
