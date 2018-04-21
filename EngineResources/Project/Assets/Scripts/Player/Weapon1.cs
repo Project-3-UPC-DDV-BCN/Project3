@@ -63,7 +63,7 @@ public class Weapon1
 				{
 					TheConsole.Log("Slave1 shoots with weapon 1");			
 	
-					object[] args = {slave_go, 100, 10, slave_transform.ForwardDirection, slave_transform.QuatRotation};
+					object[] args = {slave_go, 130.0f, 10, slave_transform.ForwardDirection, slave_transform.QuatRotation};
 					laser_script.CallFunctionArgs("SetInfo", args);
 				}
 			}

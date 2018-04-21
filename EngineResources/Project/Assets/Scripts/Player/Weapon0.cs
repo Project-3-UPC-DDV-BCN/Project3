@@ -75,8 +75,8 @@ public class Weapon0
 				if(laser_script != null && slave_transform != null && slave_go != null)
 				{
 					TheConsole.Log("Slave1 shoots with weapon 0");
-
-					object[] args = {slave_go, 100, 10, slave_transform.ForwardDirection, slave_transform.QuatRotation};
+					TheConsole.Log(slave_transform.ForwardDirection.x + " " + slave_transform.ForwardDirection.y + " " + slave_transform.ForwardDirection.z);
+					object[] args = {slave_go, 100.0f, 10, slave_transform.ForwardDirection, slave_transform.QuatRotation};
 					laser_script.CallFunctionArgs("SetInfo", args);
 				}
 			}
