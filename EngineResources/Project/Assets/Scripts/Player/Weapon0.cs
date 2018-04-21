@@ -9,16 +9,29 @@ public class Weapon0 {
 
 	void Start()
 	{
-		starship_shooting = TheGameObject.Self.GetComponent<TheScript>(0);
+		starship_shooting = TheGameObject.Self.GetScript("VS4-StarShipShooting");
 	}
 	
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
 				TheFactory laser_factory, TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
-		TheConsole.Log("Entered Shoot 1");
+		if (weapons_bar == null)
+			TheConsole.Log("weapons_bar == null");
+		if (curr_overheat_inc == null)
+			TheConsole.Log("curr_overheat_inc == null");
+		if (overheat_increment == null)
+			TheConsole.Log("overheat_increment == null");
+		if (used_left_laser == null)
+			TheConsole.Log("used_left_laser == null");
+		if (laser_factory == null)
+			TheConsole.Log("laser_factory == null");
+		if (laser_spawner == null)
+			TheConsole.Log("laser_spawner == null");
+		if (audio_source == null)
+			TheConsole.Log("audio_source == null");
 		
 		TheVector3 offset;
-			
+	
 		starship_shooting.SetFloatField("curr_overheat_inc", overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f));
 
 		if (used_left_laser)
@@ -29,9 +42,9 @@ public class Weapon0 {
 		{
 			offset = new TheVector3(-1, 2, 0);
 		}
-		
+
 		starship_shooting.SetBoolField("used_left_laser", !used_left_laser);
-		
+
 		laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition);// + offset
 
 		//Calculate the rotation
@@ -45,7 +58,7 @@ public class Weapon0 {
 		laser_scpt.SetStringField("parent_team", TheGameObject.Self.GetParent().tag);
 
 		TheVector3 vec = laser_spawner.GetComponent<TheTransform>().ForwardDirection * 20000 * TheTime.DeltaTime;
-	
+		
 		if(go != null)
 		{
 			go.GetComponent<TheRigidBody>().SetLinearVelocity(vec.x, vec.y, vec.z);

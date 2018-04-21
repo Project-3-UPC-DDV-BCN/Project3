@@ -114,9 +114,8 @@ public class StarShipShooting {
 					if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 					{
 						if (weapons_bar == null && laser_factory == null && laser_spawner == null)
-						{	
 							break;
-						}
+
 						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};
 						
 						if (weapon_script != null)
