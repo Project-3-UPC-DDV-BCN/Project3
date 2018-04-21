@@ -82,16 +82,20 @@ public class Weapon0 {
 		}
 	}
 	
-	public void Overheat(float overheat, float curr_overheat_inc, bool overheated, float overheat_timer, float overheat_time)
-	{
+	public void Overheat(float overheat, float curr_overheat_inc, bool overheated, float overheat_timer, float overheat_time, float overheated_time)
+	{	
+		TheConsole.Log("overheat =" +overheat);
 		overheat += curr_overheat_inc;
+		TheConsole.Log("overheat = " + overheat);
+		starship_shooting.SetFloatField("overheat", overheat);
+		
 		if (overheat >= 1.0f)
 		{
-			overheated = true;
-			overheat_timer = overheated_time;
+			starship_shooting.SetBoolField("overheated", true);
+			starship_shooting.SetFloatField("overheat_timer", overheated_time);
 		}
 		else 
-			overheat_timer = overheat_time;  
+			starship_shooting.SetFloatField("overheat_timer", overheat_time);  
 	}
     
 }
