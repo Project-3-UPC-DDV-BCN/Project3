@@ -137,27 +137,40 @@ public class StarShipShooting {
 				}
 				else
 				{	
-					//TheConsole.Log(overheat);
 					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
 					weapon_script.CallFunctionArgs("Cooling", args_cooling);
 				}
-				
-				if (overheat <= 0.0f)	
-					overheated = false;
-				
 				
 				break;
 			}
 			case 1:
 			{
-				if (!cooling)
+				if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 				{
-					overheat += curr_overheat_inc;
-					overheat_timer = 1.0f;
+					if (!cooling)
+					{
+						overheat += curr_overheat_inc;
+						overheat_timer = 1.0f;
+					}				
 				}
+				else if (TheInput.GetControllerButton(0,"CONTROLLER_A") == 3)
+				{
+					// SHOOT
+					object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, laser_factory, laser_spawner, audio_source};		
+					weapon_script.CallFunctionArgs("Shoot", args_shoot);
+				}
+				else
+				{
+					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
+					weapon_script.CallFunctionArgs("Cooling", args_cooling);
+				}
+				
 				break;
 			}
 		}			
+   
+		if (overheat <= 0.0f)	
+			overheated = false;
    
 		timer -= TheTime.DeltaTime;
 		overheat_timer -= TheTime.DeltaTime;
