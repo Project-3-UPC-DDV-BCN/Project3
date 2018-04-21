@@ -758,6 +758,10 @@ void GameObject::OnDestroy()
 
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)GetComponent(Component::CompMeshRenderer);
 	if (mesh_renderer) mesh_renderer->UnloadFromMemory();
+
+	ComponentParticleEmmiter* particle_emitter = (ComponentParticleEmmiter*)GetComponent(Component::CompParticleSystem);
+	if (particle_emitter)
+		App->scene->scene_emmiters.remove(particle_emitter); 
 	
 	for (std::list<GameObject*>::iterator it = childs.begin(); it != childs.end();) {
 		if (*it != nullptr) {

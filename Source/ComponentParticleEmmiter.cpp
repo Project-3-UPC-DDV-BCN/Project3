@@ -323,6 +323,7 @@ void ComponentParticleEmmiter::UpdateCurrentData()
 
 ComponentParticleEmmiter::~ComponentParticleEmmiter()
 {
+	
 }
 
 void ComponentParticleEmmiter::Save(Data & data) const
