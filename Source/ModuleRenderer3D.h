@@ -113,7 +113,7 @@ public:
 	void DrawDebugOBB(OBB& aabb, ComponentCamera* active_camera);
 	void DrawMesh(ComponentMeshRenderer* mesh);
 
-	void SendLight(uint program_id, ComponentCamera* current_camera);
+	void SendLight(uint program_id);
 	int GetDirectionalLightCount() const;
 	int GetSpotLightCount() const;
 	int GetPointLightCount() const;
@@ -135,7 +135,6 @@ private:
 
 public:
 	Light lights[MAX_LIGHTS];
-	void DrawZBuffer();
 	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
 	void DrawGrid(ComponentCamera* camera);
 
@@ -184,9 +183,9 @@ private:
 	bool changed_material = true;
 	// SHADOW MAPPING DON'T TOUCH
 
-	uint depth_map;
+	//uint depth_map;
 	uint depth_mapFBO;
-	uint curr_frame;
+	uint default_buffer = 0;
 	float near_plane, far_plane;
 
 	float* light_space_mat = nullptr;

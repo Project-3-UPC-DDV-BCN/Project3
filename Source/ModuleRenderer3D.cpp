@@ -171,6 +171,7 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 
 	//Set Up Depth Map
 	SetDepthMap();
+
 	return ret;
 }
 
@@ -194,7 +195,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
 	{
 		editor_camera->GetViewportTexture()->Bind();
-		curr_frame = editor_camera->GetViewportTexture()->GetFrameBufferID();
 		DrawEditorScene();
 	}
 
@@ -256,7 +256,6 @@ void ModuleRenderer3D::DrawSceneCameras(ComponentCamera * camera)
 	}
 
 	camera->GetViewportTexture()->Bind();
-	curr_frame = camera->GetViewportTexture()->GetFrameBufferID();
 
 	if (use_skybox)
 	{
@@ -609,29 +608,6 @@ void ModuleRenderer3D::DrawDebugOBB(OBB& obb, ComponentCamera * active_camera)
 	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 }
 
-
-void ModuleRenderer3D::DrawZBuffer()
-{
-	uint program = 0;
-	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
-	program = shader->GetProgramID();
-	UseShaderProgram(program);
-
-	SetUniformFloat(program, "near_plane", near_plane);
-	SetUniformFloat(program, "far_plane", far_plane);
-
-	SetUniformInt(program, "depthMap", 0);
-
-	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-
-	SetUniformMatrix(program, "view", App->camera->GetCamera()->GetViewMatrix());
-	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
-	SetUniformMatrix(program, "Model", trans.Transposed().ptr());
-}
-
 void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 {
 	BROFILER_CATEGORY("Draw Grid", Profiler::Color::DarkBlue);
@@ -729,7 +705,13 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	//Draw Meshes
 	uint program = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
 	UseShaderProgram(program);
-	SendLight(program, active_camera);
+	SendLight(program);
+
+	if (active_camera->GetGameObject() != nullptr)
+	{
+		ComponentTransform * c_trans = (ComponentTransform*)active_camera->GetGameObject()->GetComponent(Component::CompTransform);
+		SetUniformVector3(program, "viewPos", c_trans->GetGlobalPosition());
+	}
 
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
@@ -830,16 +812,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 			if (changed_material == true)
 			{
 				material->LoadToMemory();
-				glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-				glActiveTexture(GL_TEXTURE4);
-				glBindTexture(GL_TEXTURE_2D, depth_map);
-				glBlendFunc(GL_ONE, GL_ONE);
-				App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glBindFramebuffer(GL_FRAMEBUFFER, curr_frame);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}
-				
+
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 			SetUniformBool(program, "is_ui", false);
@@ -865,22 +839,10 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 			if (changed_material == true)
 			{
 				material->LoadToMemory();
-				glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-				glActiveTexture(GL_TEXTURE4);
-				glBindTexture(GL_TEXTURE_2D, depth_map);
-				glBlendFunc(GL_ONE, GL_ONE);
-				App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glBindFramebuffer(GL_FRAMEBUFFER, curr_frame);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}
 
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-
-			//TODO: Calculate Normal Matrix here and send it as uniform.
-			// We need this because transitioning to World Space gives a non accurate Normal.
-			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
 			glDrawElements(GL_TRIANGLES, mesh->material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->material_indices_start));
 		}
@@ -895,10 +857,6 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-
-			//TODO: Calculate Normal Matrix here and send it as uniform.
-			// We need this because transitioning to World Space gives a non accurate Normal.
-			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
 			glDrawElements(GL_TRIANGLES, mesh->interior_material_indices_number, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * mesh->interior_material_indices_start));
 		}
@@ -1583,19 +1541,12 @@ void ModuleRenderer3D::AddParticleToDraw(ComponentParticleEmmiter * particle)
 	particles_to_draw.push_back(particle);
 }
 
-void ModuleRenderer3D::SendLight(uint program, ComponentCamera* current_camera)
+void ModuleRenderer3D::SendLight(uint program)
 {
 	// ----------------------------------------
 	// ---------- SEND LIGHTING ---------------
 	// ----------------------------------------
 	// First send Camera Position, just once.
-
-	if (current_camera == nullptr || current_camera->GetGameObject() == nullptr)
-		return;
-
-	ComponentTransform * c_trans = (ComponentTransform*)current_camera->GetGameObject()->GetComponent(Component::CompTransform);
-
-	SetUniformVector3(program, "viewPos", c_trans->GetGlobalPosition());
 
 	std::string plstr, tmp;
 
@@ -1742,8 +1693,6 @@ void ModuleRenderer3D::SetDepthMap()
 	// Not rendering any color so:
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		int a = 4;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -1751,6 +1700,80 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 {
 	if (dir_lights[0] != nullptr)
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+		//glDisable(GL_BLEND);
+		//glEnable(GL_DEPTH_TEST);
+
+		glm::mat4 lightProjection, lightView;
+		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
+
+		lightProjection = glm::ortho(-10000.0f, 10000.0f, -10000.0f, 10000.0f, -10000.f, 10000.0f);
+		glm::vec3 l_pos;
+		l_pos.x = trans->GetGlobalPosition().x;
+		l_pos.y = trans->GetGlobalPosition().y;
+		l_pos.z = trans->GetGlobalPosition().z;
+		lightView = glm::lookAt(l_pos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		glm::mat4 mat = lightProjection * lightView;
+		light_space_mat = glm::value_ptr(mat);
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		uint program = 0;
+		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
+		program = shader->GetProgramID();
+		UseShaderProgram(program);
+
+		std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
+
+		for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
+		{
+			ComponentMeshRenderer* mesh = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
+			if (mesh != nullptr)
+				SendObjectToDepthShader(program, mesh);
+		}
+
+		shader = App->resources->GetShaderProgram("default_shader_program");
+		program = shader->GetProgramID();
+		UseShaderProgram(program);
+
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, depth_map);
+		App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
+
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		// SAVE
+		/*GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
+		glActiveTexture(GL_TEXTURE0);
+		GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+		GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+		GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
+		GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
+		GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
+		GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
+		GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
+		GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
+		GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
+		GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
+		GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
+		GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
+		GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
+		GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
+		GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
+		GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
+		GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
+		GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
+		GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);*/
+
+		/*glEnable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glEnable(GL_SCISSOR_TEST);
+		glEnable(GL_DEPTH_TEST);
+
+		// ----
+
 	uint program = 0;
 	ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
 	program = shader->GetProgramID();
@@ -1761,24 +1784,22 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	glm::mat4 lightProjection, lightView;
 	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 
-	lightProjection = glm::ortho(-10000.0f, 10000.0f, -10000.0f, 10000.0f, near_plane, far_plane);
+	lightProjection = glm::ortho(-10000.0f, 10000.0f, -10000.0f, 10000.0f, -10000.f, 10000.0f);
 	glm::vec3 l_pos;
 	l_pos.x = trans->GetGlobalPosition().x;
 	l_pos.y = trans->GetGlobalPosition().y;
 	l_pos.z = trans->GetGlobalPosition().z;
-	lightView = glm::lookAt(l_pos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	lightView = glm::lookAt(l_pos, glm::vec3(-1000.0f), glm::vec3(0.0, 1.0, 0.0));
 	glm::mat4 mat = lightProjection * lightView;
 	light_space_mat = glm::value_ptr(mat);
 
 	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 
-	glEnable(GL_BLEND);
-
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glActiveTexture(GL_TEXTURE0);
-
 
 	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
 	{
@@ -1791,17 +1812,50 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	shader = App->resources->GetShaderProgram("default_shader_program");
+	program = shader->GetProgramID();
+	UseShaderProgram(program);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+	App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
+
+	 // LOAD
+	/*UseShaderProgram(last_program);
+	glBindTexture(GL_TEXTURE_2D, last_texture);
+	glBindSampler(0, last_sampler);
+	glActiveTexture(last_active_texture);
+	glBindVertexArray(last_vertex_array);
+	glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
+	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
+	glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
+	if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
+	if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+	if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
+	if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
+	glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
+	glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
+	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);*/
+
+
+
 	}
 }
 
 void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRenderer* mesh)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
-	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+	mesh->GetMesh()->LoadToMemory();
 
-	SetUniformMatrix(program, "model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+	BindVertexArrayObject(mesh->GetMesh()->id_vao);
+	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+
+	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	SetUniformMatrix(program, "lightSpaceMatrix", light_space_mat);
-
 
 }
 // -----------------------------------------------

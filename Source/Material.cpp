@@ -450,6 +450,7 @@ void Material::LoadToMemory()
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_NormalMap", 1);
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Opacity", 2);
 	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_Diffuse2", 3);
+	App->renderer3D->SetUniformInt(GetShaderProgramID(), "Tex_ShadowMap", 4);
 
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture", has_tex);
 	App->renderer3D->SetUniformBool(GetShaderProgramID(), "has_texture2", has_tex2);
