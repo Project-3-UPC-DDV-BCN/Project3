@@ -125,8 +125,8 @@ public class StarShipShooting {
 						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
 						
 						// OVERHEAT
-						//object[] args_overheat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
-						//weapon_script.CallFunctionArgs("Overheat", args_overheat);	
+						object[] args_overheat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
+						weapon_script.CallFunctionArgs("Overheat", args_overheat);	
 						
 						timer = spawn_time;		
 						TheConsole.Log("overheat =" +overheat);						

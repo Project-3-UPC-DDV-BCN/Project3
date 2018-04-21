@@ -9,7 +9,7 @@ public class Weapon0 {
 
 	void Start()
 	{
-		starship_shooting = TheGameObject.Self.GetScript("VS4-StarShipShooting");
+		starship_shooting = TheGameObject.Self.GetComponent<TheScript>(0);
 	}
 	
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
