@@ -41,6 +41,7 @@ public class ColliderScalingByDistance {
 	}
 
 	TheVector3 GetResizeValue(float player_distance) {
+        if (player_distance > max_distance) player_distance = max_distance;
 		float percent = player_distance / max_distance;
 		return TheVector3.Lerp(min_size, max_size, percent);
 	}
