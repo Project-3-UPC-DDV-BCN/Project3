@@ -119,6 +119,8 @@ public:
 	int triangles_count;
 	float skybox_size = 100.f;
 
+	bool draw_fps = false;
+
 private:
 	std::list<GameObject*> gameobjects_to_destroy;
 	CubeMap* skybox;

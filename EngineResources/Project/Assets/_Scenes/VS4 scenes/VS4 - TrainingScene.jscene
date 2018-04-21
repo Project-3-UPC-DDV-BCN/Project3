@@ -2,7 +2,7 @@
     "Scene_Name": "VS4 - TrainingScene",
     "GameObjects_Count": "12",
     "GameObject_0": {
-        "UUID": "2086779300",
+        "UUID": "440523251",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2097958456",
+        "UUID": "1455295064",
         "Name": "BaseCamera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -115,7 +115,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "865414471",
+        "UUID": "819185284",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -199,11 +199,11 @@
                         },
                         "field_3": {
                             "field_name": "gametime_go",
-                            "field_value": "492215088"
+                            "field_value": "1038766043"
                         },
                         "field_4": {
                             "field_name": "score_go",
-                            "field_value": "1110086469"
+                            "field_value": "1271383331"
                         },
                         "field_5": {
                             "field_name": "slave1_audio",
@@ -221,7 +221,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1219685259",
+        "UUID": "1775443985",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -238,8 +238,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "517.000000",
-                    "value_Y": "370.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -293,13 +293,13 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "2056530812",
+        "UUID": "1174442012",
         "Name": "ShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "9",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -574,6 +574,49 @@
                 "UUID": "765746870",
                 "Sound_ID": "104",
                 "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "436451188",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ColliderScalingByDistance.dll",
+                    "assets_path": "",
+                    "script_name": "ColliderScalingByDistance",
+                    "UUID": "1422038345",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance",
+                            "field_value": "5000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "max_size_multiplier",
+                            "field_value": {
+                                "value_X": "10.000000",
+                                "value_Y": "10.000000",
+                                "value_Z": "10.000000"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -581,13 +624,13 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "701949468",
+        "UUID": "387457927",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "9",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -862,6 +905,49 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1695160537",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ColliderScalingByDistance.dll",
+                    "assets_path": "",
+                    "script_name": "ColliderScalingByDistance",
+                    "UUID": "1660441945",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance",
+                            "field_value": "5000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "max_size_multiplier",
+                            "field_value": {
+                                "value_X": "10.000000",
+                                "value_Y": "10.000000",
+                                "value_Z": "10.000000"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -869,7 +955,7 @@
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "138556849",
+        "UUID": "666245700",
         "Name": "AiAnchor",
         "Tag": "AI_ANCHOR",
         "Layer": "Default",
@@ -903,13 +989,13 @@
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "2117325552",
+        "UUID": "1192588147",
         "Name": "ShipPrototype(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "9",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1184,6 +1270,49 @@
                 "UUID": "2021148360",
                 "Sound_ID": "106",
                 "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "988961486",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ColliderScalingByDistance.dll",
+                    "assets_path": "",
+                    "script_name": "ColliderScalingByDistance",
+                    "UUID": "2014410339",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance",
+                            "field_value": "5000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "max_size_multiplier",
+                            "field_value": {
+                                "value_X": "10.000000",
+                                "value_Y": "10.000000",
+                                "value_Z": "10.000000"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -1191,13 +1320,13 @@
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "602274771",
+        "UUID": "1019138326",
         "Name": "ShipPrototype(5)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "9",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1472,6 +1601,49 @@
                 "UUID": "504001885",
                 "Sound_ID": "107",
                 "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "213465431",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ColliderScalingByDistance.dll",
+                    "assets_path": "",
+                    "script_name": "ColliderScalingByDistance",
+                    "UUID": "1089934411",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance",
+                            "field_value": "5000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "max_size_multiplier",
+                            "field_value": {
+                                "value_X": "10.000000",
+                                "value_Y": "10.000000",
+                                "value_Z": "10.000000"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -1479,13 +1651,13 @@
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "1353624116",
+        "UUID": "569697566",
         "Name": "ShipPrototype(6)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "9",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -1760,6 +1932,49 @@
                 "UUID": "1379927252",
                 "Sound_ID": "108",
                 "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1063955153",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ColliderScalingByDistance.dll",
+                    "assets_path": "",
+                    "script_name": "ColliderScalingByDistance",
+                    "UUID": "468271042",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance",
+                            "field_value": "5000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "max_size_multiplier",
+                            "field_value": {
+                                "value_X": "10.000000",
+                                "value_Y": "10.000000",
+                                "value_Z": "10.000000"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -1767,7 +1982,7 @@
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "492215088",
+        "UUID": "1038766043",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -1784,8 +1999,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "110.846489",
-                    "value_Y": "66.507896"
+                    "value_X": "110.846390",
+                    "value_Y": "66.507835"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -1801,8 +2016,8 @@
                 "Active": "1",
                 "UUID": "2145012880",
                 "position": {
-                    "value_X": "157.119507",
-                    "value_Y": "161.371490",
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1837,12 +2052,12 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1219685259",
+        "ParentID": "1775443985",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_11": {
-        "UUID": "1110086469",
+        "UUID": "1271383331",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -1859,8 +2074,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "94.219536",
-                    "value_Y": "66.507912"
+                    "value_X": "94.219452",
+                    "value_Y": "66.507851"
                 },
                 "anchor": {
                     "value_X": "1.000000",
@@ -1876,8 +2091,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "218.008392",
-                    "value_Y": "161.371490",
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1912,7 +2127,7 @@
                 "font": "arial"
             }
         },
-        "ParentID": "1219685259",
+        "ParentID": "1775443985",
         "IsRoot": "0",
         "IsStatic": "0"
     }

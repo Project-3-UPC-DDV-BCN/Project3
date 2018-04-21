@@ -444,6 +444,11 @@ float Application::GetDt()
 	return dt;
 }
 
+int Application::GetFPS()
+{
+	return last_fps;
+}
+
 void Application::Play()
 {
 	if (state == OnStop) {

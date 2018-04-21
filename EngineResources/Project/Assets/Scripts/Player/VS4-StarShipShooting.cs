@@ -113,29 +113,21 @@ public class StarShipShooting {
 				{	
 					if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
 					{
-						if (weapons_bar == null && laser_factory == null && laser_spawner == null)
+						if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
 							break;
-
-						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};
 						
-						if (weapon_script != null)
-						{
-							TheConsole.Log("Entered Shoot 0");
-							weapon_script.CallFunctionArgs("Shoot", args_shoot);		
-						}
+						// SHOOT
+						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};		
+						weapon_script.CallFunctionArgs("Shoot", args_shoot);		
 						
 						timer = spawn_time;																
+						// EDIT LIGHT COMPONENT
 						//weapon_script.EditLightComp(laser_light_comp, light_duration, light_on);						
 						
-						//Add heat
-						overheat += curr_overheat_inc;
-						if (overheat >= 1.0f)
-						{
-							overheated = true;
-							overheat_timer = overheated_time;
-						}
-						else 
-							overheat_timer = overheat_time;  
+						// OVERHEAT
+						object[] args_overheat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time};
+						weapon_script.CallFunctionArgs("Overheat", args_overheat);
+						
 					}
 					else if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
 					{

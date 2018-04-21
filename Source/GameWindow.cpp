@@ -45,6 +45,7 @@ void GameWindow::DrawWindow()
 		{
 			ImGui::Image((void*)App->renderer3D->game_camera->GetViewportTexture()->GetTextureID(), { width, height }, ImVec2(0, 1), ImVec2(1, 0));
 		}
+
 		ImGui::End();
 	}
 	else
