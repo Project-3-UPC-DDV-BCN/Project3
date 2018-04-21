@@ -17,7 +17,7 @@ namespace TheEngine
         public extern int GetIntField(string field_name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetFloatlField(string field_name, float value);
+        public extern void SetFloatField(string field_name, float value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern float GetFloatField(string field_name);

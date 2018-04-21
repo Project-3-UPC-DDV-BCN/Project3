@@ -3,9 +3,15 @@ using TheEngine;
 using TheEngine.TheConsole;
 using TheEngine.TheMath;
 
-
 public class Weapon0 {	
+	
+	private TheScript starship_shooting = null;
 
+	void Start()
+	{
+		starship_shooting = TheGameObject.Self.GetComponent<TheScript>(0);
+	}
+	
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, bool used_left_laser, 
 				TheFactory laser_factory, TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
@@ -13,7 +19,7 @@ public class Weapon0 {
 		
 		TheVector3 offset;
 			
-		curr_overheat_inc = overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f);
+		starship_shooting.SetFloatField("curr_overheat_inc", overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f));
 
 		if (used_left_laser)
 		{
@@ -24,7 +30,7 @@ public class Weapon0 {
 			offset = new TheVector3(-1, 2, 0);
 		}
 		
-		used_left_laser = !used_left_laser;
+		starship_shooting.SetBoolField("used_left_laser", !used_left_laser);
 		
 		laser_factory.SetSpawnPosition(laser_spawner.GetComponent<TheTransform>().GlobalPosition);// + offset
 
