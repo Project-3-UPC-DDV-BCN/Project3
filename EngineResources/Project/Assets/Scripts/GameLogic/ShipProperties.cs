@@ -23,6 +23,7 @@ public class ShipProperties
 	private TheFactory factory = null;
 	private TheScript movement_script = null;
 	private TheTransform self_transform = null;
+	private TheAudioSource audio_source;
 
 	bool one_shoot = true;
 		
@@ -55,7 +56,7 @@ public class ShipProperties
 	void Start()
 	{
 		factory = TheGameObject.Self.GetComponent<TheFactory>();
-
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 		if(factory != null)
 			factory.StartFactory();		
 	}
@@ -92,6 +93,9 @@ public class ShipProperties
 			
 			if(laser != null)
 			{
+				if(audio_source!=null)
+					audio_source.Play("Play_Shoot");
+				
 				TheScript laser_script = laser.GetScript("Laser");
 
 				if(laser_script != null)
