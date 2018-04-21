@@ -809,7 +809,8 @@ void ModuleScene::SetParticleSystemsState()
 
 	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
 	{
-		(*it)->PlayEmmiter(); 
+		if((*it)->GetDataBehaviour() == 0)
+			(*it)->PlayEmmiter(); 
 	}
 }
 

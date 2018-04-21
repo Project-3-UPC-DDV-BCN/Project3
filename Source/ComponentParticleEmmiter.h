@@ -61,6 +61,9 @@ public:
 	particle_system_state GetSystemState() const;
 	void SetSystemState(particle_system_state new_state);
 
+	///Runtime Behaviour
+	int GetDataBehaviour(); 
+
 	///Root particle
 	Particle* GetRootParticle() const;
 
@@ -92,8 +95,6 @@ public:
 	float show_depth; 
 
 	bool scale_dirty; 
-
-	string runtime_behaviour; 
 
 	bool show_shockwave;
 

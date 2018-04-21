@@ -464,6 +464,7 @@ void Application::Play()
 		}
 		
 		App->scene->is_game = true;
+
 		App->scene->InitScripts();
 		App->scene->SetParticleSystemsState(); 
 	}
