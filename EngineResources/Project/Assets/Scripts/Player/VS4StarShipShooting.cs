@@ -69,20 +69,20 @@ public class VS4StarShipShooting
         	laser_factory.StartFactory();
 
 		audio_source = shoot_audio_emiter.GetComponent<TheAudioSource>();
-		if(audio_source == null) 
-			TheConsole.Log("no audio");
+		/*if(audio_source == null) 
+			TheConsole.Log("no audio");*/
 
         weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
-		if(weapons_bar == null) 
-			TheConsole.Log("no weapon bar");
+		/*if(weapons_bar == null) 
+			TheConsole.Log("no weapon bar");*/
 
         curr_overheat_inc = overheat_increment;
 	
 		if(overheat_bar_obj != null)
 			overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
 
-		if(overheat_bar_bar == null) 
-			TheConsole.Log("no overheat");
+		/*if(overheat_bar_bar == null) 
+			TheConsole.Log("no overheat");*/
 
 		if(crosshair_1 != null)
 			crosshair_1.SetActive(true);

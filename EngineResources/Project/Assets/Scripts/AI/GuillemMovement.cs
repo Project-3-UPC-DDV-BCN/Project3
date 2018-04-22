@@ -39,12 +39,12 @@ public class GuillemMovement
 
 	bool avoiding = false;
 	TheVector3 avoiding_addition = new TheVector3(0, 0, 0);
+	
+	public TheGameObject GM = null;
 
 	void Init()
 	{
         ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
-
-		TheGameObject GM = TheGameObject.Find("GameManager");
 		
 		if(GM != null)
 			GameManager = GM.GetScript("GameManager");
@@ -100,15 +100,17 @@ public class GuillemMovement
         {
 			TheVector3 center_trans_pos = center_transform.GlobalPosition;
 			TheVector3 self_trans_pos = self_transform.GlobalPosition;
-
-            if (TheVector3.Distance(center_trans_pos, self_trans_pos) > desertor_distance)
+			
+			float distance_center_self = TheVector3.Distance(center_trans_pos, self_trans_pos);
+			
+            if (distance_center_self > desertor_distance)
                 TheGameObject.Destroy(TheGameObject.Self);
 
-            if (TheVector3.Distance(center_trans_pos, self_trans_pos) > max_distance_to_center_object)
+            if (distance_center_self > max_distance_to_center_object)
             {
                 target_transform = center_transform;
             }
-            else if (TheVector3.Distance(center_trans_pos, self_trans_pos) < max_distance_to_center_object / 2 &&
+            else if (distance_center_self < max_distance_to_center_object / 2 &&
                     target_transform == center_transform && !forced)
             {
                 target_transform = null;
@@ -140,7 +142,7 @@ public class GuillemMovement
 	{
 		if(go.GetComponent<TheTransform>() == target_transform)
 		{
-			TheConsole.Log("My target was destroyed! Reseting..");
+			//TheConsole.Log("My target was destroyed! Reseting..");
 			ClearTarget();
 		}
 	}

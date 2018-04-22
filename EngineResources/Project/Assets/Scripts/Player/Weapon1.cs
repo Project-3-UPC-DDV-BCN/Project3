@@ -18,11 +18,12 @@ public class Weapon1
 	TheTimer heat_timer = new TheTimer();
 	public float heat_time = 2.0f;
 	
+	public TheGameObject game_manager = null;
+	
 	void Start()
 	{
 		starship_shooting = TheGameObject.Self.GetScript("VS4StarShipShooting");
 
-		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		if(game_manager != null)
 		{
 			TheScript game_manager_script = game_manager.GetScript("GameManager");
@@ -42,7 +43,7 @@ public class Weapon1
 	public void Shoot(TheProgressBar weapons_bar, float curr_overheat_inc, float overheat_increment, TheFactory laser_factory, 
 					TheGameObject laser_spawner, TheAudioSource audio_source)
 	{
-		if (weapons_bar == null)
+		/*if (weapons_bar == null)
 			TheConsole.Log("weapons_bar == null");
 		if (curr_overheat_inc == null)
 			TheConsole.Log("curr_overheat_inc == null");
@@ -54,6 +55,7 @@ public class Weapon1
 			TheConsole.Log("laser_spawner == null");
 		if (audio_source == null)
 			TheConsole.Log("audio_source == null");
+		*/
 		
 		TheVector3 offset = new TheVector3(0, 2, 0);
 
@@ -68,7 +70,7 @@ public class Weapon1
 				TheScript laser_script = go.GetScript("Laser"); 
 				if(laser_script != null && slave_transform != null && slave_go != null)
 				{
-					TheConsole.Log("Slave1 shoots with weapon 1");			
+					//TheConsole.Log("Slave1 shoots with weapon 1");			
 	
 					object[] args = {slave_go, speed, damage, slave_transform.ForwardDirection, slave_transform.QuatRotation};
 					laser_script.CallFunctionArgs("SetInfo", args);
@@ -121,7 +123,7 @@ public class Weapon1
 				
 				if(overheat<=0.0f)
 				{
-					TheConsole.Log("Stopped");
+					//TheConsole.Log("Stopped");
 					overheat = 0.0f;
 					starship_shooting.SetBoolField("cooling", false);
 					heat_timer.Stop();
