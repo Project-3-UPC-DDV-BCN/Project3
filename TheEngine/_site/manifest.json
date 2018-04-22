@@ -1,6 +1,6 @@
 {
   "homepages": [],
-  "source_base_path": "D:/Project3/TheEngine",
+  "source_base_path": "C:/Users/USUARIO/Documents/GitHub/Project3/TheEngine",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -587,17 +587,26 @@
         "incrementalPhase": "build"
       },
       "processors": {
+<<<<<<< HEAD
+        "ManagedReferenceDocumentProcessor": {
+=======
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
+>>>>>>> d5c7ec147fb5a01689f98ad94d9351e5f4b1a356
           "can_incremental": true,
           "incrementalPhase": "build"
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
+          "incrementalPhase": "build"
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot suppport incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

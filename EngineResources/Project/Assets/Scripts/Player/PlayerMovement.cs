@@ -258,7 +258,7 @@ public class PlayerMovement {
 			if(audio_source != null)
 			{
 				audio_source.Play("Play_Engine");
-				audio_source.SetMyRTPCvalue("Speed",vel_percent);
+				audio_source.SetMyRTPCvalue("Velocity",vel_percent);
 			}
 		}
 		
@@ -533,7 +533,7 @@ public class PlayerMovement {
 		float target_vel = vel_percent * curr_max_vel;
 		
 		if(audio_source != null)
-			audio_source.SetMyRTPCvalue("Speed",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
+			audio_source.SetMyRTPCvalue("Velocity",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
 		
 		if(boosting)
 		{
@@ -721,7 +721,7 @@ public class PlayerMovement {
 	public void DamageSlaveOne(float dmg)
     {
 		if(audio_source != null)
-			audio_source.Play("Play_Ship_hit)";
+			audio_source.Play("Play_Ship_hit");
 
         switch(TheRandom.RandomInt() % ship_parts)
         {
