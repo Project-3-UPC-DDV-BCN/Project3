@@ -1711,6 +1711,9 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		//glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+
 		/*glm::mat4 lightProjection, lightView;
 		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 
@@ -1733,9 +1736,6 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		l_dir.y = trans->GetMatrix().WorldZ().y;
 		l_dir.z = trans->GetMatrix().WorldZ().z;
 
-
-		float4x4 MVP;
-
 		glm::mat4 biasMatrix(
 			0.5, 0.0, 0.0, 0,
 			0.0, 0.5, 0.0, 0,
@@ -1745,7 +1745,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-40.0, 40.0, -40.0, 40.0, -40.0, 40.0);
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-400.0, 400.0, -400.0, 400.0, 1.0, 4000.0);
 		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0) + l_dir, glm::vec3(0, 1, 0));
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
@@ -1901,9 +1901,6 @@ void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRender
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
 	BindVertexArrayObject(mesh->GetMesh()->id_vao);
-	//glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
-
-
 	App->renderer3D->BindVertexArrayObject(mesh->GetMesh()->id_vao);
 
 	App->renderer3D->BindArrayBuffer(mesh->GetMesh()->id_vertices_data);
@@ -1929,10 +1926,15 @@ void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRender
 
 	App->renderer3D->BindElementArrayBuffer(mesh->GetMesh()->id_indices);
 
-	App->renderer3D->UnbindVertexArrayObject();
 
 
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+
+	App->renderer3D->UnbindVertexArrayObject();
+
+
 
 	//mesh->GetMesh()->InitializeMesh();
 }
