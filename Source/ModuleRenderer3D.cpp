@@ -815,6 +815,17 @@ void ModuleRenderer3D::DrawMesh(ComponentMeshRenderer * mesh)
 				material->LoadToMemory();
 			}
 
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D,depth_map);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+			glActiveTexture(GL_TEXTURE4);
+			glBindTexture(GL_TEXTURE_2D, depth_map);
+
 			SetUniformBool(program, "has_light", mesh->has_light);
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 			SetUniformBool(program, "is_ui", false);
@@ -1933,8 +1944,6 @@ void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRender
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 
 	App->renderer3D->UnbindVertexArrayObject();
-
-
 
 	//mesh->GetMesh()->InitializeMesh();
 }

@@ -1805,7 +1805,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	TangentFragPos = TBN * FragPos;\n"
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
-		"	FragPosLightSpace = DepthBiasMVP * vec4(position, 1.0);\n"
+		"	FragPosLightSpace = DepthBiasMVP* Model * vec4(FragPos, 1.0);\n"
 		"}";
 
 		default_vert->SetContent(shader_text);
