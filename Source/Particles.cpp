@@ -471,7 +471,6 @@ void Particle::Draw(ComponentCamera* active_camera)
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, GetAtributes().texture->GetID());
-		CONSOLE_LOG("%d", GetAtributes().texture->GetID()); 
 	}
 
 	if (GetAtributes().particle_mesh->id_indices == 0) GetAtributes().particle_mesh->LoadToMemory(); 

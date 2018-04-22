@@ -23,10 +23,6 @@ void ComponentParticleEmmiter::GenerateParticles()
 	if (system_state == PARTICLE_STATE_PAUSE)
 		return;
 
-	//CONSOLE_LOG("Timer: %d", spawn_timer.Read()); 
-	//CONSOLE_LOG("DT: %f", App->GetDt()*1000);
-	//CONSOLE_LOG("Freq: %f", emmision_frequency);
-
 	if (App->GetDt()*1000 > emmision_frequency)
 	{
 		time_lefting += (App->GetDt() * 1000) - emmision_frequency;
@@ -38,8 +34,6 @@ void ComponentParticleEmmiter::GenerateParticles()
 		}
 
 	}
-
-	//CONSOLE_LOG("particles: %d", particles_this_frame);
 
 	if (spawn_timer.Read() > emmision_frequency)
 	{

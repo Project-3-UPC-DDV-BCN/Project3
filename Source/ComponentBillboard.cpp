@@ -95,8 +95,6 @@ bool ComponentBillboard::RotateObject()
 
 	object_transform->SetRotation({ 0, angles.y, 0 });
 
-	CONSOLE_LOG("%f", angles.y); 
-
 	//if (billboarding_type == BILLBOARD_Y)
 	//	direction.y = 0;
 
