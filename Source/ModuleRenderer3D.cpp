@@ -44,6 +44,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "Mesh.h"
 
 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -1727,6 +1728,12 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		l_pos.y = trans->GetGlobalPosition().y;
 		l_pos.z = trans->GetGlobalPosition().z;
 
+		glm::vec3 l_dir;
+		l_dir.x = trans->GetMatrix().WorldZ().x;
+		l_dir.y = trans->GetMatrix().WorldZ().y;
+		l_dir.z = trans->GetMatrix().WorldZ().z;
+
+
 		float4x4 MVP;
 
 		glm::mat4 biasMatrix(
@@ -1736,8 +1743,10 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 			0.5, 0.5, 0.5, 1.0
 		);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-40.0, 40.0, -40.0, 40.0, -40.0, 40.0);
-		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0) + l_dir, glm::vec3(0, 1, 0));
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
 		glm::mat4 MVP_BIAS = biasMatrix* depthMVP;
@@ -1759,7 +1768,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 		std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 
-		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
 
 		SetUniformMatrix(program, "depthMVP", glm::value_ptr(depthMVP));
 
@@ -1889,12 +1898,41 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRenderer* mesh)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
-	//if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
-	//BindVertexArrayObject(mesh->GetMesh()->id_vao);
+	BindVertexArrayObject(mesh->GetMesh()->id_vao);
 	//glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
 
-	//SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+
+	App->renderer3D->BindVertexArrayObject(mesh->GetMesh()->id_vao);
+
+	App->renderer3D->BindArrayBuffer(mesh->GetMesh()->id_vertices_data);
+
+	//vertices
+	App->renderer3D->SetVertexAttributePointer(0, 3, 19, 0);
+	App->renderer3D->EnableVertexAttributeArray(0);
+	//texture coords
+	App->renderer3D->SetVertexAttributePointer(1, 3, 19, 3);
+	App->renderer3D->EnableVertexAttributeArray(1);
+	//normals
+	App->renderer3D->SetVertexAttributePointer(2, 3, 19, 6);
+	App->renderer3D->EnableVertexAttributeArray(2);
+	//colors
+	App->renderer3D->SetVertexAttributePointer(3, 4, 19, 9);
+	App->renderer3D->EnableVertexAttributeArray(3);
+	//tangents
+	App->renderer3D->SetVertexAttributePointer(4, 3, 19, 13);
+	App->renderer3D->EnableVertexAttributeArray(4);
+	//bitangents
+	App->renderer3D->SetVertexAttributePointer(5, 3, 19, 16);
+	App->renderer3D->EnableVertexAttributeArray(5);
+
+	App->renderer3D->BindElementArrayBuffer(mesh->GetMesh()->id_indices);
+
+	App->renderer3D->UnbindVertexArrayObject();
+
+
+	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 
 	//mesh->GetMesh()->InitializeMesh();
 }

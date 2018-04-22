@@ -2161,10 +2161,10 @@ void ModuleResources::CreateDefaultShaders()
 			"layout(location = 0) in vec3 position;\n"
 
 			"uniform mat4 depthMVP;\n"
-
+			"uniform mat4 Model;\n"
 			"void main()\n"
 			"{\n"
-			"	gl_Position = depthMVP * vec4(position, 1.0);\n"
+			"	gl_Position = depthMVP * Model* vec4(position, 1.0);\n"
 			"}\n"
 			;
 
