@@ -86,7 +86,7 @@ public:
 
 	JSONTool* GetJSONTool() const;
 
-	void SetParticleSystemsState();
+	void SetParticleSystemsState(const char* state);
 
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);

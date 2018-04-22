@@ -2192,8 +2192,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::Checkbox("Show Emmiter Area", &show);
 				current_emmiter->SetShowEmmisionArea(show);
 
-				CONSOLE_LOG("Emmit_Width: %f", current_emmiter->data->emmit_width); 
-
 				ImGui::InputFloat("Width (X)", &current_emmiter->show_width, 0.1f, 0.0f, 2);
 				ImGui::InputFloat("Height (X)", &current_emmiter->show_height, 0.1f, 0.0f, 2);
 				ImGui::InputFloat("Depth (X)", &current_emmiter->show_depth, 0.1f, 0.0f, 2);

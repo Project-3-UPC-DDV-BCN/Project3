@@ -802,15 +802,27 @@ JSONTool * ModuleScene::GetJSONTool() const
 	return json_tool;
 }
 
-void ModuleScene::SetParticleSystemsState()
+void ModuleScene::SetParticleSystemsState(const char* state)
 {
-	CONSOLE_LOG("%d", scene_emmiters.size()); 
 
-	for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+	if (state == "Stop")
 	{
-		if((*it)->GetDataBehaviour() == 0)
-			(*it)->PlayEmmiter(); 
+		for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+		{
+			(*it)->SetShowEmmisionArea(true);
+		}
 	}
+	else if (state == "Play")
+	{
+		for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+		{
+			if ((*it)->GetDataBehaviour() == 0)
+				(*it)->PlayEmmiter();
+
+			(*it)->SetShowEmmisionArea(false);
+		}
+	}
+
 }
 
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)

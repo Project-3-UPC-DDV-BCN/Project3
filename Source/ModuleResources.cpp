@@ -2160,7 +2160,7 @@ void ModuleResources::CreateDefaultShaders()
 			"   if(color.a < 0.1f)\n"
 			"		discard;\n"
 
-			"	if(alpha_interpolation)\n"
+			"	if(alpha_interpolation && color.a > alpha_percentage)\n"
 			"		color.a = alpha_percentage;\n"
 
 			"}";

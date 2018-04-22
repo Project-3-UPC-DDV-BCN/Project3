@@ -409,10 +409,8 @@ void ComponentParticleEmmiter::SetEmmisionRate(float new_emision_rate)
 
 void ComponentParticleEmmiter::SetFrequencyFromRate(int rate)
 {
-
 	if (rate != 0)
 		emmision_frequency = (1000 / rate);
-
 }
 
 bool ComponentParticleEmmiter::ShowEmmisionArea() const
