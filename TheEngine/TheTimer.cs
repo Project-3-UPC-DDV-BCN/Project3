@@ -13,6 +13,12 @@ namespace TheEngine
             started = true;
         }
 
+        public void Stop()
+        {
+            started = false;
+            start_time = 0.0f;
+        }
+
         public float ReadTime()
         {
             if (started)
