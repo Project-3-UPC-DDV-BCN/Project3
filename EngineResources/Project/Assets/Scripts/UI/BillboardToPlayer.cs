@@ -26,8 +26,12 @@ public class BillboardToPlayer {
 	}
 	
 	void Update () {
-		transform.LookAt(player_transform.GlobalPosition);		
-		transform.LocalRotation = (transform.LocalRotation - player_transform.GlobalRotation);
+		if(player_transform == null) return;
+
+		transform.LookAt(player_transform.GlobalPosition);	
+		if(parent_transform != null)	
+			transform.LocalRotation = (transform.LocalRotation - parent_transform.GlobalRotation);
+			transform.LocalRotation = new TheVector3(transform.LocalRotation.x, -transform.LocalRotation.y, transform.LocalRotation.z);
 	}
 
 }
