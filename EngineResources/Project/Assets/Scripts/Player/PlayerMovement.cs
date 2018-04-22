@@ -516,8 +516,10 @@ public class PlayerMovement {
 			if(decel_percent<default_break_percent)
 			{	
 				decel_percent = default_break_percent;
-				breaking = true;
+				
 			}
+			else
+				breaking = true;
 			
         }
 		
