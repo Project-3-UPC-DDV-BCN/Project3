@@ -1756,7 +1756,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-400.0, 400.0, -400.0, 400.0, 1.0, 4000.0);
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-4000.0, 4000.0, -4000.0, 4000.0, -100.0, 8000.0);
 		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0) + l_dir, glm::vec3(0, 1, 0));
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
