@@ -187,6 +187,6 @@ private:
 	uint depth_mapFBO;
 	uint default_buffer = 0;
 	float near_plane, far_plane;
-
-	float* light_space_mat = nullptr;
+	float* bias_MVP = nullptr;
+	//float* light_space_mat = nullptr;
 };
