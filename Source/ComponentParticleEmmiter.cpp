@@ -331,11 +331,7 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	data.AddInt("Type", (int)GetType());
 	data.AddBool("Active", IsActive());
 	data.AddUInt("UUID", GetUID());
-	//Save Transform 
-	ComponentTransform* go_transform = (ComponentTransform*)GetGameObject()->GetComponent(Component::CompTransform); 
-	
-	data.AddVector3("Position", go_transform->GetGlobalPosition()); 
-	data.AddVector3("Rotation", go_transform->GetGlobalRotation());
+	data.CreateSection("ParticleEmitter");
 
 	int rate = GetEmmisionRate(); 
 	data.AddInt("Rate", rate);
@@ -343,6 +339,8 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	string name = this->data->GetName(); 
 
 	data.AddString("Template", name); 
+
+	data.CloseSection();
 
 }
 
@@ -352,19 +350,17 @@ void ComponentParticleEmmiter::Load(Data & data)
 	SetActive(data.GetBool("Active"));
 	SetUID(data.GetUInt("UUID"));
 
-	uint particle_uid = data.GetUInt("UUID");
-
-	float3 pos = data.GetVector3("Position"); 
-	float3 rot = data.GetVector3("Rotation");
+	data.EnterSection("ParticleEmitter"); 
 
 	//Load Template 
 	SetFrequencyFromRate(data.GetInt("Rate"));
 	string template_name = data.GetString("Template");
 
-	this->data = App->resources->GetParticleTemplate(template_name);
-
 	if (first_loaded == false && this->data)
 	{
+		this->data = App->resources->GetParticleTemplate(template_name);
+		data.LeaveSection();
+
 		show_width = this->data->emmit_width;
 		show_height = this->data->emmit_height;
 		show_depth = this->data->emmit_depth;
@@ -375,6 +371,8 @@ void ComponentParticleEmmiter::Load(Data & data)
 
 		first_loaded = true; 
 	}
+	else
+		data.LeaveSection();
 
 }
 
