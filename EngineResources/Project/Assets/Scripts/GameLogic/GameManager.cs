@@ -281,6 +281,12 @@ public class GameManager
 						front_radar.SetMarkerToEntity(add, "Empire");
 					}
 
+					if(back_radar != null)
+					{
+						back_radar.AddEntity(add);
+						back_radar.SetMarkerToEntity(add, "Alliance");
+					}
+
 					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
 				}
 			}

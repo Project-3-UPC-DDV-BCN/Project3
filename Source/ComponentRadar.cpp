@@ -441,6 +441,12 @@ void ComponentRadar::DrawRadarTop(ComponentCanvas* canvas)
 				{
 					ComponentTransform* entity_trans = (ComponentTransform*)(*it).go->GetComponent(Component::CompTransform);
 
+					if (entity_trans->GetGameObject()->is_on_destroy)
+					{
+						RemoveEntity(entity_trans->GetGameObject());
+						return;
+					}
+
 					float3 center_rot = center_trans->GetGlobalRotation();
 					float3 center_pos = center_trans->GetGlobalPosition();
 					float3 entity_pos = entity_trans->GetGlobalPosition();
@@ -512,6 +518,12 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 				if ((*it).go != nullptr)
 				{
 					ComponentTransform* entity_trans = (ComponentTransform*)(*it).go->GetComponent(Component::CompTransform);
+
+					if (entity_trans->GetGameObject()->is_on_destroy)
+					{
+						RemoveEntity(entity_trans->GetGameObject());
+						return;
+					}
 
 					const float entity_scaled_size = c_rect_trans->GetScaledSize().x;
 
@@ -607,6 +619,12 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 				if ((*it).go != nullptr)
 				{
 					ComponentTransform* entity_trans = (ComponentTransform*)(*it).go->GetComponent(Component::CompTransform);
+
+					if (entity_trans->GetGameObject()->is_on_destroy)
+					{
+						RemoveEntity(entity_trans->GetGameObject());
+						return;
+					}
 
 					const float entity_scaled_size = c_rect_trans->GetScaledSize().x;
 

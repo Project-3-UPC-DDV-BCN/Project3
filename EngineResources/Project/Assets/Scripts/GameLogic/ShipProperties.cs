@@ -121,6 +121,7 @@ public class ShipProperties
 		if(ship != null && !IsDead())
 		{
 			TheScript ship_script = ship.GetScript("ShipProperties");
+			bool ship_is_slave1 = (bool)ship_script.CallFunctionArgs("IsSlave1");
 			if(ship_script != null)
 			{
 				string hit_faction = (string)ship_script.CallFunctionArgs("GetFaction");
@@ -129,8 +130,10 @@ public class ShipProperties
 				{
 					// Ally hit
 					DealDamage(dmg);
+	
 					if(!is_slave1)
 						TheConsole.Log("Ally hit. Dmg: " + dmg + "  | Ship now has: " + GetLife() + " Life");
+	
 					else
 						TheConsole.Log("Slave1 is hit!");
 				}
@@ -140,8 +143,18 @@ public class ShipProperties
 					DealDamage(dmg);
 					if(!is_slave1)
 						TheConsole.Log("Enemy hit. Dmg: " + dmg+ "  | Ship now has: " + GetLife() + " Life");
+					
 					else
 						TheConsole.Log("Slave1 is hit!");
+
+					if(ship_is_slave1 && IsDead())
+					{	
+						if(game_manager_script != null)
+						{
+							object[] args = {100};
+							game_manager_script.CallFunctionArgs("AddScore", args);
+						}
+					}
 				}
 			}
 		}
@@ -246,7 +259,7 @@ public class ShipProperties
 					if(particle_trans != null && self_transform != null)
 					{
 						TheConsole.Log("Explosion particle created!");
-						particle_trans.GlobalPosition = self_transform.GlobalPosition;
+						particle_trans.LocalPosition = self_transform.LocalPosition;
 					}
 				}
 

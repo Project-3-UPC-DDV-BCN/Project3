@@ -56,6 +56,10 @@ public class VS4StarShipShooting
     public float w2_cooling_rate = 10.0f;
     
 	private TheScript weapon_script = null;
+
+	private TheTimer shooting_frequency_timer = new TheTimer();
+	public float shooting_frequency_w0 = 0.2f;
+	public float shooting_frequency_w1 = 0.2f;
 	
     void Start () 
 	{
@@ -96,6 +100,8 @@ public class VS4StarShipShooting
 			laser_light_comp = laser_light.GetComponent<TheLight>();
 		
 		weapon_script = TheGameObject.Self.GetScript("Weapon0");
+
+		shooting_frequency_timer.Start();
     }	
 
 	void Update () 
@@ -109,7 +115,7 @@ public class VS4StarShipShooting
 			{	
 				if(timer <= 0 && !overheated)
 				{
-					if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2)
+					if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 2 && shooting_frequency_timer.ReadTime() > shooting_frequency_w0)
 					{
 						if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
 							break;
@@ -126,7 +132,9 @@ public class VS4StarShipShooting
 						object[] args_heat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
 						weapon_script.CallFunctionArgs("Heat", args_heat);	
 						
-						timer = spawn_time;							
+						timer = spawn_time;	
+
+						shooting_frequency_timer.Start();						
 					}
 					else if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
 					{
@@ -155,11 +163,13 @@ public class VS4StarShipShooting
 						overheat_timer = 1.0f;
 					}				
 				}
-				else if (TheInput.GetControllerButton(0,"CONTROLLER_A") == 3)
+				else if (TheInput.GetControllerButton(0,"CONTROLLER_A") == 3 && shooting_frequency_timer.ReadTime() > shooting_frequency_w1)
 				{
 					// SHOOT
 					object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, laser_factory, laser_spawner, audio_source};		
 					weapon_script.CallFunctionArgs("Shoot", args_shoot);
+
+					shooting_frequency_timer.Start();
 				}
 				else
 				{
