@@ -248,7 +248,7 @@ public class Slave1Movement {
 		SetValuesWithEnergy();
         RegenShield();
 		RepairPuzzle();
-
+		
         //set ui bars
 		if(weapons_bar != null)
 			weapons_bar.PercentageProgress = (100.0f / 8.0f) * weapon_energy;
@@ -274,6 +274,7 @@ public class Slave1Movement {
 			particle_emitter.SetParticleSpeed(((curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100)* particle_base_speed);
         }*/
 		curr_total_hp = wings_hp + body_hp + engine_hp;
+
 	}
 
 	void SetValuesWithEnergy()

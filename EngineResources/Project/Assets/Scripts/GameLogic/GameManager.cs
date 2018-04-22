@@ -25,8 +25,8 @@ public class GameManager
 	private float background_music_timer = 0.0f;
 	private bool calm_combat = false;
 	
-	public int calm_volume = 35;
-	public int combat_volume = 20;
+	public int calm_volume = 10;
+	public int combat_volume = 10;
 
 	TheAudioSource audio_source = null;
 	
