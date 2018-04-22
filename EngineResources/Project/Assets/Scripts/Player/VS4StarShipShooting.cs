@@ -141,12 +141,11 @@ public class VS4StarShipShooting
 						object[] args_overheat = {overheat, cooling, laser_factory, laser_spawner, overheat_timer};
 						weapon_script.CallFunctionArgs("Overheat", args_overheat);
 					}
-				}
-				else
-				{	
-					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
-					weapon_script.CallFunctionArgs("Cooling", args_cooling);
-				}
+				}	
+				
+				object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
+				weapon_script.CallFunctionArgs("Cooling", args_cooling);
+
 				
 				break;
 			}

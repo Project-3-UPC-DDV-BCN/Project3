@@ -188,6 +188,7 @@ public:
 
 	//TIMER
 	void Start(MonoObject* object, float time);
+	void Stop(MonoObject * object);
 	float ReadTime(MonoObject* object);
 
 	//INPUT

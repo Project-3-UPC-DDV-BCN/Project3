@@ -4075,6 +4075,10 @@ void NSScriptImporter::Start(MonoObject * object, float time)
 {
 }
 
+void NSScriptImporter::Stop(MonoObject * object)
+{
+}
+
 float NSScriptImporter::ReadTime(MonoObject * object)
 {
 	return 0.0f;
