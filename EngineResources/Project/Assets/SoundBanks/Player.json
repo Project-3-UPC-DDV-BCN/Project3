@@ -7,7 +7,7 @@
   "RootPaths": {
    "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\",
    "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\.cache\\Windows\\",
-   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\..\\..\\PlayerSoundbank\\",
+   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\..\\..\\playerbank\\",
    "ExternalSourcesInputFile": "",
    "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\GeneratedSoundBanks\\Windows\\"
   },
@@ -40,14 +40,9 @@
       "ObjectPath": "\\Events\\Default Work Unit\\Play_Engine"
      },
      {
-      "Id": "1864892471",
-      "Name": "Play_Player_hit",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Player_hit"
-     },
-     {
       "Id": "4276952718",
-      "Name": "Play_Potency_up",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Potency_up"
+      "Name": "Play_Potency_Up",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Potency_Up"
      },
      {
       "Id": "1958147595",
@@ -107,12 +102,6 @@
       "Path": "SFX\\droid_speed_up_1C9C67B2.wem"
      },
      {
-      "Id": "386923776",
-      "Language": "SFX",
-      "ShortName": "exp_debris_metal_med02.wav",
-      "Path": "SFX\\exp_debris_metal_med02_1C9C67B2.wem"
-     },
-     {
       "Id": "390753520",
       "Language": "SFX",
       "ShortName": "shotgun-reload-mossberg590-RA_The_Sun_God-1398444554.wav",
@@ -149,10 +138,10 @@
       "Path": "SFX\\droid_r5_chatter_01_1C9C67B2.wem"
      },
      {
-      "Id": "889703100",
+      "Id": "900674420",
       "Language": "SFX",
-      "ShortName": "Speed_up.wav",
-      "Path": "SFX\\Speed_up_1C9C67B2.wem"
+      "ShortName": "Potency_Up.wav",
+      "Path": "SFX\\Potency_Up_1C9C67B2.wem"
      }
     ]
    }
