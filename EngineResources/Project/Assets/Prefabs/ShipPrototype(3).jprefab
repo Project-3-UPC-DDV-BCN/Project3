@@ -1,11 +1,11 @@
 {
-"UUID": "325956190",
+    "UUID": "410064291",
     "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "936206141",
+        "UUID": "438400493",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -103,7 +103,7 @@
                     "value_Z": "-431602080.000000"
                 },
                 "Life_time": "3.500000",
-                "Prefab_UID": "1464112867"
+                "Prefab_UID": "1406036996"
             },
             "Component_3": {
                 "Type": "3",
@@ -208,7 +208,7 @@
                     "float_fields_count": "5",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
-                    "gameobject_fields_count": "1",
+                    "gameobject_fields_count": "2",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -240,6 +240,10 @@
                     "string_fields": {},
                     "gameobject_fields": {
                         "field_0": {
+                            "field_name": "GM",
+                            "field_value": "538062033"
+                        },
+                        "field_1": {
                             "field_name": "force_target",
                             "field_value": "0"
                         }
@@ -340,7 +344,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1331572464",
+        "UUID": "1843131989",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -398,12 +402,12 @@
                 }
             }
         },
-        "ParentID": "936206141",
+        "ParentID": "438400493",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "684958801",
+        "UUID": "2101846978",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -470,12 +474,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1331572464",
+        "ParentID": "1843131989",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "494819139",
+        "UUID": "1005265111",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -543,7 +547,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "684958801",
+        "ParentID": "2101846978",
         "IsRoot": "0",
         "IsStatic": "0"
     }
