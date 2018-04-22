@@ -356,18 +356,22 @@ void ComponentParticleEmmiter::Load(Data & data)
 	SetFrequencyFromRate(data.GetInt("Rate"));
 	string template_name = data.GetString("Template");
 
-	if (first_loaded == false && this->data)
+	if (first_loaded == false)
 	{
 		this->data = App->resources->GetParticleTemplate(template_name);
 		data.LeaveSection();
 
-		show_width = this->data->emmit_width;
-		show_height = this->data->emmit_height;
-		show_depth = this->data->emmit_depth;
+		if (this->data)
+		{
+			show_width = this->data->emmit_width;
+			show_height = this->data->emmit_height;
+			show_depth = this->data->emmit_depth;
 
-		scale_dirty = true;
+			scale_dirty = true;
 
-		this->data->emmit_width = this->data->emmit_height = this->data->emmit_depth = 1;
+			this->data->emmit_width = this->data->emmit_height = this->data->emmit_depth = 1;
+		}
+		
 
 		first_loaded = true; 
 	}
