@@ -6112,6 +6112,10 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	{
 		type = Component::CompLight;
 	}
+	else if (component_type == "TheRadar")
+	{
+		type = Component::CompRadar;
+	}
 	else
 	{
 		type = Component::CompUnknown;

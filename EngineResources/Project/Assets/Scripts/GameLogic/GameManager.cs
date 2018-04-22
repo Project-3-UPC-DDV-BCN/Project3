@@ -34,6 +34,11 @@ public class GameManager
 	TheTransform slave1_trans = null;
 	TheAudioSource slave1_audiosource = null;
 
+	public TheGameObject front_radar_go;
+	TheRadar front_radar = null;
+	public TheGameObject back_radar_go;
+	TheRadar back_radar = null;
+
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
     List<TheGameObject> empire_ships = new List<TheGameObject>();
 	TheGameObject slave1 = null;
@@ -81,8 +86,13 @@ public class GameManager
 		if(score_text != null)
 			score_text.Text = score.ToString();
 
-		
-			audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+		if(front_radar_go != null)
+			front_radar = front_radar_go.GetComponent<TheRadar>();
+
+		if(back_radar_go != null)
+			back_radar = back_radar_go.GetComponent<TheRadar>();
+
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
 		if(slave1_audio != null)
 			slave1_audiosource = slave1_audio.GetComponent<TheAudioSource>();
@@ -233,6 +243,19 @@ public class GameManager
 				{
 					alliance_ships.Add(add);
 
+					if(front_radar != null)
+					{
+						front_radar.AddEntity(add);
+						front_radar.SetMarkerToEntity(add, "Alliance");
+					}
+		
+					if(back_radar != null)
+					{
+						back_radar.AddEntity(add);
+						back_radar.SetMarkerToEntity(add, "Alliance");
+					}
+					
+
 					TheConsole.Log("Ship added to alliance!: " + AllianceShipsCount());
 				}
 			}
@@ -251,6 +274,12 @@ public class GameManager
 				if(!is_slave)
 				{
 					empire_ships.Add(add);
+				
+					if(front_radar != null)
+					{
+						front_radar.AddEntity(add);
+						front_radar.SetMarkerToEntity(add, "Empire");
+					}
 
 					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
 				}
@@ -296,6 +325,12 @@ public class GameManager
 				}
 			}
 			
+			if(front_radar != null)
+				front_radar.RemoveEntity(remove);
+	
+			if(back_radar != null)
+				back_radar.RemoveEntity(remove);
+
 		}
 	}
 

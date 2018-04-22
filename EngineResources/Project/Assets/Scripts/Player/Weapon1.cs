@@ -6,6 +6,9 @@ using TheEngine.TheMath;
 
 public class Weapon1 
 {
+	public int damage = 10;
+	public float speed = 100;
+
 	private TheGameObject slave_go = null;
 	private TheTransform slave_transform = null;
 	
@@ -63,7 +66,7 @@ public class Weapon1
 				{
 					TheConsole.Log("Slave1 shoots with weapon 1");			
 	
-					object[] args = {slave_go, 130.0f, 10, slave_transform.ForwardDirection, slave_transform.QuatRotation};
+					object[] args = {slave_go, speed, damage, slave_transform.ForwardDirection, slave_transform.QuatRotation};
 					laser_script.CallFunctionArgs("SetInfo", args);
 				}
 			}
