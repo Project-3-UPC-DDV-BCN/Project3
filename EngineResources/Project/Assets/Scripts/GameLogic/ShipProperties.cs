@@ -53,7 +53,7 @@ public class ShipProperties
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("AddSlave1", args);
 
-				player_movement_script = TheGameObject.Self.GetScript("PlayerMovement");
+				player_movement_script = TheGameObject.Self.GetScript("Slave1Movemement");
 			}
 		}
 		else
@@ -203,8 +203,9 @@ public class ShipProperties
 		else
 		{
 			if(player_movement_script != null)
-			{
-				object[] args = {(float)dmg};
+			{	
+				float f_dmg = (float)dmg;
+				object[] args = {f_dmg};
 				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);
 			}
 		}
@@ -258,8 +259,15 @@ public class ShipProperties
 					TheTransform particle_trans = particle.GetComponent<TheTransform>();
 					if(particle_trans != null && self_transform != null)
 					{
-						TheConsole.Log("Explosion particle created!");
 						particle_trans.LocalPosition = self_transform.LocalPosition;
+			
+						TheScript particle_script = particle.GetScript("ParticleAutoDestroy");
+						if(particle_script != null)
+						{
+							particle_script.CallFunctionArgs("Destroy");
+
+							TheConsole.Log("Explosion particle created!");
+						}
 					}
 				}
 

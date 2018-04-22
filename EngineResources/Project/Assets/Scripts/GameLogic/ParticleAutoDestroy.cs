@@ -6,9 +6,9 @@ public class ParticleAutoDestroy
 	public float destruction_time = 4.0f;
 
 	TheTimer timer = new TheTimer();
-
-	void Start () 
-	{	
+	
+	void Destroy()
+	{
 		int childs_count = TheGameObject.Self.GetChildCount();
 
 		for(int i = 0; i < childs_count; ++i)
@@ -28,7 +28,7 @@ public class ParticleAutoDestroy
 
 		timer.Start();
 	}
-	
+
 	void Update () 
 	{
 		if(timer.ReadTime() > destruction_time)

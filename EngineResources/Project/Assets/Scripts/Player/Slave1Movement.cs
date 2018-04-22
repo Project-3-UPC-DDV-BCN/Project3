@@ -677,6 +677,8 @@ public class Slave1Movement {
 
     public void DamageSlaveOne(float dmg)
     {
+		TheConsole.Log("Slave1 Damaged");
+
 		if(audio_source != null)
 			audio_source.Play("Play_Player_hit");
 
