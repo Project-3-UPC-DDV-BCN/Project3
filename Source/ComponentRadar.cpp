@@ -538,9 +538,9 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 					float3 rota_scal;
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
-					float distance_magnitude = rota_pos.z - entity_pos.z;
-
 					rota_pos = center_pos - rota_pos;
+
+					float distance_magnitude = rota_pos.z - entity_pos.z;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
