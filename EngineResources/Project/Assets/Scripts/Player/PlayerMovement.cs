@@ -516,8 +516,10 @@ public class PlayerMovement {
 			if(decel_percent<default_break_percent)
 			{	
 				decel_percent = default_break_percent;
-				breaking = true;
+				
 			}
+			else
+				breaking = true;
 			
         }
 		
@@ -719,7 +721,7 @@ public class PlayerMovement {
 	public void DamageSlaveOne(float dmg)
     {
 		if(audio_source != null)
-			audio_source.Play("Play_Player_hit");
+			audio_source.Play("Play_Ship_hit)";
 
         switch(TheRandom.RandomInt() % ship_parts)
         {
