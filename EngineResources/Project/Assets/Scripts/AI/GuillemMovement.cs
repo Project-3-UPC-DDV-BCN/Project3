@@ -39,16 +39,15 @@ public class GuillemMovement
 
 	bool avoiding = false;
 	TheVector3 avoiding_addition = new TheVector3(0, 0, 0);
-	
-	public TheGameObject GM = null;
 
 	void Init()
 	{
         ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
 		
+		TheGameObject GM = TheGameObject.Find("GameManager");
 		if(GM != null)
 			GameManager = GM.GetScript("GameManager");
-
+	
 		shooting_script = TheGameObject.Self.GetScript("Ai_Starship_Shooting");
 
 	    self_transform = TheGameObject.Self.GetComponent<TheTransform>();
@@ -142,7 +141,7 @@ public class GuillemMovement
 	{
 		if(go.GetComponent<TheTransform>() == target_transform)
 		{
-			//TheConsole.Log("My target was destroyed! Reseting..");
+			TheConsole.Log("My target was destroyed! Reseting..");
 			ClearTarget();
 		}
 	}

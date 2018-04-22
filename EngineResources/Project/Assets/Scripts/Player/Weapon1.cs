@@ -18,12 +18,17 @@ public class Weapon1
 	TheTimer heat_timer = new TheTimer();
 	public float heat_time = 2.0f;
 	
-	public TheGameObject game_manager = null;
+	private TheGameObject game_manager = null;
 	
+	void Init()	
+	{
+		game_manager = TheGameObject.Find("GameManager");
+
+		starship_shooting = TheGameObject.Self.GetScript("VS4StarShipShooting");
+	}
+
 	void Start()
 	{
-		starship_shooting = TheGameObject.Self.GetScript("VS4StarShipShooting");
-
 		if(game_manager != null)
 		{
 			TheScript game_manager_script = game_manager.GetScript("GameManager");
