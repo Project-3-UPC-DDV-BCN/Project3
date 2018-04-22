@@ -14,6 +14,10 @@ public class Weapon1
 	
 	private TheScript starship_shooting = null;
 
+	private bool cool = false;
+	TheTimer heat_timer = new TheTimer();
+	public float heat_time = 2.0f;
+	
 	void Start()
 	{
 		starship_shooting = TheGameObject.Self.GetScript("VS4StarShipShooting");
@@ -77,22 +81,56 @@ public class Weapon1
 			audio_source.Stop("Play_shot_2");
 			audio_source.Play("Play_shot_2");
 		}
+		
+		starship_shooting.SetBoolField("cooling", true);
+		heat_timer.Stop();
 	}
 	
 	void Cooling(float overheat_timer, float overheat, float w2_cooling_rate)
 	{
-		if(overheat_timer <= 0.0f)
+		if (overheat >= 1.0f)
+			cool = true;		
+		else if (overheat > 0.0f && heat_timer.ReadTime() <= 0.0f)
+			heat_timer.Start();
+		
+		if (overheat <= 0.0f)
+			starship_shooting.SetBoolField("cooling", false);
+		
+		if (cool)
 		{
-			overheat -= w2_cooling_rate * TheTime.DeltaTime;
-			
-			if(overheat<=0.0f)
+			if(overheat_timer <= 0.0f)
 			{
-				overheat = 0.0f;
-				starship_shooting.SetBoolField("overheated", false);
-				starship_shooting.SetBoolField("cooling", false);
+				overheat -= w2_cooling_rate * TheTime.DeltaTime;
+				
+				if(overheat<=0.0f)
+				{
+					overheat = 0.0f;
+					starship_shooting.SetBoolField("overheated", false);
+					starship_shooting.SetBoolField("cooling", false);
+					cool = false;
+				}
+				
+				starship_shooting.SetFloatField("overheat", overheat);
 			}
-			
-			starship_shooting.SetFloatField("overheat", overheat);
-		}	
+		}
+		else
+		{
+			if (heat_timer.ReadTime() >= heat_time)
+			{
+				overheat -= w2_cooling_rate * TheTime.DeltaTime;
+				
+				if(overheat<=0.0f)
+				{
+					TheConsole.Log("Stopped");
+					overheat = 0.0f;
+					starship_shooting.SetBoolField("cooling", false);
+					heat_timer.Stop();
+				}
+				
+				starship_shooting.SetFloatField("overheat", overheat);
+			}
+		}
+
+		
 	}
 }

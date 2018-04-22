@@ -136,7 +136,7 @@ public class VS4StarShipShooting
 
 						shooting_frequency_timer.Start();						
 					}
-					else if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 1)
+					else if (TheInput.GetControllerButton(0, "CONTROLLER_A") == 3)
 					{
 						object[] args_overheat = {overheat, cooling, laser_factory, laser_spawner, overheat_timer};
 						weapon_script.CallFunctionArgs("Overheat", args_overheat);
@@ -162,19 +162,15 @@ public class VS4StarShipShooting
 						overheat_timer = 1.0f;
 					}				
 				}
-				else if (TheInput.GetControllerButton(0,"CONTROLLER_A") == 3 && shooting_frequency_timer.ReadTime() > shooting_frequency_w1)
+				else if (TheInput.GetControllerButton(0,"CONTROLLER_A") == 3 && !cooling)
 				{
 					// SHOOT
 					object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, laser_factory, laser_spawner, audio_source};		
 					weapon_script.CallFunctionArgs("Shoot", args_shoot);
+				}
 
-					shooting_frequency_timer.Start();
-				}
-				else
-				{
-					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
-					weapon_script.CallFunctionArgs("Cooling", args_cooling);
-				}
+				object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
+				weapon_script.CallFunctionArgs("Cooling", args_cooling);
 				
 				break;
 			}

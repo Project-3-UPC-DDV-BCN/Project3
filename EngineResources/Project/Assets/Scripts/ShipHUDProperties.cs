@@ -1,7 +1,7 @@
 using TheEngine;
 using TheEngine.TheConsole;
 
-public class HUDProperties {
+public class ShipHUDProperties {
 	public TheGameObject parent_GO;
 	private TheGameObject hp_GO;
 
