@@ -405,7 +405,7 @@ public class GameManager
 	void UpdateAudio()
 	{
 	
-		if (TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER") >= 20000 && !calm_combat)
+		if (TheInput.GetControllerButton(0,"CONTROLLER_A") == 2 && !calm_combat)
 		{
 			if(audio_source != null)
 			{
