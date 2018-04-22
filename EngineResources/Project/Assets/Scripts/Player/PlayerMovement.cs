@@ -28,15 +28,15 @@ public class PlayerMovement {
 	public float acceleration = 10.0f;
 	public float slow_acceleration = 50.0f;
 	public float vertical_thrust = 20.0f;
+	public float default_speed_percent = 0.1f;
+	public float default_break_percent = 0.1f;
 	///boost properties
 	private bool boosting = false;
 	public float boost_extra_vel = 25.0f;
 	public float boost_accel_multiplier = 1.5f;
 	public float boost_time = 1.5f;
 	public float boost_cd_time = 5.0f;
-	///slow (still not decided)
-	public float slow_time = 1.0f;
-	public float slow_regen = 0.1f;
+
 	
 	// Ship Private Information
 	///ship speeds
@@ -47,7 +47,7 @@ public class PlayerMovement {
 	private float curr_decel;
 	private float decel_percent = 0.1f;
 	///slow
-	private bool slowing = false;
+	private bool breaking = false;
 	/// camera movement
 	public float roll_camera_rot = 10.0f;
 	public float pitch_camera_rot = 10.0f;
@@ -501,18 +501,26 @@ public class PlayerMovement {
             }
         }
 		
-		vel_percent = 0.1f; //reset to min vel
+		vel_percent = default_speed_percent; //reset to min vel
 		if(right_trigger > trigger_sensibility)
 		{
 			vel_percent = (float)(right_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
-			if(vel_percent<0.1f) vel_percent = 0.1f;
+			if(vel_percent<default_speed_percent) vel_percent = default_speed_percent;
 		}
 		
-		decel_percent = 0.1f;
+		decel_percent = default_break_percent;
+		breaking = false;
 		if (left_trigger > controller_sensibility)
         {
             decel_percent = (float)(left_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
-			if(decel_percent<0.1f)decel_percent = 0.1f;
+			if(decel_percent<default_break_percent)
+			{	
+				decel_percent = default_break_percent;
+				
+			}
+			else
+				breaking = true;
+			
         }
 		
 		if(TheInput.GetControllerButton(0,"CONTROLLER_L3") == 2 && boost_cd_timer <= 0.0f)
@@ -559,13 +567,26 @@ public class PlayerMovement {
 		
 		}
 		
-		if(curr_vel != target_vel) 
+		if(curr_vel < target_vel) 
 		{
-			curr_vel += curr_accel*delta_time + curr_decel*delta_time;
+			curr_vel += curr_accel*delta_time;
 
 			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
 
 			TheInput.RumbleController(0,rumble,accel_rumble_ms);
+		}
+		else if(curr_vel > target_vel)
+		{
+			if(breaking)
+			{
+				curr_vel -= decel_percent*slow_acceleration*delta_time;
+				float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
+				TheInput.RumbleController(0,rumble,accel_rumble_ms);
+			}
+			else
+			{
+				curr_vel -= acceleration*delta_time;
+			}		
 		}
 		
 		TheVector3 new_vel_pos = trans.LocalPosition;
@@ -700,7 +721,7 @@ public class PlayerMovement {
 	public void DamageSlaveOne(float dmg)
     {
 		if(audio_source != null)
-			audio_source.Play("Play_Player_hit");
+			audio_source.Play("Play_Ship_hit)";
 
         switch(TheRandom.RandomInt() % ship_parts)
         {
