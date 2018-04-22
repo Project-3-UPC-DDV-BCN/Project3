@@ -531,8 +531,6 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 					float3 entity_pos;
 					entity_mat.Decompose(entity_pos, rot, scal);
 
-					float distance_magnitude = center_pos.Distance(entity_pos);
-
 					float4x4 rotated = RotateArround(entity_mat, center_pos, -center_rot.x, -center_rot.y, -center_rot.z);
 
 					float3 rota_pos;
@@ -540,11 +538,13 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 					float3 rota_scal;
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
+					float distance_magnitude = rota_pos.z - entity_pos.z;
+
 					rota_pos = center_pos - rota_pos;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
-					float z_offset = -distance_magnitude;
+					float z_offset = distance_magnitude;
 
 					if (z_offset < 0)
 					{
@@ -632,8 +632,6 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					float3 entity_pos;
 					entity_mat.Decompose(entity_pos, rot, scal);
 
-					float distance_magnitude = center_pos.Distance(entity_pos);
-
 					float4x4 rotated = RotateArround(entity_mat, center_pos, -center_rot.x, -center_rot.y, -center_rot.z);
 
 					float3 rota_pos;
@@ -642,6 +640,8 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
 					rota_pos = center_pos - rota_pos;
+
+					float distance_magnitude = rota_pos.z - entity_pos.z;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;

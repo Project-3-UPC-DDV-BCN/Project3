@@ -119,10 +119,12 @@ public class GameManager
 
 	void CheckWinLose()
 	{
+		/*
 		if(GetRemainingTime() <= 0)
 		{
 			Lose();
 		}
+		*/
 		/*else if()
 		{
 			Win();
@@ -391,9 +393,14 @@ public class GameManager
 		return remaining;
 	}
 
+	int GetTimeSinceStart()
+	{
+		return (int)game_timer.ReadTime();
+	}
+
 	void UpdateTimePointsTexts()
 	{		
-		int remaining = GetRemainingTime();
+		int remaining = GetTimeSinceStart();
 
 		if(gametime_text != null)
 			gametime_text.Text = GetTimeFromSeconds(remaining); 
