@@ -481,6 +481,8 @@ void Particle::Draw(ComponentCamera* active_camera)
 	glDrawElements(GL_TRIANGLES, GetAtributes().particle_mesh->num_indices, GL_UNSIGNED_INT, NULL);
 		
 	App->renderer3D->UnbindVertexArrayObject(); 
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 Particle::~Particle()

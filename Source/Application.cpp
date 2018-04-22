@@ -260,6 +260,7 @@ void Application::StopNow()
 			}
 			App->scene->is_game = false;
 			to_stop = false;
+			App->scene->SetParticleSystemsState("Stop");
 		}
 	}
 }
@@ -466,7 +467,7 @@ void Application::Play()
 		App->scene->is_game = true;
 
 		App->scene->InitScripts();
-		App->scene->SetParticleSystemsState(); 
+		App->scene->SetParticleSystemsState("Play"); 
 	}
 }
 
