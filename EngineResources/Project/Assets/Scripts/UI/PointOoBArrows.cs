@@ -21,6 +21,9 @@ public class PointOoBArrows {
 
 	public TheVector3 original_pos = new TheVector3();
 
+	// Transforms ---
+	TheTransform player_transform = null;
+
     // Scripts ---
     TheScript GameManager = null;
 
@@ -29,6 +32,11 @@ public class PointOoBArrows {
         TheGameObject GM = TheGameObject.Find("GameManager");
         if (GM != null)
             GameManager = GM.GetScript("GameManager");
+		if(GameManager != null) {
+			TheGameObject player = (TheGameObject)GameManager.CallFunctionArgs("GetSlave1");
+			if(player != null)
+				player_transform = player.GetComponent<TheTransform>();
+		}
 	}
 	
 	void Update () {
@@ -43,7 +51,7 @@ public class PointOoBArrows {
 	}
 
 	void MoveArrowToPosition(TheGameObject ship, TheGameObject arrow) {
-		if(ship == null || arrow == null) return;	
+		if(ship == null || arrow == null || player_transform == null) return;	
 
 		// Is Ship in Frustrum ? arrow.active = true : arrow.active = false
 		//	...
@@ -53,7 +61,7 @@ public class PointOoBArrows {
 
 		TheRectTransform arrowTrans = arrow.GetComponent<TheRectTransform>();
 		TheTransform ship_transform = ship.GetComponent<TheTransform>();
-		TheVector3 dv2 = ship_transform.GlobalPosition - transform.GlobalPosition;
+		TheVector3 dv2 = ship_transform.GlobalPosition - player_transform.GlobalPosition;
 		//dv2 = Coord3DtoCoord2D(dv2, perspective2d);
 		if(TheMath.Abs(dv2.x) > activeArrowThresholdX || TheMath.Abs(dv2.y) > activeArrowThresholdY) {
 			arrow.SetActive(true);
@@ -66,7 +74,7 @@ public class PointOoBArrows {
 		debugY = dv2.y;
 		arrowTrans.Position = original_pos + dv2.Normalized * radius;
 		if(dv2.x > 0) arrowTrans.Rotation = new TheVector3(0, 0,-(arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan(dv2.y / -dv2.x)));
-		else arrowTrans.Rotation = new TheVector3(0, 0, arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan(dv2.y / dv2.x));
+		else arrowTrans.Rotation = new TheVector3(0, 0, arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan2(dv2.x, dv2.y));
 	}
 
 	TheVector3 Coord3DtoCoord2D(TheVector3 v3d, bool w_perspective = false) {
