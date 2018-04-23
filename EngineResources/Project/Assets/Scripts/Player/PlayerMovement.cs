@@ -257,6 +257,7 @@ public class PlayerMovement {
 
 			if(audio_source != null)
 			{
+				audio_source.SetMyRTPCvalue("Volume",50);
 				audio_source.Play("Play_Engine");
 				audio_source.SetMyRTPCvalue("Velocity",vel_percent);
 			}
@@ -291,6 +292,7 @@ public class PlayerMovement {
 		
 		//Calculate current hp and send to ship properties script
 		curr_total_hp = wings_hp + body_hp + engine_hp;
+		
 		if(ship_properties != null)
 		{
 			object[] args = {(int)curr_total_hp};
