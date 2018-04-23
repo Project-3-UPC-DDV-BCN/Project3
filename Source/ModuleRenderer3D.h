@@ -3,6 +3,11 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include <list>
 
 class ComponentMeshRenderer;
@@ -118,7 +123,7 @@ public:
 
 	void SetDepthMap();
 	void DrawFromLightForShadows();
-	void SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat);
+	void SendObjectToDepthShader(uint program, ComponentMeshRenderer* mesh);
 
 private:
 	void DrawSceneGameObjects(ComponentCamera* active_camera, bool is_editor_camera);
@@ -181,11 +186,10 @@ private:
 	Material* current_material = nullptr;
 	bool changed_material = true;
 	// SHADOW MAPPING DON'T TOUCH
-
 	uint depth_map;
 	uint depth_mapFBO;
+	uint default_buffer = 0;
 	float near_plane, far_plane;
 
-	unsigned int quadVAO = 0;
-	unsigned int quadVBO;
+	glm::mat4 light_space_mat;
 };
