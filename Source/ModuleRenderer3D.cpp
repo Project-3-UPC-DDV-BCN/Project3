@@ -716,7 +716,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
-	SetUniformMatrix(program, "DepthBiasMVP", bias_MVP);
+	SetUniformMatrix(program, "DepthBiasMVP", light_space_mat);
 
 
 
@@ -1694,14 +1694,12 @@ void ModuleRenderer3D::SetDepthMap()
 
 	glGenTextures(1, &depth_map);
 	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
@@ -1725,17 +1723,6 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 
-		/*glm::mat4 lightProjection, lightView;
-		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
-
-		lightProjection = glm::ortho(-50000.0f, 50000.0f, -50000.0f, 50000.0f, 1.0f, 500000.0f);
-		glm::vec3 l_pos;
-		l_pos.x = trans->GetGlobalPosition().x;
-		l_pos.y = trans->GetGlobalPosition().y;
-		l_pos.z = trans->GetGlobalPosition().z;
-		lightView = glm::lookAt(l_pos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-		glm::mat4 mat = lightProjection * lightView;
-		light_space_mat = glm::value_ptr(mat);*/
 		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 		glm::vec3 l_pos;
 		l_pos.x = trans->GetGlobalPosition().x;
@@ -1747,30 +1734,24 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		l_dir.y = trans->GetMatrix().WorldZ().y;
 		l_dir.z = trans->GetMatrix().WorldZ().z;
 
-		glm::mat4 biasMatrix(
+	/*	glm::mat4 biasMatrix(
 			0.5, 0.0, 0.0, 0,
 			0.0, 0.5, 0.0, 0,
 			0.0, 0.0, 0.5, 0,
 			0.5, 0.5, 0.5, 1.0
-		);
+		);*/
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-4000.0, 4000.0, -4000.0, 4000.0, -100.0, 8000.0);
 		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0) + l_dir, glm::vec3(0, 1, 0));
 		glm::mat4 depthModelMatrix = glm::mat4(1.0);
-		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix * depthModelMatrix;
-		glm::mat4 MVP_BIAS = biasMatrix* depthMVP;
-		bias_MVP = glm::value_ptr(MVP_BIAS);
-		//glm::mat4 depthBiasMVP = biasMatrix * depthMVP;
-
-		/*int depthMatrixID = glGetUniformLocation(material->GetProgramID(), "depthMVP");
-		int depthBiasID = glGetUniformLocation(material->GetProgramID(), "depthBias");
-		GLuint ShadowMapID = glGetUniformLocation(material->GetProgramID(), "shadowMap");*/
-
+		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
+		light_space_mat = glm::value_ptr(depthMVP);
+	//	glm::mat4 MVP_BIAS = biasMatrix* depthMVP;
+	//	bias_MVP = glm::value_ptr(MVP_BIAS);
 		glClear(GL_DEPTH_BUFFER_BIT);
-	//	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
-	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 		uint program = 0;
 		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
@@ -1794,113 +1775,18 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		program = shader->GetProgramID();
 		UseShaderProgram(program);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+
+
 		glActiveTexture(GL_TEXTURE0 + 4);
 		glBindTexture(GL_TEXTURE_2D, depth_map);
 		App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
 
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// SAVE
-		/*GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
-		glActiveTexture(GL_TEXTURE0);
-		GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-		GLint last_texture; glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-		GLint last_sampler; glGetIntegerv(GL_SAMPLER_BINDING, &last_sampler);
-		GLint last_array_buffer; glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &last_array_buffer);
-		GLint last_element_array_buffer; glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &last_element_array_buffer);
-		GLint last_vertex_array; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
-		GLint last_polygon_mode[2]; glGetIntegerv(GL_POLYGON_MODE, last_polygon_mode);
-		GLint last_viewport[4]; glGetIntegerv(GL_VIEWPORT, last_viewport);
-		GLint last_scissor_box[4]; glGetIntegerv(GL_SCISSOR_BOX, last_scissor_box);
-		GLenum last_blend_src_rgb; glGetIntegerv(GL_BLEND_SRC_RGB, (GLint*)&last_blend_src_rgb);
-		GLenum last_blend_dst_rgb; glGetIntegerv(GL_BLEND_DST_RGB, (GLint*)&last_blend_dst_rgb);
-		GLenum last_blend_src_alpha; glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint*)&last_blend_src_alpha);
-		GLenum last_blend_dst_alpha; glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint*)&last_blend_dst_alpha);
-		GLenum last_blend_equation_rgb; glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint*)&last_blend_equation_rgb);
-		GLenum last_blend_equation_alpha; glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint*)&last_blend_equation_alpha);
-		GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
-		GLboolean last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
-		GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
-		GLboolean last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);*/
-
-		/*glEnable(GL_BLEND);
-		glDisable(GL_CULL_FACE);
-		glBlendFunc(GL_ONE, GL_ONE);
-		glEnable(GL_SCISSOR_TEST);
-		glEnable(GL_DEPTH_TEST);
-
-		// ----
-
-	uint program = 0;
-	ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
-	program = shader->GetProgramID();
-	UseShaderProgram(program);
-
-	near_plane = 1.0f, far_plane = 10000.0f;
-
-	glm::mat4 lightProjection, lightView;
-	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
-
-	lightProjection = glm::ortho(-10000.0f, 10000.0f, -10000.0f, 10000.0f, -10000.f, 10000.0f);
-	glm::vec3 l_pos;
-	l_pos.x = trans->GetGlobalPosition().x;
-	l_pos.y = trans->GetGlobalPosition().y;
-	l_pos.z = trans->GetGlobalPosition().z;
-	lightView = glm::lookAt(l_pos, glm::vec3(-1000.0f), glm::vec3(0.0, 1.0, 0.0));
-	glm::mat4 mat = lightProjection * lightView;
-	light_space_mat = glm::value_ptr(mat);
-
-	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glActiveTexture(GL_TEXTURE0);
-
-	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
-	{
-		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*) (*it)->GetComponent(Component::CompMeshRenderer);
-		if (mesh != nullptr)
-			SendObjectToDepthShader(program, mesh);
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	shader = App->resources->GetShaderProgram("default_shader_program");
-	program = shader->GetProgramID();
-	UseShaderProgram(program);
-
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-	App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
-
-	 // LOAD
-	/*UseShaderProgram(last_program);
-	glBindTexture(GL_TEXTURE_2D, last_texture);
-	glBindSampler(0, last_sampler);
-	glActiveTexture(last_active_texture);
-	glBindVertexArray(last_vertex_array);
-	glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, last_element_array_buffer);
-	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
-	glBlendFuncSeparate(last_blend_src_rgb, last_blend_dst_rgb, last_blend_src_alpha, last_blend_dst_alpha);
-	if (last_enable_blend) glEnable(GL_BLEND); else glDisable(GL_BLEND);
-	if (last_enable_cull_face) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
-	if (last_enable_depth_test) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
-	if (last_enable_scissor_test) glEnable(GL_SCISSOR_TEST); else glDisable(GL_SCISSOR_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
-	glViewport(last_viewport[0], last_viewport[1], (GLsizei)last_viewport[2], (GLsizei)last_viewport[3]);
-	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);*/
-
 
 
 	}
