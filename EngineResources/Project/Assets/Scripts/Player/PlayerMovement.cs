@@ -350,7 +350,7 @@ public class PlayerMovement {
 			{
 				if (cam_rot.x < 0.0f)
 				{
-					cam_rot.x += camera_rot_step * delta_time;
+					cam_rot.x += camera_return_step * delta_time;
 					if (cam_rot.x > 0.0f)
 						cam_rot.x = 0.0f;
 				}
@@ -386,7 +386,7 @@ public class PlayerMovement {
             
             if (cam_rot.x < 0.0f)
             {
-                cam_rot.x += camera_rot_step * delta_time;
+                cam_rot.x += camera_return_step * delta_time;
                 if (cam_rot.x > 0.0f)
                     cam_rot.x = 0.0f;
             }
@@ -410,7 +410,7 @@ public class PlayerMovement {
         {
             if(cam_rot.z<0.0f)
             {
-                cam_rot.z += camera_rot_step * delta_time;
+                cam_rot.z += camera_return_step * delta_time;
                 if (cam_rot.z > 0.0f)
                     cam_rot.z = 0.0f;
             }
@@ -433,7 +433,7 @@ public class PlayerMovement {
         {
             if (cam_rot.z > 0.0f)
             {
-                cam_rot.z -= camera_rot_step * delta_time;
+                cam_rot.z -= camera_return_step * delta_time;
                 if (cam_rot.z < 0.0f)
                     cam_rot.z = 0.0f;
             }
@@ -472,7 +472,7 @@ public class PlayerMovement {
         {
             if (cam_rot.y > 0.0f)
             {
-                cam_rot.y -= camera_rot_step * delta_time;
+                cam_rot.y -= camera_return_step * delta_time;
                 if (cam_rot.y < 0.0f)
                     cam_rot.y = 0.0f;
             }
@@ -495,7 +495,7 @@ public class PlayerMovement {
         {
             if (cam_rot.y < 0.0f)
             {
-                cam_rot.y += camera_rot_step * delta_time;
+                cam_rot.y += camera_return_step * delta_time;
                 if (cam_rot.y > 0.0f)
                     cam_rot.y = 0.0f;
             }
@@ -556,11 +556,11 @@ public class PlayerMovement {
 		{
 			if(engine_energy > 4)
 			{
-				boost_cd_timer -= TheTime.DeltaTime*(1+(0.5f/4) * (engine_energy-4));
+				boost_cd_timer -= delta_time*(1+(0.5f/4) * (engine_energy-4));
 			}
 			else if(engine_energy < 4)
 			{
-				boost_cd_timer -= TheTime.DeltaTime*(1-(0.75f/4) * (engine_energy));
+				boost_cd_timer -= delta_time*(1-(0.75f/4) * (engine_energy));
 			}
 			else
 				boost_cd_timer -= delta_time;
