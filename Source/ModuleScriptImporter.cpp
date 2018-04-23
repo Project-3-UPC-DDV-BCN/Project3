@@ -288,14 +288,32 @@ void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene
 
 void ModuleScriptImporter::RemoveGameObjectInfoFromMono(GameObject * go)
 {
-	if (go == nullptr)
-		return;
-
-	ns_importer->RemoveGameObjectFromMonoObjectList(go);
-
-	for (Component* comp : go->components_list)
+	if (go != nullptr)
 	{
-		ns_importer->RemoveComponentFromMonoObjectList(comp);
+		std::vector<GameObject*> to_add;
+		to_add.push_back(go);
+
+		while (!to_add.empty())
+		{
+			GameObject* curr_go = *to_add.begin();
+
+			if (curr_go == nullptr)
+				continue;
+
+			ns_importer->RemoveGameObjectFromMonoObjectList(go);
+
+			for (Component* comp : curr_go->components_list)
+			{
+				ns_importer->RemoveComponentFromMonoObjectList(comp);
+			}
+
+			for (std::list<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
+			{
+				to_add.push_back(*it);
+			}
+
+			to_add.erase(to_add.begin());
+		}
 	}
 }
 
@@ -2771,10 +2789,14 @@ MonoObject * NSScriptImporter::GetScript(MonoObject * object, MonoString * strin
 
 	if (go != nullptr)
 	{
-		const char* comp_name = "TheScript";
 		Component::ComponentType cpp_type = Component::ComponentType::CompScript;
 
 		std::string script_name = mono_string_to_utf8(string);
+
+		if (script_name == "PlayerMovement")
+		{
+			int i = 0;
+		}
 
 		int comp_type_count = 0;
 		for (Component* comp : go->components_list)
@@ -4219,17 +4241,7 @@ void NSScriptImporter::DestroyGameObject(MonoObject * object)
 
 	if (go != nullptr)
 	{
-		for (std::list<Component*>::iterator it = go->components_list.begin(); it != go->components_list.end(); ++it)
-		{
-			RemoveComponentFromMonoObjectList(*it);
-		}
-
-		RemoveGameObjectFromMonoObjectList(go);
-
-		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
-		{
-			DestroyGameObject(*it);
-		}
+		App->script_importer->RemoveGameObjectInfoFromMono(go);
 
 		go->SetActive(false);
 		go->Destroy();
