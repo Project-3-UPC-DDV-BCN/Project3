@@ -10,7 +10,7 @@ public class GuillemMovement
 
     TheGameObject center_object;
     public float max_distance_to_center_object = 2000f;
-    public float desertor_distance = 10000f;
+    public float desertor_distance = 5000f;
 
     public float move_speed = 300;
     public float rotation_speed = 60;
@@ -103,7 +103,7 @@ public class GuillemMovement
 			float distance_center_self = TheVector3.Distance(center_trans_pos, self_trans_pos);
 			
             if (distance_center_self > desertor_distance)
-                TheGameObject.Destroy(TheGameObject.Self);
+				self_transform.GlobalPosition = center_transform.GlobalPosition;               	
 
             if (distance_center_self > max_distance_to_center_object)
             {
