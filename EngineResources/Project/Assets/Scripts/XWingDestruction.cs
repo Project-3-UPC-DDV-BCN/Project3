@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole; 
+//using TheEngine.TheConsole; 
 using System.Collections.Generic; 
 
 public class XWingDestruction {
@@ -18,11 +18,14 @@ public class XWingDestruction {
 	bool need_boom;
 	bool exploted;
     bool destruction_mesh; 
+	
+	TheGameObject self = null;
 
 	void Start () 
 	{
-		transform = TheGameObject.Self.GetComponent<TheTransform>();
-        hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0);
+		self = TheGameObject.Self;
+		transform = self.GetComponent<TheTransform>();
+        hp_tracker = self.GetComponent<TheScript>(0);
 
         ship_parts = new List<TheGameObject>(); 
 		need_boom = false; 
@@ -33,7 +36,7 @@ public class XWingDestruction {
 	{
 		if(hp_tracker.GetIntField("amount") <= 0 && exploted == false)
 		{
-            TheGameObject current = TheGameObject.Self; 
+            TheGameObject current = self; 
                      	
 			FillPartList(current); 
 			SetPartsDirection(); 		
@@ -46,7 +49,7 @@ public class XWingDestruction {
 			if(destroy_timer.ReadTime() > time_to_destroy)
             {
                 DeleteShipParts();
-                TheGameObject.Self.SetActive(false); 
+                self.SetActive(false); 
             }
 				
 		} 	
@@ -62,9 +65,9 @@ public class XWingDestruction {
 
 	void DeleteShipParts()
 	{
-		for(int i = 0; i < TheGameObject.Self.GetChildCount(); i++)
+		for(int i = 0; i < self.GetChildCount(); i++)
 		{			
-			ship_parts.Remove(TheGameObject.Self.GetChild(i)); 
+			ship_parts.Remove(self.GetChild(i)); 
 			ship_parts[i].SetActive(false); 
 		}
 	}

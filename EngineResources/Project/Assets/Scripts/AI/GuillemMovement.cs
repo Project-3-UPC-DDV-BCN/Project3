@@ -1,7 +1,7 @@
 using TheEngine;
 using System.Collections.Generic;
 using TheEngine.TheMath;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 
 public class GuillemMovement
 {
@@ -39,19 +39,22 @@ public class GuillemMovement
 
 	bool avoiding = false;
 	TheVector3 avoiding_addition = new TheVector3(0, 0, 0);
+	
+	TheGameObject self = null;
 
 	void Init()
 	{
-        ShipProperties = TheGameObject.Self.GetScript("ShipProperties");
+		self = TheGameObject.Self;
+        ShipProperties = self.GetScript("ShipProperties");
 		
 		TheGameObject GM = TheGameObject.Find("GameManager");
 		if(GM != null)
 			GameManager = GM.GetScript("GameManager");
 	
-		shooting_script = TheGameObject.Self.GetScript("Ai_Starship_Shooting");
+		shooting_script = self.GetScript("Ai_Starship_Shooting");
 
-	    self_transform = TheGameObject.Self.GetComponent<TheTransform>();
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+	    self_transform = self.GetComponent<TheTransform>();
+		audio_source = self.GetComponent<TheAudioSource>();
 	}
 
     void Start()
@@ -141,7 +144,7 @@ public class GuillemMovement
 	{
 		if(go.GetComponent<TheTransform>() == target_transform)
 		{
-			TheConsole.Log("My target was destroyed! Reseting..");
+			//TheConsole.Log("My target was destroyed! Reseting..");
 			ClearTarget();
 		}
 	}
@@ -234,33 +237,33 @@ public class GuillemMovement
 
         float angle_diff_x = self_trans_rot.y - target_x_angle;
 
-		//TheConsole.Log("x: " + NormalizeAngle(angle_diff_x));
+		////TheConsole.Log("x: " + NormalizeAngle(angle_diff_x));
 	
 		if((NormalizeAngle(self_trans_rot.x) < 90 && NormalizeAngle(self_trans_rot.x) > -90) || 
 		(NormalizeAngle(self_trans_rot.x) > 270 || NormalizeAngle(self_trans_rot.x) < -270))
 		{
         	if (NormalizeAngle(angle_diff_x) > 180)
 			{
-				//TheConsole.Log("1");
+				////TheConsole.Log("1");
             	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
 			}
         	else
 			{
            	 	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
-				//TheConsole.Log("2");
+				////TheConsole.Log("2");
 			}
 		}
 		else
 		{
 			if (NormalizeAngle(angle_diff_x) > 0)
 			{
-				//TheConsole.Log("1-1");
+				////TheConsole.Log("1-1");
             	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
 			}
         	else
 			{
            	 	self_transform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.z);
-				//TheConsole.Log("2-2");
+				////TheConsole.Log("2-2");
 			}
 		}
 		
@@ -271,9 +274,9 @@ public class GuillemMovement
 			
 		float target_y_angle = GetAngleFromTwoPoints(self_pos.y, self_pos.z, target_pos.y, target_pos.z) - 270;
 
-		//TheConsole.Log("y: " + NormalizeAngle(target_y_angle));	
+		////TheConsole.Log("y: " + NormalizeAngle(target_y_angle));	
 
-		//TheConsole.Log("y: " + NormalizeAngle(angle_diff_y));
+		////TheConsole.Log("y: " + NormalizeAngle(angle_diff_y));
 		if(self_pos.z > target_pos.z)
 		{
 			target_y_angle -= 180;
@@ -283,12 +286,12 @@ public class GuillemMovement
 
 		if (NormalizeAngle(angle_diff_y) > 180)
 		{
-			//TheConsole.Log("1");
+			////TheConsole.Log("1");
 			self_transform.LocalRotation = new TheVector3(self_trans_rot.x + (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.y, self_trans_rot.z);
 		}
 		else
 		{
-			//TheConsole.Log("2");
+			////TheConsole.Log("2");
 			self_transform.LocalRotation = new TheVector3(self_trans_rot.x - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.y, self_trans_rot.z);
 		}
     }

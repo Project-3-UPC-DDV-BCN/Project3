@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 
 public class PlayerMovement {
 
@@ -153,11 +153,15 @@ public class PlayerMovement {
 	
 	//Dead check
 	private bool is_dead = false;
+	
+	TheGameObject self = null;
 
 	void Start () 
 	{
+		self = TheGameObject.Self;
+		
 		//Get the transform
-		trans = TheGameObject.Self.GetComponent<TheTransform>();
+		trans = self.GetComponent<TheTransform>();
 		
 		//Get all the Components needed for the UI elements
 		/// Bars
@@ -269,7 +273,7 @@ public class PlayerMovement {
 		}
 		
 		//Get ShipProperties Script
-		ship_properties = TheGameObject.Self.GetScript("ShipProperties");
+		ship_properties = self.GetScript("ShipProperties");
 	}
 	
 	void Update () 
@@ -725,20 +729,20 @@ public class PlayerMovement {
 		if(audio_source != null)
 			audio_source.Play("Play_Ship_hit");
 
-		TheConsole.Log("Damage Slave One: " + dmg);
+		//TheConsole.Log("Damage Slave One: " + dmg);
 
         switch(TheRandom.RandomInt() % ship_parts)
         {
             case 0:
-				TheConsole.Log("Slave body damaged");
+				//TheConsole.Log("Slave body damaged");
                 DamageBody(f_dmg);
                 break;
             case 1:
-				TheConsole.Log("Slave engine damaged");
+				//TheConsole.Log("Slave engine damaged");
                 DamageEngine(f_dmg);
                 break;
             case 2:
-				TheConsole.Log("Slave wings damaged");
+				//TheConsole.Log("Slave wings damaged");
                 DamageWings(f_dmg);
                 break;
         }

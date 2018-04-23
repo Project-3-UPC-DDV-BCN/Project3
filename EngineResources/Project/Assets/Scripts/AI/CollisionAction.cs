@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole; 
+//using TheEngine.TheConsole; 
 
 public class CollisionAction {
 
@@ -19,7 +19,7 @@ public class CollisionAction {
 	void OnCollisionEnter(TheGameObject bullet)
 	{
 		
-		TheConsole.Log("collided"); 
+		//TheConsole.Log("collided"); 
 
 		string my_team = game_manager_scpt.GetStringField("tag"); 
 		string ship_hit_team = TheGameObject.Self.tag; 

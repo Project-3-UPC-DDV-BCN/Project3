@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 using TheEngine.TheMath;
 
 using System.Collections.Generic;
@@ -24,29 +24,27 @@ public class EnemyHUD {
 	public TheGameObject HUD2 = null;
 	public TheGameObject HUD3 = null;
 	
+	TheTransform self_transform = null;
 	
 	void Start () {
 
 		self = TheGameObject.Self;
 
-		TheGameObject[] aux = TheGameObject.GetGameObjectsWithTag("GameManager");
-		if(aux.Length>0) 
-		{
-			gm_GO = aux[0];
-		}
-			
-
+		gm_GO = TheGameObject.Find("GameManager");
 
 		if(gm_GO == null)
-			TheConsole.Log("No game Manager detected");
+		{
+			//TheConsole.Log("No game Manager detected");
+		}
 		else if(gm_GO != null)
 		{
 			GameManager = gm_GO.GetComponent<TheScript>();
 		}
 		
-		self_pos = self.GetComponent<TheTransform>().GlobalPosition;
-		self_front = self.GetComponent<TheTransform>().ForwardDirection;
-		self_up = self.GetComponent<TheTransform>().UpDirection;
+		self_transform = self.GetComponent<TheTransform>();
+		self_pos = self_transform.GlobalPosition;
+		self_front = self_transform.ForwardDirection;
+		self_up = self_transform.UpDirection;
 		enemies = (List<TheGameObject>)GameManager.CallFunctionArgs("GetSlaveEnemies");
 	}
 	
@@ -59,8 +57,8 @@ public class EnemyHUD {
 		{
 			isVisible = false;
 			
-			TheVector3 directionToTarget = enemies[i].GetComponent<TheTransform>().GlobalPosition - self.GetComponent<TheTransform>().GlobalPosition;
-       		float angle = TheVector3.AngleBetween(self.GetComponent<TheTransform>().ForwardDirection, directionToTarget);
+			TheVector3 directionToTarget = enemies[i].GetComponent<TheTransform>().GlobalPosition - self_transform.GlobalPosition;
+       		float angle = TheVector3.AngleBetween(self_transform.ForwardDirection, directionToTarget);
         	
  
         	if (TheMath.Abs (angle) < 90) {
@@ -71,13 +69,13 @@ public class EnemyHUD {
 
 			if(isVisible){
 				enemies_in_front.Add(enemies[i]);
-				TheConsole.Log("enemy detected");
-				TheConsole.Log(enemies_in_front[j].name);
+				//TheConsole.Log("enemy detected");
+				//TheConsole.Log(enemies_in_front[j].name);
 				j++; 
 			}
 			else if(!isVisible)
 			{
-				TheConsole.Log("no enemies detected");
+				//TheConsole.Log("no enemies detected");
 			}
 		}
 		
@@ -91,16 +89,21 @@ public class EnemyHUD {
 			aux_HUD_counter = enemies_in_front.Count;
 		for(int k = 0; k < enemies_in_front.Count;k++)
 		{
+			TheVector3 enemy_global_pos = new TheVector3();
+			if(enemies_in_front[k] != null)
+			{
+				enemy_global_pos = enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition;
+			}
 			if(HUD1!= null && k == 0){
-				TheVector3 new_pos1 = new TheVector3(enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition.x,enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition.y,0);
+				TheVector3 new_pos1 = new TheVector3(enemy_global_pos.x,enemy_global_pos.y,0);
 				HUD1.GetComponent<TheTransform>().GlobalPosition = new_pos1; 
 			}
 			else if(HUD2 != null && k == 1){
-				TheVector3 new_pos2 = new TheVector3(enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition.x,enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition.y,0);
+				TheVector3 new_pos2 = new TheVector3(enemy_global_pos.x,enemy_global_pos.y,0);
 				HUD2.GetComponent<TheTransform>().GlobalPosition = new_pos2; 
 			}
 			else if(HUD3 != null && k == 2){
-				TheVector3 new_pos3 = new TheVector3(enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition.x,enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition.y,0);
+				TheVector3 new_pos3 = new TheVector3(enemy_global_pos.x,enemy_global_pos.y,0);
 				HUD3.GetComponent<TheTransform>().GlobalPosition = new_pos3;
 			}
 				

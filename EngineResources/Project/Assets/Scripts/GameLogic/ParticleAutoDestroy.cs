@@ -10,6 +10,13 @@ public class ParticleAutoDestroy
 	public bool to_destroy = false;
 	private int iterations_waited = 0;
 	
+	TheGameObject self = null;
+	
+	void Start()
+	{
+		self = TheGameObject.Self;
+	}
+	
 	void Destroy()
 	{
 		to_destroy = true;
@@ -19,17 +26,17 @@ public class ParticleAutoDestroy
 	{
 		if(timer.ReadTime() > destruction_time)
 		{
-			TheGameObject.Destroy(TheGameObject.Self);
+			TheGameObject.Destroy(self);
 			return;
 		}
 
 		if(to_destroy && iterations_waited == 2)
 		{
-			int childs_count = TheGameObject.Self.GetChildCount();
+			int childs_count = self.GetChildCount();
 
 			for(int i = 0; i < childs_count; ++i)
 			{
-				TheGameObject child = TheGameObject.Self.GetChild(i);
+				TheGameObject child = self.GetChild(i);
 
 				if(child != null)
 				{

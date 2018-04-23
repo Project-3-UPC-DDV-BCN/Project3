@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole; 
+//using TheEngine.TheConsole; 
 using System.Collections.Generic; 
 using TheEngine.TheMath;
 
@@ -20,12 +20,15 @@ public class ShipDestruction
 
 	bool need_boom;
 	bool exploted;
-    bool destruction_mesh; 
+    bool destruction_mesh;
+	
+	TheGameObject self = null;
 
 	void Start () 
 	{
-		transform = TheGameObject.Self.GetComponent<TheTransform>();
-		hp_tracker = TheGameObject.Self.GetComponent<TheScript>(0);
+		self = TheGameObject.Self;
+		transform = self.GetComponent<TheTransform>();
+		hp_tracker = self.GetComponent<TheScript>(0);
 		game_manager = TheGameObject.Find("GameManager").GetComponent<TheScript>(0);
 
         ship_parts = new List<TheGameObject>(); 
@@ -39,7 +42,7 @@ public class ShipDestruction
 		{                     	
 			PlayDestruction(); 
 			
-			int score_to_add = GetRewardFromTeams(TheGameObject.Self.tag, hp_tracker.GetStringField("last_collided_team")); 
+			int score_to_add = GetRewardFromTeams(self.tag, hp_tracker.GetStringField("last_collided_team")); 
 			game_manager.SetIntField("score_to_inc", score_to_add); 
 			game_manager.CallFunction("AddToScore"); 
 			game_manager.SetIntField("score_to_inc", 0); 
@@ -50,9 +53,9 @@ public class ShipDestruction
 			if(destroy_timer.ReadTime() > time_to_destroy)
             {
                 DeleteShipParts();
-				if (TheGameObject.Self.GetParent() != null)
+				if (self.GetParent() != null)
 				{
-					TheGameObject.Self.GetParent().SetActive(false); 
+					self.GetParent().SetActive(false); 
 				}
             }
 				
@@ -71,8 +74,8 @@ public class ShipDestruction
 	{
 		int return_value = 0; 
 		
-		TheConsole.Log(ship1); 
-		TheConsole.Log(ship2); 
+		//TheConsole.Log(ship1); 
+		//TheConsole.Log(ship2); 
 		
 		string team1, team2; 
 		team1 = team2 = "";
@@ -97,17 +100,17 @@ public class ShipDestruction
 
 	void FillPartList()
 	{
-		for(int i = 0; i < TheGameObject.Self.GetChildCount(); i++)
+		for(int i = 0; i < self.GetChildCount(); i++)
 		{			
-			ship_parts.Add(TheGameObject.Self.GetChild(i)); 
+			ship_parts.Add(self.GetChild(i)); 
 		}
 	}
 
 	void DeleteShipParts()
 	{
-		for(int i = 0; i < TheGameObject.Self.GetChildCount(); i++)
+		for(int i = 0; i < self.GetChildCount(); i++)
 		{	
-			ship_parts.Remove(TheGameObject.Self.GetChild(i)); 
+			ship_parts.Remove(self.GetChild(i)); 
 			ship_parts[i].SetActive(false); 
 		}
 	}

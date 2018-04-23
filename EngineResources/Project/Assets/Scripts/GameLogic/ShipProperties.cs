@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 
 /*
 	All ships should have this script with set with "alliance" or "empire"
@@ -25,35 +25,39 @@ public class ShipProperties
 	private TheTransform self_transform = null;
 	private TheAudioSource audio_source = null;
 	private TheScript player_movement_script = null;
+	
+	TheGameObject self = null;
 
 	bool one_shoot = true;
 		
 	void Init()
 	{
-		TheGameObject.Self.tag = "ShipEntity";
+		self = TheGameObject.Self;
+		
+		self.tag = "ShipEntity";
 
-		self_transform = TheGameObject.Self.GetComponent<TheTransform>();
+		self_transform = self.GetComponent<TheTransform>();
 			
 		game_manager = TheGameObject.Find("GameManager");
 		
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
 
-		movement_script = TheGameObject.Self.GetScript("GuillemMovement");
+		movement_script = self.GetScript("GuillemMovement");
 
-		factory = TheGameObject.Self.GetComponent<TheFactory>();
+		factory = self.GetComponent<TheFactory>();
 
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
+		audio_source = self.GetComponent<TheAudioSource>();
 
 		// Add ship to game manager
 		if(is_slave1)
 		{
 			if(game_manager_script != null)
 			{
-				object[] args = {TheGameObject.Self};
+				object[] args = {self};
 				game_manager_script.CallFunctionArgs("AddSlave1", args);
 
-				player_movement_script = TheGameObject.Self.GetScript("PlayerMovement");
+				player_movement_script = self.GetScript("PlayerMovement");
 			}
 		}
 		else
@@ -106,7 +110,7 @@ public class ShipProperties
 
 				if(laser_script != null)
 				{
-					object[] args = {TheGameObject.Self, laser_speed, base_laser_damage,
+					object[] args = {self, laser_speed, base_laser_damage,
 									 self_transform.ForwardDirection, self_transform.QuatRotation};
 
 					laser_script.CallFunctionArgs("SetInfo", args);
@@ -131,21 +135,21 @@ public class ShipProperties
 					// Ally hit
 					DealDamage(dmg);
 	
-					if(!is_slave1)
-						TheConsole.Log("Ally hit. Dmg: " + dmg + "  | Ship now has: " + GetLife() + " Life");
+					//if(!is_slave1)
+						//TheConsole.Log("Ally hit. Dmg: " + dmg + "  | Ship now has: " + GetLife() + " Life");
 	
-					else
-						TheConsole.Log("Slave1 is hit!");
+					//else
+						//TheConsole.Log("Slave1 is hit!");
 				}
 				else
 				{
 					// Enemy hit
 					DealDamage(dmg);
-					if(!is_slave1)
-						TheConsole.Log("Enemy hit. Dmg: " + dmg+ "  | Ship now has: " + GetLife() + " Life");
+					//if(!is_slave1)
+						//TheConsole.Log("Enemy hit. Dmg: " + dmg+ "  | Ship now has: " + GetLife() + " Life");
 					
-					else
-						TheConsole.Log("Slave1 is hit!");
+					//else
+						//TheConsole.Log("Slave1 is hit!");
 					
 					// Add score if killed by slave
 					if(ship_is_slave1 && IsDead())
@@ -183,7 +187,7 @@ public class ShipProperties
 	void SetLife(int set)
 	{
 		if(set != life)
-			TheConsole.Log("Life set to: " + set);
+			//TheConsole.Log("Life set to: " + set);
 
 		life = set;
 
@@ -211,10 +215,10 @@ public class ShipProperties
 				object[] args = {dmg};
 				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
 
-				TheConsole.Log("DealDamage: Slave");
+				//TheConsole.Log("DealDamage: Slave");
 			}
-			else
-				TheConsole.Log("Player movement is null");
+			//else
+				//TheConsole.Log("Player movement is null");
 		}
 	}
 	
@@ -223,7 +227,7 @@ public class ShipProperties
 	{	
 		if(game_manager_script != null)
 		{
-			object[] args = {TheGameObject.Self};
+			object[] args = {self};
 			game_manager_script.CallFunctionArgs("RemoveShip", args);
 			
 			if(faction == "alliance")
@@ -273,15 +277,15 @@ public class ShipProperties
 						{
 							particle_script.CallFunctionArgs("Destroy");
 
-							TheConsole.Log("Explosion particle created!");
+							//TheConsole.Log("Explosion particle created!");
 						}
 					}
 				}
 
-				object[] args = {TheGameObject.Self};
+				object[] args = {self};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				
-				TheGameObject.Destroy(TheGameObject.Self);					
+				TheGameObject.Destroy(self);					
 			}
 		}
 	}

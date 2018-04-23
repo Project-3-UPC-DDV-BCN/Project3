@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 using System.Collections.Generic;
 
 public class TrainingModeManager 
@@ -60,7 +60,7 @@ public class TrainingModeManager
 			enabled = true;
 
 			if(enabled)
-				TheConsole.Log("Training mode enabled!"); 
+				//TheConsole.Log("Training mode enabled!"); 
 
 			check_wave_finished_timer.Start();
 			spawn_timer.Start();
@@ -94,7 +94,7 @@ public class TrainingModeManager
 		
 				if(enemies_count == 0)
 				{
-					TheConsole.Log("No enemies! Need to spawn new round");
+					//TheConsole.Log("No enemies! Need to spawn new round");
 					ret = true;
 				}
 			}
@@ -113,7 +113,7 @@ public class TrainingModeManager
 
 		spawn_timer.Start();
 
-		TheConsole.Log("Spawning wave: " + curr_wave);
+		//TheConsole.Log("Spawning wave: " + curr_wave);
 
 		SetCurrWaveText(curr_wave);
 	}
@@ -133,7 +133,7 @@ public class TrainingModeManager
 					spawned_ship_trans.GlobalPosition = GetRandomSpawnPoint();
 			
 					TheVector3 spawned_pos = spawned_ship_trans.GlobalPosition;
-					TheConsole.Log("Enemy ship spawned! x:" + spawned_pos.x + " y: " + spawned_pos.y + " z:" + spawned_pos.z);
+					//TheConsole.Log("Enemy ship spawned! x:" + spawned_pos.x + " y: " + spawned_pos.y + " z:" + spawned_pos.z);
 				}
 
 				spawn_timer.Start();

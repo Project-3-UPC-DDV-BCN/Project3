@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 
 public class Ai_Starship_Shooting 
 {
@@ -24,15 +24,17 @@ public class Ai_Starship_Shooting
 
 	TheTimer timer = new TheTimer();
 	
+	TheGameObject self = TheGameObject.Self;
+	
 	void Init()
 	{
 		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
 
-		ship_properties = TheGameObject.Self.GetScript("ShipProperties");
+		ship_properties = self.GetScript("ShipProperties");
 
-		transform = TheGameObject.Self.GetComponent<TheTransform>();
+		transform = self.GetComponent<TheTransform>();
 
 	}
 	
@@ -94,7 +96,7 @@ public class Ai_Starship_Shooting
 	{
 		target_transform = trans;
 
-		TheConsole.Log("Shooting target set!");
+		//TheConsole.Log("Shooting target set!");
 	}
 
 	void ClearTargetTransform()

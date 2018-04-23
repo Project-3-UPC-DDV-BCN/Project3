@@ -1,5 +1,5 @@
 using TheEngine;	
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 
 using TheEngine.TheMath;
 
@@ -74,11 +74,11 @@ public class VS4StarShipShooting
 
 		audio_source = shoot_audio_emiter.GetComponent<TheAudioSource>();
 		/*if(audio_source == null) 
-			TheConsole.Log("no audio");*/
+			//TheConsole.Log("no audio");*/
 
         weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
 		/*if(weapons_bar == null) 
-			TheConsole.Log("no weapon bar");*/
+			//TheConsole.Log("no weapon bar");*/
 
         curr_overheat_inc = overheat_increment;
 	
@@ -86,7 +86,7 @@ public class VS4StarShipShooting
 			overheat_bar_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
 
 		/*if(overheat_bar_bar == null) 
-			TheConsole.Log("no overheat");*/
+			//TheConsole.Log("no overheat");*/
 
 		if(crosshair_1 != null)
 			crosshair_1.SetActive(true);

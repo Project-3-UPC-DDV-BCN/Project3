@@ -1,5 +1,5 @@
 using TheEngine;
-using TheEngine.TheConsole;
+//using TheEngine.TheConsole; 
 
 public class ShipHUDProperties {
 	public TheGameObject parent_GO = null;
@@ -15,15 +15,19 @@ public class ShipHUDProperties {
 	
 	public float min_distance = 10;
 	public float max_distance = 1000;
+	
+	TheGameObject self = null;
 
 	void Start () {
-		
-		marker_GO = TheGameObject.Self.GetChild(0);
-		hp_GO = TheGameObject.Self.GetChild(1);
-		TheGameObject[] aux = TheGameObject.GetGameObjectsWithTag("GameManager");
-		GM = aux[0];
-		game_manager = GM.GetScript("GameManager");
-		slave_GO = (TheGameObject)game_manager.CallFunctionArgs("GetSlave1");
+		self = TheGameObject.Self;
+		marker_GO = self.GetChild(0);
+		hp_GO = self.GetChild(1);
+		GM = TheGameObject.Find("GameManager");
+		if(GM != null)
+		{
+			game_manager = GM.GetScript("GameManager");
+			slave_GO = (TheGameObject)game_manager.CallFunctionArgs("GetSlave1");
+		}
 	
 	}
 	
@@ -34,10 +38,10 @@ public class ShipHUDProperties {
 		//Update HP
 			float hp_value;
 			hp_value = parent_GO.GetComponent<TheScript>(0).GetFloatField("life");
-			TheConsole.Log(hp_value);
+			//TheConsole.Log(hp_value);
 			hp_GO.GetComponent<TheProgressBar>().PercentageProgress = hp_value;
 		//Update Size
-			float distance = TheVector3.Distance(TheGameObject.Self.GetComponent<TheTransform>().GlobalPosition,slave_GO.GetComponent<TheTransform>().GlobalPosition);
+			float distance = TheVector3.Distance(self.GetComponent<TheTransform>().GlobalPosition,slave_GO.GetComponent<TheTransform>().GlobalPosition);
 			/*
 			if(distance <= min_distance)
 			{
