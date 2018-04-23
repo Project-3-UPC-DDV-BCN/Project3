@@ -409,6 +409,9 @@ void ComponentParticleEmmiter::SetFrequencyFromRate(int rate)
 
 bool ComponentParticleEmmiter::ShowEmmisionArea() const
 {
+	if (App->IsPlaying())
+		return false;
+
 	return show_emit_area;
 }
 

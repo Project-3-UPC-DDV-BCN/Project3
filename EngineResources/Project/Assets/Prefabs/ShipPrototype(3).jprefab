@@ -1,11 +1,11 @@
 {
-    "UUID": "294253014",
+    "UUID": "863104366",
     "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1342578961",
+        "UUID": "1449138579",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -17,9 +17,9 @@
                 "Active": "1",
                 "UUID": "645302198",
                 "position": {
-                    "value_X": "0.000000",
+                    "value_X": "0.191450",
                     "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_Z": "43.518852"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -54,14 +54,14 @@
                     "int_fields": {
                         "field_0": {
                             "field_name": "base_laser_damage",
-                            "field_value": "7"
+                            "field_value": "10"
                         }
                     },
                     "double_fields": {},
                     "float_fields": {
                         "field_0": {
                             "field_name": "laser_speed",
-                            "field_value": "500.000000"
+                            "field_value": "300.000000"
                         }
                     },
                     "bool_fields": {
@@ -86,7 +86,7 @@
                 "Type": "12",
                 "Active": "1",
                 "UUID": "1437024583",
-                "Object_count": "20",
+                "Object_count": "4",
                 "Spawn_position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -102,8 +102,8 @@
                     "value_Y": "-431602080.000000",
                     "value_Z": "-431602080.000000"
                 },
-                "Life_time": "2.000000",
-                "Prefab_UID": "1406036996"
+                "Life_time": "3.500000",
+                "Prefab_UID": "1464112867"
             },
             "Component_3": {
                 "Type": "3",
@@ -181,9 +181,9 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "7.000000",
-                        "value_Y": "4.000000",
-                        "value_Z": "13.500000"
+                        "value_X": "6.750691",
+                        "value_Y": "3.899920",
+                        "value_Z": "10.197910"
                     }
                 }
             },
@@ -221,19 +221,19 @@
                         },
                         "field_1": {
                             "field_name": "desertor_distance",
-                            "field_value": "2000.000000"
+                            "field_value": "10000.000000"
                         },
                         "field_2": {
                             "field_name": "max_distance_to_center_object",
-                            "field_value": "1000.000000"
+                            "field_value": "2000.000000"
                         },
                         "field_3": {
                             "field_name": "move_speed",
-                            "field_value": "70.000000"
+                            "field_value": "40.000000"
                         },
                         "field_4": {
                             "field_name": "rotation_speed",
-                            "field_value": "60.000000"
+                            "field_value": "20.000000"
                         }
                     },
                     "bool_fields": {},
@@ -280,7 +280,7 @@
                         },
                         "field_2": {
                             "field_name": "time_between_lasers",
-                            "field_value": "0.200000"
+                            "field_value": "1.000000"
                         }
                     },
                     "bool_fields": {},
@@ -314,7 +314,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "max_distance",
-                            "field_value": "2000.000000"
+                            "field_value": "5000.000000"
                         }
                     },
                     "bool_fields": {},
@@ -340,7 +340,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "316624459",
+        "UUID": "1695272499",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -398,12 +398,12 @@
                 }
             }
         },
-        "ParentID": "1342578961",
+        "ParentID": "1449138579",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1939307231",
+        "UUID": "865413759",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -470,12 +470,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "316624459",
+        "ParentID": "1695272499",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2064358914",
+        "UUID": "1170115107",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -539,11 +539,11 @@
                 "flip": "0",
                 "loop": "1",
                 "anim_speed": "1.000000",
-                "anim_textures_count": "0",
+                "anim_textures_count": "1",
                 "texture": "mira1"
             }
         },
-        "ParentID": "1939307231",
+        "ParentID": "865413759",
         "IsRoot": "0",
         "IsStatic": "0"
     }

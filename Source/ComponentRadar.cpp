@@ -540,7 +540,7 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 
 					rota_pos = center_pos - rota_pos;
 
-					float distance_magnitude = rota_pos.z - entity_pos.z;
+					float distance_magnitude = rota_pos.z - center_pos.z;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
@@ -557,8 +557,8 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 							if (z_offset != 0)
 							{
 								float scaled_size_z = (max_distance * markers_size) / -z_offset * 0.5f;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 5)
-									scaled_size_z = radar_scaled_size / (5 * entity_scaled_size);
+								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 6)
+									scaled_size_z = radar_scaled_size / (6 * entity_scaled_size);
 
 								if ((float)scaled_size_z * (float)entity_scaled_size > 0)
 								{
@@ -641,7 +641,7 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 
 					rota_pos = center_pos - rota_pos;
 
-					float distance_magnitude = rota_pos.z - entity_pos.z;
+					float distance_magnitude = rota_pos.z - center_pos.z;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
@@ -658,8 +658,8 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 							if (z_offset != 0)
 							{
 								float scaled_size_z = (max_distance * markers_size) / z_offset;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 5)
-									scaled_size_z = radar_scaled_size / (5 * entity_scaled_size);
+								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 6)
+									scaled_size_z = radar_scaled_size / (6 * entity_scaled_size);
 
 								if (scaled_size_z * entity_scaled_size > 0)
 								{
