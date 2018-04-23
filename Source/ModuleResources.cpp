@@ -1787,7 +1787,7 @@ void ModuleResources::CreateDefaultShaders()
 		"out vec3 TangentFragPos;\n"
 		"out mat3 TBN;\n"
 
-		"uniform mat4 DepthBiasMVP;\n"
+		"uniform mat4 MVP;\n"
 		"uniform mat4 Model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n\n"
@@ -1807,7 +1807,7 @@ void ModuleResources::CreateDefaultShaders()
 		"	TangentFragPos = TBN * FragPos;\n"
 		"	ourColor = color;\n"
 		"	TexCoord = texCoord.xy;\n"
-		"	FragPosLightSpace = DepthBiasMVP * vec4(FragPos, 1.0);\n"
+		"	FragPosLightSpace = MVP * Model * vec4(position, 1.0);\n"
 		"}";
 
 		default_vert->SetContent(shader_text);
@@ -1956,7 +1956,6 @@ void ModuleResources::CreateDefaultShaders()
 			"			float shadow = 0.0f;\n"
 			"			shadow = ShadowCalculation();\n"
 			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)), color.a);  \n"
-			"			color = vec4(vec3(texture(Tex_ShadowMap, TexCoord).r) * (1 - shadow), 1.0);\n"
 			//	"			color = vec4((color.rgb * (1.0 - shadow)), color.a);  \n"
 			//	"			color = vec4(vec3(1.0f - shadow), 1.0f);\n"
 			"			}\n"
@@ -1973,7 +1972,24 @@ void ModuleResources::CreateDefaultShaders()
 			"	projCoords = projCoords * vec3(0.5) + vec3(0.5);\n"
 			"	float closestDepth = texture(Tex_ShadowMap, projCoords.xy).r;\n"
 			"	float currentDepth = projCoords.z;\n"
-			"	float shadow = currentDepth > closestDepth  ? 0.8 : 0.0; \n"
+			"	vec3 normal_p = normalize(Normal);\n"
+			"	vec3 lightDir_p = normalize(dirLights[0].position - FragPos);\n"
+			"	float bias = max(0.05 * (1.0 - dot(normal_p, lightDir_p)), 0.005);\n"
+
+			"	float shadow = 0.0;\n"
+			"	vec2 texelSize = 1.0 / textureSize(Tex_ShadowMap, 0);\n"
+			"	for (int x = -1; x <= 1; ++x)\n"
+			"	{\n"
+			"		for (int y = -1; y <= 1; ++y)\n"
+			"		{\n"
+			"			float pcfDepth = texture(Tex_ShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;\n"
+			"			shadow += currentDepth - bias > pcfDepth ? 0.8 : 0.0;\n"
+			"		}\n"
+			"	}\n"
+			"	shadow /= 9.0;\n"
+			"	if (projCoords.z > 1.0)\n"
+			"		shadow = 0.0;\n"
+
 			"	return shadow;\n"
 			"}\n"
 

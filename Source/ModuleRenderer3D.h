@@ -5,6 +5,9 @@
 #include "Light.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include <list>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 class ComponentMeshRenderer;
 class ComponentParticleEmmiter;
@@ -188,5 +191,5 @@ private:
 	uint default_buffer = 0;
 	float near_plane, far_plane;
 	//float* bias_MVP = nullptr;
-	float* light_space_mat = nullptr;
+	glm::mat4 light_space_mat;
 };

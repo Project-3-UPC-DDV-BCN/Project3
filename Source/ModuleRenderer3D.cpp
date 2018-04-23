@@ -41,9 +41,6 @@
 #include "glmath.h"
 #include "OpenGL.h"
 #include "Brofiler\Brofiler.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
 #include "Mesh.h"
 
 
@@ -716,7 +713,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
-	SetUniformMatrix(program, "DepthBiasMVP", light_space_mat);
+	SetUniformMatrix(program, "MVP", glm::value_ptr(light_space_mat));
 
 
 
@@ -1374,6 +1371,7 @@ void ModuleRenderer3D::SetUniformMatrix(uint program, const char * name, float *
 	GLint modelLoc = glGetUniformLocation(program, name);
 	if (modelLoc != -1)
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, data);
+
 	GLenum error = glGetError();
 
 	//Check for error
@@ -1743,11 +1741,10 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-4000.0, 4000.0, -4000.0, 4000.0, -100.0, 8000.0);
-		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0) + l_dir, glm::vec3(0, 1, 0));
-		glm::mat4 depthModelMatrix = glm::mat4(1.0);
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-4000.0, 4000.0, -4000.0, 4000.0, -1000.0, 8000.0);
+		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
-		light_space_mat = glm::value_ptr(depthMVP);
+		light_space_mat = depthMVP;
 	//	glm::mat4 MVP_BIAS = biasMatrix* depthMVP;
 	//	bias_MVP = glm::value_ptr(MVP_BIAS);
 		glClear(GL_DEPTH_BUFFER_BIT);
