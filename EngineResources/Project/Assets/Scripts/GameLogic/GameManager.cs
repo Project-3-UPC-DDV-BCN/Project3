@@ -140,12 +140,20 @@ public class GameManager
 	void Win()
 	{
 		TheConsole.Log("You win!");
+		if(audio_source!=null)
+			audio_source.Stop("Play_Music");
+		if(slave1_audiosource!=null)
+			slave1_audiosource.Play("Stop_Engine");
 		TheApplication.LoadScene("VS4 - MainMenu");
 	}
 
 	void Lose()
 	{
 		TheConsole.Log("You lose!");
+		if(audio_source!=null)
+			audio_source.Stop("Play_Music");
+		if(slave1_audiosource!=null)
+			slave1_audiosource.Play("Stop_Engine");
 		TheApplication.LoadScene("VS4 - MainMenu");
 	}
 
