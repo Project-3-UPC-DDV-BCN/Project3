@@ -245,14 +245,34 @@ MonoObject* ModuleScriptImporter::AddGameObjectInfoToMono(GameObject * go)
 {
 	MonoObject* ret = nullptr;
 
-	if (go == nullptr)
-		return nullptr;
-
-	ret = ns_importer->CreateGameObject(go);
-
-	for (Component* comp : go->components_list)
+	if (go != nullptr)
 	{
-		ns_importer->CreateComponent(comp);
+		std::vector<GameObject*> to_add;
+		to_add.push_back(go);
+
+		ret = ns_importer->GetMonoObjectFromGameObject(go);
+
+		while (!to_add.empty())
+		{
+			GameObject* curr_go = *to_add.begin();
+
+			if (curr_go == nullptr)
+				continue;
+
+			ns_importer->CreateGameObject(curr_go);
+
+			for (Component* comp : curr_go->components_list)
+			{
+				ns_importer->CreateComponent(comp);
+			}
+
+			for (std::list<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
+			{
+				to_add.push_back(*it);
+			}
+
+			to_add.erase(to_add.begin());
+		}
 	}
 
 	return ret;
@@ -6087,7 +6107,7 @@ std::string NSScriptImporter::CppComponentToCs(Component::ComponentType componen
 		cs_name = "TheAudioSource";
 		break;
 	case Component::CompParticleSystem:
-		cs_name = "TheParticleSystem";
+		cs_name = "TheParticleEmmiter";
 		break;
 	case Component::CompText:
 		cs_name = "TheText";
