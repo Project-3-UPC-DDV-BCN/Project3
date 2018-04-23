@@ -53,7 +53,7 @@ public class ShipProperties
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("AddSlave1", args);
 
-				player_movement_script = TheGameObject.Self.GetScript("PlayerMovemement");
+				player_movement_script = TheGameObject.Self.GetScript("PlayerMovement");
 			}
 		}
 		else
@@ -213,6 +213,8 @@ public class ShipProperties
 
 				TheConsole.Log("DealDamage: Slave");
 			}
+			else
+				TheConsole.Log("Player movement is null");
 		}
 	}
 	
