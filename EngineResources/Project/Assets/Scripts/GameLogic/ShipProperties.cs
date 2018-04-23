@@ -53,7 +53,7 @@ public class ShipProperties
 				object[] args = {TheGameObject.Self};
 				game_manager_script.CallFunctionArgs("AddSlave1", args);
 
-				player_movement_script = TheGameObject.Self.GetScript("Slave1Movemement");
+				player_movement_script = TheGameObject.Self.GetScript("PlayerMovemement");
 			}
 		}
 		else
@@ -146,7 +146,8 @@ public class ShipProperties
 					
 					else
 						TheConsole.Log("Slave1 is hit!");
-
+					
+					// Add score if killed by slave
 					if(ship_is_slave1 && IsDead())
 					{	
 						if(game_manager_script != null)
@@ -181,6 +182,9 @@ public class ShipProperties
 	// Sets life of the ship
 	void SetLife(int set)
 	{
+		if(set != life)
+			TheConsole.Log("Life set to: " + set);
+
 		life = set;
 
 		if(life < 0)
@@ -204,9 +208,10 @@ public class ShipProperties
 		{
 			if(player_movement_script != null)
 			{	
-				float f_dmg = (float)dmg;
-				object[] args = {f_dmg};
-				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);
+				object[] args = {dmg};
+				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
+
+				TheConsole.Log("DealDamage: Slave");
 			}
 		}
 	}

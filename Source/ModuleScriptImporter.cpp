@@ -241,52 +241,21 @@ std::string ModuleScriptImporter::CompileScript(std::string assets_path, std::st
 //	return current_script;
 //}
 
-void ModuleScriptImporter::AddGameObjectInfoToMono(GameObject * go)
+MonoObject* ModuleScriptImporter::AddGameObjectInfoToMono(GameObject * go)
 {
-	if (go == nullptr)
-		return;
+	MonoObject* ret = nullptr;
 
-	MonoObject* exist_obejct = ns_importer->GetMonoObjectFromGameObject(go);
-	if (!exist_obejct)
-	{
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-		if (c)
-		{
-			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-			if (new_object)
-			{
-				ns_importer->AddCreatedGameObjectToList(new_object, go);
-			}
-		}
-	}
+	if (go == nullptr)
+		return nullptr;
+
+	ret = ns_importer->CreateGameObject(go);
 
 	for (Component* comp : go->components_list)
 	{
-		std::string comp_type = ns_importer->CppComponentToCs(comp->GetType());
-
-		MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_type.c_str());
-		if (c_comp)
-		{
-			MonoObject* comp_new_object = mono_object_new(App->script_importer->GetDomain(), c_comp);
-			if (comp_new_object)
-			{
-				ns_importer->AddCreatedComponentToList(comp_new_object, comp);
-			}
-		}
-
-		if (comp_type == "TheBoxCollider" || comp_type == "TheSphereCollider" || comp_type == "TheCapsuleCollider" || comp_type == "TheMeshCollider")
-		{
-			MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheCollider");
-			if (c_comp)
-			{
-				MonoObject* comp_new_object = mono_object_new(App->script_importer->GetDomain(), c_comp);
-				if (comp_new_object)
-				{
-					ns_importer->AddCreatedComponentToList(comp_new_object, comp);
-				}
-			}
-		}
+		ns_importer->CreateComponent(comp);
 	}
+
+	return ret;
 }
 
 void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list)
@@ -294,6 +263,27 @@ void ModuleScriptImporter::AddGameObjectsInfoToMono(std::list<GameObject*> scene
 	for (GameObject* go : scene_objects_list)
 	{
 		AddGameObjectInfoToMono(go);
+	}
+}
+
+void ModuleScriptImporter::RemoveGameObjectInfoFromMono(GameObject * go)
+{
+	if (go == nullptr)
+		return;
+
+	ns_importer->RemoveGameObjectFromMonoObjectList(go);
+
+	for (Component* comp : go->components_list)
+	{
+		ns_importer->RemoveComponentFromMonoObjectList(comp);
+	}
+}
+
+void ModuleScriptImporter::RemoveGameObjectInfoFromMono(std::list<GameObject*> scene_objects_list)
+{
+	for (GameObject* go : scene_objects_list)
+	{
+		RemoveGameObjectInfoFromMono(go);
 	}
 }
 
@@ -1874,13 +1864,62 @@ void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, Mon
 
 /////////// Non Static Class Defs //////////////
 
-void NSScriptImporter::AddCreatedGameObjectToList(MonoObject* object, GameObject * go)
+MonoObject* NSScriptImporter::CreateGameObject(GameObject * go)
 {
-	if (go && object)
+	MonoObject* ret = nullptr;
+
+	if (go != nullptr)
 	{
-		mono_gchandle_new(object, 1);
-		created_gameobjects[object] = go;
+		if (!IsGameObjectAddedToMonoObjectList(go))
+		{
+			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+			if (c)
+			{
+				ret = mono_object_new(App->script_importer->GetDomain(), c);
+				if (ret)
+				{
+					mono_gchandle_new(ret, 1);
+					created_gameobjects[ret] = go;
+				}
+			}
+		}
 	}
+
+	return ret;
+}
+
+GameObject * NSScriptImporter::GetGameObjectFromMonoObject(MonoObject * object)
+{
+	if (object != nullptr)
+	{
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (object == it->first)
+			{
+				return it->second;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+MonoObject * NSScriptImporter::GetMonoObjectFromGameObject(GameObject * go)
+{
+	if (go != nullptr)
+	{
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		{
+			if (go == it->second)
+			{
+				return it->first;
+			}
+		}
+
+		return CreateGameObject(go);
+	}
+
+	return nullptr;
 }
 
 void NSScriptImporter::RemoveGameObjectFromMonoObjectList(GameObject * go)
@@ -1891,6 +1930,7 @@ void NSScriptImporter::RemoveGameObjectFromMonoObjectList(GameObject * go)
 		{
 			if (it->second == go)
 			{
+				mono_gchandle_new(it->first, 0);
 				created_gameobjects.erase(it);
 				break;
 			}
@@ -1898,43 +1938,92 @@ void NSScriptImporter::RemoveGameObjectFromMonoObjectList(GameObject * go)
 	}
 }
 
-void NSScriptImporter::AddCreatedComponentToList(MonoObject * object, Component * comp)
+void NSScriptImporter::RemoveMonoObjectFromGameObjectList(MonoObject * object)
 {
-	if (comp && object)
+	if (object != nullptr)
 	{
-		mono_gchandle_new(object, 1);
-		created_components[object] = comp;
-	}
-}
-
-void NSScriptImporter::RemoveComponentFromMonoObjectList(Component * comp)
-{
-	if (comp != nullptr)
-	{
-		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 		{
-			if (comp == it->second)
+			if (it->first == object)
 			{
-				created_components.erase(it);
+				mono_gchandle_new(it->first, 0);
+				created_gameobjects.erase(it);
 				break;
 			}
 		}
 	}
 }
 
-GameObject * NSScriptImporter::GetGameObjectFromMonoObject(MonoObject * object)
+bool NSScriptImporter::IsGameObjectAddedToMonoObjectList(GameObject * go)
 {
-	if (object)
+	bool ret = false;
+
+	for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		if (it->second == go)
 		{
-			if (object == it->first)
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+bool NSScriptImporter::IsMonoObjectAddedToGameObjectList(MonoObject * object)
+{
+	bool ret = false;
+
+	for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+	{
+		if (it->first == object)
+		{
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+MonoObject * NSScriptImporter::CreateComponent(Component * comp)
+{
+	MonoObject* ret = nullptr;
+
+	if (comp != nullptr)
+	{
+		if (!IsComponentAddedToMonoObjectList(comp))
+		{
+			std::string comp_type = CppComponentToCs(comp->GetType());
+
+			MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_type.c_str());
+			if (c_comp)
 			{
-				return it->second;
+				ret = mono_object_new(App->script_importer->GetDomain(), c_comp);
+				if (ret)
+				{
+					mono_gchandle_new(ret, 1);
+					created_components[ret] = comp;
+					return ret;
+				}
+			}
+
+			if (comp_type == "TheBoxCollider" || comp_type == "TheSphereCollider" || comp_type == "TheCapsuleCollider" || comp_type == "TheMeshCollider")
+			{
+				MonoClass* c_comp = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheCollider");
+				if (c_comp)
+				{
+					ret = mono_object_new(App->script_importer->GetDomain(), c_comp);
+					if (ret)
+					{
+						created_components[ret] = comp;
+						return ret;
+					}
+				}
 			}
 		}
 	}
-	
+
 	return nullptr;
 }
 
@@ -1947,34 +2036,6 @@ Component * NSScriptImporter::GetComponentFromMonoObject(MonoObject * object)
 			if (object == it->first)
 			{
 				return it->second;
-			}
-		}
-	}
-	
-	return nullptr;
-}
-
-MonoObject * NSScriptImporter::GetMonoObjectFromGameObject(GameObject * go)
-{
-	if (go)
-	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
-		{
-			if (go == it->second)
-			{
-				return it->first;
-			}
-		}
-
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-		if (c)
-		{
-			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-			if (new_object)
-			{
-				mono_gchandle_new(new_object, 1);
-				created_gameobjects[new_object] = go;
-				return new_object;
 			}
 		}
 	}
@@ -1993,8 +2054,75 @@ MonoObject* NSScriptImporter::GetMonoObjectFromComponent(Component * component)
 				return it->first;
 			}
 		}
+
+		return CreateComponent(component);
 	}
+
 	return nullptr;
+}
+
+void NSScriptImporter::RemoveComponentFromMonoObjectList(Component * comp)
+{
+	if (comp != nullptr)
+	{
+		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		{
+			if (comp == it->second)
+			{
+				mono_gchandle_new(it->first, 0);
+				created_components.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+void NSScriptImporter::RemoveMonoObjectFromComponentList(MonoObject * object)
+{
+	if (object != nullptr)
+	{
+		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		{
+			if (object == it->first)
+			{
+				mono_gchandle_new(it->first, 0);
+				created_components.erase(it);
+				break;
+			}
+		}
+	}
+}
+
+bool NSScriptImporter::IsComponentAddedToMonoObjectList(Component * comp)
+{
+	bool ret = false;
+
+	for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); ++it)
+	{
+		if (it->second == comp)
+		{
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+bool NSScriptImporter::IsMonoObjectAddedToComponentList(MonoObject * object)
+{
+	bool ret = false;
+
+	for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); ++it)
+	{
+		if (it->first == object)
+		{
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
 }
 
 void NSScriptImporter::SetGameObjectName(MonoObject * object, MonoString* name)
@@ -2013,7 +2141,9 @@ MonoString* NSScriptImporter::GetGameObjectName(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (!go) return nullptr;
+	if (go == nullptr) 
+		return nullptr;
+
 	return mono_string_new(App->script_importer->GetDomain(), go->GetName().c_str());
 }
 
@@ -2021,7 +2151,7 @@ void NSScriptImporter::SetGameObjectTag(MonoObject * object, MonoString * tag)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go && tag)
+	if (go != nullptr && tag != nullptr)
 	{
 		const char* new_tag = mono_string_to_utf8(tag);
 		go->SetTag(new_tag);
@@ -2032,7 +2162,9 @@ MonoString * NSScriptImporter::GetGameObjectTag(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (!go) return nullptr;
+	if (go == nullptr) 
+		return nullptr;
+
 	return mono_string_new(App->script_importer->GetDomain(), go->GetTag().c_str());
 }
 
@@ -2051,7 +2183,9 @@ MonoString * NSScriptImporter::GetGameObjectLayer(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (!go) return nullptr;
+	if (go == nullptr) 
+		return nullptr;
+
 	return mono_string_new(App->script_importer->GetDomain(), go->GetLayer().c_str());
 }
 
@@ -2059,7 +2193,7 @@ void NSScriptImporter::SetGameObjectStatic(MonoObject * object, mono_bool value)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		go->SetStatic(value);
 	}
@@ -2069,36 +2203,31 @@ mono_bool NSScriptImporter::GameObjectIsStatic(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		return go->IsStatic();
 	}
+
 	return false;
 }
 
 MonoObject * NSScriptImporter::DuplicateGameObject(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
-	if (!go)
+
+	if (go == nullptr)
 	{
 		CONSOLE_ERROR("Trying to instantiate a null object");
 		return nullptr;
 	}
 
 	GameObject* duplicated = App->scene->DuplicateGameObject(go);
-	if (duplicated)
+
+	if (duplicated != nullptr)
 	{
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-		if (c)
-		{
-			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-			if (new_object)
-			{
-				mono_gchandle_new(new_object, 1);
-				created_gameobjects[new_object] = duplicated;
-				return new_object;
-			}
-		}
+		App->script_importer->AddGameObjectInfoToMono(duplicated);
+
+		return GetMonoObjectFromGameObject(duplicated);
 	}
 
 	return nullptr;
@@ -2108,7 +2237,7 @@ void NSScriptImporter::SetGameObjectParent(MonoObject * object, MonoObject * par
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		go->SetParent(GetGameObjectFromMonoObject(object));
 	}
@@ -2118,27 +2247,13 @@ MonoObject* NSScriptImporter::GetGameObjectParent(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		GameObject* parent = go->GetParent();
-		if (parent)
+
+		if (parent != nullptr)
 		{
-			MonoObject* parent_mono_object = GetMonoObjectFromGameObject(parent);
-			if (!parent_mono_object)
-			{
-				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-				if (c)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = parent;
-						return new_object;
-					}
-				}
-			}
-			return parent_mono_object;
+			return GetMonoObjectFromGameObject(parent);
 		}
 	}
 
@@ -2149,24 +2264,14 @@ MonoObject * NSScriptImporter::GetGameObjectChild(MonoObject * object, int index
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		if (index >= 0 && index < go->childs.size())
 		{
 			std::list<GameObject*>::iterator it = std::next(go->childs.begin(), index);
-			if (*it)
+			if ((*it) != nullptr)
 			{
-				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-				if (c)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = *it;
-						return new_object;
-					}
-				}
+				return GetMonoObjectFromGameObject(*it);
 			}
 		}
 		else
@@ -2185,28 +2290,17 @@ MonoObject * NSScriptImporter::GetGameObjectChildString(MonoObject * object, Mon
 
 	const char* s_name = mono_string_to_utf8(name);
 
-	if (go)
+	if (go != nullptr)
 	{
 		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); it++)
 		{
 			if (*it != nullptr && (*it)->GetName() == s_name)
 			{
-				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-				if (c)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = *it;
-						return new_object;
-					}
-				}
+				return GetMonoObjectFromGameObject(*it);
 			}
 		}
 	}
 	
-
 	return nullptr;
 }
 
@@ -2214,40 +2308,26 @@ int NSScriptImporter::GetGameObjectChildCount(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		return go->childs.size();
 	}
 
-	return -1;
+	return 0;
 }
 
 MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 {
-	if (!gameobject_name) return nullptr;
+	if (gameobject_name == nullptr) 
+		return nullptr;
 
 	const char* s_name = mono_string_to_utf8(gameobject_name);
 
 	GameObject* go = App->scene->FindGameObjectByName(s_name);
 
-	if (go)
+	if (go != nullptr)
 	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
-		{
-			if (it->second == go) return it->first;
-		}
-
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-		if (c)
-		{
-			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-			if (new_object)
-			{
-				mono_gchandle_new(new_object, 1);
-				created_gameobjects[new_object] = go;
-				return new_object;
-			}
-		}
+		return GetMonoObjectFromGameObject(go);
 	}
 	else
 	{
@@ -2260,6 +2340,7 @@ MonoObject * NSScriptImporter::FindGameObject(MonoString * gameobject_name)
 MonoArray * NSScriptImporter::GetGameObjectsWithTag(MonoString * tag)
 {
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+
 	std::list<GameObject*> objects = App->scene->scene_gameobjects;
 
 	std::vector<GameObject*> found_gameobjects;
@@ -2273,49 +2354,31 @@ MonoArray * NSScriptImporter::GetGameObjectsWithTag(MonoString * tag)
 		}
 	}
 
-	if (c)
+	MonoArray* scene_objects = mono_array_new(App->script_importer->GetDomain(), c, found_gameobjects.size());
+
+	if (scene_objects != nullptr)
 	{
-		MonoArray* scene_objects = mono_array_new(App->script_importer->GetDomain(), c, found_gameobjects.size());
-		if (scene_objects)
+		int index = 0;
+		for (GameObject* go : found_gameobjects)
 		{
-			int index = 0;
-			for (GameObject* go : found_gameobjects)
-			{
-				bool exist = false;
-				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
-				{
-					if (it->second == go)
-					{
-						mono_array_set(scene_objects, MonoObject*, index, it->first);
-						index++;
-						exist = true;
-					}
-				}
-				if (!exist)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_array_set(scene_objects, MonoObject*, index, new_object);
-						index++;
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = go;
-					}
-				}
-			}
-			return scene_objects;
+			MonoObject* obj = GetMonoObjectFromGameObject(go);
+			mono_array_set(scene_objects, MonoObject*, index, obj);
+			++index;
+
 		}
+		return scene_objects;
 	}
-	return nullptr;
 }
 
 MonoArray * NSScriptImporter::GetGameObjectsMultipleTags(MonoArray * tags)
 {
 	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
+
 	std::list<GameObject*> objects = App->scene->scene_gameobjects;
 
 	std::vector<GameObject*> found_gameobjects;
 	std::vector<std::string> tags_to_find;
+
 	int tags_count = mono_array_length(tags);
 
 	for (int i = 0; i < tags_count; i++)
@@ -2340,33 +2403,18 @@ MonoArray * NSScriptImporter::GetGameObjectsMultipleTags(MonoArray * tags)
 	if (c)
 	{
 		MonoArray* scene_objects = mono_array_new(App->script_importer->GetDomain(), c, found_gameobjects.size());
-		if (scene_objects)
+		if (scene_objects != nullptr)
 		{
 			int index = 0;
 			for (GameObject* go : found_gameobjects)
 			{
-				bool exist = false;
-				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
-				{
-					if (it->second == go)
-					{
-						mono_array_set(scene_objects, MonoObject*, index, it->first);
-						index++;
-						exist = true;
-					}
-				}
-				if (!exist)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_array_set(scene_objects, MonoObject*, index, new_object);
-						index++;
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = go;
-					}
-				}
+				MonoObject* obj = GetMonoObjectFromGameObject(go);
+
+				mono_array_set(scene_objects, MonoObject*, index, obj);
+
+				++index;
 			}
+
 			return scene_objects;
 		}
 	}
@@ -2455,28 +2503,11 @@ MonoArray * NSScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject *
 			int index = 0;
 			for (GameObject* go : obj_inFrustum)
 			{
-				bool exist = false;
-				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
-				{
-					if (it->second == go)
-					{
-						mono_array_set(scene_objects, MonoObject*, index, it->first);
-						index++;
-						exist = true;
-						break;
-					}
-				}
-				if (!exist)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_array_set(scene_objects, MonoObject*, index, new_object);
-						index++;
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = go;
-					}
-				}
+				MonoObject* obj = GetMonoObjectFromGameObject(go);
+
+				mono_array_set(scene_objects, MonoObject*, index, obj);
+
+				++index;
 			}
 			return scene_objects;
 		}
@@ -2503,28 +2534,11 @@ MonoArray * NSScriptImporter::GetAllChilds(MonoObject * object)
 				int index = 0;
 				for (GameObject* go : objects)
 				{
-					bool exist = false;
-					for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
-					{
-						if (it->second == go)
-						{
-							mono_array_set(scene_objects, MonoObject*, index, it->first);
-							index++;
-							exist = true;
-							break;
-						}
-					}
-					if (!exist)
-					{
-						MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-						if (new_object)
-						{
-							mono_array_set(scene_objects, MonoObject*, index, new_object);
-							index++;
-							mono_gchandle_new(new_object, 1);
-							created_gameobjects[new_object] = go;
-						}
-					}
+					MonoObject* obj = GetMonoObjectFromGameObject(go);
+
+					mono_array_set(scene_objects, MonoObject*, index, obj);
+
+					++index;
 				}
 				return scene_objects;
 			}
@@ -2536,8 +2550,13 @@ MonoArray * NSScriptImporter::GetAllChilds(MonoObject * object)
 
 void NSScriptImporter::SetComponentActive(MonoObject * object, bool active)
 {
-	Component* cmp = GetComponentFromMonoObject(object); 
-	cmp->SetActive(active); 
+	if (object != nullptr)
+	{
+		Component* cmp = GetComponentFromMonoObject(object);
+
+		if (cmp != nullptr)
+			cmp->SetActive(active);
+	}
 }
 
 MonoObject* NSScriptImporter::AddComponent(MonoObject * object, MonoReflectionType * type)
@@ -2581,17 +2600,7 @@ MonoObject* NSScriptImporter::AddComponent(MonoObject * object, MonoReflectionTy
 		{
 			Component* comp = go->AddComponent(comp_type);
 
-			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
-			if (c)
-			{
-				MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					mono_gchandle_new(new_object, 1);
-					created_components[new_object] = comp;
-					return new_object;
-				}
-			}
+			return CreateComponent(comp);
 		}
 	}
 
@@ -2602,7 +2611,7 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		MonoType* t = mono_reflection_type_get_type(type);
 		std::string name = mono_type_get_name(t);
@@ -2719,14 +2728,7 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 				{
 					if (temp_index == 0)
 					{
-						for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
-						{
-							if (comp == it->second)
-							{
-								return it->first;
-							}
-						}
-						break;
+						return GetMonoObjectFromComponent(comp);
 					}
 					else
 					{
@@ -2736,31 +2738,6 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 			}
 
 			temp_index = index;
-			MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
-			if (c)
-			{
-				MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-				if (new_object)
-				{
-					for (Component* comp : go->components_list)
-					{
-						if (comp->GetType() == cpp_type)
-						{
-							if (temp_index == 0)
-							{
-								mono_gchandle_new(new_object, 1);
-								created_components[new_object] = comp;
-								break;
-							}
-							else
-							{
-								temp_index--;
-							}
-						}
-					}
-					return new_object;
-				}
-			}
 		}
 		CONSOLE_ERROR("%s component type is unknown...", comp_name);
 	}
@@ -2772,50 +2749,24 @@ MonoObject * NSScriptImporter::GetScript(MonoObject * object, MonoString * strin
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	const char* comp_name = "TheScript";
-	Component::ComponentType cpp_type = Component::ComponentType::CompScript;
-
-	std::string script_name = mono_string_to_utf8(string);
-
-	int comp_type_count = 0;
-	for (Component* comp : go->components_list)
+	if (go != nullptr)
 	{
-		if (cpp_type == comp->GetType())
+		const char* comp_name = "TheScript";
+		Component::ComponentType cpp_type = Component::ComponentType::CompScript;
+
+		std::string script_name = mono_string_to_utf8(string);
+
+		int comp_type_count = 0;
+		for (Component* comp : go->components_list)
 		{
-			ComponentScript* c_script = (ComponentScript*)comp;
-			if (c_script->GetScriptName() == script_name)
+			if (cpp_type == comp->GetType())
 			{
-				for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+				ComponentScript* c_script = (ComponentScript*)comp;
+				if (c_script->GetScriptName() == script_name)
 				{
-					if (comp == it->second)
-					{
-						return it->first;
-					}
+					return GetMonoObjectFromComponent(comp);
 				}
 			}
-		}
-	}
-
-	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", comp_name);
-	if (c)
-	{
-		MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-		if (new_object)
-		{
-			for (Component* comp : go->components_list)
-			{
-				if (comp->GetType() == cpp_type)
-				{
-					ComponentScript* c_script = (ComponentScript*)comp;
-					if (c_script->GetScriptName() == script_name)
-					{
-						mono_gchandle_new(new_object, 1);
-						created_components[new_object] = comp;
-						break;
-					}		
-				}
-			}
-			return new_object;
 		}
 	}
 
@@ -2829,6 +2780,8 @@ void NSScriptImporter::DestroyComponent(MonoObject* object, MonoObject* cmp)
 
 	if (comp != nullptr && go != nullptr)
 	{
+		RemoveComponentFromMonoObjectList(comp);
+
 		go->DestroyComponent(comp);
 	}
 }
@@ -2838,7 +2791,7 @@ void NSScriptImporter::SetPosition(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -2860,7 +2813,7 @@ MonoObject* NSScriptImporter::GetPosition(MonoObject * object, mono_bool is_glob
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -2898,7 +2851,7 @@ void NSScriptImporter::SetRotation(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -2920,7 +2873,7 @@ MonoObject * NSScriptImporter::GetRotation(MonoObject * object, mono_bool is_glo
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -2958,7 +2911,7 @@ void NSScriptImporter::SetScale(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -2980,7 +2933,7 @@ MonoObject * NSScriptImporter::GetScale(MonoObject * object, mono_bool is_global
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -3018,7 +2971,7 @@ void NSScriptImporter::LookAt(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3041,7 +2994,7 @@ void NSScriptImporter::SetRectPosition(MonoObject * object, MonoObject * vector3
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3068,7 +3021,7 @@ MonoObject * NSScriptImporter::GetForward(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -3098,8 +3051,8 @@ void NSScriptImporter::SetRectRotation(MonoObject * object, MonoObject * vector3
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
-	{
+	if (comp != nullptr)
+	{ 
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
 		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
@@ -3120,7 +3073,7 @@ MonoObject * NSScriptImporter::GetRectRotation(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -3153,7 +3106,7 @@ void NSScriptImporter::SetRectSize(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3180,7 +3133,7 @@ MonoObject * NSScriptImporter::GetRight(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -3210,7 +3163,7 @@ void NSScriptImporter::SetRectAnchor(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3232,7 +3185,7 @@ MonoObject * NSScriptImporter::GetRectAnchor(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheRectTransform");
 
@@ -3263,7 +3216,7 @@ mono_bool NSScriptImporter::GetOnClick(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRectTransform* rect_trans = (ComponentRectTransform*)comp;
 
@@ -3279,7 +3232,7 @@ mono_bool NSScriptImporter::GetOnClickDown(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRectTransform* rect_trans = (ComponentRectTransform*)comp;
 
@@ -3295,7 +3248,7 @@ mono_bool NSScriptImporter::GetOnClickUp(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRectTransform* rect_trans = (ComponentRectTransform*)comp;
 
@@ -3311,7 +3264,7 @@ mono_bool NSScriptImporter::GetOnMouseEnter(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRectTransform* rect_trans = (ComponentRectTransform*)comp;
 
@@ -3327,7 +3280,7 @@ mono_bool NSScriptImporter::GetOnMouseOver(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRectTransform* rect_trans = (ComponentRectTransform*)comp;
 
@@ -3343,7 +3296,7 @@ mono_bool NSScriptImporter::GetOnMouseOut(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRectTransform* rect_trans = (ComponentRectTransform*)comp;
 
@@ -3359,7 +3312,7 @@ void NSScriptImporter::SetColor(MonoObject * object, MonoObject * color)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(color);
 		MonoClassField* r_field = mono_class_get_field_from_name(c, "x");
@@ -3382,7 +3335,7 @@ MonoObject * NSScriptImporter::GetColor(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -3412,7 +3365,7 @@ void NSScriptImporter::SetText(MonoObject * object, MonoString* t)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		const char* txt = mono_string_to_utf8(t);
 
@@ -3426,7 +3379,7 @@ MonoString* NSScriptImporter::GetText(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentText* text = (ComponentText*)comp;
 		return mono_string_new(App->script_importer->GetDomain(), text->GetText().c_str());
@@ -3438,7 +3391,7 @@ MonoObject * NSScriptImporter::GetUp(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
 		if (c)
@@ -3468,7 +3421,7 @@ void NSScriptImporter::RotateAroundAxis(MonoObject * object, MonoObject * axis, 
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(axis);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3490,7 +3443,7 @@ void NSScriptImporter::SetIncrementalRotation(MonoObject * object, MonoObject * 
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3512,7 +3465,7 @@ void NSScriptImporter::SetQuatRotation(MonoObject * object, MonoObject * quat)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(quat);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3536,7 +3489,7 @@ MonoObject * NSScriptImporter::GetQuatRotation(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheQuaternion");
 		if (c)
@@ -3568,7 +3521,7 @@ void NSScriptImporter::SetPercentageProgress(MonoObject * object, float progress
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentProgressBar* progres_barr = (ComponentProgressBar*)comp;
 
@@ -3580,7 +3533,7 @@ float NSScriptImporter::GetPercentageProgress(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentProgressBar* progres_barr = (ComponentProgressBar*)comp;
 		return progres_barr->GetProgressPercentage();
@@ -3592,7 +3545,7 @@ void NSScriptImporter::AddEntity(MonoObject * object, MonoObject * game_object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRadar* radar = (ComponentRadar*)comp;
 
@@ -3612,7 +3565,7 @@ void NSScriptImporter::RemoveEntity(MonoObject * object, MonoObject * game_objec
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRadar* radar = (ComponentRadar*)comp;
 
@@ -3632,7 +3585,7 @@ void NSScriptImporter::RemoveAllEntities(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRadar* radar = (ComponentRadar*)comp;
 
@@ -3647,7 +3600,7 @@ void NSScriptImporter::SetMarkerToEntity(MonoObject * object, MonoObject * game_
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRadar* radar = (ComponentRadar*)comp;
 
@@ -3669,10 +3622,12 @@ void NSScriptImporter::StartFactory(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentFactory* factory = (ComponentFactory*)comp;
-		if (factory) factory->StartFactory();
+
+		if (factory) 
+			factory->StartFactory();
 	}
 }
 
@@ -3680,10 +3635,12 @@ void NSScriptImporter::ClearFactory(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentFactory* factory = (ComponentFactory*)comp;
-		if (factory) factory->ClearFactory();
+
+		if (factory) 
+			factory->ClearFactory();
 	}
 }
 
@@ -3691,7 +3648,7 @@ MonoObject * NSScriptImporter::Spawn(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentFactory* factory = (ComponentFactory*)comp;
 		GameObject* go = nullptr;
@@ -3702,22 +3659,7 @@ MonoObject * NSScriptImporter::Spawn(MonoObject * object)
 
 		if (go)
 		{
-			MonoObject* obj = GetMonoObjectFromGameObject(go);
-			if (!obj)
-			{
-				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-				if (c)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = go;
-						return new_object;
-					}
-				}
-			}
-			return obj;
+			return GetMonoObjectFromGameObject(go);
 		}
 	}
 	return nullptr;
@@ -3727,7 +3669,7 @@ void NSScriptImporter::SetSpawnPosition(MonoObject * object, MonoObject * vector
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3741,7 +3683,9 @@ void NSScriptImporter::SetSpawnPosition(MonoObject * object, MonoObject * vector
 		if (z_field) mono_field_get_value(vector3, z_field, &new_pos.z);
 
 		ComponentFactory* factory = (ComponentFactory*)comp;
-		if (factory) factory->SetSpawnPos(new_pos);
+
+		if (factory) 
+			factory->SetSpawnPos(new_pos);
 	}
 }
 
@@ -3749,7 +3693,7 @@ void NSScriptImporter::SetSpawnRotation(MonoObject * object, MonoObject * vector
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3763,7 +3707,9 @@ void NSScriptImporter::SetSpawnRotation(MonoObject * object, MonoObject * vector
 		if (z_field) mono_field_get_value(vector3, z_field, &new_rot.z);
 
 		ComponentFactory* factory = (ComponentFactory*)comp;
-		if (factory) factory->SetSpawnRotation(new_rot);
+
+		if (factory) 
+			factory->SetSpawnRotation(new_rot);
 	}
 }
 
@@ -3771,7 +3717,7 @@ void NSScriptImporter::SetSpawnScale(MonoObject * object, MonoObject * vector3)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		MonoClass* c = mono_object_get_class(vector3);
 		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
@@ -3785,7 +3731,9 @@ void NSScriptImporter::SetSpawnScale(MonoObject * object, MonoObject * vector3)
 		if (z_field) mono_field_get_value(vector3, z_field, &new_scale.z);
 
 		ComponentFactory* factory = (ComponentFactory*)comp;
-		if (factory) factory->SetSpawnScale(new_scale);
+
+		if (factory) 
+			factory->SetSpawnScale(new_scale);
 	}
 }
 
@@ -4242,8 +4190,7 @@ void NSScriptImporter::CreateGameObject(MonoObject * object)
 		return;
 	}*/
 	GameObject* gameobject = App->scene->CreateGameObject();
-	created_gameobjects[object] = gameobject;
-	mono_gchandle_new(object, 1);
+	CreateGameObject(gameobject);
 }
 
 void NSScriptImporter::DestroyGameObject(MonoObject * object)
@@ -4300,7 +4247,7 @@ void NSScriptImporter::SetGameObjectActive(MonoObject * object, mono_bool active
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		go->SetActive(active);
 	}
@@ -4310,7 +4257,7 @@ mono_bool NSScriptImporter::GetGameObjectIsActive(MonoObject * object)
 {
 	GameObject* go = GetGameObjectFromMonoObject(object);
 
-	if (go)
+	if (go != nullptr)
 	{
 		return go->IsActive();
 	}
@@ -4336,7 +4283,7 @@ void NSScriptImporter::SetVolume(MonoObject* obj, int volume)
 {
 	Component* comp = GetComponentFromMonoObject(obj);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentAudioSource* as = (ComponentAudioSource*)comp;
 		as->volume = volume;
@@ -4363,7 +4310,7 @@ bool NSScriptImporter::Play(MonoObject * object, MonoString* name)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentAudioSource* as = (ComponentAudioSource*)comp;
 		const char* event_name = mono_string_to_utf8(name);
@@ -4376,7 +4323,7 @@ bool NSScriptImporter::Stop(MonoObject * object, MonoString* name)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentAudioSource* as = (ComponentAudioSource*)comp;
 		const char* event_name = mono_string_to_utf8(name);
@@ -4390,7 +4337,7 @@ bool NSScriptImporter::Send(MonoObject * object, MonoString* name)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentAudioSource* as = (ComponentAudioSource*)comp;
 		const char* event_name = mono_string_to_utf8(name);
@@ -4404,7 +4351,7 @@ bool NSScriptImporter::SetMyRTPCvalue(MonoObject * object, MonoString* name, flo
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		const char* new_name = mono_string_to_utf8(name);
 		ComponentAudioSource* as = (ComponentAudioSource*)comp;
@@ -4417,7 +4364,7 @@ bool NSScriptImporter::SetState(MonoObject* object, MonoString* group, MonoStrin
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		const char* group_name = mono_string_to_utf8(group);
 		const char* state_name = mono_string_to_utf8(state);
@@ -4431,7 +4378,7 @@ void NSScriptImporter::PlayEmmiter(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)comp;
 
@@ -4444,7 +4391,7 @@ void NSScriptImporter::StopEmmiter(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)comp;
 
@@ -4457,7 +4404,7 @@ void NSScriptImporter::SetEmitterSpeed(MonoObject * object, float speed)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)comp;
 
@@ -4470,7 +4417,7 @@ void NSScriptImporter::SetParticleSpeed(MonoObject * object, float speed)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)comp;
 
@@ -4483,7 +4430,7 @@ void NSScriptImporter::SetLinearVelocity(MonoObject * object, float x, float y, 
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4496,7 +4443,7 @@ void NSScriptImporter::SetAngularVelocity(MonoObject * object, float x, float y,
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4509,7 +4456,7 @@ void NSScriptImporter::AddTorque(MonoObject* object, float x, float y, float z, 
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4525,7 +4472,7 @@ void NSScriptImporter::SetKinematic(MonoObject * object, bool kinematic)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4538,7 +4485,7 @@ bool NSScriptImporter::IsKinematic(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4553,7 +4500,7 @@ void NSScriptImporter::SetRBPosition(MonoObject * object, float x, float y, floa
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4566,7 +4513,7 @@ void NSScriptImporter::SetRBRotation(MonoObject * object, float x, float y, floa
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4582,7 +4529,7 @@ MonoObject* NSScriptImporter::GetRBPosition(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentRigidBody* rb = (ComponentRigidBody*)comp;
 
@@ -4666,7 +4613,7 @@ int NSScriptImporter::GetNumGoals(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4685,7 +4632,7 @@ MonoString * NSScriptImporter::GetGoalName(MonoObject * object, int index)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4705,7 +4652,7 @@ MonoString * NSScriptImporter::GetGoalConditionName(MonoObject * object, int ind
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4725,7 +4672,7 @@ void NSScriptImporter::SetGoalPriority(MonoObject * object, int index, int prior
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4744,7 +4691,7 @@ int NSScriptImporter::GetGoalPriority(MonoObject * object, int index)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4764,7 +4711,7 @@ void NSScriptImporter::CompleteAction(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4782,7 +4729,7 @@ void NSScriptImporter::FailAction(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4800,7 +4747,7 @@ void NSScriptImporter::SetBlackboardVariable(MonoObject * object, MonoString * n
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4819,7 +4766,7 @@ void NSScriptImporter::SetBlackboardVariable(MonoObject * object, MonoString * n
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		ComponentGOAPAgent* goap = (ComponentGOAPAgent*)comp;
 		if (goap != nullptr)
@@ -4887,7 +4834,7 @@ void NSScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -4906,7 +4853,7 @@ bool NSScriptImporter::GetBoolField(MonoObject * object, MonoString * field_name
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -4925,7 +4872,7 @@ void NSScriptImporter::SetIntField(MonoObject * object, MonoString * field_name,
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -4944,7 +4891,7 @@ int NSScriptImporter::GetIntField(MonoObject * object, MonoString * field_name)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -4963,7 +4910,7 @@ void NSScriptImporter::SetFloatField(MonoObject * object, MonoString * field_nam
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -4982,7 +4929,7 @@ float NSScriptImporter::GetFloatField(MonoObject * object, MonoString * field_na
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5001,7 +4948,7 @@ void NSScriptImporter::SetDoubleField(MonoObject * object, MonoString * field_na
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5020,7 +4967,7 @@ double NSScriptImporter::GetDoubleField(MonoObject * object, MonoString * field_
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5039,7 +4986,7 @@ void NSScriptImporter::SetStringField(MonoObject * object, MonoString * field_na
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5059,7 +5006,7 @@ MonoString * NSScriptImporter::GetStringField(MonoObject * object, MonoString * 
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5081,7 +5028,7 @@ void NSScriptImporter::SetGameObjectField(MonoObject * object, MonoString * fiel
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5109,7 +5056,7 @@ MonoObject * NSScriptImporter::GetGameObjectField(MonoObject * object, MonoStrin
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5148,7 +5095,7 @@ void NSScriptImporter::SetVector3Field(MonoObject * object, MonoString * field_n
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5177,7 +5124,7 @@ MonoObject * NSScriptImporter::GetVector3Field(MonoObject * object, MonoString *
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5214,7 +5161,7 @@ void NSScriptImporter::SetQuaternionField(MonoObject * object, MonoString * fiel
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5245,7 +5192,7 @@ MonoObject * NSScriptImporter::GetQuaternionField(MonoObject * object, MonoStrin
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5284,7 +5231,7 @@ void NSScriptImporter::CallFunction(MonoObject * object, MonoString * function_n
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
-	if (comp)
+	if (comp != nullptr)
 	{
 		if (comp->GetType() == Component::CompScript)
 		{
@@ -5315,6 +5262,15 @@ void NSScriptImporter::CallFunction(MonoObject * object, MonoString * function_n
 MonoObject* NSScriptImporter::CallFunctionArgs(MonoObject * object, MonoString * function_name, MonoArray* arr_args)
 {
 	MonoObject* ret = nullptr;
+
+	std::string names = mono_string_to_utf8(function_name);
+
+	if (names == "DamageSlaveOne")
+	{
+		int i = 0;
+
+		i++;
+	}
 
 	Component* comp = GetComponentFromMonoObject(object);
 
@@ -5356,25 +5312,7 @@ MonoObject * NSScriptImporter::LoadPrefab(MonoString* prefab_name)
 
 		if (go)
 		{
-			MonoObject* mono_object = GetMonoObjectFromGameObject(go);
-			if (mono_object)
-			{
-				return mono_object;
-			}
-			else
-			{
-				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-				if (c)
-				{
-					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-					if (new_object)
-					{
-						mono_gchandle_new(new_object, 1);
-						created_gameobjects[new_object] = go;
-						return new_object;
-					}
-				}
-			}
+			return App->script_importer->AddGameObjectInfoToMono(go);
 		}
 		
 	}
@@ -6177,6 +6115,9 @@ std::string NSScriptImporter::CppComponentToCs(Component::ComponentType componen
 		break;
 	case Component::CompScript:
 		cs_name = "TheScript";
+		break;
+	case Component::CompRadar:
+		cs_name = "TheRadar";
 		break;
 	default:
 		break;

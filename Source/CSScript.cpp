@@ -993,16 +993,7 @@ void CSScript::ConvertMonoType(MonoType * type, ScriptField& script_field)
 
 void CSScript::CreateSelfGameObject()
 {
-	MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-	if (c)
-	{
-		MonoObject* new_object = mono_object_new(mono_domain, c);
-		if (new_object)
-		{
-			mono_self_object = new_object;
-			App->script_importer->ns_importer->AddCreatedGameObjectToList(mono_self_object, attached_gameobject);
-		}
-	}
+	mono_self_object = App->script_importer->ns_importer->GetMonoObjectFromGameObject(attached_gameobject);
 }
 
 void CSScript::FillSavingData()

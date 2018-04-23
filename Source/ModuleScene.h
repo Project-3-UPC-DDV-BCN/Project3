@@ -75,6 +75,7 @@ public:
 	void DrawSkyBox(float3 pos, ComponentCamera* active_camera);
 
 	void InitScripts();
+	void DeInitScripts();
 
 	// UI
 	GameObject* CreateCanvas(GameObject* parent = nullptr);

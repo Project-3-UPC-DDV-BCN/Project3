@@ -417,12 +417,14 @@ void ModuleScene::GetOctreeIntersects(std::vector<ComponentMeshRenderer*>& list,
 
 void ModuleScene::NewScene(bool loading_scene)
 {
-	//gameobjects_to_destroy = root_gameobjects;
+	App->script_importer->RemoveGameObjectInfoFromMono(scene_gameobjects);
+
 	for (std::list<GameObject*>::iterator it = root_gameobjects.begin(); it != root_gameobjects.end();)
 	{
 		RELEASE(*it);
 		it = root_gameobjects.erase(it);
 	}
+
 	App->renderer3D->ResetRender();
 	scene_gameobjects.clear();
 	scene_emmiters.clear(); 
@@ -724,6 +726,11 @@ void ModuleScene::InitScripts()
 			(*it)->StartScripts();
 		}
 	}
+}
+
+void ModuleScene::DeInitScripts()
+{
+	App->script_importer->RemoveGameObjectInfoFromMono(scene_gameobjects);
 }
 
 GameObject * ModuleScene::CreateCanvas(GameObject * parent)

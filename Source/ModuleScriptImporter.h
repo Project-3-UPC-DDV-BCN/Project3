@@ -64,14 +64,24 @@ public:
 	NSScriptImporter() { current_script = nullptr; };
 	~NSScriptImporter() {};
 
-	void AddCreatedGameObjectToList(MonoObject* object, GameObject* go);
-	void RemoveGameObjectFromMonoObjectList(GameObject* go);
-	void AddCreatedComponentToList(MonoObject* object, Component* comp);
-	void RemoveComponentFromMonoObjectList(Component* comp);
+	// GameObjects
+	MonoObject* CreateGameObject(GameObject* go);
 	GameObject* GetGameObjectFromMonoObject(MonoObject* object);
-	Component* GetComponentFromMonoObject(MonoObject* object);
 	MonoObject* GetMonoObjectFromGameObject(GameObject* go);
-	MonoObject* GetMonoObjectFromComponent(Component* component);
+	void RemoveGameObjectFromMonoObjectList(GameObject* go);
+	void RemoveMonoObjectFromGameObjectList(MonoObject* object);
+	bool IsGameObjectAddedToMonoObjectList(GameObject* go);
+	bool IsMonoObjectAddedToGameObjectList(MonoObject* object);
+
+	// Components
+	MonoObject* CreateComponent(Component* comp);
+	Component* GetComponentFromMonoObject(MonoObject* object);
+	MonoObject* GetMonoObjectFromComponent(Component* comp);
+	void RemoveComponentFromMonoObjectList(Component* comp);
+	void RemoveMonoObjectFromComponentList(MonoObject* object);
+	bool IsComponentAddedToMonoObjectList(Component* comp);
+	bool IsMonoObjectAddedToComponentList(MonoObject* object);
+
 	Component::ComponentType CsToCppComponent(std::string component_type);
 	std::string CppComponentToCs(Component::ComponentType component_type);
 
@@ -358,8 +368,10 @@ public:
 
 	std::vector<DLLClassInfo> engine_dll_info;
 
-	void AddGameObjectInfoToMono(GameObject* go);
+	MonoObject* AddGameObjectInfoToMono(GameObject* go);
 	void AddGameObjectsInfoToMono(std::list<GameObject*> scene_objects_list);
+	void RemoveGameObjectInfoFromMono(GameObject* go);
+	void RemoveGameObjectInfoFromMono(std::list<GameObject*> scene_objects_list);
 
 private:
 	CSScript* DumpAssemblyInfo(MonoAssembly* assembly);

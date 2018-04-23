@@ -7,6 +7,8 @@ namespace TheEngine
         /// <summary>
         ///   <para>Get the percentatge progress</para>
         /// </summary>
+        /// 
+        
         public float PercentageProgress
         {
             get

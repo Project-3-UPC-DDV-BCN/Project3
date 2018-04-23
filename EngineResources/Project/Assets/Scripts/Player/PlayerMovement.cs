@@ -714,25 +714,32 @@ public class PlayerMovement {
 
 		if(TheInput.IsKeyDown("F1"))
 		{
-			DamageSlaveOne(10.0f);
+			DamageSlaveOne(10);
 		}
 	}
 	
-	public void DamageSlaveOne(float dmg)
+	void DamageSlaveOne(int dmg)
     {
+		float f_dmg = dmg;
+		
 		if(audio_source != null)
 			audio_source.Play("Play_Ship_hit");
+
+		TheConsole.Log("Damage Slave One: " + dmg);
 
         switch(TheRandom.RandomInt() % ship_parts)
         {
             case 0:
-                DamageBody(dmg);
+				TheConsole.Log("Slave body damaged");
+                DamageBody(f_dmg);
                 break;
             case 1:
-                DamageEngine(dmg);
+				TheConsole.Log("Slave engine damaged");
+                DamageEngine(f_dmg);
                 break;
             case 2:
-                DamageWings(dmg);
+				TheConsole.Log("Slave wings damaged");
+                DamageWings(f_dmg);
                 break;
         }
     }
