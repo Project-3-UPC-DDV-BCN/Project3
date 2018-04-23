@@ -25,7 +25,7 @@ public class GameManager
 	private float background_music_timer = 0.0f;
 	private bool calm_combat = false;
 	
-	public int calm_volume = 20;
+	public int calm_volume = 10;
 	public int combat_volume = 10;
 
 	TheAudioSource audio_source = null;
@@ -140,26 +140,12 @@ public class GameManager
 	void Win()
 	{
 		TheConsole.Log("You win!");
-		if(audio_source!=null)
-			audio_source.Stop("Play_Music");
-		if(slave1_audiosource!=null){
-			slave1_audiosource.SetMyRTPCvalue("Volume",0);
-			slave1_audiosource.Play("Stop_Engine");
-			TheConsole.Log("Engine fuera");
-		}
 		TheApplication.LoadScene("VS4 - MainMenu");
 	}
 
 	void Lose()
 	{
 		TheConsole.Log("You lose!");
-		if(audio_source!=null)
-			audio_source.Stop("Play_Music");
-		if(slave1_audiosource!=null){
-			slave1_audiosource.SetMyRTPCvalue("Volume",0);
-			slave1_audiosource.Play("Stop_Engine");
-			TheConsole.Log("Engine fuera");
-		}
 		TheApplication.LoadScene("VS4 - MainMenu");
 	}
 
