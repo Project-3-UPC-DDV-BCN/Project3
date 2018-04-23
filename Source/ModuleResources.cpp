@@ -1768,37 +1768,44 @@ void ModuleResources::CreateDefaultShaders()
 		default_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
 		
 		std::string shader_text = 
-		"#version 400 core\n"
-		"layout(location = 0) in vec3 position;\n"
-		"layout(location = 1) in vec3 texCoord;\n"
-		"layout(location = 2) in vec3 normals;\n"
-		"layout(location = 3) in vec4 color;\n\n"
-		"layout(location = 4) in vec3 tangents;\n"
-		"layout(location = 5) in vec3 bitangents;\n"
-		"out vec4 ourColor;\n"
-		"out vec3 Normal;\n"
-		"out vec2 TexCoord;\n"
-		"out vec3 FragPos;\n\n"
-		"out vec3 TangentFragPos;\n"
-		"out mat3 TBN;\n"
-		"uniform mat4 Model;\n"
-		"uniform mat4 view;\n"
-		"uniform mat4 projection;\n\n"
-		"void main()\n"
-		"{ \n"
-		"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
-		"	FragPos = vec3(Model * vec4(position, 1.0));"
-		"	Normal = mat3(transpose(inverse(Model))) * normals;\n"
-		"	mat3 normalMatrix = transpose(inverse(mat3(Model)));\n"
-		"	vec3 T = normalize(normalMatrix * tangents);\n"
-		"	vec3 N = normalize(normalMatrix * normals);\n"
-		"	T = normalize(T - dot(T, N) * N);\n"
-		"	vec3 B = cross(N, T);\n"
-		"	TBN = transpose(mat3(T, B, N));\n"
-		"	TangentFragPos = TBN * FragPos;\n"
-		"	ourColor = color;\n"
-		"	TexCoord = texCoord.xy;\n"
-		"}";
+			"#version 400 core\n"
+			"layout(location = 0) in vec3 position;\n"
+			"layout(location = 1) in vec3 texCoord;\n"
+			"layout(location = 2) in vec3 normals;\n"
+			"layout(location = 3) in vec4 color;\n\n"
+			"layout(location = 4) in vec3 tangents;\n"
+			"layout(location = 5) in vec3 bitangents;\n"
+			"out vec4 FragPosLightSpace;\n"
+			"out vec4 ourColor;\n"
+			"out vec3 Normal;\n"
+			"out vec2 TexCoord;\n"
+			"out vec3 FragPos;\n\n"
+			"out vec3 TangentFragPos;\n"
+			"out mat3 TBN;\n"
+
+			"uniform mat4 MVP;\n"
+			"uniform mat4 Model;\n"
+			"uniform mat4 view;\n"
+			"uniform mat4 projection;\n\n"
+
+
+			"void main()\n"
+			"{ \n"
+			"	gl_Position = projection * view * Model * vec4(position, 1.0f);\n"
+			"	FragPos = vec3(Model * vec4(position, 1.0));"
+			"	Normal = mat3(transpose(inverse(Model))) * normals;\n"
+			"	mat3 normalMatrix = transpose(inverse(mat3(Model)));\n"
+			"	vec3 T = normalize(normalMatrix * tangents);\n"
+			"	vec3 N = normalize(normalMatrix * normals);\n"
+			"	T = normalize(T - dot(T, N) * N);\n"
+			"	vec3 B = cross(N, T);\n"
+			"	TBN = transpose(mat3(T, B, N));\n"
+			"	TangentFragPos = TBN * FragPos;\n"
+			"	ourColor = color;\n"
+			"	TexCoord = texCoord.xy;\n"
+			"	FragPosLightSpace = MVP * Model * vec4(position, 1.0);\n"
+			"}";
+
 
 		default_vert->SetContent(shader_text);
 		std::ofstream outfile(vert_default_path.c_str(), std::ofstream::out);
@@ -1816,13 +1823,14 @@ void ModuleResources::CreateDefaultShaders()
 
 		std::string shader_text =
 			"#version 400 core\n\n"
-
+			"in vec4 FragPosLightSpace;\n"
 			"in vec4 ourColor;\n"
 			"in vec3 Normal;\n"
 			"in vec3 FragPos;\n"
 			"in vec2 TexCoord;\n"
 			"in vec3 TangentFragPos;\n"
 			"in mat3 TBN;\n"
+
 			"out vec4 color;\n\n"
 
 			"uniform bool has_material_color;\n"
@@ -1843,6 +1851,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform sampler2D Tex_Diffuse2;\n\n"
 			"uniform sampler2D Tex_NormalMap;\n\n"
 			"uniform sampler2D Tex_Opacity;\n"
+			"uniform sampler2D Tex_ShadowMap;\n"
 
 			"uniform vec2 Tex_Diffuse_UV;\n"
 			"uniform vec2 Tex_Diffuse2_UV;\n"
@@ -1850,6 +1859,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform vec2 Tex_Opacity_UV;\n"
 
 			"struct DirLight {\n"
+			"	vec3 position;\n"
 			"	vec3 direction;\n\n"
 
 			"	vec3 ambient;\n"
@@ -1907,6 +1917,7 @@ void ModuleResources::CreateDefaultShaders()
 			"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);\n\n"
 			"void ApplyOpacity();\n"
 			"void SetFragmentColor();\n"
+			"float ShadowCalculation();\n"
 			"void main()\n"
 			"{\n"
 			"	SetFragmentColor();\n"
@@ -1917,9 +1928,9 @@ void ModuleResources::CreateDefaultShaders()
 			"		if (has_normalmap)\n"
 			"		{\n"
 			"			if (own_uvs_normalmap == false)\n"
-				"			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0));\n"
+			"			normal = normalize((texture(Tex_NormalMap, TexCoord).rgb * 2.0 - 1.0));\n"
 			"			else\n"
-				"			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0));\n"
+			"			normal = normalize((texture(Tex_NormalMap, TexCoord * Tex_NormalMap_UV).rgb * 2.0 - 1.0));\n"
 			"			vec3 TangentViewPos = TBN * viewPos;\n"
 			"			viewDir = normalize(TangentViewPos - TangentFragPos);\n"
 			"			fragPosarg = TangentFragPos;\n"
@@ -1937,16 +1948,47 @@ void ModuleResources::CreateDefaultShaders()
 			"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
 			"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
 			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
-			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"		
-			"				color = vec4((color.rgb * AMBIENT_LIGHT + result), color.a);  \n"	
-			"			}\n"	
-			"			if (has_opacity)"
-			"			{\n"
-			"				ApplyOpacity();\n"
-						"}\n"
+			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
+
+			"			float shadow = 0.0f;\n"
+			"			shadow = ShadowCalculation();\n"
+			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)), color.a);  \n"
+			//	"			color = vec4((color.rgb * (1.0 - shadow)), color.a);  \n"
+			//	"			color = vec4(vec3(1.0f - shadow), 1.0f);\n"
+			"			}\n"
+			//	"			if (has_opacity)"
+			//	"			{\n"
+			//	"				ApplyOpacity();\n"
+			//				"}\n"
 			"}\n"
 
 			"}\n\n"
+			"float ShadowCalculation()\n"
+			" {\n"
+			"	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;\n"
+			"	projCoords = projCoords * vec3(0.5) + vec3(0.5);\n"
+			"	float closestDepth = texture(Tex_ShadowMap, projCoords.xy).r;\n"
+			"	float currentDepth = projCoords.z;\n"
+			"	vec3 normal_p = normalize(Normal);\n"
+			"	vec3 lightDir_p = normalize(dirLights[0].position - FragPos);\n"
+			"	float bias = max(0.05 * (1.0 - dot(normal_p, lightDir_p)), 0.005);\n"
+
+			"	float shadow = 0.0;\n"
+			"	vec2 texelSize = 1.0 / textureSize(Tex_ShadowMap, 0);\n"
+			"	for (int x = -1; x <= 1; ++x)\n"
+			"	{\n"
+			"		for (int y = -1; y <= 1; ++y)\n"
+			"		{\n"
+			"			float pcfDepth = texture(Tex_ShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;\n"
+			"			shadow += currentDepth - bias > pcfDepth ? 0.8 : 0.0;\n"
+			"		}\n"
+			"	}\n"
+			"	shadow /= 9.0;\n"
+			"	if (projCoords.z > 1.0)\n"
+			"		shadow = 0.0;\n"
+
+			"	return shadow;\n"
+			"}\n"
 
 			"	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
 			"{\n"
@@ -2051,7 +2093,7 @@ void ModuleResources::CreateDefaultShaders()
 			"{\n"
 			"	if (has_texture)\n"
 			"	{\n"
-			"		if (own_uvs_diffuse == false)\n"	
+			"		if (own_uvs_diffuse == false)\n"
 			"		color = texture(Tex_Diffuse, TexCoord);\n"
 			"		else\n"
 			"		color = texture(Tex_Diffuse, TexCoord * Tex_Diffuse_UV);\n"
@@ -2072,9 +2114,9 @@ void ModuleResources::CreateDefaultShaders()
 			"}\n"
 			"void ApplyOpacity()\n"
 			"{\n"
-				"vec4 opacity = texture(Tex_Opacity, TexCoord);\n"
-				"color.a = opacity.r;\n"
-			"}\n"				
+			"vec4 opacity = texture(Tex_Opacity, TexCoord);\n"
+			"color.a = opacity.r;\n"
+			"}\n"
 				;
 
 		default_frag->SetContent(shader_text);
@@ -2382,14 +2424,13 @@ void ModuleResources::CreateDefaultShaders()
 
 		std::string shader_text =
 			"#version 330 core\n"
-			"layout(location = 0) in vec3 aPos;\n"
+			"layout(location = 0) in vec3 position;\n"
 
-			"uniform mat4 lightSpaceMatrix;\n"
-			"uniform mat4 model;\n"
-
+			"uniform mat4 depthMVP;\n"
+			"uniform mat4 Model;\n"
 			"void main()\n"
 			"{\n"
-			"	gl_Position = lightSpaceMatrix * model * vec4(aPos, 1.0);\n"
+			"	gl_Position = depthMVP * Model* vec4(position, 1.0);\n"
 			"}\n"
 			;
 
@@ -2409,10 +2450,11 @@ void ModuleResources::CreateDefaultShaders()
 		depth_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
 
 		std::string shader_text =
-			"	#version 330 core\n"
-			"	void main()\n"
+			"#version 330 core\n"
+			"layout(location = 0) out float fragmentdepth;\n"
+			"void main()\n"
 			"{\n"
-			"	gl_FragDepth = gl_FragCoord.z;\n"
+			"	fragmentdepth = gl_FragCoord.z;\n"
 			"}\n"
 			;
 		depth_frag->SetContent(shader_text);
@@ -2435,90 +2477,6 @@ void ModuleResources::CreateDefaultShaders()
 	depthprog->LinkShaderProgram();
 
 	AddResource(depthprog);
-
-
-	//Depth Debug Shader
-	/*std::string vert_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_vertex.vshader";
-	if (!App->file_system->FileExist(vert_depthdebug_path))
-	{
-		Shader* depthdebug_vert = new Shader();
-		depthdebug_vert->SetShaderType(Shader::ShaderType::ST_VERTEX);
-
-		std::string shader_text =
-			"#version 330 core\n"
-			"layout(location = 0) in vec3 aPos;\n"
-		"layout(location = 1) in vec2 aTexCoords;\n"
-
-		"out vec2 TexCoords;\n"
-		"uniform mat4 Model;\n"
-		"uniform mat4 view;\n"
-		"uniform mat4 projection;\n"
-		"void main()\n"
-		"{\n"
-		"	TexCoords = aTexCoords.xy;\n"
-		"	gl_Position = projection * view * Model * vec4(aPos, 1.0f);\n"
-		"}\n"
-			;
-
-		depthdebug_vert->SetContent(shader_text);
-		std::ofstream outfile(vert_depthdebug_path.c_str(), std::ofstream::out);
-		outfile << shader_text;
-		outfile.close();
-		RELEASE(depthdebug_vert);
-	}
-	CreateResource(vert_depthdebug_path);
-
-
-	std::string frag_depthdebug_path = SHADER_DEFAULT_FOLDER "depthdebug_shader_fragment.fshader";
-	if (!App->file_system->FileExist(frag_depthdebug_path))
-	{
-		Shader* depthdebug_frag = new Shader();
-		depthdebug_frag->SetShaderType(Shader::ShaderType::ST_FRAGMENT);
-
-		std::string shader_text =
-			"#version 330 core\n"
-			"out vec4 FragColor;\n"
-
-		"in vec2 TexCoords;\n"
-
-	"	uniform sampler2D depthMap;\n"
-		"uniform float near_plane;\n"
-		"uniform float far_plane;\n"
-
-
-		"float LinearizeDepth(float depth)\n"
-		"{\n"
-		"	float z = depth * 2.0 - 1.0; // Back to NDC \n"
-		"	return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));\n"
-		"}\n"
-	
-		"void main()\n"
-		"{\n"
-		"	float depthValue = texture(depthMap, TexCoords).r;\n"
-		
-		"	FragColor = vec4(vec3(depthValue), 1.0); // orthographic\n"
-		"}\n"
-			;
-		depthdebug_frag->SetContent(shader_text);
-		std::ofstream outfile(frag_depthdebug_path.c_str(), std::ofstream::out);
-		outfile << shader_text;
-		outfile.close();
-		RELEASE(depthdebug_frag);
-	}
-	CreateResource(frag_depthdebug_path);
-
-	ShaderProgram* depthdebugprog = new ShaderProgram();
-	depthdebugprog->SetName("depthdebug_shader_program");
-
-	Shader* depthdebugvertex = GetShader("depthdebug_shader_vertex");
-	depthdebugprog->SetVertexShader(depthdebugvertex);
-
-	Shader* depthdebugfragment = GetShader("depthdebug_shader_fragment");
-	depthdebugprog->SetFragmentShader(depthdebugfragment);
-
-	depthdebugprog->LinkShaderProgram();
-
-	AddResource(depthdebugprog);*/
 
 	// outline shader
 	std::string outline_vert_path = SHADER_DEFAULT_FOLDER "outline_vertex.vshader";

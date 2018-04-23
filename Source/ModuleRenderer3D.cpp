@@ -167,7 +167,7 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 	}
 
 	//Set Up Depth Map
-
+	SetDepthMap();
 	return ret;
 }
 
@@ -184,6 +184,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer  PostUpdate", Profiler::Color::Red);
 	ms_timer.Start();
+
+	DrawFromLightForShadows();
 
 	// Regular rendering
 	if (!App->IsGame() && editor_camera != nullptr && editor_camera->GetViewportTexture() != nullptr)
@@ -724,6 +726,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	SendLight(program);
 	SetUniformMatrix(program, "view", active_camera->GetViewMatrix());
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
+	SetUniformMatrix(program, "MVP", glm::value_ptr(light_space_mat));
 	SetUniformBool(program, "is_ui", false);
 
 	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
@@ -899,6 +902,9 @@ void ModuleRenderer3D::ResetRender()
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
+	glDeleteTextures(1, &depth_map);
+	glDeleteFramebuffers(1, &depth_mapFBO);
+
 	CONSOLE_DEBUG("Destroying 3D Renderer");
 	rendering_cameras.clear();
 
@@ -1553,7 +1559,8 @@ void ModuleRenderer3D::SendLight(uint program)
 		{
 			ComponentTransform* trans = nullptr;
 			trans = (ComponentTransform*)dir_lights[i]->GetGameObject()->GetComponent(Component::CompTransform);
-
+			tmp = plstr + "position";
+			SetUniformVector3(program, tmp.c_str(), trans->GetGlobalPosition());
 			tmp = plstr + "direction";
 			SetUniformVector3(program, tmp.c_str(), trans->GetMatrix().WorldZ());
 			tmp = plstr + "ambient";
@@ -1666,20 +1673,23 @@ int ModuleRenderer3D::GetPointLightCount() const
 void ModuleRenderer3D::SetDepthMap()
 {
 	glGenFramebuffers(1, &depth_mapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 
 	glGenTextures(1, &depth_map);
 	glBindTexture(GL_TEXTURE_2D, depth_map);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
 	// Not rendering any color so:
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 void ModuleRenderer3D::DrawFromLightForShadows()
@@ -1687,47 +1697,105 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	if (dir_lights[0] != nullptr)
 	{
 	
-	near_plane = 1.0f, far_plane = 750.0f;
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	float4x4 light_projection = OrthoProjection(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
+		//glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 
-	ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 
-	float4x4 light_view = float4x4::LookAt(float3(0,0,1), trans->GetMatrix().WorldZ(), float3(0,1,0), trans->GetMatrix().WorldY());
+		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
+		glm::vec3 l_pos;
+		l_pos.x = trans->GetGlobalPosition().x;
+		l_pos.y = trans->GetGlobalPosition().y;
+		l_pos.z = trans->GetGlobalPosition().z;
 
-	float4x4 light_space_mat = light_projection * light_view;
+		glm::vec3 l_dir;
+		l_dir.x = trans->GetMatrix().WorldZ().x;
+		l_dir.y = trans->GetMatrix().WorldZ().y;
+		l_dir.z = trans->GetMatrix().WorldZ().z;
 
-	std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
+		/*	glm::mat4 biasMatrix(
+		0.5, 0.0, 0.0, 0,
+		0.0, 0.5, 0.0, 0,
+		0.0, 0.0, 0.5, 0,
+		0.5, 0.5, 0.5, 1.0
+		);*/
 
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-	for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
-	{
-		ComponentMeshRenderer* mesh = (ComponentMeshRenderer*) (*it)->GetComponent(Component::CompMeshRenderer);
-		if (mesh != nullptr)
-			SendObjectToDepthShader(mesh, light_space_mat);
-	}
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-4000.0, 4000.0, -4000.0, 4000.0, -1000.0, 8000.0);
+		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
+		light_space_mat = depthMVP;
+		//	glm::mat4 MVP_BIAS = biasMatrix* depthMVP;
+		//	bias_MVP = glm::value_ptr(MVP_BIAS);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		uint program = 0;
+		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
+		program = shader->GetProgramID();
+		UseShaderProgram(program);
 
+		std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 
-	//DrawZBuffer();
+		SetUniformMatrix(program, "depthMVP", glm::value_ptr(depthMVP));
+
+		for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
+		{
+			ComponentMeshRenderer* mesh = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
+			if (mesh != nullptr)
+				SendObjectToDepthShader(program, mesh);
+		}
+
+		shader = App->resources->GetShaderProgram("default_shader_program");
+		program = shader->GetProgramID();
+		UseShaderProgram(program);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+		glActiveTexture(GL_TEXTURE0 + 4);
+		glBindTexture(GL_TEXTURE_2D, depth_map);
+		App->renderer3D->SetUniformInt(program, "Tex_ShadowMap", 4);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 
-void ModuleRenderer3D::SendObjectToDepthShader(ComponentMeshRenderer* mesh, float4x4 lightSpaceMat)
+void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRenderer* mesh)
 {
 	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
 	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
 
-	uint program = 0;
-	ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
-	program = shader->GetProgramID();
-	UseShaderProgram(program);
+	BindVertexArrayObject(mesh->GetMesh()->id_vao);
+	BindArrayBuffer(mesh->GetMesh()->id_vertices_data);
 
-	SetUniformMatrix(program, "model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
-	SetUniformMatrix(program, "lightSpaceMatrix", lightSpaceMat.ptr());
+	//vertices
+	App->renderer3D->SetVertexAttributePointer(0, 3, 19, 0);
+	App->renderer3D->EnableVertexAttributeArray(0);
+	//texture coords
+	App->renderer3D->SetVertexAttributePointer(1, 3, 19, 3);
+	App->renderer3D->EnableVertexAttributeArray(1);
+	//normals
+	App->renderer3D->SetVertexAttributePointer(2, 3, 19, 6);
+	App->renderer3D->EnableVertexAttributeArray(2);
+	//colors
+	App->renderer3D->SetVertexAttributePointer(3, 4, 19, 9);
+	App->renderer3D->EnableVertexAttributeArray(3);
+	//tangents
+	App->renderer3D->SetVertexAttributePointer(4, 3, 19, 13);
+	App->renderer3D->EnableVertexAttributeArray(4);
+	//bitangents
+	App->renderer3D->SetVertexAttributePointer(5, 3, 19, 16);
+	App->renderer3D->EnableVertexAttributeArray(5);
+	App->renderer3D->BindElementArrayBuffer(mesh->GetMesh()->id_indices);
+
+	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+	UnbindVertexArrayObject();
 }
 // -----------------------------------------------
