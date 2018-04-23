@@ -1,11 +1,11 @@
 {
-    "UUID": "1391050654",
+    "UUID": "843797018",
     "assets_path": "./Project/Assets/Prefabs/ParticleExplosion.jprefab",
     "library_path": "./Project/Library/Prefabs/ParticleExplosion.jprefab",
     "prefab_name": "ParticleExplosion",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1267553375",
+        "UUID": "1577026493",
         "Name": "ParticleExplosion",
         "Tag": "Default",
         "Layer": "Default",
@@ -17,8 +17,8 @@
                 "Active": "1",
                 "UUID": "570784235",
                 "position": {
-                    "value_X": "15.783646",
-                    "value_Y": "-28.500002",
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -42,7 +42,7 @@
                     "assets_path": "",
                     "script_name": "ParticleAutoDestroy",
                     "UUID": "231531098",
-                    "int_fields_count": "1",
+                    "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "1",
                     "bool_fields_count": "1",
@@ -51,12 +51,7 @@
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
-                    "int_fields": {
-                        "field_0": {
-                            "field_name": "iterations_waited",
-                            "field_value": "0"
-                        }
-                    },
+                    "int_fields": {},
                     "double_fields": {},
                     "float_fields": {
                         "field_0": {
@@ -83,7 +78,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1788014704",
+        "UUID": "1912532631",
         "Name": "SmokeParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -117,16 +112,16 @@
                 "UUID": "951168033",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "Explosion"
+                    "Template": "SmokeExplosion"
                 }
             }
         },
-        "ParentID": "1267553375",
+        "ParentID": "1577026493",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "187141535",
+        "UUID": "2005737910",
         "Name": "FireParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -160,16 +155,16 @@
                 "UUID": "1463886601",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "tmp_part"
+                    "Template": "FireExplosion"
                 }
             }
         },
-        "ParentID": "1267553375",
+        "ParentID": "1577026493",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "197521886",
+        "UUID": "1354885935",
         "Name": "SparkleParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -203,11 +198,11 @@
                 "UUID": "1970128895",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "tmp_part"
+                    "Template": "SparkleExplosion"
                 }
             }
         },
-        "ParentID": "1267553375",
+        "ParentID": "1577026493",
         "IsRoot": "0",
         "IsStatic": "0"
     }
