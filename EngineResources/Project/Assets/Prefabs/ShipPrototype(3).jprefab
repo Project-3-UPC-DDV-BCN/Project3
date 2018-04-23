@@ -1,11 +1,11 @@
 {
-    "UUID": "589181388",
+    "UUID": "1638926860",
     "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "312272601",
+        "UUID": "1478304009",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -54,7 +54,7 @@
                     "int_fields": {
                         "field_0": {
                             "field_name": "base_laser_damage",
-                            "field_value": "10"
+                            "field_value": "5"
                         }
                     },
                     "double_fields": {},
@@ -233,7 +233,7 @@
                         },
                         "field_4": {
                             "field_name": "rotation_speed",
-                            "field_value": "60.000000"
+                            "field_value": "40.000000"
                         }
                     },
                     "bool_fields": {},
@@ -280,7 +280,7 @@
                         },
                         "field_2": {
                             "field_name": "time_between_lasers",
-                            "field_value": "0.200000"
+                            "field_value": "0.300000"
                         }
                     },
                     "bool_fields": {},
@@ -314,7 +314,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "max_distance",
-                            "field_value": "5000.000000"
+                            "field_value": "2000.000000"
                         }
                     },
                     "bool_fields": {},
@@ -340,7 +340,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1753795640",
+        "UUID": "702144467",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -398,12 +398,12 @@
                 }
             }
         },
-        "ParentID": "312272601",
+        "ParentID": "1478304009",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1528534961",
+        "UUID": "829680346",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -470,12 +470,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1753795640",
+        "ParentID": "702144467",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1727876343",
+        "UUID": "160231860",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -539,11 +539,11 @@
                 "flip": "0",
                 "loop": "1",
                 "anim_speed": "1.000000",
-                "anim_textures_count": "1",
+                "anim_textures_count": "0",
                 "texture": "mira1"
             }
         },
-        "ParentID": "1528534961",
+        "ParentID": "829680346",
         "IsRoot": "0",
         "IsStatic": "0"
     }
