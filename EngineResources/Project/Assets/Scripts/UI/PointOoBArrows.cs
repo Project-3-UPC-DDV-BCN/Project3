@@ -69,12 +69,24 @@ public class PointOoBArrows {
 		else {
 			arrow.SetActive(false);
 		}
-		//dv2.x = -dv2.x;
+
 		debugX = dv2.x;
-		debugY = dv2.y;
+        debugY = dv2.y;
+
+        // Position ---
 		arrowTrans.Position = original_pos + dv2.Normalized * radius;
-		if(dv2.x > 0) arrowTrans.Rotation = new TheVector3(0, 0,-(arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan(dv2.y / -dv2.x)));
-		else arrowTrans.Rotation = new TheVector3(0, 0, arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan2(dv2.x, dv2.y));
+        // Angle ---
+        float angle = 0;
+		if(dv2.x > 0) angle = -(arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan(dv2.y / -dv2.x));
+		else angle = (arrowAngleOffset + TheMath.RadToDeg * TheMath.Atan(dv2.y / dv2.x));
+
+        angle = NormalizeAngle(angle);
+
+        float dzDeg = NormalizeAngle(player_transform.LocalRotation.z);
+        angle -= dzDeg;
+
+        arrowTrans.Rotation = new TheVector3(0, 0, angle);
+
 	}
 
 	TheVector3 Coord3DtoCoord2D(TheVector3 v3d, bool w_perspective = false) {
@@ -82,5 +94,24 @@ public class PointOoBArrows {
 			return new TheVector3(v3d.x/v3d.z, v3d.y/v3d.z, 0f).Normalized * TheVector3.Magnitude(v3d);
 		return new TheVector3(v3d.x, v3d.y, 0f);
 	}
+
+	float NormalizeAngle(float angle, bool in_rads = false) {
+		if(in_rads)
+			angle *= TheMath.RadToDeg;
+		while(angle > 360)
+			angle -= 360;
+        while (angle < 0)
+            angle += 360;
+		return angle;
+	}
+
+    TheVector3 RotateVectorZ(TheVector3 vec, float angle, bool in_rads = false)
+    {
+        if(!in_rads)
+			angle = TheMath.DegToRad * angle;
+        float x = vec.x * TheMath.Cos(angle) - vec.y * TheMath.Sin(angle);
+        float y = vec.x * TheMath.Sin(angle) + vec.y * TheMath.Cos(angle);
+        return new TheVector3(x, y, vec.z);
+    }
 
 }
