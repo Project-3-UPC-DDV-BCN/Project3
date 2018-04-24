@@ -24,10 +24,11 @@ public class Ai_Starship_Shooting
 
 	TheTimer timer = new TheTimer();
 	
-	TheGameObject self = TheGameObject.Self;
+	TheGameObject self = null;
 	
 	void Init()
 	{
+		TheGameObject self = TheGameObject.Self;
 		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
