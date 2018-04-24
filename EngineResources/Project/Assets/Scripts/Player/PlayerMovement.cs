@@ -273,7 +273,7 @@ public class PlayerMovement {
 		}
 		
 		//Get ShipProperties Script
-		ship_properties = self.GetScript("ShipProperties");
+		ship_properties = self.GetScript("EntityProperties");
 	}
 	
 	void Update () 

@@ -45,7 +45,7 @@ public class GuillemMovement
 	void Init()
 	{
 		self = TheGameObject.Self;
-        ShipProperties = self.GetScript("ShipProperties");
+        ShipProperties = self.GetScript("EntityProperties");
 		
 		TheGameObject GM = TheGameObject.Find("GameManager");
 		if(GM != null)

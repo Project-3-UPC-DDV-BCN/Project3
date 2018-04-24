@@ -168,7 +168,7 @@ public class GameManager
 
 		if(slave != null)
 		{
-			TheScript slave1_properties = slave.GetScript("ShipProperties");
+			TheScript slave1_properties = slave.GetScript("EntityProperties");
 	
 			if(slave1_properties != null)
 			{
@@ -244,7 +244,7 @@ public class GameManager
 	{
 		if(add != null)
 		{
-			TheScript ship_properties = add.GetScript("ShipProperties");
+			TheScript ship_properties = add.GetScript("EntityProperties");
 
 			if(ship_properties != null)
 			{	
@@ -276,7 +276,7 @@ public class GameManager
 	{
 		if(add != null)
 		{
-			TheScript ship_properties = add.GetScript("ShipProperties");
+			TheScript ship_properties = add.GetScript("EntityProperties");
 			
 			if(ship_properties != null)
 			{
@@ -323,7 +323,7 @@ public class GameManager
 		{
 			for(int i = 0; i < alliance_ships.Count; ++i)
 			{
-				TheScript ship_prop = alliance_ships[i].GetScript("ShipProperties");
+				TheScript ship_prop = alliance_ships[i].GetScript("EntityProperties");
 				if(ship_prop != null)
 				{
 					object[] args = {remove};
@@ -333,7 +333,7 @@ public class GameManager
 
 			for(int i = 0; i < empire_ships.Count; ++i)
 			{
-				TheScript ship_prop = empire_ships[i].GetScript("ShipProperties");
+				TheScript ship_prop = empire_ships[i].GetScript("EntityProperties");
 				if(ship_prop != null)
 				{
 					object[] args = {remove};

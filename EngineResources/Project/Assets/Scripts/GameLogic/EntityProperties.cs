@@ -7,7 +7,7 @@ using TheEngine;
 	Laser should have a collider and a rigid body
 */
 
-public class ShipProperties 
+public class EntityProperties 
 {
 	public string ship_faction;
 	public bool is_slave1 = false;

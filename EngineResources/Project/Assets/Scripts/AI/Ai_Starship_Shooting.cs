@@ -33,7 +33,7 @@ public class Ai_Starship_Shooting
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
 
-		ship_properties = self.GetScript("ShipProperties");
+		ship_properties = self.GetScript("EntityProperties");
 
 		transform = self.GetComponent<TheTransform>();
 
