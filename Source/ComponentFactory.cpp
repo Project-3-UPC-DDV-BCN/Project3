@@ -34,8 +34,8 @@ void ComponentFactory::SetFactoryObjectName(std::string _prefab_to_spawn_name)
 
 		prefab_to_spawn = App->resources->GetPrefab(prefab_to_spawn_name);
 
-		if (prefab_to_spawn == nullptr)
-			CONSOLE_WARNING("Could not find prefab with name: %s", _prefab_to_spawn_name.c_str());
+		if (prefab_to_spawn != nullptr)
+			CONSOLE_WARNING("Prefab found with name: %s", _prefab_to_spawn_name.c_str());
 	}
 }
 
