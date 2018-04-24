@@ -1,11 +1,11 @@
 {
-    "UUID": "1606612549",
+    "UUID": "2120818337",
     "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "139036287",
+        "UUID": "1107807145",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -103,7 +103,7 @@
                     "value_Z": "-431602080.000000"
                 },
                 "Life_time": "3.500000",
-                "Prefab_UID": "1464112867"
+                "Object_to_spawn_name": "VS4 - Laser"
             },
             "Component_3": {
                 "Type": "3",
@@ -340,7 +340,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1136540198",
+        "UUID": "1913543687",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -398,12 +398,12 @@
                 }
             }
         },
-        "ParentID": "139036287",
+        "ParentID": "1107807145",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "882667596",
+        "UUID": "1529507335",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -470,12 +470,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1136540198",
+        "ParentID": "1913543687",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1956142211",
+        "UUID": "706049893",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -543,7 +543,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "882667596",
+        "ParentID": "1529507335",
         "IsRoot": "0",
         "IsStatic": "0"
     }
