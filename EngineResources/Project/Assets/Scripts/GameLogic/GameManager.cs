@@ -1,6 +1,6 @@
 using TheEngine;
 using System.Collections.Generic; 
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 
 public class GameManager
 {
@@ -41,6 +41,7 @@ public class GameManager
 
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
     List<TheGameObject> empire_ships = new List<TheGameObject>();
+	List<TheGameObject> world_entities = new List<TheGameObject>();
 	TheGameObject slave1 = null;
 	
 	string alliance_name = "alliance";
@@ -57,10 +58,10 @@ public class GameManager
 
 		is_training_mode = System.Convert.ToBoolean(TheData.GetInt("is_training_mode"));
 
-        //TheConsole.Log("Team: " + team); 
+        TheConsole.Log("Team: " + team); 
 
-		//if(is_training_mode)
-			//TheConsole.Log("Training mode enabled!"); 
+		if(is_training_mode)
+			TheConsole.Log("Training mode enabled!"); 
 	}
 
 	void Start ()
@@ -139,7 +140,7 @@ public class GameManager
 
 	void Win()
 	{
-		//TheConsole.Log("You win!");
+		TheConsole.Log("You win!");
 		if(audio_source!=null)
 			audio_source.Stop("Play_Music");
 		if(slave1_audiosource!=null)
@@ -149,7 +150,7 @@ public class GameManager
 
 	void Lose()
 	{
-		//TheConsole.Log("You lose!");
+		TheConsole.Log("You lose!");
 		if(audio_source!=null)
 			audio_source.Stop("Play_Music");
 		if(slave1_audiosource!=null)
@@ -183,7 +184,7 @@ public class GameManager
 				
 						slave1 = slave;
 
-						//TheConsole.Log("Slave1 added to " + team);
+						TheConsole.Log("Slave1 added to " + team);
 					}
 				}
 			}
@@ -266,7 +267,7 @@ public class GameManager
 					}
 					
 
-					//TheConsole.Log("Ship added to alliance!: " + AllianceShipsCount());
+					TheConsole.Log("Ship added to alliance!: " + AllianceShipsCount());
 				}
 			}
 		}
@@ -297,7 +298,7 @@ public class GameManager
 						back_radar.SetMarkerToEntity(add, "Alliance");
 					}
 
-					//TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
+					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
 				}
 			}
 		}
@@ -310,13 +311,13 @@ public class GameManager
 		if(empire_ships.Remove(remove))
 		{
 			found = true;
-			//TheConsole.Log("Ship destroyed from empire! Remaining: " + EmpireShipsCount());
+			TheConsole.Log("Ship destroyed from empire! Remaining: " + EmpireShipsCount());
 		}
 
 		if(alliance_ships.Remove(remove))
 		{
 			found = true;
-			//TheConsole.Log("Ship destroyed from alliance! Remaining: " + AllianceShipsCount());
+			TheConsole.Log("Ship destroyed from alliance! Remaining: " + AllianceShipsCount());
 		}		
 
 		if(found)
@@ -359,6 +360,22 @@ public class GameManager
 	{
 		return empire_ships;
 	}
+
+	void AddTurret(TheGameObject add)
+	{
+		if(add != null)
+		{
+			TheScript ship_prop = add.GetScript("EntityProperties");
+		}
+	}
+
+	void AddGenerator(TheGameObject add)
+	{
+		if(add != null)
+		{
+			TheScript ship_prop = add.GetScript("EntityProperties");
+		}
+	}		
 
 	TheGameObject GetSlave1()
 	{

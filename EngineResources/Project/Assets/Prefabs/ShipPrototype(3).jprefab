@@ -1,11 +1,11 @@
 {
-    "UUID": "436750142",
+    "UUID": "1610249641",
     "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "760678309",
+        "UUID": "2101431720",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -34,55 +34,6 @@
                 }
             },
             "Component_1": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "1452834158",
-                "Script": {
-                    "library_path": ".\\Project\\Library\\Scripts\\ShipProperties.dll",
-                    "assets_path": "",
-                    "script_name": "ShipProperties",
-                    "UUID": "1287140418",
-                    "int_fields_count": "1",
-                    "double_fields_count": "0",
-                    "float_fields_count": "1",
-                    "bool_fields_count": "1",
-                    "string_fields_count": "1",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {
-                        "field_0": {
-                            "field_name": "base_laser_damage",
-                            "field_value": "10"
-                        }
-                    },
-                    "double_fields": {},
-                    "float_fields": {
-                        "field_0": {
-                            "field_name": "laser_speed",
-                            "field_value": "300.000000"
-                        }
-                    },
-                    "bool_fields": {
-                        "field_0": {
-                            "field_name": "is_slave1",
-                            "field_value": "0"
-                        }
-                    },
-                    "string_fields": {
-                        "field_0": {
-                            "field_name": "ship_faction",
-                            "field_value": "empire"
-                        }
-                    },
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
-            },
-            "Component_2": {
                 "Type": "12",
                 "Active": "1",
                 "UUID": "1437024583",
@@ -105,7 +56,7 @@
                 "Life_time": "3.500000",
                 "Object_to_spawn_name": "VS4 - Laser"
             },
-            "Component_3": {
+            "Component_2": {
                 "Type": "3",
                 "Active": "1",
                 "UUID": "1401506640",
@@ -124,7 +75,7 @@
                 "Int_Mat_Indices_Start": "0",
                 "has_light": "1"
             },
-            "Component_4": {
+            "Component_3": {
                 "Type": "2",
                 "Active": "1",
                 "UUID": "1177331895",
@@ -166,7 +117,7 @@
                 "IsCCDMode": "0",
                 "Transforms": "0"
             },
-            "Component_5": {
+            "Component_4": {
                 "Type": "4",
                 "Active": "1",
                 "UUID": "1868023099",
@@ -187,14 +138,14 @@
                     }
                 }
             },
-            "Component_6": {
+            "Component_5": {
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
                 "Sound_ID": "100",
                 "SoundBank_Name": "Enemy.bnk"
             },
-            "Component_7": {
+            "Component_6": {
                 "Type": "10",
                 "Active": "1",
                 "UUID": "348689911",
@@ -229,7 +180,7 @@
                         },
                         "field_3": {
                             "field_name": "move_speed",
-                            "field_value": "60.000000"
+                            "field_value": "40.000000"
                         },
                         "field_4": {
                             "field_name": "rotation_speed",
@@ -249,7 +200,7 @@
                     "vec4_fields": {}
                 }
             },
-            "Component_8": {
+            "Component_7": {
                 "Type": "10",
                 "Active": "1",
                 "UUID": "659183817",
@@ -272,7 +223,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "shooting_angle",
-                            "field_value": "30.000000"
+                            "field_value": "60.000000"
                         },
                         "field_1": {
                             "field_name": "shooting_range",
@@ -291,7 +242,7 @@
                     "vec4_fields": {}
                 }
             },
-            "Component_9": {
+            "Component_8": {
                 "Type": "10",
                 "Active": "1",
                 "UUID": "1695160537",
@@ -333,6 +284,67 @@
                     },
                     "vec4_fields": {}
                 }
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1622762902",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/EntityProperties.dll",
+                    "assets_path": "",
+                    "script_name": "EntityProperties",
+                    "UUID": "1408815119",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "4",
+                    "string_fields_count": "1",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "base_laser_damage",
+                            "field_value": "10"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "laser_speed",
+                            "field_value": "100.000000"
+                        }
+                    },
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "is_generator",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "is_ship",
+                            "field_value": "1"
+                        },
+                        "field_2": {
+                            "field_name": "is_slave1",
+                            "field_value": "0"
+                        },
+                        "field_3": {
+                            "field_name": "is_turret",
+                            "field_value": "0"
+                        }
+                    },
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "entity_faction",
+                            "field_value": "empire"
+                        }
+                    },
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -340,7 +352,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "90332222",
+        "UUID": "11875304",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -398,12 +410,12 @@
                 }
             }
         },
-        "ParentID": "760678309",
+        "ParentID": "2101431720",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1187509446",
+        "UUID": "2136819336",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -470,12 +482,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "90332222",
+        "ParentID": "11875304",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1769697760",
+        "UUID": "569345731",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -543,7 +555,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1187509446",
+        "ParentID": "2136819336",
         "IsRoot": "0",
         "IsStatic": "0"
     }

@@ -1,5 +1,5 @@
 using TheEngine;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 
 /*
 	All ships should have this script with set with "alliance" or "empire"
@@ -9,8 +9,11 @@ using TheEngine;
 
 public class EntityProperties 
 {
-	public string ship_faction;
+	public string entity_faction;
 	public bool is_slave1 = false;
+	public bool is_ship = false;
+	public bool is_turret = false;
+	public bool is_generator = false;
 
 	public float laser_speed = 30;
 	public int base_laser_damage = 10;
@@ -33,8 +36,6 @@ public class EntityProperties
 	void Init()
 	{
 		self = TheGameObject.Self;
-		
-		self.tag = "ShipEntity";
 
 		self_transform = self.GetComponent<TheTransform>();
 			
@@ -49,19 +50,18 @@ public class EntityProperties
 
 		audio_source = self.GetComponent<TheAudioSource>();
 
-		// Add ship to game manager
+		// Add entity to game manager
 		if(is_slave1)
-		{
-			if(game_manager_script != null)
-			{
-				object[] args = {self};
-				game_manager_script.CallFunctionArgs("AddSlave1", args);
+			SetSlave1();
+		
+		else if(is_ship)
+			SetShipFaction(entity_faction);	
 
-				player_movement_script = self.GetScript("PlayerMovement");
-			}
-		}
-		else
-			SetShipFaction(ship_faction);			
+		else if(is_turret)	
+			SetTurret();
+
+		else if(is_generator)
+			SetGenerator();
 	}
 
 	void Start()
@@ -124,7 +124,7 @@ public class EntityProperties
 	{
 		if(ship != null && !IsDead())
 		{
-			TheScript ship_script = ship.GetScript("ShipProperties");
+			TheScript ship_script = ship.GetScript("EntityProperties");
 			bool ship_is_slave1 = (bool)ship_script.CallFunctionArgs("IsSlave1");
 			if(ship_script != null)
 			{
@@ -180,14 +180,14 @@ public class EntityProperties
 	// Returns faction of the ship
 	string GetFaction()
 	{
-		return ship_faction;
+		return entity_faction;
 	}
 	
 	// Sets life of the ship
 	void SetLife(int set)
 	{
 		if(set != life)
-			//TheConsole.Log("Life set to: " + set);
+			TheConsole.Log("Life set to: " + set);
 
 		life = set;
 
@@ -215,16 +215,26 @@ public class EntityProperties
 				object[] args = {dmg};
 				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
 
-				//TheConsole.Log("DealDamage: Slave");
+				TheConsole.Log("DealDamage: Slave");
 			}
-			//else
-				//TheConsole.Log("Player movement is null");
+		}
+	}
+
+	void SetSlave1()
+	{
+		if(game_manager_script != null)
+		{
+			object[] args = {self};
+			game_manager_script.CallFunctionArgs("AddSlave1", args);
+
+			player_movement_script = self.GetScript("PlayerMovement");	
 		}
 	}
 	
 	// Can be used to set ship faction dinamically
 	void SetShipFaction(string faction)
 	{	
+		self.tag = "ShipEntity";
 		if(game_manager_script != null)
 		{
 			object[] args = {self};
@@ -241,6 +251,16 @@ public class EntityProperties
 
 			
 		}
+	}
+
+	void SetTurret()
+	{
+
+	}
+
+	void SetGenerator()
+	{
+
 	}
 	
 	// Checks if ship is dead, and tell the game manager, then destroy it
@@ -277,7 +297,7 @@ public class EntityProperties
 						{
 							particle_script.CallFunctionArgs("Destroy");
 
-							//TheConsole.Log("Explosion particle created!");
+							TheConsole.Log("Explosion particle created!");
 						}
 					}
 				}

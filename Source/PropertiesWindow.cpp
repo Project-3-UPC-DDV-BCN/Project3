@@ -1764,7 +1764,8 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 		{
 			if (factory->SetFactoryObjectName(name))
 			{
-				CONSOLE_LOG("Prefab found with name: %s", factory_object_name.c_str());
+				std::string new_name = name;
+				CONSOLE_LOG("Prefab found with name: %s", new_name.c_str());
 			}
 		}
 
