@@ -567,6 +567,8 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			
 				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
 					(*it)->StartScripts();
+
+				SetParticleSystemsState("Play");
 			}
 						
 			current_scene_path = path;
