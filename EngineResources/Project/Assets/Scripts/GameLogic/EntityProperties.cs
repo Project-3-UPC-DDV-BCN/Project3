@@ -50,6 +50,8 @@ public class EntityProperties
 
 		audio_source = self.GetComponent<TheAudioSource>();
 
+		self.tag = "Entity";
+
 		// Add entity to game manager
 		if(is_slave1)
 			SetSlave1();
@@ -92,6 +94,21 @@ public class EntityProperties
 	bool IsSlave1()
 	{
 		return is_slave1;
+	}
+
+	bool IsShip()
+	{
+		return is_ship;
+	}
+
+	bool IsTurret()
+	{
+		return is_turret;
+	}
+
+	bool IsGenerator()
+	{
+		return is_generator;
 	}
 	
 	// Shoots a laser
@@ -234,7 +251,6 @@ public class EntityProperties
 	// Can be used to set ship faction dinamically
 	void SetShipFaction(string faction)
 	{	
-		self.tag = "ShipEntity";
 		if(game_manager_script != null)
 		{
 			object[] args = {self};
@@ -247,20 +263,26 @@ public class EntityProperties
 			else if (faction == "empire")
 			{
 				game_manager_script.CallFunctionArgs("AddEmpireShip", args);
-			}
-
-			
+			}	
 		}
 	}
 
 	void SetTurret()
 	{
-
+		if(game_manager_script != null)
+		{
+			object[] args = {self};
+			game_manager_script.CallFunctionArgs("AddTurret", args);
+		}
 	}
 
 	void SetGenerator()
 	{
-
+		if(game_manager_script != null)
+		{
+			object[] args = {self};
+			game_manager_script.CallFunctionArgs("AddGenerator", args);
+		}
 	}
 	
 	// Checks if ship is dead, and tell the game manager, then destroy it
@@ -277,7 +299,8 @@ public class EntityProperties
 			{
 				game_manager_script.CallFunctionArgs("Lose");
 			}
-			else
+
+			else if(IsShip())
 			{
 				if(audio_source != null)
 					audio_source.Play("Play_Enemy_Explosions");
@@ -306,6 +329,22 @@ public class EntityProperties
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				
 				TheGameObject.Destroy(self);					
+			}
+
+			else if(IsTurret())
+			{
+				object[] args = {self};
+				game_manager_script.CallFunctionArgs("RemoveTurret", args);
+
+				TheGameObject.Destroy(self);
+			}
+
+			else if(IsGenerator())
+			{
+				object[] args = {self};
+				game_manager_script.CallFunctionArgs("RemoveGenerator", args);
+
+				TheGameObject.Destroy(self);
 			}
 		}
 	}

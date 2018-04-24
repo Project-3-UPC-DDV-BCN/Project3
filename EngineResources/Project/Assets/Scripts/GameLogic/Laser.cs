@@ -48,7 +48,7 @@ public class Laser
 		if(other_ship == null)
 			return;
 		
-		if(other_ship.tag != "ShipEntity")
+		if(other_ship.tag != "Entity")
 			return;
 
 		TheScript ship_properties = other_ship.GetScript("EntityProperties");

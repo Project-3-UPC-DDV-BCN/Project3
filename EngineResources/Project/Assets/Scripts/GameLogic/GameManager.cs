@@ -41,7 +41,8 @@ public class GameManager
 
 	List<TheGameObject> alliance_ships = new List<TheGameObject>();
     List<TheGameObject> empire_ships = new List<TheGameObject>();
-	List<TheGameObject> world_entities = new List<TheGameObject>();
+	List<TheGameObject> turret_entities = new List<TheGameObject>();
+	List<TheGameObject> generator_entities = new List<TheGameObject>();
 	TheGameObject slave1 = null;
 	
 	string alliance_name = "alliance";
@@ -162,7 +163,21 @@ public class GameManager
 	{
 		score += add;
 	}
-	
+
+	void AddSlaveEnemiesShip(TheGameObject go)
+	{
+		string faction = team;
+
+		if(team == alliance_name)
+		{
+			AddEmpireShip(go);
+		}
+		else if(team == empire_name)
+		{
+			AddAllianceShip(go);
+		}
+	}
+
 	void AddSlave1(TheGameObject slave)
 	{
 		slave1 = slave;
@@ -189,56 +204,6 @@ public class GameManager
 				}
 			}
 		}
-	}
-
-	void AddSlaveEnemiesShip(TheGameObject go)
-	{
-		string faction = team;
-
-		if(team == alliance_name)
-		{
-			AddEmpireShip(go);
-		}
-		else if(team == empire_name)
-		{
-			AddAllianceShip(go);
-		}
-	}
-
-	List<TheGameObject> GetSlaveEnemies()
-	{
-		List<TheGameObject> ret = new List<TheGameObject>();
-		
-		string faction = team;
-
-		if(team == alliance_name)
-		{
-			ret = empire_ships;
-		}
-		else if(team == empire_name)
-		{
-			ret = alliance_ships;
-		}
-			
-		return ret;
-	}
-
-	int GetSlaveEnemiesCount()
-	{
-		int ret = 0;
-
-		string faction = team;
-
-		if(team == alliance_name)
-		{
-			ret = empire_ships.Count;
-		}
-		else if(team == empire_name)
-		{
-			ret = alliance_ships.Count;
-		}
-
-		return ret;
 	}
 
 	void AddAllianceShip(TheGameObject add)
@@ -304,6 +269,33 @@ public class GameManager
 		}
 	}
 
+	void AddTurret(TheGameObject add)
+	{
+		if(add != null)
+		{
+			TheScript ship_prop = add.GetScript("EntityProperties");
+			
+			if(ship_prop != null)
+			{
+				turret_entities.Add(add);
+				TheConsole.Log("Turret added: " + TurretsCount());
+			}
+		}
+	}
+
+	void AddGenerator(TheGameObject add)
+	{
+		if(add != null)
+		{
+			TheScript ship_prop = add.GetScript("EntityProperties");
+			
+			if(ship_prop != null)
+			{
+				generator_entities.Add(add);
+				TheConsole.Log("Generator added: " + TurretsCount());
+			}
+		}
+	}	
 
 	void RemoveShip(TheGameObject remove)
 	{
@@ -351,6 +343,64 @@ public class GameManager
 		}
 	}
 
+	void RemoveTurret(TheGameObject turret)
+	{
+		if(turret != null)
+		{
+			if(turret_entities.Remove(turret))
+			{
+				TheConsole.Log("Turret destroyed! Remaining: " + TurretsCount());
+			}
+		}
+	}
+
+	void RemoveGenerator(TheGameObject generator)
+	{
+		if(generator != null)
+		{
+			if(generator_entities.Remove(generator))
+			{
+				TheConsole.Log("Generator destroyed! Remaining: " + TurretsCount());
+			}
+		}
+	}
+
+	List<TheGameObject> GetSlaveEnemies()
+	{
+		List<TheGameObject> ret = new List<TheGameObject>();
+		
+		string faction = team;
+
+		if(team == alliance_name)
+		{
+			ret = empire_ships;
+		}
+		else if(team == empire_name)
+		{
+			ret = alliance_ships;
+		}
+			
+		return ret;
+	}
+
+	int GetSlaveEnemiesCount()
+	{
+		int ret = 0;
+
+		string faction = team;
+
+		if(team == alliance_name)
+		{
+			ret = empire_ships.Count;
+		}
+		else if(team == empire_name)
+		{
+			ret = alliance_ships.Count;
+		}
+
+		return ret;
+	}
+
 	List<TheGameObject> GetAllianceShips()
 	{
 		return alliance_ships;
@@ -359,29 +409,23 @@ public class GameManager
 	List<TheGameObject> GetEmpireShips()
 	{
 		return empire_ships;
-	}
-
-	void AddTurret(TheGameObject add)
-	{
-		if(add != null)
-		{
-			TheScript ship_prop = add.GetScript("EntityProperties");
-		}
-	}
-
-	void AddGenerator(TheGameObject add)
-	{
-		if(add != null)
-		{
-			TheScript ship_prop = add.GetScript("EntityProperties");
-		}
-	}		
+	}	
 
 	TheGameObject GetSlave1()
 	{
 		return slave1;
 	}
 	
+	List<TheGameObject> GetTurrets()
+	{
+		return turret_entities;
+	}
+
+	List<TheGameObject> GetGenerators()
+	{
+		return generator_entities;
+	}
+
 	int AllianceShipsCount()
 	{
 		return alliance_ships.Count;
@@ -390,6 +434,16 @@ public class GameManager
 	int EmpireShipsCount()
 	{
 		return empire_ships.Count;
+	}
+
+	int TurretsCount()
+	{
+		return turret_entities.Count;
+	}
+
+	int GeneratorsCount()
+	{
+		return generator_entities.Count;
 	}
 	
 	string GetTimeFromSeconds(int seconds)
