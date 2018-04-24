@@ -26,8 +26,10 @@ ComponentFactory::~ComponentFactory()
 {
 }
 
-void ComponentFactory::SetFactoryObjectName(std::string _prefab_to_spawn_name)
+bool ComponentFactory::SetFactoryObjectName(std::string _prefab_to_spawn_name)
 {
+	bool ret = false;
+
 	if (prefab_to_spawn_name != _prefab_to_spawn_name)
 	{
 		prefab_to_spawn_name = _prefab_to_spawn_name;
@@ -35,8 +37,10 @@ void ComponentFactory::SetFactoryObjectName(std::string _prefab_to_spawn_name)
 		prefab_to_spawn = App->resources->GetPrefab(prefab_to_spawn_name);
 
 		if (prefab_to_spawn != nullptr)
-			CONSOLE_WARNING("Prefab found with name: %s", _prefab_to_spawn_name.c_str());
+			ret = true;
 	}
+
+	return ret;
 }
 
 void ComponentFactory::SetObjectCount(int count)

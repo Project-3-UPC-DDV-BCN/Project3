@@ -33,6 +33,7 @@
 #include "ComponentCollider.h"
 #include "ModuleRenderer3D.h"
 #include "DebugDraw.h"
+#include "Application.h"
 
 //CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;

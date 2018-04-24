@@ -14,7 +14,7 @@ public:
 	ComponentFactory(GameObject* attached_gameobject);
 	~ComponentFactory();
 
-	void SetFactoryObjectName(std::string prefab_to_spawn_name);
+	bool SetFactoryObjectName(std::string prefab_to_spawn_name);
 	void SetObjectCount(int count);
 	void SetSpawnPos(float3 position);
 	void SetSpawnRotation(float3 rotation);

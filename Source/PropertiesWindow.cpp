@@ -51,6 +51,8 @@
 #include "GOAPField.h"	
 #include "GOAPVariable.h"
 #include "ModuleScriptImporter.h"
+#include "Globals.h"
+
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
@@ -1760,7 +1762,10 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 
 		if (ImGui::InputText(("Factory object name##Factory_" + std::to_string(factories_count)).c_str(), name, 100))
 		{
-			factory->SetFactoryObjectName(name);
+			if (factory->SetFactoryObjectName(name))
+			{
+				CONSOLE_LOG("Prefab found with name: %s", factory_object_name.c_str());
+			}
 		}
 
 
