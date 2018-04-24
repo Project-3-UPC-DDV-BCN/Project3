@@ -1916,8 +1916,10 @@ MonoObject* NSScriptImporter::CreateGameObject(GameObject * go)
 				ret = mono_object_new(App->script_importer->GetDomain(), c);
 				if (ret)
 				{
-					mono_gchandle_new(ret, 1);
-					created_gameobjects[ret] = go;
+					int id = mono_gchandle_new(ret, 1);
+
+					GameObjectMono gom(go, ret, id);
+					created_gameobjects.push_back(gom);
 				}
 			}
 		}
@@ -1930,11 +1932,11 @@ GameObject * NSScriptImporter::GetGameObjectFromMonoObject(MonoObject * object)
 {
 	if (object != nullptr)
 	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (object == it->first)
+			if (object == (*it).obj)
 			{
-				return it->second;
+				return (*it).go;
 			}
 		}
 	}
@@ -1946,11 +1948,11 @@ MonoObject * NSScriptImporter::GetMonoObjectFromGameObject(GameObject * go)
 {
 	if (go != nullptr)
 	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+		for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 		{
-			if (go == it->second)
+			if (go == (*it).go)
 			{
-				return it->first;
+				return (*it).obj;
 			}
 		}
 
@@ -1964,11 +1966,11 @@ void NSScriptImporter::RemoveGameObjectFromMonoObjectList(GameObject * go)
 {
 	if (go != nullptr)
 	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+		for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 		{
-			if (it->second == go)
+			if ((*it).go == go)
 			{
-				mono_gchandle_new(it->first, 0);
+				mono_gchandle_free((*it).mono_id);
 				created_gameobjects.erase(it);
 				break;
 			}
@@ -1980,11 +1982,11 @@ void NSScriptImporter::RemoveMonoObjectFromGameObjectList(MonoObject * object)
 {
 	if (object != nullptr)
 	{
-		for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+		for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 		{
-			if (it->first == object)
+			if ((*it).obj == object)
 			{
-				mono_gchandle_new(it->first, 0);
+				mono_gchandle_free((*it).mono_id);
 				created_gameobjects.erase(it);
 				break;
 			}
@@ -1996,9 +1998,9 @@ bool NSScriptImporter::IsGameObjectAddedToMonoObjectList(GameObject * go)
 {
 	bool ret = false;
 
-	for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+	for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 	{
-		if (it->second == go)
+		if ((*it).go == go)
 		{
 			ret = true;
 			break;
@@ -2012,9 +2014,9 @@ bool NSScriptImporter::IsMonoObjectAddedToGameObjectList(MonoObject * object)
 {
 	bool ret = false;
 
-	for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
+	for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); ++it)
 	{
-		if (it->first == object)
+		if ((*it).obj == object)
 		{
 			ret = true;
 			break;
@@ -2040,8 +2042,10 @@ MonoObject * NSScriptImporter::CreateComponent(Component * comp)
 				ret = mono_object_new(App->script_importer->GetDomain(), c_comp);
 				if (ret)
 				{
-					mono_gchandle_new(ret, 1);
-					created_components[ret] = comp;
+					int mono_id = mono_gchandle_new(ret, 1);
+					ComponentMono cm(comp, ret, mono_id);
+
+					created_components.push_back(cm);
 					return ret;
 				}
 			}
@@ -2054,7 +2058,10 @@ MonoObject * NSScriptImporter::CreateComponent(Component * comp)
 					ret = mono_object_new(App->script_importer->GetDomain(), c_comp);
 					if (ret)
 					{
-						created_components[ret] = comp;
+						int mono_id = mono_gchandle_new(ret, 1);
+						ComponentMono cm(comp, ret, mono_id);
+
+						created_components.push_back(cm);
 						return ret;
 					}
 				}
@@ -2069,11 +2076,11 @@ Component * NSScriptImporter::GetComponentFromMonoObject(MonoObject * object)
 {
 	if (object)
 	{
-		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		for (std::vector<ComponentMono>::iterator it = created_components.begin(); it != created_components.end(); it++)
 		{
-			if (object == it->first)
+			if (object == (*it).obj)
 			{
-				return it->second;
+				return (*it).comp;
 			}
 		}
 	}
@@ -2085,11 +2092,11 @@ MonoObject* NSScriptImporter::GetMonoObjectFromComponent(Component * component)
 {
 	if (component)
 	{
-		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		for (std::vector<ComponentMono>::iterator it = created_components.begin(); it != created_components.end(); it++)
 		{
-			if (component == it->second)
+			if (component == (*it).comp)
 			{
-				return it->first;
+				return (*it).obj;
 			}
 		}
 
@@ -2103,11 +2110,11 @@ void NSScriptImporter::RemoveComponentFromMonoObjectList(Component * comp)
 {
 	if (comp != nullptr)
 	{
-		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		for (std::vector<ComponentMono>::iterator it = created_components.begin(); it != created_components.end(); it++)
 		{
-			if (comp == it->second)
+			if (comp == (*it).comp)
 			{
-				mono_gchandle_new(it->first, 0);
+				mono_gchandle_free((*it).mono_id);
 				created_components.erase(it);
 				break;
 			}
@@ -2119,11 +2126,11 @@ void NSScriptImporter::RemoveMonoObjectFromComponentList(MonoObject * object)
 {
 	if (object != nullptr)
 	{
-		for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); it++)
+		for (std::vector<ComponentMono>::iterator it = created_components.begin(); it != created_components.end(); it++)
 		{
-			if (object == it->first)
+			if (object == (*it).obj)
 			{
-				mono_gchandle_new(it->first, 0);
+				mono_gchandle_free((*it).mono_id);
 				created_components.erase(it);
 				break;
 			}
@@ -2135,9 +2142,9 @@ bool NSScriptImporter::IsComponentAddedToMonoObjectList(Component * comp)
 {
 	bool ret = false;
 
-	for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); ++it)
+	for (std::vector<ComponentMono>::iterator it = created_components.begin(); it != created_components.end(); ++it)
 	{
-		if (it->second == comp)
+		if ((*it).comp == comp)
 		{
 			ret = true;
 			break;
@@ -2151,9 +2158,9 @@ bool NSScriptImporter::IsMonoObjectAddedToComponentList(MonoObject * object)
 {
 	bool ret = false;
 
-	for (std::map<MonoObject*, Component*>::iterator it = created_components.begin(); it != created_components.end(); ++it)
+	for (std::vector<ComponentMono>::iterator it = created_components.begin(); it != created_components.end(); ++it)
 	{
-		if (it->first == object)
+		if ((*it).obj == object)
 		{
 			ret = true;
 			break;
@@ -5070,11 +5077,11 @@ void NSScriptImporter::SetGameObjectField(MonoObject * object, MonoString * fiel
 			if (script)
 			{
 				GameObject* go_to_set = nullptr;
-				for (std::map<MonoObject*, GameObject*>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
+				for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
 				{
-					if (it->first == value)
+					if ((*it).obj == value)
 					{
-						go_to_set = it->second;
+						go_to_set = (*it).go;
 						break;
 					}
 				}
@@ -5098,25 +5105,8 @@ MonoObject * NSScriptImporter::GetGameObjectField(MonoObject * object, MonoStrin
 			if (script)
 			{
 				GameObject* go = script->GetGameObjectProperty(name);
-				MonoObject* mono_object = GetMonoObjectFromGameObject(go);
-				if (mono_object)
-				{
-					return mono_object;
-				}
-				else
-				{
-					MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheGameObject");
-					if (c)
-					{
-						MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-						if (new_object)
-						{
-							mono_gchandle_new(new_object, 1);
-							created_gameobjects[new_object] = go;
-							return new_object;
-						}
-					}
-				}
+				return GetMonoObjectFromGameObject(go);
+
 			}
 		}
 	}

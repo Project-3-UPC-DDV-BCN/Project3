@@ -15,7 +15,7 @@ ComponentFactory::ComponentFactory(GameObject* attached_gameobject)
 	SetType(ComponentType::CompFactory);
 	SetGameObject(attached_gameobject);
 
-	object_to_spawn = nullptr;
+	prefab_to_spawn_name = "";
 	object_count = 0;
 	life_time = 1;
 	spawn_position = float3::zero;
@@ -26,15 +26,16 @@ ComponentFactory::~ComponentFactory()
 {
 }
 
-void ComponentFactory::SetFactoryObject(Prefab * gameobject)
+void ComponentFactory::SetFactoryObjectName(std::string _prefab_to_spawn_name)
 {
-	if (gameobject)
+	if (prefab_to_spawn_name != _prefab_to_spawn_name)
 	{
-		object_to_spawn = gameobject;
-	}
-	else
-	{
-		CONSOLE_ERROR("Prefab assigned to factory is null");
+		prefab_to_spawn_name = _prefab_to_spawn_name;
+
+		prefab_to_spawn = App->resources->GetPrefab(prefab_to_spawn_name);
+
+		if (prefab_to_spawn == nullptr)
+			CONSOLE_WARNING("Could not find prefab with name: %s", _prefab_to_spawn_name.c_str());
 	}
 }
 
@@ -106,9 +107,9 @@ float ComponentFactory::GetLifeTime() const
 	return life_time;
 }
 
-Prefab * ComponentFactory::GetFactoryObject() const
+std::string ComponentFactory::GetFactoryObjectName() const
 {
-	return object_to_spawn;
+	return prefab_to_spawn_name;
 }
 
 int ComponentFactory::GetObjectCount() const
@@ -135,7 +136,7 @@ void ComponentFactory::StartFactory()
 {
 	BROFILER_CATEGORY("Component - Factory - StartFactory", Profiler::Color::Beige);
 
-	if (object_to_spawn != nullptr )
+	if (prefab_to_spawn != nullptr )
 	{		
 		if (GetGameObject() != nullptr)
 		{
@@ -151,7 +152,7 @@ void ComponentFactory::StartFactory()
 		{
 			Data data;
 			std::list<GameObject*> new_go;
-			if (App->scene->LoadPrefab(object_to_spawn->GetLibraryPath(), "jprefab", data, false, true, new_go))
+			if (App->scene->LoadPrefab(prefab_to_spawn->GetLibraryPath(), "jprefab", data, false, true, new_go))
 			{
 				GameObject* duplicated = *new_go.begin();
 				duplicated->SetParent(GetGameObject());
@@ -219,12 +220,7 @@ void ComponentFactory::Save(Data & data) const
 	data.AddVector3("Spawn_rotation", spawn_rotation);
 	data.AddVector3("Spawn_scale", spawn_scale);
 	data.AddFloat("Life_time", life_time);
-	int object_uid = 0;
-	if (object_to_spawn)
-	{
-		object_uid = object_to_spawn->GetUID();
-	}
-	data.AddInt("Prefab_UID", object_uid);
+	data.AddString("Object_to_spawn_name", prefab_to_spawn_name);
 }
 
 void ComponentFactory::Load(Data & data)
@@ -237,9 +233,5 @@ void ComponentFactory::Load(Data & data)
 	spawn_rotation = data.GetVector3("Spawn_rotation");
 	spawn_scale = data.GetVector3("Spawn_scale");
 	life_time = data.GetFloat("Life_time");
-	object_to_spawn = App->resources->GetPrefab(data.GetInt("Prefab_UID"));
-	if (!object_to_spawn)
-	{
-		CONSOLE_WARNING("Prefab loaded for component Factory in %s doesn't exist", GetGameObject()->GetName().c_str());
-	}
+	SetFactoryObjectName(data.GetString("Object_to_spawn_name"));
 }

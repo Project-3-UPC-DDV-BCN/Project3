@@ -1754,11 +1754,15 @@ void PropertiesWindow::DrawFactoryPanel(ComponentFactory * factory)
 			return;
 		}
 
-		Prefab* prefab = factory->GetFactoryObject();
-		if(ImGui::InputResourcePrefab("Factory Object", &prefab))
+		std::string factory_object_name = factory->GetFactoryObjectName();
+		char name[100];
+		strcpy_s(name, 100, factory_object_name.c_str());
+
+		if (ImGui::InputText(("Factory object name##Factory_" + std::to_string(factories_count)).c_str(), name, 100))
 		{
-			factory->SetFactoryObject(prefab);
+			factory->SetFactoryObjectName(name);
 		}
+
 
 		int count = factory->GetObjectCount();
 		if (ImGui::InputInt(("Object Count##" + std::to_string(factories_count)).c_str(), &count))

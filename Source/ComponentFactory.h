@@ -14,7 +14,7 @@ public:
 	ComponentFactory(GameObject* attached_gameobject);
 	~ComponentFactory();
 
-	void SetFactoryObject(Prefab* gameobject);
+	void SetFactoryObjectName(std::string prefab_to_spawn_name);
 	void SetObjectCount(int count);
 	void SetSpawnPos(float3 position);
 	void SetSpawnRotation(float3 rotation);
@@ -23,7 +23,7 @@ public:
 	GameObject* Spawn();
 	int GetCurrentCount() const;
 	float GetLifeTime() const;
-	Prefab* GetFactoryObject() const;
+	std::string GetFactoryObjectName() const;
 	int GetObjectCount() const;
 	float3 GetSpawnPosition() const;
 	float3 GetSpawnRotation() const;
@@ -36,7 +36,8 @@ public:
 	void Load(Data& data);
 
 private:
-	Prefab* object_to_spawn;
+	std::string prefab_to_spawn_name;
+	Prefab* prefab_to_spawn = nullptr;
 	int object_count;
 	float3 spawn_position;
 	float3 spawn_rotation;

@@ -573,12 +573,6 @@ void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * val
 	{
 		void* params = value;
 		mono_field_set_value(mono_object, field, params);
-		MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
-		if (object && value)
-		{
-			mono_gchandle_new(object, 1);
-			App->script_importer->ns_importer->created_gameobjects[object] = value;
-		}
 	}
 	else
 	{

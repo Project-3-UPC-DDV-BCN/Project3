@@ -58,6 +58,34 @@ struct DLLClassInfo
 	std::vector<DLLFieldsInfo> fields;
 };
 
+struct GameObjectMono
+{
+	GameObjectMono(GameObject* _go, MonoObject* _obj, int _mono_id)
+	{
+		go = _go;
+		obj = _obj;
+		mono_id = _mono_id;
+	}
+
+	GameObject * go = nullptr;
+	MonoObject* obj = nullptr;
+	int mono_id = 0;
+};
+
+struct ComponentMono
+{
+	ComponentMono(Component* _comp, MonoObject* _obj, int _mono_id)
+	{
+		comp = _comp;
+		obj = _obj;
+		mono_id = _mono_id;
+	}
+
+	Component * comp = nullptr;
+	MonoObject* obj = nullptr;
+	int mono_id = 0;
+};
+
 class NSScriptImporter
 {
 public:
@@ -333,8 +361,8 @@ public:
 	//DEBUG DRAW
 	void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
 
-	std::map<MonoObject*, GameObject*> created_gameobjects;
-	std::map<MonoObject*, Component*> created_components;
+	std::vector<GameObjectMono> created_gameobjects;
+	std::vector<ComponentMono> created_components;
 	CSScript* current_script;
 
 private:
