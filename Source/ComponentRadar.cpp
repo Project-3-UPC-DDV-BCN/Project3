@@ -507,9 +507,11 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 			Quat rot;
 			float3 scal;
 			center_mat.Decompose(center_pos, rot, scal);
-			center_rot = center_trans->GetLocalRotation();
+			center_rot = rot.ToEulerXYZ() * RADTODEG;
 
 			float4x4 new_center_mat = float4x4::FromTRS(center_pos, Quat::identity, float3(1, 1, 1));
+
+			//CONSOLE_LOG("%f %f %f", center_rot.x, center_rot.y, center_rot.z);
 
 			const float radar_scaled_size = c_rect_trans->GetScaledSize().x;
 
@@ -538,15 +540,15 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 					float3 rota_scal;
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
-					rota_pos = center_pos - rota_pos;
-
 					float distance_magnitude = rota_pos.z - center_pos.z;
+
+					rota_pos = center_pos - rota_pos;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
 					float z_offset = distance_magnitude;
 
-					if (z_offset < 0)
+					if (z_offset > 0)
 					{
 						if (max_distance > 0)
 						{
@@ -556,11 +558,9 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 							// Scale size
 							if (z_offset != 0)
 							{
-								float scaled_size_z = (max_distance * markers_size) / -z_offset * 0.5f;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 6)
-									scaled_size_z = radar_scaled_size / (6 * entity_scaled_size);
-
-								if ((float)scaled_size_z * (float)entity_scaled_size > 0)
+								float scaled_size_z = markers_size;
+			
+								if (scaled_size_z > 0)
 								{
 									// Check out radar
 									float magnitude_scaled_distance = abs(float2(0, 0).Distance(float2(scaled_distance_x, scaled_distance_y)));
@@ -608,7 +608,7 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 			Quat rot;
 			float3 scal;
 			center_mat.Decompose(center_pos, rot, scal);
-			center_rot = center_trans->GetLocalRotation();
+			center_rot = rot.ToEulerXYZ() * RADTODEG;
 
 			float4x4 new_center_mat = float4x4::FromTRS(center_pos, Quat::identity, float3(1, 1, 1));
 
@@ -639,15 +639,15 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					float3 rota_scal;
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
-					rota_pos = center_pos - rota_pos;
-
 					float distance_magnitude = rota_pos.z - center_pos.z;
+
+					rota_pos = center_pos - rota_pos;
 
 					float x_offset = rota_pos.x;
 					float y_offset = rota_pos.y;
 					float z_offset = distance_magnitude;
 
-					if (z_offset > 0)
+					if (z_offset < 0)
 					{
 						if (max_distance > 0)
 						{
@@ -657,11 +657,9 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 							// Scale size
 							if (z_offset != 0)
 							{
-								float scaled_size_z = (max_distance * markers_size) / z_offset;
-								if (scaled_size_z * entity_scaled_size > radar_scaled_size / 6)
-									scaled_size_z = radar_scaled_size / (6 * entity_scaled_size);
+								float scaled_size_z = markers_size;
 
-								if (scaled_size_z * entity_scaled_size > 0)
+								if ((float)scaled_size_z * (float)entity_scaled_size > 0)
 								{
 									// Check out radar
 									float magnitude_scaled_distance = abs(float2(0, 0).Distance(float2(scaled_distance_x, scaled_distance_y)));
