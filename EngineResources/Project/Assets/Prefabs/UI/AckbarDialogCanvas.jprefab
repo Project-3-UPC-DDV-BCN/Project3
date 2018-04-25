@@ -1,0 +1,452 @@
+{
+    "UUID": "504810428",
+    "assets_path": "./Project/Assets/Prefabs/AckbarDialogCanvas.jprefab",
+    "library_path": "./Project/Library/Prefabs/AckbarDialogCanvas.jprefab",
+    "prefab_name": "AckbarDialogCanvas",
+    "GameObjects_Count": "5",
+    "GameObject_0": {
+        "UUID": "1836924633",
+        "Name": "AckbarDialogCanvas",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "405672139",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1300.000000",
+                    "value_Y": "435.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1424355647",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "1742547622",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "0",
+                "scale_mode": "1",
+                "scale": "1.000000"
+            },
+            "Component_3": {
+                "Type": "21",
+                "Active": "1",
+                "UUID": "566743761",
+                "Object_ID": "0"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_1": {
+        "UUID": "1583727949",
+        "Name": "BackgroundImage",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "5",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1049697266",
+                "pos": {
+                    "value_X": "420.750031",
+                    "value_Y": "-92.500008"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "883.500061",
+                    "value_Y": "184.100006"
+                },
+                "anchor": {
+                    "value_X": "0.000000",
+                    "value_Y": "1.000000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "114321291",
+                "position": {
+                    "value_X": "-222.675751",
+                    "value_Y": "123.554680",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "2104848776",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "Textbox"
+            },
+            "Component_3": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "585336206",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\IntroManager.dll",
+                    "assets_path": "",
+                    "script_name": "IntroManager",
+                    "UUID": "1042312454",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "3",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "audio_emiter",
+                            "field_value": "1583727949"
+                        },
+                        "field_1": {
+                            "field_name": "canvas_go",
+                            "field_value": "1836924633"
+                        },
+                        "field_2": {
+                            "field_name": "text_go",
+                            "field_value": "2084760609"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_4": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "1100307844",
+                "Sound_ID": "102",
+                "SoundBank_Name": "Rebel_dialogue.bnk"
+            }
+        },
+        "ParentID": "1836924633",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "323165761",
+        "Name": "AckbarNameText",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "80118335",
+                "pos": {
+                    "value_X": "-207.500015",
+                    "value_Y": "14.000001"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "124.922256",
+                    "value_Y": "26.610657"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "4.694445"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1687529910",
+                "position": {
+                    "value_X": "-210.742203",
+                    "value_Y": "14.218751",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "27",
+                "Active": "1",
+                "UUID": "903569776",
+                "colour": {
+                    "value_X": "0.156398",
+                    "value_Y": "0.156397",
+                    "value_Z": "1.000000",
+                    "value_W": "0.156397"
+                },
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "GIAL ACKBAR",
+                "font_size": "27",
+                "grow_dir": "2",
+                "font": "Purista Semibold Italic"
+            }
+        },
+        "ParentID": "1583727949",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "2084760609",
+        "Name": "TextBoxText",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1335673507",
+                "pos": {
+                    "value_X": "-222.827393",
+                    "value_Y": "-14.250001"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "83.027084",
+                    "value_Y": "33.085979"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "2.509434"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1603433722",
+                "position": {
+                    "value_X": "-226.309067",
+                    "value_Y": "-14.472657",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "27",
+                "Active": "1",
+                "UUID": "588348453",
+                "colour": {
+                    "value_X": "0.113744",
+                    "value_Y": "0.113743",
+                    "value_Z": "1.000000",
+                    "value_W": "0.113743"
+                },
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "Dialog..",
+                "font_size": "40",
+                "grow_dir": "0",
+                "font": "Purista Semibold"
+            }
+        },
+        "ParentID": "1583727949",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "1141109400",
+        "Name": "AckbarImageAnim",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "189263740",
+                "pos": {
+                    "value_X": "-340.500000",
+                    "value_Y": "12.250001"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "195.000015",
+                    "value_Y": "205.200012"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "507093443",
+                "position": {
+                    "value_X": "-345.820313",
+                    "value_Y": "12.441407",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "1918668195",
+                "mode": "1",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "0.120000",
+                "anim_textures_count": "23",
+                "anim_texture_0": "Ackbar_1",
+                "anim_texture_1": "Ackbar_2",
+                "anim_texture_2": "Ackbar_3",
+                "anim_texture_3": "Ackbar_4",
+                "anim_texture_4": "Ackbar_5",
+                "anim_texture_5": "Ackbar_6",
+                "anim_texture_6": "Ackbar_7",
+                "anim_texture_7": "Ackbar_8",
+                "anim_texture_8": "Ackbar_9",
+                "anim_texture_9": "Ackbar_10",
+                "anim_texture_10": "Ackbar_11",
+                "anim_texture_11": "Ackbar_12",
+                "anim_texture_12": "Ackbar_13",
+                "anim_texture_13": "Ackbar_14",
+                "anim_texture_14": "Ackbar_15",
+                "anim_texture_15": "Ackbar_16",
+                "anim_texture_16": "Ackbar_17",
+                "anim_texture_17": "Ackbar_18",
+                "anim_texture_18": "Ackbar_19",
+                "anim_texture_19": "Ackbar_20",
+                "anim_texture_20": "Ackbar_21",
+                "anim_texture_21": "Ackbar_22",
+                "anim_texture_22": "Ackbar_23"
+            }
+        },
+        "ParentID": "1583727949",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    }
+}
