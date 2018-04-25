@@ -2459,9 +2459,27 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			if (ImGui::Button("Update Template"))
 			{
 				string template_name = current_emmiter->data->GetName(); 
+
 				ParticleData* to_mod = App->resources->GetParticleTemplate(template_name); 
 
-				to_mod->Copy(current_emmiter->data); 
+				App->resources->RemoveParticleTemplate(to_mod);
+
+				Data template_to_save;
+
+				ParticleData* new_template = new ParticleData();
+				new_template->Copy(current_emmiter->data);
+				new_template->SetName(template_name);
+
+				new_template->Save(template_to_save);
+				new_template->SaveTextures(template_to_save);
+
+				string new_path_name(EDITOR_PARTICLE_FOLDER);
+				new_path_name += template_name;
+				new_path_name += ".particle";
+
+				template_to_save.SaveAsBinary(new_path_name);
+				App->resources->CreateResource(new_path_name);
+				App->resources->AddParticleTemplate(new_template);
 			}
 
 		}
