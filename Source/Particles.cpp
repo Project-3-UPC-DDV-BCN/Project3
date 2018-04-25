@@ -429,6 +429,9 @@ void Particle::Draw(ComponentCamera* active_camera)
 	App->renderer3D->SetUniformMatrix(id, "view", active_camera->GetViewMatrix());
 	App->renderer3D->SetUniformMatrix(id, "projection", active_camera->GetProjectionMatrix());
 
+	App->renderer3D->SetUniformVector3(id, "camera_position", App->renderer3D->game_camera->GetFrustum().Pos()); 
+	App->renderer3D->SetUniformVector3(id, "particle_position", GetAtributes().particle_transform->GetGlobalPosition());
+
 	if (particle_data->change_alpha_interpolation)
 	{
 		App->renderer3D->SetUniformBool(id, "alpha_interpolation", true); 

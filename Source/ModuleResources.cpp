@@ -2182,6 +2182,8 @@ void ModuleResources::CreateDefaultShaders()
 			"in vec3 Normal;\n"
 			"in vec2 TexCoord;\n\n"
 			"out vec4 color;\n\n"
+			"uniform vec3 camera_position;\n"
+			"uniform vec3 particle_position;\n"
 			"uniform bool has_material_color;\n"
 			"uniform vec4 material_color;\n"
 			"uniform bool alpha_interpolation;\n"
@@ -2204,6 +2206,12 @@ void ModuleResources::CreateDefaultShaders()
 
 			"	if(alpha_interpolation && color.a > alpha_percentage)\n"
 			"		color.a = alpha_percentage;\n"
+
+			"	vec3 distance_vec = particle_position - camera_position;\n"	
+			"	float distance = sqrt(pow(distance_vec.x, 2) + pow(distance_vec.y, 2) + pow(distance_vec.z, 2));\n"
+
+			"	if(distance < 5)\n"
+			"		color.a = 0;\n"	
 
 			"}";
 
