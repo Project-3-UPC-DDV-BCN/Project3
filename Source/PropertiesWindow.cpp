@@ -2006,7 +2006,8 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			ImGui::Separator();
 
 			ImGui::Text("CURRENT TEMPLATE: "); ImGui::SameLine(); 
-			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", current_emmiter->data->GetName().c_str());
+			if(current_emmiter->data != nullptr) ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", current_emmiter->data->GetName().c_str());
+			else ImGui::TextColored(ImVec4(1, 0, 0, 1), "NULL");
 
 			if (ImGui::TreeNode("Templates"))
 			{
@@ -2018,7 +2019,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					{
 						if (ImGui::MenuItem(it->second->GetName().c_str()))
 						{
-							float3 tmp_size = { current_emmiter->data->emmit_width,current_emmiter->data->emmit_height,current_emmiter->data->emmit_depth };
+							float3 tmp_size; 
+
+							if (current_emmiter->data != nullptr)
+								tmp_size = { current_emmiter->data->emmit_width,current_emmiter->data->emmit_height,current_emmiter->data->emmit_depth };
+							else
+								tmp_size = { 1,1,1 }; 
 
 							current_emmiter->data = it->second;
 
@@ -2037,6 +2043,12 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 
 				ImGui::TreePop();
+			}
+
+			if (current_emmiter->data == nullptr)
+			{
+				CONSOLE_ERROR("PARTICLE EMITTER DATA IN PROPERTIES WINDOW IS NULLPTR");
+				return;
 			}
 
 			if (ImGui::TreeNode("System Stats"))
@@ -2136,14 +2148,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			else if (runtime_behaviour_combo == 1)
 				current_emmiter->data->runtime_behaviour_ = runtime_behaviour::EMMIT_MANUAL;
-			
-	
-			
-			if (current_emmiter->data == nullptr)
-			{
-				CONSOLE_ERROR("PARTICLE EMITTER DATA IN PROPERTIES WINDOW IS NULLPTR");
-				return;
-			}
 
 			int emmision_behaviour_combo = current_emmiter->data->emmision_type;
 
