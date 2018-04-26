@@ -298,8 +298,6 @@ void Particle::UpdateSize()
 
 }
 
-
-
 void Particle::UpdateRotation()
 {
 	//Get the percentatge that has passed

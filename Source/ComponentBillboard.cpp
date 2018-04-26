@@ -60,7 +60,7 @@ bool ComponentBillboard::RotateObject()
 
 	BROFILER_CATEGORY("Component - Billboard - RotateObject", Profiler::Color::Beige);
 
-	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
+	if (reference == nullptr || billboarding_type == BILLBOARD_NONE || IsActive() == false)
 		return false;
 
 	//Get the director vector which the object/particle is currently pointing at (Z axis)
@@ -74,34 +74,46 @@ bool ComponentBillboard::RotateObject()
 		object_transform = (ComponentTransform*)particle_attached->components.particle_transform;
 
 	//Get the rotation of the current camera & construct the matrix
-	float3x3 camera_rot = reference->GetFrustum().ViewMatrix().RotatePart(); 
-	float4x4 new_object_matrix = float4x4::FromTRS(object_transform->GetGlobalPosition(), camera_rot, object_transform->GetGlobalScale());
+	float3 new_object_x; 
+	float3 new_object_y;
+	float3 new_object_z;
+
+	new_object_z = object_transform->GetGlobalPosition() - reference->GetFrustum().Pos();
+	new_object_z.Normalize(); 
+	new_object_z *= -1; 
+
+	new_object_y = reference->GetFrustum().Up();
+	new_object_y.Normalize();
+
+	new_object_x = new_object_y.Cross(new_object_z);
+	new_object_x.Normalize();
+
+	//Calculate Matrix from axis
+	float3 column1, column2, column3;
+
+	column1.x = new_object_x.x; 
+	column1.y = new_object_y.x;
+	column1.z = new_object_z.x;
+
+	column2.x = new_object_x.y;
+	column2.y = new_object_y.y;
+	column2.z = new_object_z.y;
+
+	column3.x = new_object_x.z;
+	column3.y = new_object_y.z;
+	column3.z = new_object_z.z;
+
+	float3x3 matrix = float3x3::identity; 
+
+	matrix.SetCol(0, column1); 
+	matrix.SetCol(1, column2);
+	matrix.SetCol(2, column3);
+
+	//Apply the matrix
+	float4x4 new_mat = float4x4::FromTRS(object_transform->GetGlobalPosition(), matrix, object_transform->GetGlobalScale());
 	
 	//Apply it into the plane
-	object_transform->SetMatrix(new_object_matrix);
-
-
-	//float3 object_z = { 0,0,1 }; 
-
-	////Get the director vector which the object/particle should be pointing at 
-	//float3 direction = object_transform->GetGlobalPosition() - reference->camera_frustum.Pos();
-	//direction.Normalize(); 
-
-	//Quat rot = Quat::RotateFromTo(object_z, direction);
-
-	//float3 angles = rot.ToEulerXYZ()*RADTODEG; 
-
-	//object_transform->SetRotation({ 0,0,0 }); 
-
-	//if (reference->camera_frustum.Pos().z > object_transform->GetGlobalPosition().z &&
-	//	reference->camera_frustum.Pos().x < object_transform->GetGlobalPosition().x)
-	//	angles.y = 90 + (90 - angles.y); 
-
-	//else if(reference->camera_frustum.Pos().z > object_transform->GetGlobalPosition().z &&
-	//	reference->camera_frustum.Pos().x > object_transform->GetGlobalPosition().x)
-	//	angles.y = -90 - (90 + angles.y);
-
-	//object_transform->SetRotation({ 0, angles.y, 0 });
+	//object_transform->SetMatrix(new_mat);
 
 	return ret; 
 }
