@@ -402,25 +402,28 @@ void ParticleAnimation::PaintStackUI()
 	int number = 1;
 	for (vector<Texture*>::iterator it = frames_stack.begin(); it != frames_stack.end();)
 	{
-		ImGui::Text(to_string(number).c_str()); ImGui::SameLine();
-
-		ImGui::Text(". "); ImGui::SameLine();
-		ImGui::Text((*it)->GetName().c_str()); ImGui::SameLine();
-
-		string button_name("X##");
-		button_name += to_string(number);
-
-		if (ImGui::Button(button_name.c_str()))
+		if ((*it) != nullptr)
 		{
-			it = DeleteFromFrameStack(number);
+			ImGui::Text(to_string(number).c_str()); ImGui::SameLine();
 
-			if (frames_stack.empty())
-				break;
-		}
-		else
-			it++;
+			ImGui::Text(". "); ImGui::SameLine();
+			ImGui::Text((*it)->GetName().c_str()); ImGui::SameLine();
 
-		number++;
+			string button_name("X##");
+			button_name += to_string(number);
+
+			if (ImGui::Button(button_name.c_str()))
+			{
+				it = DeleteFromFrameStack(number);
+
+				if (frames_stack.empty())
+					break;
+			}
+			else
+				it++;
+
+			number++;
+		}	
 	}
 }
 
