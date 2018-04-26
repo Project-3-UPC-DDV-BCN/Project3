@@ -1,4 +1,5 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class Level1Manager 
 {
@@ -19,7 +20,8 @@ public class Level1Manager
 		{
 			enabled = (bool)game_manager_script.CallFunctionArgs("GetIsLevel1");
 
-			enabled = true;
+			if(enabled)
+				TheConsole.Log("Level1 activated! :D");
 		}
 	}
 	

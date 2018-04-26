@@ -37,8 +37,8 @@ public class GameManager
 	string alliance_name = "alliance";
 	string empire_name = "empire";
 
-	bool is_training_mode = false;
-	bool is_level1 = false;
+	public bool is_training_mode = false;
+	public bool is_level1 = false;
 
 	void Init ()
 	{
@@ -49,15 +49,11 @@ public class GameManager
 
         TheConsole.Log("Team: " + team); 
 
-		is_training_mode = System.Convert.ToBoolean(TheData.GetInt("is_training_mode"));
-
 		if(is_training_mode)
 		{
 			training_mode_script = TheGameObject.Self.GetScript("TrainingModeManager");
 			TheConsole.Log("Training mode enabled!"); 
 		}
-
-		is_level1 = System.Convert.ToBoolean(TheData.GetInt("is_level1"));
 
 		if(is_level1)
 		{

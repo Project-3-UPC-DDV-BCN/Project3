@@ -67,6 +67,9 @@ public class TrainingModeManager
 		{
 			enabled = (bool)game_manager_script.CallFunctionArgs("GetIsTrainingMode");
 
+			if(enabled)
+				TheConsole.Log("Training Mode activated! :D");
+
 			check_wave_finished_timer.Start();
 			spawn_timer.Start();
 			check_win_lose.Start();
