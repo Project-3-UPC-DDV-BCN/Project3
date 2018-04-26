@@ -147,6 +147,7 @@ private:
 	float refraction;
 	float reflectivity;
 	float bump_scaling = 1.0f;
+	float self_alpha = -1.0f;
 
 	ShaderProgram* shader_program = nullptr;
 
@@ -168,5 +169,7 @@ private:
 		bool own_diffuse_uvs = false;
 		bool own_diffuse2_uvs = false;
 		bool own_normal_uvs = false;
+
+		bool own_alpha = false;
 };
 

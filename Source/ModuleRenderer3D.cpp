@@ -728,6 +728,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "MVP", glm::value_ptr(light_space_mat));
 	SetUniformBool(program, "is_ui", false);
+	SetUniformFloat(program, "self_transparency", -1.0f);
 
 	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -743,6 +744,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		//changed_material = false;
 		//changed_material = true;
 	}
+
+	self_alpha = -1.0f;
 
 	for (uint i = 0; i < cubes_to_draw.size(); ++i)
 	{
@@ -807,6 +810,7 @@ void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, Comp
 		UseShaderProgram(program);
 
 		bool has_light = true;
+
 		SetUniformBool(program, "has_light", true);
 
 		uint current_vao = meshes[0]->GetMesh()->id_vao;
@@ -830,6 +834,12 @@ void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, Comp
 				has_light = mesh->has_light;
 			}
 			
+			if (self_alpha != mesh->self_transparency)
+			{
+				SetUniformFloat(program, "self_transparency", mesh->self_transparency);
+				self_alpha = mesh->self_transparency;
+			}
+
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 
 
@@ -1777,22 +1787,7 @@ void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRender
 	//vertices
 	App->renderer3D->SetVertexAttributePointer(0, 3, 19, 0);
 	App->renderer3D->EnableVertexAttributeArray(0);
-	//texture coords
-	App->renderer3D->SetVertexAttributePointer(1, 3, 19, 3);
-	App->renderer3D->EnableVertexAttributeArray(1);
-	//normals
-	App->renderer3D->SetVertexAttributePointer(2, 3, 19, 6);
-	App->renderer3D->EnableVertexAttributeArray(2);
-	//colors
-	App->renderer3D->SetVertexAttributePointer(3, 4, 19, 9);
-	App->renderer3D->EnableVertexAttributeArray(3);
-	//tangents
-	App->renderer3D->SetVertexAttributePointer(4, 3, 19, 13);
-	App->renderer3D->EnableVertexAttributeArray(4);
-	//bitangents
-	App->renderer3D->SetVertexAttributePointer(5, 3, 19, 16);
-	App->renderer3D->EnableVertexAttributeArray(5);
-	App->renderer3D->BindElementArrayBuffer(mesh->GetMesh()->id_indices);
+
 
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
