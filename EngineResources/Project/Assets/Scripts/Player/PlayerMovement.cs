@@ -1,5 +1,5 @@
 using TheEngine;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 
 public class PlayerMovement {
 
@@ -1050,7 +1050,7 @@ public class PlayerMovement {
                     repair_part = ship_parts - 1;
             }
 
-            if(TheInput.IsKeyDown("SPACE"))
+            if(TheInput.IsKeyDown("SPACE") && !PartFull(repair_part))
             {
                 repair_mode = true;
 
@@ -1130,4 +1130,28 @@ public class PlayerMovement {
             }
         }
     }
+	
+	bool PartFull(int part)
+	{
+		bool ret = true;
+		TheConsole.Log(wings_hp + body_hp + engine_hp);
+		TheConsole.Log(total_hp/3.0f);
+		switch(repair_part)
+		{
+			case 0:
+				if(wings_hp < (total_hp/3.0f)-0.1f)
+					ret = false;
+				break;
+			case 1:
+				if(body_hp < (total_hp/3.0f)-0.1f)
+					ret = false;
+				break;
+			case 2:
+				if(engine_hp < (total_hp/3.0f)-0.1f)
+					ret = false;
+				break;
+		}
+		TheConsole.Log(ret);
+		return ret;		
+	}
 }

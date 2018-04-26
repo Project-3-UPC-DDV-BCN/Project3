@@ -30,8 +30,6 @@ public class EntityProperties
 	private TheScript player_movement_script = null;
 	
 	TheGameObject self = null;
-
-	bool one_shoot = true;
 		
 	void Init()
 	{
@@ -70,24 +68,6 @@ public class EntityProperties
 	{
 		if(factory != null)
 			factory.StartFactory();		
-	}
-
-	void Update()
-	{
-		// Temp ----------------------
-		/*if (TheInput.IsKeyDown("w"))
-		{
-			if(one_shoot)
-				Shoot();
-
-			one_shoot = false;
-		}
-		else
-			one_shoot = true;
-		*/
-		// ---------------------------
-		
-		CheckDeath();
 	}
 
 	// Returns if the ship is the slave1
@@ -151,33 +131,14 @@ public class EntityProperties
 				{
 					// Ally hit
 					DealDamage(dmg);
-	
-					//if(!is_slave1)
-						//TheConsole.Log("Ally hit. Dmg: " + dmg + "  | Ship now has: " + GetLife() + " Life");
-	
-					//else
-						//TheConsole.Log("Slave1 is hit!");
 				}
 				else
 				{
-					// Enemy hit
 					DealDamage(dmg);
-					//if(!is_slave1)
-						//TheConsole.Log("Enemy hit. Dmg: " + dmg+ "  | Ship now has: " + GetLife() + " Life");
-					
-					//else
-						//TheConsole.Log("Slave1 is hit!");
-					
-					// Add score if killed by slave
-					if(ship_is_slave1 && IsDead())
-					{	
-						if(game_manager_script != null)
-						{
-							object[] args = {100};
-							game_manager_script.CallFunctionArgs("AddScore", args);
-						}
-					}
 				}
+
+				// Check if is dead
+				CheckDeath(ship);
 			}
 		}
 	}
@@ -286,7 +247,7 @@ public class EntityProperties
 	}
 	
 	// Checks if ship is dead, and tell the game manager, then destroy it
-	void CheckDeath()
+	void CheckDeath(TheGameObject killer)
 	{
 		if(IsDead() && game_manager_script != null && !dead)
 		{
@@ -294,13 +255,8 @@ public class EntityProperties
 
 			if(factory != null)
 				factory.ClearFactory();
-			
-			if(IsSlave1())
-			{
-				game_manager_script.CallFunctionArgs("Lose");
-			}
 
-			else if(IsShip())
+			if(IsShip())
 			{
 				if(audio_source != null)
 					audio_source.Play("Play_Enemy_Explosions");
@@ -325,7 +281,7 @@ public class EntityProperties
 					}
 				}
 
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				
 				TheGameObject.Destroy(self);					
