@@ -100,7 +100,6 @@ public class MainMenuVS2
 		if(menu_audio_source != null)
 			menu_audio_source.Play("Play_Menu_song");
 
-		TheData.AddInt("is_training_mode", 0);
 		TheData.AddString("faction", "no_str");
 	}
 	
@@ -132,9 +131,7 @@ public class MainMenuVS2
 		if(training_rect != null)
 		{
 			if(training_rect.OnClickUp)
-			{	
-				TheData.AddInt("is_training_mode", 1);
-			
+			{				
 				if(menu_audio_source != null)	
 					menu_audio_source.Stop("Play_Menu_song");
 

@@ -1,5 +1,5 @@
 using TheEngine;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 
 public class PlayerMovement {
 
@@ -48,6 +48,18 @@ public class PlayerMovement {
 	public string vertical_movement_up_joystic = "RIGHTJOY_UP";
 	public string vertical_movement_down_joystic = "RIGHTJOY_DOWN";
 	public string boost_button = "CONTROLLER_L3";
+	
+	
+	//Energy Controls
+	public string energy_balance_keyboard = "DOWN_ARROW";
+	public string energy_attack_keyboard = "LEFT_ARROW";
+	public string energy_shields_keyboard = "UP_ARROW";
+	public string energy_engine_keyboard = "RIGHT_ARROW";
+	
+	public string energy_balance_controller = "CONTROLLER_DOWN_ARROW";
+	public string energy_attack_controller = "CONTROLLER_LEFT_ARROW";
+	public string energy_shields_controller = "CONTROLLER_UP_ARROW";
+	public string energy_engine_controller = "CONTROLLER_RIGHT_ARROW";
 	
 	// Ship Private Information
 	///ship speeds
@@ -655,7 +667,7 @@ public class PlayerMovement {
 	
 	void EnergyManagement()
 	{
-		if(TheInput.IsKeyDown("UP_ARROW"))
+		if(TheInput.IsKeyDown(energy_shields_keyboard) || TheInput.GetControllerButton(0, energy_shields_controller) == 1)
 		{
 			audio_source.Stop("Play_droid_speed_up");
 			audio_source.Play("Play_droid_speed_up");
@@ -676,7 +688,7 @@ public class PlayerMovement {
 			}
 		}
 		
-		if(TheInput.IsKeyDown("LEFT_ARROW"))
+		if(TheInput.IsKeyDown(energy_attack_keyboard) || TheInput.GetControllerButton(0, energy_attack_controller) == 1)
 		{
 			audio_source.Stop("Play_Shield_up");
 			audio_source.Play("Play_Shield_up");
@@ -697,7 +709,7 @@ public class PlayerMovement {
 			}
 		}
 
-		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(TheInput.IsKeyDown(energy_engine_keyboard) || TheInput.GetControllerButton(0, energy_engine_controller) == 1)
 		{
 			audio_source.Stop("Play_Potency_up");
 			audio_source.Play("Play_Potency_up");
@@ -717,7 +729,7 @@ public class PlayerMovement {
 			}
 		}
 
-		if(TheInput.IsKeyDown("DOWN_ARROW"))
+		if(TheInput.IsKeyDown(energy_balance_keyboard) || TheInput.GetControllerButton(0, energy_balance_controller) == 1)
 		{
 			audio_source.Stop("Play_droid_speed_down");
 			audio_source.Play("Play_droid_speed_down");
@@ -1038,7 +1050,7 @@ public class PlayerMovement {
                     repair_part = ship_parts - 1;
             }
 
-            if(TheInput.IsKeyDown("SPACE"))
+            if(TheInput.IsKeyDown("SPACE") && !PartFull(repair_part))
             {
                 repair_mode = true;
 
@@ -1118,4 +1130,28 @@ public class PlayerMovement {
             }
         }
     }
+	
+	bool PartFull(int part)
+	{
+		bool ret = true;
+		TheConsole.Log(wings_hp + body_hp + engine_hp);
+		TheConsole.Log(total_hp/3.0f);
+		switch(repair_part)
+		{
+			case 0:
+				if(wings_hp < (total_hp/3.0f)-0.1f)
+					ret = false;
+				break;
+			case 1:
+				if(body_hp < (total_hp/3.0f)-0.1f)
+					ret = false;
+				break;
+			case 2:
+				if(engine_hp < (total_hp/3.0f)-0.1f)
+					ret = false;
+				break;
+		}
+		TheConsole.Log(ret);
+		return ret;		
+	}
 }
