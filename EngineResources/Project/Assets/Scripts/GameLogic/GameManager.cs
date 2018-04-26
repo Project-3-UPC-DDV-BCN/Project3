@@ -5,23 +5,8 @@ using TheEngine.TheConsole;
 public class GameManager
 {
 	private string team = "no_str"; 
-
-	public int game_time = 120;
-	private TheTimer game_timer = new TheTimer();
-
-	private int score = 0;
-
-	public TheGameObject gametime_go;
-	private TheText gametime_text = null; 
-	public TheGameObject score_go; 
-	private TheText score_text = null; 
 	
-	public TheGameObject alliance_spawn;
-	TheTransform alliance_spawn_trans = null;
-    public TheGameObject empire_spawn;
-	TheTransform empire_spawn_trans = null;
-	
-	public float music_timer = 15;
+	/*public float music_timer = 15;
 	private float background_music_timer = 0.0f;
 	private bool calm_combat = false;
 	
@@ -31,8 +16,11 @@ public class GameManager
 	TheAudioSource audio_source = null;
 	
 	public TheGameObject slave1_audio;
-	TheTransform slave1_trans = null;
 	TheAudioSource slave1_audiosource = null;
+*/
+
+	TheScript training_mode_script = null;
+	TheScript level1_script = null;
 
 	public TheGameObject front_radar_go;
 	TheRadar front_radar = null;
@@ -44,11 +32,13 @@ public class GameManager
 	List<TheGameObject> turret_entities = new List<TheGameObject>();
 	List<TheGameObject> generator_entities = new List<TheGameObject>();
 	TheGameObject slave1 = null;
+	TheTransform slave1_trans = null;
 	
 	string alliance_name = "alliance";
 	string empire_name = "empire";
 
 	bool is_training_mode = false;
+	bool is_level1 = false;
 
 	void Init ()
 	{
@@ -57,81 +47,60 @@ public class GameManager
 		if(team == "no_str")
 			team = "alliance";
 
-		is_training_mode = System.Convert.ToBoolean(TheData.GetInt("is_training_mode"));
-
         TheConsole.Log("Team: " + team); 
 
+		is_training_mode = System.Convert.ToBoolean(TheData.GetInt("is_training_mode"));
+
 		if(is_training_mode)
+		{
+			training_mode_script = TheGameObject.Self.GetScript("TrainingModeManager");
 			TheConsole.Log("Training mode enabled!"); 
+		}
+
+		is_level1 = System.Convert.ToBoolean(TheData.GetInt("is_level1"));
+
+		if(is_level1)
+		{
+			level1_script = TheGameObject.Self.GetScript("Level1ManagerManager");
+			TheConsole.Log("Level 1 enabled!");
+		}
 	}
 
 	void Start ()
 	{
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
-				
-		if(alliance_spawn != null)
-			alliance_spawn_trans = alliance_spawn.GetComponent<TheTransform>();
-		
-		if(empire_spawn != null)
-			empire_spawn_trans = empire_spawn.GetComponent<TheTransform>();
-
-		if(gametime_go != null)
-	 		gametime_text = gametime_go.GetComponent<TheText>();
-
-		if(score_go != null)
-			score_text = score_go.GetComponent<TheText>();
-		
-		if(gametime_text != null)
-			gametime_text.Text = GetTimeFromSeconds(game_time); 
-
-		if(score_text != null)
-			score_text.Text = score.ToString();
 
 		if(front_radar_go != null)
 			front_radar = front_radar_go.GetComponent<TheRadar>();
 
 		if(back_radar_go != null)
 			back_radar = back_radar_go.GetComponent<TheRadar>();
-
+		
+		/*
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
 		if(slave1_audio != null)
 			slave1_audiosource = slave1_audio.GetComponent<TheAudioSource>();
-		
-		if(audio_source != null)
+		*/
+		/*if(audio_source != null)
 		{
 			audio_source.Play("Play_Music");
 			audio_source.SetVolume(calm_volume);
 		}
+		
 			
 		background_music_timer = music_timer;
 
 		game_timer.Start();
+		*/
 	}
 	
 	void Update () 
 	{
-		UpdateAudio();
+		//UpdateAudio();
 
-		UpdateTimePointsTexts();
-
-		CheckWinLose();
-	}
-
-	void CheckWinLose()
-	{
-		/*
-		if(GetRemainingTime() <= 0)
-		{
-			Lose();
-		}
-		*/
-		/*else if()
-		{
-			Win();
-		}
-		*/
+		//UpdateTimePointsTexts();
 	}
 
 	bool GetIsTrainingMode()
@@ -139,29 +108,9 @@ public class GameManager
 		return is_training_mode;
 	}
 
-	void Win()
+	bool GetIsLevel1()
 	{
-		TheConsole.Log("You win!");
-		if(audio_source!=null)
-			audio_source.Stop("Play_Music");
-		if(slave1_audiosource!=null)
-			slave1_audiosource.Play("Stop_Engine");
-		TheApplication.LoadScene("VS4 - MainMenu");
-	}
-
-	void Lose()
-	{
-		TheConsole.Log("You lose!");
-		if(audio_source!=null)
-			audio_source.Stop("Play_Music");
-		if(slave1_audiosource!=null)
-			slave1_audiosource.Play("Stop_Engine");
-		TheApplication.LoadScene("VS4 - MainMenu");
-	}
-
-	void AddScore(int add)
-	{
-		score += add;
+		return is_level1;
 	}
 
 	void AddSlaveEnemiesShip(TheGameObject go)
@@ -297,7 +246,7 @@ public class GameManager
 		}
 	}	
 
-	void RemoveShip(TheGameObject remove)
+	void RemoveShip(TheGameObject remove, TheGameObject killer)
 	{
 		bool found = false;
 		if(empire_ships.Remove(remove))
@@ -340,6 +289,23 @@ public class GameManager
 			if(back_radar != null)
 				back_radar.RemoveEntity(remove);
 
+			if(is_training_mode)
+			{
+				if(training_mode_script != null)
+				{
+					object[] args = {remove, killer};
+					training_mode_script.CallFunctionArgs("OnShipDestroyedCallback", args);
+				}
+			}
+			
+			if(is_level1)
+			{
+				if(level1_script != null)
+				{
+					object[] args = {remove, killer};
+					training_mode_script.CallFunctionArgs("OnShipDestroyedCallback", args);
+				}
+			}
 		}
 	}
 
@@ -446,48 +412,7 @@ public class GameManager
 		return generator_entities.Count;
 	}
 	
-	string GetTimeFromSeconds(int seconds)
-	{
-		int division = seconds/60; 
-		float reminder = seconds % 60;
-
-		string new_time = division.ToString(); 
-		new_time += ":";
-
-		if(reminder < 10) 
-			new_time += "0";
-
-		new_time += reminder.ToString(); 
-		 
-		return new_time; 
-	}
-
-	int GetRemainingTime()
-	{
-		int remaining = (int)((float)game_time - game_timer.ReadTime());
-
-		if(remaining < 0)
-			remaining = 0;
-
-		return remaining;
-	}
-
-	int GetTimeSinceStart()
-	{
-		return (int)game_timer.ReadTime();
-	}
-
-	void UpdateTimePointsTexts()
-	{		
-		int remaining = GetTimeSinceStart();
-
-		if(gametime_text != null)
-			gametime_text.Text = GetTimeFromSeconds(remaining); 
-
-		if(score_text != null)
-			score_text.Text = score.ToString();
-	}
-
+	/*
 	void UpdateAudio()
 	{
 	
@@ -519,4 +444,5 @@ public class GameManager
 			}
 		}
 	}
+	*/
 }

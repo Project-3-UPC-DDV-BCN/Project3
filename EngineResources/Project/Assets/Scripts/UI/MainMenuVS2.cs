@@ -101,6 +101,7 @@ public class MainMenuVS2
 			menu_audio_source.Play("Play_Menu_song");
 
 		TheData.AddInt("is_training_mode", 0);
+		TheData.AddInt("is_level1", 0);
 		TheData.AddString("faction", "no_str");
 	}
 	
@@ -219,6 +220,7 @@ public class MainMenuVS2
 					loading_text_go.SetActive(true);
 
 				TheData.AddString("faction", faction);
+				TheData.AddInt("is_level1", 0);
 				
 				TheApplication.LoadScene("Alpha1 - Level1Scene");
 			}

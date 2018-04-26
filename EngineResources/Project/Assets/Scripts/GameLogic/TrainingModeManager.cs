@@ -1,5 +1,5 @@
 using TheEngine;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 using System.Collections.Generic;
 
 public class TrainingModeManager 
@@ -17,15 +17,24 @@ public class TrainingModeManager
 	
 	TheScript game_manager_script = null;
 
-	TheTransform scene_center = null;
-
 	TheTimer check_wave_finished_timer = new TheTimer();
 
 	int curr_wave = 0;
-
 	int ships_remaining_to_spawn = 0;
-
 	TheTimer spawn_timer = new TheTimer();
+
+	TheScript slave1_script = null;
+
+	TheTimer check_win_lose = new TheTimer();
+
+	public TheGameObject gametime_go;
+	private TheText gametime_text = null; 
+	public TheGameObject score_go; 
+	private TheText score_text = null; 
+
+	private TheTimer game_timer = new TheTimer();
+
+	private int score = 0; 
 
 	void Init()
 	{
@@ -33,21 +42,23 @@ public class TrainingModeManager
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
 
-		TheGameObject[] anchors = TheGameObject.GetGameObjectsWithTag("AI_ANCHOR");
-		if(anchors.Length > 0)
-		{
-			TheGameObject anchor = anchors[0];
-			if(anchor != null)
-			{
-				scene_center = anchor.GetComponent<TheTransform>();
-			}
-		}
-
 		if(curr_wave_go != null)
 			curr_wave_text = curr_wave_go.GetComponent<TheText>();
 
 		if(remaining_ships_go != null)
 			remaining_ships_text = remaining_ships_go.GetComponent<TheText>();
+
+		if(gametime_go != null)
+	 		gametime_text = gametime_go.GetComponent<TheText>();
+
+		if(score_go != null)
+			score_text = score_go.GetComponent<TheText>();
+		
+		if(gametime_text != null)
+			gametime_text.Text = GetTimeFromSeconds(0); 
+
+		if(score_text != null)
+			score_text.Text = score.ToString();
 	}
 
 	void Start () 
@@ -55,29 +66,58 @@ public class TrainingModeManager
 		if(game_manager_script != null)
 		{
 			enabled = (bool)game_manager_script.CallFunctionArgs("GetIsTrainingMode");
-			
-			//Temporal for VS4 testing
-			enabled = true;
-
-			if(enabled)
-				//TheConsole.Log("Training mode enabled!"); 
 
 			check_wave_finished_timer.Start();
 			spawn_timer.Start();
+			check_win_lose.Start();
+
+			TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
+
+			if(slave1 != null)
+				slave1_script = slave1.GetScript("EntityProperties");
 		}
+
+		game_timer.Start();
 	}
 	
 	void Update () 
 	{
 		if(enabled)
-		{
+		{	
+			CheckWinLose();
+
 			if(CheckWaveFinished())
 			{
 				SpawnNextWave();
 			}
 
 			SpawnRemainingShips();
+
+			UpdateTimePointsTexts();
 		}
+	}
+
+	void CheckWinLose()
+	{
+		if(check_win_lose.ReadTime() > 1)
+		{
+			if(slave1_script != null)
+			{
+				bool dead = (bool)slave1_script.CallFunctionArgs("IsDead");
+
+				if(dead)
+				{
+					Lose();
+				}
+			}	
+
+			check_win_lose.Start();
+		}
+	}
+
+	void Lose()
+	{
+		
 	}
 
 	bool CheckWaveFinished()
@@ -94,7 +134,7 @@ public class TrainingModeManager
 		
 				if(enemies_count == 0)
 				{
-					//TheConsole.Log("No enemies! Need to spawn new round");
+					TheConsole.Log("No enemies! Need to spawn new round");
 					ret = true;
 				}
 			}
@@ -113,7 +153,7 @@ public class TrainingModeManager
 
 		spawn_timer.Start();
 
-		//TheConsole.Log("Spawning wave: " + curr_wave);
+		TheConsole.Log("Spawning wave: " + curr_wave);
 
 		SetCurrWaveText(curr_wave);
 	}
@@ -133,7 +173,7 @@ public class TrainingModeManager
 					spawned_ship_trans.GlobalPosition = GetRandomSpawnPoint();
 			
 					TheVector3 spawned_pos = spawned_ship_trans.GlobalPosition;
-					//TheConsole.Log("Enemy ship spawned! x:" + spawned_pos.x + " y: " + spawned_pos.y + " z:" + spawned_pos.z);
+					TheConsole.Log("Enemy ship spawned! x:" + spawned_pos.x + " y: " + spawned_pos.y + " z:" + spawned_pos.z);
 				}
 
 				spawn_timer.Start();
@@ -157,11 +197,7 @@ public class TrainingModeManager
 			y_add = -y_add;
 
 		if((int)TheRandom.RandomRange(1, 3) > 2)
-			z_add = -z_add;
-		
-			
-		if(scene_center != null)
-			ret = scene_center.GlobalPosition;			
+			z_add = -z_add;		
 			
 		ret.x += x_add;
 		ret.y += y_add;
@@ -183,6 +219,64 @@ public class TrainingModeManager
 		if(remaining_ships_text != null)
 		{
 			remaining_ships_text.Text = "Enemies: " + remaining_ships.ToString();
+		}
+	}
+
+	string GetTimeFromSeconds(int seconds)
+	{
+		int division = seconds/60; 
+		float reminder = seconds % 60;
+
+		string new_time = division.ToString(); 
+		new_time += ":";
+
+		if(reminder < 10) 
+			new_time += "0";
+
+		new_time += reminder.ToString(); 
+		 
+		return new_time; 
+	}
+
+	int GetTimeSinceStart()
+	{
+		return (int)game_timer.ReadTime();
+	}
+
+	void AddScore(int add)
+	{
+		if(add > 0)
+		{
+			score += add;
+		}
+	}
+	
+	void UpdateTimePointsTexts()
+	{		
+		int remaining = GetTimeSinceStart();
+
+		if(gametime_text != null)
+			gametime_text.Text = GetTimeFromSeconds(remaining); 
+
+		if(score_text != null)
+			score_text.Text = score.ToString();
+	}
+
+	void OnShipDestroyedCallback(TheGameObject ship, TheGameObject killer)
+	{
+		if(killer != null && ship != null)
+		{
+			TheScript killer_script = killer.GetScript("EntityProperties");
+			
+			if(killer_script != null)
+			{
+				bool is_slave = (bool)killer_script.CallFunctionArgs("IsSlave1");
+
+				if(is_slave)
+				{
+					AddScore(100);
+				}
+			}
 		}
 	}
 }
