@@ -548,10 +548,6 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 
 					float distance_magnitude = rota_pos.z - center_pos.z;
 
-					rota_pos = center_pos - rota_pos;
-
-					float x_offset = rota_pos.x;
-					float y_offset = rota_pos.y;
 					float z_offset = distance_magnitude;
 
 					if (z_offset > 0)
@@ -686,16 +682,12 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
 					float horizontal_angle = AngleFromTwoPoints(center_pos.x, center_pos.z, rota_pos.x, rota_pos.z) - 90;
-					CONSOLE_LOG("%f", horizontal_angle);
+					//CONSOLE_LOG("%f", horizontal_angle);
 					float vertical_angle = AngleFromTwoPoints(center_pos.y, center_pos.z, rota_pos.y, rota_pos.z) - 90;
-					CONSOLE_LOG("%f", vertical_angle);
+					//CONSOLE_LOG("%f", vertical_angle);
 
 					float distance_magnitude = rota_pos.z - center_pos.z;
 
-					rota_pos = center_pos - rota_pos;
-
-					float x_offset = rota_pos.x;
-					float y_offset = rota_pos.y;
 					float z_offset = distance_magnitude;
 
 					if (z_offset < 0)
