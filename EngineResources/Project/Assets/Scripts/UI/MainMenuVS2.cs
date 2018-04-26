@@ -138,7 +138,7 @@ public class MainMenuVS2
 				if(menu_audio_source != null)	
 					menu_audio_source.Stop("Play_Menu_song");
 
-				TheApplication.LoadScene("VS4 - TrainingScene");
+				TheApplication.LoadScene("Alpha1 - TrainingScene");
 			}
 
 			if(training_rect.OnMouseOver)
@@ -220,7 +220,7 @@ public class MainMenuVS2
 
 				TheData.AddString("faction", faction);
 				
-				TheApplication.LoadScene("VS3 - FinalScene_v2(with_audio)");
+				TheApplication.LoadScene("Alpha1 - Level1Scene");
 			}
 		}
 
