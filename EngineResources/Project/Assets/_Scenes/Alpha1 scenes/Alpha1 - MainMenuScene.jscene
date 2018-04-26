@@ -1,8 +1,8 @@
 {
     "Scene_Name": "Alpha1 - MainMenuScene",
-    "GameObjects_Count": "36",
+    "GameObjects_Count": "35",
     "GameObject_0": {
-        "UUID": "1922808771",
+        "UUID": "2109273439",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -58,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "181342752",
+        "UUID": "499347465",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "207376279",
+        "UUID": "1604583129",
         "Name": "Audio(28)",
         "Tag": "Default",
         "Layer": "Default",
@@ -149,7 +149,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "211361478",
+        "UUID": "582707169",
         "Name": "MainMenuCanvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -166,8 +166,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "1034.000000",
-                    "value_Y": "547.000000"
+                    "value_X": "510.000000",
+                    "value_Y": "289.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -241,59 +241,59 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "campaign_button_go",
-                            "field_value": "1618465593"
+                            "field_value": "2111443695"
                         },
                         "field_1": {
                             "field_name": "empire_idle_image_go",
-                            "field_value": "1590847205"
+                            "field_value": "844897253"
                         },
                         "field_2": {
                             "field_name": "empire_selected_image_go",
-                            "field_value": "122650109"
+                            "field_value": "942347286"
                         },
                         "field_3": {
                             "field_name": "exit_button_go",
-                            "field_value": "726092163"
+                            "field_value": "1270885151"
                         },
                         "field_4": {
                             "field_name": "explanation_text_go",
-                            "field_value": "1644913490"
+                            "field_value": "1821357724"
                         },
                         "field_5": {
                             "field_name": "loading_text_go",
-                            "field_value": "1795869980"
+                            "field_value": "841460448"
                         },
                         "field_6": {
                             "field_name": "menu_go",
-                            "field_value": "1187627805"
+                            "field_value": "836936809"
                         },
                         "field_7": {
                             "field_name": "rebels_idle_image_go",
-                            "field_value": "1719743276"
+                            "field_value": "1526424795"
                         },
                         "field_8": {
                             "field_name": "rebels_selected_image_go",
-                            "field_value": "1420035111"
+                            "field_value": "703785338"
                         },
                         "field_9": {
                             "field_name": "settings_button_go",
-                            "field_value": "353435851"
+                            "field_value": "343373618"
                         },
                         "field_10": {
                             "field_name": "side_selection_back_go",
-                            "field_value": "18403661"
+                            "field_value": "1805729815"
                         },
                         "field_11": {
                             "field_name": "side_selection_continue_go",
-                            "field_value": "559805992"
+                            "field_value": "1252126946"
                         },
                         "field_12": {
                             "field_name": "side_selection_go",
-                            "field_value": "1456996850"
+                            "field_value": "1053688949"
                         },
                         "field_13": {
                             "field_name": "training_button_go",
-                            "field_value": "689755145"
+                            "field_value": "226700374"
                         }
                     },
                     "vec2_fields": {},
@@ -320,7 +320,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "639510594",
+        "UUID": "542237472",
         "Name": "BackgroundColor(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -387,12 +387,12 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "211361478",
+        "ParentID": "582707169",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1736095270",
+        "UUID": "500007499",
         "Name": "BackgroundImage(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -426,7 +426,7 @@
                 "Active": "1",
                 "UUID": "433215440",
                 "position": {
-                    "value_X": "-35.947659",
+                    "value_X": "-17.730469",
                     "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
@@ -460,12 +460,12 @@
                 "texture": "Background"
             }
         },
-        "ParentID": "211361478",
+        "ParentID": "582707169",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "1866688569",
+        "UUID": "312170009",
         "Name": "CurrVersionText(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -499,8 +499,8 @@
                 "Active": "1",
                 "UUID": "84683818",
                 "position": {
-                    "value_X": "-447.748535",
-                    "value_Y": "-251.689056",
+                    "value_X": "-220.843079",
+                    "value_Y": "-133.742188",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -535,12 +535,12 @@
                 "font": "Purista Medium"
             }
         },
-        "ParentID": "211361478",
+        "ParentID": "582707169",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "1456996850",
+        "UUID": "1053688949",
         "Name": "SideSelectionCanvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -607,12 +607,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "211361478",
+        "ParentID": "582707169",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1187627805",
+        "UUID": "836936809",
         "Name": "MenuCanvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -629,8 +629,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "1034.000000",
-                    "value_Y": "547.000000"
+                    "value_X": "510.000000",
+                    "value_Y": "289.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -679,12 +679,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "211361478",
+        "ParentID": "582707169",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "1420035111",
+        "UUID": "703785338",
         "Name": "RebelsImageSelected(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -752,12 +752,12 @@
                 "texture": "Rebels_SelectedButton_v2"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "559805992",
+        "UUID": "1252126946",
         "Name": "ContinueButton(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -792,7 +792,7 @@
                 "UUID": "308522486",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "-174.896088",
+                    "value_Y": "-201.300781",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -853,12 +853,12 @@
                 "pressed_texture": "SmallButtonPressed"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_11": {
-        "UUID": "1719743276",
+        "UUID": "1526424795",
         "Name": "RebelsIdleOver(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -892,8 +892,8 @@
                 "Active": "1",
                 "UUID": "1109095771",
                 "position": {
-                    "value_X": "-167.419159",
-                    "value_Y": "-27.662888",
+                    "value_X": "-82.576187",
+                    "value_Y": "101.392578",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -954,12 +954,12 @@
                 "pressed_texture": "Rebels_SelectedButton_v2"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_12": {
-        "UUID": "1590847205",
+        "UUID": "844897253",
         "Name": "EmpireIdleOver",
         "Tag": "Default",
         "Layer": "Default",
@@ -993,8 +993,8 @@
                 "Active": "1",
                 "UUID": "1109095771",
                 "position": {
-                    "value_X": "171.660172",
-                    "value_Y": "-27.662888",
+                    "value_X": "84.667976",
+                    "value_Y": "101.392578",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1055,12 +1055,12 @@
                 "pressed_texture": "Empire_SelectedButton_v3"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_13": {
-        "UUID": "2051648927",
+        "UUID": "867076136",
         "Name": "RebelsText(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1094,8 +1094,8 @@
                 "Active": "1",
                 "UUID": "1052971140",
                 "position": {
-                    "value_X": "-165.197662",
-                    "value_Y": "-185.590302",
+                    "value_X": "-81.480469",
+                    "value_Y": "23.498032",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1130,12 +1130,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_14": {
-        "UUID": "122650109",
+        "UUID": "942347286",
         "Name": "EmpireImageSelected(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1203,12 +1203,12 @@
                 "texture": "Empire_SelectedButton_v3"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_15": {
-        "UUID": "628258217",
+        "UUID": "1534982756",
         "Name": "TopImage(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1243,7 +1243,7 @@
                 "UUID": "426436815",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "165.202347",
+                    "value_Y": "196.519531",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1276,12 +1276,12 @@
                 "texture": "Triangle_Image_v1"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_16": {
-        "UUID": "18403661",
+        "UUID": "1805729815",
         "Name": "BackToMenuButton(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1315,8 +1315,8 @@
                 "Active": "1",
                 "UUID": "361653461",
                 "position": {
-                    "value_X": "-334.910919",
-                    "value_Y": "190.042572",
+                    "value_X": "-376.257813",
+                    "value_Y": "208.771484",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1377,12 +1377,12 @@
                 "pressed_texture": "SmallButtonHalfPressed"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_17": {
-        "UUID": "1381028869",
+        "UUID": "875271088",
         "Name": "TopText(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1417,7 +1417,7 @@
                 "UUID": "431224377",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "184.185928",
+                    "value_Y": "205.882813",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1452,12 +1452,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_18": {
-        "UUID": "1473045165",
+        "UUID": "252450376",
         "Name": "EmpireText(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1474,8 +1474,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "137.746368",
-                    "value_Y": "52.646515"
+                    "value_X": "137.746429",
+                    "value_Y": "52.646538"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -1491,8 +1491,8 @@
                 "Active": "1",
                 "UUID": "1052971140",
                 "position": {
-                    "value_X": "176.103149",
-                    "value_Y": "-185.590271",
+                    "value_X": "86.859390",
+                    "value_Y": "23.498047",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1527,12 +1527,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_19": {
-        "UUID": "1795869980",
+        "UUID": "841460448",
         "Name": "LoadingPanel(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1599,12 +1599,12 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "1456996850",
+        "ParentID": "1053688949",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_20": {
-        "UUID": "1618465593",
+        "UUID": "2111443695",
         "Name": "CampaignButton(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1629,7 +1629,7 @@
                     "value_Y": "1.000000"
                 },
                 "scale": "1.000000",
-                "interactable": "0",
+                "interactable": "1",
                 "fixed_aspect_ratio": "0",
                 "fixed_ratio": "-1.000000"
             },
@@ -1638,8 +1638,8 @@
                 "Active": "1",
                 "UUID": "1838492356",
                 "position": {
-                    "value_X": "-262.539063",
-                    "value_Y": "121.601349",
+                    "value_X": "-129.492188",
+                    "value_Y": "69.579010",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1700,12 +1700,12 @@
                 "pressed_texture": "BigButtonPressed"
             }
         },
-        "ParentID": "1187627805",
+        "ParentID": "836936809",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_21": {
-        "UUID": "726092163",
+        "UUID": "1270885151",
         "Name": "ExitButton(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1739,8 +1739,8 @@
                 "Active": "1",
                 "UUID": "732128190",
                 "position": {
-                    "value_X": "-262.539063",
-                    "value_Y": "-152.217194",
+                    "value_X": "-129.492188",
+                    "value_Y": "-65.476563",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1801,12 +1801,12 @@
                 "pressed_texture": "SmallButtonPressed"
             }
         },
-        "ParentID": "1187627805",
+        "ParentID": "836936809",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_22": {
-        "UUID": "1644913490",
+        "UUID": "1821357724",
         "Name": "ExplanationText(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1840,8 +1840,8 @@
                 "Active": "1",
                 "UUID": "1587149474",
                 "position": {
-                    "value_X": "-370.583984",
-                    "value_Y": "-200.796875",
+                    "value_X": "-182.783203",
+                    "value_Y": "-108.640625",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1876,12 +1876,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "1187627805",
+        "ParentID": "836936809",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_23": {
-        "UUID": "1661643721",
+        "UUID": "131714548",
         "Name": "StarGamesLogo(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1915,8 +1915,8 @@
                 "Active": "1",
                 "UUID": "316594113",
                 "position": {
-                    "value_X": "461.664856",
-                    "value_Y": "-223.213669",
+                    "value_X": "227.707031",
+                    "value_Y": "-119.697266",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1949,12 +1949,12 @@
                 "texture": "StarGamesLogo"
             }
         },
-        "ParentID": "1187627805",
+        "ParentID": "836936809",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_24": {
-        "UUID": "353435851",
+        "UUID": "343373618",
         "Name": "SettingsButton(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1988,8 +1988,8 @@
                 "Active": "1",
                 "UUID": "1867383348",
                 "position": {
-                    "value_X": "-262.539063",
-                    "value_Y": "-95.872314",
+                    "value_X": "-129.492188",
+                    "value_Y": "-37.685562",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2050,12 +2050,12 @@
                 "pressed_texture": "SmallButtonPressed"
             }
         },
-        "ParentID": "1187627805",
+        "ParentID": "836936809",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_25": {
-        "UUID": "689755145",
+        "UUID": "226700374",
         "Name": "TrainingButton",
         "Tag": "Default",
         "Layer": "Default",
@@ -2089,8 +2089,8 @@
                 "Active": "1",
                 "UUID": "1867383348",
                 "position": {
-                    "value_X": "-262.538818",
-                    "value_Y": "-35.488342",
+                    "value_X": "-129.492065",
+                    "value_Y": "-7.902359",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2151,12 +2151,12 @@
                 "pressed_texture": "SmallButtonPressed"
             }
         },
-        "ParentID": "1187627805",
+        "ParentID": "836936809",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_26": {
-        "UUID": "1561119478",
+        "UUID": "1249416451",
         "Name": "Text(48)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2190,8 +2190,8 @@
                 "Active": "1",
                 "UUID": "729847598",
                 "position": {
-                    "value_X": "-3.635156",
-                    "value_Y": "3.029297",
+                    "value_X": "-1.792967",
+                    "value_Y": "1.494141",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2226,12 +2226,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "559805992",
+        "ParentID": "1252126946",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_27": {
-        "UUID": "404319521",
+        "UUID": "1797613336",
         "Name": "Text(50)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2248,8 +2248,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "91.716301",
-                    "value_Y": "46.622452"
+                    "value_X": "91.716316",
+                    "value_Y": "46.622459"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -2266,7 +2266,7 @@
                 "UUID": "631446846",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "2.423438",
+                    "value_Y": "1.195313",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2301,12 +2301,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "18403661",
+        "ParentID": "1805729815",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_28": {
-        "UUID": "2061210312",
+        "UUID": "586085790",
         "Name": "Text(51)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2340,8 +2340,8 @@
                 "Active": "1",
                 "UUID": "1957810376",
                 "position": {
-                    "value_X": "11.309375",
-                    "value_Y": "15.752344",
+                    "value_X": "5.578125",
+                    "value_Y": "7.769531",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2376,12 +2376,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "1795869980",
+        "ParentID": "841460448",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_29": {
-        "UUID": "75904624",
+        "UUID": "1689492590",
         "Name": "ColorBar",
         "Tag": "Default",
         "Layer": "Default",
@@ -2416,7 +2416,7 @@
                 "UUID": "2062768926",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "-114.640625",
+                    "value_Y": "-120.371880",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2448,12 +2448,12 @@
                 "anim_textures_count": "1"
             }
         },
-        "ParentID": "1795869980",
+        "ParentID": "841460448",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_30": {
-        "UUID": "1746055884",
+        "UUID": "41811259",
         "Name": "Image(42)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2487,8 +2487,8 @@
                 "Active": "1",
                 "UUID": "1564787193",
                 "position": {
-                    "value_X": "-0.484686",
-                    "value_Y": "-22.618750",
+                    "value_X": "-0.239065",
+                    "value_Y": "-11.156250",
                     "value_Z": "-1.000000"
                 },
                 "rotation": {
@@ -2521,12 +2521,12 @@
                 "texture": "slave_1_back"
             }
         },
-        "ParentID": "1618465593",
+        "ParentID": "2111443695",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_31": {
-        "UUID": "1697377882",
+        "UUID": "1101321154",
         "Name": "Text(52)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2560,8 +2560,8 @@
                 "Active": "1",
                 "UUID": "680188566",
                 "position": {
-                    "value_X": "-87.899361",
-                    "value_Y": "92.898445",
+                    "value_X": "-43.354622",
+                    "value_Y": "45.820316",
                     "value_Z": "-1.000000"
                 },
                 "rotation": {
@@ -2596,84 +2596,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "1618465593",
+        "ParentID": "2111443695",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_32": {
-        "UUID": "1415395606",
-        "Name": "Image(43)",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "3",
-            "Component_0": {
-                "Type": "25",
-                "Active": "1",
-                "UUID": "1556744629",
-                "pos": {
-                    "value_X": "-4.750000",
-                    "value_Y": "0.000000"
-                },
-                "z_pos": "0.000000",
-                "size": {
-                    "value_X": "459.700012",
-                    "value_Y": "292.700012"
-                },
-                "anchor": {
-                    "value_X": "0.500000",
-                    "value_Y": "0.500000"
-                },
-                "scale": "1.000000",
-                "interactable": "1",
-                "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000"
-            },
-            "Component_1": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "542590762",
-                "position": {
-                    "value_X": "-3.837109",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_2": {
-                "Type": "26",
-                "Active": "1",
-                "UUID": "765635166",
-                "mode": "0",
-                "colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "0.564706"
-                },
-                "flip": "0",
-                "loop": "1",
-                "anim_speed": "1.000000",
-                "anim_textures_count": "1"
-            }
-        },
-        "ParentID": "1618465593",
-        "IsRoot": "0",
-        "IsStatic": "0"
-    },
-    "GameObject_33": {
-        "UUID": "1822859084",
+        "UUID": "1323930146",
         "Name": "Text(53)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2707,8 +2635,8 @@
                 "Active": "1",
                 "UUID": "680188566",
                 "position": {
-                    "value_X": "-139.335281",
-                    "value_Y": "3.635156",
+                    "value_X": "-68.724365",
+                    "value_Y": "1.792969",
                     "value_Z": "-1.000000"
                 },
                 "rotation": {
@@ -2743,12 +2671,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "726092163",
+        "ParentID": "1270885151",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_34": {
-        "UUID": "1578684052",
+    "GameObject_33": {
+        "UUID": "1195081779",
         "Name": "Text(54)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2782,8 +2710,8 @@
                 "Active": "1",
                 "UUID": "680188566",
                 "position": {
-                    "value_X": "-97.759865",
-                    "value_Y": "3.635156",
+                    "value_X": "-48.218117",
+                    "value_Y": "1.792969",
                     "value_Z": "-1.000000"
                 },
                 "rotation": {
@@ -2818,12 +2746,12 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "353435851",
+        "ParentID": "343373618",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_35": {
-        "UUID": "1349330832",
+    "GameObject_34": {
+        "UUID": "682116391",
         "Name": "Text(57)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2857,8 +2785,8 @@
                 "Active": "1",
                 "UUID": "680188566",
                 "position": {
-                    "value_X": "-97.759865",
-                    "value_Y": "3.635156",
+                    "value_X": "-48.218117",
+                    "value_Y": "1.792969",
                     "value_Z": "-1.000000"
                 },
                 "rotation": {
@@ -2893,7 +2821,7 @@
                 "font": "Purista Semibold"
             }
         },
-        "ParentID": "689755145",
+        "ParentID": "226700374",
         "IsRoot": "0",
         "IsStatic": "0"
     }
