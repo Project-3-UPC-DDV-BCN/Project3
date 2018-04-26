@@ -155,10 +155,28 @@ bool ComponentBillboard::RotateObject()
 
 void ComponentBillboard::Save(Data & data) const
 {
+	data.AddInt("Type", (int)GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.CreateSection("Billboard");
+;
+	data.AddInt("Active", IsActive());
+
+	data.CloseSection();
 }
 
 void ComponentBillboard::Load(Data & data)
 {
+	SetType((Component::ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+
+	data.EnterSection("Billboard");
+
+	bool is_active = data.GetBool("Active"); 
+	SetActive(is_active);
+
+	data.LeaveSection();
 }
 
 ComponentBillboard::~ComponentBillboard()

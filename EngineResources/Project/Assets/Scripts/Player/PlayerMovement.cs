@@ -36,7 +36,18 @@ public class PlayerMovement {
 	public float boost_accel_multiplier = 1.5f;
 	public float boost_time = 1.5f;
 	public float boost_cd_time = 5.0f;
-
+	//controls
+	public string roll_pos_joystic = "RIGHTJOY_RIGHT";
+	public string roll_neg_joystic = "RIGHTJOY_LEFT";
+	public string pitch_pos_joystic = "LEFTJOY_UP";
+	public string pitch_neg_joystic = "LEFTJOY_DOWN";
+	public string yaw_pos_joystic = "LEFTJOY_RIGHT";
+	public string yaw_neg_joystic = "LEFTJOY_LEFT";
+	public string accel_joystic = "RIGHT_TRIGGER";
+	public string break_joystick = "LEFT_TRIGGER";
+	public string vertical_movement_up_joystic = "RIGHTJOY_UP";
+	public string vertical_movement_down_joystic = "RIGHTJOY_DOWN";
+	public string boost_button = "CONTROLLER_L3";
 	
 	// Ship Private Information
 	///ship speeds
@@ -306,18 +317,18 @@ public class PlayerMovement {
 	
 	void Movement()
 	{
-		int rjoy_up = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_UP");
-        int rjoy_down = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_DOWN");
-        int rjoy_right = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_RIGHT");
-        int rjoy_left = TheInput.GetControllerJoystickMove(0, "RIGHTJOY_LEFT");
+		int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
+        int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
+        int rjoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
+        int rjoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
 
-        int ljoy_up = TheInput.GetControllerJoystickMove(0, "LEFTJOY_UP");
-        int ljoy_down = TheInput.GetControllerJoystickMove(0, "LEFTJOY_DOWN");
-        int ljoy_right = TheInput.GetControllerJoystickMove(0, "LEFTJOY_RIGHT");
-        int ljoy_left = TheInput.GetControllerJoystickMove(0, "LEFTJOY_LEFT");
+        int ljoy_up = TheInput.GetControllerJoystickMove(0, pitch_pos_joystic);
+        int ljoy_down = TheInput.GetControllerJoystickMove(0, pitch_neg_joystic);
+        int ljoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
+        int ljoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
 
-        int right_trigger = TheInput.GetControllerJoystickMove(0, "RIGHT_TRIGGER");
-        int left_trigger = TheInput.GetControllerJoystickMove(0, "LEFT_TRIGGER");
+        int right_trigger = TheInput.GetControllerJoystickMove(0, accel_joystic);
+        int left_trigger = TheInput.GetControllerJoystickMove(0, break_joystick);
 		
 		if (ljoy_up > controller_sensibility)
         {
@@ -527,7 +538,7 @@ public class PlayerMovement {
 			
         }
 		
-		if(TheInput.GetControllerButton(0,"CONTROLLER_L3") == 2 && boost_cd_timer <= 0.0f)
+		if(TheInput.GetControllerButton(0,boost_button) == 2 && boost_cd_timer <= 0.0f)
 		{
 			boosting = true;
 			boost_timer = boost_time;

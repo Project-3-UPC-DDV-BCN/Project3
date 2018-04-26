@@ -2277,18 +2277,18 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("Billboard"))
 			{
-				ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
+				ImGui::Checkbox("Active", &current_emmiter->data->billboarding);
 
-				static int billboard_type;
-				ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+				//static int billboard_type;
+				//ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
 
-				if (billboard_type != 0)
-				{
-					current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
-					++billboard_type;
-				}
-				else
-					current_emmiter->data->billboard_type = BILLBOARD_NONE;
+				//if (billboard_type != 0)
+				//{
+				//	current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
+				//	++billboard_type;
+				//}
+				//else
+				//	current_emmiter->data->billboard_type = BILLBOARD_NONE;
 
 				ImGui::TreePop();
 			}
@@ -2296,7 +2296,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			
 				if (ImGui::TreeNode("Size"))
 				{
-					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.1f, 0, 20.0f);
+					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.01f, 0.01f, 20.0f);
 
 					if (ImGui::TreeNode("Interpolation"))
 					{
@@ -2547,20 +2547,25 @@ void PropertiesWindow::DrawBillboardPanel(ComponentBillboard * billboard)
 
 	if (ImGui::CollapsingHeader("Component Billboard", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		static int billboard_type;
-		ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
 
-		if (billboard_type != 0)
-		{
-			billboard->SetBillboardType((BillboardingType)--billboard_type);
-			++billboard_type;
+		bool keeper = billboard->IsActive(); 
+		ImGui::Checkbox("Billboard Active", &keeper); 
+		billboard->SetActive(keeper); 
+		
+		//static int billboard_type;
+		//ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
 
-			//Reset transform 
-			ComponentTransform* trans = (ComponentTransform*)billboard->GetGameObject()->GetComponent(Component::CompTransform); 
-			trans->SetRotation(float3::zero); 
-		}
-		else
-			billboard->SetBillboardType(BILLBOARD_NONE);
+		//if (billboard_type != 0)
+		//{
+		//	billboard->SetBillboardType((BillboardingType)--billboard_type);
+		//	++billboard_type;
+
+		//	//Reset transform 
+		//	ComponentTransform* trans = (ComponentTransform*)billboard->GetGameObject()->GetComponent(Component::CompTransform); 
+		//	trans->SetRotation(float3::zero); 
+		//}
+		//else
+		//	billboard->SetBillboardType(BILLBOARD_NONE);
 	}
 }
 
