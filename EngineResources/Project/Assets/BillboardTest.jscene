@@ -2,7 +2,7 @@
     "Scene_Name": "BillboardTest",
     "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "844301590",
+        "UUID": "1442285103",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -58,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "198611706",
+        "UUID": "1290789537",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -109,13 +109,13 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "2045864040",
+        "UUID": "310179468",
         "Name": "New GameObject",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "2",
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -144,6 +144,25 @@
                 "Billboard": {
                     "Active": "1"
                 }
+            },
+            "Component_2": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1395926728",
+                "Mesh": {
+                    "mesh_name": "PrimitiveParticlePlane"
+                },
+                "Material": {
+                    "Name": "DefaultMaterial"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
             }
         },
         "ParentID": "0",
