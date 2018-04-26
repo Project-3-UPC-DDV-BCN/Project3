@@ -49,6 +49,18 @@ public class PlayerMovement {
 	public string vertical_movement_down_joystic = "RIGHTJOY_DOWN";
 	public string boost_button = "CONTROLLER_L3";
 	
+	
+	//Energy Controls
+	public string energy_balance_keyboard = "DOWN_ARROW";
+	public string energy_attack_keyboard = "LEFT_ARROW";
+	public string energy_shields_keyboard = "UP_ARROW";
+	public string energy_engine_keyboard = "RIGHT_ARROW";
+	
+	public string energy_balance_controller = "CONTROLLER_DOWN_ARROW";
+	public string energy_attack_controller = "CONTROLLER_LEFT_ARROW";
+	public string energy_shields_controller = "CONTROLLER_UP_ARROW";
+	public string energy_engine_controller = "CONTROLLER_RIGHT_ARROW";
+	
 	// Ship Private Information
 	///ship speeds
 	private float curr_vel = 0.0f;
@@ -319,13 +331,13 @@ public class PlayerMovement {
 	{
 		int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
         int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
-        int rjoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
-        int rjoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
+        int rjoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
+        int rjoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
 
         int ljoy_up = TheInput.GetControllerJoystickMove(0, pitch_pos_joystic);
         int ljoy_down = TheInput.GetControllerJoystickMove(0, pitch_neg_joystic);
-        int ljoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
-        int ljoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
+        int ljoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
+        int ljoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
 
         int right_trigger = TheInput.GetControllerJoystickMove(0, accel_joystic);
         int left_trigger = TheInput.GetControllerJoystickMove(0, break_joystick);
@@ -655,7 +667,7 @@ public class PlayerMovement {
 	
 	void EnergyManagement()
 	{
-		if(TheInput.IsKeyDown("UP_ARROW"))
+		if(TheInput.IsKeyDown(energy_shields_keyboard) || TheInput.GetControllerButton(0, energy_shields_controller) == 1)
 		{
 			audio_source.Stop("Play_droid_speed_up");
 			audio_source.Play("Play_droid_speed_up");
@@ -676,7 +688,7 @@ public class PlayerMovement {
 			}
 		}
 		
-		if(TheInput.IsKeyDown("LEFT_ARROW"))
+		if(TheInput.IsKeyDown(energy_attack_keyboard) || TheInput.GetControllerButton(0, energy_attack_controller) == 1)
 		{
 			audio_source.Stop("Play_Shield_up");
 			audio_source.Play("Play_Shield_up");
@@ -697,7 +709,7 @@ public class PlayerMovement {
 			}
 		}
 
-		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(TheInput.IsKeyDown(energy_engine_keyboard) || TheInput.GetControllerButton(0, energy_engine_controller) == 1)
 		{
 			audio_source.Stop("Play_Potency_up");
 			audio_source.Play("Play_Potency_up");
@@ -717,7 +729,7 @@ public class PlayerMovement {
 			}
 		}
 
-		if(TheInput.IsKeyDown("DOWN_ARROW"))
+		if(TheInput.IsKeyDown(energy_balance_keyboard) || TheInput.GetControllerButton(0, energy_balance_controller) == 1)
 		{
 			audio_source.Stop("Play_droid_speed_down");
 			audio_source.Play("Play_droid_speed_down");
