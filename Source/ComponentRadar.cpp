@@ -532,60 +532,99 @@ void ComponentRadar::DrawRadarFront(ComponentCanvas* canvas)
 					float4x4 entity_mat = entity_trans->GetMatrix();
 					float3 entity_pos;
 					entity_mat.Decompose(entity_pos, rot, scal);
+					float4x4 new_entity_mat = float4x4::FromTRS(entity_pos, Quat::identity, float3(1, 1, 1));
 
-					float4x4 rotated = RotateArround(entity_mat, center_pos, -center_rot.x, -center_rot.y, -center_rot.z);
+					float4x4 rotated = RotateArround(new_entity_mat, center_pos, -center_rot.x, -center_rot.y, -center_rot.z);
 
 					float3 rota_pos;
 					Quat rota_rot;
 					float3 rota_scal;
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
+					float horizontal_angle = AngleFromTwoPoints(center_pos.x, center_pos.z, rota_pos.x, rota_pos.z) + 90;
+					//CONSOLE_LOG("%f", horizontal_angle);
+					float vertical_angle = AngleFromTwoPoints(center_pos.y, center_pos.z, rota_pos.y, rota_pos.z) + 90;
+					//CONSOLE_LOG("%f", vertical_angle);
+
 					float distance_magnitude = rota_pos.z - center_pos.z;
 
-					rota_pos = center_pos - rota_pos;
-
-					float x_offset = rota_pos.x;
-					float y_offset = rota_pos.y;
 					float z_offset = distance_magnitude;
 
 					if (z_offset > 0)
 					{
-						if (max_distance > 0)
+						float scaled_distance_x = 0;
+						float scaled_distance_y = 0;
+
+						if (horizontal_angle < 90 && horizontal_angle > -90)
 						{
-							float scaled_distance_x = (radar_scaled_size * x_offset) / max_distance;
-							float scaled_distance_y = (radar_scaled_size * y_offset) / max_distance;
+							float horizontal_ratio = abs(horizontal_angle) / 90;
+							
+							float horizontal_distance = (radar_scaled_size * 0.5f) * horizontal_ratio;
 
-							// Scale size
-							if (z_offset != 0)
+							if (horizontal_angle > 0)
 							{
-								float scaled_size_z = markers_size;
+								scaled_distance_x = -horizontal_distance;
+							}
+							else
+							{
+								scaled_distance_x = horizontal_distance;
+							}
+						}
+						else
+							continue;
+
+						if (vertical_angle < 90 && vertical_angle > -90)
+						{
+							float vertical_ratio = abs(vertical_angle) / 90;
+
+							float vertical_distance = (radar_scaled_size * 0.5f) * vertical_ratio;
+
+							if (vertical_angle > 0)
+							{
+								scaled_distance_y = vertical_distance;
+							}
+							else
+							{
+								scaled_distance_y = -vertical_distance;
+							}
+						}
+						else
+							continue;
+
+						//float scaled_distance_x = (radar_scaled_size * x_offset) / max_distance;
+						//float scaled_distance_y = (radar_scaled_size * y_offset) / max_distance;
+
+						// Scale size
+						if (z_offset != 0)
+						{
+							float scaled_size_z = markers_size;
 			
-								if (scaled_size_z > 0)
+							if (scaled_size_z > 0)
+							{
+								// Check out radar
+								float magnitude_scaled_distance = abs(float2(0, 0).Distance(float2(scaled_distance_x, scaled_distance_y)));
+
+								if (magnitude_scaled_distance < (radar_scaled_size * 0.5f))
 								{
-									// Check out radar
-									float magnitude_scaled_distance = abs(float2(0, 0).Distance(float2(scaled_distance_x, scaled_distance_y)));
+									CanvasDrawElement de(canvas, this);
+									de.SetTransform(c_rect_trans->GetMatrix());
+									de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
+									de.SetSize(c_rect_trans->GetScaledSize() * scaled_size_z);
+									de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
+									de.SetFlip(false, false);
+									de.SetPosition(float3(scaled_distance_x, scaled_distance_y, 0));
 
-									if (magnitude_scaled_distance < radar_scaled_size / 2)
+									if ((*it).marker != nullptr)
 									{
-										CanvasDrawElement de(canvas, this);
-										de.SetTransform(c_rect_trans->GetMatrix());
-										de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-										de.SetSize(c_rect_trans->GetScaledSize() * scaled_size_z);
-										de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
-										de.SetFlip(false, false);
-										de.SetPosition(float3(scaled_distance_x, -scaled_distance_y, 0));
-
-										if ((*it).marker != nullptr)
-										{
-											if ((*it).marker->marker_texture != nullptr)
-												de.SetTextureId((*it).marker->marker_texture->GetID());
-										}
-
-										canvas->AddDrawElement(de);
+										if ((*it).marker->marker_texture != nullptr)
+											de.SetTextureId((*it).marker->marker_texture->GetID());
 									}
+
+									canvas->AddDrawElement(de);
 								}
 							}
 						}
+						
 					}
 				}
 			}
@@ -612,6 +651,8 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 
 			float4x4 new_center_mat = float4x4::FromTRS(center_pos, Quat::identity, float3(1, 1, 1));
 
+			//CONSOLE_LOG("%f %f %f", center_rot.x, center_rot.y, center_rot.z);
+
 			const float radar_scaled_size = c_rect_trans->GetScaledSize().x;
 
 			for (std::vector<RadarEntity>::iterator it = entities.begin(); it != entities.end(); ++it)
@@ -631,60 +672,99 @@ void ComponentRadar::DrawRadarBack(ComponentCanvas* canvas)
 					float4x4 entity_mat = entity_trans->GetMatrix();
 					float3 entity_pos;
 					entity_mat.Decompose(entity_pos, rot, scal);
+					float4x4 new_entity_mat = float4x4::FromTRS(entity_pos, Quat::identity, float3(1, 1, 1));
 
-					float4x4 rotated = RotateArround(entity_mat, center_pos, -center_rot.x, -center_rot.y, -center_rot.z);
+					float4x4 rotated = RotateArround(new_entity_mat, center_pos, -center_rot.x, -center_rot.y, -center_rot.z);
 
 					float3 rota_pos;
 					Quat rota_rot;
 					float3 rota_scal;
 					rotated.Decompose(rota_pos, rota_rot, rota_scal);
 
+					float horizontal_angle = AngleFromTwoPoints(center_pos.x, center_pos.z, rota_pos.x, rota_pos.z) - 90;
+					//CONSOLE_LOG("%f", horizontal_angle);
+					float vertical_angle = AngleFromTwoPoints(center_pos.y, center_pos.z, rota_pos.y, rota_pos.z) - 90;
+					//CONSOLE_LOG("%f", vertical_angle);
+
 					float distance_magnitude = rota_pos.z - center_pos.z;
 
-					rota_pos = center_pos - rota_pos;
-
-					float x_offset = rota_pos.x;
-					float y_offset = rota_pos.y;
 					float z_offset = distance_magnitude;
 
 					if (z_offset < 0)
 					{
-						if (max_distance > 0)
+						float scaled_distance_x = 0;
+						float scaled_distance_y = 0;
+
+						if (horizontal_angle < 90 && horizontal_angle > -90)
 						{
-							float scaled_distance_x = (radar_scaled_size * x_offset) / max_distance;
-							float scaled_distance_y = (radar_scaled_size * y_offset) / max_distance;
+							float horizontal_ratio = abs(horizontal_angle) / 90;
 
-							// Scale size
-							if (z_offset != 0)
+							float horizontal_distance = (radar_scaled_size * 0.5f) * horizontal_ratio;
+
+							if (horizontal_angle > 0)
 							{
-								float scaled_size_z = markers_size;
+								scaled_distance_x = horizontal_distance;
+							}
+							else
+							{
+								scaled_distance_x = -horizontal_distance;
+							}
+						}
+						else
+							continue;
 
-								if ((float)scaled_size_z * (float)entity_scaled_size > 0)
+						if (vertical_angle < 90 && vertical_angle > -90)
+						{
+							float vertical_ratio = abs(vertical_angle) / 90;
+
+							float vertical_distance = (radar_scaled_size * 0.5f) * vertical_ratio;
+
+							if (vertical_angle > 0)
+							{
+								scaled_distance_y = vertical_distance;
+							}
+							else
+							{
+								scaled_distance_y = -vertical_distance;
+							}
+						}
+						else
+							continue;
+
+						//float scaled_distance_x = (radar_scaled_size * x_offset) / max_distance;
+						//float scaled_distance_y = (radar_scaled_size * y_offset) / max_distance;
+
+						// Scale size
+						if (z_offset != 0)
+						{
+							float scaled_size_z = markers_size;
+
+							if (scaled_size_z > 0)
+							{
+								// Check out radar
+								float magnitude_scaled_distance = abs(float2(0, 0).Distance(float2(scaled_distance_x, scaled_distance_y)));
+
+								if (magnitude_scaled_distance < (radar_scaled_size * 0.5f))
 								{
-									// Check out radar
-									float magnitude_scaled_distance = abs(float2(0, 0).Distance(float2(scaled_distance_x, scaled_distance_y)));
+									CanvasDrawElement de(canvas, this);
+									de.SetTransform(c_rect_trans->GetMatrix());
+									de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
+									de.SetSize(c_rect_trans->GetScaledSize() * scaled_size_z);
+									de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
+									de.SetFlip(false, false);
+									de.SetPosition(float3(scaled_distance_x, scaled_distance_y, 0));
 
-									if (magnitude_scaled_distance < radar_scaled_size / 2)
+									if ((*it).marker != nullptr)
 									{
-										CanvasDrawElement de(canvas, this);
-										de.SetTransform(c_rect_trans->GetMatrix());
-										de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
-										de.SetSize(c_rect_trans->GetScaledSize() * scaled_size_z);
-										de.SetColour(float4(1.0f, 0.0f, 1.0f, 1.0f));
-										de.SetFlip(false, false);
-										de.SetPosition(float3(scaled_distance_x, -scaled_distance_y, 0));
-
-										if ((*it).marker != nullptr)
-										{
-											if ((*it).marker->marker_texture != nullptr)
-												de.SetTextureId((*it).marker->marker_texture->GetID());
-										}
-
-										canvas->AddDrawElement(de);
+										if ((*it).marker->marker_texture != nullptr)
+											de.SetTextureId((*it).marker->marker_texture->GetID());
 									}
+
+									canvas->AddDrawElement(de);
 								}
 							}
 						}
+
 					}
 				}
 			}

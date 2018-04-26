@@ -60,7 +60,7 @@ bool ComponentBillboard::RotateObject()
 
 	BROFILER_CATEGORY("Component - Billboard - RotateObject", Profiler::Color::Beige);
 
-	if (reference == nullptr || billboarding_type == BILLBOARD_NONE)
+	if (reference == nullptr || billboarding_type == BILLBOARD_NONE || IsActive() == false)
 		return false;
 
 	//Get the director vector which the object/particle is currently pointing at (Z axis)
@@ -73,92 +73,75 @@ bool ComponentBillboard::RotateObject()
 	else
 		object_transform = (ComponentTransform*)particle_attached->components.particle_transform;
 
-	float3 object_z = { 0,0,1 }; 
+	//Get the rotation of the current camera & construct the matrix
+	float3 new_object_x; 
+	float3 new_object_y;
+	float3 new_object_z;
 
-	//Get the director vector which the object/particle should be pointing at 
-	float3 direction = object_transform->GetGlobalPosition() - reference->camera_frustum.Pos();
-	direction.Normalize(); 
+	new_object_z = object_transform->GetGlobalPosition() - reference->GetFrustum().Pos();
+	new_object_z.Normalize(); 
+	new_object_z *= -1; 
 
-	Quat rot = Quat::RotateFromTo(object_z, direction);
+	new_object_y = reference->GetFrustum().Up();
+	new_object_y.Normalize();
 
-	float3 angles = rot.ToEulerXYZ()*RADTODEG; 
+	new_object_x = new_object_y.Cross(new_object_z);
+	new_object_x.Normalize();
 
-	object_transform->SetRotation({ 0,0,0 }); 
+	//Calculate Matrix from axis
+	float3 column1, column2, column3;
 
-	if (reference->camera_frustum.Pos().z > object_transform->GetGlobalPosition().z &&
-		reference->camera_frustum.Pos().x < object_transform->GetGlobalPosition().x)
-		angles.y = 90 + (90 - angles.y); 
+	column1.x = new_object_x.x; 
+	column1.y = new_object_y.x;
+	column1.z = new_object_z.x;
 
-	else if(reference->camera_frustum.Pos().z > object_transform->GetGlobalPosition().z &&
-		reference->camera_frustum.Pos().x > object_transform->GetGlobalPosition().x)
-		angles.y = -90 - (90 + angles.y);
+	column2.x = new_object_x.y;
+	column2.y = new_object_y.y;
+	column2.z = new_object_z.y;
 
-	object_transform->SetRotation({ 0, angles.y, 0 });
+	column3.x = new_object_x.z;
+	column3.y = new_object_y.z;
+	column3.z = new_object_z.z;
 
-	//if (billboarding_type == BILLBOARD_Y)
-	//	direction.y = 0;
+	float3x3 matrix = float3x3::identity; 
 
-	//else if (billboarding_type == BILLBOARD_X)
-	//	direction.x = 0;
+	matrix.SetCol(0, column1); 
+	matrix.SetCol(1, column2);
+	matrix.SetCol(2, column3);
 
-	//else if (billboarding_type == BILLBOARD_ALL)
-	//{
-	//	direction = { 0,0,1 };
-	//	object_transform->SetRotation({ 0, 0, 0 });
-	//	object_z = {0,0,1};
-	//}
-	//	
+	//Apply the matrix
+	float4x4 new_mat = float4x4::FromTRS(object_transform->GetGlobalPosition(), matrix, object_transform->GetGlobalScale());
+	
+	//Apply it into the plane
+	//object_transform->SetMatrix(new_mat);
 
-	//direction.Normalize();
-	//direction *= -1;
-
-	////Get the angle between where the object is pointing at and where the object should be pointing at in XZ plane
-	//float3 desired_pos_projection_xz = { direction.x, 0, direction.z };
-	//float3 projection_z_on_xz = { object_z.x, 0, object_z.z };
-
-	//float angle_xz = desired_pos_projection_xz.AngleBetweenNorm(reference_axis)*RADTODEG;
-
-	////Get the angle between where the object is pointing at and where the object should be pointing at in XY plane
-	//float3 desired_pos_projection_xy = { 0, direction.y, direction.z };
-	//float angle_xy = desired_pos_projection_xy.AngleBetweenNorm(reference_axis)*RADTODEG;
-
-	//if (reference->camera_frustum.Pos().x > 0)
-	//	angle_xz *= -1;
-
-	//if (reference->camera_frustum.Pos().y < 0)
-	//	angle_xy *= -1;
-
-	//switch (billboarding_type)
-	//{
-	//case BILLBOARD_X:
-	//	object_transform->SetRotation({ angle_xy, object_transform->GetGlobalRotation().y, object_transform->GetGlobalRotation().z });
-	//	break;
-
-	//case BILLBOARD_Y:
-	//	object_transform->SetRotation({ object_transform->GetGlobalRotation().x, angle_xz, object_transform->GetGlobalRotation().z });
-	//	break;
-
-	//case BILLBOARD_ALL:
-	//	billboarding_type = BILLBOARD_Y; 
-	//	RotateObject(); 
-
-	//	billboarding_type = BILLBOARD_X;
-	//	RotateObject();
-
-	//	billboarding_type = BILLBOARD_ALL; 
-
-	//	break;
-	//}
-	//	
-	//return ret;
+	return ret; 
 }
 
 void ComponentBillboard::Save(Data & data) const
 {
+	data.AddInt("Type", (int)GetType());
+	data.AddBool("Active", IsActive());
+	data.AddUInt("UUID", GetUID());
+	data.CreateSection("Billboard");
+;
+	data.AddInt("Active", IsActive());
+
+	data.CloseSection();
 }
 
 void ComponentBillboard::Load(Data & data)
 {
+	SetType((Component::ComponentType)data.GetInt("Type"));
+	SetActive(data.GetBool("Active"));
+	SetUID(data.GetUInt("UUID"));
+
+	data.EnterSection("Billboard");
+
+	bool is_active = data.GetBool("Active"); 
+	SetActive(is_active);
+
+	data.LeaveSection();
 }
 
 ComponentBillboard::~ComponentBillboard()
