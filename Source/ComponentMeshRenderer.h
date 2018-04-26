@@ -49,6 +49,8 @@ public:
 	////////////////////////////////////////
 	bool has_light = true;
 	float self_transparency = -1.0f;
+
+
 private:
 	Mesh* mesh;
 	Material* material;
