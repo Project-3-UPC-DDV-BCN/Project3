@@ -319,13 +319,13 @@ public class PlayerMovement {
 	{
 		int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
         int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
-        int rjoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
-        int rjoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
+        int rjoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
+        int rjoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
 
         int ljoy_up = TheInput.GetControllerJoystickMove(0, pitch_pos_joystic);
         int ljoy_down = TheInput.GetControllerJoystickMove(0, pitch_neg_joystic);
-        int ljoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
-        int ljoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
+        int ljoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
+        int ljoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
 
         int right_trigger = TheInput.GetControllerJoystickMove(0, accel_joystic);
         int left_trigger = TheInput.GetControllerJoystickMove(0, break_joystick);
