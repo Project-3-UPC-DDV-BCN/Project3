@@ -44,11 +44,16 @@ void ParticleData::LoadDefaultData()
 	billboarding = false;
 
 	change_rotation_interpolation = false;
+	change_velocity_interpolation = false; 
 	change_size_interpolation = false;
 	change_color_interpolation = false;
 	change_alpha_interpolation = false; 
 
 	init_alpha_interpolation_time = 0; 
+
+	v_interpolation_start_time = 0.0f; 
+	v_interpolation_end_time = 0.0f;
+	v_interpolation_final_v = 0.0f; 
 
 	initial_scale = { 1,1,1 };
 	final_scale = { 1,1,1 };

@@ -2053,9 +2053,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("System Stats"))
 			{
-				ImGui::Text("Template Loaded:"); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
-
 				ImGui::Text("Rendering Particles: "); ImGui::SameLine(); 
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", current_emmiter->GetParticlesNum());
 
@@ -2076,9 +2073,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				else
 					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
 
-				ImGui::Text("Shock Wave: "); ImGui::SameLine();
+				ImGui::Text("Velocity Interpolation: "); ImGui::SameLine();
 
-				if (current_emmiter->show_shockwave)
+				if (current_emmiter->data->change_velocity_interpolation)
 					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
 				else
 					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
@@ -2271,24 +2268,37 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
 				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
+				ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
 
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Billboard"))
+			if (ImGui::TreeNode("Velocity Interpolation"))
 			{
-				ImGui::Checkbox("Active", &current_emmiter->data->billboarding);
+				ImGui::TextColored(ImVec4(0, 0, 1, 1), "Time must be inserted in a range between [0 - 'lifetime']");
+				ImGui::Text("Current Emmision Velocity:"); ImGui::SameLine(); 
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.2f", current_emmiter->data->velocity); 
 
-				//static int billboard_type;
-				//ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+				ImGui::InputFloat("Start Time", &current_emmiter->data->v_interpolation_start_time, 0.05f, 0.1f, 2);
+				ImGui::InputFloat("End Time", &current_emmiter->data->v_interpolation_end_time, 0.05f, 0.1f, 2);
+				ImGui::InputFloat("Final Velocity", &current_emmiter->data->v_interpolation_final_v, 0.05f, 0.1f, 2);
 
-				//if (billboard_type != 0)
-				//{
-				//	current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
-				//	++billboard_type;
-				//}
-				//else
-				//	current_emmiter->data->billboard_type = BILLBOARD_NONE;
+				if (ImGui::Button("Apply"))
+				{
+					if (current_emmiter->data->v_interpolation_start_time >= current_emmiter->data->v_interpolation_end_time)
+					{
+						CONSOLE_ERROR("Error assigning velocity interpolation: Start & End time can not match.");
+					}
+					else
+						current_emmiter->data->change_velocity_interpolation = true;
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::Button("Cancel"))
+				{
+					current_emmiter->data->change_velocity_interpolation = false;
+				}
 
 				ImGui::TreePop();
 			}

@@ -107,6 +107,17 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	}
 	else
 		new_particle->particle_data->change_color_interpolation = false;
+
+	///Velocity
+	if (data->change_velocity_interpolation)
+	{
+		new_particle->particle_data->change_velocity_interpolation = true;
+		new_particle->particle_data->v_interpolation_start_time = data->v_interpolation_start_time;
+		new_particle->particle_data->v_interpolation_end_time = data->v_interpolation_end_time;
+		new_particle->particle_data->v_interpolation_final_v = data->v_interpolation_final_v;
+	}
+	else
+		new_particle->particle_data->change_velocity_interpolation = false;
 	
 	///Size
 	if (data->change_size_interpolation)

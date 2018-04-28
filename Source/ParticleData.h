@@ -127,6 +127,12 @@ public:
 	float emmit_depth;
 
 	//Interpolations
+	///Velocity
+	bool change_velocity_interpolation;
+	float v_interpolation_start_time;
+	float v_interpolation_end_time;
+	float v_interpolation_final_v; 
+	
 	///Size
 	bool change_size_interpolation;
 	float global_scale; 
