@@ -46,6 +46,8 @@ public class ObstacleAvoidance {
 				avoidanceVector.y + rayHitCenter.Normal.y, 
 				avoidanceVector.z + rayHitCenter.Normal.z
 			);
+			if(rayHitCenter.Normal == TheVector3.Forward || rayHitCenter.Normal == TheVector3.BackWard)
+				avoidanceVector.y = avoidanceVector.y + 1f;
 		}
 		// Left
 		if(rayHitLeft != null) {
@@ -54,6 +56,8 @@ public class ObstacleAvoidance {
 				avoidanceVector.y + rayHitLeft.Normal.y, 
 				avoidanceVector.z + rayHitLeft.Normal.z
 			);
+			if(rayHitLeft.Normal == TheVector3.Forward || rayHitLeft.Normal == TheVector3.BackWard)
+				avoidanceVector.x = avoidanceVector.x + 1f;
 		}
 		// Right
 		if(rayHitRight != null) {
@@ -62,6 +66,8 @@ public class ObstacleAvoidance {
 				avoidanceVector.y + rayHitRight.Normal.y, 
 				avoidanceVector.z + rayHitRight.Normal.z
 			);
+			if(rayHitRight.Normal == TheVector3.Forward || rayHitRight.Normal == TheVector3.BackWard)
+				avoidanceVector.x = avoidanceVector.x - 1f;
 		}
 		// Top
 		if(rayHitTop != null) {
@@ -70,6 +76,8 @@ public class ObstacleAvoidance {
 				avoidanceVector.y + rayHitTop.Normal.y, 
 				avoidanceVector.z + rayHitTop.Normal.z
 			);
+			if(rayHitTop.Normal == TheVector3.Forward || rayHitTop.Normal == TheVector3.BackWard)
+				avoidanceVector.y = avoidanceVector.y - 1f;
 		}
 		// Bottom
 		if(rayHitBottom != null) {
@@ -78,6 +86,8 @@ public class ObstacleAvoidance {
 				avoidanceVector.y + rayHitBottom.Normal.y, 
 				avoidanceVector.z + rayHitBottom.Normal.z
 			);
+			if(rayHitBottom.Normal == TheVector3.Forward || rayHitBottom.Normal == TheVector3.BackWard)
+				avoidanceVector.y = avoidanceVector.y + 1f;
 		}
 		
 		// Rotation Managing ---
