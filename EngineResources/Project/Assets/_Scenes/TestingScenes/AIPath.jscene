@@ -1,8 +1,8 @@
 {
     "Scene_Name": "AIPath",
-    "GameObjects_Count": "9",
+    "GameObjects_Count": "10",
     "GameObject_0": {
-        "UUID": "2082850491",
+        "UUID": "590191294",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -58,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1300770236",
+        "UUID": "1903461523",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -109,166 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1539206566",
-        "Name": "Dot",
-        "Tag": "PATH_NODE",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1466857541",
-                "position": {
-                    "value_X": "6.641832",
-                    "value_Y": "2.971364",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "697804557",
-                "Mesh": {
-                    "mesh_name": "PrimitiveCube"
-                },
-                "Material": {
-                    "Name": "default_mat"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_3": {
-        "UUID": "1666346186",
-        "Name": "Dot(2)",
-        "Tag": "PATH_NODE",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1466857541",
-                "position": {
-                    "value_X": "-1.056998",
-                    "value_Y": "2.971364",
-                    "value_Z": "-30.937332"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "1476000463",
-                "Mesh": {
-                    "mesh_name": "PrimitiveCube"
-                },
-                "Material": {
-                    "Name": "default_mat"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_4": {
-        "UUID": "1326237272",
-        "Name": "Dot(3)",
-        "Tag": "PATH_NODE",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1466857541",
-                "position": {
-                    "value_X": "-42.693565",
-                    "value_Y": "2.971365",
-                    "value_Z": "75.825279"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "1388241926",
-                "Mesh": {
-                    "mesh_name": "PrimitiveCube"
-                },
-                "Material": {
-                    "Name": "default_mat"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_5": {
-        "UUID": "758227500",
+        "UUID": "1826320060",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -391,8 +232,8 @@
                     "double_fields_count": "0",
                     "float_fields_count": "0",
                     "bool_fields_count": "1",
-                    "string_fields_count": "1",
-                    "gameobject_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -405,13 +246,13 @@
                             "field_value": "0"
                         }
                     },
-                    "string_fields": {
+                    "string_fields": {},
+                    "gameobject_fields": {
                         "field_0": {
-                            "field_name": "node_tag",
-                            "field_value": "PATH_NODE"
+                            "field_name": "PathGroup",
+                            "field_value": "2017125684"
                         }
                     },
-                    "gameobject_fields": {},
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -422,8 +263,42 @@
         "IsRoot": "1",
         "IsStatic": "0"
     },
-    "GameObject_6": {
-        "UUID": "1261250593",
+    "GameObject_3": {
+        "UUID": "2017125684",
+        "Name": "PathGroup",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1052934888",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "1761633846",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -481,12 +356,171 @@
                 }
             }
         },
-        "ParentID": "758227500",
+        "ParentID": "1826320060",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "1771428549",
+        "Name": "Start",
+        "Tag": "PATH_NODE",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1466857541",
+                "position": {
+                    "value_X": "-1.056998",
+                    "value_Y": "2.971364",
+                    "value_Z": "-30.937332"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1476000463",
+                "Mesh": {
+                    "mesh_name": "PrimitiveCube"
+                },
+                "Material": {
+                    "Name": "default_mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "2017125684",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_6": {
+        "UUID": "788646366",
+        "Name": "Mid",
+        "Tag": "PATH_NODE",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1466857541",
+                "position": {
+                    "value_X": "-42.693565",
+                    "value_Y": "2.971365",
+                    "value_Z": "75.825279"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1388241926",
+                "Mesh": {
+                    "mesh_name": "PrimitiveCube"
+                },
+                "Material": {
+                    "Name": "default_mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "2017125684",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "1068693070",
+        "UUID": "1634244437",
+        "Name": "End",
+        "Tag": "PATH_NODE",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1466857541",
+                "position": {
+                    "value_X": "6.641832",
+                    "value_Y": "2.971364",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "697804557",
+                "Mesh": {
+                    "mesh_name": "PrimitiveCube"
+                },
+                "Material": {
+                    "Name": "default_mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "2017125684",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_8": {
+        "UUID": "1900846670",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -553,12 +587,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1261250593",
+        "ParentID": "1761633846",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_8": {
-        "UUID": "1761792508",
+    "GameObject_9": {
+        "UUID": "166265695",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -626,7 +660,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1068693070",
+        "ParentID": "1900846670",
         "IsRoot": "0",
         "IsStatic": "0"
     }
