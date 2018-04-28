@@ -2,7 +2,7 @@
     "Scene_Name": "AIPath",
     "GameObjects_Count": "10",
     "GameObject_0": {
-        "UUID": "1319789277",
+        "UUID": "16022843",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -58,7 +58,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "666449828",
+        "UUID": "982339710",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -109,7 +109,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "371798106",
+        "UUID": "561243901",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -123,7 +123,7 @@
                 "position": {
                     "value_X": "0.191450",
                     "value_Y": "0.000000",
-                    "value_Z": "43.518852"
+                    "value_Z": "-67.007637"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -259,7 +259,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "PathGroup",
-                            "field_value": "1335540535"
+                            "field_value": "896674356"
                         }
                     },
                     "vec2_fields": {},
@@ -273,7 +273,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1335540535",
+        "UUID": "896674356",
         "Name": "PathGroup",
         "Tag": "Default",
         "Layer": "Default",
@@ -307,7 +307,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "2068123076",
+        "UUID": "15720786",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -365,12 +365,12 @@
                 }
             }
         },
-        "ParentID": "371798106",
+        "ParentID": "561243901",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "313110140",
+        "UUID": "1427665783",
         "Name": "Start",
         "Tag": "PATH_NODE",
         "Layer": "Default",
@@ -418,12 +418,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1335540535",
+        "ParentID": "896674356",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "2082039890",
+        "UUID": "1386360495",
         "Name": "Mid",
         "Tag": "PATH_NODE",
         "Layer": "Default",
@@ -471,12 +471,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1335540535",
+        "ParentID": "896674356",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "700492837",
+        "UUID": "1151507980",
         "Name": "End",
         "Tag": "PATH_NODE",
         "Layer": "Default",
@@ -524,12 +524,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1335540535",
+        "ParentID": "896674356",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1805665054",
+        "UUID": "1425049423",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -596,12 +596,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "2068123076",
+        "ParentID": "15720786",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "661512801",
+        "UUID": "1768870930",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -669,7 +669,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1805665054",
+        "ParentID": "1425049423",
         "IsRoot": "0",
         "IsStatic": "0"
     }

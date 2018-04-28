@@ -61,9 +61,24 @@ public class AIPath {
 		}
 		else
 		{
-			if (node_index < num_nodes)
+			if (node_index < num_nodes - 1)
 			{
 				node_index++;
+				next_node = NodePosition[node_index];
+			}
+			else if (IsPatrol)
+			{
+				List<TheVector3> new_list = new List<TheVector3>();
+				
+				for (int i = num_nodes - 1; i >= 0; i--)
+					new_list.Add(NodePosition[i]);
+				
+				NodePosition.Clear();
+				
+				foreach (TheVector3 node in new_list)
+					NodePosition.Add(node);
+					
+				node_index = 1;
 				next_node = NodePosition[node_index];
 			}
 		}
