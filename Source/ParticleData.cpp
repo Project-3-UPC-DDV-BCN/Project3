@@ -44,11 +44,16 @@ void ParticleData::LoadDefaultData()
 	billboarding = false;
 
 	change_rotation_interpolation = false;
+	change_velocity_interpolation = false; 
 	change_size_interpolation = false;
 	change_color_interpolation = false;
 	change_alpha_interpolation = false; 
 
 	init_alpha_interpolation_time = 0; 
+
+	v_interpolation_start_time = 0.0f; 
+	v_interpolation_end_time = 0.0f;
+	v_interpolation_final_v = 0.0f; 
 
 	initial_scale = { 1,1,1 };
 	final_scale = { 1,1,1 };
@@ -132,6 +137,17 @@ void ParticleData::Save(Data & data) const
 	// Interpolation -----
 
 	data.AddFloat("Global_Scale", global_scale); 
+
+	if (change_velocity_interpolation)
+	{
+		data.AddBool("Velocity_Interpolation", true);
+
+		data.AddFloat("Initial_V_Time", v_interpolation_start_time);
+		data.AddFloat("Final_V_Time", v_interpolation_end_time);
+		data.AddFloat("Final_V_Speed", v_interpolation_final_v);
+	}
+	else
+		data.AddBool("Velocity_Interpolation", false);
 
 	if (change_color_interpolation)
 	{
@@ -241,7 +257,12 @@ void ParticleData::Copy(ParticleData * other)
 	change_size_interpolation = other->change_size_interpolation;
 	initial_scale = other->initial_scale;
 	final_scale = other->final_scale;
-									
+
+	change_velocity_interpolation = other->change_velocity_interpolation;
+	v_interpolation_start_time = other->v_interpolation_start_time;
+	v_interpolation_end_time = other->v_interpolation_end_time;
+	v_interpolation_final_v = other->v_interpolation_final_v;
+
 	change_rotation_interpolation = other->change_rotation_interpolation;
 	initial_angular_v = other->initial_angular_v;
 	final_angular_v = other->final_angular_v;
@@ -348,15 +369,22 @@ bool ParticleData::Load(Data & _data)
 		change_size_interpolation = _data.GetBool("Size_Interpolation");
 		change_rotation_interpolation = _data.GetBool("Rotation_Interpolation");
 		change_alpha_interpolation = _data.GetBool("Alpha_Interpolation");
+		change_velocity_interpolation = _data.GetBool("Velocity_Interpolation");
 
 		global_scale = _data.GetFloat("Global_Scale");
+
+		if (change_velocity_interpolation)
+		{
+			v_interpolation_start_time = _data.GetFloat("Initial_V_Time");
+			v_interpolation_end_time = _data.GetFloat("Final_V_Time");
+			v_interpolation_final_v = _data.GetFloat("Final_V_Speed");
+		}
 
 		if (change_size_interpolation)
 		{
 			initial_scale = _data.GetVector3("Initial_Size");
 			final_scale = _data.GetVector3("Final_Size");
 		}
-
 
 		if (change_rotation_interpolation)
 		{

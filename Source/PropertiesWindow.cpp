@@ -2053,9 +2053,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 			if (ImGui::TreeNode("System Stats"))
 			{
-				ImGui::Text("Template Loaded:"); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1, 1, 0, 1), current_emmiter->data->GetName().c_str());
-
 				ImGui::Text("Rendering Particles: "); ImGui::SameLine(); 
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", current_emmiter->GetParticlesNum());
 
@@ -2076,9 +2073,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				else
 					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
 
-				ImGui::Text("Shock Wave: "); ImGui::SameLine();
+				ImGui::Text("Velocity Interpolation: "); ImGui::SameLine();
 
-				if (current_emmiter->show_shockwave)
+				if (current_emmiter->data->change_velocity_interpolation)
 					ImGui::TextColored(ImVec4(0, 1, 0, 1), "ON");
 				else
 					ImGui::TextColored(ImVec4(1, 0, 0, 1), "OFF");
@@ -2268,37 +2265,59 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 			{
 				ImGui::DragInt("Emmision Rate", &current_emmiter->data->emmision_rate, 1, 1, 1, 1000);
 				ImGui::DragFloat("Lifetime", &current_emmiter->data->max_lifetime, 1, 0.1f, 0.1f, 20);
-				ImGui::SliderFloat("Initial Velocity", &current_emmiter->data->velocity, 0.1f, 30);
+				ImGui::DragFloat("Launching Velocity", &current_emmiter->data->velocity, 1, 0.1f, 0.1f, 1000);
 				ImGui::SliderFloat3("Gravity", &current_emmiter->data->gravity[0], -1, 1);
 				ImGui::SliderFloat("Emision Angle", &current_emmiter->data->emision_angle, 0, 179);
+				ImGui::Checkbox("Billboarding", &current_emmiter->data->billboarding);
 
 				ImGui::TreePop();
 			}
 
-			if (ImGui::TreeNode("Billboard"))
+			if (ImGui::TreeNode("Velocity"))
 			{
-				ImGui::Checkbox("Active", &current_emmiter->data->billboarding);
+				ImGui::DragFloat("Launching Velocity", &current_emmiter->data->velocity, 1, 0.1f, 0.1f, 1000);
 
-				//static int billboard_type;
-				//ImGui::Combo("Templates", &billboard_type, "Select Billboard Type\0Only on X\0Only on Y\0All Axis\0");
+				if (ImGui::TreeNode("Velocity Over Lifetime"))
+				{
+					ImGui::TextColored(ImVec4(0, 0, 1, 1), "Time must be inserted in a range between [0 - 'lifetime']");
 
-				//if (billboard_type != 0)
-				//{
-				//	current_emmiter->data->billboard_type = (BillboardingType)--billboard_type;
-				//	++billboard_type;
-				//}
-				//else
-				//	current_emmiter->data->billboard_type = BILLBOARD_NONE;
+					ImGui::Text("Current Emmision Velocity:"); ImGui::SameLine();
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.2f", current_emmiter->data->velocity);
 
+					ImGui::Text("Current Lifetime:"); ImGui::SameLine();
+					ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.2f", current_emmiter->data->max_lifetime);
+
+					ImGui::DragFloat("Start Time", &current_emmiter->data->v_interpolation_start_time, 1, 0.05f, 0, current_emmiter->data->max_lifetime, "%.4f");
+					ImGui::DragFloat("End Time", &current_emmiter->data->v_interpolation_end_time, 1, 0.05f, 0, current_emmiter->data->max_lifetime, "%.4f");
+					ImGui::DragFloat("Final Velocity", &current_emmiter->data->v_interpolation_final_v, 1, 0.05f, 0, 1000, "%.4f");
+
+					if (ImGui::Button("Apply"))
+					{
+						if (current_emmiter->data->v_interpolation_start_time >= current_emmiter->data->v_interpolation_end_time)
+						{
+							CONSOLE_ERROR("Error assigning velocity interpolation: Start & End time can not match.");
+						}
+						else
+							current_emmiter->data->change_velocity_interpolation = true;
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("Cancel"))
+					{
+						current_emmiter->data->change_velocity_interpolation = false;
+					}
+
+					ImGui::TreePop(); 
+				}
 				ImGui::TreePop();
 			}
-
 			
-				if (ImGui::TreeNode("Size"))
+			if (ImGui::TreeNode("Size"))
 				{
 					ImGui::DragFloat("Initial Size", &current_emmiter->data->global_scale, 1, 0.01f, 0.01f, 20.0f);
 
-					if (ImGui::TreeNode("Interpolation"))
+					if (ImGui::TreeNode("Size Over Lifetime"))
 					{
 						static float3 init_scale = { 1,1,1 };
 						static float3 fin_scale = { 1,1,1 };
@@ -2333,14 +2352,14 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
-				if (ImGui::TreeNode("Rotation"))
+			if (ImGui::TreeNode("Rotation"))
 				{
 					static float init_angular_v = 0;
 					static float fin_angular_v = 0;
 
 					ImGui::DragFloat("Angular Velocity", &current_emmiter->data->angular_v, 1, 1.0f, -1000.0f, 1000.0f);
 				
-					if (ImGui::TreeNode("Interpolation"))
+					if (ImGui::TreeNode("Rotation Over Lifetime"))
 					{
 						ImGui::DragFloat("Initial", &init_angular_v, 1, 0.5f, 0, 150);
 
@@ -2370,8 +2389,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
-
-				if (ImGui::TreeNode("Alpha"))
+			if (ImGui::TreeNode("Alpha"))
 				{
 					static int current_interpolation_type; 
 					ImGui::Combo("Interpolation Type", &current_interpolation_type, "Alpha Interpolation\0Match Lifetime\0Manual Start\0");
@@ -2405,7 +2423,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					ImGui::TreePop();
 				}
 
-				if (ImGui::TreeNode("Color"))
+			if (ImGui::TreeNode("Color"))
 				{
 					ImGui::TextColored(ImVec4(0, 1, 1, 1), "If textures are used, (0,0,0) will show the original color"); 
 
@@ -2420,7 +2438,7 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 
 					ImGui::ColorPicker4("Current Color##4", (float*)&current_emmiter->data->color, flags);
 
-					if (ImGui::TreeNode("Interpolation"))
+					if (ImGui::TreeNode("Color Over Lifetime"))
 					{
 						static float temp_initial_color[4];
 						static float temp_final_color[4];

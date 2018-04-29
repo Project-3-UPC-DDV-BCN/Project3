@@ -57,6 +57,9 @@ public:
 	///Color
 	void UpdateColor();
 
+	//Velocity
+	void UpdateVelocity();
+
 	//Scale
 	void UpdateSize();
 
@@ -135,6 +138,7 @@ private:
 	Timer particle_timer;
 	Timer twister;
 	Timer interpolation_timer;
+	Timer velocity_interpolation_timer; 
 	Timer animation_timer;
 
 	//Extra data
@@ -147,6 +151,7 @@ private:
 
 	//Alpha
 	bool alpha_started; 
+	bool velocity_interpolation_started; 
 
 	//Parent emmiter
 	ComponentParticleEmmiter* emmiter; 
