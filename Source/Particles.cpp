@@ -370,6 +370,11 @@ void Particle::SetMovement()
 
 void Particle::Update()
 {
+	if (App->time->time_scale <= 0 && particle_timer.getTimerState())
+	{
+		particle_timer.Stop();
+	}
+
 	//Translate the particles in the necessary direction
 	SetMovementFromStats(); 
 
@@ -446,13 +451,19 @@ bool Particle::CheckIfDelete()
 	return ret; 
 }
 
-void Particle::Draw(ComponentCamera* active_camera)
+void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 {
 	//Billboard to the active camera 
 	BROFILER_CATEGORY("Particle Draw", Profiler::Color::Thistle);
+
 	if (particle_data->billboarding)
-	{		
-		GetAtributes().billboard->RotateObject();		
+	{
+		if (editor_camera)
+			components.billboard->AttachToCamera(App->renderer3D->editor_camera);
+		else
+			components.billboard->AttachToCamera(App->renderer3D->game_camera);
+
+		components.billboard->RotateObject();
 	}
 		
 	//Activate shader program

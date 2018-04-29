@@ -304,7 +304,7 @@ ComponentText * ComponentButton::GetTextChild() const
 {
 	ComponentText* text = nullptr;
 
-	for (std::list<GameObject*>::iterator it = GetGameObject()->childs.begin(); it != GetGameObject()->childs.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = GetGameObject()->childs.begin(); it != GetGameObject()->childs.end(); ++it)
 	{
 		text = (ComponentText*)(*it)->GetComponent(Component::CompText);
 

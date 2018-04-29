@@ -113,78 +113,78 @@ bool ModulePhysics::Init(Data * editor_config)
 update_status ModulePhysics::Update(float dt)
 {
 	BROFILER_CATEGORY("Physics Update", Profiler::Color::Green);
-	if (App->IsPlaying()/* || App->IsPaused()*/)
-	{
-		if (physx_physics && physx_physics->getNbScenes() > 0) {
-			int scene_mum = physx_physics->getNbScenes();
-			for (int i = 0; i < scene_mum; i++)
-			{
-				physx::PxScene* scene;
-				physx_physics->getScenes(&scene, 1, i);
+	//if (App->IsPlaying() && dt > 0/* || App->IsPaused()*/)
+	//{
+	//	if (physx_physics && physx_physics->getNbScenes() > 0) {
+	//		int scene_mum = physx_physics->getNbScenes();
+	//		for (int i = 0; i < scene_mum; i++)
+	//		{
+	//			physx::PxScene* scene;
+	//			physx_physics->getScenes(&scene, 1, i);
 
-				if (scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC) > 0 || scene->getNbActors(physx::PxActorTypeFlag::eRIGID_STATIC) > 0)
-				{
-					scene->simulate(dt);
-					//App->blast->ApplyDamage();
-					scene->fetchResults(true);
+	//			if (scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC) > 0 || scene->getNbActors(physx::PxActorTypeFlag::eRIGID_STATIC) > 0)
+	//			{
+	//				scene->simulate(dt);
+	//				//App->blast->ApplyDamage();
+	//				scene->fetchResults(true);
 
-					physx::PxU32 active_actors_num;
-					physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
+	//				/*physx::PxU32 active_actors_num;
+	//				physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
 
-					for (physx::PxU32 i = 0; i < active_actors_num; ++i)
-					{
-						physx::PxActorType::Enum type = active_actors[i]->getType();
-						switch (type)
-						{
-						case physx::PxActorType::eRIGID_STATIC:
-							break;
-						case physx::PxActorType::eRIGID_DYNAMIC:
-							UpdateDynamicBody(active_actors[i]);
-							break;
-						case physx::PxActorType::ePARTICLE_SYSTEM:
-							break;
-						case physx::PxActorType::ePARTICLE_FLUID:
-							break;
-						case physx::PxActorType::eARTICULATION_LINK:
-							break;
-						case physx::PxActorType::eCLOTH:
-							break;
-						case physx::PxActorType::eACTOR_COUNT:
-							break;
-						case physx::PxActorType::eACTOR_FORCE_DWORD:
-							break;
-						default:
-							break;
-						}
-					}
-				}
-			}
-		}
+	//				for (physx::PxU32 i = 0; i < active_actors_num; ++i)
+	//				{
+	//					physx::PxActorType::Enum type = active_actors[i]->getType();
+	//					switch (type)
+	//					{
+	//					case physx::PxActorType::eRIGID_STATIC:
+	//						break;
+	//					case physx::PxActorType::eRIGID_DYNAMIC:
+	//						UpdateDynamicBody(active_actors[i]);
+	//						break;
+	//					case physx::PxActorType::ePARTICLE_SYSTEM:
+	//						break;
+	//					case physx::PxActorType::ePARTICLE_FLUID:
+	//						break;
+	//					case physx::PxActorType::eARTICULATION_LINK:
+	//						break;
+	//					case physx::PxActorType::eCLOTH:
+	//						break;
+	//					case physx::PxActorType::eACTOR_COUNT:
+	//						break;
+	//					case physx::PxActorType::eACTOR_FORCE_DWORD:
+	//						break;
+	//					default:
+	//						break;
+	//					}
+	//				}*/
+	//			}
+	//		}
+	//	}
 
-		for (std::vector<physx::PxTriggerPair>::iterator it = trigger_stay_pairs.begin(); it != trigger_stay_pairs.end(); it++)
-		{
-			for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
-			{
-				if (it->otherActor == it2->first)
-				{
-					for (std::map<physx::PxRigidActor*, GameObject*>::iterator it3 = physics_objects.begin(); it3 != physics_objects.end(); it3++)
-					{
-						if (it->triggerActor == it3->first)
-						{
-							CollisionData data1;
-							CollisionData data2;
-							data1.other_collider = (ComponentCollider*)it->otherShape->userData;
-							data2.other_collider = (ComponentCollider*)it->triggerShape->userData;
-							it3->second->OnTriggerStay(data1);
-							it2->second->OnTriggerStay(data2);
-							break;
-						}
-					}
-					break;
-				}
-			}
-		}
-	}
+	//	for (std::vector<physx::PxTriggerPair>::iterator it = trigger_stay_pairs.begin(); it != trigger_stay_pairs.end(); it++)
+	//	{
+	//		for (std::map<physx::PxRigidActor*, GameObject*>::iterator it2 = physics_objects.begin(); it2 != physics_objects.end(); it2++)
+	//		{
+	//			if (it->otherActor == it2->first)
+	//			{
+	//				for (std::map<physx::PxRigidActor*, GameObject*>::iterator it3 = physics_objects.begin(); it3 != physics_objects.end(); it3++)
+	//				{
+	//					if (it->triggerActor == it3->first)
+	//					{
+	//						CollisionData data1;
+	//						CollisionData data2;
+	//						data1.other_collider = (ComponentCollider*)it->otherShape->userData;
+	//						data2.other_collider = (ComponentCollider*)it->triggerShape->userData;
+	//						it3->second->OnTriggerStay(data1);
+	//						it2->second->OnTriggerStay(data2);
+	//						break;
+	//					}
+	//				}
+	//				break;
+	//			}
+	//		}
+	//	}
+	//}
 
 	if (draw_colliders)
 	{

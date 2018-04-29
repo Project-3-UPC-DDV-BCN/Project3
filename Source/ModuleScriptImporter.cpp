@@ -267,7 +267,7 @@ MonoObject* ModuleScriptImporter::AddGameObjectInfoToMono(GameObject * go)
 				ns_importer->CreateComponent(comp);
 			}
 
-			for (std::list<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
 			{
 				to_add.push_back(*it);
 			}
@@ -308,7 +308,7 @@ void ModuleScriptImporter::RemoveGameObjectInfoFromMono(GameObject * go)
 				ns_importer->RemoveComponentFromMonoObjectList(comp);
 			}
 
-			for (std::list<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
 			{
 				to_add.push_back(*it);
 			}
@@ -1325,9 +1325,9 @@ MonoObject * ModuleScriptImporter::RotateTowards(MonoObject * current, MonoObjec
 	return ns_importer->RotateTowards(current, target, angle);
 }
 
-void ModuleScriptImporter::SetTimeScale(MonoObject * object, float scale)
+void ModuleScriptImporter::SetTimeScale(float scale)
 {
-	ns_importer->SetTimeScale(object, scale);
+	ns_importer->SetTimeScale(scale);
 }
 
 float ModuleScriptImporter::GetTimeScale()
@@ -2335,7 +2335,7 @@ MonoObject * NSScriptImporter::GetGameObjectChild(MonoObject * object, int index
 	{
 		if (index >= 0 && index < go->childs.size())
 		{
-			std::list<GameObject*>::iterator it = std::next(go->childs.begin(), index);
+			std::vector<GameObject*>::iterator it = std::next(go->childs.begin(), index);
 			if ((*it) != nullptr)
 			{
 				return GetMonoObjectFromGameObject(*it);
@@ -2359,7 +2359,7 @@ MonoObject * NSScriptImporter::GetGameObjectChildString(MonoObject * object, Mon
 
 	if (go != nullptr)
 	{
-		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); it++)
+		for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); it++)
 		{
 			if (*it != nullptr && (*it)->GetName() == s_name)
 			{
@@ -4069,7 +4069,7 @@ MonoObject * NSScriptImporter::RotateTowards(MonoObject * current, MonoObject * 
 	return nullptr;
 }
 
-void NSScriptImporter::SetTimeScale(MonoObject * object, float scale)
+void NSScriptImporter::SetTimeScale(float scale)
 {
 	App->time->time_scale = scale;
 }
@@ -4288,7 +4288,7 @@ void NSScriptImporter::DestroyGameObject(GameObject * go)
 
 		RemoveGameObjectFromMonoObjectList(go);
 
-		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+		for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
 		{
 			DestroyGameObject(*it);
 		}
