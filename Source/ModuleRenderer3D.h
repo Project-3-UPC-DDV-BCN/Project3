@@ -185,6 +185,9 @@ private:
 	std::vector<AABB> cubes_to_draw;
 	Material* current_material = nullptr;
 	bool changed_material = true;
+	float self_transparency = -1.0f;
+
+
 	// SHADOW MAPPING DON'T TOUCH
 	uint depth_map;
 	uint depth_mapFBO;
