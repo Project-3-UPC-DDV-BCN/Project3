@@ -52,7 +52,7 @@ public:
 	void DeleteNow();
 
 	//Drawing
-	void Draw(ComponentCamera* active_camera);
+	void Draw(ComponentCamera* active_camera, bool editor_camera);
 
 	///Color
 	void UpdateColor();

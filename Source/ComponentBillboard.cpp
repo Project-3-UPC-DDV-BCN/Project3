@@ -78,40 +78,6 @@ bool ComponentBillboard::RotateObject()
 	float3 new_object_y;
 	float3 new_object_z;
 
-	//new_object_z = object_transform->GetGlobalPosition() - reference->GetFrustum().Pos();
-	//new_object_z.Normalize(); 
-	//new_object_z *= -1; 
-
-	//new_object_y = reference->GetFrustum().Up();
-	//new_object_y.Normalize();
-
-	//new_object_x = new_object_y.Cross(new_object_z);
-	//new_object_x.Normalize();
-
-	//new_object_y = new_object_z.Cross(new_object_x);
-	//new_object_y.Normalize();
-
-	////Calculate Matrix from axis
-	//float3 column1, column2, column3;
-
-	//column1.x = new_object_x.x; 
-	//column1.y = new_object_y.x;
-	//column1.z = new_object_z.x;
-
-	//column2.x = new_object_x.y;
-	//column2.y = new_object_y.y;
-	//column2.z = new_object_z.y;
-
-	//column3.x = new_object_x.z;
-	//column3.y = new_object_y.z;
-	//column3.z = new_object_z.z;
-
-	//float3x3 matrix = float3x3::identity; 
-
-	//matrix.SetCol(0, column1); 
-	//matrix.SetCol(1, column2);
-	//matrix.SetCol(2, column3);
-
 	float3 dir = object_transform->GetGlobalPosition() - reference->GetFrustum().Pos();
 	float3 up = reference->GetFrustum().Up();
 	dir = dir.Normalized();
@@ -121,26 +87,6 @@ bool ComponentBillboard::RotateObject()
 
 	new_object_y = dir.Cross(new_object_x);
 	new_object_y = new_object_y.Normalized();
-
-	/*float3 column1, column2, column3;
-
-	column1.x = new_object_x.x;
-	column1.y = new_object_y.x;
-	column1.z = dir.x;
-
-	column2.x = new_object_x.y;
-	column2.y = new_object_y.y;
-	column2.z = dir.y;
-
-	column3.x = new_object_x.z;
-	column3.y = new_object_y.z;
-	column3.z = dir.z;*/
-
-	/*float3x3 matrix = float3x3::identity;
-
-	matrix.SetCol(0, column1);
-	matrix.SetCol(1, column2);
-	matrix.SetCol(2, column3);*/
 
 	float3x3 matrix(new_object_x.x, new_object_y.x, dir.x, new_object_x.y, new_object_y.y, dir.y, new_object_x.z, new_object_y.z, dir.z);
 

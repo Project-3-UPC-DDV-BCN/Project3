@@ -20,7 +20,7 @@ void ParticleData::LoadDefaultData()
 	emmision_rate = 15;
 	max_lifetime = 1;
 	velocity = 5.0f;
-	billboard_type = BILLBOARD_NONE; 
+	billboard_type = BILLBOARD_ALL; 
 	emmision_type = EMMISION_CONTINUOUS; 
 	runtime_behaviour_ = EMMIT_ALWAYS; 
 	emmit_style = EMMIT_FROM_RANDOM;
