@@ -603,29 +603,6 @@ void ModuleRenderer3D::DrawDebugOBB(OBB& obb, ComponentCamera * active_camera)
 	glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 }
 
-
-void ModuleRenderer3D::DrawZBuffer()
-{
-	uint program = 0;
-	ShaderProgram* shader = App->resources->GetShaderProgram("depthdebug_shader_program");
-	program = shader->GetProgramID();
-	UseShaderProgram(program);
-
-	SetUniformFloat(program, "near_plane", near_plane);
-	SetUniformFloat(program, "far_plane", far_plane);
-
-	SetUniformInt(program, "depthMap", 0);
-
-	float4x4 trans = float4x4::FromTRS(float3(0, 0, 0), Quat::identity, float3(1, 1, 1));
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-
-	SetUniformMatrix(program, "view", App->camera->GetCamera()->GetViewMatrix());
-	SetUniformMatrix(program, "projection", App->camera->GetCamera()->GetProjectionMatrix());
-	SetUniformMatrix(program, "Model", trans.Transposed().ptr());
-}
-
 void ModuleRenderer3D::DrawGrid(ComponentCamera * camera)
 {
 	BROFILER_CATEGORY("Draw Grid", Profiler::Color::DarkBlue);
@@ -728,6 +705,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	SetUniformMatrix(program, "projection", active_camera->GetProjectionMatrix());
 	SetUniformMatrix(program, "MVP", glm::value_ptr(light_space_mat));
 	SetUniformBool(program, "is_ui", false);
+	SetUniformFloat(program, "self_transparency", -1.0f);
 
 	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -830,6 +808,13 @@ void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, Comp
 				has_light = mesh->has_light;
 			}
 			
+
+			if (self_alpha != mesh->self_transparency)
+			{
+				SetUniformFloat(program, "self_transparency", mesh->self_transparency);
+				self_alpha = mesh->self_transparency;
+			}
+
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 
 
@@ -1777,22 +1762,6 @@ void ModuleRenderer3D::SendObjectToDepthShader(uint program, ComponentMeshRender
 	//vertices
 	App->renderer3D->SetVertexAttributePointer(0, 3, 19, 0);
 	App->renderer3D->EnableVertexAttributeArray(0);
-	//texture coords
-	App->renderer3D->SetVertexAttributePointer(1, 3, 19, 3);
-	App->renderer3D->EnableVertexAttributeArray(1);
-	//normals
-	App->renderer3D->SetVertexAttributePointer(2, 3, 19, 6);
-	App->renderer3D->EnableVertexAttributeArray(2);
-	//colors
-	App->renderer3D->SetVertexAttributePointer(3, 4, 19, 9);
-	App->renderer3D->EnableVertexAttributeArray(3);
-	//tangents
-	App->renderer3D->SetVertexAttributePointer(4, 3, 19, 13);
-	App->renderer3D->EnableVertexAttributeArray(4);
-	//bitangents
-	App->renderer3D->SetVertexAttributePointer(5, 3, 19, 16);
-	App->renderer3D->EnableVertexAttributeArray(5);
-	App->renderer3D->BindElementArrayBuffer(mesh->GetMesh()->id_indices);
 
 	SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 	glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);

@@ -131,14 +131,11 @@ private:
 	void DrawSceneCameras(ComponentCamera* camera);
 
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
-
-	void DrawColliders();
 	
 	void OrderByMaterials(ComponentMeshRenderer* mesh);
 
 public:
 	Light lights[MAX_LIGHTS];
-	void DrawZBuffer();
 	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
 	void DrawGrid(ComponentCamera* camera);
 
