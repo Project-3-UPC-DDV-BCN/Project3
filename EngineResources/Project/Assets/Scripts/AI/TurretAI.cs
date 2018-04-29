@@ -16,9 +16,13 @@ public class TurretAI {
 	TheVector3 PlayerPosition;
 	
 	float DeltaTime = 0.0f;
-	public float MinDistance = 0.0f;
+	public float MinDistance = 600.0f;
+	public float ShootingRange = 500.0f;
 	public float MinAngleBlasters = 0.0f;
 	public float MaxAngleBlasters = 60.0f;
+	
+	public float LaserFrequency = 0.100f;
+	TheTimer BlasterTimer = new TheTimer();
 
 	void Start () {
 		TurretBase = TheGameObject.Self;
@@ -27,6 +31,8 @@ public class TurretAI {
 		SelfTransform = TurretHead.GetComponent<TheTransform>();
 		
 		blaster_factory	= BlasterCannon.GetComponent<TheFactory>();
+		
+		BlasterTimer.Start();
 	}
 	
 	void Update () {
@@ -56,6 +62,17 @@ public class TurretAI {
 	
 	void Shoot()
 	{
+		TheVector3 tOffset = PlayerPosition - SelfPosition;
 		
+		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
+		{
+			if (BlasterTimer.ReadTime() >= LaserFrequency)
+			{
+				// 1. Shoot			
+				// 2. Change Between Left and Rigth Blasters
+				// 3. Restart Timer
+				BlasterTimer.Start();
+			}
+		}
 	}
 }
