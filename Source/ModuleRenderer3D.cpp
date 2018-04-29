@@ -722,6 +722,8 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		//changed_material = true;
 	}
 
+	self_alpha = -1.0f;
+
 	for (uint i = 0; i < cubes_to_draw.size(); ++i)
 	{
 		DrawDebugCube(cubes_to_draw[i], active_camera);

@@ -1845,6 +1845,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform bool own_uvs_diffuse2;\n"
 			"uniform bool own_uvs_normalmap;\n"
 
+			"uniform float self_transparency;\n"
 			"uniform float normal_bump;\n"
 
 			"uniform sampler2D Tex_Diffuse;\n\n"
@@ -1952,14 +1953,17 @@ void ModuleResources::CreateDefaultShaders()
 
 			"			float shadow = 0.0f;\n"
 			"			shadow = ShadowCalculation();\n"
+
+			"			if (self_transparency >= 0.0 && self_transparency <= 100.0)\n"
+			"				{\n	"
+			"					color.a = self_transparency / 100;\n"
+			"				}\n	"
 			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)), color.a);  \n"
-			//	"			color = vec4((color.rgb * (1.0 - shadow)), color.a);  \n"
-			//	"			color = vec4(vec3(1.0f - shadow), 1.0f);\n"
 			"			}\n"
-			//	"			if (has_opacity)"
-			//	"			{\n"
-			//	"				ApplyOpacity();\n"
-			//				"}\n"
+				"			if (has_opacity)"
+				"			{\n"
+				"				ApplyOpacity();\n"
+							"}\n"
 			"}\n"
 
 			"}\n\n"
