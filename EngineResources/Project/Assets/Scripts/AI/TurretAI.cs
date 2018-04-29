@@ -1,4 +1,5 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class TurretAI {
 	
@@ -15,6 +16,8 @@ public class TurretAI {
 	TheTransform PlayerTransform = null;
 	TheVector3 PlayerPosition;
 	
+	TheAudioSource AudioSource = null;
+	
 	float DeltaTime = 0.0f;
 	public float MinDistance = 600.0f;
 	public float ShootingRange = 500.0f;
@@ -22,6 +25,9 @@ public class TurretAI {
 	public float MaxAngleBlasters = 60.0f;
 	
 	public float LaserFrequency = 0.100f;
+	public float LaserSpeed = 30.0f;
+	public int BaseLaserDamage = 10;
+	
 	TheTimer BlasterTimer = new TheTimer();
 
 	void Start () {
@@ -31,6 +37,8 @@ public class TurretAI {
 		SelfTransform = TurretHead.GetComponent<TheTransform>();
 		
 		blaster_factory	= BlasterCannon.GetComponent<TheFactory>();
+		
+		AudioSource = TurretBase.GetComponent<TheAudioSource>();
 		
 		BlasterTimer.Start();
 	}
@@ -64,14 +72,34 @@ public class TurretAI {
 	{
 		TheVector3 tOffset = PlayerPosition - SelfPosition;
 		
-		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
+		//if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
+		if (TheInput.IsKeyRepeat("UP_ARROW"))
 		{
-			if (BlasterTimer.ReadTime() >= LaserFrequency)
+			TheConsole.Warning(BlasterTimer.ReadTime());
+			if (BlasterTimer.ReadTime() >= LaserFrequency && blaster_factory != null)
 			{
+				TheGameObject laser = blaster_factory.Spawn();
+				
+				TheConsole.Warning("1");
+				
+				if(laser != null)
+				{
+					TheConsole.Warning("2");
+					if(AudioSource != null)
+						AudioSource.Play("Play_Shoot");
+					
+					TheScript laser_script = laser.GetScript("Laser");
+
+					if(laser_script != null)
+					{
+						object[] args = {SelfTransform, LaserSpeed, BaseLaserDamage, BlasterTransform.ForwardDirection, BlasterTransform.QuatRotation};
+						laser_script.CallFunctionArgs("SetInfo", args);
+					}
+				}
 				// 1. Shoot			
 				// 2. Change Between Left and Rigth Blasters
 				// 3. Restart Timer
-				BlasterTimer.Start();
+				//BlasterTimer.Start();
 			}
 		}
 	}
