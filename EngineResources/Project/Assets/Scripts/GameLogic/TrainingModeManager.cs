@@ -120,7 +120,7 @@ public class TrainingModeManager
 
 	void Lose()
 	{
-		
+		TheApplication.LoadScene("Alpha1 - MainMenuScene");
 	}
 
 	bool CheckWaveFinished()
