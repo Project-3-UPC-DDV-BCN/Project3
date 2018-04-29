@@ -142,7 +142,7 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 
 		if (!is_particle)
 		{
-			for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+			for (std::vector<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
 			{
 				ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
 				child_transform->UpdateGlobalMatrix();
@@ -162,7 +162,7 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
 		
-		for (std::list<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
+		for (std::vector<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
 		{
 			ComponentTransform* child_transform = (ComponentTransform*)(*it)->GetComponent(Component::CompTransform);
 			child_transform->UpdateGlobalMatrix();

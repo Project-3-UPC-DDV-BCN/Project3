@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "ModuleResources.h"
+#include "ModuleTime.h"
 
 ComponentImage::ComponentImage(GameObject * attached_gameobject)
 {
@@ -63,7 +64,7 @@ bool ComponentImage::Update()
 
 		case ImageMode::IM_ANIMATION:
 		{
-			if ((App->IsPlaying()) || (!App->IsPlaying() && animation_preview_play))
+			if ((App->IsPlaying() && App->time->time_scale > 0) || (!App->IsPlaying() && animation_preview_play))
 			{
 				if (animation_timer.Read() > (animation_speed * 1000))
 				{

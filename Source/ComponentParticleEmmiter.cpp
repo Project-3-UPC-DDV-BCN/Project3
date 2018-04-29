@@ -13,14 +13,14 @@
 #include "ModuleResources.h"
 #include "GameObject.h"
 #include "Mesh.h"
-
+#include "ModuleTime.h"
 #include <map>
 
 #include "OpenGL.h"
 
 void ComponentParticleEmmiter::GenerateParticles()
 {
-	if (system_state == PARTICLE_STATE_PAUSE)
+	if (system_state == PARTICLE_STATE_PAUSE || App->time->time_scale <= 0)
 		return;
 
 	if (App->GetDt()*1000 > emmision_frequency)
