@@ -7,6 +7,8 @@ public class Level1Manager
 
 	TheScript game_manager_script = null;
 
+	TheScript slave1_script = null;
+
 	void Init()
 	{
 		TheGameObject game_manager = TheGameObject.Find("GameManager");
@@ -23,6 +25,10 @@ public class Level1Manager
 			if(enabled)
 				TheConsole.Log("Level1 activated! :D");
 		}
+
+		TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
+		if(slave1 != null)
+			slave1_script = slave1.GetScript("EntityProperties");
 	}
 	
 	void Update () 
@@ -35,7 +41,7 @@ public class Level1Manager
 		
 	}
 
-	void OnShipDestroyedCallback(TheGameObject ship)
+	void OnShipDestroyedCallback(TheGameObject ship, TheGameObject killer)
 	{
 		
 	}

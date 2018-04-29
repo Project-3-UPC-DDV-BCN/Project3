@@ -107,6 +107,17 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	}
 	else
 		new_particle->particle_data->change_color_interpolation = false;
+
+	///Velocity
+	if (data->change_velocity_interpolation)
+	{
+		new_particle->particle_data->change_velocity_interpolation = true;
+		new_particle->particle_data->v_interpolation_start_time = data->v_interpolation_start_time;
+		new_particle->particle_data->v_interpolation_end_time = data->v_interpolation_end_time;
+		new_particle->particle_data->v_interpolation_final_v = data->v_interpolation_final_v;
+	}
+	else
+		new_particle->particle_data->change_velocity_interpolation = false;
 	
 	///Size
 	if (data->change_size_interpolation)
@@ -203,6 +214,16 @@ bool ComponentParticleEmmiter::Update()
 	BROFILER_CATEGORY("Particle Emmiter Update", Profiler::Color::Thistle);
 	if (data == nullptr)
 		return false;
+
+	if (system_state == PARTICLE_STATE_PLAY)
+	{
+		CONSOLE_LOG("PARTICLES PLAY"); 
+	}
+
+	if (system_state == PARTICLE_STATE_PAUSE)
+	{
+		CONSOLE_LOG("PARTICLES PAUSE");
+	}
 
 	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();

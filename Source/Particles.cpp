@@ -21,6 +21,7 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 	//General
 	emmiter = parent;
 	runtime_behaviour = RUNTIME_NONE; 
+	velocity_interpolation_started = false; 
 	particle_data = new ParticleData(); 
 
 	emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
@@ -274,6 +275,31 @@ void Particle::UpdateColor()
 
 }
 
+void Particle::UpdateVelocity()
+{
+	if (!particle_data->change_velocity_interpolation)
+		return;
+
+	static float initial_v = particle_data->velocity; 
+	//We get the number that we have to increment 
+	float total_time = particle_data->v_interpolation_end_time - particle_data->v_interpolation_start_time; 
+	float velocity_total_increment = particle_data->v_interpolation_final_v - initial_v;
+
+	float time_ex = velocity_interpolation_timer.Read() / 1000;
+	float time_dec = velocity_interpolation_timer.Read() % 1000;
+	float time = time_ex + time_dec / 1000;
+
+	float percentage = (time / total_time);	
+	float inc_this_frame = velocity_total_increment * percentage; 
+
+	particle_data->velocity = (initial_v + inc_this_frame);
+	movement.Normalize(); 
+	movement *= particle_data->velocity;
+
+	if (time > total_time)
+		particle_data->change_velocity_interpolation = false; 
+}
+
 void Particle::UpdateSize()
 {
 	if (!particle_data->change_size_interpolation)
@@ -366,13 +392,23 @@ void Particle::Update()
 		
 	}
 
+	if (particle_timer.Read() >= particle_data->v_interpolation_start_time * 1000 && velocity_interpolation_started == false)
+	{
+		velocity_interpolation_started = true; 
+		velocity_interpolation_timer.Start(); 
+	}
+
+	if (particle_data->change_velocity_interpolation && velocity_interpolation_started == true)
+	{
+		UpdateVelocity();
+	}
+
 	//Update the particle color in case of interpolation
 	if (particle_data->change_color_interpolation)
 	{
 		UpdateColor();
 	}
 	
-
 	//Update scale
 	if (particle_data->change_size_interpolation)
 	{
