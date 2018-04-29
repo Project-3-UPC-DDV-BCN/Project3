@@ -215,6 +215,16 @@ bool ComponentParticleEmmiter::Update()
 	if (data == nullptr)
 		return false;
 
+	if (system_state == PARTICLE_STATE_PLAY)
+	{
+		CONSOLE_LOG("PARTICLES PLAY"); 
+	}
+
+	if (system_state == PARTICLE_STATE_PAUSE)
+	{
+		CONSOLE_LOG("PARTICLES PAUSE");
+	}
+
 	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();
 
