@@ -10,6 +10,7 @@ public class TurretAI {
 	public TheGameObject BlasterPivot = null;
 	TheTransform BlasterTransform = null;
 	public TheGameObject BlasterCannon = null;
+	TheTransform CannonTransform = null;
 	TheFactory blaster_factory = null;
 
 	public TheGameObject TargetPlayer = null;
@@ -35,8 +36,10 @@ public class TurretAI {
 		BlasterTransform = BlasterPivot.GetComponent<TheTransform>();
 		PlayerTransform = TargetPlayer.GetComponent<TheTransform>();
 		SelfTransform = TurretHead.GetComponent<TheTransform>();
+		CannonTransform = BlasterCannon.GetComponent<TheTransform>();
 		
 		blaster_factory	= BlasterCannon.GetComponent<TheFactory>();
+		blaster_factory.StartFactory();
 		
 		AudioSource = TurretBase.GetComponent<TheAudioSource>();
 		
@@ -75,12 +78,9 @@ public class TurretAI {
 		//if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
 		if (TheInput.IsKeyRepeat("UP_ARROW"))
 		{
-			TheConsole.Warning(BlasterTimer.ReadTime());
 			if (BlasterTimer.ReadTime() >= LaserFrequency && blaster_factory != null)
 			{
 				TheGameObject laser = blaster_factory.Spawn();
-				
-				TheConsole.Warning("1");
 				
 				if(laser != null)
 				{
@@ -92,14 +92,14 @@ public class TurretAI {
 
 					if(laser_script != null)
 					{
-						object[] args = {SelfTransform, LaserSpeed, BaseLaserDamage, BlasterTransform.ForwardDirection, BlasterTransform.QuatRotation};
+						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, BlasterTransform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
 					}
 				}
 				// 1. Shoot			
 				// 2. Change Between Left and Rigth Blasters
 				// 3. Restart Timer
-				//BlasterTimer.Start();
+				BlasterTimer.Start();
 			}
 		}
 	}

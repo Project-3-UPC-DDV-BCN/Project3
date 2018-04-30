@@ -851,7 +851,7 @@ void ComponentRectTransform::UpdateTransformAndChilds()
 
 	to_change.push_back(GetGameObject());
 
-	for (std::list<GameObject*>::iterator ch = GetGameObject()->childs.begin(); ch != GetGameObject()->childs.end(); ++ch)
+	for (std::vector<GameObject*>::iterator ch = GetGameObject()->childs.begin(); ch != GetGameObject()->childs.end(); ++ch)
 	{
 		to_change.push_back(*ch);
 	}
@@ -905,7 +905,7 @@ void ComponentRectTransform::UpdateRectTransformAndChilds()
 			c_rect_trans->UpdateRectTransform();
 		}
 
-		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
+		for (std::vector<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
 		{
 			to_change.push_back(*ch);
 		}

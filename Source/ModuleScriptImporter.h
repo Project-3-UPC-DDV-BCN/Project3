@@ -220,7 +220,7 @@ public:
 	MonoObject* RotateTowards(MonoObject* current, MonoObject* target, float angle);
 
 	//TIME
-	void SetTimeScale(MonoObject* object, float scale);
+	void SetTimeScale(float scale);
 	float GetTimeScale();
 	float GetDeltaTime();
 	float GetTimeSinceStart();
@@ -520,7 +520,7 @@ private:
 	static MonoObject* RotateTowards(MonoObject* current, MonoObject* target, float angle);
 
 	//TIME
-	static void SetTimeScale(MonoObject* object, float scale);
+	static void SetTimeScale(float scale);
 	static float GetTimeScale();
 	static float GetDeltaTime();
 	static float GetTimeSinceStart();

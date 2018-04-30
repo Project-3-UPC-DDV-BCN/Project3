@@ -763,7 +763,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 			DrawDebugCube((*it)->emmit_area, active_camera);
 		}
 
-		(*it)->DrawParticles(active_camera); 
+		(*it)->DrawParticles(active_camera, is_editor_camera);
 
 	}
 

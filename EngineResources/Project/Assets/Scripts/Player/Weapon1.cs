@@ -35,7 +35,7 @@ public class Weapon1
 
 			if(game_manager_script != null)
 			{
-				slave_go = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
+				slave_go = TheGameObject.Self.GetParent();
 
 				if(slave_go != null)
 				{

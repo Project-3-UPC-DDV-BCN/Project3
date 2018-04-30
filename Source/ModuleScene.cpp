@@ -367,7 +367,7 @@ void ModuleScene::RemoveWithoutDelete(GameObject * gameobject)
 		}
 	}
 
-	for (std::list<GameObject*>::iterator it = gameobject->childs.begin(); it != gameobject->childs.end(); it++)
+	for (std::vector<GameObject*>::iterator it = gameobject->childs.begin(); it != gameobject->childs.end(); it++)
 	{
 		RemoveWithoutDelete(*it);
 	}
@@ -608,7 +608,7 @@ void ModuleScene::SavePrefab(std::list<GameObject*> gos, std::string path, std::
 		uids.push_back((*it)->GetUID());
 		(*it)->SetNewUID();
 
-		for (std::list<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
+		for (std::vector<GameObject*>::iterator ch = (*it)->childs.begin(); ch != (*it)->childs.end(); ++ch)
 		{
 			gos_to_check.push_back((*ch));
 		}
