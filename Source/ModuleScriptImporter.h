@@ -362,6 +362,11 @@ public:
 	//DEBUG DRAW
 	void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
 
+	// CAMERA
+	int GetSizeX();
+	int GetSizeY();
+	MonoObject* WorldPosToScreenPos(MonoObject* from);
+
 	std::vector<GameObjectMono> created_gameobjects;
 	std::vector<ComponentMono> created_components;
 	CSScript* current_script;
@@ -652,6 +657,11 @@ private:
 	//MESH COLLIDER
 	static bool GetMeshColliderConvex(MonoObject* object);
 	static void SetMeshColliderConvex(MonoObject* object, bool convex);
+
+	// CAMERA
+	static int GetSizeX();
+	static int GetSizeY();
+	static MonoObject* WorldPosToScreenPos(MonoObject* from);
 
 	//DEBUG DRAW
 	static void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);

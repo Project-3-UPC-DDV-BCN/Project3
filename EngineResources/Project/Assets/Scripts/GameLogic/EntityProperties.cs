@@ -289,7 +289,7 @@ public class EntityProperties
 
 			else if(IsTurret())
 			{
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveTurret", args);
 
 				TheGameObject.Destroy(self);
@@ -297,7 +297,7 @@ public class EntityProperties
 
 			else if(IsGenerator())
 			{
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveGenerator", args);
 
 				TheGameObject.Destroy(self);
