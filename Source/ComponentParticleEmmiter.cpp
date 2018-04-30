@@ -13,14 +13,14 @@
 #include "ModuleResources.h"
 #include "GameObject.h"
 #include "Mesh.h"
-
+#include "ModuleTime.h"
 #include <map>
 
 #include "OpenGL.h"
 
 void ComponentParticleEmmiter::GenerateParticles()
 {
-	if (system_state == PARTICLE_STATE_PAUSE)
+	if (system_state == PARTICLE_STATE_PAUSE || App->time->time_scale <= 0)
 		return;
 
 	if (App->GetDt()*1000 > emmision_frequency)
@@ -69,7 +69,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	else if (data->emmit_style == EMMIT_FROM_RANDOM)
 		new_particle->components.particle_transform->SetPosition(particle_pos);
 
-	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 0});
+	new_particle->components.particle_transform->SetScale({ data->global_scale,  data->global_scale , 1});
 
 	//We generate the always squared surface for the particle 
 	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitiveParticlePlane");
@@ -79,6 +79,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 	{
 		new_particle->SetBillboarding(true);
 		new_particle->components.billboard = new ComponentBillboard(new_particle);
+		new_particle->components.billboard->SetAttachedToParticle(true); 
 		new_particle->components.billboard->SetBillboardType(data->billboard_type);
 	}
 	else
@@ -215,16 +216,6 @@ bool ComponentParticleEmmiter::Update()
 	if (data == nullptr)
 		return false;
 
-	if (system_state == PARTICLE_STATE_PLAY)
-	{
-		CONSOLE_LOG("PARTICLES PLAY"); 
-	}
-
-	if (system_state == PARTICLE_STATE_PAUSE)
-	{
-		CONSOLE_LOG("PARTICLES PAUSE");
-	}
-
 	if (data->emmision_type == EMMISION_CONTINUOUS && system_state == PARTICLE_STATE_PLAY)
 		GenerateParticles();
 
@@ -283,13 +274,13 @@ bool ComponentParticleEmmiter::Update()
 	return true;
 }
 
-void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera)
+void ComponentParticleEmmiter::DrawParticles(ComponentCamera* active_camera, bool editor_camera)
 {
 	if (active_particles.empty() == false)
 	{
 		for (multimap<float, Particle*>::reverse_iterator it = active_particles.rbegin(); it != active_particles.rend(); it++)
 		{
-			(*it).second->Draw(active_camera);
+			(*it).second->Draw(active_camera, editor_camera);
 		}
 	}
 }

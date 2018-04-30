@@ -37,7 +37,7 @@ public:
 	void UpdateCurrentData();
 
 	//Draws
-	void DrawParticles(ComponentCamera* active_camera); 
+	void DrawParticles(ComponentCamera* active_camera, bool editor_camera); 
 
 	//Particle Management
 	void GenerateParticles();

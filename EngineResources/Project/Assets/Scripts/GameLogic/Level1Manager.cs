@@ -9,11 +9,17 @@ public class Level1Manager
 
 	TheScript slave1_script = null;
 
+	public TheGameObject mission_state_text_go;
+	TheRectTransform mission_state_text = null;
+
 	void Init()
 	{
 		TheGameObject game_manager = TheGameObject.Find("GameManager");
 		if(game_manager != null)
 			game_manager_script = game_manager.GetScript("GameManager");
+
+		if(mission_state_text_go != null)
+			mission_state_text = mission_state_text_go.GetComponent<TheRectTransform>();
 	}
 
 	void Start () 
@@ -44,5 +50,15 @@ public class Level1Manager
 	void OnShipDestroyedCallback(TheGameObject ship, TheGameObject killer)
 	{
 		
+	}
+
+	void OnTurretDestroyedCallback(TheGameObject ship, TheGameObject killer)
+	{
+
+	}
+
+	void OnGeneratorDestroyedCallback(TheGameObject ship, TheGameObject killer)
+	{
+
 	}
 }

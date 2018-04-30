@@ -7,7 +7,7 @@ public class ParticleAutoDestroy
 
 	TheTimer timer = new TheTimer();
 
-	public bool to_destroy = false;
+	private bool to_destroy = false;
 	private int iterations_waited = 0;
 	
 	TheGameObject self = null;

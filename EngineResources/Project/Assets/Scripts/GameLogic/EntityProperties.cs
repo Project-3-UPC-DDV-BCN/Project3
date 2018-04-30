@@ -14,6 +14,8 @@ public class EntityProperties
 	public bool is_ship = false;
 	public bool is_turret = false;
 	public bool is_generator = false;
+	
+	public string explosion_prefab;
 
 	public float laser_speed = 30;
 	public int base_laser_damage = 10;
@@ -139,6 +141,8 @@ public class EntityProperties
 
 				// Check if is dead
 				CheckDeath(ship);
+
+				TheConsole.Log("Hit by ship");
 			}
 		}
 	}
@@ -261,7 +265,7 @@ public class EntityProperties
 				if(audio_source != null)
 					audio_source.Play("Play_Enemy_Explosions");
 
-				TheGameObject particle = TheResources.LoadPrefab("ParticleExplosion");
+				TheGameObject particle = TheResources.LoadPrefab(explosion_prefab);
 				
 				// Particles when destroying ship
 				if(particle != null)
@@ -289,7 +293,7 @@ public class EntityProperties
 
 			else if(IsTurret())
 			{
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveTurret", args);
 
 				TheGameObject.Destroy(self);
@@ -297,7 +301,7 @@ public class EntityProperties
 
 			else if(IsGenerator())
 			{
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveGenerator", args);
 
 				TheGameObject.Destroy(self);

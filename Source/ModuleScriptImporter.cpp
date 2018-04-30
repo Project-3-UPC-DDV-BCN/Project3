@@ -34,6 +34,7 @@
 #include "ModuleRenderer3D.h"
 #include "DebugDraw.h"
 #include "Application.h"
+#include "GameWindow.h"
 
 //CSScript* ModuleScriptImporter::current_script = nullptr;
 bool ModuleScriptImporter::inside_function = false;
@@ -267,7 +268,7 @@ MonoObject* ModuleScriptImporter::AddGameObjectInfoToMono(GameObject * go)
 				ns_importer->CreateComponent(comp);
 			}
 
-			for (std::list<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
 			{
 				to_add.push_back(*it);
 			}
@@ -308,7 +309,7 @@ void ModuleScriptImporter::RemoveGameObjectInfoFromMono(GameObject * go)
 				ns_importer->RemoveComponentFromMonoObjectList(comp);
 			}
 
-			for (std::list<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = curr_go->childs.begin(); it != curr_go->childs.end(); ++it)
 			{
 				to_add.push_back(*it);
 			}
@@ -913,6 +914,11 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//DEBUG DRAW
 	mono_add_internal_call("TheEngine.TheDebug.TheDebugDraw::Line", (const void*)DebugDrawLine);
+
+	//CAMERA
+	mono_add_internal_call("TheEngine.TheCamera::SizeX", (const void*)GetSizeX);
+	mono_add_internal_call("TheEngine.TheCamera::SizeY", (const void*)GetSizeY);
+	mono_add_internal_call("TheEngine.TheCamera::WorldPosToCameraPos", (const void*)WorldPosToScreenPos);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1325,9 +1331,9 @@ MonoObject * ModuleScriptImporter::RotateTowards(MonoObject * current, MonoObjec
 	return ns_importer->RotateTowards(current, target, angle);
 }
 
-void ModuleScriptImporter::SetTimeScale(MonoObject * object, float scale)
+void ModuleScriptImporter::SetTimeScale(float scale)
 {
-	ns_importer->SetTimeScale(object, scale);
+	ns_importer->SetTimeScale(scale);
 }
 
 float ModuleScriptImporter::GetTimeScale()
@@ -1895,6 +1901,21 @@ void ModuleScriptImporter::SetMeshColliderConvex(MonoObject * object, bool conve
 	ns_importer->SetMeshColliderConvex(object, convex);
 }
 
+int ModuleScriptImporter::GetSizeX()
+{
+	return ns_importer->GetSizeX();
+}
+
+int ModuleScriptImporter::GetSizeY()
+{
+	return ns_importer->GetSizeY();
+}
+
+MonoObject * ModuleScriptImporter::WorldPosToScreenPos(MonoObject * from)
+{
+	return ns_importer->WorldPosToScreenPos(from);
+}
+
 void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
 {
 	ns_importer->DebugDrawLine(from, to, color);
@@ -2335,7 +2356,7 @@ MonoObject * NSScriptImporter::GetGameObjectChild(MonoObject * object, int index
 	{
 		if (index >= 0 && index < go->childs.size())
 		{
-			std::list<GameObject*>::iterator it = std::next(go->childs.begin(), index);
+			std::vector<GameObject*>::iterator it = std::next(go->childs.begin(), index);
 			if ((*it) != nullptr)
 			{
 				return GetMonoObjectFromGameObject(*it);
@@ -2359,7 +2380,7 @@ MonoObject * NSScriptImporter::GetGameObjectChildString(MonoObject * object, Mon
 
 	if (go != nullptr)
 	{
-		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); it++)
+		for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); it++)
 		{
 			if (*it != nullptr && (*it)->GetName() == s_name)
 			{
@@ -4069,7 +4090,7 @@ MonoObject * NSScriptImporter::RotateTowards(MonoObject * current, MonoObject * 
 	return nullptr;
 }
 
-void NSScriptImporter::SetTimeScale(MonoObject * object, float scale)
+void NSScriptImporter::SetTimeScale(float scale)
 {
 	App->time->time_scale = scale;
 }
@@ -4288,7 +4309,7 @@ void NSScriptImporter::DestroyGameObject(GameObject * go)
 
 		RemoveGameObjectFromMonoObjectList(go);
 
-		for (std::list<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
+		for (std::vector<GameObject*>::iterator it = go->childs.begin(); it != go->childs.end(); ++it)
 		{
 			DestroyGameObject(*it);
 		}
@@ -6027,6 +6048,85 @@ void NSScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObj
 
 		App->renderer3D->debug_draw->Line(from_pos, to_pos, color_data);
 	}
+}
+
+int NSScriptImporter::GetSizeX()
+{
+	int ret = 0;
+
+	if (App->editor->game_window != nullptr)
+	{
+		App->editor->game_window->GetSize().x;
+	}
+
+	return ret;
+}
+
+int NSScriptImporter::GetSizeY()
+{
+	int ret = 0;
+
+	if (App->editor->game_window != nullptr)
+	{
+		App->editor->game_window->GetSize().y;
+	}
+
+	return ret;
+}
+
+MonoObject* NSScriptImporter::WorldPosToScreenPos(MonoObject * world)
+{
+	MonoObject* ret = nullptr;
+
+	float3 world_pos = float3::zero;
+
+	if (world != nullptr)
+	{
+		MonoClass* from_class = mono_object_get_class(world);
+		if (from_class)
+		{
+			MonoClassField* x_field = mono_class_get_field_from_name(from_class, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(from_class, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(from_class, "z");
+
+			if (x_field) mono_field_get_value(world, x_field, &world_pos.x);
+			if (y_field) mono_field_get_value(world, y_field, &world_pos.y);
+			if (z_field) mono_field_get_value(world, z_field, &world_pos.z);
+
+			if (App->renderer3D->game_camera != nullptr && App->editor->game_window != nullptr)
+			{
+				float3 camera_pos_normalized = float3::zero;
+
+				camera_pos_normalized = App->renderer3D->game_camera->GetFrustum().Project(world_pos);
+
+				float3 camera_pos = float3::zero;
+
+				camera_pos.x = ((camera_pos_normalized.x + 1) / 2) * App->editor->game_window->GetSize().x;
+				camera_pos.y = ((camera_pos_normalized.y + 1) / 2) * App->editor->game_window->GetSize().y;
+				camera_pos.z = camera_pos_normalized.z;
+						
+				MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+				if (c)
+				{
+					MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+					if (new_object)
+					{
+						MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+						MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+						MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+						if (x_field) mono_field_set_value(new_object, x_field, &camera_pos.x);
+						if (y_field) mono_field_set_value(new_object, y_field, &camera_pos.y);
+						if (z_field) mono_field_set_value(new_object, z_field, &camera_pos.z);
+
+						return new_object;
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
 }
 
 

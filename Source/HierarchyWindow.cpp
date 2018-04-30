@@ -62,55 +62,78 @@ void HierarchyWindow::DrawWindow()
 				}
 				if (App->scene->selected_gameobjects.size() == 1) 
 				{
+					GameObject* selected = App->scene->selected_gameobjects.front();
 					if (ImGui::MenuItem("Rename")) 
 					{
 						show_rename_window = true;
-						gameobject_to_rename = App->scene->selected_gameobjects.front();
+						gameobject_to_rename = selected;
 						rename_window_y = ImGui::GetMousePos().y;
 					}
 					if (ImGui::MenuItem("Create Child")) 
 					{
 						GameObject* parent = nullptr;
-						parent = App->scene->selected_gameobjects.front();
+						parent = selected;
 						App->scene->CreateGameObject(parent);
 						open_gameobject_node = parent;
+					}
+
+					GameObject* parent = selected->GetParent();
+					if (parent && parent->childs.size() > 1)
+					{
+						if (selected != parent->childs.front())
+						{
+							if (ImGui::MenuItem("Move Child Up"))
+							{
+								std::vector<GameObject*>::iterator it = std::find(parent->childs.begin(), parent->childs.end(), selected);
+								std::iter_swap(it, it - 1);
+							}
+						}
+
+						if (selected != parent->childs.back())
+						{
+							if (ImGui::MenuItem("Move Child Down"))
+							{
+								std::vector<GameObject*>::iterator it = std::find(parent->childs.begin(), parent->childs.end(), selected);
+								std::iter_swap(it, it + 1);
+							}
+						}
 					}
 
 					if (ImGui::BeginMenu("Child UI"))
 					{
 						if (ImGui::MenuItem("Canvas"))
 						{
-							GameObject* parent = App->scene->selected_gameobjects.front();
+							GameObject* parent = selected;
 							App->scene->CreateCanvas(parent);
 						}
 
 						if (ImGui::MenuItem("Image"))
 						{
-							GameObject* parent = App->scene->selected_gameobjects.front();
+							GameObject* parent = selected;
 							App->scene->CreateImage(parent);
 						}
 
 						if (ImGui::MenuItem("Text"))
 						{
-							GameObject* parent = App->scene->selected_gameobjects.front();
+							GameObject* parent = selected;
 							App->scene->CreateText(parent);
 						}
 
 						if (ImGui::MenuItem("Button"))
 						{
-							GameObject* parent = App->scene->selected_gameobjects.front();
+							GameObject* parent = selected;
 							App->scene->CreateButton(parent);
 						}
 
 						if (ImGui::MenuItem("Progress Bar"))
 						{
-							GameObject* parent = App->scene->selected_gameobjects.front();
+							GameObject* parent = selected;
 							App->scene->CreateProgressBar(parent);
 						}
 
 						if (ImGui::MenuItem("Radar"))
 						{
-							GameObject* parent = App->scene->selected_gameobjects.front();
+							GameObject* parent = selected;
 							App->scene->CreateRadar(parent);
 						}
 
@@ -119,7 +142,7 @@ void HierarchyWindow::DrawWindow()
 
 					if (ImGui::MenuItem("Create prefab")) 
 					{
-						prefab_to_create = App->scene->selected_gameobjects.front();
+						prefab_to_create = selected;
 						if (!App->file_system->DirectoryExist(LIBRARY_PREFABS_FOLDER_PATH)) 
 							App->file_system->Create_Directory(LIBRARY_PREFABS_FOLDER_PATH);
 
@@ -296,7 +319,7 @@ void HierarchyWindow::DrawSceneGameObjects(GameObject * gameObject)
 		if (ImGui::TreeNodeEx(gameObject->GetName().c_str(), flag))
 		{
 			IsMouseOver(gameObject);
-			for (std::list<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); ++it) 
+			for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); ++it) 
 			{
 				DrawSceneGameObjects(*it);
 			}

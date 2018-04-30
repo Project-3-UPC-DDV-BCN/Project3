@@ -113,7 +113,7 @@ bool ModulePhysics::Init(Data * editor_config)
 update_status ModulePhysics::Update(float dt)
 {
 	BROFILER_CATEGORY("Physics Update", Profiler::Color::Green);
-	if (App->IsPlaying()/* || App->IsPaused()*/)
+	if (App->IsPlaying() && dt > 0/* || App->IsPaused()*/)
 	{
 		if (physx_physics && physx_physics->getNbScenes() > 0) {
 			int scene_mum = physx_physics->getNbScenes();
@@ -128,7 +128,7 @@ update_status ModulePhysics::Update(float dt)
 					//App->blast->ApplyDamage();
 					scene->fetchResults(true);
 
-					physx::PxU32 active_actors_num;
+					/*physx::PxU32 active_actors_num;
 					physx::PxActor** active_actors = scene->getActiveActors(active_actors_num);
 
 					for (physx::PxU32 i = 0; i < active_actors_num; ++i)
@@ -156,7 +156,7 @@ update_status ModulePhysics::Update(float dt)
 						default:
 							break;
 						}
-					}
+					}*/
 				}
 			}
 		}

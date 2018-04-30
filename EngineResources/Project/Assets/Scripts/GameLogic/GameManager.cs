@@ -57,7 +57,7 @@ public class GameManager
 
 		if(is_level1)
 		{
-			level1_script = TheGameObject.Self.GetScript("Level1ManagerManager");
+			level1_script = TheGameObject.Self.GetScript("Level1Manager");
 			TheConsole.Log("Level 1 enabled!");
 		}
 	}
@@ -90,13 +90,6 @@ public class GameManager
 
 		game_timer.Start();
 		*/
-	}
-	
-	void Update () 
-	{
-		//UpdateAudio();
-
-		//UpdateTimePointsTexts();
 	}
 
 	bool GetIsTrainingMode()
@@ -299,29 +292,47 @@ public class GameManager
 				if(level1_script != null)
 				{
 					object[] args = {remove, killer};
-					training_mode_script.CallFunctionArgs("OnShipDestroyedCallback", args);
+					level1_script.CallFunctionArgs("OnShipDestroyedCallback", args);
 				}
 			}
 		}
 	}
 
-	void RemoveTurret(TheGameObject turret)
+	void RemoveTurret(TheGameObject turret, TheGameObject killer)
 	{
 		if(turret != null)
 		{
 			if(turret_entities.Remove(turret))
 			{
+				if(is_level1)
+				{
+					if(level1_script != null)
+					{
+						object[] args = {turret, killer};
+						level1_script.CallFunctionArgs("OnTurretDestroyedCallback", args);
+					}
+				}
+
 				TheConsole.Log("Turret destroyed! Remaining: " + TurretsCount());
 			}
 		}
 	}
 
-	void RemoveGenerator(TheGameObject generator)
+	void RemoveGenerator(TheGameObject generator, TheGameObject killer)
 	{
 		if(generator != null)
 		{
 			if(generator_entities.Remove(generator))
 			{
+				if(is_level1)
+				{
+					if(level1_script != null)
+					{
+						object[] args = {generator, killer};
+						level1_script.CallFunctionArgs("OnGeneratorDestroyedCallback", args);
+					}
+				}
+
 				TheConsole.Log("Generator destroyed! Remaining: " + TurretsCount());
 			}
 		}

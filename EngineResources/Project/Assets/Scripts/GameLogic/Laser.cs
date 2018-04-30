@@ -1,13 +1,12 @@
 using TheEngine;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 
 public class Laser 
 {
-	public int laser_damage = 10;
-
 	private TheGameObject sender = null;
 	private TheTransform self_trans = null;
 
+	private int laser_damage = 10;
 	private float speed = 0.0f;
 	private TheVector3 direction = new TheVector3(0, 0, 0);
 	private TheQuaternion orientation = TheQuaternion.Identity;
@@ -30,6 +29,8 @@ public class Laser
 		direction = dir; 
 		orientation = ori;
 		laser_damage = _damage;
+
+		//TheConsole.Log("Info set");
 	}
 
 	TheGameObject GetSender()
@@ -40,6 +41,8 @@ public class Laser
 	// Check collision and notify collided ship
 	void OnTriggerEnter(TheCollisionData coll)
 	{
+		//TheConsole.Log("Laser trigger 0");
+
 		if(coll == null)
 			return;
 
@@ -48,19 +51,20 @@ public class Laser
 		if(other_ship == null)
 			return;
 		
-		if(other_ship.tag != "Entity")
-			return;
-
-		TheScript ship_properties = other_ship.GetScript("EntityProperties");
+		TheScript entity_properties = other_ship.GetScript("EntityProperties");
 		
-		if(ship_properties != null && sender != null)
+		//TheConsole.Log("Laser trigger 1");
+
+		if(entity_properties != null && sender != null)
 		{
 			// I could do this comparing only the game objects but for some reason it's not working :(
 			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
 			{
 				object[] args = {sender, laser_damage};
-				ship_properties.CallFunctionArgs("HitByShip", args);
+				entity_properties.CallFunctionArgs("HitByShip", args);
 				TheGameObject.Self.SetActive(false);
+
+				//TheConsole.Log("Laser trigger 2");
 			}
 		}
 	}

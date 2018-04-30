@@ -220,7 +220,7 @@ public:
 	MonoObject* RotateTowards(MonoObject* current, MonoObject* target, float angle);
 
 	//TIME
-	void SetTimeScale(MonoObject* object, float scale);
+	void SetTimeScale(float scale);
 	float GetTimeScale();
 	float GetDeltaTime();
 	float GetTimeSinceStart();
@@ -361,6 +361,11 @@ public:
 
 	//DEBUG DRAW
 	void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
+
+	// CAMERA
+	int GetSizeX();
+	int GetSizeY();
+	MonoObject* WorldPosToScreenPos(MonoObject* from);
 
 	std::vector<GameObjectMono> created_gameobjects;
 	std::vector<ComponentMono> created_components;
@@ -515,7 +520,7 @@ private:
 	static MonoObject* RotateTowards(MonoObject* current, MonoObject* target, float angle);
 
 	//TIME
-	static void SetTimeScale(MonoObject* object, float scale);
+	static void SetTimeScale(float scale);
 	static float GetTimeScale();
 	static float GetDeltaTime();
 	static float GetTimeSinceStart();
@@ -652,6 +657,11 @@ private:
 	//MESH COLLIDER
 	static bool GetMeshColliderConvex(MonoObject* object);
 	static void SetMeshColliderConvex(MonoObject* object, bool convex);
+
+	// CAMERA
+	static int GetSizeX();
+	static int GetSizeY();
+	static MonoObject* WorldPosToScreenPos(MonoObject* from);
 
 	//DEBUG DRAW
 	static void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);

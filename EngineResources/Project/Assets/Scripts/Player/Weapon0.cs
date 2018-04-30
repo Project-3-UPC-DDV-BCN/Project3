@@ -1,6 +1,5 @@
 using TheEngine;
-
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 using TheEngine.TheMath;
 
 public class Weapon0 
@@ -92,6 +91,8 @@ public class Weapon0
 					////TheConsole.Log(slave_transform.ForwardDirection.x + " " + slave_transform.ForwardDirection.y + " " + slave_transform.ForwardDirection.z);
 					object[] args = {slave_go, speed, damage, slave_transform.ForwardDirection, slave_transform.QuatRotation};
 					laser_script.CallFunctionArgs("SetInfo", args);
+
+					TheConsole.Log("Shoot");
 				}
 			}
 		}

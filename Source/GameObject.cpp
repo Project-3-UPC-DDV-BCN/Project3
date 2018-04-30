@@ -67,7 +67,7 @@ GameObject::~GameObject()
 		RELEASE(*it);
 	}
 
-	for (std::list<GameObject*>::iterator it = childs.begin(); it != childs.end(); ++it) {
+	for (std::vector<GameObject*>::iterator it = childs.begin(); it != childs.end(); ++it) {
 		RELEASE(*it);
 	}
 }
@@ -407,7 +407,7 @@ void GameObject::SetParent(GameObject * parent)
 
 	if (this->parent != nullptr)
 	{
-		this->parent->childs.remove(this);
+		this->parent->childs.erase(std::find(this->parent->childs.begin(), this->parent->childs.end(), this));
 	}
 
 	this->parent = parent;
@@ -501,7 +501,7 @@ void GameObject::SetUID(uint _uid)
 int GameObject::GetAllChildsCount() const
 {
 	int count = childs.size();
-	for (std::list<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
+	for (std::vector<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
 	{
 		count += (*it)->GetAllChildsCount();
 	}
@@ -511,7 +511,7 @@ int GameObject::GetAllChildsCount() const
 
 void GameObject::GetAllChildsName(std::vector<std::string>& names)
 {
-	for (std::list<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
+	for (std::vector<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
 	{
 		(*it)->GetAllChildsName(names);
 		names.push_back((*it)->name);
@@ -520,7 +520,7 @@ void GameObject::GetAllChildsName(std::vector<std::string>& names)
 
 void GameObject::GetAllChildsMeshesNames(std::vector<std::string>& names)
 {
-	for (std::list<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
+	for (std::vector<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
 	{
 		(*it)->GetAllChildsName(names);
 		ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)GetComponent(Component::CompMeshRenderer);
@@ -533,7 +533,7 @@ void GameObject::GetAllChildsMeshesNames(std::vector<std::string>& names)
 
 void GameObject::GetAllChilds(std::vector<GameObject*>& childs_list) const
 {
-	for (std::list<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
+	for (std::vector<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++)
 	{
 		(*it)->GetAllChilds(childs_list);
 		childs_list.push_back(*it);
@@ -763,7 +763,7 @@ void GameObject::OnDestroy()
 	if (particle_emitter)
 		App->scene->scene_emmiters.remove(particle_emitter); 
 	
-	for (std::list<GameObject*>::iterator it = childs.begin(); it != childs.end();) {
+	for (std::vector<GameObject*>::iterator it = childs.begin(); it != childs.end();) {
 		if (*it != nullptr) {
 			(*it)->OnDestroy();
 			CONSOLE_DEBUG("GameObject Destroyed: %s", (*it)->GetName().c_str());
@@ -773,7 +773,7 @@ void GameObject::OnDestroy()
 	}
 
 	if (parent != nullptr && !parent->is_on_destroy) {
-		parent->childs.remove(this);
+		parent->childs.erase(std::find(parent->childs.begin(), parent->childs.end(), this));
 	}
 	
 }
@@ -820,7 +820,7 @@ void GameObject::Save(Data & data, bool save_children)
 	//Save all childs recursively
 	if (save_children)
 	{
-		for (std::list<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++) {
+		for (std::vector<GameObject*>::const_iterator it = childs.begin(); it != childs.end(); it++) {
 			(*it)->Save(data, save_children);
 		}
 	}

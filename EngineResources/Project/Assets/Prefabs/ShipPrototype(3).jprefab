@@ -1,11 +1,11 @@
 {
-    "UUID": "1610249641",
+    "UUID": "928977396",
     "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "2101431720",
+        "UUID": "570290217",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -18,8 +18,8 @@
                 "UUID": "645302198",
                 "position": {
                     "value_X": "0.191450",
-                    "value_Y": "0.000000",
-                    "value_Z": "43.518852"
+                    "value_Y": "533.250000",
+                    "value_Z": "4893.750000"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -184,7 +184,7 @@
                         },
                         "field_4": {
                             "field_name": "rotation_speed",
-                            "field_value": "20.000000"
+                            "field_value": "30.000000"
                         }
                     },
                     "bool_fields": {},
@@ -298,7 +298,7 @@
                     "double_fields_count": "0",
                     "float_fields_count": "1",
                     "bool_fields_count": "4",
-                    "string_fields_count": "1",
+                    "string_fields_count": "2",
                     "gameobject_fields_count": "0",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
@@ -338,6 +338,10 @@
                         "field_0": {
                             "field_name": "entity_faction",
                             "field_value": "empire"
+                        },
+                        "field_1": {
+                            "field_name": "explosion_prefab",
+                            "field_value": "ParticleExplosion"
                         }
                     },
                     "gameobject_fields": {},
@@ -352,7 +356,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "11875304",
+        "UUID": "1497532021",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -410,12 +414,12 @@
                 }
             }
         },
-        "ParentID": "2101431720",
+        "ParentID": "570290217",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "2136819336",
+        "UUID": "1493255838",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -482,12 +486,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "11875304",
+        "ParentID": "1497532021",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "569345731",
+        "UUID": "133862481",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -555,7 +559,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "2136819336",
+        "ParentID": "1493255838",
         "IsRoot": "0",
         "IsStatic": "0"
     }
