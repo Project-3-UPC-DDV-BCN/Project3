@@ -300,7 +300,9 @@ void ModuleRenderer3D::DrawDebugCube(AABB& aabb, ComponentCamera * active_camera
 
 void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 {
-	if (canvas_to_draw.empty()) return;
+	if (canvas_to_draw.empty()) 
+		return;
+
 	BROFILER_CATEGORY("Draw Canvas", Profiler::Color::FloralWhite);
 	// Activate
 	GLenum last_active_texture; glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint*)&last_active_texture);
@@ -332,174 +334,196 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	glEnable(GL_SCISSOR_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	std::vector<ComponentCanvas*> world_canvas;
+	std::vector<ComponentCanvas*> screen_canvas;
+
 	for (std::vector<ComponentCanvas*>::iterator cv = canvas_to_draw.begin(); cv != canvas_to_draw.end(); ++cv)
 	{
-		ComponentCanvas* canvas = (*cv);
+		if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+			world_canvas.push_back(*cv);
+		else if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_SCREEN_SPACE)
+			screen_canvas.push_back(*cv);
+	}
 
-		ComponentRectTransform* last_rect_trans = canvas->GetLastRectTransform();
-		ComponentRectTransform* last_last_rect_trans = canvas->GetLastLastRectTransform();
+	while (!world_canvas.empty() || !screen_canvas.empty())
+	{
+		ComponentCanvas* canvas = nullptr;
 
-		std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
-
-		uint program = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
-
-		UseShaderProgram(program);
-
-		LineSegment segment = App->camera->GetUIMouseRay(*cv);
-
-		CanvasDrawElement* top_element = nullptr;
-		int highest_layer = -9999999999;
-
-		for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
+		if (!world_canvas.empty())
 		{
-			ComponentRectTransform* rect_trans = (ComponentRectTransform*)(*it).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+			canvas = *world_canvas.begin();
+			world_canvas.erase(world_canvas.begin());
+		}
+		else if (!screen_canvas.empty())
+		{
+			canvas = *screen_canvas.begin();
+			screen_canvas.erase(screen_canvas.begin());
+		}
+		else
+			break;
 
-			if (rect_trans != nullptr)
+		if (canvas != nullptr)
+		{
+			ComponentRectTransform* last_rect_trans = canvas->GetLastRectTransform();
+			ComponentRectTransform* last_last_rect_trans = canvas->GetLastLastRectTransform();
+
+			std::vector<CanvasDrawElement> to_draw = canvas->GetDrawElements();
+
+			uint program = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
+
+			UseShaderProgram(program);
+
+			LineSegment segment = App->camera->GetUIMouseRay(canvas);
+
+			CanvasDrawElement* top_element = nullptr;
+			int highest_layer = -9999999999;
+
+			for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 			{
-				if (!editor_camera)
-				{					
-					if (rect_trans->GetInteractable() && rect_trans->GetGameObject()->IsActive() && (*it).CheckRay(segment, canvas->GetRenderMode()))
-					{
-						top_element = &(*it);
-					}
-				}
-				// -----------
-			}
-			// WORLD
-			if (editor_camera || (*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
-			{
-				if ((*cv)->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+				ComponentRectTransform* rect_trans = (ComponentRectTransform*)(*it).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+
+				if (rect_trans != nullptr)
 				{
-					SetUniformBool(program, "is_ui", false);
-					SetUniformBool(program, "has_opacity", false);
-					SetUniformBool(program, "has_light", true);
-					//SetUniformBool(program, "own_uvs_normalmap", false); don't need to send this
-					SetUniformBool(program, "has_normalmap", false);
+					if (!editor_camera)
+					{
+						if (rect_trans->GetInteractable() && rect_trans->GetGameObject()->IsActive() && (*it).CheckRay(segment, canvas->GetRenderMode()))
+						{
+							top_element = &(*it);
+						}
+					}
+					// -----------
 				}
+				// WORLD
+				if (editor_camera || canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+				{
+					if (canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+					{
+						SetUniformBool(program, "is_ui", false);
+						SetUniformBool(program, "has_opacity", false);
+						SetUniformBool(program, "has_light", true);
+						SetUniformBool(program, "has_normalmap", false);
+					}
+					else
+						SetUniformBool(program, "is_ui", true);
+
+					SetUniformMatrix(program, "view", camera->GetViewMatrix());
+					SetUniformMatrix(program, "projection", camera->GetProjectionMatrix());
+					SetUniformMatrix(program, "Model", (*it).GetTransform().Transposed().ptr());
+				}
+
+				// ORTHO
 				else
+				{
 					SetUniformBool(program, "is_ui", true);
 
-				SetUniformMatrix(program, "view", camera->GetViewMatrix());
-				SetUniformMatrix(program, "projection", camera->GetProjectionMatrix());
-				SetUniformMatrix(program, "Model", (*it).GetTransform().Transposed().ptr());
-			}
+					float2 win_size = App->editor->game_window->GetSize();
 
-			// ORTHO
-			else
-			{
-				SetUniformBool(program, "is_ui", true);
+					float far_p = -1000;
+					float near_p = 1000;
 
-				float2 win_size = App->editor->game_window->GetSize();
+					float ortho_projection[4][4] =
+					{
+						{ 2.0f / win_size.x,       0.0f,               0.0f,			   0.0f },
+					{ 0.0f,                    2.0f / win_size.y,  0.0f,			   0.0f },
+					{ 0.0f,                    0.0f,              -2 / (far_p - near_p), -((far_p + near_p) / (far_p - near_p)) },
+					{ -1.0f,                   1.0f,               0.0f,			   1.0f },
+					};
 
-				float far_p = -1000;
-				float near_p = 1000;
-
-				float ortho_projection[4][4] =
-				{
-				{ 2.0f / win_size.x,       0.0f,               0.0f,			   0.0f },
-				{ 0.0f,                    2.0f / win_size.y,  0.0f,			   0.0f },
-				{ 0.0f,                    0.0f,              -2/(far_p - near_p), -((far_p + near_p)/(far_p - near_p)) },
-				{ -1.0f,                   1.0f,               0.0f,			   1.0f },
-				};
-
-				float4x4 ide = float4x4::identity;
-				SetUniformMatrix(program, "view", (float*)ide.Transposed().v);
-				SetUniformMatrix(program, "projection", &ortho_projection[0][0]);
-				SetUniformMatrix(program, "Model", (*it).GetOrtoTransform().Transposed().ptr());
-			}
-
-			bool has_texture = ((*it).GetTextureId() > 0);
-
-			SetUniformBool(program, "has_material_color", !has_texture);
-			SetUniformVector4(program, "material_color", (*it).GetColour());
-			SetUniformBool(program, "has_texture", has_texture);
-			SetUniformBool(program, "has_texture2", false);
-			SetUniformBool(program, "own_uvs_diffuse", false);
-			
-			//SetUniformBool(program, "own_uvs_diffuse2", false); don't need to send this
-
-			SetUniformInt(program, "Tex_Diffuse", 0);
-			SetUniformInt(program, "Tex_Diffuse2", 3);
-			SetUniformInt(program, "Tex_NormalMap", 1);
-			SetUniformInt(program, "Tex_Opacity", 2);
-
-
-			if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
-
-			BindVertexArrayObject((*it).GetPlane()->id_vao);
-
-			//SendLight(program);
-
-			glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
-
-			glDrawElements(GL_TRIANGLES, (*it).GetPlane()->num_indices, GL_UNSIGNED_INT, NULL);
-
-			glBindTexture(GL_TEXTURE_2D, 0);
-			UnbindVertexArrayObject();
-		}
-
-		// Event managing
-
-		if (!editor_camera)
-		{
-			ComponentRectTransform* rect_trans = nullptr;
-
-			if (top_element != nullptr)
-				rect_trans = (ComponentRectTransform*)top_element->GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
-
-			if (last_last_rect_trans != nullptr)
-			{
-				if (last_last_rect_trans->GetOnMouseOut())
-					last_last_rect_trans->SetOnMouseOut(false);
-			}
-
-			if (last_rect_trans != nullptr)
-			{
-				if (last_rect_trans->GetOnClickDown())
-					last_rect_trans->SetOnClickDown(false);
-
-				if (last_rect_trans->GetOnClickUp())
-					last_rect_trans->SetOnClickUp(false);
-
-				if (last_rect_trans->GetOnMouseEnter())
-					last_rect_trans->SetOnMouseEnter(false);
-
-				if (last_rect_trans != rect_trans)
-				{
-					last_rect_trans->SetOnMouseOut(true);
-					last_rect_trans->SetOnMouseOver(false);
-
-					last_rect_trans->SetOnClickDown(false);
-					last_rect_trans->SetOnClickUp(false);
-					last_rect_trans->SetOnClick(false);
-				}
-			}
-
-			if (top_element != nullptr)
-			{
-				if (!rect_trans->GetOnMouseOver())
-					rect_trans->SetOnMouseEnter(true);
-
-				rect_trans->SetOnMouseOver(true);
-
-				if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-				{
-					rect_trans->SetOnClickUp(false);
-					rect_trans->SetOnClickDown(true);
-					rect_trans->SetOnClick(true);
+					float4x4 ide = float4x4::identity;
+					SetUniformMatrix(program, "view", (float*)ide.Transposed().v);
+					SetUniformMatrix(program, "projection", &ortho_projection[0][0]);
+					SetUniformMatrix(program, "Model", (*it).GetOrtoTransform().Transposed().ptr());
 				}
 
-				if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
-				{
-					rect_trans->SetOnClickUp(true);
-					rect_trans->SetOnClickDown(false);
-					rect_trans->SetOnClick(false);
-				}
+				bool has_texture = ((*it).GetTextureId() > 0);
 
+				SetUniformBool(program, "has_material_color", !has_texture);
+				SetUniformVector4(program, "material_color", (*it).GetColour());
+				SetUniformBool(program, "has_texture", has_texture);
+				SetUniformBool(program, "has_texture2", false);
+				SetUniformBool(program, "own_uvs_diffuse", false);
+
+				SetUniformInt(program, "Tex_Diffuse", 0);
+				SetUniformInt(program, "Tex_Diffuse2", 3);
+				SetUniformInt(program, "Tex_NormalMap", 1);
+				SetUniformInt(program, "Tex_Opacity", 2);
+
+
+				if ((*it).GetPlane()->id_indices == 0) (*it).GetPlane()->LoadToMemory();
+
+				BindVertexArrayObject((*it).GetPlane()->id_vao);
+
+				glBindTexture(GL_TEXTURE_2D, (*it).GetTextureId());
+
+				glDrawElements(GL_TRIANGLES, (*it).GetPlane()->num_indices, GL_UNSIGNED_INT, NULL);
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+				UnbindVertexArrayObject();
 			}
 
-			canvas->SetLastLastRectTransform(last_rect_trans);
-			canvas->SetLastRectTransform(rect_trans);
+			// Event managing
+
+			if (!editor_camera)
+			{
+				ComponentRectTransform* rect_trans = nullptr;
+
+				if (top_element != nullptr)
+					rect_trans = (ComponentRectTransform*)top_element->GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
+
+				if (last_last_rect_trans != nullptr)
+				{
+					if (last_last_rect_trans->GetOnMouseOut())
+						last_last_rect_trans->SetOnMouseOut(false);
+				}
+
+				if (last_rect_trans != nullptr)
+				{
+					if (last_rect_trans->GetOnClickDown())
+						last_rect_trans->SetOnClickDown(false);
+
+					if (last_rect_trans->GetOnClickUp())
+						last_rect_trans->SetOnClickUp(false);
+
+					if (last_rect_trans->GetOnMouseEnter())
+						last_rect_trans->SetOnMouseEnter(false);
+
+					if (last_rect_trans != rect_trans)
+					{
+						last_rect_trans->SetOnMouseOut(true);
+						last_rect_trans->SetOnMouseOver(false);
+
+						last_rect_trans->SetOnClickDown(false);
+						last_rect_trans->SetOnClickUp(false);
+						last_rect_trans->SetOnClick(false);
+					}
+				}
+
+				if (top_element != nullptr)
+				{
+					if (!rect_trans->GetOnMouseOver())
+						rect_trans->SetOnMouseEnter(true);
+
+					rect_trans->SetOnMouseOver(true);
+
+					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+					{
+						rect_trans->SetOnClickUp(false);
+						rect_trans->SetOnClickDown(true);
+						rect_trans->SetOnClick(true);
+					}
+
+					if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+					{
+						rect_trans->SetOnClickUp(true);
+						rect_trans->SetOnClickDown(false);
+						rect_trans->SetOnClick(false);
+					}
+
+				}
+
+				canvas->SetLastLastRectTransform(last_rect_trans);
+				canvas->SetLastRectTransform(rect_trans);
+			}
 		}
 	}
 
