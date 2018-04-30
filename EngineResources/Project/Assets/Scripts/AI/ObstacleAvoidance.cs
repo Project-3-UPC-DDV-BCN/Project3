@@ -16,8 +16,12 @@ public class ObstacleAvoidance {
 	public TheVector3 rayTop = new TheVector3(0, 1, 1);
 	public TheVector3 rayBottom = new TheVector3(0, -1, 1);
 
+	// Exceptions
+	public TheBoxCollider self_collider = null;
+
 	void Start () {
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
+		if(self_collider == null) self_collider = TheGameObject.Self.GetComponent<TheBoxCollider>();
 	}
 	
 	void Update () {
@@ -31,12 +35,64 @@ public class ObstacleAvoidance {
 		TheVector3 RayBottom = rayBottom + transform.ForwardDirection;
 
 		// RayCasting ---
-		TheRayCastHit rayHitCenter = ThePhysics.RayCast(transform.GlobalPosition, RayCenter, rayLength);
-		TheRayCastHit rayHitLeft = ThePhysics.RayCast(transform.GlobalPosition, RayLeft, rayLength);
-		TheRayCastHit rayHitRight = ThePhysics.RayCast(transform.GlobalPosition, RayRight, rayLength);
-		TheRayCastHit rayHitTop = ThePhysics.RayCast(transform.GlobalPosition, RayTop, rayLength);
-		TheRayCastHit rayHitBottom = ThePhysics.RayCast(transform.GlobalPosition, RayBottom, rayLength);
-		
+		TheRayCastHit[] ArrRayHitCenter = ThePhysics.RayCastAll(transform.GlobalPosition, RayCenter, rayLength);
+		TheRayCastHit[] ArrRayHitLeft = ThePhysics.RayCastAll(transform.GlobalPosition, RayLeft, rayLength);
+		TheRayCastHit[] ArrRayHitRight = ThePhysics.RayCastAll(transform.GlobalPosition, RayRight, rayLength);
+		TheRayCastHit[] ArrRayHitTop = ThePhysics.RayCastAll(transform.GlobalPosition, RayTop, rayLength);
+		TheRayCastHit[] ArrRayHitBottom = ThePhysics.RayCastAll(transform.GlobalPosition, RayBottom, rayLength);
+
+		// RayCast Filtering ---
+		TheRayCastHit rayHitCenter = null;
+		TheRayCastHit rayHitLeft = null;
+		TheRayCastHit rayHitRight = null;
+		TheRayCastHit rayHitTop = null;
+		TheRayCastHit rayHitBottom = null;
+		// Center
+		if(ArrRayHitCenter.Length > 0) {
+			foreach(TheRayCastHit hit in ArrRayHitCenter) {
+				if(hit.Collider != self_collider) {
+					rayHitCenter = hit;
+					break;
+				}
+			}
+		}
+		// Left
+		if(ArrRayHitLeft.Length > 0) {
+			foreach(TheRayCastHit hit in ArrRayHitLeft) {
+				if(hit.Collider != self_collider) {
+					rayHitLeft = hit;
+					break;
+				}
+			}
+		}	
+		// Right
+		if(ArrRayHitRight.Length > 0) {
+			foreach(TheRayCastHit hit in ArrRayHitRight) {
+				if(hit.Collider != self_collider) {
+					rayHitRight = hit;
+					break;
+				}
+			}
+		}
+		// Top
+		if(ArrRayHitTop.Length > 0) {
+			foreach(TheRayCastHit hit in ArrRayHitTop) {
+				if(hit.Collider != self_collider) {
+					rayHitTop = hit;
+					break;
+				}
+			}
+		}
+		// Bottom	
+		if(ArrRayHitBottom.Length > 0) {
+			foreach(TheRayCastHit hit in ArrRayHitBottom) {
+				if(hit.Collider != self_collider) {
+					rayHitBottom = hit;
+					break;
+				}
+			}
+		}
+
 		// RayHit Managing ---
 		TheVector3 avoidanceVector = new TheVector3(0, 0, 0);
 		// Center
