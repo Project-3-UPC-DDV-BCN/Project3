@@ -5,19 +5,6 @@ using TheEngine.TheConsole;
 public class GameManager
 {
 	private string team = "no_str"; 
-	
-	/*public float music_timer = 15;
-	private float background_music_timer = 0.0f;
-	private bool calm_combat = false;
-	
-	public int calm_volume = 10;
-	public int combat_volume = 10;
-
-	TheAudioSource audio_source = null;
-	
-	public TheGameObject slave1_audio;
-	TheAudioSource slave1_audiosource = null;
-*/
 
 	TheScript training_mode_script = null;
 	TheScript level1_script = null;
@@ -68,7 +55,10 @@ public class GameManager
 			slave1_trans = slave1.GetComponent<TheTransform>();
 
 		if(front_radar_go != null)
+		{
+			TheConsole.Log("Radar not null");
 			front_radar = front_radar_go.GetComponent<TheRadar>();
+		}
 
 		if(back_radar_go != null)
 			back_radar = back_radar_go.GetComponent<TheRadar>();
@@ -161,12 +151,14 @@ public class GameManager
 					{
 						front_radar.AddEntity(add);
 						front_radar.SetMarkerToEntity(add, "Alliance");
+						TheConsole.Log("Adding to front radar");
 					}
 		
 					if(back_radar != null)
 					{
 						back_radar.AddEntity(add);
 						back_radar.SetMarkerToEntity(add, "Alliance");
+						TheConsole.Log("Adding to back radar");
 					}
 					
 
@@ -193,12 +185,14 @@ public class GameManager
 					{
 						front_radar.AddEntity(add);
 						front_radar.SetMarkerToEntity(add, "Empire");
+						TheConsole.Log("Adding to front radar");
 					}
 
 					if(back_radar != null)
 					{
 						back_radar.AddEntity(add);
 						back_radar.SetMarkerToEntity(add, "Alliance");
+						TheConsole.Log("Adding to back radar");
 					}
 
 					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
