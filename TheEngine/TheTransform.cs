@@ -140,6 +140,9 @@ namespace TheEngine
         public extern void LookAt(TheVector3 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void LookAtY(TheVector3 value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetForward();
 
         [MethodImpl(MethodImplOptions.InternalCall)]

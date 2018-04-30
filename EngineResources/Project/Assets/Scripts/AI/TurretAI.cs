@@ -1,5 +1,6 @@
 using TheEngine;
 using TheEngine.TheConsole;
+using TheEngine.TheMath;
 
 public class TurretAI {
 	
@@ -7,6 +8,7 @@ public class TurretAI {
 	public TheGameObject TurretHead	= null;
 	TheTransform SelfTransform = null;
 	TheVector3 SelfPosition;
+	TheVector3 SelfRotation;
 	public TheGameObject BlasterPivot = null;
 	TheTransform BlasterTransform = null;
 	public TheGameObject BlasterCannon = null;
@@ -20,6 +22,7 @@ public class TurretAI {
 	TheAudioSource AudioSource = null;
 	
 	float DeltaTime = 0.0f;
+	public float RotationSpeed = 50.0f;
 	public float MinDistance = 600.0f;
 	public float ShootingRange = 500.0f;
 	public float MinAngleBlasters = 0.0f;
@@ -49,6 +52,8 @@ public class TurretAI {
 	void Update () {
 		PlayerPosition = PlayerTransform.GlobalPosition;
 		SelfPosition = SelfTransform.GlobalPosition;
+		SelfRotation = SelfTransform.LocalRotation;
+		
 		DeltaTime = TheTime.DeltaTime;
 		
 		if (TheVector3.Distance(PlayerPosition, SelfPosition) < MinDistance)
@@ -61,8 +66,22 @@ public class TurretAI {
 	
 	void RotateHeadTowardsPlayer()
 	{
-		// Face Forward Dir to PlayerPosition
-		
+		SelfTransform.LookAtY(PlayerPosition);
+		/*// Face Forward Dir to PlayerPosition
+		float target_y_angle = GetAngleFromTwoPoints(SelfPosition.y, SelfPosition.z, PlayerPosition.y, PlayerPosition.z) - 270;
+
+		if(SelfPosition.z > PlayerPosition.z)
+		{
+			target_y_angle -= 180;
+		}		
+
+        float angle_diff_y = SelfRotation.x - target_y_angle;		
+
+		if (NormalizeAngle(angle_diff_y) > 180)
+			SelfRotation = new TheVector3(SelfRotation.x + (RotationSpeed * DeltaTime), SelfRotation.y, SelfRotation.z);
+		else
+			SelfRotation = new TheVector3(SelfRotation.x - (RotationSpeed * DeltaTime), SelfRotation.y, SelfRotation.z);
+		*/
 	}
 	
 	void RotateBlasterTowardsPlayer()
@@ -92,7 +111,7 @@ public class TurretAI {
 
 					if(laser_script != null)
 					{
-						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, BlasterTransform.QuatRotation};
+						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, CannonTransform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
 					}
 				}
@@ -103,4 +122,28 @@ public class TurretAI {
 			}
 		}
 	}
+	
+	float GetAngleFromTwoPoints(float x1, float y1, float x2, float y2)
+    {
+        float xDiff = x1 - x2;
+        float yDiff = y1 - y2;
+        return (float)TheMath.Atan2(yDiff, xDiff) * (float)(180 / TheMath.PI);
+    }
+
+    float NormalizeAngle(float angle)
+    {
+        if (angle > 360)
+        {
+            int multiplers = (int)(angle / 360);
+            angle -= (360 * multiplers);
+        }
+
+        if (angle < -360)
+        {
+            int multiplers = (int)(System.Math.Abs(angle) / 360);
+            angle += (360 * multiplers);
+        }
+
+        return angle;
+    }
 }

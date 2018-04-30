@@ -713,6 +713,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheTransform::SetScale", (const void*)SetScale);
 	mono_add_internal_call("TheEngine.TheTransform::GetScale", (const void*)GetScale);
 	mono_add_internal_call("TheEngine.TheTransform::LookAt", (const void*)LookAt);
+	mono_add_internal_call("TheEngine.TheTransform::LookAtY", (const void*)LookAtY);
 	mono_add_internal_call("TheEngine.TheTransform::GetForward", (const void*)GetForward);
 	mono_add_internal_call("TheEngine.TheTransform::GetUp", (const void*)GetUp);
 	mono_add_internal_call("TheEngine.TheTransform::GetRight", (const void*)GetRight);
@@ -1100,6 +1101,12 @@ void ModuleScriptImporter::LookAt(MonoObject * object, MonoObject * vector)
 {
 	ns_importer->LookAt(object, vector);
 }
+
+void ModuleScriptImporter::LookAtY(MonoObject * object, MonoObject * vector)
+{
+	ns_importer->LookAtY(object, vector);
+}
+
 
 void ModuleScriptImporter::SetRectPosition(MonoObject * object, MonoObject * vector3)
 {
@@ -3079,6 +3086,29 @@ void NSScriptImporter::LookAt(MonoObject * object, MonoObject * vector3)
 		ComponentTransform* transform = (ComponentTransform*)comp;
 		float3 direction = target_pos - transform->GetGlobalPosition();
 		transform->LookAt(direction.Normalized(), float3::unitY);
+	}
+}
+
+void NSScriptImporter::LookAtY(MonoObject * object, MonoObject * vector3)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		MonoClass* c = mono_object_get_class(vector3);
+		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+		float3 target_pos;
+
+		if (x_field) mono_field_get_value(vector3, x_field, &target_pos.x);
+		if (y_field) mono_field_get_value(vector3, y_field, &target_pos.y);
+		if (z_field) mono_field_get_value(vector3, z_field, &target_pos.z);
+
+		ComponentTransform* transform = (ComponentTransform*)comp;
+		float3 direction = target_pos - transform->GetGlobalPosition();
+		transform->LookAtY(direction.Normalized(), float3::unitY);
 	}
 }
 

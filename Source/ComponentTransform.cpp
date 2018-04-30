@@ -271,6 +271,19 @@ void ComponentTransform::LookAt(float3 dir, float3 up)
 	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
 }
 
+void ComponentTransform::LookAtY(float3 dir, float3 up)
+{
+	float3 z(dir);
+	float3 x(-z.Normalized().Cross(up));
+	float3 y(x.Normalized().Cross(-z.Normalized()));
+	float3x3 mat(x, y, z);
+	//mat.ToQuat crashes and need to do this workaround...
+	float3 eulers = mat.ToEulerXYZ();
+	Quat q = Quat::FromEulerXYZ(0, eulers.y, 0);
+	SetQuatRotation(q);
+	/*CONSOLE_LOG("%.3f,%.3f,%.3f,%.3f", rotation.x, rotation.y, rotation.z, rotation.w);*/
+}
+
 bool ComponentTransform::AnyDirty()
 {
 	GameObject* current_go= GetGameObject(); 
