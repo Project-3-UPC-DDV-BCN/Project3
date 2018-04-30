@@ -1,6 +1,5 @@
 using TheEngine;
-
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 using TheEngine.TheMath;
 
 public class Weapon0 
@@ -34,7 +33,7 @@ public class Weapon0
 
 			if(game_manager_script != null)
 			{
-				slave_go = TheGameObject.Self.GetParent();
+				slave_go = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
 
 				if(slave_go != null)
 				{
@@ -92,6 +91,8 @@ public class Weapon0
 					////TheConsole.Log(slave_transform.ForwardDirection.x + " " + slave_transform.ForwardDirection.y + " " + slave_transform.ForwardDirection.z);
 					object[] args = {slave_go, speed, damage, slave_transform.ForwardDirection, slave_transform.QuatRotation};
 					laser_script.CallFunctionArgs("SetInfo", args);
+
+					TheConsole.Log("Shoot");
 				}
 			}
 		}

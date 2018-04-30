@@ -57,7 +57,7 @@ public class GameManager
 
 		if(is_level1)
 		{
-			level1_script = TheGameObject.Self.GetScript("Level1ManagerManager");
+			level1_script = TheGameObject.Self.GetScript("Level1Manager");
 			TheConsole.Log("Level 1 enabled!");
 		}
 	}
@@ -90,16 +90,6 @@ public class GameManager
 
 		game_timer.Start();
 		*/
-	}
-	
-	void Update () 
-	{
-
-		TheVector3 sceen_point = TheCamera.WorldPosToCameraPos(new TheVector3(0, 0, 0));
-		TheConsole.Log(sceen_point.x + " " + sceen_point.y + " " + sceen_point.z);
-		//UpdateAudio();
-
-		//UpdateTimePointsTexts();
 	}
 
 	bool GetIsTrainingMode()

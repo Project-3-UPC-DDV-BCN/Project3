@@ -14,16 +14,13 @@ public class ColliderScalingByDistance {
 	
 	TheTransform transform = null;
 	
-	TheGameObject self = TheGameObject.Self;
-	
 	TheGameObject GM = null;
 
 	void Init()
 	{
-		collider = self.GetComponent<TheBoxCollider>();
+		TheGameObject self = TheGameObject.Self;
 
-		if(player != null)
-			player_transform = player.GetComponent<TheTransform>();
+		collider = self.GetComponent<TheBoxCollider>();
 
 		transform = self.GetComponent<TheTransform>();
 		
@@ -36,6 +33,9 @@ public class ColliderScalingByDistance {
 			min_size = collider.Size;
 		
 		player = GetPlayerFromGM();
+
+		if(player != null)
+			player_transform = player.GetComponent<TheTransform>();
 
 		// Max Size Setup
 		max_size.x = min_size.x * max_size_multiplier.x;
