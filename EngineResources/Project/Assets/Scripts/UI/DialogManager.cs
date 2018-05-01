@@ -4,10 +4,8 @@ using TheEngine.TheConsole;
 
 public class DialogManager 
 {
-	public TheGameObject audio_emiter;
 	TheAudioSource audio_source = null;
 	
-	public TheGameObject text_go;
 	TheText text = null;
 
 	TheGameObject canvas_go = null;
@@ -28,12 +26,39 @@ public class DialogManager
 	
 	void Start () 
 	{
-	
+		NewDialog("hi");
+		NewDialogLine("hi", "t1", 1.0f);
+		NewDialogLine("hi", "t2", 1.0f);
+		NewDialogLine("hi", "t3", 1.0f);
+		FireDialog("hi");
+
+		NewDialog("hi2");
+		NewDialogLine("hi", "r1", 1.0f);
+		NewDialogLine("hi", "r2", 1.0f);
+		NewDialogLine("hi", "r3", 1.0f);
 	}
 	
 	void Update () 
 	{
 		UpdateText();
+
+		if(!DialogIsRunning())
+			FireDialog("hi2");
+	}
+
+	void SetTextComponent(TheText txt)
+	{
+		text = txt;
+	}
+
+	void SetCanvas(TheGameObject cv)
+	{
+		canvas_go = cv;
+	}
+
+	void SetAudioSource(TheAudioSource sc)
+	{
+		audio_source = sc;
 	}
 
 	void FireDialog(string dialog)
@@ -79,6 +104,11 @@ public class DialogManager
 		}
 	}
 
+	void NewDialogLine(string dialog, string text, float time)
+	{
+		NewDialogLine(dialog, text, time, "");
+	}
+
 	List<int> GetDialogList(string dialog)
 	{
 		List<int> ret = null;
@@ -111,13 +141,14 @@ public class DialogManager
 					if(audio_source != null)
 						audio_source.Play(audio);
 
-					update_info = false;
 					timer.Start();
+
+					update_info = false;
 				}
 
 				if(timer.ReadTime() > curr_time)
 				{
-					if(curr_info + 1 < curr_dialog.Count-1)
+					if(curr_info + 1 <= curr_dialog.Count-1)
 					{
 						++curr_info;
 						update_info = true;	
@@ -128,11 +159,9 @@ public class DialogManager
 						curr_info = 0;
 						curr_time = 0;
 					}
-				}
-					
+				}	
 			}
 		}
-
 	}
 
 	void SetText(string t)
