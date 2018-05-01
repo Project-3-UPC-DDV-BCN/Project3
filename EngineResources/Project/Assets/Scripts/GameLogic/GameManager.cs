@@ -47,39 +47,19 @@ public class GameManager
 			level1_script = TheGameObject.Self.GetScript("Level1Manager");
 			TheConsole.Log("Level 1 enabled!");
 		}
+
+		// Raders
+		if(front_radar_go != null)
+			front_radar = front_radar_go.GetComponent<TheRadar>();
+	
+		if(back_radar_go != null)
+			back_radar = back_radar_go.GetComponent<TheRadar>();
 	}
 
 	void Start ()
 	{
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
-
-		if(front_radar_go != null)
-		{
-			TheConsole.Log("Radar not null");
-			front_radar = front_radar_go.GetComponent<TheRadar>();
-		}
-
-		if(back_radar_go != null)
-			back_radar = back_radar_go.GetComponent<TheRadar>();
-		
-		/*
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
-
-		if(slave1_audio != null)
-			slave1_audiosource = slave1_audio.GetComponent<TheAudioSource>();
-		*/
-		/*if(audio_source != null)
-		{
-			audio_source.Play("Play_Music");
-			audio_source.SetVolume(calm_volume);
-		}
-		
-			
-		background_music_timer = music_timer;
-
-		game_timer.Start();
-		*/
 	}
 
 	bool GetIsTrainingMode()
@@ -138,11 +118,11 @@ public class GameManager
 	{
 		if(add != null)
 		{
-			TheScript ship_properties = add.GetScript("EntityProperties");
+			TheScript entity_properties = add.GetScript("EntityProperties");
 
-			if(ship_properties != null)
+			if(entity_properties != null)
 			{	
-				bool is_slave = (bool)ship_properties.CallFunctionArgs("IsSlave1");		
+				bool is_slave = (bool)entity_properties.CallFunctionArgs("IsSlave1");		
 				if(!is_slave)
 				{
 					alliance_ships.Add(add);
@@ -153,6 +133,8 @@ public class GameManager
 						front_radar.SetMarkerToEntity(add, "Alliance");
 						TheConsole.Log("Adding to front radar");
 					}
+					else
+						TheConsole.Log("radar is null");
 		
 					if(back_radar != null)
 					{
@@ -172,11 +154,11 @@ public class GameManager
 	{
 		if(add != null)
 		{
-			TheScript ship_properties = add.GetScript("EntityProperties");
+			TheScript entity_properties = add.GetScript("EntityProperties");
 			
-			if(ship_properties != null)
+			if(entity_properties != null)
 			{
-				bool is_slave = (bool)ship_properties.CallFunctionArgs("IsSlave1");		
+				bool is_slave = (bool)entity_properties.CallFunctionArgs("IsSlave1");		
 				if(!is_slave)
 				{
 					empire_ships.Add(add);
@@ -187,7 +169,9 @@ public class GameManager
 						front_radar.SetMarkerToEntity(add, "Empire");
 						TheConsole.Log("Adding to front radar");
 					}
-
+					else
+						TheConsole.Log("radar is null");
+	
 					if(back_radar != null)
 					{
 						back_radar.AddEntity(add);
