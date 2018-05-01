@@ -1,10 +1,12 @@
 using TheEngine;
+using TheEngine.TheDebug;
+using TheEngine.TheMath;
 
 public class ObstacleAvoidance {
 
 	public float rayLength = 50f;
 	public float avoidingForce = 40f;
-	float avoidingMultiplier = 1f;
+	public float avoidingMultiplier = 1f;
 
 	// Transforms
 	TheTransform transform = null;
@@ -26,13 +28,20 @@ public class ObstacleAvoidance {
 	
 	void Update () {
 		if(transform == null) return;
-		
+
 		// RayCast Setup ---
-		TheVector3 RayCenter = rayCenter + transform.ForwardDirection;
+		TheVector3 RayCenter = transform.ForwardDirection;
 		TheVector3 RayLeft = rayLeft + transform.ForwardDirection;
 		TheVector3 RayRight = rayRight + transform.ForwardDirection;
 		TheVector3 RayTop = rayTop + transform.ForwardDirection;
 		TheVector3 RayBottom = rayBottom + transform.ForwardDirection;
+
+		// RayDebug ---
+		/*TheDebugDraw.Ray(transform.GlobalPosition, RayCenter.Normalized * rayLength, TheColor.Red);
+		TheDebugDraw.Ray(transform.GlobalPosition, RayLeft.Normalized * rayLength, TheColor.Blue);	
+		TheDebugDraw.Ray(transform.GlobalPosition, RayRight.Normalized * rayLength, TheColor.Blue);	
+		TheDebugDraw.Ray(transform.GlobalPosition, RayTop.Normalized * rayLength, TheColor.Blue);	
+		TheDebugDraw.Ray(transform.GlobalPosition, RayBottom.Normalized * rayLength, TheColor.Blue);*/			
 
 		// RayCasting ---
 		TheRayCastHit[] ArrRayHitCenter = ThePhysics.RayCastAll(transform.GlobalPosition, RayCenter, rayLength);
@@ -104,6 +113,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitCenter.Normal == TheVector3.Forward || rayHitCenter.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y + 1f;
+			avoidingMultiplier = 1 - (rayHitCenter.Distance / rayLength);
 		}
 		// Left
 		if(rayHitLeft != null) {
@@ -114,6 +124,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitLeft.Normal == TheVector3.Forward || rayHitLeft.Normal == TheVector3.BackWard)
 				avoidanceVector.x = avoidanceVector.x + 1f;
+			avoidingMultiplier = 1 - (rayHitLeft.Distance / rayLength);
 		}
 		// Right
 		if(rayHitRight != null) {
@@ -124,6 +135,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitRight.Normal == TheVector3.Forward || rayHitRight.Normal == TheVector3.BackWard)
 				avoidanceVector.x = avoidanceVector.x - 1f;
+			avoidingMultiplier = 1 - (rayHitRight.Distance / rayLength);
 		}
 		// Top
 		if(rayHitTop != null) {
@@ -134,6 +146,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitTop.Normal == TheVector3.Forward || rayHitTop.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y - 1f;
+			avoidingMultiplier = 1 - (rayHitTop.Distance / rayLength);
 		}
 		// Bottom
 		if(rayHitBottom != null) {
@@ -144,6 +157,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitBottom.Normal == TheVector3.Forward || rayHitBottom.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y + 1f;
+			avoidingMultiplier = 1 - (rayHitBottom.Distance / rayLength);
 		}
 		
 		// Rotation Managing ---
@@ -156,4 +170,24 @@ public class ObstacleAvoidance {
 		);
 
 	}
+
+	TheVector3 RotateVector(TheVector3 v, TheVector3 euler) {
+		TheVector3 ret = v;
+		// Conversion to Rad ---
+		euler = new TheVector3(TheMath.DegToRad * euler.x, TheMath.DegToRad * euler.y, TheMath.DegToRad * euler.z);
+		// Rotations ---
+		// Z - Axis (Necessary?)
+		// ...
+		// Y - Axis
+		ret.x = ret.x * TheMath.Cos(euler.y) + ret.z * TheMath.Sin(euler.y);
+		ret.z = -ret.x * TheMath.Sin(euler.y) + ret.z * TheMath.Cos(euler.y);
+		// X - Axis
+		ret.y = ret.y * TheMath.Cos(euler.x) - ret.z * TheMath.Sin(euler.x);
+		ret.z = ret.y * TheMath.Sin(euler.x) + ret.z * TheMath.Cos(euler.x);
+		// Conversion to Deg ---
+		//ret = new TheVector3(TheMath.RadToDeg * ret.x, TheMath.RadToDeg * ret.y, TheMath.RadToDeg * ret.z);
+
+		return ret;
+	}
+
 }
