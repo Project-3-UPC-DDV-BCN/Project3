@@ -11,6 +11,8 @@ public class TurretAI {
 	TheVector3 SelfRotation;
 	public TheGameObject BlasterPivot = null;
 	TheTransform BlasterTransform = null;
+	TheVector3 BlasterPosition;
+	TheVector3 BlasterRotation;
 	public TheGameObject BlasterCannon = null;
 	TheTransform CannonTransform = null;
 	TheFactory blaster_factory = null;
@@ -53,6 +55,8 @@ public class TurretAI {
 		PlayerPosition = PlayerTransform.GlobalPosition;
 		SelfPosition = SelfTransform.GlobalPosition;
 		SelfRotation = SelfTransform.LocalRotation;
+		BlasterPosition = BlasterTransform.GlobalPosition;
+		BlasterRotation = BlasterTransform.LocalRotation;
 		
 		DeltaTime = TheTime.DeltaTime;
 		
@@ -69,28 +73,21 @@ public class TurretAI {
 		TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, 0, PlayerPosition.z - SelfPosition.z);
 		TheQuaternion q = TheQuaternion.LookRotation(LookPos, SelfTransform.UpDirection);
 		SelfTransform.QuatRotation = TheQuaternion.Slerp(SelfTransform.QuatRotation, q, DeltaTime * RotationSpeed);
-		
-		/*// Face Forward Dir to PlayerPosition
-		float target_y_angle = GetAngleFromTwoPoints(SelfPosition.y, SelfPosition.z, PlayerPosition.y, PlayerPosition.z) - 270;
-
-		if(SelfPosition.z > PlayerPosition.z)
-		{
-			target_y_angle -= 180;
-		}		
-
-        float angle_diff_y = SelfRotation.x - target_y_angle;		
-
-		if (NormalizeAngle(angle_diff_y) > 180)
-			SelfRotation = new TheVector3(SelfRotation.x + (RotationSpeed * DeltaTime), SelfRotation.y, SelfRotation.z);
-		else
-			SelfRotation = new TheVector3(SelfRotation.x - (RotationSpeed * DeltaTime), SelfRotation.y, SelfRotation.z);
-		*/
 	}
 	
 	void RotateBlasterTowardsPlayer()
 	{
 		// Face Blasters to the PlayerPosition
+		TheVector3 LookPos = new TheVector3(0, PlayerPosition.y - BlasterPosition.y, PlayerPosition.z - BlasterPosition.z);
+		TheQuaternion q = TheQuaternion.LookRotation(LookPos, CannonTransform.UpDirection);
+		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
+	
+		if (BlasterRotation.x < MinAngleBlasters)
+			BlasterRotation = new TheVector3(MinAngleBlasters, 0, 0);
+		else if (BlasterRotation.x > MaxAngleBlasters)
+			BlasterRotation = new TheVector3(MaxAngleBlasters, 0, 0);
 		
+	
 	}
 	
 	void Shoot()
