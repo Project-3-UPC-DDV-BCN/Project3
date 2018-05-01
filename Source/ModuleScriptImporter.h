@@ -156,6 +156,7 @@ public:
 	void SetScale(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	void LookAt(MonoObject * object, MonoObject * vector3);
+	void LookAtY(MonoObject * object, MonoObject * vector3);
 	MonoObject* GetForward(MonoObject* object);
 	MonoObject* GetRight(MonoObject* object);
 	MonoObject* GetUp(MonoObject* object);
@@ -456,6 +457,7 @@ private:
 	static void SetScale(MonoObject * object, MonoObject * vector);
 	static MonoObject* GetScale(MonoObject* object, mono_bool is_global);
 	static void LookAt(MonoObject * object, MonoObject * vector);
+	static void LookAtY(MonoObject * object, MonoObject * vector);
 	static MonoObject* GetForward(MonoObject* object);
 	static MonoObject* GetRight(MonoObject* object);
 	static MonoObject* GetUp(MonoObject* object);
