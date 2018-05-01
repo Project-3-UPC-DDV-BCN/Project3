@@ -11,6 +11,7 @@ public class Level1Manager
 
 	public TheGameObject mission_state_text_go;
 	TheRectTransform mission_state_text = null;
+	TheAudioSource audio_source;
 
 	void Init()
 	{
@@ -31,10 +32,14 @@ public class Level1Manager
 			if(enabled)
 				TheConsole.Log("Level1 activated! :D");
 		}
-
+		
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 		TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
 		if(slave1 != null)
 			slave1_script = slave1.GetScript("EntityProperties");
+
+		if(audio_source!= null)
+			audio_source.Play("Play_Music");
 	}
 	
 	void Update () 
