@@ -66,7 +66,10 @@ public class TurretAI {
 	
 	void RotateHeadTowardsPlayer()
 	{
-		SelfTransform.LookAtY(PlayerPosition);
+		TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, 0, PlayerPosition.z - SelfPosition.z);
+		TheQuaternion q = TheQuaternion.LookRotation(LookPos, SelfTransform.UpDirection);
+		SelfTransform.QuatRotation = TheQuaternion.Slerp(SelfTransform.QuatRotation, q, DeltaTime * RotationSpeed);
+		
 		/*// Face Forward Dir to PlayerPosition
 		float target_y_angle = GetAngleFromTwoPoints(SelfPosition.y, SelfPosition.z, PlayerPosition.y, PlayerPosition.z) - 270;
 
