@@ -33,6 +33,14 @@ public class Level1Manager
 	// 5 - Kill generators 
 	// 6 - Win
 
+	public TheGameObject intro_ship_spawn;
+	public TheGameObject intro_ship_path;
+
+	public string intro_enemy_ship_prefab;
+	private TheGameObject intro_ship = null;
+
+	public string enemy_ship_prefab;
+
 	void Init()
 	{
 		self = TheGameObject.Self;
@@ -98,6 +106,18 @@ public class Level1Manager
 
 			object[] args4 =  {"AckbarIntro", "as an intro.", 3.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args4);
+
+			object[] args5 = {"AckbarMissionExplain"};
+			dialog_manager.CallFunctionArgs("NewDialog", args5);
+
+			object[] args6 = {"AckbarMissionExplain", "Well done!", 3.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args6);
+
+			object[] args7 = {"AckbarMissionExplain", "This mission is still in creation progress", 3.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args7);
+
+			object[] args8 = {"AckbarMissionExplain", "so there is nothing else for now.", 3.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args8);
 		}
 
 		HideCurrMissionObj();
@@ -139,11 +159,19 @@ public class Level1Manager
 			{
 				SetCurrMissionObj("Follow and kill the enemy ship");
 				SetEnemiesToKill("Ships to kill: 1");
+
+				SpawnIntroShip();
 				
 				break;
 			}
 			case 3:
 			{
+				if(dialog_manager != null)
+				{
+					object[] args =  {"AckbarMissionExplain"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+
 				break;
 			}
 			case 4:
@@ -167,6 +195,9 @@ public class Level1Manager
 			}
 			case 2:
 			{
+				HideEnemiesToKill();
+				HideCurrMissionObj();
+
 				break;
 			}
 			case 3:
@@ -223,7 +254,13 @@ public class Level1Manager
 
 	void OnShipDestroyedCallback(TheGameObject ship, TheGameObject killer)
 	{
-		
+		if(curr_mission_state == 2)
+		{
+			if(ship == intro_ship)
+			{
+				NextMissionState();
+			}
+		}
 	}
 
 	void OnTurretDestroyedCallback(TheGameObject ship, TheGameObject killer)
@@ -264,5 +301,37 @@ public class Level1Manager
 	{
 		if(enemies_to_kill_background_go != null)
 			enemies_to_kill_background_go.SetActive(false);
+	}
+
+	void SpawnIntroShip()
+	{
+		intro_ship = TheResources.LoadPrefab(intro_enemy_ship_prefab);
+
+		if(intro_ship != null)
+		{
+			TheTransform trans = intro_ship.GetComponent<TheTransform>();
+
+			if(trans != null)
+			{
+				if(intro_ship_spawn != null)
+				{
+					TheTransform spawn_trans = intro_ship_spawn.GetComponent<TheTransform>();
+
+					trans.LocalPosition = spawn_trans.LocalPosition;
+
+					TheScript movement_script = intro_ship.GetScript("GuillemMovement");
+
+					object[] args = {1};
+					movement_script.CallFunctionArgs("SetMovementMode", args);
+
+					if(intro_ship_path != null)
+					{
+						object[] args2 = {intro_ship_path};
+	
+						movement_script.CallFunctionArgs("SetPathParent", args2);
+					}
+				}
+			}
+		}
 	}
 }

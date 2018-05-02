@@ -1,16 +1,21 @@
 using TheEngine;
 using System.Collections.Generic;
 using TheEngine.TheMath;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 
 public class GuillemMovement
 {
+	int movement_mode = 0;
+	// Modes
+	// 0 - Follows target
+	// 1 - Follows path
+	// 2 - Patrol
+
     public TheGameObject force_target;
     private bool forced = false;
 
     TheGameObject center_object;
     public float max_distance_to_center_object = 2000f;
-    public float desertor_distance = 5000f;
 
     public float move_speed = 300;
     public float rotation_speed = 60;
@@ -33,23 +38,27 @@ public class GuillemMovement
 	TheAudioSource audio_source = null;
 
 	// Scripts ---
-	TheScript ShipProperties = null;
-	TheScript GameManager = null;
+	TheScript entity_properties = null;
+	TheScript game_manager_script = null;
 	TheScript shooting_script = null;
 
 	bool avoiding = false;
 	TheVector3 avoiding_addition = new TheVector3(0, 0, 0);
 	
+	List<TheTransform> path = new List<TheTransform>();
+	int curr_path_index = 0;
+
 	TheGameObject self = null;
 
 	void Init()
 	{
 		self = TheGameObject.Self;
-        ShipProperties = self.GetScript("EntityProperties");
+
+        entity_properties = self.GetScript("EntityProperties");
 		
-		TheGameObject GM = TheGameObject.Find("GameManager");
-		if(GM != null)
-			GameManager = GM.GetScript("GameManager");
+		TheGameObject game_manager = TheGameObject.Find("GameManager");
+		if(game_manager != null)
+			game_manager_script = game_manager.GetScript("GameManager");
 	
 		shooting_script = self.GetScript("Ai_Starship_Shooting");
 
@@ -81,15 +90,48 @@ public class GuillemMovement
 		LookForTarget();
 		
 		audio_source.Play("Play_Enemy_Engine");
-		audio_source.SetMyRTPCvalue("Speed",modified_move_speed);// is this the current speed of the ship? Change it if not pls
+		audio_source.SetMyRTPCvalue("Speed", modified_move_speed);
     }
 
     void Update()
     {
 		if(audio_source != null)
-			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);
+			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);;
 
-        // Change target after x seconds
+		switch(movement_mode)
+		{	
+			case 0:
+			{
+				UpdateAutomaticTargetMode();
+			}
+			break;
+			case 1:
+			{
+				UpdateFollowPathMode();
+			}
+			break;
+			case 2:
+			{
+			}
+			break;
+		}
+
+        // Move
+        if (target_transform != null)
+        {
+            MoveFront();
+            OrientateToTarget();
+        }
+    }
+
+	void SetMovementMode(int set)
+	{
+		movement_mode = set;
+	}
+
+	void UpdateAutomaticTargetMode()
+	{
+		// Change target after x seconds
         if (timer.ReadTime() > random_time && !forced)
         {
             target_transform = null;
@@ -97,16 +139,13 @@ public class GuillemMovement
             RandomizeStats();
         }
 
-        // Avoid leaving x point on the map 
+		 // Avoid leaving x point on the map 
         if (center_transform != null && self_transform != null)
         {
 			TheVector3 center_trans_pos = center_transform.GlobalPosition;
 			TheVector3 self_trans_pos = self_transform.GlobalPosition;
 			
-			float distance_center_self = TheVector3.Distance(center_trans_pos, self_trans_pos);
-			
-            if (distance_center_self > desertor_distance)
-				self_transform.GlobalPosition = center_transform.GlobalPosition;               	
+			float distance_center_self = TheVector3.Distance(center_trans_pos, self_trans_pos);               	
 
             if (distance_center_self > max_distance_to_center_object)
             {
@@ -119,17 +158,47 @@ public class GuillemMovement
             }
         }
 
-        // Look for a new target
+	    // Look for a new target
         if (target_transform == null)
             LookForTarget();
+	}
 
-        // Move
-        if (target_transform != null)
-        {
-            MoveFront();
-            OrientateToTarget();
-        }
-    }
+	void UpdateFollowPathMode()
+	{
+		if(path.Count > 0 && curr_path_index >= 0 && path.Count > curr_path_index)
+		{
+			target_transform = path[curr_path_index];
+
+			if(TheVector3.Distance(target_transform.GlobalPosition, self_transform.GlobalPosition) < 4)
+			{
+				if(path.Count > curr_path_index + 1)
+					++curr_path_index;
+				else
+					curr_path_index = 0;
+			}
+		}
+	}
+
+	void SetPathParent(TheGameObject parent)
+	{
+		if(parent != null)
+		{
+			path.Clear();
+			curr_path_index = 0;
+
+			TheGameObject[] nodes = parent.GetAllChilds();
+
+			foreach (TheGameObject node in nodes)
+			{
+				TheTransform trans = node.GetComponent<TheTransform>();
+
+				if(trans != null)
+				{
+					path.Add(trans);
+				}
+			}
+		}
+	}
 
 	void ClearTarget()
 	{		
@@ -156,20 +225,20 @@ public class GuillemMovement
 
     void LookForTarget()
     {
-		if(ShipProperties == null) 
+		if(entity_properties == null) 
 			return;
 
-		string factionStr = (string)ShipProperties.CallFunctionArgs("GetFaction");
+		string factionStr = (string)entity_properties.CallFunctionArgs("GetFaction");
 
 		List<TheGameObject> enemy_ships = new List<TheGameObject>();	
 
 		if(factionStr == "alliance") 
-			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetEmpireShips");
+			enemy_ships = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetEmpireShips");
 		
 		else if(factionStr == "empire") 
-			enemy_ships = (List<TheGameObject>)GameManager.CallFunctionArgs("GetAllianceShips");
+			enemy_ships = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetAllianceShips");
 			
-		TheGameObject PlayerGo = (TheGameObject)GameManager.CallFunctionArgs("GetSlave1");
+		TheGameObject PlayerGo = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
 		
 		if(PlayerGo != null) {
 			// Player faction Filter Here ...
@@ -214,22 +283,25 @@ public class GuillemMovement
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
 		// Target avoidance ----
-		bool was_avoiding = avoiding;
-		if(TheVector3.Distance(self_pos, target_pos) < avoidance_rad)
-			avoiding = true;
-		else
-			avoiding = false;
+		if(movement_mode == 0)
+		{
+			bool was_avoiding = avoiding;
+			if(TheVector3.Distance(self_pos, target_pos) < avoidance_rad)
+				avoiding = true;
+			else
+				avoiding = false;
 		
-		if(!was_avoiding && avoiding)
-		{
-			avoiding_addition = GetRandomAvoidance();
-		}
+			if(!was_avoiding && avoiding)
+			{
+				avoiding_addition = GetRandomAvoidance();
+			}
  
-		if(TheVector3.Distance(self_pos, target_pos) < avoidance_rad)
-		{
-			target_pos.x += avoiding_addition.x;
-			target_pos.y += avoiding_addition.y;
-			target_pos.z += avoiding_addition.z;
+			if(TheVector3.Distance(self_pos, target_pos) < avoidance_rad)
+			{
+				target_pos.x += avoiding_addition.x;
+				target_pos.y += avoiding_addition.y;
+				target_pos.z += avoiding_addition.z;
+			}
 		}
 		// --------------------
 

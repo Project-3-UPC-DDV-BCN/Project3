@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using TheEngine.TheConsole;
 using TheEngine.TheMath;
 
-public class AIPath {
+public class AIPath 
+{
 
 	public TheGameObject PathGroup = null;
 	public bool IsPatrol = false;
 	
 	float min_dist = 1.0f;
 	
-	TheGameObject Self = TheGameObject.Self;
-	TheTransform SelfTransform;
+	TheGameObject Self = null;
+	TheTransform SelfTransform = null;
 	
 	List<TheGameObject> Nodes = new List<TheGameObject>();
 	List<TheVector3> NodePosition = new List<TheVector3>();
@@ -27,64 +28,90 @@ public class AIPath {
 	
 	float DeltaTime = 0.0f;
 	
-	void Start () {
-		SelfTransform = TheGameObject.Self.GetComponent<TheTransform>();
-		
-		TheGameObject[] nodes = PathGroup.GetAllChilds();
-		foreach (TheGameObject node in nodes)
-		{
-			Nodes.Add(node);
-			NodePosition.Add(node.GetComponent<TheTransform>().GlobalPosition);
-			TheConsole.Log("Node Position: "+node.GetComponent<TheTransform>().GlobalPosition.x+","
-											+node.GetComponent<TheTransform>().GlobalPosition.y+","
-											+node.GetComponent<TheTransform>().GlobalPosition.z);
-			//TheConsole.Log("Name: "+ node.name);
-		}
-		//TheConsole.Log("Total Nodes: "+Nodes.Count);
-		num_nodes = Nodes.Count;
-		node_index = 0;
-		next_node = NodePosition[0];
+	void Init()
+	{
+		Self = TheGameObject.Self;
+
+		SelfTransform = Self.GetComponent<TheTransform>();
+
+		if(PathGroup != null)
+			SetNodes(PathGroup);
 	}
 	
-	void Update () {
-		
+	void Update () 
+	{
+		MoveThroughPath();
+	}
+
+	void SetNodes(TheGameObject nodes_parent)
+	{
+		if(nodes_parent != null)
+		{
+			Nodes.Clear();
+			NodePosition.Clear();
+			next_node = null;
+			node_index = 0;
+			num_nodes = 0;
+
+			TheGameObject[] nodes = nodes_parent.GetAllChilds();
+
+			foreach (TheGameObject node in nodes)
+			{
+				TheTransform trans = node.GetComponent<TheTransform>();
+
+				if(trans != null)
+				{
+					Nodes.Add(node);
+					NodePosition.Add(trans.GlobalPosition);
+				}
+			}
+
+			num_nodes = Nodes.Count;
+
+			node_index = 0;
+
+			if(NodePosition.Count > 0)
+				next_node = NodePosition[0];
+		}
+	}
+	
+	void MoveThroughPath()
+	{
 		DeltaTime = TheTime.DeltaTime;
 		
-		if (TheVector3.Distance(SelfTransform.GlobalPosition, next_node) > min_dist)
+		if(next_node != null)
 		{
-			// Move
-			if (next_node != null)
+			if (TheVector3.Distance(SelfTransform.GlobalPosition, next_node) > min_dist)
 			{
 				MoveFront();
 				OrientateToTarget();
 			}
-		}
-		else
-		{
-			if (node_index < num_nodes - 1)
+			else
 			{
-				node_index++;
-				next_node = NodePosition[node_index];
-			}
-			else if (IsPatrol)
-			{
-				List<TheVector3> new_list = new List<TheVector3>();
+				if (node_index < num_nodes - 1)
+				{
+					++node_index;
+					next_node = NodePosition[node_index];
+				}
+				else if (IsPatrol)
+				{
+					List<TheVector3> new_list = new List<TheVector3>();
 				
-				for (int i = num_nodes - 1; i >= 0; i--)
-					new_list.Add(NodePosition[i]);
+					for (int i = num_nodes - 1; i >= 0; i--)
+						new_list.Add(NodePosition[i]);
 				
-				NodePosition.Clear();
+					NodePosition.Clear();
 				
-				foreach (TheVector3 node in new_list)
-					NodePosition.Add(node);
+					foreach (TheVector3 node in new_list)
+						NodePosition.Add(node);
 					
-				node_index = 1;
-				next_node = NodePosition[node_index];
+					node_index = 1;
+					next_node = NodePosition[node_index];
+				}
 			}
 		}
-		
 	}
-	
+
 	void MoveFront()
     {
         if (next_node != null)
@@ -103,44 +130,47 @@ public class AIPath {
 	
 	void OrientateToTarget()
     {
-		TheVector3 self_pos = SelfTransform.GlobalPosition;
-        TheVector3 target_pos = next_node;	
-		TheVector3 self_trans_rot = SelfTransform.LocalRotation;
+		if(next_node != null)
+		{
+			TheVector3 self_pos = SelfTransform.GlobalPosition;
+        	TheVector3 target_pos = next_node;	
+			TheVector3 self_trans_rot = SelfTransform.LocalRotation;
 
-        float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z) - 270;
+        	float target_x_angle = -GetAngleFromTwoPoints(self_pos.x, self_pos.z, target_pos.x, target_pos.z) - 270;
 
-        float angle_diff_x = self_trans_rot.y - target_x_angle;
+        	float angle_diff_x = self_trans_rot.y - target_x_angle;
 	
-		if((NormalizeAngle(self_trans_rot.x) < 90 && NormalizeAngle(self_trans_rot.x) > -90) || (NormalizeAngle(self_trans_rot.x) > 270 || NormalizeAngle(self_trans_rot.x) < -270))
-		{
-        	if (NormalizeAngle(angle_diff_x) > 180)
-            	SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * DeltaTime), self_trans_rot.z);
-        	else
-           	 	SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * DeltaTime), self_trans_rot.z);
-		}
-		else
-		{
-			if (NormalizeAngle(angle_diff_x) > 0)
-				SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * DeltaTime), self_trans_rot.z);
-        	else
-           	 	SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * DeltaTime), self_trans_rot.z);
-		}
+			if((NormalizeAngle(self_trans_rot.x) < 90 && NormalizeAngle(self_trans_rot.x) > -90) || (NormalizeAngle(self_trans_rot.x) > 270 || NormalizeAngle(self_trans_rot.x) < -270))
+			{
+        		if (NormalizeAngle(angle_diff_x) > 180)
+            		SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * DeltaTime), self_trans_rot.z);
+        		else
+           	 		SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * DeltaTime), self_trans_rot.z);
+			}
+			else
+			{
+				if (NormalizeAngle(angle_diff_x) > 0)
+					SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y - (modified_rotation_speed * DeltaTime), self_trans_rot.z);
+        		else
+           	 		SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x, self_trans_rot.y + (modified_rotation_speed * DeltaTime), self_trans_rot.z);
+			}
 		
-		self_trans_rot = SelfTransform.LocalRotation;
+			self_trans_rot = SelfTransform.LocalRotation;
 			
-		float target_y_angle = GetAngleFromTwoPoints(self_pos.y, self_pos.z, target_pos.y, target_pos.z) - 270;
+			float target_y_angle = GetAngleFromTwoPoints(self_pos.y, self_pos.z, target_pos.y, target_pos.z) - 270;
 
-		if(self_pos.z > target_pos.z)
-		{
-			target_y_angle -= 180;
-		}		
+			if(self_pos.z > target_pos.z)
+			{
+				target_y_angle -= 180;
+			}		
 
-        float angle_diff_y =self_trans_rot.x - target_y_angle;		
+        	float angle_diff_y =self_trans_rot.x - target_y_angle;		
 
-		if (NormalizeAngle(angle_diff_y) > 180)
-			SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x + (modified_rotation_speed * DeltaTime), self_trans_rot.y, self_trans_rot.z);
-		else
-			SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x - (modified_rotation_speed * DeltaTime), self_trans_rot.y, self_trans_rot.z);
+			if (NormalizeAngle(angle_diff_y) > 180)
+				SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x + (modified_rotation_speed * DeltaTime), self_trans_rot.y, self_trans_rot.z);
+			else
+				SelfTransform.LocalRotation = new TheVector3(self_trans_rot.x - (modified_rotation_speed * DeltaTime), self_trans_rot.y, self_trans_rot.z);
+		}
     }
 	
 	float GetAngleFromTwoPoints(float x1, float y1, float x2, float y2)
