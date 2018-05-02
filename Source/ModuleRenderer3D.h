@@ -9,6 +9,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include <list>
+#include <map>
 
 class ComponentMeshRenderer;
 class ComponentParticleEmmiter;
@@ -25,8 +26,8 @@ class Material;
 #define MAX_SPO_LIGHT 8
 #define MAX_POI_LIGHT 8
 
-#define SHADOW_HEIGHT 1024
-#define SHADOW_WIDTH 1024
+#define SHADOW_HEIGHT 4096
+#define SHADOW_WIDTH 4096
 
 class ModuleRenderer3D : public Module
 {
@@ -115,6 +116,7 @@ public:
 	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
 	void DrawDebugOBB(OBB& aabb, ComponentCamera* active_camera);
 	void DrawMesh(std::vector<ComponentMeshRenderer*> mesh, ComponentCamera* active_camera);
+	void DrawMeshWithBlending(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 	void SendLight(uint program_id);
 	int GetDirectionalLightCount() const;
@@ -131,14 +133,11 @@ private:
 	void DrawSceneCameras(ComponentCamera* camera);
 
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
-
-	void DrawColliders();
 	
-	void OrderByMaterials(ComponentMeshRenderer* mesh);
+	void OrderByMaterials(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 public:
 	Light lights[MAX_LIGHTS];
-	void DrawZBuffer();
 	float4x4 OrthoProjection( float left, float right, float bottom, float top, float near_plane, float far_plane);
 	void DrawGrid(ComponentCamera* camera);
 
@@ -182,9 +181,14 @@ private:
 	std::vector<ComponentParticleEmmiter*> particles_to_draw;
 
 	std::vector<std::vector<ComponentMeshRenderer*>> ordering_by_materials;
+	std::map<float, ComponentMeshRenderer*> sorted; // For blending
+
 	std::vector<AABB> cubes_to_draw;
 	Material* current_material = nullptr;
 	bool changed_material = true;
+	float self_alpha = -1.0f;
+
+
 	// SHADOW MAPPING DON'T TOUCH
 	uint depth_map;
 	uint depth_mapFBO;
