@@ -8,15 +8,15 @@ public class ObstacleAvoidance {
 	public float avoidingForce = 40f;
 	public float avoidingMultiplier = 1f;
 
+	// Debug
+	public bool ShowRays = false;
+
 	// Transforms
 	TheTransform transform = null;
 
 	// RayCasts Directions
-	public TheVector3 rayCenter = new TheVector3(0, 0, 1);
-	public TheVector3 rayLeft = new TheVector3(-1, 0, 1);
-	public TheVector3 rayRight = new TheVector3(1, 0, 1);
-	public TheVector3 rayTop = new TheVector3(0, 1, 1);
-	public TheVector3 rayBottom = new TheVector3(0, -1, 1);
+	public float XOffset = 15f;
+	public float YOffset = 10f;
 
 	// Exceptions
 	public TheBoxCollider self_collider = null;
@@ -29,26 +29,28 @@ public class ObstacleAvoidance {
 	void Update () {
 		if(transform == null) return;
 
-		// RayCast Setup ---
-		TheVector3 RayCenter = transform.ForwardDirection;
-		TheVector3 RayLeft = rayLeft + transform.ForwardDirection;
-		TheVector3 RayRight = rayRight + transform.ForwardDirection;
-		TheVector3 RayTop = rayTop + transform.ForwardDirection;
-		TheVector3 RayBottom = rayBottom + transform.ForwardDirection;
+		// RayCast Setup
+		TheVector3 originLeft = transform.GlobalPosition + new TheVector3(-XOffset, 0, 0);
+		TheVector3 originRight = transform.GlobalPosition + new TheVector3(XOffset, 0, 0);
+		TheVector3 originTop = transform.GlobalPosition + new TheVector3(0, YOffset, 0);
+		TheVector3 originBottom = transform.GlobalPosition + new TheVector3(0, -YOffset, 0);
 
 		// RayDebug ---
-		/*TheDebugDraw.Ray(transform.GlobalPosition, RayCenter.Normalized * rayLength, TheColor.Red);
-		TheDebugDraw.Ray(transform.GlobalPosition, RayLeft.Normalized * rayLength, TheColor.Blue);	
-		TheDebugDraw.Ray(transform.GlobalPosition, RayRight.Normalized * rayLength, TheColor.Blue);	
-		TheDebugDraw.Ray(transform.GlobalPosition, RayTop.Normalized * rayLength, TheColor.Blue);	
-		TheDebugDraw.Ray(transform.GlobalPosition, RayBottom.Normalized * rayLength, TheColor.Blue);*/			
+		if(ShowRays == true) {
+			TheDebugDraw.Ray(transform.GlobalPosition, transform.ForwardDirection.Normalized * rayLength, TheColor.Red);
+			TheDebugDraw.Ray(originLeft, transform.ForwardDirection.Normalized * rayLength, TheColor.Blue);	
+			TheDebugDraw.Ray(originRight, transform.ForwardDirection.Normalized * rayLength, TheColor.Blue);	
+			TheDebugDraw.Ray(originTop, transform.ForwardDirection.Normalized * rayLength, TheColor.Blue);	
+			TheDebugDraw.Ray(originBottom, transform.ForwardDirection.Normalized * rayLength, TheColor.Blue);		
+	
+		}	
 
 		// RayCasting ---
-		TheRayCastHit[] ArrRayHitCenter = ThePhysics.RayCastAll(transform.GlobalPosition, RayCenter, rayLength);
-		TheRayCastHit[] ArrRayHitLeft = ThePhysics.RayCastAll(transform.GlobalPosition, RayLeft, rayLength);
-		TheRayCastHit[] ArrRayHitRight = ThePhysics.RayCastAll(transform.GlobalPosition, RayRight, rayLength);
-		TheRayCastHit[] ArrRayHitTop = ThePhysics.RayCastAll(transform.GlobalPosition, RayTop, rayLength);
-		TheRayCastHit[] ArrRayHitBottom = ThePhysics.RayCastAll(transform.GlobalPosition, RayBottom, rayLength);
+		TheRayCastHit[] ArrRayHitCenter = 	ThePhysics.RayCastAll(transform.GlobalPosition, transform.ForwardDirection, rayLength);
+		TheRayCastHit[] ArrRayHitLeft = 	ThePhysics.RayCastAll(originLeft, transform.ForwardDirection, rayLength);
+		TheRayCastHit[] ArrRayHitRight = 	ThePhysics.RayCastAll(originRight, transform.ForwardDirection, rayLength);
+		TheRayCastHit[] ArrRayHitTop = 		ThePhysics.RayCastAll(originTop, transform.ForwardDirection, rayLength);
+		TheRayCastHit[] ArrRayHitBottom = 	ThePhysics.RayCastAll(originBottom, transform.ForwardDirection, rayLength);
 
 		// RayCast Filtering ---
 		TheRayCastHit rayHitCenter = null;
