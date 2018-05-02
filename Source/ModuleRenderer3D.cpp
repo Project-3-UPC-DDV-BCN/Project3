@@ -537,8 +537,21 @@ void ModuleRenderer3D::OrderByMaterials(ComponentMeshRenderer* mesh, ComponentCa
 	// If it needs to blend due to alpha, we add it to the blend map
 	if (mesh->GetMaterial()->GetOpacityTexture() != nullptr)
 	{
+		glm::vec3 cam_pos;
 		ComponentTransform* trans = (ComponentTransform*) mesh->GetGameObject()->GetComponent(Component::CompTransform);
-		glm::vec3 cam_pos(active_camera->GetFrustum().Pos().x, active_camera->GetFrustum().Pos().y, active_camera->GetFrustum().Pos().z);
+		if (active_camera->GetGameObject() != nullptr)
+		{
+			ComponentTransform* cam_trans = (ComponentTransform*)active_camera->GetGameObject()->GetComponent(Component::CompTransform);
+			
+			glm::vec3 tmp(cam_trans->GetGlobalPosition().x, cam_trans->GetGlobalPosition().y, cam_trans->GetGlobalPosition().z);
+			cam_pos = tmp;
+		}
+		else 
+		{
+			glm::vec3 tmp(active_camera->GetFrustum().Pos().x, active_camera->GetFrustum().Pos().y, active_camera->GetFrustum().Pos().z);
+			cam_pos = tmp;
+		}
+		
 		glm::vec3 go_pos(trans->GetGlobalPosition().x, trans->GetGlobalPosition().y, trans->GetGlobalPosition().z);
 
 		float distance = glm::length(cam_pos - go_pos);
@@ -795,6 +808,9 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 	active_camera->GetViewportTexture()->Render();
 	active_camera->GetViewportTexture()->Unbind();
+
+	ordering_by_materials.clear();
+	sorted.clear();
 }
 
 void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, ComponentCamera* active_camera)
@@ -932,6 +948,7 @@ void ModuleRenderer3D::ResetRender()
 	debug_primitive_to_draw.clear();
 	particles_to_draw.clear();
 	ordering_by_materials.clear();
+	sorted.clear();
 	cubes_to_draw.clear();
 	using_program = false;
 	changed_material = true;

@@ -2000,7 +2000,7 @@ void ModuleResources::CreateDefaultShaders()
 			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
 
 						// -------------- FRESNEL + predefined metallic and roughness ----------
-			"			float metallic = 1.5;\n"
+		/*	"			float metallic = 1.5;\n"
 			"			float roughness = 1.5;\n"
 			"			vec3 V = normalize(viewPos - FragPos);\n"
 
@@ -2029,7 +2029,7 @@ void ModuleResources::CreateDefaultShaders()
 			"				kD *= 1.0 - metallic;\n"
 			"				float NdotL = max(dot(normal, L), 0.0);\n"
 			"				Lo += (kD * color.rgb / PI + specular) * radiance * NdotL;\n"
-			"			}\n"
+			"			}\n"*/
 
 
 
@@ -2041,7 +2041,7 @@ void ModuleResources::CreateDefaultShaders()
 			"				{\n	"
 			"					color.a = self_transparency / 100;\n"
 			"				}\n	"
-			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)) + Lo, color.a);  \n"
+			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)), color.a);  \n"
 		//	"			color.rgb = color.rgb / (color.rgb + vec3(1.0));\n"
 		//	"			color.rgb = pow(color.rgb, vec3(1.0 / 2.2));\n"
 
