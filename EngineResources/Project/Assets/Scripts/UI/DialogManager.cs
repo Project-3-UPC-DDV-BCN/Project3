@@ -24,35 +24,22 @@ public class DialogManager
 
 	bool update_info = false;
 	
-	void Start () 
-	{
-		NewDialog("hi");
-		NewDialogLine("hi", "t1", 1.0f);
-		NewDialogLine("hi", "t2", 1.0f);
-		NewDialogLine("hi", "t3", 1.0f);
-		FireDialog("hi");
-
-		NewDialog("hi2");
-		NewDialogLine("hi", "r1", 1.0f);
-		NewDialogLine("hi", "r2", 1.0f);
-		NewDialogLine("hi", "r3", 1.0f);
-	}
-	
 	void Update () 
 	{
 		UpdateText();
-
-		if(!DialogIsRunning())
-			FireDialog("hi2");
 	}
 
 	void SetTextComponent(TheText txt)
 	{
+		//TheConsole.Log("Setting text cmp");
+
 		text = txt;
 	}
 
 	void SetCanvas(TheGameObject cv)
 	{
+		//TheConsole.Log("Setting canvas");
+
 		canvas_go = cv;
 	}
 
@@ -63,6 +50,8 @@ public class DialogManager
 
 	void FireDialog(string dialog)
 	{
+		//TheConsole.Log("Firing dialog");
+
 		curr_dialog = GetDialogList(dialog);
 
 		if(curr_dialog != null && curr_dialog.Count > 0)
@@ -144,6 +133,9 @@ public class DialogManager
 					timer.Start();
 
 					update_info = false;
+				
+					//TheConsole.Log(text);
+
 				}
 
 				if(timer.ReadTime() > curr_time)
@@ -158,6 +150,9 @@ public class DialogManager
 						curr_dialog = null;
 						curr_info = 0;
 						curr_time = 0;
+
+						if(canvas_go != null)
+							canvas_go.SetActive(false);
 					}
 				}	
 			}
