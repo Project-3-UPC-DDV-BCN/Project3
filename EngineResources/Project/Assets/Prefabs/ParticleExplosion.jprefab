@@ -1,11 +1,11 @@
 {
-    "UUID": "2036300119",
+    "UUID": "99307554",
     "assets_path": "./Project/Assets/Prefabs/ParticleExplosion.jprefab",
     "library_path": "./Project/Library/Prefabs/ParticleExplosion.jprefab",
     "prefab_name": "ParticleExplosion",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "970144547",
+        "UUID": "1141357341",
         "Name": "ParticleExplosion",
         "Tag": "Default",
         "Layer": "Default",
@@ -15,7 +15,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "732505548",
+                "UUID": "570784235",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -36,12 +36,12 @@
             "Component_1": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "2135704306",
+                "UUID": "388896719",
                 "Script": {
                     "library_path": "./Project/Library/Scripts/ParticleAutoDestroy.dll",
                     "assets_path": "",
                     "script_name": "ParticleAutoDestroy",
-                    "UUID": "249253393",
+                    "UUID": "2052135770",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "1",
@@ -78,8 +78,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1925324890",
-        "Name": "New GameObject(3)",
+        "UUID": "1249531467",
+        "Name": "SmokeParticle",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -88,7 +88,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "2113817544",
+                "UUID": "713795320",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -109,20 +109,20 @@
             "Component_1": {
                 "Type": "11",
                 "Active": "1",
-                "UUID": "1384293386",
+                "UUID": "951168033",
                 "ParticleEmitter": {
-                    "Rate": "15",
+                    "Rate": "34",
                     "Template": "SmokeTemplate"
                 }
             }
         },
-        "ParentID": "970144547",
+        "ParentID": "1141357341",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1409888244",
-        "Name": "New GameObject(4)",
+        "UUID": "1215207684",
+        "Name": "FireParticle",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -131,7 +131,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1177548522",
+                "UUID": "354710876",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -152,20 +152,20 @@
             "Component_1": {
                 "Type": "11",
                 "Active": "1",
-                "UUID": "1118716640",
+                "UUID": "1463886601",
                 "ParticleEmitter": {
                     "Rate": "15",
                     "Template": "FireTemplate2"
                 }
             }
         },
-        "ParentID": "970144547",
+        "ParentID": "1141357341",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "646898448",
-        "Name": "New GameObject(5)",
+        "UUID": "1708410552",
+        "Name": "SparkleParticle",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -174,7 +174,7 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1232695063",
+                "UUID": "1387097377",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -195,14 +195,14 @@
             "Component_1": {
                 "Type": "11",
                 "Active": "1",
-                "UUID": "1234284044",
+                "UUID": "1970128895",
                 "ParticleEmitter": {
                     "Rate": "15",
                     "Template": "SparkleTemplate"
                 }
             }
         },
-        "ParentID": "970144547",
+        "ParentID": "1141357341",
         "IsRoot": "0",
         "IsStatic": "0"
     }

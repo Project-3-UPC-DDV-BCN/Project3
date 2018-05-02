@@ -1724,7 +1724,7 @@ void ModuleResources::DeleteFBXMeshes(GameObject* gameobject)
 {
 	if (gameobject != nullptr)
 	{
-		for (std::list<GameObject*>::iterator it = gameobject->childs.begin(); it != gameobject->childs.end(); it++)
+		for (std::vector<GameObject*>::iterator it = gameobject->childs.begin(); it != gameobject->childs.end(); it++)
 		{
 			DeleteFBXMeshes(*it);
 		}

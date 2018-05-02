@@ -324,13 +324,12 @@ void ComponentText::UpdateText(bool font_update)
 			t = " ";
 
 		float2 last_text_size = text_size;
-
-		if (last_text_size.x > 0)
-			text_scale_diff = c_rect_trans->GetSize().x / last_text_size.x;
+		
+		text_scale_diff = c_rect_trans->GetSize().x / last_text_size.x;
 
 		if (font_size != font->GetFontSize())
 			font->SetFontSize(font_size);
-		
+
 		if (texture != 0)
 			App->font_importer->UnloadText(texture);
 
@@ -338,41 +337,51 @@ void ComponentText::UpdateText(bool font_update)
 
 		text_size = App->font_importer->CalcTextSize(t.c_str(), font, bold, italic, underline, strikethrough);
 
-		texture = App->font_importer->LoadText(t.c_str(), font, colour255, bold, italic, underline, strikethrough);
-
-		c_rect_trans->SetAspectRatio(text_size.x / text_size.y);
-
-		c_rect_trans->SetSize(float2(c_rect_trans->GetSize().x, c_rect_trans->GetSize().y));
-
-		if (!font_update)
+		if (text_size.y > 0)
 		{
-			// Move text
-			float2 movement = text_size - last_text_size;
+			texture = App->font_importer->LoadText(t.c_str(), font, colour255, bold, italic, underline, strikethrough);
 
-			if (text_size.x > 0)
-				text_scale_diff = c_rect_trans->GetScaledSize().x / text_size.x;
+			c_rect_trans->SetAspectRatio(text_size.x / text_size.y);
 
-			movement.x *= text_scale_diff;
-			movement.x /= c_rect_trans->GetScale();
+			c_rect_trans->SetSize(float2(c_rect_trans->GetSize().x, c_rect_trans->GetSize().y));
 
-			switch (grow_dir)
+			if (!font_update)
 			{
-			case TextGrow::TG_LEFT:
-			{
-				c_rect_trans->AddPos(float2((movement.x / 2), 0));
-			}
-			break;
-			case TextGrow::TG_RIGHT:
-			{
-				c_rect_trans->AddPos(float2(-(movement.x / 2), 0));
-			}
-			break;
-			case TextGrow::TG_CENTER:
-			{
+				// Move text
+				float2 movement = text_size - last_text_size;
 
-			}
-			break;
+				if (text_size.x > 0)
+				{
+					text_scale_diff = c_rect_trans->GetScaledSize().x / text_size.x;
+
+					movement.x *= text_scale_diff;
+
+					if (c_rect_trans->GetScale() > 0)
+					{
+						movement.x /= c_rect_trans->GetScale();
+
+						switch (grow_dir)
+						{
+						case TextGrow::TG_LEFT:
+						{
+							c_rect_trans->AddPos(float2((movement.x / 2), 0));
+						}
+						break;
+						case TextGrow::TG_RIGHT:
+						{
+							c_rect_trans->AddPos(float2(-(movement.x / 2), 0));
+						}
+						break;
+						case TextGrow::TG_CENTER:
+						{
+
+						}
+						break;
+						}
+					}
+				}
 			}
 		}
+		
 	}
 }

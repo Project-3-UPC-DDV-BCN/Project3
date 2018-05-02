@@ -48,6 +48,8 @@ public class PlayerMovement {
 	public string vertical_movement_up_joystic = "RIGHTJOY_UP";
 	public string vertical_movement_down_joystic = "RIGHTJOY_DOWN";
 	public string boost_button = "CONTROLLER_L3";
+	public string front_shield_key = "E";
+	public string back_shield_key = "D";
 	
 	
 	//Energy Controls
@@ -95,6 +97,9 @@ public class PlayerMovement {
     public float shield_regen_time = 10.0f;
     private float shield_regen_energy;
     private float shield_regen_timer;
+	private int front_shield = 2;
+	private int back_shield = 2;
+	private float shield_step = 0.25f;
 	
 	
 	// Ship Information Timers
@@ -309,6 +314,7 @@ public class PlayerMovement {
 		EnergyManagement();
 		RepairPuzzle();
 		RegenShield();
+		ManageShields();
 		
 		
 		//Apply changes to values
@@ -745,6 +751,48 @@ public class PlayerMovement {
 		}
 	}
 	
+	void ManageShields()
+	{
+		if(TheInput.IsKeyDown(front_shield_key) && front_shield < 4)
+		{
+			front_shield++;
+			back_shield--;
+		}
+		if(TheInput.IsKeyDown(back_shield_key) && back_shield < 4)
+		{
+			front_shield--;
+			back_shield++;
+		}
+	}
+	
+	void DamageFrontShield(int dmg)
+	{
+		if(shield_hp > 0)
+		{
+			float shield_dmg = (float)dmg*(4-front_shield)*shield_step;
+			
+			shield_hp -= shield_dmg;
+			if(shield_hp < 0)
+				shield_hp = 0;
+		}
+		else
+			DamageSlaveOne(dmg);
+	}
+	
+	void DamageBackShield(int dmg)
+	{
+		if(shield_hp > 0)
+		{
+			float shield_dmg = (float)dmg*(4-back_shield)*shield_step;
+			
+			shield_hp -= shield_dmg;
+			if(shield_hp < 0)
+				shield_hp = 0;
+		}
+		else
+			DamageSlaveOne(dmg);
+	}
+	
 	void DamageSlaveOne(int dmg)
     {
 		float f_dmg = dmg;
@@ -773,55 +821,34 @@ public class PlayerMovement {
 
     void DamageWings(float damage)
     {
-        if (curr_shield_hp > 0)
-        {
-            curr_shield_hp -= damage;
-            shield_regen_timer = shield_regen_time;
-        }
-        else
-        {
-            wings_hp -= damage;
+        wings_hp -= damage;
 
-            if (wings_hp <= 0.0f)
-            {
-				is_dead = true;
-            }
+        if (wings_hp <= 0.0f)
+        {
+			is_dead = true;
         }
+        
     }
 
     void DamageBody(float damage)
     {
-        if (curr_shield_hp > 0)
-        {
-            curr_shield_hp -= damage;
-            shield_regen_timer = shield_regen_time;
-        }
-        else
-        {
-            body_hp -= damage;
+        body_hp -= damage;
 
-            if (wings_hp <= 0.0f)
-            {
-                is_dead = true;
-            }
+        if (wings_hp <= 0.0f)
+        {
+            is_dead = true;
         }
+        
     }
 
     void DamageEngine(float damage)
     {
-        if (curr_shield_hp > 0)
+        engine_hp -= damage;
+        if (wings_hp <= 0.0f)
         {
-            curr_shield_hp -= damage;
-            shield_regen_timer = shield_regen_time;
+            is_dead = true;
         }
-        else
-        {
-            engine_hp -= damage;
-            if (wings_hp <= 0.0f)
-            {
-                is_dead = true;
-            }
-        }
+        
     }
 	
 	void RegenShield()

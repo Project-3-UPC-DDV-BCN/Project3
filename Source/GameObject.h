@@ -90,7 +90,7 @@ public:
 	void DeleteFromResourcesDestructor();
 
 public:
-	std::list<GameObject*> childs;
+	std::vector<GameObject*> childs;
 	std::list<Component*> components_list;
 	bool is_on_destroy;
 	bool used_in_scene;

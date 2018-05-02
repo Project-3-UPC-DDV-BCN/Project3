@@ -8,11 +8,11 @@ namespace TheEngine
         {
             get
             {
-                return GetScale();
+                return GetTimeScale();
             }
             set
             {
-                SetScale(value);
+                SetTimeScale(value);
             }
         }
 
@@ -33,10 +33,10 @@ namespace TheEngine
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float GetScale();
+        private static extern float GetTimeScale();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float SetScale(float scale);
+        private static extern float SetTimeScale(float scale);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetDeltaTime();

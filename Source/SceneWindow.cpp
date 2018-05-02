@@ -226,9 +226,12 @@ void SceneWindow::DrawMenuBar()
 		}
 		if (ImGui::BeginMenu("Time"))
 		{
-			if (ImGui::SliderFloat("Dt Scale", &App->time->time_scale, 0.0f, 100.0f))
+			if (ImGui::SliderFloat("Dt Scale", &App->time->time_scale, 0.0f, 3.0f, "%.3f", 0.1f))
 			{
-				if (App->time->time_scale < 0.0f) App->time->time_scale = 0.0f;
+				if (App->time->time_scale < 0.0f || App->time->time_scale == 0)
+				{
+					App->time->time_scale = 0.0f;
+				}
 			}
 			ImGui::EndMenu();
 		}

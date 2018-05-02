@@ -1,11 +1,11 @@
 {
-    "UUID": "1464112867",
+    "UUID": "1593001186",
     "assets_path": "./Project/Assets/Prefabs/VS4 - Laser.jprefab",
     "library_path": "./Project/Library/Prefabs/VS4 - Laser.jprefab",
     "prefab_name": "VS4 - Laser",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "543124905",
+        "UUID": "1690104838",
         "Name": "VS4 - Laser",
         "Tag": "Default",
         "Layer": "Default",
@@ -24,13 +24,13 @@
                 "rotation": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
-                    "value_Z": "-0.408729",
-                    "value_W": "0.912656"
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
                     "value_Y": "1.000000",
-                    "value_Z": "5.750000"
+                    "value_Z": "6.250000"
                 }
             },
             "Component_1": {
@@ -42,7 +42,7 @@
                     "assets_path": "",
                     "script_name": "Laser",
                     "UUID": "1789239694",
-                    "int_fields_count": "1",
+                    "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
                     "bool_fields_count": "0",
@@ -51,12 +51,7 @@
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
-                    "int_fields": {
-                        "field_0": {
-                            "field_name": "laser_damage",
-                            "field_value": "10"
-                        }
-                    },
+                    "int_fields": {},
                     "double_fields": {},
                     "float_fields": {},
                     "bool_fields": {},
@@ -143,9 +138,9 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "2.253800",
-                        "value_Y": "2.151600",
-                        "value_Z": "8.888500"
+                        "value_X": "2.004000",
+                        "value_Y": "1.652000",
+                        "value_Z": "54.638004"
                     }
                 }
             }

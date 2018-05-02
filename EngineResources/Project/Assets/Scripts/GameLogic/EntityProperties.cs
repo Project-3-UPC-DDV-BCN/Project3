@@ -14,6 +14,8 @@ public class EntityProperties
 	public bool is_ship = false;
 	public bool is_turret = false;
 	public bool is_generator = false;
+	
+	public string explosion_prefab;
 
 	public float laser_speed = 30;
 	public int base_laser_damage = 10;
@@ -121,11 +123,11 @@ public class EntityProperties
 	{
 		if(ship != null && !IsDead())
 		{
-			TheScript ship_script = ship.GetScript("EntityProperties");
-			bool ship_is_slave1 = (bool)ship_script.CallFunctionArgs("IsSlave1");
-			if(ship_script != null)
+			TheScript entity_script = ship.GetScript("EntityProperties");
+
+			if(entity_script != null)
 			{
-				string hit_faction = (string)ship_script.CallFunctionArgs("GetFaction");
+				string hit_faction = (string)entity_script.CallFunctionArgs("GetFaction");
 
 				if(hit_faction == GetFaction())
 				{
@@ -139,6 +141,8 @@ public class EntityProperties
 
 				// Check if is dead
 				CheckDeath(ship);
+
+				TheConsole.Log("Hit by ship");
 			}
 		}
 	}
@@ -261,44 +265,30 @@ public class EntityProperties
 				if(audio_source != null)
 					audio_source.Play("Play_Enemy_Explosions");
 
-				TheGameObject particle = TheResources.LoadPrefab("ParticleExplosion");
-				
-				// Particles when destroying ship
-				if(particle != null)
-				{
-					TheTransform particle_trans = particle.GetComponent<TheTransform>();
-					if(particle_trans != null && self_transform != null)
-					{
-						particle_trans.LocalPosition = self_transform.LocalPosition;
-			
-						TheScript particle_script = particle.GetScript("ParticleAutoDestroy");
-						if(particle_script != null)
-						{
-							particle_script.CallFunctionArgs("Destroy");
-
-							TheConsole.Log("Explosion particle created!");
-						}
-					}
-				}
-
 				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
+				
+				SpawnExplosion();
 				
 				TheGameObject.Destroy(self);					
 			}
 
 			else if(IsTurret())
 			{
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveTurret", args);
+				
+				SpawnExplosion();
 
 				TheGameObject.Destroy(self);
 			}
 
 			else if(IsGenerator())
 			{
-				object[] args = {self};
+				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveGenerator", args);
+
+				SpawnExplosion();
 
 				TheGameObject.Destroy(self);
 			}
@@ -313,6 +303,29 @@ public class EntityProperties
 		{
 			object[] args = {ship};
 			movement_script.CallFunctionArgs("ClearIfTarget", args);
+		}
+	}
+
+	void SpawnExplosion()
+	{
+		TheGameObject particle = TheResources.LoadPrefab(explosion_prefab);
+				
+		// Particles when destroying ship
+		if(particle != null)
+		{
+			TheTransform particle_trans = particle.GetComponent<TheTransform>();
+			if(particle_trans != null && self_transform != null)
+			{
+				particle_trans.LocalPosition = self_transform.LocalPosition;
+			
+				TheScript particle_script = particle.GetScript("ParticleAutoDestroy");
+				if(particle_script != null)
+				{
+					particle_script.CallFunctionArgs("Destroy");
+
+					TheConsole.Log("Explosion particle created!");
+				}
+			}
 		}
 	}
 }

@@ -5,19 +5,6 @@ using TheEngine.TheConsole;
 public class GameManager
 {
 	private string team = "no_str"; 
-	
-	/*public float music_timer = 15;
-	private float background_music_timer = 0.0f;
-	private bool calm_combat = false;
-	
-	public int calm_volume = 10;
-	public int combat_volume = 10;
-
-	TheAudioSource audio_source = null;
-	
-	public TheGameObject slave1_audio;
-	TheAudioSource slave1_audiosource = null;
-*/
 
 	TheScript training_mode_script = null;
 	TheScript level1_script = null;
@@ -57,46 +44,22 @@ public class GameManager
 
 		if(is_level1)
 		{
-			level1_script = TheGameObject.Self.GetScript("Level1ManagerManager");
+			level1_script = TheGameObject.Self.GetScript("Level1Manager");
 			TheConsole.Log("Level 1 enabled!");
 		}
+
+		// Raders
+		if(front_radar_go != null)
+			front_radar = front_radar_go.GetComponent<TheRadar>();
+	
+		if(back_radar_go != null)
+			back_radar = back_radar_go.GetComponent<TheRadar>();
 	}
 
 	void Start ()
 	{
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
-
-		if(front_radar_go != null)
-			front_radar = front_radar_go.GetComponent<TheRadar>();
-
-		if(back_radar_go != null)
-			back_radar = back_radar_go.GetComponent<TheRadar>();
-		
-		/*
-		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
-
-		if(slave1_audio != null)
-			slave1_audiosource = slave1_audio.GetComponent<TheAudioSource>();
-		*/
-		/*if(audio_source != null)
-		{
-			audio_source.Play("Play_Music");
-			audio_source.SetVolume(calm_volume);
-		}
-		
-			
-		background_music_timer = music_timer;
-
-		game_timer.Start();
-		*/
-	}
-	
-	void Update () 
-	{
-		//UpdateAudio();
-
-		//UpdateTimePointsTexts();
 	}
 
 	bool GetIsTrainingMode()
@@ -155,11 +118,11 @@ public class GameManager
 	{
 		if(add != null)
 		{
-			TheScript ship_properties = add.GetScript("EntityProperties");
+			TheScript entity_properties = add.GetScript("EntityProperties");
 
-			if(ship_properties != null)
+			if(entity_properties != null)
 			{	
-				bool is_slave = (bool)ship_properties.CallFunctionArgs("IsSlave1");		
+				bool is_slave = (bool)entity_properties.CallFunctionArgs("IsSlave1");		
 				if(!is_slave)
 				{
 					alliance_ships.Add(add);
@@ -168,12 +131,16 @@ public class GameManager
 					{
 						front_radar.AddEntity(add);
 						front_radar.SetMarkerToEntity(add, "Alliance");
+						TheConsole.Log("Adding to front radar");
 					}
+					else
+						TheConsole.Log("radar is null");
 		
 					if(back_radar != null)
 					{
 						back_radar.AddEntity(add);
 						back_radar.SetMarkerToEntity(add, "Alliance");
+						TheConsole.Log("Adding to back radar");
 					}
 					
 
@@ -187,11 +154,11 @@ public class GameManager
 	{
 		if(add != null)
 		{
-			TheScript ship_properties = add.GetScript("EntityProperties");
+			TheScript entity_properties = add.GetScript("EntityProperties");
 			
-			if(ship_properties != null)
+			if(entity_properties != null)
 			{
-				bool is_slave = (bool)ship_properties.CallFunctionArgs("IsSlave1");		
+				bool is_slave = (bool)entity_properties.CallFunctionArgs("IsSlave1");		
 				if(!is_slave)
 				{
 					empire_ships.Add(add);
@@ -200,12 +167,16 @@ public class GameManager
 					{
 						front_radar.AddEntity(add);
 						front_radar.SetMarkerToEntity(add, "Empire");
+						TheConsole.Log("Adding to front radar");
 					}
-
+					else
+						TheConsole.Log("radar is null");
+	
 					if(back_radar != null)
 					{
 						back_radar.AddEntity(add);
 						back_radar.SetMarkerToEntity(add, "Alliance");
+						TheConsole.Log("Adding to back radar");
 					}
 
 					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
@@ -299,29 +270,47 @@ public class GameManager
 				if(level1_script != null)
 				{
 					object[] args = {remove, killer};
-					training_mode_script.CallFunctionArgs("OnShipDestroyedCallback", args);
+					level1_script.CallFunctionArgs("OnShipDestroyedCallback", args);
 				}
 			}
 		}
 	}
 
-	void RemoveTurret(TheGameObject turret)
+	void RemoveTurret(TheGameObject turret, TheGameObject killer)
 	{
 		if(turret != null)
 		{
 			if(turret_entities.Remove(turret))
 			{
+				if(is_level1)
+				{
+					if(level1_script != null)
+					{
+						object[] args = {turret, killer};
+						level1_script.CallFunctionArgs("OnTurretDestroyedCallback", args);
+					}
+				}
+
 				TheConsole.Log("Turret destroyed! Remaining: " + TurretsCount());
 			}
 		}
 	}
 
-	void RemoveGenerator(TheGameObject generator)
+	void RemoveGenerator(TheGameObject generator, TheGameObject killer)
 	{
 		if(generator != null)
 		{
 			if(generator_entities.Remove(generator))
 			{
+				if(is_level1)
+				{
+					if(level1_script != null)
+					{
+						object[] args = {generator, killer};
+						level1_script.CallFunctionArgs("OnGeneratorDestroyedCallback", args);
+					}
+				}
+
 				TheConsole.Log("Generator destroyed! Remaining: " + TurretsCount());
 			}
 		}
