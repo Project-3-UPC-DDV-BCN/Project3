@@ -1,11 +1,11 @@
 {
-    "UUID": "215814381",
-    "assets_path": "./Project/Assets/Prefabs/GeneratorParticleEx.jprefab",
+    "UUID": "2074611609",
+    "assets_path": ".\\Project\\Assets\\Prefabs\\Particles\\GeneratorParticleEx.jprefab",
     "library_path": "./Project/Library/Prefabs/GeneratorParticleEx.jprefab",
     "prefab_name": "GeneratorParticleEx",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1417425189",
+        "UUID": "1079700263",
         "Name": "GeneratorParticleEx",
         "Tag": "Default",
         "Layer": "Default",
@@ -56,7 +56,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "destruction_time",
-                            "field_value": "7.000000"
+                            "field_value": "10.000000"
                         }
                     },
                     "bool_fields": {},
@@ -73,7 +73,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1390536425",
+        "UUID": "1441914382",
         "Name": "SmokeParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -107,16 +107,16 @@
                 "UUID": "951168033",
                 "ParticleEmitter": {
                     "Rate": "1",
-                    "Template": "SmokeTemplate"
+                    "Template": "GeneratorSmoke"
                 }
             }
         },
-        "ParentID": "1417425189",
+        "ParentID": "1079700263",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1973638165",
+        "UUID": "1250626560",
         "Name": "FireParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -154,12 +154,12 @@
                 }
             }
         },
-        "ParentID": "1417425189",
+        "ParentID": "1079700263",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2069015817",
+        "UUID": "147266145",
         "Name": "SparkleParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -193,11 +193,11 @@
                 "UUID": "1970128895",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "SparkleTemplate"
+                    "Template": "GeneratorSparkle"
                 }
             }
         },
-        "ParentID": "1417425189",
+        "ParentID": "1079700263",
         "IsRoot": "0",
         "IsStatic": "0"
     }

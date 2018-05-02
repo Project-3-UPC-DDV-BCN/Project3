@@ -5,6 +5,8 @@
 #include "ModuleScene.h"
 #include "ModuleEditor.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResources.h"
+#include "Prefab.h"
 
 HierarchyWindow::HierarchyWindow()
 {
@@ -149,7 +151,13 @@ void HierarchyWindow::DrawWindow()
 						if (!App->file_system->DirectoryExist(ASSETS_PREFABS_FOLDER_PATH)) 
 							App->file_system->Create_Directory(ASSETS_PREFABS_FOLDER_PATH);
 
+						Prefab* p = App->resources->GetPrefab(prefab_to_create->GetName());
+
 						std::string assets_path = ASSETS_PREFABS_FOLDER + prefab_to_create->GetName() + ".jprefab";
+
+						if (p != nullptr)
+							assets_path = p->GetAssetsPath();
+
 						std::string library_path = LIBRARY_PREFABS_FOLDER + prefab_to_create->GetName() + ".jprefab";
 
 						if (App->file_system->FileExist(library_path) || App->file_system->FileExist(assets_path))
