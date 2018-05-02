@@ -38,6 +38,11 @@ public class Laser
 		return sender;
 	}
 
+	int GetDamage()
+	{
+		return laser_damage;
+	}
+	
 	// Check collision and notify collided ship
 	void OnTriggerEnter(TheCollisionData coll)
 	{
