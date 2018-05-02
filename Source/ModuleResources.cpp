@@ -1919,6 +1919,51 @@ void ModuleResources::CreateDefaultShaders()
 			"void ApplyOpacity();\n"
 			"void SetFragmentColor();\n"
 			"float ShadowCalculation();\n"
+			"float GeometrySchlickGGX(float NdotV, float roughness);\n"
+
+			"const float PI = 3.14159265359;\n"
+
+			// -------- SOME PBR FUNCTIONS -----------
+			// ------------------------
+			"vec3 fresnelSchlick(float cosTheta, vec3 F0)\n"
+			"{\n"
+			"	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);\n"
+			"}\n"
+				// ------------------------
+			"float DistributionGGX(vec3 N, vec3 H, float roughness)\n"
+			"{\n"
+			"	float a = roughness * roughness;\n"
+			"	float a2 = a * a;\n"
+			"	float NdotH = max(dot(N, H), 0.0);\n"
+			"	float NdotH2 = NdotH * NdotH;\n"
+
+			"	float nom = a2;\n"
+			"	float denom = (NdotH2 * (a2 - 1.0) + 1.0);\n"
+			"	denom = PI * denom * denom;\n"
+
+			"	return nom / max(denom, 0.001);\n"
+			"}\n"
+				// ------------------------
+			"float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)\n"
+			"{\n"
+				"float NdotV = max(dot(N, V), 0.0); \n"
+				"float NdotL = max(dot(N, L), 0.0); \n"
+				"float ggx2 = GeometrySchlickGGX(NdotV, roughness);\n"
+				"float ggx1 = GeometrySchlickGGX(NdotL, roughness);\n"
+				"return ggx1 * ggx2; \n"
+			"}\n"
+				// ------------------------
+			"float GeometrySchlickGGX(float NdotV, float roughness)\n"
+			"{\n"
+				"float r = (roughness + 1.0);\n"
+				"float k = (r*r) / 8.0;\n"
+
+				"float nom = NdotV;\n"
+				"float denom = NdotV * (1.0 - k) + k;\n"
+
+				"return nom / denom;\n"
+			"}\n"
+			// ------- MAIN --------------
 			"void main()\n"
 			"{\n"
 			"	SetFragmentColor();\n"
@@ -1944,6 +1989,9 @@ void ModuleResources::CreateDefaultShaders()
 			"		}\n"
 			"			vec3 result = vec3(0.0, 0.0, 0.0); \n"
 			"			if (has_light){\n"
+
+						// -----  DIFFERENT LIGHTS --------
+
 			"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
 			"				result += CalcDirLight(dirLights[i], normal, viewDir);\n"
 			"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
@@ -1951,15 +1999,54 @@ void ModuleResources::CreateDefaultShaders()
 			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
 			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
 
+						// -------------- FRESNEL + predefined metallic and roughness ----------
+			"			float metallic = 1.5;\n"
+			"			float roughness = 1.5;\n"
+			"			vec3 V = normalize(viewPos - FragPos);\n"
+
+			"			vec3 F0 = vec3(0.04); \n"
+			"			F0 = mix(F0, color.rgb, metallic);\n"
+			"			vec3 Lo = vec3(0.0);\n"
+			"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
+			"			{\n	"
+
+			"				vec3 L = normalize(dirLights[i].position - FragPos);"
+			"				vec3 H = normalize(V + L);\n"
+			"				float distance = length(dirLights[i].position - FragPos);\n"
+			"				float attenuation = 1.0 / (distance * distance);\n"
+			"				vec3 radiance = dirLights[i].color.rgb * attenuation;\n"
+			"				float NDF = DistributionGGX(normal, H, roughness);\n"
+			"				float G = GeometrySmith(normal, V, L, roughness);\n"
+			"				vec3 F = fresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);\n"
+			"				vec3 nominator = NDF * G * F;\n"
+			"				float denominator = 4 * max(dot(normal, V), 0.0) * max(dot(normal, L), 0.0);\n"
+			"				vec3 specular = nominator / max(denominator, 0.001); \n"
+
+			"				vec3 kS = F;\n"
+
+			"				vec3 kD = vec3(1.0) - kS;\n"
+
+			"				kD *= 1.0 - metallic;\n"
+			"				float NdotL = max(dot(normal, L), 0.0);\n"
+			"				Lo += (kD * color.rgb / PI + specular) * radiance * NdotL;\n"
+			"			}\n"
+
+
+
+						// -------------- SHADOWS ----------
 			"			float shadow = 0.0f;\n"
 			"			shadow = ShadowCalculation();\n"
-
+						// -------------- SELF_TRANSPARENCY ----------
 			"			if (self_transparency >= 0.0 && self_transparency <= 100.0)\n"
 			"				{\n	"
 			"					color.a = self_transparency / 100;\n"
 			"				}\n	"
-			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)), color.a);  \n"
+			"			color = vec4((color.rgb * (AMBIENT_LIGHT + result) * (1 - shadow)) + Lo, color.a);  \n"
+		//	"			color.rgb = color.rgb / (color.rgb + vec3(1.0));\n"
+		//	"			color.rgb = pow(color.rgb, vec3(1.0 / 2.2));\n"
+
 			"			}\n"
+						// -------------- OPACITY MAP ----------
 				"			if (has_opacity)"
 				"			{\n"
 				"				ApplyOpacity();\n"
@@ -1967,6 +2054,7 @@ void ModuleResources::CreateDefaultShaders()
 			"}\n"
 
 			"}\n\n"
+				// ------------------------
 			"float ShadowCalculation()\n"
 			" {\n"
 			"	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;\n"
@@ -1993,7 +2081,7 @@ void ModuleResources::CreateDefaultShaders()
 
 			"	return shadow;\n"
 			"}\n"
-
+				// ------------------------
 			"	vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)\n"
 			"{\n"
 			"	if (light.active == true)\n"
@@ -2017,7 +2105,7 @@ void ModuleResources::CreateDefaultShaders()
 			"else\n"
 			"	return vec3(0.0, 0.0, 0.0);\n"
 			"}\n"
-
+				// ------------------------
 			"vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
 			"{\n"
 			"	if (light.active == true)\n"
@@ -2053,7 +2141,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	else\n"
 			"		return vec3(0.0, 0.0, 0.0);\n"
 			"}\n\n"
-
+				// ------------------------
 			"vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)\n"
 			"{\n"
 			"	if (light.active == true)\n"
@@ -2093,6 +2181,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	else\n"
 			"		return vec3(0.0, 0.0, 0.0);\n"
 			"}\n"
+				// ------------------------
 			"void SetFragmentColor()\n"
 			"{\n"
 			"	if (has_texture)\n"
@@ -2116,11 +2205,13 @@ void ModuleResources::CreateDefaultShaders()
 			"		if (diffuse2.a > 0.1) color = diffuse2;"
 			"	}\n"
 			"}\n"
+				// ------------------------
 			"void ApplyOpacity()\n"
 			"{\n"
 			"vec4 opacity = texture(Tex_Opacity, TexCoord);\n"
 			"color.a = opacity.r;\n"
 			"}\n"
+				// ------------------------
 				;
 
 		default_frag->SetContent(shader_text);

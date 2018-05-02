@@ -9,6 +9,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include <list>
+#include <map>
 
 class ComponentMeshRenderer;
 class ComponentParticleEmmiter;
@@ -115,6 +116,7 @@ public:
 	void DrawDebugCube(AABB& aabb, ComponentCamera* active_camera);
 	void DrawDebugOBB(OBB& aabb, ComponentCamera* active_camera);
 	void DrawMesh(std::vector<ComponentMeshRenderer*> mesh, ComponentCamera* active_camera);
+	void DrawMeshWithBlending(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 	void SendLight(uint program_id);
 	int GetDirectionalLightCount() const;
@@ -132,7 +134,7 @@ private:
 
 	void DrawCanvas(ComponentCamera* camera, bool editor_camera = true);
 	
-	void OrderByMaterials(ComponentMeshRenderer* mesh);
+	void OrderByMaterials(ComponentMeshRenderer* mesh, ComponentCamera* active_camera);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -179,6 +181,8 @@ private:
 	std::vector<ComponentParticleEmmiter*> particles_to_draw;
 
 	std::vector<std::vector<ComponentMeshRenderer*>> ordering_by_materials;
+	std::map<float, ComponentMeshRenderer*> sorted; // For blending
+
 	std::vector<AABB> cubes_to_draw;
 	Material* current_material = nullptr;
 	bool changed_material = true;

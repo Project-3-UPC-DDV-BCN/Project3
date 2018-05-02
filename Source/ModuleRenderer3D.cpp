@@ -522,7 +522,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 	glScissor(last_scissor_box[0], last_scissor_box[1], (GLsizei)last_scissor_box[2], (GLsizei)last_scissor_box[3]);
 }
 
-void ModuleRenderer3D::OrderByMaterials(ComponentMeshRenderer* mesh)
+void ModuleRenderer3D::OrderByMaterials(ComponentMeshRenderer* mesh, ComponentCamera* active_camera)
 {
 	bool mesh_included = false;
 	bool material_match = false;
@@ -532,6 +532,18 @@ void ModuleRenderer3D::OrderByMaterials(ComponentMeshRenderer* mesh)
 	{
 		std::vector<ComponentMeshRenderer*> first_mat;
 		ordering_by_materials.push_back(first_mat);
+	}
+
+	// If it needs to blend due to alpha, we add it to the blend map
+	if (mesh->GetMaterial()->GetOpacityTexture() != nullptr)
+	{
+		ComponentTransform* trans = (ComponentTransform*) mesh->GetGameObject()->GetComponent(Component::CompTransform);
+		glm::vec3 cam_pos(active_camera->GetFrustum().Pos().x, active_camera->GetFrustum().Pos().y, active_camera->GetFrustum().Pos().z);
+		glm::vec3 go_pos(trans->GetGlobalPosition().x, trans->GetGlobalPosition().y, trans->GetGlobalPosition().z);
+
+		float distance = glm::length(cam_pos - go_pos);
+		sorted[distance] = mesh;
+		return;
 	}
 
 	while (material_match == false)
@@ -546,7 +558,7 @@ void ModuleRenderer3D::OrderByMaterials(ComponentMeshRenderer* mesh)
 		// If it's not, we need to find it.
 		for (uint ord_i = 0; ord_i < ordering_by_materials.size(); ++ord_i)
 		{
-			// If it's a match we check it's distance and place it properly
+			// If it's a match we place it properly
 			if (material_match == false && ordering_by_materials[ord_i].size() > 0 && ordering_by_materials[ord_i][0] != nullptr && mesh->GetMaterial() == ordering_by_materials[ord_i][0]->GetMaterial())
 			{
 				material_match = true;
@@ -667,7 +679,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 					cubes_to_draw.push_back((*it)->bounding_box);
 			}
 		}
-		OrderByMaterials(*it);
+		OrderByMaterials(*it, active_camera);
 		//DrawMesh(*it, active_camera);
 	}
 
@@ -680,14 +692,14 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 				if (active_camera->ContainsGameObjectAABB((*it2)->bounding_box))
 				{
 					//if (std::find(layer_masks.begin(), layer_masks.end(), (*it)->GetGameObject()->GetLayer()) == layer_masks.end()) continue;
-					OrderByMaterials(*it2);
+					OrderByMaterials(*it2, active_camera);
 					//DrawMesh(*it2, active_camera);
 				}
 			}
 		}
 		else
 		{
-			OrderByMaterials(*it2);
+			OrderByMaterials(*it2, active_camera);
 			//DrawMesh(*it2, active_camera);
 			if ((*it2)->GetGameObject()->IsSelected())
 			{
@@ -706,6 +718,7 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 	SetUniformMatrix(program, "MVP", glm::value_ptr(light_space_mat));
 	SetUniformBool(program, "is_ui", false);
 	SetUniformFloat(program, "self_transparency", -1.0f);
+	SetUniformVector3(program, "viewPos", active_camera->GetFrustum().Pos());
 
 	glEnable(GL_BLEND); // this enables opacity map so yeah, don't comment it again or ya'll will hear me >:(
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -721,8 +734,15 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		//changed_material = false;
 		//changed_material = true;
 	}
-
 	self_alpha = -1.0f;
+
+	current_material = nullptr;
+
+	for (std::map<float, ComponentMeshRenderer*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+	{
+		DrawMeshWithBlending(it->second, active_camera);
+	}
+
 
 	for (uint i = 0; i < cubes_to_draw.size(); ++i)
 	{
@@ -820,9 +840,6 @@ void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, Comp
 			SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
 
 
-			//TODO: Calculate Normal Matrix here and send it as uniform.
-			// We need this because transitioning to World Space gives a non accurate Normal.
-			// Reminder: NormalMat = mat3(transpose(inverse(Model))) * normals;
 
 			if (mesh->GetMesh()->id_vao != current_vao)
 			{
@@ -836,6 +853,41 @@ void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, Comp
 
 		UnbindVertexArrayObject();
 	}
+}
+
+void ModuleRenderer3D::DrawMeshWithBlending(ComponentMeshRenderer* mesh, ComponentCamera * active_camera)
+{
+		mesh->GetMaterial()->LoadToMemory();
+		uint program = 0;
+		program = mesh->GetMaterial()->GetShaderProgramID();
+		UseShaderProgram(program);
+
+		uint current_vao = mesh->GetMesh()->id_vao;
+
+		BindVertexArrayObject(mesh->GetMesh()->id_vao);
+
+
+		if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
+		if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+
+		ComponentBillboard* billboard = (ComponentBillboard*)mesh->GetGameObject()->GetComponent(Component::CompBillboard);
+		if (billboard != nullptr)
+		{
+			billboard->RotateObject();
+		}
+
+		SetUniformBool(program, "has_light", mesh->has_light);
+		SetUniformMatrix(program, "Model", mesh->GetGameObject()->GetGlobalTransfomMatrix().Transposed().ptr());
+		if (mesh->GetMesh()->id_vao != current_vao)
+		{
+			UnbindVertexArrayObject();
+			BindVertexArrayObject(mesh->GetMesh()->id_vao);
+			current_vao = mesh->GetMesh()->id_vao;
+		}
+
+		glDrawElements(GL_TRIANGLES, mesh->GetMesh()->num_indices, GL_UNSIGNED_INT, NULL);
+
+		UnbindVertexArrayObject();
 }
 
 void ModuleRenderer3D::AddMeshToDraw(ComponentMeshRenderer * mesh)
