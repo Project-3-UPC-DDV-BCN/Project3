@@ -897,6 +897,9 @@ void ModuleRenderer3D::DrawMesh(std::vector<ComponentMeshRenderer*> meshes, Comp
 
 void ModuleRenderer3D::DrawMeshWithBlending(ComponentMeshRenderer* mesh, ComponentCamera * active_camera)
 {
+	if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
+	if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+
 		mesh->GetMaterial()->LoadToMemory();
 		uint program = 0;
 		program = mesh->GetMaterial()->GetShaderProgramID();
@@ -904,11 +907,7 @@ void ModuleRenderer3D::DrawMeshWithBlending(ComponentMeshRenderer* mesh, Compone
 
 		uint current_vao = mesh->GetMesh()->id_vao;
 
-		BindVertexArrayObject(mesh->GetMesh()->id_vao);
-
-
-		if (mesh == nullptr || mesh->GetMesh() == nullptr) return;
-		if (mesh->GetMesh()->id_indices == 0) mesh->GetMesh()->LoadToMemory();
+		BindVertexArrayObject(mesh->GetMesh()->id_vao);	
 
 		ComponentBillboard* billboard = (ComponentBillboard*)mesh->GetGameObject()->GetComponent(Component::CompBillboard);
 		if (billboard != nullptr)
