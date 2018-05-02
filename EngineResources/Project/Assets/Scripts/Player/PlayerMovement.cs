@@ -122,14 +122,29 @@ public class PlayerMovement {
 	public TheGameObject shields;
 	public TheGameObject energy;
 	public TheGameObject speed;
-    public TheGameObject shield_hp_go;
+    //public TheGameObject shield_hp_go;
     public TheGameObject hp;
+	///Shields
+	public TheGameObject front_shield_25;
+	public TheGameObject front_shield_50;
+	public TheGameObject front_shield_75;
+	public TheGameObject front_shield_100;
+	public TheGameObject back_shield_25;
+	public TheGameObject back_shield_50;
+	public TheGameObject back_shield_75;
+	public TheGameObject back_shield_100;
+	public TheGameObject shield_green;
+	public TheGameObject shield_yellow;
+	public TheGameObject shield_red;
+	public float shield_yellow_value = 15.0f;
+	public float shield_red_value = 7.0f;
+	
 	///Element Component
     private TheProgressBar weapons_bar = null;
 	private TheProgressBar shields_bar = null;
 	private TheProgressBar energy_bar = null;
 	private TheProgressBar speed_bar = null;
-    private TheProgressBar shield_hp_bar = null;
+    //private TheProgressBar shield_hp_bar = null;
     private TheProgressBar hp_bar = null;
 	
 	//Repair Puzzle
@@ -205,8 +220,8 @@ public class PlayerMovement {
 		if(speed != null)
 			speed_bar = speed.GetComponent<TheProgressBar>();
 
-		if(shield_hp_go != null)
-        	shield_hp_bar = shield_hp_go.GetComponent<TheProgressBar>();
+		//if(shield_hp_go != null)
+        	//shield_hp_bar = shield_hp_go.GetComponent<TheProgressBar>();
 
 		if(hp != null)
        		hp_bar = hp.GetComponent<TheProgressBar>();
@@ -652,14 +667,101 @@ public class PlayerMovement {
 		if(energy_bar != null)
 			energy_bar.PercentageProgress = (100.0f / 8.0f) * engine_energy;
 		
-		if(shield_hp_bar != null)
-        	shield_hp_bar.PercentageProgress = (curr_shield_hp / shield_hp) * 100.0f;
+		//if(shield_hp_bar != null)
+        	//shield_hp_bar.PercentageProgress = (curr_shield_hp / shield_hp) * 100.0f;
 
 		if(hp_bar != null)
         	hp_bar.PercentageProgress = (curr_total_hp / total_hp) * 100.0f;
 
 		if(speed_bar != null)
 			speed_bar.PercentageProgress = (curr_vel/((1.5f * max_vel) + boost_extra_vel))  * 100;
+		
+		//Shields
+		if(front_shield_25 != null && front_shield_50 != null && front_shield_75 != null && front_shield_100 != null)
+		{
+			//Set ui elements acording to values
+			front_shield_25.SetActive(false);
+			front_shield_50.SetActive(false);
+			front_shield_75.SetActive(false);
+			front_shield_100.SetActive(false);
+		
+			switch(front_shield)
+			{
+				case 4:
+					front_shield_100.SetActive(true);
+					front_shield_75.SetActive(true);
+					front_shield_50.SetActive(true);
+					front_shield_25.SetActive(true);
+					break;
+				case 3:
+					front_shield_75.SetActive(true);
+					front_shield_50.SetActive(true);
+					front_shield_25.SetActive(true);
+					break;
+				case 2:
+					front_shield_50.SetActive(true);
+					front_shield_25.SetActive(true);
+					break;
+				case 1:
+					front_shield_25.SetActive(true);
+					break;
+				case 0:
+					break;
+				
+			}
+		}
+		
+		if(back_shield_25 != null && back_shield_50 != null && back_shield_75 != null && back_shield_100 != null)
+		{
+			back_shield_25.SetActive(false);
+			back_shield_50.SetActive(false);
+			back_shield_75.SetActive(false);
+			back_shield_100.SetActive(false);
+		
+			switch(back_shield)
+			{
+				case 4:
+					back_shield_100.SetActive(true);
+					back_shield_75.SetActive(true);
+					back_shield_50.SetActive(true);
+					back_shield_25.SetActive(true);
+					break;
+				case 3:
+					back_shield_75.SetActive(true);
+					back_shield_50.SetActive(true);
+					back_shield_25.SetActive(true);
+					break;
+				case 2:
+					back_shield_50.SetActive(true);
+					back_shield_25.SetActive(true);
+					break;
+				case 1:
+					back_shield_25.SetActive(true);
+					break;
+				case 0:
+					break;
+				
+			}
+		}
+		
+		if(shield_green != null && shield_yellow != null && shield_red != null)
+		{
+			//Update Shield Generator HP image 
+			shield_green.SetActive(false);
+			shield_yellow.SetActive(false);
+			shield_red.SetActive(false);
+		
+			if(shield_hp > shield_yellow_value)
+			{
+				shield_green.SetActive(true);
+			}
+			else if(shield_hp > shield_red_value)
+			{
+				shield_yellow.SetActive(true);
+			}
+			else if(shield_hp > 0.0f)
+				shield_red.SetActive(false);
+		}
 	}
 	
 	void SetParticlesValues()
@@ -763,6 +865,7 @@ public class PlayerMovement {
 			front_shield--;
 			back_shield++;
 		}
+
 	}
 	
 	void DamageFrontShield(int dmg)
