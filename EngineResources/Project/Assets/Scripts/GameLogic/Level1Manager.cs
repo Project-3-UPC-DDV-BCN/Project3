@@ -24,6 +24,11 @@ public class Level1Manager
 	TheScript dialog_manager = null;
 
 	TheAudioSource audio_source = null;
+	public float music_distance = 3000;
+	public TheGameObject fight_zone;
+	TheTransform fight_trans = null;
+	TheTransform slave_trans = null;
+	
 
 	int curr_mission_state = 0;
 	// 1 - Ackbar intro
@@ -63,6 +68,9 @@ public class Level1Manager
 		if(ackbar_text_go != null)
 			ackbar_text = ackbar_text_go.GetComponent<TheText>();
 
+		if(fight_zone != null)
+			fight_trans = fight_zone.GetComponent<TheTransform>();
+
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
 
@@ -77,8 +85,10 @@ public class Level1Manager
 		}
 		
 		TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
-		if(slave1 != null)
+		if(slave1 != null){
 			slave1_script = slave1.GetScript("EntityProperties");
+			slave_trans = slave1.GetComponent<TheTransform>();
+			}
 
 		if(audio_source!= null)
 			audio_source.Play("Play_Music");
@@ -130,6 +140,38 @@ public class Level1Manager
 	void Update () 
 	{
 		UpdateMissionState(curr_mission_state);
+		UpdateAudio();
+	}
+
+	void UpdateAudio()
+	{
+		if(slave_trans!=null)
+		{
+			
+			
+			if(slave_trans!=null)
+			{
+				float distance = TheVector3.Distance(fight_trans.GlobalPosition, slave_trans.GlobalPosition);
+
+				if(distance < music_distance)
+				{
+					audio_source.SetState("Level","Combat");
+					TheConsole.Log("State Changed");
+				}
+				else
+				{
+					audio_source.SetState("Level","Calm");
+					TheConsole.Log("State Changed");
+				}
+			}
+			
+
+		}
+
+		else
+		{
+			TheConsole.Log("Slave null");
+		}
 	}
 
 	void NextMissionState()
