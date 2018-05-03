@@ -1,11 +1,11 @@
 {
-    "UUID": "1194444754",
+    "UUID": "1399223391",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1428955453",
+        "UUID": "1178509597",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -38,10 +38,10 @@
                 "Active": "1",
                 "UUID": "1401506640",
                 "Mesh": {
-                    "mesh_name": "A_Wing"
+                    "mesh_name": "TIE_FIGHTER"
                 },
                 "Material": {
-                    "Name": "X_Wing_final_Mat"
+                    "Name": "TieFighter1"
                 },
                 "Interior_Material": {
                     "UUID": "1480464845"
@@ -109,9 +109,9 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "6.750691",
-                        "value_Y": "3.899920",
-                        "value_Z": "10.197910"
+                        "value_X": "21.251001",
+                        "value_Y": "27.650002",
+                        "value_Z": "23.198002"
                     }
                 }
             },
@@ -287,7 +287,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "980162391",
+        "UUID": "108951808",
         "Name": "Billboard(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -345,12 +345,12 @@
                 }
             }
         },
-        "ParentID": "1428955453",
+        "ParentID": "1178509597",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1445456739",
+        "UUID": "421583564",
         "Name": "canvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -417,12 +417,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "980162391",
+        "ParentID": "108951808",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "912443852",
+        "UUID": "1410305695",
         "Name": "marker(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -490,7 +490,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1445456739",
+        "ParentID": "421583564",
         "IsRoot": "0",
         "IsStatic": "0"
     }
