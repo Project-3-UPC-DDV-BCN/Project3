@@ -94,8 +94,8 @@ public class TurretAI {
 	{
 		TheVector3 tOffset = PlayerPosition - SelfPosition;
 		
-		//if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
-		if (TheInput.IsKeyRepeat("UP_ARROW"))
+		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
+		//if (TheInput.IsKeyRepeat("UP_ARROW"))
 		{
 			if (BlasterTimer.ReadTime() >= LaserFrequency && blaster_factory != null)
 			{
@@ -103,7 +103,6 @@ public class TurretAI {
 				
 				if(laser != null)
 				{
-					TheConsole.Warning("2");
 					if(AudioSource != null)
 						AudioSource.Play("Play_Shoot");
 					
