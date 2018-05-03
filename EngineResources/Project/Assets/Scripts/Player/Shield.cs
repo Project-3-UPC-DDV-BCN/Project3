@@ -37,8 +37,9 @@ public class Shield
 		
 		TheScript laser = colision_object.GetScript("Laser");
 		
+		TheGameObject sender = (TheGameObject)laser.CallFunctionArgs("GetSender");
 
-		if(laser != null && slave_script != null)
+		if(laser != null && slave_script != null && sender.GetComponent<TheTransform>() != slave.GetComponent<TheTransform>())
 		{
 			int dmg = (int)laser.CallFunctionArgs("GetDamage");
 			object[] args = {dmg};
