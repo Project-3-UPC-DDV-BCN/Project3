@@ -568,22 +568,38 @@ std::string CSScript::GetStringProperty(const char * propertyName)
 
 void CSScript::SetGameObjectProperty(const char * propertyName, GameObject * value)
 {
-	MonoClassField* field = mono_class_get_field_from_name(mono_class, propertyName);
-	if (field)
+	if (value != nullptr)
 	{
-		void* params = value;
-		mono_field_set_value(mono_object, field, params);
-		MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
-		if (object && value != nullptr)
+		MonoObject* value_object = App->script_importer->ns_importer->GetMonoObjectFromGameObject(value);
+
+		if (value_object != nullptr)
 		{
-			int mono_id = mono_gchandle_new(object, 1);
-			App->script_importer->ns_importer->UpdateGameObjectMonoObject(value, object, mono_id);
+			MonoClassField* field = mono_class_get_field_from_name(mono_class, propertyName);
+
+			if (field)
+			{
+				void* params = value_object;
+				mono_field_set_value(mono_object, field, value_object);
+			}
 		}
 	}
-	else
-	{
-		//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
-	}
+
+	//if (field)
+	//{
+	//	void* params = value_object;
+	//	mono_field_set_value(mono_object, field, nullptr);
+	//	//mono_field_set_value()
+	///*	MonoObject* object = mono_field_get_value_object(mono_domain, field, mono_object);
+	//	if (object && value != nullptr)
+	//	{
+	//		int mono_id = mono_gchandle_new(object, 1);
+	//		App->script_importer->ns_importer->UpdateGameObjectMonoObject(value, object, mono_id);
+	//	}*/
+	//}
+	//else
+	//{
+	//	//CONSOLE_ERROR("Field '%s' does not exist in %s", propertyName, GetName().c_str());
+	//}
 }
 
 GameObject * CSScript::GetGameObjectProperty(const char * propertyName)
@@ -597,7 +613,9 @@ GameObject * CSScript::GetGameObjectProperty(const char * propertyName)
 		ConvertMonoType(type, property_field);
 		if (property_field.propertyType == property_field.GameObject)
 		{
-			mono_field_get_value(mono_object, field, &value);
+			MonoObject* val;
+			mono_field_get_value(mono_object, field, &val);
+			value = App->script_importer->ns_importer->GetGameObjectFromMonoObject(val);
 		}
 		else
 		{

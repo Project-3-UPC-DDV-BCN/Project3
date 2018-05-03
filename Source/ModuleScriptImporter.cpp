@@ -1957,27 +1957,6 @@ MonoObject* NSScriptImporter::CreateGameObject(GameObject * go)
 	return ret;
 }
 
-void NSScriptImporter::UpdateGameObjectMonoObject(GameObject * go, MonoObject * new_mono_object, int new_id)
-{
-	if (go != nullptr && new_mono_object != nullptr)
-	{
-		for (std::vector<GameObjectMono>::iterator it = created_gameobjects.begin(); it != created_gameobjects.end(); it++)
-		{
-			if (go == (*it).go)
-			{
-				mono_gchandle_free((*it).mono_id);
-
-				(*it).obj = new_mono_object;
-				(*it).mono_id = new_id;
-				return;
-			}
-		}
-
-		GameObjectMono gom(go, new_mono_object, new_id);
-		created_gameobjects.push_back(gom);
-	}
-}
-
 GameObject * NSScriptImporter::GetGameObjectFromMonoObject(MonoObject * object)
 {
 	if (object != nullptr)

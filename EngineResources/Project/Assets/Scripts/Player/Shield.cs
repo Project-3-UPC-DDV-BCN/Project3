@@ -1,20 +1,21 @@
 using TheEngine;
 using TheEngine.TheConsole;
 
-public class Shield {
-	
-	public TheGameObject Slave;
+public class Shield 
+{
+	public TheGameObject slave;
 	private TheScript slave_script = null;
 	
 	public bool front_shield = false;
 	public bool back_shield = false;
 
+	
 	void Start () 
 	{
-		if(Slave != null)
-		{
-			slave_script = Slave.GetScript("PlayerMovement");
-		}
+		if(slave != null)
+			slave_script = slave.GetScript("PlayerMovement");
+
+		TheConsole.Log(slave.name);
 	}
 	
 	void Update () 
@@ -22,9 +23,10 @@ public class Shield {
 		
 	}
 	
+
 	void OnTriggerEnter(TheCollisionData coll)
 	{
-
+		
 		if(coll == null)
 			return;
 
@@ -52,5 +54,6 @@ public class Shield {
 				TheConsole.Log("Invalid Shield Options");
 				
 		}
+		
 	}
 }

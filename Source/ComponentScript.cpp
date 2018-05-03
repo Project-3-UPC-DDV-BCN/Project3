@@ -241,16 +241,13 @@ void ComponentScript::Load(Data & data)
 		if (!script)
 		{
 			script = new CSScript();
+			script->SetAttachedGameObject(GetGameObject());
 		}
 		if (!script->Load(data))
 		{
 			CONSOLE_ERROR("Cannot find %s. Script not loaded", script_name.c_str());
 			RELEASE(script);
 		}
-		/*else
-		{
-			script->SetAttachedGameObject(GetGameObject());
-		}*/
 		data.LeaveSection();
 	}
 }

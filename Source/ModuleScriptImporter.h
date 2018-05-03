@@ -94,7 +94,6 @@ public:
 
 	// GameObjects
 	MonoObject* CreateGameObject(GameObject* go);
-	void UpdateGameObjectMonoObject(GameObject* go, MonoObject* new_mono_object, int new_id);
 	GameObject* GetGameObjectFromMonoObject(MonoObject* object);
 	MonoObject* GetMonoObjectFromGameObject(GameObject* go);
 	void RemoveGameObjectFromMonoObjectList(GameObject* go);
