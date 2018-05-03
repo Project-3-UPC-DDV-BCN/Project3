@@ -2,11 +2,13 @@ using TheEngine;
 using TheEngine.TheConsole; 
 using TheEngine.TheMath;
 
-public class PlayerMovement {
-
+public class PlayerMovement 
+{
 	// Self transform
 	private TheTransform trans;
 	
+	private bool can_move = true;
+
 	// Controller Settings
 	public int controller_sensibility = 2500;
 	public int trigger_sensibility = 0;
@@ -337,12 +339,15 @@ public class PlayerMovement {
 		delta_time = TheTime.DeltaTime;
 		
 		//Execute the logic for the player
-		Movement();
-		EnergyManagement();
-		RepairPuzzle();
-		RegenShield();
-		ManageShields();
-		CameraShake();
+		if(can_move)
+		{
+			Movement();
+			EnergyManagement();
+			RepairPuzzle();
+			RegenShield();
+			ManageShields();
+			CameraShake();
+		}
 		
 		//Apply changes to values
 		SetValuesFromEnergy();
@@ -360,6 +365,11 @@ public class PlayerMovement {
 		
 	}
 	
+	void SetCanMove(bool set)
+	{
+		can_move = set;
+	}
+
 	void Movement()
 	{
 		int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
