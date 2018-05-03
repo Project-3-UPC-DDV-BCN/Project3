@@ -1,11 +1,11 @@
 {
-    "UUID": "1431655999",
+    "UUID": "1470520201",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "16314521",
+        "UUID": "2099010390",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -37,7 +37,7 @@
                 "Type": "12",
                 "Active": "1",
                 "UUID": "1437024583",
-                "Object_count": "5",
+                "Object_count": "10",
                 "Spawn_position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -53,7 +53,7 @@
                     "value_Y": "-431602080.000000",
                     "value_Z": "-431602080.000000"
                 },
-                "Life_time": "4.850000",
+                "Life_time": "2.000000",
                 "Object_to_spawn_name": "VS4 - Laser"
             },
             "Component_2": {
@@ -176,11 +176,11 @@
                         },
                         "field_2": {
                             "field_name": "move_speed",
-                            "field_value": "40.000000"
+                            "field_value": "70.000000"
                         },
                         "field_3": {
                             "field_name": "rotation_speed",
-                            "field_value": "30.000000"
+                            "field_value": "60.000000"
                         }
                     },
                     "bool_fields": {},
@@ -219,7 +219,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "shooting_angle",
-                            "field_value": "60.000000"
+                            "field_value": "30.000000"
                         },
                         "field_1": {
                             "field_name": "shooting_range",
@@ -227,7 +227,7 @@
                         },
                         "field_2": {
                             "field_name": "time_between_lasers",
-                            "field_value": "1.000000"
+                            "field_value": "0.500000"
                         }
                     },
                     "bool_fields": {},
@@ -302,14 +302,14 @@
                     "int_fields": {
                         "field_0": {
                             "field_name": "base_laser_damage",
-                            "field_value": "10"
+                            "field_value": "7"
                         }
                     },
                     "double_fields": {},
                     "float_fields": {
                         "field_0": {
                             "field_name": "laser_speed",
-                            "field_value": "100.000000"
+                            "field_value": "500.000000"
                         }
                     },
                     "bool_fields": {
@@ -352,7 +352,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1961900925",
+        "UUID": "1087667487",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -410,12 +410,12 @@
                 }
             }
         },
-        "ParentID": "16314521",
+        "ParentID": "2099010390",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "954415637",
+        "UUID": "2077235560",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -482,12 +482,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1961900925",
+        "ParentID": "1087667487",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2079541750",
+        "UUID": "1225682839",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -555,7 +555,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "954415637",
+        "ParentID": "2077235560",
         "IsRoot": "0",
         "IsStatic": "0"
     }
