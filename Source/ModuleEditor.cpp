@@ -142,7 +142,7 @@ update_status ModuleEditor::Update(float deltaTime)
 						App->scene->scene_name = new_scene_name;
 						App->window->SetTitle((SCENE_TITLE_PREFIX + new_scene_name).c_str());
 						std::string final_path_assets = App->file_system->ChangeFileExtension(path, "jscene");
-						std::string final_path_library = LIBRARY_SCENES_FOLDER + new_scene_name + "jscene";
+						std::string final_path_library = LIBRARY_SCENES_FOLDER + new_scene_name + "." + "jscene";
 						App->scene->SaveScene(final_path_assets);
 						App->scene->SaveScene(final_path_library);
 					}
