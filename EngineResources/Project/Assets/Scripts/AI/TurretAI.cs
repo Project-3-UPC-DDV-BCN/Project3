@@ -110,7 +110,8 @@ public class TurretAI {
 
 					if(laser_script != null)
 					{
-						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, CannonTransform.QuatRotation};
+						//TheConsole.Log("X: "+CannonTransform.ForwardDirection.x+" Y: "+CannonTransform.ForwardDirection.y+" Z: "+CannonTransform.ForwardDirection.z);
+						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, SelfTransform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
 					}
 				}
