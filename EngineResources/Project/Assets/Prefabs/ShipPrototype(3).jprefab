@@ -1,17 +1,17 @@
 {
-    "UUID": "736336565",
-    "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
+    "UUID": "1431655999",
+    "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1905854328",
+        "UUID": "16314521",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "11",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -37,7 +37,7 @@
                 "Type": "12",
                 "Active": "1",
                 "UUID": "1437024583",
-                "Object_count": "4",
+                "Object_count": "5",
                 "Spawn_position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -53,7 +53,7 @@
                     "value_Y": "-431602080.000000",
                     "value_Z": "-431602080.000000"
                 },
-                "Life_time": "3.500000",
+                "Life_time": "4.850000",
                 "Object_to_spawn_name": "VS4 - Laser"
             },
             "Component_2": {
@@ -156,7 +156,7 @@
                     "UUID": "985148043",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "5",
+                    "float_fields_count": "4",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "1",
@@ -171,18 +171,14 @@
                             "field_value": "30.000000"
                         },
                         "field_1": {
-                            "field_name": "desertor_distance",
-                            "field_value": "10000.000000"
-                        },
-                        "field_2": {
                             "field_name": "max_distance_to_center_object",
                             "field_value": "2000.000000"
                         },
-                        "field_3": {
+                        "field_2": {
                             "field_name": "move_speed",
                             "field_value": "40.000000"
                         },
-                        "field_4": {
+                        "field_3": {
                             "field_name": "rotation_speed",
                             "field_value": "30.000000"
                         }
@@ -349,61 +345,6 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
-            },
-            "Component_10": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "833595417",
-                "Script": {
-                    "library_path": ".\\Project\\Library\\Scripts\\ObstacleAvoidance.dll",
-                    "assets_path": "",
-                    "script_name": "ObstacleAvoidance",
-                    "UUID": "966782",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "5",
-                    "bool_fields_count": "1",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {
-                        "field_0": {
-                            "field_name": "XOffset",
-                            "field_value": "15.000000"
-                        },
-                        "field_1": {
-                            "field_name": "YOffset",
-                            "field_value": "10.000000"
-                        },
-                        "field_2": {
-                            "field_name": "avoidingForce",
-                            "field_value": "40.000000"
-                        },
-                        "field_3": {
-                            "field_name": "avoidingMultiplier",
-                            "field_value": "1.000000"
-                        },
-                        "field_4": {
-                            "field_name": "rayLength",
-                            "field_value": "50.000000"
-                        }
-                    },
-                    "bool_fields": {
-                        "field_0": {
-                            "field_name": "ShowRays",
-                            "field_value": "0"
-                        }
-                    },
-                    "string_fields": {},
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
             }
         },
         "ParentID": "0",
@@ -411,7 +352,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "912072499",
+        "UUID": "1961900925",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -440,21 +381,41 @@
                 }
             },
             "Component_1": {
-                "Type": "23",
+                "Type": "10",
                 "Active": "1",
-                "UUID": "1602643476",
-                "Billboard": {
-                    "Active": "1",
-                    "Billboard_Type": "1701016932"
+                "UUID": "1548955120",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/BillboardToPlayer.dll",
+                    "assets_path": "",
+                    "script_name": "BillboardToPlayer",
+                    "UUID": "1765591768",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
                 }
             }
         },
-        "ParentID": "1905854328",
+        "ParentID": "16314521",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "455494736",
+        "UUID": "954415637",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -521,12 +482,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "912072499",
+        "ParentID": "1961900925",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "107999807",
+        "UUID": "2079541750",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -594,7 +555,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "455494736",
+        "ParentID": "954415637",
         "IsRoot": "0",
         "IsStatic": "0"
     }
