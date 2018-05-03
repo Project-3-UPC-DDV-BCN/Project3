@@ -28,6 +28,9 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	scale = 1.0f;
 	
 	c_rect_trans->SetInteractable(false);
+
+	controller_selection = false;
+	controller_id = -1; 
 }
 
 ComponentCanvas::~ComponentCanvas()
@@ -227,6 +230,28 @@ void ComponentCanvas::Load(Data & data)
 	SetRenderMode(static_cast<CanvasRenderMode>(data.GetInt("render_mode")));
 	SetScaleMode(static_cast<CanvasScaleMode>(data.GetInt("scale_mode")));
 	SetScale(data.GetFloat("scale"));
+}
+
+void ComponentCanvas::MoveID(const char * direction)
+{
+	if (direction == "Up")
+	{
+
+	}
+	else if (direction == "Down")
+	{
+
+	}
+}
+
+uint ComponentCanvas::GetCurrentID()
+{
+	return controller_id;
+}
+
+void ComponentCanvas::SetCurrentID(uint new_id)
+{
+	controller_id = new_id; 
 }
 
 CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas, Component* _cmp)

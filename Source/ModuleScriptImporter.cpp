@@ -21,6 +21,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ComponentAudioSource.h"
+#include "ComponentCanvas.h"
 #include "ComponentRigidBody.h"
 #include "ComponentGOAPAgent.h"
 #include "GOAPGoal.h"
@@ -1176,6 +1177,16 @@ mono_bool ModuleScriptImporter::GetOnMouseOver(MonoObject * object)
 mono_bool ModuleScriptImporter::GetOnMouseOut(MonoObject * object)
 {
 	return ns_importer->GetOnMouseOut(object);
+}
+
+void ModuleScriptImporter::ControllerIDUp(MonoObject * object)
+{
+	return ns_importer->ControllerIDUp(object);
+}
+
+void ModuleScriptImporter::ControllerIDDown(MonoObject * object)
+{
+	return ns_importer->ControllerIDDown(object);
 }
 
 void ModuleScriptImporter::SetColor(MonoObject * object, MonoObject * color)
@@ -2748,6 +2759,10 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		{
 			comp_name = "TheSphereCollider";
 		}
+		else if (name == "TheEngine.TheCanvas")
+		{
+			comp_name = "TheCanvas";
+		}
 		else if (name == "TheEngine.TheMeshCollider")
 		{
 			comp_name = "TheMeshCollider";
@@ -3407,6 +3422,36 @@ mono_bool NSScriptImporter::GetOnMouseOut(MonoObject * object)
 		}
 	}
 	return false;
+}
+
+void NSScriptImporter::ControllerIDUp(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		ComponentCanvas* canvas = (ComponentCanvas*)comp;
+
+		if (canvas != nullptr)
+		{
+			return canvas->MoveID("Up"); 
+		}
+	}
+}
+
+void NSScriptImporter::ControllerIDDown(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		ComponentCanvas* canvas = (ComponentCanvas*)comp;
+
+		if (canvas != nullptr)
+		{
+			return canvas->MoveID("Down");
+		}
+	}
 }
 
 void NSScriptImporter::SetColor(MonoObject * object, MonoObject * color)

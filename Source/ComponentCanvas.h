@@ -114,6 +114,11 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	void MoveID(const char* direction);
+
+	uint GetCurrentID();
+	void SetCurrentID(uint new_id); 
+
 private:
 	void UpdateSize();
 
@@ -134,6 +139,9 @@ private:
 	ComponentRectTransform* last_last_rect_trans = nullptr;
 
 	float scale;
+
+	bool controller_selection; 
+	int controller_id; 
 };
 
 #endif // !_H_COMPONENT_CANVAS__

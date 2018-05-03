@@ -35,6 +35,9 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	fixed_aspect_ratio = false;
 	aspect_ratio = 1.0f;
 
+	id = 0; 
+	controller_admision = false; 
+
 	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
 }
@@ -810,6 +813,26 @@ void ComponentRectTransform::Load(Data & data)
 	//SetSnapRight(data.GetBool("snap_right"));
 	SetScale(data.GetFloat("scale"));
 	SetInteractable(data.GetBool("interactable"));
+}
+
+void ComponentRectTransform::SetID(uint new_id)
+{
+	id = new_id; 
+}
+
+uint ComponentRectTransform::GetID()
+{
+	return id;
+}
+
+void ComponentRectTransform::SetControllerAdmision(bool admite)
+{
+	controller_admision = admite; 
+}
+
+bool ComponentRectTransform::GetControllerAdmision()
+{
+	return controller_admision;
 }
 
 bool ComponentRectTransform::GetHasParent() const

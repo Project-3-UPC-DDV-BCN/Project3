@@ -180,6 +180,10 @@ public:
 	mono_bool GetOnMouseOver(MonoObject * object);
 	mono_bool GetOnMouseOut(MonoObject * object);
 
+	//CANVAS 
+	void ControllerIDUp(MonoObject * object);
+	void ControllerIDDown(MonoObject * object);
+
 	//LIGHT
 	void SetColor(MonoObject* object, MonoObject* color);
 	MonoObject* GetColor(MonoObject* object);
@@ -480,6 +484,10 @@ private:
 	static mono_bool GetOnMouseEnter(MonoObject * object);
 	static mono_bool GetOnMouseOver(MonoObject * object);
 	static mono_bool GetOnMouseOut(MonoObject * object);
+
+	//CANVAS 
+	static void ControllerIDUp(MonoObject * object);
+	static void ControllerIDDown(MonoObject * object);
 
 	// LIGHT
 	static void SetColor(MonoObject* object, MonoObject* color);

@@ -642,11 +642,23 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				float2 anchor = rect_transform->GetAnchor();
 				float2 size = rect_transform->GetSize();
 				float scale = rect_transform->GetScale();
+				int curr_id = rect_transform->GetID();
+				bool controller_admision = rect_transform->GetControllerAdmision(); 
 
 				bool snap_up = rect_transform->GetSnapUp();
 				bool snap_down = rect_transform->GetSnapDown();
 				bool snap_left = rect_transform->GetSnapLeft();
 				bool snap_right = rect_transform->GetSnapRight();
+
+				if (ImGui::InputInt("ID", (int*)&curr_id, true, 0.25f))
+				{
+					rect_transform->SetID(curr_id);
+				} ImGui::SameLine(); 
+				
+				if (ImGui::Checkbox("Accept Controller", &controller_admision))
+				{
+					rect_transform->SetControllerAdmision(controller_admision);
+				} 
 
 				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
 				{

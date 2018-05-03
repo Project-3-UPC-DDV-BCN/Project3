@@ -391,6 +391,11 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 							top_element = &(*it);
 						}
 					}
+
+					if (rect_trans->GetID() == canvas->GetCurrentID() && rect_trans->GetControllerAdmision() == true)
+					{
+
+					}
 					// -----------
 				}
 				// WORLD

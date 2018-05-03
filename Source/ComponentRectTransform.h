@@ -104,6 +104,12 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	void SetID(uint new_id);
+	uint GetID(); 
+
+	void SetControllerAdmision(bool new_id);
+	bool GetControllerAdmision();
+
 private:
 	bool GetHasParent() const;
 	bool GetHasParentInactive() const;
@@ -119,6 +125,7 @@ private:
 
 	bool				fixed_aspect_ratio;
 	float				aspect_ratio;
+	uint					id; 
 
 	bool			    snap_up;
 	bool				snap_down;
@@ -126,6 +133,7 @@ private:
 	bool				snap_right;
 
 	bool				interactable;
+	bool				controller_admision; 
 
 	bool				on_click;
 	bool				on_click_down;
