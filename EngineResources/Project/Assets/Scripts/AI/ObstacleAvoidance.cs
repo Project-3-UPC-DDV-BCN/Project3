@@ -118,7 +118,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitCenter.Distance / rayLength);
 		}
 		// Left
-		if(rayHitLeft != null) {
+		else if(rayHitLeft != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitLeft.Normal.x, 
 				avoidanceVector.y + rayHitLeft.Normal.y, 
@@ -129,7 +129,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitLeft.Distance / rayLength);
 		}
 		// Right
-		if(rayHitRight != null) {
+		else if(rayHitRight != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitRight.Normal.x, 
 				avoidanceVector.y + rayHitRight.Normal.y, 
@@ -140,7 +140,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitRight.Distance / rayLength);
 		}
 		// Top
-		if(rayHitTop != null) {
+		else if(rayHitTop != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitTop.Normal.x, 
 				avoidanceVector.y + rayHitTop.Normal.y, 
@@ -151,7 +151,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitTop.Distance / rayLength);
 		}
 		// Bottom
-		if(rayHitBottom != null) {
+		else if(rayHitBottom != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitBottom.Normal.x, 
 				avoidanceVector.y + rayHitBottom.Normal.y, 
@@ -163,7 +163,7 @@ public class ObstacleAvoidance {
 		}
 		
 		// Rotation Managing ---
-		TheVector3 finalRotation = avoidanceVector.Normalized * avoidingForce * avoidingMultiplier;
+		TheVector3 finalRotation = avoidanceVector.Normalized * (avoidingForce * avoidingMultiplier);
 		
 		transform.LocalRotation = new TheVector3(
 			transform.LocalRotation.x + finalRotation.y,
