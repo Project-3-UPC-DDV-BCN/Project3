@@ -31,12 +31,28 @@ public class Level1Manager
 	
 
 	int curr_mission_state = 0;
-	// 1 - Ackbar intro
-	// 2 - Follow ship and destroy it
-	// 3 - Ackbar intro briefing and see ring
-	// 4 - Go to ring and kill ships
-	// 5 - Kill generators 
-	// 6 - Win
+	// 1 - Slave 1 cant move. Receives commands from General Ackbar
+	// 2 - TIE-Fighter appears from the right of the player. 
+	//	   Follows path into asteroid hole and stops some meters in front of the exit.
+	// 3 - Ackbar intro briefing and see ring. Receives commands from General Ackbar
+	// 4 - Players follow the ship into the asteroid. In the middle of it, 
+    //     they can see the ship stopped in front. Receives commands from General Ackbar
+	// 5 - 2 enemy ships appear from the sides, start coming towards the player
+    //     (if they are not destroyed, they start going to the shield gate and disappear after 6 seconds of not being hit).
+	// 6 - Player destroys the TIE FIGHTER in front (and maybe the other 2). 
+	// 7 - Receives commands from General Ackbar
+	// 8 - Players go through asteroid field.
+	// 9 - When they reach the final one (purple line more or less), players receive 
+    //     communications from the enemy (interferences of their radio): Intruder in our base!...
+    //     (radio noise)...All units ready!....”
+	// 10 - 3 ships in the close part of the shield gate appear and start patrolling.
+    // 11 - At the same time, the lights of energy of the shield generators lit up.
+	// 12 - When the 3 ships are destroyed or after 1 minute, another squad appears from
+    //      random positions near the shield generators and try to destroy the player.
+	// 13 - When the players destroy the first shield generator, 
+	//	    General Ackbar says: Fast! We need the shields down!”
+
+
 
 	public TheGameObject intro_ship_spawn;
 	public TheGameObject intro_ship_path;
