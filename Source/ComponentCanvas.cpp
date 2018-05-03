@@ -273,15 +273,18 @@ void ComponentCanvas::AdvanceCursor()
 			it++; 
 			if ((*it).second == nullptr)
 			{
-				//PROVISIONAL
-				continue;
+				controller_id = controler_elements[0]->GetID(); 
 			}
 			else if(false) // Is Locked
 			{
 
 			}
-			controller_id = (*it).second->GetID(); 
-			break; 
+			else
+			{
+				controller_id = (*it).second->GetID();
+				break;
+			}
+			
 		}			
 	}
 }
@@ -295,11 +298,18 @@ void ComponentCanvas::RegressCursor()
 			it--;
 			if ((*it).second == nullptr)
 			{
-				//PROVISIONAL
-				continue; 
+				int count = controler_elements.size(); 
+				controller_id = controler_elements[count - 1]->GetID();
 			}
-			controller_id = (*it).second->GetID();
-			break;
+			else if (false) // Is Locked
+			{
+
+			}
+			else
+			{
+				controller_id = (*it).second->GetID();
+				break;
+			}
 		}
 	}
 }
