@@ -1,11 +1,14 @@
 using TheEngine;
 using TheEngine.TheConsole; 
+using TheEngine.TheMath;
 
-public class PlayerMovement {
-
+public class PlayerMovement 
+{
 	// Self transform
 	private TheTransform trans;
 	
+	private bool can_move = true;
+
 	// Controller Settings
 	public int controller_sensibility = 2500;
 	public int trigger_sensibility = 0;
@@ -197,6 +200,17 @@ public class PlayerMovement {
 	//Dead check
 	private bool is_dead = false;
 	
+	//Camera Shake
+	public float shake_radius_shield = 0.1f;
+	public float shake_radius_hull = 0.3f;
+	public float shake_duration_shield = 2.5f;
+	public float shake_duration_hull = 3.5f;
+	private bool shaking = false;
+	private bool direct_hit = false;
+	private float shake_timer = 0;
+	private TheVector3 cam_original_pos;
+	
+	
 	TheGameObject self = null;
 
 	void Start () 
@@ -325,12 +339,15 @@ public class PlayerMovement {
 		delta_time = TheTime.DeltaTime;
 		
 		//Execute the logic for the player
-		Movement();
-		EnergyManagement();
-		RepairPuzzle();
-		RegenShield();
-		ManageShields();
-		
+		if(can_move)
+		{
+			Movement();
+			EnergyManagement();
+			RepairPuzzle();
+			RegenShield();
+			ManageShields();
+			CameraShake();
+		}
 		
 		//Apply changes to values
 		SetValuesFromEnergy();
@@ -348,6 +365,11 @@ public class PlayerMovement {
 		
 	}
 	
+	void SetCanMove(bool set)
+	{
+		can_move = set;
+	}
+
 	void Movement()
 	{
 		int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
@@ -877,6 +899,9 @@ public class PlayerMovement {
 			shield_hp -= shield_dmg;
 			if(shield_hp < 0)
 				shield_hp = 0;
+			
+			shaking = true;
+			shake_timer = shake_duration_shield;
 		}
 		else
 			DamageSlaveOne(dmg);
@@ -891,6 +916,9 @@ public class PlayerMovement {
 			shield_hp -= shield_dmg;
 			if(shield_hp < 0)
 				shield_hp = 0;
+			
+			shaking = true;
+			shake_timer = shake_duration_shield;
 		}
 		else
 			DamageSlaveOne(dmg);
@@ -899,7 +927,9 @@ public class PlayerMovement {
 	void DamageSlaveOne(int dmg)
     {
 		float f_dmg = dmg;
-		
+		direct_hit = true;
+		shaking = true;
+		shake_timer = shake_duration_hull;
 		if(audio_source != null)
 			audio_source.Play("Play_Ship_hit");
 
@@ -1284,4 +1314,46 @@ public class PlayerMovement {
 		TheConsole.Log(ret);
 		return ret;		
 	}
+	
+	void CameraShake()
+	{
+		if(shaking)
+		{
+			if(shake_timer>0.0f)
+			{
+				if(direct_hit)
+					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_hull);
+				else
+					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_shield);
+				
+				shake_timer -= delta_time;
+			}
+			else
+			{
+				direct_hit = false;
+				shaking = false;
+				camera_go.GetComponent<TheTransform>().LocalPosition = original_cam_pos;
+			}
+		}
+	}
+	
+	TheVector3 PickRandomPointForShake(float radius)
+	{
+		/* Thats how a random point inside a sphere is picked mathematically
+		x = r * cos(theta) * cos(phi)
+		y = r * sin(phi)
+		z = r * sin(theta) * cos(phi)*/
+		
+		TheVector3 pos = new TheVector3(original_cam_pos.x,original_cam_pos.y,original_cam_pos.z);
+		
+		float theta = TheRandom.RandomRange(0.0f, TheMath.PI*2);
+		float phi = TheRandom.RandomRange(0.0f, TheMath.PI*2);
+		
+		pos.x += radius * TheMath.Cos(theta) * TheMath.Cos(phi);
+		pos.y += radius * TheMath.Sin(phi);
+		pos.z += radius * TheMath.Sin(theta) * TheMath.Cos(phi);
+		
+		return pos;
+	}
+	
 }
