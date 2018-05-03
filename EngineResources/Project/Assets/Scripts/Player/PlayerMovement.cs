@@ -208,7 +208,6 @@ public class PlayerMovement
 	private bool shaking = false;
 	private bool direct_hit = false;
 	private float shake_timer = 0;
-	private TheVector3 cam_original_pos;
 	
 	
 	TheGameObject self = null;
@@ -1321,10 +1320,35 @@ public class PlayerMovement
 		{
 			if(shake_timer>0.0f)
 			{
+				float shake_intensity;
+				
 				if(direct_hit)
-					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_hull);
+				{
+					
+					if(shake_timer > shake_duration_hull/2)
+					{
+						shake_intensity = (shake_duration_hull-shake_timer)/(shake_duration_hull/2);
+					}
+					else
+					{
+						shake_intensity = shake_timer/(shake_duration_hull/2);
+					}
+					
+					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_hull * shake_intensity);
+				}
 				else
-					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_shield);
+				{
+					if(shake_timer > shake_duration_shield/2)
+					{
+						shake_intensity = (shake_duration_shield-shake_timer)/(shake_duration_shield/2);
+					}
+					else
+					{
+						shake_intensity = shake_timer/(shake_duration_shield/2);
+					}
+					
+					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_shield * shake_intensity);
+				}
 				
 				shake_timer -= delta_time;
 			}
