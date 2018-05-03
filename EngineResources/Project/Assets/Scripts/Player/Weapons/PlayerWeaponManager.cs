@@ -15,8 +15,8 @@ public class PlayerWeaponManager
 	//Weapons info
 	public int num_weapons = 2;
 	private int curr_weapon = 0;
-	public string p1_change_weapon = "CONTROLLER_RB"
-	public string p2_change_weapon = "C"
+	public string p1_change_weapon = "CONTROLLER_RB";
+	public string p2_change_weapon = "C";
 	private float overheat = 0.0f;
 
 	//Overheat bar
@@ -57,7 +57,7 @@ public class PlayerWeaponManager
 			{
 				was_pressed = true;
 				
-				overheat = 
+				//overheat = 
 			}
 			
 			else if(was_pressed)

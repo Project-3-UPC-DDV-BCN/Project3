@@ -78,7 +78,7 @@ public class TurretAI {
 	void RotateBlasterTowardsPlayer()
 	{
 		// Face Blasters to the PlayerPosition
-		TheVector3 LookPos = new TheVector3(0, PlayerPosition.y - BlasterPosition.y, PlayerPosition.z - BlasterPosition.z);
+		/*TheVector3 LookPos = new TheVector3(0, PlayerPosition.y - BlasterPosition.y, PlayerPosition.z - BlasterPosition.z);
 		TheQuaternion q = TheQuaternion.LookRotation(LookPos, CannonTransform.UpDirection);
 		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 	
@@ -86,7 +86,7 @@ public class TurretAI {
 			BlasterRotation = new TheVector3(MinAngleBlasters, 0, 0);
 		else if (BlasterRotation.x > MaxAngleBlasters)
 			BlasterRotation = new TheVector3(MaxAngleBlasters, 0, 0);
-		
+		*/
 	
 	}
 	
