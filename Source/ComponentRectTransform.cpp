@@ -36,6 +36,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	aspect_ratio = 1.0f;
 
 	id = 0; 
+	controler_order = 0; 
 	controller_admision = false; 
 
 	c_transform->SetPosition(float3(0, 0, 0));
@@ -795,6 +796,9 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddBool("interactable", interactable);
 	data.AddBool("fixed_aspect_ratio", fixed_aspect_ratio);
 	data.AddFloat("fixed_ratio", aspect_ratio);
+	data.AddBool("accept_controller", GetControllerAdmision()); 
+	data.AddInt("id", GetID());
+	data.AddInt("order", GetControllerOrder());
 }
 
 void ComponentRectTransform::Load(Data & data)
@@ -813,6 +817,9 @@ void ComponentRectTransform::Load(Data & data)
 	//SetSnapRight(data.GetBool("snap_right"));
 	SetScale(data.GetFloat("scale"));
 	SetInteractable(data.GetBool("interactable"));
+	SetID(data.GetInt("id"));
+	SetControllerAdmision(data.GetBool("controler_admision")); 
+	SetControllerOrder(data.GetInt("order"));
 }
 
 void ComponentRectTransform::SetID(uint new_id)
@@ -820,7 +827,7 @@ void ComponentRectTransform::SetID(uint new_id)
 	id = new_id; 
 }
 
-uint ComponentRectTransform::GetID()
+uint ComponentRectTransform::GetID() const
 {
 	return id;
 }
@@ -830,9 +837,19 @@ void ComponentRectTransform::SetControllerAdmision(bool admite)
 	controller_admision = admite; 
 }
 
-bool ComponentRectTransform::GetControllerAdmision()
+bool ComponentRectTransform::GetControllerAdmision() const
 {
 	return controller_admision;
+}
+
+void ComponentRectTransform::SetControllerOrder(int new_order)
+{
+	controler_order = new_order;
+}
+
+int ComponentRectTransform::GetControllerOrder() const
+{
+	return controler_order;
 }
 
 bool ComponentRectTransform::GetHasParent() const

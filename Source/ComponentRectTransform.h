@@ -105,10 +105,13 @@ public:
 	void Load(Data& data);
 
 	void SetID(uint new_id);
-	uint GetID(); 
+	uint GetID() const;
 
 	void SetControllerAdmision(bool new_id);
-	bool GetControllerAdmision();
+	bool GetControllerAdmision() const;
+
+	void SetControllerOrder(int new_order);
+	int GetControllerOrder() const;
 
 private:
 	bool GetHasParent() const;
@@ -125,7 +128,9 @@ private:
 
 	bool				fixed_aspect_ratio;
 	float				aspect_ratio;
-	uint					id; 
+
+	uint				id;
+	int					controler_order; 
 
 	bool			    snap_up;
 	bool				snap_down;

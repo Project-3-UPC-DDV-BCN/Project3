@@ -2,6 +2,7 @@
 #define _H_COMPONENT_CANVAS__
 
 #include <vector>
+#include <map>
 #include <iostream>
 #include "Component.h"
 #include "MathGeoLib\float4x4.h"
@@ -114,11 +115,18 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
-	void PrevControllerID();
-	void NextControllerID();
-
 	uint GetCurrentID();
 	void SetCurrentID(uint new_id); 
+
+	bool IsOrderRepeated(int order_to_test);
+	bool IsIDInController(int id); 
+
+	void AdvanceCursor();
+	void RegressCursor(); 
+
+	void PrintCursor(); 
+	
+	std::map<int, ComponentRectTransform*> controler_elements;
 
 private:
 	void UpdateSize();
@@ -127,8 +135,9 @@ private:
 	ComponentRectTransform* c_rect_trans = nullptr;
 
 	ComponentCamera*			   render_camera = nullptr;
-	std::vector<CanvasDrawElement> draws;
 
+	std::vector<CanvasDrawElement> draws;
+	
 	float2 size;
 	float2 last_size;
 	float2 reference_size;

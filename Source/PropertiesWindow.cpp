@@ -644,6 +644,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				float scale = rect_transform->GetScale();
 				int curr_id = rect_transform->GetID();
 				bool controller_admision = rect_transform->GetControllerAdmision(); 
+				int order = rect_transform->GetControllerOrder(); 
 
 				bool snap_up = rect_transform->GetSnapUp();
 				bool snap_down = rect_transform->GetSnapDown();
@@ -652,14 +653,48 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 
 				if (ImGui::InputInt("ID", (int*)&curr_id, true, 0.25f))
 				{
+					if (curr_id < 0) curr_id = 0;
 					rect_transform->SetID(curr_id);
-				} ImGui::SameLine(); 
-				
+				}  
+
 				if (ImGui::Checkbox("Accept Controller", &controller_admision))
 				{
-					rect_transform->SetControllerAdmision(controller_admision);
-				} 
+					if (order <= 0)
+					{
+						CONSOLE_ERROR("Error assigning controller rect: order must be > 0")
+					}
+					else if(controller_admision == true)
+					{
+						if (rect_transform->GetCanvas()->IsOrderRepeated(order))
+						{
+							CONSOLE_ERROR("Error assigning controller rect: order can not be repeated.");
+						}
+						else if (rect_transform->GetCanvas()->IsIDInController(curr_id))
+						{
+							CONSOLE_ERROR("Error assigning controller rect: a rect with the same ID already exists in controller list.");
+						}
+						else
+						{
+							rect_transform->SetControllerAdmision(controller_admision);
+							c_canvas->controler_elements.insert(pair<int, ComponentRectTransform*>(order, rect_transform));
+							CONSOLE_LOG("ADDED SUCCESFULY BRO, U ALMOST HAVE IT");
+						}
+					}
+					else if (controller_admision == false)
+					{
+						rect_transform->SetControllerAdmision(controller_admision);
+						c_canvas->controler_elements.erase(order);
+						CONSOLE_LOG("DELETED SUCCESFULY BRO, U HAVE IT");
+					}
 
+				}
+
+				if (ImGui::InputInt("Order", (int*)&order, true, 0.25f))
+				{
+					if (order < 0) order = 0;
+					rect_transform->SetControllerOrder(order);
+				}
+				
 				if (ImGui::DragFloat2("Position", (float*)&position, true, 0.25f))
 				{
 					rect_transform->SetPos(position);

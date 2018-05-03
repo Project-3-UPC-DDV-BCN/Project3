@@ -5,9 +5,12 @@ namespace TheEngine
     public class TheCanvas : TheComponent
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern uint ControllerIDUp();
+        public extern void ControllerIDUp();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern uint ControllerIDDown();
+        public extern void ControllerIDDown();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetSelectedRectID();
     }
 }

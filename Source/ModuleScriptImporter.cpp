@@ -761,6 +761,12 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnRotation", (const void*)SetSpawnRotation);
 	mono_add_internal_call("TheEngine.TheFactory::SetSpawnScale", (const void*)SetSpawnScale);
 
+	//CANVAS
+	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDUp", (const void*)ControllerIDUp);
+	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDDown", (const void*)ControllerIDDown);
+	mono_add_internal_call("TheEngine.TheCanvas::SetSelectedRectID", (const void*)SetSelectedRectID);
+
+
 	//VECTOR/QUATERNION
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
 	mono_add_internal_call("TheEngine.TheQuaternion::ToEulerAngles", (const void*)ToEulerAngles);
@@ -1187,6 +1193,11 @@ void ModuleScriptImporter::ControllerIDUp(MonoObject * object)
 void ModuleScriptImporter::ControllerIDDown(MonoObject * object)
 {
 	return ns_importer->ControllerIDDown(object);
+}
+
+void ModuleScriptImporter::SetSelectedRectID(MonoObject * object, int new_id)
+{
+	ns_importer->SetSelectedRectID(object, new_id); 
 }
 
 void ModuleScriptImporter::SetColor(MonoObject * object, MonoObject * color)
@@ -3434,7 +3445,7 @@ void NSScriptImporter::ControllerIDUp(MonoObject * object)
 
 		if (canvas != nullptr)
 		{
-			//return canvas->MoveID("Up"); 
+			return canvas->AdvanceCursor(); 
 		}
 	}
 }
@@ -3449,7 +3460,22 @@ void NSScriptImporter::ControllerIDDown(MonoObject * object)
 
 		if (canvas != nullptr)
 		{
-			//return canvas->MoveID("Down");
+			return canvas->RegressCursor(); 
+		}
+	}
+}
+
+void NSScriptImporter::SetSelectedRectID(MonoObject * object, int new_id)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		ComponentCanvas* canvas = (ComponentCanvas*)comp;
+
+		if (canvas != nullptr)
+		{
+			canvas->SetCurrentID(new_id); 
 		}
 	}
 }
@@ -6256,6 +6282,10 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	{
 		type = Component::CompRadar;
 	}
+	else if (component_type == "TheCanvas")
+	{
+		type = Component::CompCanvas;
+	}
 	else
 	{
 		type = Component::CompUnknown;
@@ -6286,6 +6316,9 @@ std::string NSScriptImporter::CppComponentToCs(Component::ComponentType componen
 		break;
 	case Component::CompParticleSystem:
 		cs_name = "TheParticleEmmiter";
+		break;
+	case Component::CompCanvas:
+		cs_name = "TheCanvas";
 		break;
 	case Component::CompText:
 		cs_name = "TheText";

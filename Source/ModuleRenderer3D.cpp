@@ -378,6 +378,11 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			CanvasDrawElement* top_element = nullptr;
 			int highest_layer = -9999999999;
 
+			if (App->GetEngineState() == Application::EngineState::OnPlay && canvas->controler_elements.size() != 0)
+			{
+				canvas->PrintCursor(); 
+			}
+
 			for (std::vector<CanvasDrawElement>::iterator it = to_draw.begin(); it != to_draw.end(); ++it)
 			{
 				ComponentRectTransform* rect_trans = (ComponentRectTransform*)(*it).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
@@ -391,28 +396,6 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 							top_element = &(*it);
 						}
 					}
-
-					if (rect_trans->GetID() == canvas->GetCurrentID())
-					{
-						if (rect_trans->GetControllerAdmision() == true)
-						{
-							rect_trans->SetOnMouseOver(true); 
-						}
-						else
-						{
-							//Find next RectTransform which is valid 
-							for (std::vector<CanvasDrawElement>::iterator it2 = it; it2 != to_draw.end(); ++it2)
-							{
-								ComponentRectTransform* rect_trans2 = (ComponentRectTransform*)(*it2).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
-
-								if (rect_trans2->GetControllerAdmision() == true)
-								{
-									//rect_tr
-								}
-							}
-						}
-					}
-					// -----------
 				}
 				// WORLD
 				if (editor_camera || canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)

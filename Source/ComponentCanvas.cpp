@@ -30,7 +30,7 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	c_rect_trans->SetInteractable(false);
 
 	controller_selection = false;
-	controller_id = -1; 
+	controller_id = 0; 
 }
 
 ComponentCanvas::~ComponentCanvas()
@@ -219,6 +219,7 @@ void ComponentCanvas::Save(Data & data) const
 	data.AddInt("render_mode", render_mode);
 	data.AddInt("scale_mode", scale_mode);
 	data.AddFloat("scale", scale);
+
 }
 
 void ComponentCanvas::Load(Data & data)
@@ -232,15 +233,6 @@ void ComponentCanvas::Load(Data & data)
 	SetScale(data.GetFloat("scale"));
 }
 
-void ComponentCanvas::NextControllerID()
-{
-	controller_id++;
-}
-
-void ComponentCanvas::PrevControllerID()
-{
-	controller_id--; 
-}
 
 uint ComponentCanvas::GetCurrentID()
 {
@@ -250,6 +242,82 @@ uint ComponentCanvas::GetCurrentID()
 void ComponentCanvas::SetCurrentID(uint new_id)
 {
 	controller_id = new_id; 
+}
+
+bool ComponentCanvas::IsOrderRepeated(int order_to_test)
+{
+	for (std::map<int, ComponentRectTransform*>::iterator it = controler_elements.begin(); it != controler_elements.end(); it++)
+	{
+		if ((*it).first == order_to_test)
+			return true; 
+	}
+	return false; 
+}
+
+bool ComponentCanvas::IsIDInController(int id)
+{
+	for (std::map<int, ComponentRectTransform*>::iterator it = controler_elements.begin(); it != controler_elements.end(); it++)
+	{
+		if ((*it).second->GetID() == id)
+			return true;
+	}
+	return false;
+}
+
+void ComponentCanvas::AdvanceCursor()
+{
+	for (std::map<int, ComponentRectTransform*>::iterator it = controler_elements.begin(); it != controler_elements.end(); it++)
+	{
+		if ((*it).second->GetID() == controller_id)
+		{
+			it++; 
+			if ((*it).second == nullptr)
+			{
+				//PROVISIONAL
+				continue;
+			}
+			else if(false) // Is Locked
+			{
+
+			}
+			controller_id = (*it).second->GetID(); 
+			break; 
+		}			
+	}
+}
+
+void ComponentCanvas::RegressCursor()
+{
+	for (std::map<int, ComponentRectTransform*>::iterator it = controler_elements.begin(); it != controler_elements.end(); it++)
+	{
+		if ((*it).second->GetID() == controller_id)
+		{
+			it--;
+			if ((*it).second == nullptr)
+			{
+				//PROVISIONAL
+				continue; 
+			}
+			controller_id = (*it).second->GetID();
+			break;
+		}
+	}
+}
+
+void ComponentCanvas::PrintCursor()
+{
+	for (std::map<int, ComponentRectTransform*>::iterator it = controler_elements.begin(); it != controler_elements.end(); it++)
+	{
+		if ((*it).second->GetID() == controller_id)
+		{
+			(*it).second->SetOnMouseOver(true); 
+		}
+		else
+		{
+			(*it).second->SetOnMouseOver(false);
+		}
+			
+	}
 }
 
 CanvasDrawElement::CanvasDrawElement(ComponentCanvas* _canvas, Component* _cmp)

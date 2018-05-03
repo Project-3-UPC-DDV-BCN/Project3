@@ -1,12 +1,27 @@
 using TheEngine;
+using TheEngine.TheConsole; 
 
-public class ManageControllerMenu {
+public class ManageControllerMenu 
+{
+	
+	TheCanvas canvas; 
 
-	void Start () {
-		
+	void Start () 
+	{
+		canvas = TheGameObject.Self.GetComponent<TheCanvas>(0); 
 	}
 	
-	void Update () {
-		
+	void Update () 
+	{
+		if(TheInput.IsKeyDown("UP_ARROW"))
+		{
+			canvas.ControllerIDUp();
+		}
+
+
+		if(TheInput.IsKeyDown("DOWN_ARROW"))
+		{
+			canvas.ControllerIDDown();
+		}
 	}
 }

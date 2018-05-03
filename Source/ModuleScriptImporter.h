@@ -183,6 +183,7 @@ public:
 	//CANVAS 
 	void ControllerIDUp(MonoObject * object);
 	void ControllerIDDown(MonoObject * object);
+	void SetSelectedRectID(MonoObject* object, int new_id);
 
 	//LIGHT
 	void SetColor(MonoObject* object, MonoObject* color);
@@ -488,6 +489,7 @@ private:
 	//CANVAS 
 	static void ControllerIDUp(MonoObject * object);
 	static void ControllerIDDown(MonoObject * object);
+	static void SetSelectedRectID(MonoObject* object, int new_id); 
 
 	// LIGHT
 	static void SetColor(MonoObject* object, MonoObject* color);
