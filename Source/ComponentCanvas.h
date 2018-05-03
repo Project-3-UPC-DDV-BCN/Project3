@@ -114,7 +114,8 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
-	void MoveID(const char* direction);
+	void PrevControllerID();
+	void NextControllerID();
 
 	uint GetCurrentID();
 	void SetCurrentID(uint new_id); 

@@ -3434,7 +3434,7 @@ void NSScriptImporter::ControllerIDUp(MonoObject * object)
 
 		if (canvas != nullptr)
 		{
-			return canvas->MoveID("Up"); 
+			//return canvas->MoveID("Up"); 
 		}
 	}
 }
@@ -3449,7 +3449,7 @@ void NSScriptImporter::ControllerIDDown(MonoObject * object)
 
 		if (canvas != nullptr)
 		{
-			return canvas->MoveID("Down");
+			//return canvas->MoveID("Down");
 		}
 	}
 }

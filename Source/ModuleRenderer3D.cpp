@@ -392,9 +392,25 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 						}
 					}
 
-					if (rect_trans->GetID() == canvas->GetCurrentID() && rect_trans->GetControllerAdmision() == true)
+					if (rect_trans->GetID() == canvas->GetCurrentID())
 					{
+						if (rect_trans->GetControllerAdmision() == true)
+						{
+							rect_trans->SetOnMouseOver(true); 
+						}
+						else
+						{
+							//Find next RectTransform which is valid 
+							for (std::vector<CanvasDrawElement>::iterator it2 = it; it2 != to_draw.end(); ++it2)
+							{
+								ComponentRectTransform* rect_trans2 = (ComponentRectTransform*)(*it2).GetComponent()->GetGameObject()->GetComponent(Component::CompRectTransform);
 
+								if (rect_trans2->GetControllerAdmision() == true)
+								{
+									//rect_tr
+								}
+							}
+						}
 					}
 					// -----------
 				}

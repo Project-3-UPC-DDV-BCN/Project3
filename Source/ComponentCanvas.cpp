@@ -232,16 +232,14 @@ void ComponentCanvas::Load(Data & data)
 	SetScale(data.GetFloat("scale"));
 }
 
-void ComponentCanvas::MoveID(const char * direction)
+void ComponentCanvas::NextControllerID()
 {
-	if (direction == "Up")
-	{
+	controller_id++;
+}
 
-	}
-	else if (direction == "Down")
-	{
-
-	}
+void ComponentCanvas::PrevControllerID()
+{
+	controller_id--; 
 }
 
 uint ComponentCanvas::GetCurrentID()
