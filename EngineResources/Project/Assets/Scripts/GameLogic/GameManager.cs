@@ -26,6 +26,11 @@ public class GameManager
 
 	public bool is_training_mode = false;
 	public bool is_level1 = false;
+	
+	float last_time_scale = 1;
+	
+	public TheGameObject controller_image;
+	bool game_paused = false;
 
 	void Init ()
 	{
@@ -60,6 +65,32 @@ public class GameManager
 	{
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
+		
+		PauseGame(true);
+	}
+	
+	void Update()
+	{
+		if(TheInput.GetControllerButton(0, "CONTROLLER_START") == 1 || TheInput.IsKeyDown("ESC"))
+		{
+			PauseGame(!game_paused);
+		}
+	}
+	
+	void PauseGame(bool pause)
+	{
+		if(pause)
+		{
+			last_time_scale = TheTime.TimeScale;
+			TheTime.TimeScale = 0;
+		}
+		else
+		{
+			TheTime.TimeScale = last_time_scale;
+		}
+		
+		controller_image.SetActive(pause);
+		game_paused = pause;
 	}
 
 	bool GetIsTrainingMode()

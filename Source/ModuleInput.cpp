@@ -7,6 +7,7 @@
 #include "PerformanceWindow.h"
 #include "ModuleRenderer3D.h"
 #include "AssetsWindow.h"
+#include "ModuleTime.h"
 
 #define MAX_KEYS 300
 
@@ -218,7 +219,7 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
-	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
+	if(quit == true)
 		return UPDATE_STOP;
 	App->editor->performance_window->AddModuleData(this->name, ms_timer.ReadMs());
 
@@ -259,6 +260,8 @@ uint ModuleInput::GetControllerJoystickMove(int pad, int id) const
 
 void ModuleInput::RumbleController(int pad, float strength, int ms) const
 {
+	if (App->time->GetGameDt() >= 0) return;
+
 	for (std::vector<GamePad*>::const_iterator it = gamepads.begin(); it != gamepads.end(); it++)
 	{
 		if ((*it)->id == gamepad_connected[pad]) {
