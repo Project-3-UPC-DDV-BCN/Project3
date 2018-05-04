@@ -5,6 +5,7 @@ using TheEngine.TheMath;
 
 public class VS4StarShipShooting 
 {
+	bool can_shoot = true;
 
 	TheFactory laser_factory;
 	
@@ -117,83 +118,86 @@ public class VS4StarShipShooting
 		if(overheat_bar_bar != null)
 			overheat_bar_bar.PercentageProgress = overheat * 100;
 		
-		switch (weapon)
+		if(!can_shoot)
 		{
-			case 0:
-			{	
-				if(timer <= 0)
-				{
-					float percent = weapons_bar.PercentageProgress;
-					
-					shooting_frequency_w0 = -75.16412f + (0.2187436f + 75.16412f)/(1 + TheMath.Pow(percent/381393900, 0.4224618f));
-					
-					/*if (percent > 45.0 && percent < 55.0)
-						
-					else if (percent >= 55.0)
-						shooting_frequency_w0 = shooting_frequency_w0_base + shooting_frequency_w0_base * percent / 100;
-					else if (percent <= 45.0)
-						shooting_frequency_w0 = shooting_frequency_w0_base - (100 - shooting_frequency_w0_base) * percent / 100;
-					*/
-					if(TheInput.GetControllerButton(0, shoot_button) == 2 && shooting_frequency_timer.ReadTime() > shooting_frequency_w0)
-					{
-						if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
-							break;
-						
-						// SHOOT
-						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};		
-						weapon_script.CallFunctionArgs("Shoot", args_shoot);		
-																	
-						// EDIT LIGHT COMPONENT
-						object[] args_light = {laser_light_comp};
-						weapon_script.CallFunctionArgs("EditLightComp", args_light);						
-						
-						timer = spawn_time;
-						
-						// OVERHEAT
-						//object[] args_heat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
-						//weapon_script.CallFunctionArgs("Heat", args_heat);
-						
-						shooting_frequency_timer.Start();						
-					}
-					else if (TheInput.GetControllerButton(0, shoot_button) == 3)
-					{
-						object[] args_overheat = {overheat, cooling, laser_factory, laser_spawner, overheat_timer};
-						weapon_script.CallFunctionArgs("Overheat", args_overheat);
-					}
-				}
-				
-				object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
-				weapon_script.CallFunctionArgs("Cooling", args_cooling);
-
-			
-				break;
-			}
-			case 1:
+			switch (weapon)
 			{
-				if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
-					break;
-
-				if(TheInput.GetControllerButton(0, shoot_button) == 2)
-				{
-					if (!cooling)
+				case 0:
+				{	
+					if(timer <= 0)
 					{
-						overheat += curr_overheat_inc;
-						overheat_timer = 1.0f;
-					}				
-				}
-				else if (TheInput.GetControllerButton(0, shoot_button) == 3 && !cooling)
-				{
-					// SHOOT
-					object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, laser_factory, laser_spawner, audio_source};		
-					weapon_script.CallFunctionArgs("Shoot", args_shoot);
-				}
-
-				object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
-				weapon_script.CallFunctionArgs("Cooling", args_cooling);
+						float percent = weapons_bar.PercentageProgress;
+					
+						shooting_frequency_w0 = -75.16412f + (0.2187436f + 75.16412f)/(1 + TheMath.Pow(percent/381393900, 0.4224618f));
+					
+						/*if (percent > 45.0 && percent < 55.0)
+						
+						else if (percent >= 55.0)
+							shooting_frequency_w0 = shooting_frequency_w0_base + shooting_frequency_w0_base * percent / 100;
+						else if (percent <= 45.0)
+							shooting_frequency_w0 = shooting_frequency_w0_base - (100 - shooting_frequency_w0_base) * percent / 100;
+						*/
+						if(TheInput.GetControllerButton(0, shoot_button) == 2 && shooting_frequency_timer.ReadTime() > shooting_frequency_w0)
+						{
+							if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
+								break;
+						
+							// SHOOT
+							object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, used_left_laser, laser_factory, laser_spawner, audio_source};		
+							weapon_script.CallFunctionArgs("Shoot", args_shoot);		
+																	
+							// EDIT LIGHT COMPONENT
+							object[] args_light = {laser_light_comp};
+							weapon_script.CallFunctionArgs("EditLightComp", args_light);						
+						
+							timer = spawn_time;
+						
+							// OVERHEAT
+							//object[] args_heat = {overheat, curr_overheat_inc, overheated, overheat_timer, overheat_time, overheated_time};
+							//weapon_script.CallFunctionArgs("Heat", args_heat);
+						
+							shooting_frequency_timer.Start();						
+						}
+						else if (TheInput.GetControllerButton(0, shoot_button) == 3)
+						{
+							object[] args_overheat = {overheat, cooling, laser_factory, laser_spawner, overheat_timer};
+							weapon_script.CallFunctionArgs("Overheat", args_overheat);
+						}
+					}
 				
-				break;
-			}
-		}			
+					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
+					weapon_script.CallFunctionArgs("Cooling", args_cooling);
+	
+			
+					break;
+				}
+				case 1:
+				{
+					if (weapon_script == null && weapons_bar == null && laser_factory == null && laser_spawner == null)
+						break;
+
+					if(TheInput.GetControllerButton(0, shoot_button) == 2)
+					{
+						if (!cooling)
+						{
+							overheat += curr_overheat_inc;
+							overheat_timer = 1.0f;
+						}				
+					}
+					else if (TheInput.GetControllerButton(0, shoot_button) == 3 && !cooling)
+					{
+						// SHOOT
+						object[] args_shoot = {weapons_bar, curr_overheat_inc, overheat_increment, laser_factory, laser_spawner, audio_source};		
+						weapon_script.CallFunctionArgs("Shoot", args_shoot);
+					}
+
+					object[] args_cooling = {overheat_timer, overheat, w1_cooling_rate};
+					weapon_script.CallFunctionArgs("Cooling", args_cooling);
+				
+					break;
+				}
+			}		
+		}	
    
 		if (overheat <= 0.0f)	
 			overheated = false;
@@ -212,6 +216,11 @@ public class VS4StarShipShooting
         if(TheInput.IsKeyDown("C"))
 			ChangeWeapon();
     }
+
+	void SetCanShoot(bool set)
+	{
+		can_shoot = set;
+	}
 
     void ChangeWeapon()
 	{

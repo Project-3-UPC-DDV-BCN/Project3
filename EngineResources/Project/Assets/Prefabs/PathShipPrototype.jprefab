@@ -1,11 +1,11 @@
 {
-    "UUID": "1399223391",
+    "UUID": "2142101474",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1178509597",
+        "UUID": "1097371792",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -257,7 +257,7 @@
                         },
                         "field_1": {
                             "field_name": "max_distance_to_center_object",
-                            "field_value": "2000.000000"
+                            "field_value": "100000000.000000"
                         },
                         "field_2": {
                             "field_name": "move_speed",
@@ -287,7 +287,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "108951808",
+        "UUID": "1243305160",
         "Name": "Billboard(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -345,12 +345,12 @@
                 }
             }
         },
-        "ParentID": "1178509597",
+        "ParentID": "1097371792",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "421583564",
+        "UUID": "1525184731",
         "Name": "canvas(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -377,7 +377,10 @@
                 "scale": "1.000000",
                 "interactable": "0",
                 "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000"
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "-1",
+                "order": "-1"
             },
             "Component_1": {
                 "Type": "0",
@@ -417,12 +420,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "108951808",
+        "ParentID": "1243305160",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1410305695",
+        "UUID": "409747389",
         "Name": "marker(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -449,7 +452,10 @@
                 "scale": "1.000000",
                 "interactable": "0",
                 "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000"
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "-1",
+                "order": "-1"
             },
             "Component_1": {
                 "Type": "0",
@@ -490,7 +496,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "421583564",
+        "ParentID": "1525184731",
         "IsRoot": "0",
         "IsStatic": "0"
     }

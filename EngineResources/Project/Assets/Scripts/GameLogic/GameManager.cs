@@ -427,6 +427,18 @@ public class GameManager
 	{
 		return generator_entities.Count;
 	}
+
+	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
+	{
+		if(is_level1)
+		{
+			if(level1_script != null)
+			{
+				object[] args = {trigger_name, go_triggerer};
+				level1_script.CallFunctionArgs("CallTrigger", args);
+			}
+		}
+	}
 	
 	/*
 	void UpdateAudio()

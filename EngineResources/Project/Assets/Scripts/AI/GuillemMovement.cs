@@ -47,6 +47,7 @@ public class GuillemMovement
 	
 	List<TheTransform> path = new List<TheTransform>();
 	int curr_path_index = 0;
+	bool path_loop = false;
 
 	TheGameObject self = null;
 
@@ -127,6 +128,17 @@ public class GuillemMovement
 	void SetMovementMode(int set)
 	{
 		movement_mode = set;
+
+		if(set != movement_mode)
+		{
+			if(set == 0)
+				LookForTarget();
+		}
+	}
+
+	void SetPathLoop(bool set)
+	{
+		path_loop = set;
 	}
 
 	void UpdateAutomaticTargetMode()
@@ -173,8 +185,10 @@ public class GuillemMovement
 			{
 				if(path.Count > curr_path_index + 1)
 					++curr_path_index;
-				else
+				else if(path_loop)
 					curr_path_index = 0;
+				else
+					target_transform = null;	
 			}
 		}
 	}

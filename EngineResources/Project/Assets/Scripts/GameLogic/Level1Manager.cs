@@ -9,7 +9,12 @@ public class Level1Manager
 
 	TheScript game_manager_script = null;
 
+	TheGameObject slave1 = null;
+	TheTransform slave_trans = null;
+
 	TheScript slave1_script = null;
+	TheScript slave1_movement_script = null;
+	TheScript slave1_shooting_script = null;
 
 	public TheGameObject mission_state_background_go;
 	public TheGameObject mission_state_text_go;
@@ -27,7 +32,6 @@ public class Level1Manager
 	public float music_distance = 3000;
 	public TheGameObject fight_zone;
 	TheTransform fight_trans = null;
-	TheTransform slave_trans = null;
 	
 
 	int curr_mission_state = 0;
@@ -53,14 +57,19 @@ public class Level1Manager
 	//	    General Ackbar says: Fast! We need the shields down!”
 
 
-
 	public TheGameObject intro_ship_spawn;
 	public TheGameObject intro_ship_path;
 
+	public TheGameObject intro_ship_spawn_2;
+	public TheGameObject intro_ship_spawn_3;
+
 	public string intro_enemy_ship_prefab;
 	private TheGameObject intro_ship = null;
-
+	private TheTransform intro_ship_trans = null;
+	
 	public string enemy_ship_prefab;
+
+	private TheTimer attack_intro_ship = new TheTimer();
 
 	void Init()
 	{
@@ -100,11 +109,23 @@ public class Level1Manager
 				TheConsole.Log("Level1 activated! :D");
 		}
 		
-		TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
-		if(slave1 != null){
+		slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
+		if(slave1 != null)
+		{
 			slave1_script = slave1.GetScript("EntityProperties");
+			slave1_movement_script = slave1.GetScript("PlayerMovement");
 			slave_trans = slave1.GetComponent<TheTransform>();
+
+			TheGameObject[] childs = slave1.GetAllChilds();
+
+			for(int i = 0; i < childs.Length; ++i)
+			{
+				slave1_shooting_script = childs[i].GetScript("VS4StarShipShooting");
+
+				if(slave1_shooting_script != null)
+					break;
 			}
+		}
 
 		if(audio_source!= null)
 			audio_source.Play("Play_Music");
@@ -121,29 +142,42 @@ public class Level1Manager
 			object[] args0 = {ackbar_text};
 			dialog_manager.CallFunctionArgs("SetTextComponent", args0);
 
-			object[] args1 = {"AckbarIntro"};
+			object[] args1 = {"AckbarIntro1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args1);
 
-			object[] args2 = {"AckbarIntro", "This is the intro text that", 3.5f};
+			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 6.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args2);
 
-			object[] args3 =  {"AckbarIntro", "will pop on the beggining", 3.5f};
+			object[] args3 =  {"AckbarIntro1", "Be careful, try to not get detected", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args3);
 
-			object[] args4 =  {"AckbarIntro", "as an intro.", 3.5f};
-			dialog_manager.CallFunctionArgs("NewDialogLine", args4);
+			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args8);
 
-			object[] args5 = {"AckbarMissionExplain"};
+			object[] args9 = {"AckbarIntro2"};
+			dialog_manager.CallFunctionArgs("NewDialog", args9);
+
+			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!.", 5.0f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args10);
+
+			object[] args5 = {"AckbarIntro3"};
 			dialog_manager.CallFunctionArgs("NewDialog", args5);
 
-			object[] args6 = {"AckbarMissionExplain", "Well done!", 3.5f};
+			object[] args6 = {"AckbarIntro3", "Don't get trigger happy, Bobba.", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args6);
 
-			object[] args7 = {"AckbarMissionExplain", "This mission is still in creation progress", 3.5f};
+			object[] args7 = {"AckbarIntro3", "Follow that ship. Let's see where this leads to...", 6.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args7);
 
-			object[] args8 = {"AckbarMissionExplain", "so there is nothing else for now.", 3.5f};
-			dialog_manager.CallFunctionArgs("NewDialogLine", args8);
+			object[] args11 = {"AckbarAttack1"};
+			dialog_manager.CallFunctionArgs("NewDialog", args11);
+
+			object[] args12 = {"AckbarAttack1", "They can't catch you, Bobba! Don't hesitate!,", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args12);
+
+			object[] args13 = {"AckbarAttack1", "Shoot'em down!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args13);
+
 		}
 
 		HideCurrMissionObj();
@@ -163,30 +197,18 @@ public class Level1Manager
 	{
 		if(slave_trans!=null)
 		{
-			
-			
-			if(slave_trans!=null)
+			float distance = TheVector3.Distance(fight_trans.GlobalPosition, slave_trans.GlobalPosition);
+
+			if(distance < music_distance)
 			{
-				float distance = TheVector3.Distance(fight_trans.GlobalPosition, slave_trans.GlobalPosition);
-
-				if(distance < music_distance)
-				{
+				if(audio_source != null)
 					audio_source.SetState("Level","Combat");
-					TheConsole.Log("State Changed");
-				}
-				else
-				{
-					audio_source.SetState("Level","Calm");
-					TheConsole.Log("State Changed");
-				}
 			}
-			
-
-		}
-
-		else
-		{
-			TheConsole.Log("Slave null");
+			else
+			{
+				if(audio_source != null)
+					audio_source.SetState("Level","Calm");
+			}
 		}
 	}
 
@@ -207,26 +229,51 @@ public class Level1Manager
 			{
 				if(dialog_manager != null)
 				{
-					object[] args =  {"AckbarIntro"};
+					object[] args =  {"AckbarIntro1"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+
+				if(slave1_movement_script != null)
+				{
+					object[] args = {false};
+					slave1_movement_script.CallFunctionArgs("SetCanMove", args);
+				}
+
+				if(slave1_shooting_script != null)
+				{
+					object[] args = {false};
+					slave1_shooting_script.CallFunctionArgs("SetCanShoot", args);
 				}
 
 				break;
 			}
 			case 2:
 			{
-				SetCurrMissionObj("Follow and kill the enemy ship");
-				SetEnemiesToKill("Ships to kill: 1");
-
 				SpawnIntroShip();
+
+				if(dialog_manager != null)
+				{
+					object[] args =  {"AckbarIntro2"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+
+				SetCurrMissionObj("Don't get spotted");
+
+				attack_intro_ship.Start();
 				
 				break;
 			}
 			case 3:
 			{
+				if(slave1_movement_script != null)
+				{
+					object[] args = {true};
+					slave1_movement_script.CallFunctionArgs("SetCanMove", args);
+				}
+
 				if(dialog_manager != null)
 				{
-					object[] args =  {"AckbarMissionExplain"};
+					object[] args =  {"AckbarIntro3"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
 
@@ -234,6 +281,12 @@ public class Level1Manager
 			}
 			case 4:
 			{
+				if(dialog_manager != null)
+				{
+					object[] args =  {"AckbarAttack1"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+
 				break;
 			}
 			case 5:
@@ -253,13 +306,20 @@ public class Level1Manager
 			}
 			case 2:
 			{
-				HideEnemiesToKill();
-				HideCurrMissionObj();
-
 				break;
 			}
 			case 3:
 			{
+				if(intro_ship != null)
+				{
+					TheScript movement_script = intro_ship.GetScript("GuillemMovement");
+
+					object[] args = {0};
+					movement_script.CallFunctionArgs("SetMovementMode", args);
+				}
+
+				SpawnAmbushShips();
+				
 				break;
 			}
 			case 4:
@@ -293,10 +353,14 @@ public class Level1Manager
 			}
 			case 2:
 			{
+				if(attack_intro_ship.ReadTime() > 9)
+					NextMissionState();
+				
 				break;
 			}
 			case 3:
 			{
+							
 				break;
 			}
 			case 4:
@@ -367,15 +431,15 @@ public class Level1Manager
 
 		if(intro_ship != null)
 		{
-			TheTransform trans = intro_ship.GetComponent<TheTransform>();
+			intro_ship_trans = intro_ship.GetComponent<TheTransform>();
 
-			if(trans != null)
+			if(intro_ship_trans != null)
 			{
 				if(intro_ship_spawn != null)
 				{
 					TheTransform spawn_trans = intro_ship_spawn.GetComponent<TheTransform>();
 
-					trans.LocalPosition = spawn_trans.LocalPosition;
+					intro_ship_trans.LocalPosition = spawn_trans.LocalPosition;
 
 					TheScript movement_script = intro_ship.GetScript("GuillemMovement");
 
@@ -389,6 +453,44 @@ public class Level1Manager
 						movement_script.CallFunctionArgs("SetPathParent", args2);
 					}
 				}
+			}
+		}
+	}
+
+	void SpawnAmbushShips()
+	{
+		TheGameObject spawn1 = TheResources.LoadPrefab(enemy_ship_prefab);
+		TheGameObject spawn2 = TheResources.LoadPrefab(enemy_ship_prefab);
+				
+		TheTransform spawner1 = null;
+		TheTransform spawner2 = null;
+
+		if(intro_ship_spawn_2 != null)
+			spawner1 = intro_ship_spawn_2.GetComponent<TheTransform>();
+
+		if(intro_ship_spawn_3 != null)
+			spawner2 = intro_ship_spawn_3.GetComponent<TheTransform>();
+
+		if(spawn1 != null && spawn2 != null && spawner1 != null && spawner2 != null)
+		{
+			TheTransform trans1 = spawn1.GetComponent<TheTransform>();
+			TheTransform trans2 = spawn2.GetComponent<TheTransform>();
+
+			if(trans1 != null)
+				trans1.LocalPosition = spawner1.LocalPosition;
+
+			if(trans2 != null)
+				trans2.LocalPosition = spawner2.LocalPosition;
+		}
+	}
+
+	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
+	{
+		if(trigger_name == "IntroTrigger")
+		{
+			if(go_triggerer == slave1)
+			{
+				NextMissionState();
 			}
 		}
 	}
