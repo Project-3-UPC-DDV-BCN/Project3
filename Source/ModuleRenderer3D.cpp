@@ -775,11 +775,12 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 	current_material = nullptr;
 
+	glDisable(GL_CULL_FACE);
 	for (std::map<float, ComponentMeshRenderer*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 	{
 		DrawMeshWithBlending(it->second, active_camera);
 	}
-
+	glEnable(GL_CULL_FACE);
 
 	for (uint i = 0; i < cubes_to_draw.size(); ++i)
 	{
