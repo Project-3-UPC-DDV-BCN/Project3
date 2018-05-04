@@ -104,13 +104,13 @@ public class TurretAI {
 				if(laser != null)
 				{
 					if(AudioSource != null)
-						AudioSource.Play("Play_Shoot");
+						AudioSource.Play("Play_Turret_Shoot");
 					
 					TheScript laser_script = laser.GetScript("Laser");
 
 					if(laser_script != null)
 					{
-						//TheConsole.Log("X: "+CannonTransform.ForwardDirection.x+" Y: "+CannonTransform.ForwardDirection.y+" Z: "+CannonTransform.ForwardDirection.z);
+						TheConsole.Log("X: "+CannonTransform.ForwardDirection.x+" Y: "+CannonTransform.ForwardDirection.y+" Z: "+CannonTransform.ForwardDirection.z);
 						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, SelfTransform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
 					}

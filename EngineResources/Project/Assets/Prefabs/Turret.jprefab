@@ -1,170 +1,12 @@
 {
-    "UUID": "1025860467",
-    "assets_path": "./Project/Assets/Prefabs/Turret.jprefab",
+    "UUID": "1980480267",
+    "assets_path": ".\\Project\\Assets\\Prefabs\\Turret.jprefab",
     "library_path": "./Project/Library/Prefabs/Turret.jprefab",
     "prefab_name": "Turret",
-    "GameObjects_Count": "4",
+    "GameObjects_Count": "8",
     "GameObject_0": {
-        "UUID": "420441081",
+        "UUID": "1681629525",
         "Name": "Turret",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "5",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "810759932",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "41.000004"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.500000",
-                    "value_Y": "1.500000",
-                    "value_Z": "1.500000"
-                }
-            },
-            "Component_1": {
-                "Type": "3",
-                "Active": "1",
-                "UUID": "455445565",
-                "Mesh": {
-                    "mesh_name": "PrimitiveCube"
-                },
-                "Material": {
-                    "Name": "Collision"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
-            },
-            "Component_2": {
-                "Type": "2",
-                "Active": "1",
-                "UUID": "1018253744",
-                "Mass": "1.000000",
-                "IsUsingGravity": "0",
-                "IsKinematic": "0",
-                "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "MaxAngularVelocity": "7.000000",
-                "LinearDamping": "0.000000",
-                "AngularDamping": "0.050000",
-                "CenterMass": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "InertiaTensor": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                },
-                "SleepThreshold": "0.005000",
-                "SolverIterations": "4",
-                "VelocitySolverIterations": "1",
-                "LinearXLock": "0",
-                "LinearYLock": "0",
-                "LinearZLock": "0",
-                "AngularXLock": "0",
-                "AngularYLock": "0",
-                "AngularZLock": "0",
-                "IsCCDMode": "0",
-                "Transforms": "0"
-            },
-            "Component_3": {
-                "Type": "4",
-                "Active": "1",
-                "UUID": "1261239907",
-                "IsConvex": "0",
-                "IsTrigger": "0",
-                "CapsuleDir": "0",
-                "HaveMaterial": "0",
-                "ColliderCenter": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.450000",
-                    "value_Z": "0.000000"
-                },
-                "Box": {
-                    "BoxSize": {
-                        "value_X": "1.500000",
-                        "value_Y": "1.500000",
-                        "value_Z": "1.500000"
-                    }
-                }
-            },
-            "Component_4": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "468019413",
-                "Script": {
-                    "library_path": "./Project/Library/Scripts/TurretAI.dll",
-                    "assets_path": "",
-                    "script_name": "TurretAI",
-                    "UUID": "210176542",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "3",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {
-                        "field_0": {
-                            "field_name": "BlasterCannon",
-                            "field_value": "1267168439"
-                        },
-                        "field_1": {
-                            "field_name": "BlasterPivot",
-                            "field_value": "771614464"
-                        },
-                        "field_2": {
-                            "field_name": "TurretHead",
-                            "field_value": "1326391691"
-                        }
-                    },
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
-            }
-        },
-        "ParentID": "0",
-        "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_1": {
-        "UUID": "1326391691",
-        "Name": "TurretHead",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -173,114 +15,184 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "63508861",
+                "UUID": "1658712451",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "0.900000",
-                    "value_Z": "0.000000"
+                    "value_Y": "0.000000",
+                    "value_Z": "41.000000"
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.000000",
+                    "value_Y": "-0.707107",
                     "value_Z": "0.000000",
-                    "value_W": "1.000000"
+                    "value_W": "0.707107"
                 },
                 "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "0.750000",
-                    "value_Z": "1.000000"
+                    "value_X": "0.100000",
+                    "value_Y": "0.100000",
+                    "value_Z": "0.100000"
                 }
             },
             "Component_1": {
-                "Type": "3",
+                "Type": "10",
                 "Active": "1",
-                "UUID": "1992993948",
-                "Mesh": {
-                    "mesh_name": "PrimitiveCube"
-                },
-                "Material": {
-                    "Name": "Cockpit_Empire"
-                },
-                "Interior_Material": {
-                    "UUID": "1480464845"
-                },
-                "Mat_Indices_Number": "0",
-                "Mat_Indices_Start": "0",
-                "Int_Mat_Indices_Number": "0",
-                "Int_Mat_Indices_Start": "0",
-                "has_light": "1"
+                "UUID": "55410954",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/EntityProperties.dll",
+                    "assets_path": "",
+                    "script_name": "EntityProperties",
+                    "UUID": "885398422",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "4",
+                    "string_fields_count": "2",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "base_laser_damage",
+                            "field_value": "10"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "laser_speed",
+                            "field_value": "30.000000"
+                        }
+                    },
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "is_generator",
+                            "field_value": "0"
+                        },
+                        "field_1": {
+                            "field_name": "is_ship",
+                            "field_value": "0"
+                        },
+                        "field_2": {
+                            "field_name": "is_slave1",
+                            "field_value": "0"
+                        },
+                        "field_3": {
+                            "field_name": "is_turret",
+                            "field_value": "1"
+                        }
+                    },
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "entity_faction",
+                            "field_value": "empire"
+                        },
+                        "field_1": {
+                            "field_name": "explosion_prefab",
+                            "field_value": "TurretParticle"
+                        }
+                    },
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             },
             "Component_2": {
-                "Type": "2",
+                "Type": "10",
                 "Active": "1",
-                "UUID": "324723064",
-                "Mass": "1.000000",
-                "IsUsingGravity": "0",
-                "IsKinematic": "0",
-                "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "MaxAngularVelocity": "7.000000",
-                "LinearDamping": "0.000000",
-                "AngularDamping": "0.050000",
-                "CenterMass": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "InertiaTensor": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                },
-                "SleepThreshold": "0.005000",
-                "SolverIterations": "4",
-                "VelocitySolverIterations": "1",
-                "LinearXLock": "0",
-                "LinearYLock": "0",
-                "LinearZLock": "0",
-                "AngularXLock": "0",
-                "AngularYLock": "0",
-                "AngularZLock": "0",
-                "IsCCDMode": "0",
-                "Transforms": "0"
+                "UUID": "1639208824",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/TurretAI.dll",
+                    "assets_path": "",
+                    "script_name": "TurretAI",
+                    "UUID": "1781566830",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "7",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "4",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "BaseLaserDamage",
+                            "field_value": "10"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "LaserFrequency",
+                            "field_value": "0.300000"
+                        },
+                        "field_1": {
+                            "field_name": "LaserSpeed",
+                            "field_value": "30.000000"
+                        },
+                        "field_2": {
+                            "field_name": "MaxAngleBlasters",
+                            "field_value": "180.000000"
+                        },
+                        "field_3": {
+                            "field_name": "MinAngleBlasters",
+                            "field_value": "0.000000"
+                        },
+                        "field_4": {
+                            "field_name": "MinDistance",
+                            "field_value": "600.000000"
+                        },
+                        "field_5": {
+                            "field_name": "RotationSpeed",
+                            "field_value": "1.250000"
+                        },
+                        "field_6": {
+                            "field_name": "ShootingRange",
+                            "field_value": "500.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "BlasterCannon",
+                            "field_value": "756113573"
+                        },
+                        "field_1": {
+                            "field_name": "BlasterPivot",
+                            "field_value": "756113573"
+                        },
+                        "field_2": {
+                            "field_name": "TargetPlayer",
+                            "field_value": "672095122"
+                        },
+                        "field_3": {
+                            "field_name": "TurretHead",
+                            "field_value": "1244308217"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             },
             "Component_3": {
-                "Type": "4",
+                "Type": "8",
                 "Active": "1",
-                "UUID": "1890270",
-                "IsConvex": "0",
-                "IsTrigger": "0",
-                "CapsuleDir": "0",
-                "HaveMaterial": "0",
-                "ColliderCenter": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "Box": {
-                    "BoxSize": {
-                        "value_X": "1.500000",
-                        "value_Y": "1.125000",
-                        "value_Z": "1.500000"
-                    }
-                }
+                "UUID": "1939738842",
+                "Sound_ID": "102",
+                "SoundBank_Name": "Enemy.bnk"
             }
         },
-        "ParentID": "420441081",
-        "IsRoot": "0",
+        "ParentID": "0",
+        "IsRoot": "1",
         "IsStatic": "0"
     },
-    "GameObject_2": {
-        "UUID": "771614464",
-        "Name": "BlasterPivot",
+    "GameObject_1": {
+        "UUID": "215692879",
+        "Name": "Turret_Build",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -289,7 +201,94 @@
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1864905208",
+                "UUID": "263722124",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "30.786545",
+                    "value_Y": "30.786545",
+                    "value_Z": "30.786545"
+                }
+            }
+        },
+        "ParentID": "1681629525",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "1548269035",
+        "Name": "Turret_Base_Bot",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "333578942",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "278574220",
+                "Mesh": {
+                    "mesh_name": "Turret_Base_Bot"
+                },
+                "Material": {
+                    "Name": "Turret_Mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "215692879",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "1244308217",
+        "Name": "Top",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "690954563",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -308,26 +307,26 @@
                 }
             }
         },
-        "ParentID": "1326391691",
+        "ParentID": "215692879",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_3": {
-        "UUID": "1267168439",
-        "Name": "BlasterCannon",
+    "GameObject_4": {
+        "UUID": "492055777",
+        "Name": "Turret_Base_Top",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "3",
+            "Components_Count": "2",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "147978487",
+                "UUID": "2100644603",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
-                    "value_Z": "1.000000"
+                    "value_Z": "0.000000"
                 },
                 "rotation": {
                     "value_X": "0.000000",
@@ -336,20 +335,20 @@
                     "value_W": "1.000000"
                 },
                 "scale": {
-                    "value_X": "0.250000",
-                    "value_Y": "0.150000",
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
             },
             "Component_1": {
                 "Type": "3",
                 "Active": "1",
-                "UUID": "2056881292",
+                "UUID": "1797310186",
                 "Mesh": {
-                    "mesh_name": "PrimitiveCube"
+                    "mesh_name": "Turret_Base_Top"
                 },
                 "Material": {
-                    "Name": "Panel"
+                    "Name": "Turret_Mat"
                 },
                 "Interior_Material": {
                     "UUID": "1480464845"
@@ -359,12 +358,46 @@
                 "Int_Mat_Indices_Number": "0",
                 "Int_Mat_Indices_Start": "0",
                 "has_light": "1"
+            }
+        },
+        "ParentID": "1244308217",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "756113573",
+        "Name": "Guns",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "955316110",
+                "position": {
+                    "value_X": "0.050000",
+                    "value_Y": "0.200000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.707107",
+                    "value_Z": "0.000000",
+                    "value_W": "0.707107"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
             },
-            "Component_2": {
+            "Component_1": {
                 "Type": "12",
                 "Active": "1",
-                "UUID": "154190678",
-                "Object_count": "10",
+                "UUID": "579822879",
+                "Object_count": "30",
                 "Spawn_position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -376,15 +409,121 @@
                     "value_Z": "0.000000"
                 },
                 "Spawn_scale": {
-                    "value_X": "-431602080.000000",
-                    "value_Y": "-431602080.000000",
-                    "value_Z": "-431602080.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
-                "Life_time": "1.000000",
+                "Life_time": "10.000000",
                 "Object_to_spawn_name": "VS4 - Laser"
             }
         },
-        "ParentID": "771614464",
+        "ParentID": "1244308217",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_6": {
+        "UUID": "116426922",
+        "Name": "Gun_Left",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1507902344",
+                "position": {
+                    "value_X": "-0.050000",
+                    "value_Y": "-0.200000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.707107",
+                    "value_Z": "0.000000",
+                    "value_W": "0.707107"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1938717515",
+                "Mesh": {
+                    "mesh_name": "Gun_Left"
+                },
+                "Material": {
+                    "Name": "Mat_Turret_Guns"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "756113573",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_7": {
+        "UUID": "1155452784",
+        "Name": "Gun_Right",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1278328572",
+                "position": {
+                    "value_X": "-0.050000",
+                    "value_Y": "-0.200000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.707107",
+                    "value_Z": "0.000000",
+                    "value_W": "0.707107"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1530604676",
+                "Mesh": {
+                    "mesh_name": "Gun_Right"
+                },
+                "Material": {
+                    "Name": "Mat_Turret_Guns"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            }
+        },
+        "ParentID": "756113573",
         "IsRoot": "0",
         "IsStatic": "0"
     }
