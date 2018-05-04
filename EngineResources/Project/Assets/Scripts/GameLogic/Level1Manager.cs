@@ -12,6 +12,8 @@ public class Level1Manager
 	TheGameObject slave1 = null;
 	TheTransform slave_trans = null;
 
+	public TheGameObject slave_emmiter;
+	TheAudioSource slave_audio;
 	TheScript slave1_script = null;
 	TheScript slave1_movement_script = null;
 	TheScript slave1_shooting_script = null;
@@ -95,6 +97,9 @@ public class Level1Manager
 
 		if(fight_zone != null)
 			fight_trans = fight_zone.GetComponent<TheTransform>();
+
+		if(slave_emmiter!=null)
+			slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
 
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}

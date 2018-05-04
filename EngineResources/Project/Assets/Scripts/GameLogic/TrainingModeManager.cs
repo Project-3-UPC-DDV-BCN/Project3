@@ -10,6 +10,8 @@ public class TrainingModeManager
 	public float max_spawn_rad = 50;
 	public float min_spawn_rad = 30;
 
+	public TheGameObject slave_emmiter;
+	TheAudioSource slave_audio;
 	public TheGameObject curr_wave_go;
 	public TheGameObject remaining_ships_go;
 	TheText curr_wave_text = null;
@@ -59,6 +61,8 @@ public class TrainingModeManager
 
 		if(score_text != null)
 			score_text.Text = score.ToString();
+		if(slave_emmiter!=null)
+			slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
 	}
 
 	void Start () 
@@ -110,6 +114,8 @@ public class TrainingModeManager
 
 				if(dead)
 				{
+					if(slave_audio!=null)
+						slave_audio.Play("Stop_Engine");
 					Lose();
 				}
 			}	

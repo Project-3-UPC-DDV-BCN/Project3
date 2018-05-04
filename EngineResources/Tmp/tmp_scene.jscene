@@ -1,8 +1,8 @@
 {
     "Scene_Name": "Alpha1 - TrainingScene",
-    "GameObjects_Count": "65",
+    "GameObjects_Count": "69",
     "GameObject_0": {
-        "UUID": "1374144525",
+        "UUID": "917211698",
         "Name": "DirectionalLight",
         "Tag": "Default",
         "Layer": "Default",
@@ -53,7 +53,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1066984822",
+        "UUID": "1769382913",
         "Name": "GameManager",
         "Tag": "GameManager",
         "Layer": "Default",
@@ -116,7 +116,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "back_radar_go",
-                            "field_value": "861720470"
+                            "field_value": "361900072"
                         },
                         "field_1": {
                             "field_name": "controller_image",
@@ -124,7 +124,7 @@
                         },
                         "field_2": {
                             "field_name": "front_radar_go",
-                            "field_value": "461520404"
+                            "field_value": "1937956428"
                         }
                     },
                     "vec2_fields": {},
@@ -153,7 +153,7 @@
                     "float_fields_count": "2",
                     "bool_fields_count": "0",
                     "string_fields_count": "1",
-                    "gameobject_fields_count": "4",
+                    "gameobject_fields_count": "5",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -179,7 +179,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "curr_wave_go",
-                            "field_value": "2061095354"
+                            "field_value": "1222916872"
                         },
                         "field_1": {
                             "field_name": "gametime_go",
@@ -187,11 +187,15 @@
                         },
                         "field_2": {
                             "field_name": "remaining_ships_go",
-                            "field_value": "662348294"
+                            "field_value": "1558876550"
                         },
                         "field_3": {
                             "field_name": "score_go",
                             "field_value": "0"
+                        },
+                        "field_4": {
+                            "field_name": "slave_emmiter",
+                            "field_value": "255508891"
                         }
                     },
                     "vec2_fields": {},
@@ -205,7 +209,7 @@
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "943459085",
+        "UUID": "103343112",
         "Name": "SceneCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -222,7 +226,7 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "761.000000",
+                    "value_X": "527.000000",
                     "value_Y": "413.000000"
                 },
                 "anchor": {
@@ -280,7 +284,7 @@
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1630129643",
+        "UUID": "780583102",
         "Name": "AiAnchor",
         "Tag": "AI_ANCHOR",
         "Layer": "Default",
@@ -314,7 +318,7 @@
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1040098647",
+        "UUID": "754973360",
         "Name": "Slave1(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -703,7 +707,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "audio_emiter",
-                            "field_value": "783842244"
+                            "field_value": "255508891"
                         },
                         "field_1": {
                             "field_name": "back_shield_100",
@@ -723,27 +727,27 @@
                         },
                         "field_5": {
                             "field_name": "body_part",
-                            "field_value": "1513353717"
+                            "field_value": "543189321"
                         },
                         "field_6": {
                             "field_name": "camera_go",
-                            "field_value": "465816133"
+                            "field_value": "1082004504"
                         },
                         "field_7": {
                             "field_name": "center_ring",
-                            "field_value": "1226796527"
+                            "field_value": "725027957"
                         },
                         "field_8": {
                             "field_name": "energy",
-                            "field_value": "1152971879"
+                            "field_value": "762682760"
                         },
                         "field_9": {
                             "field_name": "engine_part",
-                            "field_value": "1356442143"
+                            "field_value": "196693671"
                         },
                         "field_10": {
                             "field_name": "exterior_ring",
-                            "field_value": "1696323494"
+                            "field_value": "1412625824"
                         },
                         "field_11": {
                             "field_name": "front_shield_100",
@@ -763,11 +767,11 @@
                         },
                         "field_15": {
                             "field_name": "hp",
-                            "field_value": "263946646"
+                            "field_value": "55778238"
                         },
                         "field_16": {
                             "field_name": "inner_ring",
-                            "field_value": "1213103283"
+                            "field_value": "2146692082"
                         },
                         "field_17": {
                             "field_name": "particle_emitter_go",
@@ -775,15 +779,15 @@
                         },
                         "field_18": {
                             "field_name": "selected_center_ring",
-                            "field_value": "1133974502"
+                            "field_value": "2091239221"
                         },
                         "field_19": {
                             "field_name": "selected_exterior_ring",
-                            "field_value": "1022292656"
+                            "field_value": "113911045"
                         },
                         "field_20": {
                             "field_name": "selected_inner_ring",
-                            "field_value": "497489081"
+                            "field_value": "1216989582"
                         },
                         "field_21": {
                             "field_name": "shield_green",
@@ -799,19 +803,19 @@
                         },
                         "field_24": {
                             "field_name": "shields",
-                            "field_value": "1019609384"
+                            "field_value": "2029727081"
                         },
                         "field_25": {
                             "field_name": "speed",
-                            "field_value": "1257897441"
+                            "field_value": "1432489460"
                         },
                         "field_26": {
                             "field_name": "weapons",
-                            "field_value": "434224543"
+                            "field_value": "1015735464"
                         },
                         "field_27": {
                             "field_name": "wings_part",
-                            "field_value": "63534927"
+                            "field_value": "495766648"
                         }
                     },
                     "vec2_fields": {},
@@ -890,7 +894,338 @@
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "1706809594",
+        "UUID": "190552588",
+        "Name": "ShipPrototype(3)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "10",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "645302198",
+                "position": {
+                    "value_X": "0.191450",
+                    "value_Y": "0.000000",
+                    "value_Z": "157.765045"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.997859",
+                    "value_Z": "0.000000",
+                    "value_W": "-0.065403"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1452834158",
+                "Script": {
+                    "library_path": ".\\Project\\Library\\Scripts\\ShipProperties.dll",
+                    "assets_path": "",
+                    "script_name": "ShipProperties",
+                    "UUID": "1287140418",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "1",
+                    "string_fields_count": "1",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "base_laser_damage",
+                            "field_value": "10"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "laser_speed",
+                            "field_value": "500.000000"
+                        }
+                    },
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "is_slave1",
+                            "field_value": "0"
+                        }
+                    },
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "ship_faction",
+                            "field_value": "empire"
+                        }
+                    },
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_2": {
+                "Type": "12",
+                "Active": "1",
+                "UUID": "1437024583",
+                "Object_count": "20",
+                "Spawn_position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "-431602080.000000",
+                    "value_Y": "-431602080.000000",
+                    "value_Z": "-431602080.000000"
+                },
+                "Life_time": "2.000000",
+                "Object_to_spawn_name": "VS4-Laser"
+            },
+            "Component_3": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "1401506640",
+                "Mesh": {
+                    "mesh_name": "A_Wing"
+                },
+                "Material": {
+                    "Name": "X_Wing_final_Mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            },
+            "Component_4": {
+                "Type": "2",
+                "Active": "1",
+                "UUID": "1177331895",
+                "Mass": "1.000000",
+                "IsUsingGravity": "0",
+                "IsKinematic": "0",
+                "LinearVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "AngularVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "MaxAngularVelocity": "7.000000",
+                "LinearDamping": "0.000000",
+                "AngularDamping": "0.050000",
+                "CenterMass": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "InertiaTensor": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                },
+                "SleepThreshold": "0.005000",
+                "SolverIterations": "4",
+                "VelocitySolverIterations": "1",
+                "LinearXLock": "0",
+                "LinearYLock": "0",
+                "LinearZLock": "0",
+                "AngularXLock": "0",
+                "AngularYLock": "0",
+                "AngularZLock": "0",
+                "IsCCDMode": "0",
+                "Transforms": "0"
+            },
+            "Component_5": {
+                "Type": "4",
+                "Active": "1",
+                "UUID": "1868023099",
+                "IsConvex": "0",
+                "IsTrigger": "0",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "6.750691",
+                        "value_Y": "3.899920",
+                        "value_Z": "10.197910"
+                    }
+                }
+            },
+            "Component_6": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "1238846532",
+                "Sound_ID": "100",
+                "SoundBank_Name": "Enemy.bnk"
+            },
+            "Component_7": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "348689911",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/GuillemMovement.dll",
+                    "assets_path": "",
+                    "script_name": "GuillemMovement",
+                    "UUID": "985148043",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "4",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "avoidance_rad",
+                            "field_value": "30.000000"
+                        },
+                        "field_1": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "2000.000000"
+                        },
+                        "field_2": {
+                            "field_name": "move_speed",
+                            "field_value": "50.000000"
+                        },
+                        "field_3": {
+                            "field_name": "rotation_speed",
+                            "field_value": "60.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "force_target",
+                            "field_value": "0"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_8": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "659183817",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/Ai_Starship_Shooting.dll",
+                    "assets_path": "",
+                    "script_name": "Ai_Starship_Shooting",
+                    "UUID": "1310986967",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "3",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "shooting_angle",
+                            "field_value": "60.000000"
+                        },
+                        "field_1": {
+                            "field_name": "shooting_range",
+                            "field_value": "500.000000"
+                        },
+                        "field_2": {
+                            "field_name": "time_between_lasers",
+                            "field_value": "0.200000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1695160537",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ColliderScalingByDistance.dll",
+                    "assets_path": "",
+                    "script_name": "ColliderScalingByDistance",
+                    "UUID": "1660441945",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "1",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "max_distance",
+                            "field_value": "5000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {
+                        "field_0": {
+                            "field_name": "max_size_multiplier",
+                            "field_value": {
+                                "value_X": "10.000000",
+                                "value_Y": "10.000000",
+                                "value_Z": "10.000000"
+                            }
+                        }
+                    },
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_6": {
+        "UUID": "1455241629",
         "Name": "GameTimeBackground",
         "Tag": "Default",
         "Layer": "Default",
@@ -927,8 +1262,8 @@
                 "Active": "1",
                 "UUID": "1309076046",
                 "position": {
-                    "value_X": "320.303711",
-                    "value_Y": "175.584381",
+                    "value_X": "221.813477",
+                    "value_Y": "185.090622",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -960,12 +1295,12 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "943459085",
+        "ParentID": "103343112",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_6": {
-        "UUID": "930620776",
+    "GameObject_7": {
+        "UUID": "1393954443",
         "Name": "ScoreTimeBackground",
         "Tag": "Default",
         "Layer": "Default",
@@ -1002,8 +1337,8 @@
                 "Active": "1",
                 "UUID": "625534038",
                 "position": {
-                    "value_X": "234.393936",
-                    "value_Y": "175.584381",
+                    "value_X": "162.320114",
+                    "value_Y": "185.090622",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1035,12 +1370,12 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "943459085",
+        "ParentID": "103343112",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_7": {
-        "UUID": "1167415906",
+    "GameObject_8": {
+        "UUID": "1568784526",
         "Name": "CurrentWaveBackgrou",
         "Tag": "Default",
         "Layer": "Default",
@@ -1077,8 +1412,8 @@
                 "Active": "1",
                 "UUID": "625534038",
                 "position": {
-                    "value_X": "-292.806641",
-                    "value_Y": "183.313278",
+                    "value_X": "-202.771484",
+                    "value_Y": "190.442963",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1110,12 +1445,12 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "943459085",
+        "ParentID": "103343112",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_8": {
-        "UUID": "849203617",
+    "GameObject_9": {
+        "UUID": "1476681873",
         "Name": "RemainingShipsBackg",
         "Tag": "Default",
         "Layer": "Default",
@@ -1152,8 +1487,8 @@
                 "Active": "1",
                 "UUID": "625534038",
                 "position": {
-                    "value_X": "-292.806641",
-                    "value_Y": "148.087311",
+                    "value_X": "-202.771484",
+                    "value_Y": "166.048630",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1185,12 +1520,12 @@
                 "anim_textures_count": "1"
             }
         },
-        "ParentID": "943459085",
+        "ParentID": "103343112",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_9": {
-        "UUID": "32733600",
+    "GameObject_10": {
+        "UUID": "1584047302",
         "Name": "Energy_Bars(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1260,12 +1595,12 @@
                 "scale": "0.060000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_10": {
-        "UUID": "465816133",
+    "GameObject_11": {
+        "UUID": "1082004504",
         "Name": "Camera(28)",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -1322,12 +1657,12 @@
                 "Object_ID": "0"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_11": {
-        "UUID": "1434442246",
+    "GameObject_12": {
+        "UUID": "804203518",
         "Name": "Hull_Shields(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1397,12 +1732,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_12": {
-        "UUID": "724088678",
+    "GameObject_13": {
+        "UUID": "259482094",
         "Name": "Laser_factory(28)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1526,39 +1861,39 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "crosshair_1",
-                            "field_value": "1947237131"
+                            "field_value": "1867507206"
                         },
                         "field_1": {
                             "field_name": "crosshair_2",
-                            "field_value": "101145888"
+                            "field_value": "469264958"
                         },
                         "field_2": {
                             "field_name": "laser_light",
-                            "field_value": "1347489782"
+                            "field_value": "360446974"
                         },
                         "field_3": {
                             "field_name": "laser_spawner",
-                            "field_value": "26431960"
+                            "field_value": "1177452210"
                         },
                         "field_4": {
                             "field_name": "overheat_bar_obj",
-                            "field_value": "278989935"
+                            "field_value": "1026919107"
                         },
                         "field_5": {
                             "field_name": "shoot_audio_emiter",
-                            "field_value": "783842244"
+                            "field_value": "255508891"
                         },
                         "field_6": {
                             "field_name": "weapon_icon_1",
-                            "field_value": "200826288"
+                            "field_value": "166257791"
                         },
                         "field_7": {
                             "field_name": "weapon_icon_2",
-                            "field_value": "1694615201"
+                            "field_value": "60644333"
                         },
                         "field_8": {
                             "field_name": "weapons_energy",
-                            "field_value": "434224543"
+                            "field_value": "1015735464"
                         }
                     },
                     "vec2_fields": {},
@@ -1653,12 +1988,12 @@
                 }
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_13": {
-        "UUID": "1746721360",
+    "GameObject_14": {
+        "UUID": "770427810",
         "Name": "Crosshairs(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1728,12 +2063,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_14": {
-        "UUID": "783842244",
+    "GameObject_15": {
+        "UUID": "255508891",
         "Name": "AudioEmiter(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1769,12 +2104,12 @@
                 "SoundBank_Name": "Player.bnk"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_15": {
-        "UUID": "26431960",
+    "GameObject_16": {
+        "UUID": "1177452210",
         "Name": "laser_spawner(28)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1803,12 +2138,12 @@
                 }
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_16": {
-        "UUID": "1973485328",
+    "GameObject_17": {
+        "UUID": "1654539126",
         "Name": "Puzzle(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1878,12 +2213,12 @@
                 "scale": "1.010000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_17": {
-        "UUID": "18285628",
+    "GameObject_18": {
+        "UUID": "1793149813",
         "Name": "RadarsCanvas(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1953,12 +2288,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_18": {
-        "UUID": "1753387964",
+    "GameObject_19": {
+        "UUID": "1216279822",
         "Name": "Panel_VS3(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -1987,12 +2322,12 @@
                 }
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_19": {
-        "UUID": "1063011576",
+    "GameObject_20": {
+        "UUID": "1189802605",
         "Name": "Speed+Weapons+Targe(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2062,12 +2397,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_20": {
-        "UUID": "1347489782",
+    "GameObject_21": {
+        "UUID": "360446974",
         "Name": "LaserLight(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2113,12 +2448,12 @@
                 "outercutOff": "0.000000"
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_21": {
-        "UUID": "762993427",
+    "GameObject_22": {
+        "UUID": "1332361659",
         "Name": "Particles(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2156,12 +2491,12 @@
                 }
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_22": {
-        "UUID": "209888975",
+    "GameObject_23": {
+        "UUID": "1942412721",
         "Name": "low_det1",
         "Tag": "Default",
         "Layer": "Default",
@@ -2178,9 +2513,9 @@
                     "value_Z": "-2.800000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -2190,12 +2525,12 @@
                 }
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_23": {
-        "UUID": "1201594287",
+    "GameObject_24": {
+        "UUID": "1375829857",
         "Name": "uper_det1",
         "Tag": "Default",
         "Layer": "Default",
@@ -2212,9 +2547,9 @@
                     "value_Z": "-2.790000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -2224,12 +2559,75 @@
                 }
             }
         },
-        "ParentID": "1040098647",
+        "ParentID": "754973360",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_24": {
-        "UUID": "970386342",
+    "GameObject_25": {
+        "UUID": "289883409",
+        "Name": "Billboard",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "2",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "944411777",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1548955120",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/BillboardToPlayer.dll",
+                    "assets_path": "",
+                    "script_name": "BillboardToPlayer",
+                    "UUID": "1765591768",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "190552588",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_26": {
+        "UUID": "2068987130",
         "Name": "GameTimeText",
         "Tag": "Default",
         "Layer": "Default",
@@ -2267,7 +2665,7 @@
                 "UUID": "2145012880",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "2.824023",
+                    "value_Y": "1.955664",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2302,12 +2700,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "1706809594",
+        "ParentID": "1455241629",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_25": {
-        "UUID": "1579465409",
+    "GameObject_27": {
+        "UUID": "339871558",
         "Name": "ScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -2345,7 +2743,7 @@
                 "UUID": "1713982509",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "2.824023",
+                    "value_Y": "1.955664",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2380,12 +2778,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "930620776",
+        "ParentID": "1393954443",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_26": {
-        "UUID": "2061095354",
+    "GameObject_28": {
+        "UUID": "1222916872",
         "Name": "CurrWaveText",
         "Tag": "Default",
         "Layer": "Default",
@@ -2422,8 +2820,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "-1.486328",
-                    "value_Y": "1.783594",
+                    "value_X": "-1.029297",
+                    "value_Y": "1.235156",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2458,12 +2856,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "1167415906",
+        "ParentID": "1568784526",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_27": {
-        "UUID": "662348294",
+    "GameObject_29": {
+        "UUID": "1558876550",
         "Name": "RemainingShipsText",
         "Tag": "Default",
         "Layer": "Default",
@@ -2500,8 +2898,8 @@
                 "Active": "1",
                 "UUID": "1713982509",
                 "position": {
-                    "value_X": "-1.486328",
-                    "value_Y": "1.783594",
+                    "value_X": "-1.029297",
+                    "value_Y": "1.235156",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -2536,12 +2934,12 @@
                 "font": "Purista Semibold Italic"
             }
         },
-        "ParentID": "849203617",
+        "ParentID": "1476681873",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_28": {
-        "UUID": "434224543",
+    "GameObject_30": {
+        "UUID": "1015735464",
         "Name": "Weapons(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2613,12 +3011,12 @@
                 }
             }
         },
-        "ParentID": "32733600",
+        "ParentID": "1584047302",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_29": {
-        "UUID": "1019609384",
+    "GameObject_31": {
+        "UUID": "2029727081",
         "Name": "Shields(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2690,12 +3088,12 @@
                 }
             }
         },
-        "ParentID": "32733600",
+        "ParentID": "1584047302",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_30": {
-        "UUID": "1152971879",
+    "GameObject_32": {
+        "UUID": "762682760",
         "Name": "Engines(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2767,12 +3165,12 @@
                 }
             }
         },
-        "ParentID": "32733600",
+        "ParentID": "1584047302",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_31": {
-        "UUID": "263946646",
+    "GameObject_33": {
+        "UUID": "55778238",
         "Name": "Hull(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2844,12 +3242,12 @@
                 }
             }
         },
-        "ParentID": "1434442246",
+        "ParentID": "804203518",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_32": {
-        "UUID": "211873787",
+    "GameObject_34": {
+        "UUID": "686274022",
         "Name": "Shield(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2891,8 +3289,8 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.707107",
-                    "value_Y": "0.707107",
+                    "value_X": "-0.707107",
+                    "value_Y": "-0.707107",
                     "value_Z": "0.000000",
                     "value_W": "-0.000000"
                 },
@@ -2921,12 +3319,12 @@
                 }
             }
         },
-        "ParentID": "1434442246",
+        "ParentID": "804203518",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_33": {
-        "UUID": "1947237131",
+    "GameObject_35": {
+        "UUID": "1867507206",
         "Name": "crosshair_1(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -2997,12 +3395,12 @@
                 "texture": "CrosshairNormal_Image_v2"
             }
         },
-        "ParentID": "1746721360",
+        "ParentID": "770427810",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_34": {
-        "UUID": "101145888",
+    "GameObject_36": {
+        "UUID": "469264958",
         "Name": "crosshair_2(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3073,12 +3471,12 @@
                 "texture": "CrosshairCharged_Image_v2"
             }
         },
-        "ParentID": "1746721360",
+        "ParentID": "770427810",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_35": {
-        "UUID": "278989935",
+    "GameObject_37": {
+        "UUID": "1026919107",
         "Name": "HeatBar(7)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3150,12 +3548,12 @@
                 }
             }
         },
-        "ParentID": "1746721360",
+        "ParentID": "770427810",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_36": {
-        "UUID": "1716161167",
+    "GameObject_38": {
+        "UUID": "1109572523",
         "Name": "Puzzle_Background(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3226,12 +3624,12 @@
                 "texture": "Puzzle_Backgroudn"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_37": {
-        "UUID": "1308939568",
+    "GameObject_39": {
+        "UUID": "266873899",
         "Name": "Base(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3273,9 +3671,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3302,12 +3700,12 @@
                 "texture": "Base"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_38": {
-        "UUID": "1213103283",
+    "GameObject_40": {
+        "UUID": "2146692082",
         "Name": "Circle_Interior(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3349,9 +3747,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3378,12 +3776,12 @@
                 "texture": "c_1"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_39": {
-        "UUID": "1226796527",
+    "GameObject_41": {
+        "UUID": "725027957",
         "Name": "Circle_Mid(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3425,9 +3823,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3454,12 +3852,12 @@
                 "texture": "c_1"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_40": {
-        "UUID": "1081397783",
+    "GameObject_42": {
+        "UUID": "568271562",
         "Name": "Slave_Base(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3501,9 +3899,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3530,12 +3928,12 @@
                 "texture": "Slave_1"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_41": {
-        "UUID": "1513353717",
+    "GameObject_43": {
+        "UUID": "543189321",
         "Name": "Slave_Top_Selected(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3577,9 +3975,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3606,12 +4004,12 @@
                 "texture": "Selected_top"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_42": {
-        "UUID": "1356442143",
+    "GameObject_44": {
+        "UUID": "196693671",
         "Name": "Slave_Bottom_Select(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3653,9 +4051,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3682,12 +4080,12 @@
                 "texture": "Selected_bottom"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_43": {
-        "UUID": "1265060978",
+    "GameObject_45": {
+        "UUID": "1654335419",
         "Name": "Core(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3729,9 +4127,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3758,12 +4156,12 @@
                 "texture": "Nucli"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_44": {
-        "UUID": "63534927",
+    "GameObject_46": {
+        "UUID": "495766648",
         "Name": "Slave_Mid_Selected(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3805,9 +4203,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3834,12 +4232,12 @@
                 "texture": "Selected_mid"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_45": {
-        "UUID": "1696323494",
+    "GameObject_47": {
+        "UUID": "1412625824",
         "Name": "Circle_Exteriror(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3881,9 +4279,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3910,12 +4308,12 @@
                 "texture": "c_1"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_46": {
-        "UUID": "1022292656",
+    "GameObject_48": {
+        "UUID": "113911045",
         "Name": "Circle_Exterior_Sel(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -3957,9 +4355,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -3986,12 +4384,12 @@
                 "texture": "c_1_s"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_47": {
-        "UUID": "1133974502",
+    "GameObject_49": {
+        "UUID": "2091239221",
         "Name": "Circle_Mid_Sel(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4033,9 +4431,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "-0.000000",
+                    "value_X": "0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "-0.000000",
+                    "value_Z": "0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -4062,12 +4460,12 @@
                 "texture": "c_1_s"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_48": {
-        "UUID": "497489081",
+    "GameObject_50": {
+        "UUID": "1216989582",
         "Name": "Circle_Interior_Sel(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4109,9 +4507,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -4138,12 +4536,12 @@
                 "texture": "c_1_s"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_49": {
-        "UUID": "1071049485",
+    "GameObject_51": {
+        "UUID": "1211879684",
         "Name": "Animation(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4225,12 +4623,12 @@
                 "anim_texture_11": "Screen_anim_00022"
             }
         },
-        "ParentID": "1973485328",
+        "ParentID": "1654539126",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_50": {
-        "UUID": "461520404",
+    "GameObject_52": {
+        "UUID": "1937956428",
         "Name": "FrontRadar(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4273,8 +4671,8 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.933580",
-                    "value_Z": "0.358368",
+                    "value_Y": "-0.933580",
+                    "value_Z": "-0.358368",
                     "value_W": "-0.000000"
                 },
                 "scale": {
@@ -4292,7 +4690,7 @@
                 "max_distance": "800.000061",
                 "transparent": "0",
                 "background_texture": "Radar_shape",
-                "center_go": "1040098647",
+                "center_go": "754973360",
                 "markers_count": "2",
                 "marker_name_0": "Alliance",
                 "marker_texture_0": "RebelsMarker",
@@ -4301,12 +4699,12 @@
                 "entities_count": "0"
             }
         },
-        "ParentID": "18285628",
+        "ParentID": "1793149813",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_51": {
-        "UUID": "861720470",
+    "GameObject_53": {
+        "UUID": "361900072",
         "Name": "BackRadar(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4349,8 +4747,8 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "-0.292372",
-                    "value_Z": "-0.956305",
+                    "value_Y": "0.292372",
+                    "value_Z": "0.956305",
                     "value_W": "-0.000000"
                 },
                 "scale": {
@@ -4368,7 +4766,7 @@
                 "max_distance": "800.000000",
                 "transparent": "0",
                 "background_texture": "Radar_shape",
-                "center_go": "1040098647",
+                "center_go": "754973360",
                 "markers_count": "2",
                 "marker_name_0": "Alliance",
                 "marker_texture_0": "EmpireMarker",
@@ -4377,12 +4775,12 @@
                 "entities_count": "0"
             }
         },
-        "ParentID": "18285628",
+        "ParentID": "1793149813",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_52": {
-        "UUID": "1737679278",
+    "GameObject_54": {
+        "UUID": "1566766108",
         "Name": "Wall_Wall(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4430,12 +4828,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1753387964",
+        "ParentID": "1216279822",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_53": {
-        "UUID": "477759893",
+    "GameObject_55": {
+        "UUID": "538839350",
         "Name": "Panel_Panel(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4483,12 +4881,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1753387964",
+        "ParentID": "1216279822",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_54": {
-        "UUID": "1894785817",
+    "GameObject_56": {
+        "UUID": "142556907",
         "Name": "HUD_Elements_HUD_Elements(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4536,12 +4934,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1753387964",
+        "ParentID": "1216279822",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_55": {
-        "UUID": "1257897441",
+    "GameObject_57": {
+        "UUID": "1432489460",
         "Name": "SpeedBar(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4613,12 +5011,12 @@
                 }
             }
         },
-        "ParentID": "1063011576",
+        "ParentID": "1189802605",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_56": {
-        "UUID": "1694615201",
+    "GameObject_58": {
+        "UUID": "60644333",
         "Name": "CannonImage(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4660,9 +5058,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -4689,12 +5087,12 @@
                 "texture": "Cannon"
             }
         },
-        "ParentID": "1063011576",
+        "ParentID": "1189802605",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_57": {
-        "UUID": "200826288",
+    "GameObject_59": {
+        "UUID": "166257791",
         "Name": "BasicImage(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -4736,9 +5134,9 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
+                    "value_X": "-0.000000",
                     "value_Y": "-1.000000",
-                    "value_Z": "0.000000",
+                    "value_Z": "-0.000000",
                     "value_W": "0.000000"
                 },
                 "scale": {
@@ -4765,12 +5163,12 @@
                 "texture": "Basic"
             }
         },
-        "ParentID": "1063011576",
+        "ParentID": "1189802605",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_58": {
-        "UUID": "1608454878",
+    "GameObject_60": {
+        "UUID": "96809881",
         "Name": "Cylinder",
         "Tag": "Default",
         "Layer": "Default",
@@ -4818,12 +5216,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "209888975",
+        "ParentID": "1942412721",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_59": {
-        "UUID": "1702288423",
+    "GameObject_61": {
+        "UUID": "1197040815",
         "Name": "Cylinder_1",
         "Tag": "Default",
         "Layer": "Default",
@@ -4871,12 +5269,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "209888975",
+        "ParentID": "1942412721",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_60": {
-        "UUID": "1842270694",
+    "GameObject_62": {
+        "UUID": "1780691986",
         "Name": "Cylinder_2",
         "Tag": "Default",
         "Layer": "Default",
@@ -4924,12 +5322,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "209888975",
+        "ParentID": "1942412721",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_61": {
-        "UUID": "119686252",
+    "GameObject_63": {
+        "UUID": "1473299643",
         "Name": "Cylinder.001",
         "Tag": "Default",
         "Layer": "Default",
@@ -4977,12 +5375,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1201594287",
+        "ParentID": "1375829857",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_62": {
-        "UUID": "440000132",
+    "GameObject_64": {
+        "UUID": "185529995",
         "Name": "Cylinder.001_1",
         "Tag": "Default",
         "Layer": "Default",
@@ -5030,12 +5428,87 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "1201594287",
+        "ParentID": "1375829857",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_63": {
-        "UUID": "1542449164",
+    "GameObject_65": {
+        "UUID": "1817128837",
+        "Name": "canvas",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1570421869",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "-1",
+                "order": "-1"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1812393179",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "1653505585",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "1",
+                "scale": "1.000000"
+            }
+        },
+        "ParentID": "289883409",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_66": {
+        "UUID": "2065116007",
         "Name": "RadarAnimation(8)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5113,12 +5586,12 @@
                 "anim_texture_7": "Radar_8"
             }
         },
-        "ParentID": "461520404",
+        "ParentID": "1937956428",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_64": {
-        "UUID": "1933478609",
+    "GameObject_67": {
+        "UUID": "1411356697",
         "Name": "RadarAnimation(9)",
         "Tag": "Default",
         "Layer": "Default",
@@ -5196,7 +5669,83 @@
                 "anim_texture_7": "Radar_8"
             }
         },
-        "ParentID": "861720470",
+        "ParentID": "361900072",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_68": {
+        "UUID": "1950333352",
+        "Name": "marker",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1224727003",
+                "pos": {
+                    "value_X": "0.500000",
+                    "value_Y": "-1.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "30.000000",
+                    "value_Y": "30.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "-1",
+                "order": "-1"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "703952203",
+                "position": {
+                    "value_X": "0.500000",
+                    "value_Y": "-1.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "880471728",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "mira1"
+            }
+        },
+        "ParentID": "1817128837",
         "IsRoot": "0",
         "IsStatic": "0"
     }
