@@ -37,7 +37,8 @@ public class TrainingModeManager
 	private TheTimer game_timer = new TheTimer();
 
 	private int score = 0; 
-
+	
+	TheAudioSource audio_source;
 	void Init()
 	{
 		TheGameObject game_manager = TheGameObject.Find("GameManager");
@@ -63,6 +64,8 @@ public class TrainingModeManager
 			score_text.Text = score.ToString();
 		if(slave_emmiter!=null)
 			slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
+
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
 
 	void Start () 
@@ -85,6 +88,13 @@ public class TrainingModeManager
 		}
 
 		game_timer.Start();
+
+		if(audio_source != null)
+		{
+			audio_source.Play("Play_Music");
+			audio_source.SetState("Level","Training");
+
+		}
 	}
 	
 	void Update () 
