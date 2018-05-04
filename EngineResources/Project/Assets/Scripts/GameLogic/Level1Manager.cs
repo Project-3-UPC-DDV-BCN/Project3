@@ -281,6 +281,12 @@ public class Level1Manager
 			}
 			case 4:
 			{
+				if(slave1_shooting_script != null)
+				{
+					object[] args = {true};
+					slave1_shooting_script.CallFunctionArgs("SetCanShoot", args);
+				}
+
 				if(dialog_manager != null)
 				{
 					object[] args =  {"AckbarAttack1"};

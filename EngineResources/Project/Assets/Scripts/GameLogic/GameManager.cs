@@ -66,7 +66,8 @@ public class GameManager
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
 		
-		PauseGame(true);
+		if(controller_image != null)
+			PauseGame(true);
 	}
 	
 	void Update()
@@ -89,7 +90,9 @@ public class GameManager
 			TheTime.TimeScale = last_time_scale;
 		}
 		
-		controller_image.SetActive(pause);
+		if(controller_image != null)
+			controller_image.SetActive(pause);
+
 		game_paused = pause;
 	}
 

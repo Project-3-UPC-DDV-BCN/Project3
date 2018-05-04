@@ -118,7 +118,7 @@ public class VS4StarShipShooting
 		if(overheat_bar_bar != null)
 			overheat_bar_bar.PercentageProgress = overheat * 100;
 		
-		if(!can_shoot)
+		if(can_shoot)
 		{
 			switch (weapon)
 			{
