@@ -154,8 +154,8 @@ public class GuillemMovement
 		 // Avoid leaving x point on the map 
         if (center_transform != null && self_transform != null)
         {
-			TheVector3 center_trans_pos = center_transform.GlobalPosition;
-			TheVector3 self_trans_pos = self_transform.GlobalPosition;
+			TheVector3 center_trans_pos = center_transform.LocalPosition;
+			TheVector3 self_trans_pos = self_transform.LocalPosition;
 			
 			float distance_center_self = TheVector3.Distance(center_trans_pos, self_trans_pos);               	
 
@@ -173,6 +173,11 @@ public class GuillemMovement
 	    // Look for a new target
         if (target_transform == null)
             LookForTarget();
+
+		if(target_transform != null)
+		{
+			//TheConsole.Log(target_transform.LocalPosition.x + " " + target_transform.LocalPosition.y + " " + target_transform.LocalPosition.z);
+		}
 	}
 
 	void UpdateFollowPathMode()

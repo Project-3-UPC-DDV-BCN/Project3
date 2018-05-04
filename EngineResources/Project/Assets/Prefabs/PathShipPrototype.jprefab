@@ -1,11 +1,11 @@
 {
-    "UUID": "2142101474",
+    "UUID": "1724671415",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1097371792",
+        "UUID": "1095429004",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -193,7 +193,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "laser_speed",
-                            "field_value": "100.000000"
+                            "field_value": "400.000000"
                         }
                     },
                     "bool_fields": {
@@ -287,8 +287,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1243305160",
-        "Name": "Billboard(2)",
+        "UUID": "1275931573",
+        "Name": "Billboard(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -345,13 +345,13 @@
                 }
             }
         },
-        "ParentID": "1097371792",
+        "ParentID": "1095429004",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1525184731",
-        "Name": "canvas(2)",
+        "UUID": "970985678",
+        "Name": "canvas(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -420,13 +420,13 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1243305160",
+        "ParentID": "1275931573",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "409747389",
-        "Name": "marker(2)",
+        "UUID": "356164125",
+        "Name": "marker(4)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -496,7 +496,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1525184731",
+        "ParentID": "970985678",
         "IsRoot": "0",
         "IsStatic": "0"
     }

@@ -1,11 +1,11 @@
 {
-    "UUID": "681852156",
+    "UUID": "1470790",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1102935941",
+        "UUID": "1466139181",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -17,15 +17,15 @@
                 "Active": "1",
                 "UUID": "645302198",
                 "position": {
-                    "value_X": "0.191450",
+                    "value_X": "0.000000",
                     "value_Y": "0.000000",
-                    "value_Z": "157.765045"
+                    "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "-0.997859",
-                    "value_Z": "0.000000",
-                    "value_W": "-0.065403"
+                    "value_X": "-0.065403",
+                    "value_Y": "-0.000000",
+                    "value_Z": "-0.997859",
+                    "value_W": "-0.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -53,7 +53,7 @@
                     "value_Y": "-431602080.000000",
                     "value_Z": "-431602080.000000"
                 },
-                "Life_time": "2.000000",
+                "Life_time": "6.525000",
                 "Object_to_spawn_name": "VS4 - Laser"
             },
             "Component_2": {
@@ -83,14 +83,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "-1782785941291629805568.000000",
+                    "value_Y": "-293887513010200641536.000000",
+                    "value_Z": "-548352062994771869696.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "1164320256001210056704.000000",
+                    "value_Y": "-3302962484711658618880.000000",
+                    "value_Z": "2843051231589886328832.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -176,11 +176,11 @@
                         },
                         "field_2": {
                             "field_name": "move_speed",
-                            "field_value": "60.000000"
+                            "field_value": "90.000000"
                         },
                         "field_3": {
                             "field_name": "rotation_speed",
-                            "field_value": "20.000000"
+                            "field_value": "35.000000"
                         }
                     },
                     "bool_fields": {},
@@ -227,7 +227,7 @@
                         },
                         "field_2": {
                             "field_name": "time_between_lasers",
-                            "field_value": "0.200000"
+                            "field_value": "0.500000"
                         }
                     },
                     "bool_fields": {},
@@ -309,7 +309,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "laser_speed",
-                            "field_value": "30.000000"
+                            "field_value": "400.000000"
                         }
                     },
                     "bool_fields": {
@@ -352,11 +352,11 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2077866229",
+        "UUID": "2030694844",
         "Name": "Billboard(3)",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "1",
+        "Active": "0",
         "Components": {
             "Components_Count": "2",
             "Component_0": {
@@ -410,12 +410,12 @@
                 }
             }
         },
-        "ParentID": "1102935941",
+        "ParentID": "1466139181",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "36332701",
+        "UUID": "1567317526",
         "Name": "canvas(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -485,12 +485,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "2077866229",
+        "ParentID": "2030694844",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1930723802",
+        "UUID": "274406282",
         "Name": "marker(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -561,7 +561,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "36332701",
+        "ParentID": "1567317526",
         "IsRoot": "0",
         "IsStatic": "0"
     }
