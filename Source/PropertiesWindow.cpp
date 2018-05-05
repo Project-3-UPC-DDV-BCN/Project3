@@ -669,7 +669,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						{
 							CONSOLE_ERROR("Error assigning controller rect: order can not be repeated.");
 						}
-						else if (rect_transform->GetCanvas()->IsIDInController(curr_id))
+						if (rect_transform->GetCanvas()->IsIDInController(curr_id))
 						{
 							CONSOLE_ERROR("Error assigning controller rect: a rect with the same ID already exists in controller list.");
 						}

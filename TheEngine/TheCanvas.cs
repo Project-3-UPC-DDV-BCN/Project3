@@ -5,7 +5,7 @@ namespace TheEngine
     public class TheCanvas : TheComponent
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void ControllerIDUp();
+        public extern void PressButton();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void ControllerIDDown();

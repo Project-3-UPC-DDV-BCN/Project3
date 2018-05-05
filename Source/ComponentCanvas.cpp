@@ -234,6 +234,17 @@ void ComponentCanvas::Load(Data & data)
 }
 
 
+ComponentRectTransform * ComponentCanvas::GetSelectedRect()
+{
+	for (std::map<int, ComponentRectTransform*>::iterator it = controler_elements.begin(); it != controler_elements.end(); it++)
+	{
+		if ((*it).second->GetID() == controller_id)
+			return (*it).second;
+	}
+
+	return nullptr; 
+}
+
 uint ComponentCanvas::GetCurrentID()
 {
 	return controller_id;
@@ -270,14 +281,17 @@ void ComponentCanvas::AdvanceCursor()
 	{
 		if ((*it).second->GetID() == controller_id)
 		{
-			it++; 
+			it++;
+
+			if (it == controler_elements.end())
+			{
+				it = controler_elements.begin();
+			}		
+			
+
 			if ((*it).second == nullptr)
 			{
 				controller_id = controler_elements[0]->GetID(); 
-			}
-			else if(false) // Is Locked
-			{
-
 			}
 			else
 			{
@@ -295,7 +309,13 @@ void ComponentCanvas::RegressCursor()
 	{
 		if ((*it).second->GetID() == controller_id)
 		{
-			it--;
+			if (it == controler_elements.begin())
+			{
+				it = controler_elements.end();
+			}
+
+			it--; 
+			
 			if ((*it).second == nullptr)
 			{
 				int count = controler_elements.size(); 
