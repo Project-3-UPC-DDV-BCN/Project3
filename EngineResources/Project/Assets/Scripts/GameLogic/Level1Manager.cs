@@ -88,6 +88,18 @@ public class Level1Manager
 	public TheGameObject main_ship_spawner2;
 	TheTransform main_ship_spawner2_trans = null;
 
+	public TheGameObject main_ship_spawner3;
+	TheTransform main_ship_spawner3_trans = null;
+
+	public TheGameObject main_ship_spawner4;
+	TheTransform main_ship_spawner4_trans = null;
+
+	public TheGameObject main_ship_spawner5;
+	TheTransform main_ship_spawner5_trans = null;
+
+	public TheGameObject main_ship_spawner6;
+	TheTransform main_ship_spawner6_trans = null;
+
 	int ships_to_spawn = 0;
 	TheTimer timer_between_spawn = new TheTimer();
 	float time_between_spawn = 1.5f;
@@ -132,6 +144,18 @@ public class Level1Manager
 	
 		if(main_ship_spawner2 != null)
 			main_ship_spawner2_trans = main_ship_spawner2.GetComponent<TheTransform>();
+
+		if(main_ship_spawner3 != null)
+			main_ship_spawner3_trans = main_ship_spawner3.GetComponent<TheTransform>();
+	
+		if(main_ship_spawner4 != null)
+			main_ship_spawner4_trans = main_ship_spawner4.GetComponent<TheTransform>();
+
+		if(main_ship_spawner5 != null)
+			main_ship_spawner5_trans = main_ship_spawner5.GetComponent<TheTransform>();
+	
+		if(main_ship_spawner6 != null)
+			main_ship_spawner6_trans = main_ship_spawner6.GetComponent<TheTransform>();
 
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
@@ -635,7 +659,7 @@ public class Level1Manager
 				{
 					TheVector3 spawn_pos = new TheVector3(0, 0, 0);
 
-					int rand = (int)TheRandom.RandomRange(0, 2);
+					int rand = (int)TheRandom.RandomRange(0, 6);
 
 					if(rand < 1)
 					{
@@ -644,11 +668,40 @@ public class Level1Manager
 							spawn_pos = main_ship_spawner1_trans.LocalPosition;
 						}
 					}
-					else
+					else if (rand < 2)
 					{
 						if(main_ship_spawner2_trans != null)
 						{
 							spawn_pos = main_ship_spawner2_trans.LocalPosition;
+						}
+					}
+					else if (rand < 3)
+					{
+						if(main_ship_spawner3_trans != null)
+						{
+							spawn_pos = main_ship_spawner3_trans.LocalPosition;
+						}
+					}
+					else if (rand < 4)
+					{
+						if(main_ship_spawner4_trans != null)
+						{
+							spawn_pos = main_ship_spawner4_trans.LocalPosition;
+						}
+					}
+
+					else if (rand < 5)
+					{
+						if(main_ship_spawner5_trans != null)
+						{
+							spawn_pos = main_ship_spawner5_trans.LocalPosition;
+						}
+					}
+					else
+					{
+						if(main_ship_spawner6_trans != null)
+						{
+							spawn_pos = main_ship_spawner6_trans.LocalPosition;
 						}
 					}
 
