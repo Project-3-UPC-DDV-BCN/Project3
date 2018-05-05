@@ -85,22 +85,23 @@ public class TurretAI {
 	
 	void RotateBlasterTowardsPlayer()
 	{
-		// Face Blasters to the PlayerPosition
-		TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - BlasterPosition.y, PlayerPosition.z - SelfPosition.z);
-		float angle = TheMath.Acos((LookPos.y * LookPos.y + LookPos.z * LookPos.z - LookPos.x * LookPos.x) / (2 * LookPos.y * LookPos.z));
-		angle *= TheMath.RadToDeg;
-		if (LookPos.x > 0)
-			angle  = -angle;
-		BlasterTransform.RotateAroundAxis(BlasterTransform.ForwardDirection, angle*DeltaTime);
-		
-		//TheVector3 LookPos = new TheVector3(0, PlayerPosition.y - BlasterPosition.y, PlayerPosition.z - BlasterPosition.z);
-		/*TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.ForwardDirection);
+		TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
+		TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.ForwardDirection);
+		q.x = 0; q.y = 0;
+		TheVector3 euler = q.ToEulerAngles();
+		TheConsole.Log(euler.z+"QUE PASOOOO");
+		if (euler.z < MinAngleBlasters)
+		{
+			euler.z = MinAngleBlasters;
+			q = TheQuaternion.FromEulerAngles(euler);
+		}
+		else if (euler.z > MaxAngleBlasters)
+		{
+			TheConsole.Log("QUE PASOOOO");
+			euler.z = MaxAngleBlasters;
+			q = TheQuaternion.FromEulerAngles(euler);
+		}
 		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
-	
-		if (BlasterRotation.z < MinAngleBlasters)
-			BlasterRotation = new TheVector3(0, 0, MinAngleBlasters);
-		else if (BlasterRotation.z > MaxAngleBlasters)
-			BlasterRotation = new TheVector3(0, 0, MaxAngleBlasters);*/
 	}
 	
 	void Shoot()
