@@ -1,5 +1,6 @@
 using TheEngine;
 using TheEngine.TheConsole;
+using System.Collections.Generic;
 
 public class Level1Manager 
 {
@@ -9,6 +10,7 @@ public class Level1Manager
 
 	TheScript game_manager_script = null;
 
+	// Slave1
 	TheGameObject slave1 = null;
 	TheTransform slave_trans = null;
 
@@ -18,6 +20,7 @@ public class Level1Manager
 	TheScript slave1_movement_script = null;
 	TheScript slave1_shooting_script = null;
 
+	// UI
 	public TheGameObject mission_state_background_go;
 	public TheGameObject mission_state_text_go;
 	TheText mission_state_text = null;
@@ -30,6 +33,7 @@ public class Level1Manager
 
 	TheScript dialog_manager = null;
 
+	// Auido
 	TheAudioSource audio_source = null;
 	public float music_distance = 3000;
 	public TheGameObject fight_zone;
@@ -58,7 +62,10 @@ public class Level1Manager
 	// 13 - When the players destroy the first shield generator, 
 	//	    General Ackbar says: Fast! We need the shields down!”
 
+	// Ships
+	List<TheGameObject> ships_to_destroy = new List<TheGameObject>();
 
+	TheGameObject intro_ship = null;
 	public TheGameObject intro_ship_spawn;
 	public TheGameObject intro_ship_path;
 
@@ -66,11 +73,10 @@ public class Level1Manager
 	public TheGameObject intro_ship_spawn_3;
 
 	public string intro_enemy_ship_prefab;
-	private TheGameObject intro_ship = null;
-	private TheTransform intro_ship_trans = null;
 	
 	public string enemy_ship_prefab;
 
+	// Timers
 	private TheTimer attack_intro_ship = new TheTimer();
 
 	void Init()
@@ -177,11 +183,23 @@ public class Level1Manager
 			object[] args11 = {"AckbarAttack1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args11);
 
-			object[] args12 = {"AckbarAttack1", "They can't catch you, Bobba! Don't hesitate!,", 4.5f};
+			object[] args12 = {"AckbarAttack1", "Oh no, they found you Bobba! Don't hesitate!,", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args12);
 
 			object[] args13 = {"AckbarAttack1", "Shoot'em down!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args13);
+
+			object[] args14 = {"IntroSucces"};
+			dialog_manager.CallFunctionArgs("NewDialog", args14);
+
+			object[] args15 = {"IntroSucces", "Well done, Bobba. But it ain't finished.", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args15);
+
+			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the shield generators.", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args16);
+
+			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
 
 		}
 
@@ -302,6 +320,12 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				if(dialog_manager != null)
+				{
+					object[] args =  {"IntroSucces"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+
 				break;
 			}
 		}
@@ -335,6 +359,7 @@ public class Level1Manager
 			}
 			case 4:
 			{
+				HideEnemiesToKill();
 				break;
 			}
 			case 5:
@@ -371,11 +396,15 @@ public class Level1Manager
 			}
 			case 3:
 			{
-							
 				break;
 			}
 			case 4:
 			{
+				SetEnemiesToKill("Ships to destroy: " + GetShipsToDestroyCount().ToString());
+				
+				if(GetShipsToDestroyCount() <= 0)
+					NextMissionState();
+					
 				break;
 			}
 			case 5:
@@ -387,13 +416,8 @@ public class Level1Manager
 
 	void OnShipDestroyedCallback(TheGameObject ship, TheGameObject killer)
 	{
-		if(curr_mission_state == 2)
-		{
-			if(ship == intro_ship)
-			{
-				NextMissionState();
-			}
-		}
+		if(curr_mission_state == 4)
+			RemoveFromShipsToDestroy(ship);
 	}
 
 	void OnTurretDestroyedCallback(TheGameObject ship, TheGameObject killer)
@@ -442,7 +466,9 @@ public class Level1Manager
 
 		if(intro_ship != null)
 		{
-			intro_ship_trans = intro_ship.GetComponent<TheTransform>();
+			AddToShipsToDestroy(intro_ship);
+
+			TheTransform intro_ship_trans = intro_ship.GetComponent<TheTransform>();
 
 			if(intro_ship_trans != null)
 			{
@@ -484,6 +510,9 @@ public class Level1Manager
 
 		if(spawn1 != null && spawn2 != null && spawner1 != null && spawner2 != null)
 		{
+			AddToShipsToDestroy(spawn1);
+			AddToShipsToDestroy(spawn2);
+
 			TheTransform trans1 = spawn1.GetComponent<TheTransform>();
 			TheTransform trans2 = spawn2.GetComponent<TheTransform>();
 
@@ -504,5 +533,20 @@ public class Level1Manager
 				NextMissionState();
 			}
 		}
+	}
+
+	void AddToShipsToDestroy(TheGameObject add)
+	{
+		ships_to_destroy.Add(add);
+	}
+	
+	void RemoveFromShipsToDestroy(TheGameObject remove)
+	{
+		ships_to_destroy.Remove(remove);
+	}
+	
+	int GetShipsToDestroyCount()
+	{
+		return ships_to_destroy.Count;
 	}
 }
