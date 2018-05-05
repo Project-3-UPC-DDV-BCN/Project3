@@ -79,6 +79,12 @@ public class Level1Manager
 	
 	public string enemy_ship_prefab;
 
+	public TheGameObject main_ship_spawner1;
+	TheTransform main_ship_spawner1_trans = null;
+
+	public TheGameObject main_ship_spawner2;
+	TheTransform main_ship_spawner2_trans = null;
+
 	// Timers
 	private TheTimer attack_intro_ship = new TheTimer();
 
@@ -103,6 +109,12 @@ public class Level1Manager
 
 		if(ackbar_text_go != null)
 			ackbar_text = ackbar_text_go.GetComponent<TheText>();
+
+		if(enemies_canvas_go != null)
+			enemies_canvas_go.SetActive(false);
+
+		if(enemies_text_go != null)
+			enemies_text = enemies_text_go.GetComponent<TheText>();
 
 		if(fight_zone != null)
 			fight_trans = fight_zone.GetComponent<TheTransform>();
@@ -144,17 +156,10 @@ public class Level1Manager
 		if(audio_source!= null)
 			audio_source.Play("Play_Music");
 
-		
 		// Dialogs
 		if(dialog_manager != null)
 		{
 			TheConsole.Log("Setting dialogs");
-
-			object[] args = {ackbar_canvas_go};
-			dialog_manager.CallFunctionArgs("SetCanvas", args);
-
-			object[] args0 = {ackbar_text};
-			dialog_manager.CallFunctionArgs("SetTextComponent", args0);
 
 			object[] args1 = {"AckbarIntro1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args1);
@@ -215,6 +220,16 @@ public class Level1Manager
 			object[] args19 = {"Starting mission", "so our fleet can destroy the ship!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args19);
 
+			
+			object[] args20 = {"Enemies interception"};
+			dialog_manager.CallFunctionArgs("NewDialog", args20);
+
+			object[] args21 = {"Enemies interception", "...Intruders in our base!...", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args21);
+
+			object[] args22 = {"Enemies interception", "...All units ready!...", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args22);
+
 		}
 
 		HideCurrMissionObj();
@@ -266,8 +281,14 @@ public class Level1Manager
 			{
 				if(dialog_manager != null)
 				{
-					object[] args =  {"AckbarIntro1"};
-					dialog_manager.CallFunctionArgs("FireDialog", args);
+					object[] args = {ackbar_canvas_go};
+					dialog_manager.CallFunctionArgs("SetCanvas", args);
+
+					object[] args0 = {ackbar_text};
+					dialog_manager.CallFunctionArgs("SetTextComponent", args0);
+
+					object[] args2 =  {"AckbarIntro1"};
+					dialog_manager.CallFunctionArgs("FireDialog", args2);
 				}
 
 				if(slave1_movement_script != null)
@@ -354,6 +375,16 @@ public class Level1Manager
 
 				break;
 			}
+			case 6:
+			{
+				if(dialog_manager != null)
+				{
+					object[] args =  {"Enemies interception"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+
+				break;
+			}
 		}
 	}
 
@@ -400,6 +431,16 @@ public class Level1Manager
 						object[] args = {generators[i], "Empire"};
 						game_manager_script.CallFunctionArgs("RemoveFromRadar", args);
 					}
+				}
+
+				
+				if(dialog_manager != null)
+				{
+					object[] args = {enemies_canvas_go};
+					dialog_manager.CallFunctionArgs("SetCanvas", args);
+
+					object[] args0 = {enemies_text};
+					dialog_manager.CallFunctionArgs("SetTextComponent", args0);	
 				}
 	
 				break;
