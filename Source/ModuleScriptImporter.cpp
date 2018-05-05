@@ -764,8 +764,7 @@ void ModuleScriptImporter::RegisterAPI()
 	//CANVAS
 	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDUp", (const void*)ControllerIDUp);
 	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDDown", (const void*)ControllerIDDown);
-	mono_add_internal_call("TheEngine.TheCanvas::SetSelectedRectID", (const void*)SetSelectedRectID);
-
+	mono_add_internal_call("TheEngine.TheCanvas::PressButton", (const void*)PressButton);
 
 	//VECTOR/QUATERNION
 	mono_add_internal_call("TheEngine.TheVector3::ToQuaternion", (const void*)ToQuaternion);
@@ -1198,6 +1197,11 @@ void ModuleScriptImporter::ControllerIDDown(MonoObject * object)
 void ModuleScriptImporter::SetSelectedRectID(MonoObject * object, int new_id)
 {
 	ns_importer->SetSelectedRectID(object, new_id); 
+}
+
+void ModuleScriptImporter::PressButton(MonoObject * object)
+{
+	ns_importer->PressButton(object); 
 }
 
 void ModuleScriptImporter::SetColor(MonoObject * object, MonoObject * color)
@@ -3479,6 +3483,23 @@ void NSScriptImporter::SetSelectedRectID(MonoObject * object, int new_id)
 		}
 	}
 }
+
+void NSScriptImporter::PressButton(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		ComponentCanvas* canvas = (ComponentCanvas*)comp;
+
+		if (canvas != nullptr)
+		{
+			ComponentRectTransform* curr_rect = canvas->GetSelectedRect(); 
+			curr_rect->SetOnClick(true); 
+		}
+	}
+}
+
 
 void NSScriptImporter::SetColor(MonoObject * object, MonoObject * color)
 {

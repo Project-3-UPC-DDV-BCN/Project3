@@ -818,8 +818,13 @@ void ComponentRectTransform::Load(Data & data)
 	SetScale(data.GetFloat("scale"));
 	SetInteractable(data.GetBool("interactable"));
 	SetID(data.GetInt("id"));
-	SetControllerAdmision(data.GetBool("controler_admision")); 
+	SetControllerAdmision(data.GetBool("accept_controller")); 
 	SetControllerOrder(data.GetInt("order"));
+
+	if (GetControllerAdmision() == true)
+		GetCanvas()->controler_elements.insert(std::pair<int, ComponentRectTransform*>(GetControllerOrder(), this));
+	
+	
 }
 
 void ComponentRectTransform::SetID(uint new_id)

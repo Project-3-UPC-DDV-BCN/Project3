@@ -30,6 +30,9 @@ public class Level1Manager
 	public TheGameObject ackbar_canvas_go = null;
 	public TheGameObject ackbar_text_go = null;
 	TheText ackbar_text = null;
+	public TheGameObject enemies_canvas_go = null;
+	public TheGameObject enemies_text_go = null;
+	TheText enemies_text = null;
 
 	TheScript dialog_manager = null;
 
@@ -62,9 +65,9 @@ public class Level1Manager
 	// 13 - When the players destroy the first shield generator, 
 	//	    General Ackbar says: Fast! We need the shields down!”
 
-	// Ships
 	List<TheGameObject> ships_to_destroy = new List<TheGameObject>();
 
+	// Ships intro
 	TheGameObject intro_ship = null;
 	public TheGameObject intro_ship_spawn;
 	public TheGameObject intro_ship_path;
@@ -73,11 +76,22 @@ public class Level1Manager
 	public TheGameObject intro_ship_spawn_3;
 
 	public string intro_enemy_ship_prefab;
+
+	private TheTimer attack_intro_ship = new TheTimer();
 	
+	// Main mission ships
 	public string enemy_ship_prefab;
 
-	// Timers
-	private TheTimer attack_intro_ship = new TheTimer();
+	public TheGameObject main_ship_spawner1;
+	TheTransform main_ship_spawner1_trans = null;
+
+	public TheGameObject main_ship_spawner2;
+	TheTransform main_ship_spawner2_trans = null;
+
+	int ships_to_spawn = 0;
+	TheTimer timer_between_spawn = new TheTimer();
+	float time_between_spawn = 1.5f;
+
 
 	void Init()
 	{
@@ -101,11 +115,23 @@ public class Level1Manager
 		if(ackbar_text_go != null)
 			ackbar_text = ackbar_text_go.GetComponent<TheText>();
 
+		if(enemies_canvas_go != null)
+			enemies_canvas_go.SetActive(false);
+
+		if(enemies_text_go != null)
+			enemies_text = enemies_text_go.GetComponent<TheText>();
+
 		if(fight_zone != null)
 			fight_trans = fight_zone.GetComponent<TheTransform>();
 
 		if(slave_emmiter!=null)
 			slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
+
+		if(main_ship_spawner1 != null)
+			main_ship_spawner1_trans = main_ship_spawner1.GetComponent<TheTransform>();
+	
+		if(main_ship_spawner2 != null)
+			main_ship_spawner2_trans = main_ship_spawner2.GetComponent<TheTransform>();
 
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
@@ -141,17 +167,10 @@ public class Level1Manager
 		if(audio_source!= null)
 			audio_source.Play("Play_Music");
 
-		
 		// Dialogs
 		if(dialog_manager != null)
 		{
 			TheConsole.Log("Setting dialogs");
-
-			object[] args = {ackbar_canvas_go};
-			dialog_manager.CallFunctionArgs("SetCanvas", args);
-
-			object[] args0 = {ackbar_text};
-			dialog_manager.CallFunctionArgs("SetTextComponent", args0);
 
 			object[] args1 = {"AckbarIntro1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args1);
@@ -165,11 +184,13 @@ public class Level1Manager
 			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args8);
 
+
 			object[] args9 = {"AckbarIntro2"};
 			dialog_manager.CallFunctionArgs("NewDialog", args9);
 
 			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!.", 5.0f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args10);
+
 
 			object[] args5 = {"AckbarIntro3"};
 			dialog_manager.CallFunctionArgs("NewDialog", args5);
@@ -180,6 +201,7 @@ public class Level1Manager
 			object[] args7 = {"AckbarIntro3", "Follow that ship. Let's see where this leads to...", 6.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args7);
 
+
 			object[] args11 = {"AckbarAttack1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args11);
 
@@ -188,6 +210,7 @@ public class Level1Manager
 
 			object[] args13 = {"AckbarAttack1", "Shoot'em down!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args13);
+
 
 			object[] args14 = {"IntroSucces"};
 			dialog_manager.CallFunctionArgs("NewDialog", args14);
@@ -200,6 +223,23 @@ public class Level1Manager
 
 			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
+
+
+			object[] args18 = {"Starting mission"};
+			dialog_manager.CallFunctionArgs("NewDialog", args18);
+
+			object[] args19 = {"Starting mission", "so our fleet can destroy the ship!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args19);
+
+			
+			object[] args20 = {"Enemies interception"};
+			dialog_manager.CallFunctionArgs("NewDialog", args20);
+
+			object[] args21 = {"Enemies interception", "...Intruders in our base!...", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args21);
+
+			object[] args22 = {"Enemies interception", "...All units ready!...", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args22);
 
 		}
 
@@ -252,8 +292,14 @@ public class Level1Manager
 			{
 				if(dialog_manager != null)
 				{
-					object[] args =  {"AckbarIntro1"};
-					dialog_manager.CallFunctionArgs("FireDialog", args);
+					object[] args = {ackbar_canvas_go};
+					dialog_manager.CallFunctionArgs("SetCanvas", args);
+
+					object[] args0 = {ackbar_text};
+					dialog_manager.CallFunctionArgs("SetTextComponent", args0);
+
+					object[] args2 =  {"AckbarIntro1"};
+					dialog_manager.CallFunctionArgs("FireDialog", args2);
 				}
 
 				if(slave1_movement_script != null)
@@ -326,6 +372,32 @@ public class Level1Manager
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
 
+				// Adding generators to radar
+				if(game_manager_script != null)
+				{
+					List<TheGameObject> generators = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetGenerators");
+
+					for(int i = 0; i < generators.Count; ++i)
+					{
+						object[] args = {generators[i], "Empire"};
+						game_manager_script.CallFunctionArgs("AddToRadar", args);
+					}
+				}
+
+				break;
+			}
+			case 6:
+			{
+				if(dialog_manager != null)
+				{
+					object[] args =  {"Enemies interception"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+
+					timer_between_spawn.Start();
+				}
+
+				SpawnNextWave(3);
+
 				break;
 			}
 		}
@@ -364,6 +436,28 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				// Adding generators to radar
+				if(game_manager_script != null)
+				{
+					List<TheGameObject> generators = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetGenerators");
+
+					for(int i = 0; i < generators.Count; ++i)
+					{
+						object[] args = {generators[i], "Empire"};
+						game_manager_script.CallFunctionArgs("RemoveFromRadar", args);
+					}
+				}
+
+				
+				if(dialog_manager != null)
+				{
+					object[] args = {enemies_canvas_go};
+					dialog_manager.CallFunctionArgs("SetCanvas", args);
+
+					object[] args0 = {enemies_text};
+					dialog_manager.CallFunctionArgs("SetTextComponent", args0);	
+				}
+	
 				break;
 			}
 		}
@@ -409,6 +503,11 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				break;
+			}
+			case 6:
+			{
+				SpawnMainMissionShips();
 				break;
 			}
 		}
@@ -524,9 +623,66 @@ public class Level1Manager
 		}
 	}
 
+	void SpawnMainMissionShips()
+	{
+		if(ships_to_spawn > 0)
+		{
+			if(timer_between_spawn.ReadTime() > time_between_spawn)
+			{
+				TheGameObject spawned = TheResources.LoadPrefab(enemy_ship_prefab);
+
+				if(spawned != null)
+				{
+					TheVector3 spawn_pos = new TheVector3(0, 0, 0);
+
+					int rand = (int)TheRandom.RandomRange(0, 2);
+
+					if(rand < 1)
+					{
+						if(main_ship_spawner1_trans != null)
+						{
+							spawn_pos = main_ship_spawner1_trans.LocalPosition;
+						}
+					}
+					else
+					{
+						if(main_ship_spawner2_trans != null)
+						{
+							spawn_pos = main_ship_spawner2_trans.LocalPosition;
+						}
+					}
+
+					TheTransform spawned_trans = spawned.GetComponent<TheTransform>();
+
+					if(spawned_trans != null)
+					{
+						spawned_trans.LocalPosition = spawn_pos;
+					}
+				}		
+				
+
+				timer_between_spawn.Start();
+				--ships_to_spawn;
+			}
+		}
+	}
+
+	void SpawnNextWave(int ships)
+	{
+		ships_to_spawn += ships;
+	}
+
 	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
 	{
 		if(trigger_name == "IntroTrigger")
+		{
+			if(go_triggerer == slave1)
+			{
+				NextMissionState();
+			}
+		}
+
+		else if(trigger_name == "MainMissionTrigger")
 		{
 			if(go_triggerer == slave1)
 			{

@@ -115,6 +115,7 @@ public:
 	void Save(Data& data) const;
 	void Load(Data& data);
 
+	ComponentRectTransform* GetSelectedRect(); 
 	uint GetCurrentID();
 	void SetCurrentID(uint new_id); 
 
@@ -123,6 +124,7 @@ public:
 
 	void AdvanceCursor();
 	void RegressCursor(); 
+	void DoCursorAction(); 
 
 	void PrintCursor(); 
 	

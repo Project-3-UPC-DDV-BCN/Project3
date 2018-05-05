@@ -184,6 +184,7 @@ public:
 	void ControllerIDUp(MonoObject * object);
 	void ControllerIDDown(MonoObject * object);
 	void SetSelectedRectID(MonoObject* object, int new_id);
+	void PressButton(MonoObject* object);
 
 	//LIGHT
 	void SetColor(MonoObject* object, MonoObject* color);
@@ -490,6 +491,7 @@ private:
 	static void ControllerIDUp(MonoObject * object);
 	static void ControllerIDDown(MonoObject * object);
 	static void SetSelectedRectID(MonoObject* object, int new_id); 
+	static void PressButton(MonoObject* object); 
 
 	// LIGHT
 	static void SetColor(MonoObject* object, MonoObject* color);
