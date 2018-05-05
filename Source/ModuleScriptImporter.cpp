@@ -764,7 +764,6 @@ void ModuleScriptImporter::RegisterAPI()
 	//CANVAS
 	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDUp", (const void*)ControllerIDUp);
 	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDDown", (const void*)ControllerIDDown);
-	mono_add_internal_call("TheEngine.TheCanvas::SetSelectedRectID", (const void*)SetSelectedRectID);
 	mono_add_internal_call("TheEngine.TheCanvas::PressButton", (const void*)PressButton);
 
 	//VECTOR/QUATERNION

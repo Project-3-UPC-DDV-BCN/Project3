@@ -11,6 +11,6 @@ namespace TheEngine
         public extern void ControllerIDDown();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetSelectedRectID();
+        public extern void ControllerIDUp();
     }
 }
