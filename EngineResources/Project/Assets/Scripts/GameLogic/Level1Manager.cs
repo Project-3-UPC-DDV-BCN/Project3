@@ -30,6 +30,9 @@ public class Level1Manager
 	public TheGameObject ackbar_canvas_go = null;
 	public TheGameObject ackbar_text_go = null;
 	TheText ackbar_text = null;
+	public TheGameObject enemies_canvas_go = null;
+	public TheGameObject enemies_text_go = null;
+	TheText enemies_text = null;
 
 	TheScript dialog_manager = null;
 
@@ -165,11 +168,13 @@ public class Level1Manager
 			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args8);
 
+
 			object[] args9 = {"AckbarIntro2"};
 			dialog_manager.CallFunctionArgs("NewDialog", args9);
 
 			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!.", 5.0f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args10);
+
 
 			object[] args5 = {"AckbarIntro3"};
 			dialog_manager.CallFunctionArgs("NewDialog", args5);
@@ -180,6 +185,7 @@ public class Level1Manager
 			object[] args7 = {"AckbarIntro3", "Follow that ship. Let's see where this leads to...", 6.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args7);
 
+
 			object[] args11 = {"AckbarAttack1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args11);
 
@@ -188,6 +194,7 @@ public class Level1Manager
 
 			object[] args13 = {"AckbarAttack1", "Shoot'em down!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args13);
+
 
 			object[] args14 = {"IntroSucces"};
 			dialog_manager.CallFunctionArgs("NewDialog", args14);
@@ -200,6 +207,13 @@ public class Level1Manager
 
 			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
+
+
+			object[] args18 = {"Starting mission"};
+			dialog_manager.CallFunctionArgs("NewDialog", args18);
+
+			object[] args19 = {"Starting mission", "so our fleet can destroy the ship!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args19);
 
 		}
 
