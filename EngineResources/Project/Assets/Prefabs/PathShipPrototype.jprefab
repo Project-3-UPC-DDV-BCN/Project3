@@ -1,11 +1,11 @@
 {
-    "UUID": "1724671415",
+    "UUID": "1160768813",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1095429004",
+        "UUID": "1928409616",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -261,11 +261,11 @@
                         },
                         "field_2": {
                             "field_name": "move_speed",
-                            "field_value": "30.000000"
+                            "field_value": "40.000000"
                         },
                         "field_3": {
                             "field_name": "rotation_speed",
-                            "field_value": "40.000000"
+                            "field_value": "20.000000"
                         }
                     },
                     "bool_fields": {},
@@ -287,7 +287,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1275931573",
+        "UUID": "1423232390",
         "Name": "Billboard(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -345,12 +345,12 @@
                 }
             }
         },
-        "ParentID": "1095429004",
+        "ParentID": "1928409616",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "970985678",
+        "UUID": "1966751610",
         "Name": "canvas(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -420,12 +420,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1275931573",
+        "ParentID": "1423232390",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "356164125",
+        "UUID": "1509023443",
         "Name": "marker(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -496,7 +496,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "970985678",
+        "ParentID": "1966751610",
         "IsRoot": "0",
         "IsStatic": "0"
     }

@@ -161,23 +161,8 @@ public class GameManager
 				{
 					alliance_ships.Add(add);
 
-					if(front_radar != null)
-					{
-						front_radar.AddEntity(add);
-						front_radar.SetMarkerToEntity(add, "Alliance");
-						TheConsole.Log("Adding to front radar");
-					}
-					else
-						TheConsole.Log("radar is null");
-		
-					if(back_radar != null)
-					{
-						back_radar.AddEntity(add);
-						back_radar.SetMarkerToEntity(add, "Alliance");
-						TheConsole.Log("Adding to back radar");
-					}
+					AddToRadar(add, "Alliance");
 					
-
 					TheConsole.Log("Ship added to alliance!: " + AllianceShipsCount());
 				}
 			}
@@ -197,21 +182,7 @@ public class GameManager
 				{
 					empire_ships.Add(add);
 				
-					if(front_radar != null)
-					{
-						front_radar.AddEntity(add);
-						front_radar.SetMarkerToEntity(add, "Empire");
-						TheConsole.Log("Adding to front radar");
-					}
-					else
-						TheConsole.Log("radar is null");
-	
-					if(back_radar != null)
-					{
-						back_radar.AddEntity(add);
-						back_radar.SetMarkerToEntity(add, "Alliance");
-						TheConsole.Log("Adding to back radar");
-					}
+					AddToRadar(add, "Empire");
 
 					TheConsole.Log("Ship added to empire!: " + EmpireShipsCount());
 				}
@@ -316,6 +287,12 @@ public class GameManager
 		{
 			if(turret_entities.Remove(turret))
 			{
+				if(front_radar != null)
+					front_radar.RemoveEntity(turret);
+	
+				if(back_radar != null)
+					back_radar.RemoveEntity(turret);
+				
 				if(is_level1)
 				{
 					if(level1_script != null)
@@ -336,6 +313,12 @@ public class GameManager
 		{
 			if(generator_entities.Remove(generator))
 			{
+				if(front_radar != null)
+					front_radar.RemoveEntity(generator);
+	
+				if(back_radar != null)
+					back_radar.RemoveEntity(generator);
+				
 				if(is_level1)
 				{
 					if(level1_script != null)
@@ -443,6 +426,33 @@ public class GameManager
 		}
 	}
 	
+	void AddToRadar(TheGameObject add, string marker_type)
+	{		
+		if(front_radar != null)
+		{
+			front_radar.AddEntity(add);
+			front_radar.SetMarkerToEntity(add, marker_type);
+			TheConsole.Log("Adding to front radar");
+		}
+		else
+			TheConsole.Log("radar is null");
+	
+		if(back_radar != null)
+		{
+			back_radar.AddEntity(add);
+			back_radar.SetMarkerToEntity(add, marker_type);
+			TheConsole.Log("Adding to back radar");
+		}
+	}
+
+	void RemoveFromRadar(TheGameObject remove)
+	{
+		if(front_radar != null)
+			front_radar.RemoveEntity(remove);
+	
+		if(back_radar != null)
+			back_radar.RemoveEntity(remove);
+	}
 	/*
 	void UpdateAudio()
 	{
