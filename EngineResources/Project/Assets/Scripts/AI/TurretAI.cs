@@ -117,12 +117,12 @@ public class TurretAI {
 					{
 						if (shoot)
 						{
-							object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							object[] args = {LBlasterTransform, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);
 						}
 						else
 						{
-							object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							object[] args = {RBlasterTransform, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);						
 						}
 						shoot = !shoot;
