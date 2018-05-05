@@ -65,9 +65,9 @@ public class Level1Manager
 	// 13 - When the players destroy the first shield generator, 
 	//	    General Ackbar says: Fast! We need the shields down!”
 
-	// Ships
 	List<TheGameObject> ships_to_destroy = new List<TheGameObject>();
 
+	// Ships intro
 	TheGameObject intro_ship = null;
 	public TheGameObject intro_ship_spawn;
 	public TheGameObject intro_ship_path;
@@ -76,7 +76,10 @@ public class Level1Manager
 	public TheGameObject intro_ship_spawn_3;
 
 	public string intro_enemy_ship_prefab;
+
+	private TheTimer attack_intro_ship = new TheTimer();
 	
+	// Main mission ships
 	public string enemy_ship_prefab;
 
 	public TheGameObject main_ship_spawner1;
@@ -85,8 +88,10 @@ public class Level1Manager
 	public TheGameObject main_ship_spawner2;
 	TheTransform main_ship_spawner2_trans = null;
 
-	// Timers
-	private TheTimer attack_intro_ship = new TheTimer();
+	int ships_to_spawn = 0;
+	TheTimer timer_between_spawn = new TheTimer();
+	float time_between_spawn = 1.5f;
+
 
 	void Init()
 	{
@@ -121,6 +126,12 @@ public class Level1Manager
 
 		if(slave_emmiter!=null)
 			slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
+
+		if(main_ship_spawner1 != null)
+			main_ship_spawner1_trans = main_ship_spawner1.GetComponent<TheTransform>();
+	
+		if(main_ship_spawner2 != null)
+			main_ship_spawner2_trans = main_ship_spawner2.GetComponent<TheTransform>();
 
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
@@ -381,7 +392,11 @@ public class Level1Manager
 				{
 					object[] args =  {"Enemies interception"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
+
+					timer_between_spawn.Start();
 				}
+
+				SpawnNextWave(3);
 
 				break;
 			}
@@ -488,6 +503,11 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				break;
+			}
+			case 6:
+			{
+				SpawnMainMissionShips();
 				break;
 			}
 		}
@@ -601,6 +621,55 @@ public class Level1Manager
 			if(trans2 != null)
 				trans2.LocalPosition = spawner2.LocalPosition;
 		}
+	}
+
+	void SpawnMainMissionShips()
+	{
+		if(ships_to_spawn > 0)
+		{
+			if(timer_between_spawn.ReadTime() > time_between_spawn)
+			{
+				TheGameObject spawned = TheResources.LoadPrefab(enemy_ship_prefab);
+
+				if(spawned != null)
+				{
+					TheVector3 spawn_pos = new TheVector3(0, 0, 0);
+
+					int rand = (int)TheRandom.RandomRange(0, 2);
+
+					if(rand < 1)
+					{
+						if(main_ship_spawner1_trans != null)
+						{
+							spawn_pos = main_ship_spawner1_trans.LocalPosition;
+						}
+					}
+					else
+					{
+						if(main_ship_spawner2_trans != null)
+						{
+							spawn_pos = main_ship_spawner2_trans.LocalPosition;
+						}
+					}
+
+					TheTransform spawned_trans = spawned.GetComponent<TheTransform>();
+
+					if(spawned_trans != null)
+					{
+						spawned_trans.LocalPosition = spawn_pos;
+					}
+				}		
+				
+
+				timer_between_spawn.Start();
+				--ships_to_spawn;
+			}
+		}
+	}
+
+	void SpawnNextWave(int ships)
+	{
+		ships_to_spawn += ships;
 	}
 
 	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
