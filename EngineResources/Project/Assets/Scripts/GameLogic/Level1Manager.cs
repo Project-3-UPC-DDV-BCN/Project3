@@ -326,6 +326,18 @@ public class Level1Manager
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
 
+				// Adding generators to radar
+				if(game_manager_script != null)
+				{
+					List<TheGameObject> generators = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetGenerators");
+
+					for(int i = 0; i < generators.Count; ++i)
+					{
+						object[] args = {generators[i], "Empire"};
+						game_manager_script.CallFunctionArgs("AddToRadar", args);
+					}
+				}
+
 				break;
 			}
 		}
@@ -364,6 +376,18 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				// Adding generators to radar
+				if(game_manager_script != null)
+				{
+					List<TheGameObject> generators = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetGenerators");
+
+					for(int i = 0; i < generators.Count; ++i)
+					{
+						object[] args = {generators[i], "Empire"};
+						game_manager_script.CallFunctionArgs("RemoveFromRadar", args);
+					}
+				}
+	
 				break;
 			}
 		}
@@ -527,6 +551,14 @@ public class Level1Manager
 	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
 	{
 		if(trigger_name == "IntroTrigger")
+		{
+			if(go_triggerer == slave1)
+			{
+				NextMissionState();
+			}
+		}
+
+		else if(trigger_name == "MainMissionTrigger")
 		{
 			if(go_triggerer == slave1)
 			{

@@ -444,6 +444,15 @@ public class GameManager
 			TheConsole.Log("Adding to back radar");
 		}
 	}
+
+	void RemoveFromRadar(TheGameObject remove)
+	{
+		if(front_radar != null)
+			front_radar.RemoveEntity(remove);
+	
+		if(back_radar != null)
+			back_radar.RemoveEntity(remove);
+	}
 	/*
 	void UpdateAudio()
 	{
