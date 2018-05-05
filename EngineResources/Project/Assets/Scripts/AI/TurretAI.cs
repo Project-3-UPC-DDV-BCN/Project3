@@ -16,7 +16,12 @@ public class TurretAI {
 	public TheGameObject BlasterCannon = null;
 	TheTransform CannonTransform = null;
 	TheFactory blaster_factory = null;
-
+	public TheGameObject LBlaster = null;
+	TheTransform LBlasterTransform = null;
+	public TheGameObject RBlaster = null;
+	TheTransform RBlasterTransform = null;
+	bool shoot = false;
+	
 	public TheGameObject TargetPlayer = null;
 	TheTransform PlayerTransform = null;
 	TheVector3 PlayerPosition;
@@ -42,6 +47,9 @@ public class TurretAI {
 		PlayerTransform = TargetPlayer.GetComponent<TheTransform>();
 		SelfTransform = TurretHead.GetComponent<TheTransform>();
 		CannonTransform = BlasterCannon.GetComponent<TheTransform>();
+		
+		LBlasterTransform = LBlaster.GetComponent<TheTransform>();
+		RBlasterTransform = RBlaster.GetComponent<TheTransform>();
 		
 		blaster_factory	= BlasterCannon.GetComponent<TheFactory>();
 		blaster_factory.StartFactory();
@@ -78,24 +86,21 @@ public class TurretAI {
 	void RotateBlasterTowardsPlayer()
 	{
 		// Face Blasters to the PlayerPosition
-		/*TheVector3 LookPos = new TheVector3(0, PlayerPosition.y - BlasterPosition.y, PlayerPosition.z - BlasterPosition.z);
-		TheQuaternion q = TheQuaternion.LookRotation(LookPos, CannonTransform.UpDirection);
+		/*TheVector3 LookPos = new TheVector3(PlayerPosition.x - BlasterPosition.x, PlayerPosition.y - BlasterPosition.y, 0);
+		TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.UpDirection);
 		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 	
 		if (BlasterRotation.x < MinAngleBlasters)
 			BlasterRotation = new TheVector3(MinAngleBlasters, 0, 0);
 		else if (BlasterRotation.x > MaxAngleBlasters)
-			BlasterRotation = new TheVector3(MaxAngleBlasters, 0, 0);
-		*/
-	
+			BlasterRotation = new TheVector3(MaxAngleBlasters, 0, 0);*/
 	}
 	
 	void Shoot()
 	{
 		TheVector3 tOffset = PlayerPosition - SelfPosition;
 		
-		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters / 2)
-		//if (TheInput.IsKeyRepeat("UP_ARROW"))
+		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters)
 		{
 			if (BlasterTimer.ReadTime() >= LaserFrequency && blaster_factory != null)
 			{
@@ -110,9 +115,17 @@ public class TurretAI {
 
 					if(laser_script != null)
 					{
-						TheConsole.Log("X: "+CannonTransform.ForwardDirection.x+" Y: "+CannonTransform.ForwardDirection.y+" Z: "+CannonTransform.ForwardDirection.z);
-						object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, CannonTransform.ForwardDirection, SelfTransform.QuatRotation};
-						laser_script.CallFunctionArgs("SetInfo", args);
+						if (shoot)
+						{
+							object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							laser_script.CallFunctionArgs("SetInfo", args);
+						}
+						else
+						{
+							object[] args = {CannonTransform, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							laser_script.CallFunctionArgs("SetInfo", args);						
+						}
+						shoot = !shoot;
 					}
 				}
 				// 1. Shoot			
