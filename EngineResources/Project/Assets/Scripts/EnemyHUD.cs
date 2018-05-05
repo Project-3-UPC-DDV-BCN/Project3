@@ -1,5 +1,5 @@
 using TheEngine;
-//using TheEngine.TheConsole; 
+using TheEngine.TheConsole; 
 using TheEngine.TheMath;
 
 using System.Collections.Generic;
@@ -8,6 +8,8 @@ public class EnemyHUD {
 
 	private List<TheGameObject> enemies  = new List<TheGameObject>();
 	private List<TheGameObject> enemies_in_front  = new List<TheGameObject>();
+	private List<TheGameObject> prev_enemies_in_front  = new List<TheGameObject>();
+
 	private TheGameObject self = null;
 	private TheVector3 self_pos = new TheVector3(0,0,0);
 	private TheVector3 self_front = new TheVector3(0,0,0);
@@ -18,12 +20,13 @@ public class EnemyHUD {
 
 	TheScript GameManager = null;
 	TheGameObject gm_GO = null;
-
-	//CANVAS AUXILIARS
-	public TheGameObject HUD1 = null;
-	public TheGameObject HUD2 = null;
-	public TheGameObject HUD3 = null;
 	
+
+	//CANVAS GO
+	public TheGameObject canvas = null;
+
+	private List<TheGameObject> markers = new List<TheGameObject>();
+
 	TheTransform self_transform = null;
 	
 	void Start () {
@@ -69,46 +72,34 @@ public class EnemyHUD {
 
 			if(isVisible){
 				enemies_in_front.Add(enemies[i]);
-				//TheConsole.Log("enemy detected");
-				//TheConsole.Log(enemies_in_front[j].name);
+
 				j++; 
 			}
-			else if(!isVisible)
-			{
-				//TheConsole.Log("no enemies detected");
-			}
+
 		}
 		
 		//Step2
 			//TO 2D	
-	
-
-		//Step3
-			//Update UI
-		
-			aux_HUD_counter = enemies_in_front.Count;
-		for(int k = 0; k < enemies_in_front.Count;k++)
+		for(int l = 0; l <enemies_in_front.Count; l++)
 		{
-			TheVector3 enemy_global_pos = new TheVector3();
-			if(enemies_in_front[k] != null)
-			{
-				enemy_global_pos = enemies_in_front[k].GetComponent<TheTransform>().GlobalPosition;
+			if(prev_enemies_in_front.Count != enemies_in_front.Count)
+			{				
+				markers.Add(TheResources.LoadPrefab("enemy_marker"));
+				if(canvas != null)
+					markers[l].SetParent(canvas);
+				else	
+					TheConsole.Log("No canvas");
+				//set pos
+				markers[l].GetComponent<TheRectTransform>().Position = TheCamera.WorldPosToCameraPos(enemies_in_front[l].GetComponent<TheTransform>().GlobalPosition);
 			}
-			if(HUD1!= null && k == 0){
-				TheVector3 new_pos1 = new TheVector3(enemy_global_pos.x,enemy_global_pos.y,0);
-				HUD1.GetComponent<TheTransform>().GlobalPosition = new_pos1; 
+			else{
+				//Update the previous UI 
+				markers[l].GetComponent<TheRectTransform>().Position = TheCamera.WorldPosToCameraPos(enemies_in_front[l].GetComponent<TheTransform>().GlobalPosition);
 			}
-			else if(HUD2 != null && k == 1){
-				TheVector3 new_pos2 = new TheVector3(enemy_global_pos.x,enemy_global_pos.y,0);
-				HUD2.GetComponent<TheTransform>().GlobalPosition = new_pos2; 
-			}
-			else if(HUD3 != null && k == 2){
-				TheVector3 new_pos3 = new TheVector3(enemy_global_pos.x,enemy_global_pos.y,0);
-				HUD3.GetComponent<TheTransform>().GlobalPosition = new_pos3;
-			}
-				
+			
 		}
 
+		prev_enemies_in_front = enemies_in_front;
 
 	}
 }
