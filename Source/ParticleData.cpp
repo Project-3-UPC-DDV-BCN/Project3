@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModuleTextureImporter.h"
 #include "ModuleResources.h"
-#include "OpenGL.h"
 #include "Texture.h"
 
 ParticleData::ParticleData()
@@ -43,9 +42,6 @@ void ParticleData::LoadDefaultData()
 
 	relative_pos = false;
 	billboarding = false;
-
-	src_blending = GL_SRC_ALPHA; 
-	dst_blending = GL_ONE_MINUS_SRC_ALPHA; 
 
 	change_rotation_interpolation = false;
 	change_velocity_interpolation = false; 

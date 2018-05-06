@@ -553,56 +553,6 @@ void ComponentParticleEmmiter::SetParticlesVelocity(float v)
 	data->velocity = v; 
 }
 
-void ComponentParticleEmmiter::AssignBlendingMode(float blend_variable, int combo_pos)
-{
-	switch (combo_pos)
-		{
-		case GlZero:
-			blend_variable = GL_ZERO;
-		break;
-
-		case GlOne:
-			blend_variable = GL_ONE;
-		break;
-
-		case GlSrcColor:
-			blend_variable = GL_SRC_COLOR;
-		break;
-
-		case GlOneMinusSrcColor:
-			blend_variable = GL_ONE_MINUS_SRC_COLOR;
-		break;
-
-		case GlDstColor:
-			blend_variable = GL_DST_COLOR;
-		break;
-
-		case GlOneMinusDstColor:
-			blend_variable = GL_ONE_MINUS_DST_COLOR;
-		break;
-
-		case GlSrcAlpha:
-			blend_variable = GL_SRC_ALPHA;
-		break;
-
-		case GlOneMinusSrcAlpha:
-			blend_variable = GL_ONE_MINUS_SRC_ALPHA;
-		break;
-
-		case GlDstAlpha:
-			blend_variable = GL_DST_ALPHA;
-		break;
-
-		case GlOneMinusDstAlpha:
-			blend_variable = GL_ONE_MINUS_DST_ALPHA;
-		break;
-
-		case GlSrcAlphaSaturate:
-			blend_variable = GL_SRC_ALPHA_SATURATE;
-		break;
-	}
-}
-
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)
 {
 	//uint id = App->resources->GetShaderProgram("default_shader_program")->GetProgramID();
