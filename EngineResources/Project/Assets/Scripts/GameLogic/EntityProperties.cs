@@ -271,8 +271,11 @@ public class EntityProperties
 			{
 				TheGameObject player_target = (TheGameObject)player_targeting_script.CallFunctionArgs("GetTarget");
 			
-				if(self_transform == player_target.GetComponent<TheTransform>())
-					player_targeting_script.CallFunctionArgs("SetToNull");
+				if(player_target != null && self_transform != null)
+				{
+					if(self_transform == player_target.GetComponent<TheTransform>())
+						player_targeting_script.CallFunctionArgs("SetToNull");
+				}
 			}
 
 			if(IsShip())
