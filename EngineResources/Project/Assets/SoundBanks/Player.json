@@ -7,7 +7,7 @@
   "RootPaths": {
    "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\",
    "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\.cache\\Windows\\",
-   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\..\\..\\playerbank\\",
+   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\..\\..\\Player+enemy\\",
    "ExternalSourcesInputFile": "",
    "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\vs3\\StarWars\\GeneratedSoundBanks\\Windows\\"
   },
@@ -35,6 +35,16 @@
       "ObjectPath": "\\Events\\Default Work Unit\\Play_droid_speed_up"
      },
      {
+      "Id": "2063026827",
+      "Name": "Play_Enemy_Engine",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Enemy_Engine"
+     },
+     {
+      "Id": "654175685",
+      "Name": "Play_Enemy_Explosions",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Enemy_Explosions"
+     },
+     {
       "Id": "639345804",
       "Name": "Play_Engine",
       "ObjectPath": "\\Events\\Default Work Unit\\Play_Engine"
@@ -60,6 +70,11 @@
       "ObjectPath": "\\Events\\Default Work Unit\\Play_Ship_hit"
      },
      {
+      "Id": "2641650631",
+      "Name": "Play_Shoot",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Shoot"
+     },
+     {
       "Id": "268953978",
       "Name": "Play_shot",
       "ObjectPath": "\\Events\\Default Work Unit\\Play_shot"
@@ -70,12 +85,28 @@
       "ObjectPath": "\\Events\\Default Work Unit\\Play_shot_2"
      },
      {
+      "Id": "2638378936",
+      "Name": "Play_Turret_Shoot",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Turret_Shoot"
+     },
+     {
+      "Id": "3391768389",
+      "Name": "Stop_Enemy_Engine",
+      "ObjectPath": "\\Events\\Default Work Unit\\Stop_Enemy_Engine"
+     },
+     {
       "Id": "37214798",
       "Name": "Stop_Engine",
       "ObjectPath": "\\Events\\Default Work Unit\\Stop_Engine"
      }
     ],
     "IncludedMemoryFiles": [
+     {
+      "Id": "3497713",
+      "Language": "SFX",
+      "ShortName": "eng_tieFighter_hi_lp.wav",
+      "Path": "SFX\\eng_tieFighter_hi_lp_F17FB28C.wem"
+     },
      {
       "Id": "27322232",
       "Language": "SFX",
@@ -95,10 +126,22 @@
       "Path": "SFX\\Shield_up_1C9C67B2.wem"
      },
      {
+      "Id": "157608592",
+      "Language": "SFX",
+      "ShortName": "wpn_ywing_blaster_fire.wav",
+      "Path": "SFX\\wpn_ywing_blaster_fire_1C9C67B2.wem"
+     },
+     {
       "Id": "220581319",
       "Language": "SFX",
       "ShortName": "Shields_hit.wav",
       "Path": "SFX\\Shields_hit_1C9C67B2.wem"
+     },
+     {
+      "Id": "230705469",
+      "Language": "SFX",
+      "ShortName": "exp_obj_large04.wav",
+      "Path": "SFX\\exp_obj_large04_1C9C67B2.wem"
      },
      {
       "Id": "376536248",
@@ -117,6 +160,12 @@
       "Language": "SFX",
       "ShortName": "wpn_geonFighter_blaster_fire.wav",
       "Path": "SFX\\wpn_geonFighter_blaster_fire_1C9C67B2.wem"
+     },
+     {
+      "Id": "570977170",
+      "Language": "SFX",
+      "ShortName": "TIE fighter fire 1.wav",
+      "Path": "SFX\\TIE fighter fire 1_1C9C67B2.wem"
      },
      {
       "Id": "641201256",
@@ -143,10 +192,34 @@
       "Path": "SFX\\droid_r5_chatter_01_1C9C67B2.wem"
      },
      {
+      "Id": "776817165",
+      "Language": "SFX",
+      "ShortName": "TIE fighter fire 2.wav",
+      "Path": "SFX\\TIE fighter fire 2_087AE0F7.wem"
+     },
+     {
       "Id": "900674420",
       "Language": "SFX",
       "ShortName": "Potency_Up.wav",
       "Path": "SFX\\Potency_Up_1C9C67B2.wem"
+     },
+     {
+      "Id": "987890276",
+      "Language": "SFX",
+      "ShortName": "exp_obj_huge02.wav",
+      "Path": "SFX\\exp_obj_huge02_1C9C67B2.wem"
+     },
+     {
+      "Id": "1011728167",
+      "Language": "SFX",
+      "ShortName": "eng_tieFighter_mid_lp.wav",
+      "Path": "SFX\\eng_tieFighter_mid_lp_F17FB28C.wem"
+     },
+     {
+      "Id": "1073036598",
+      "Language": "SFX",
+      "ShortName": "exp_obj_huge01.wav",
+      "Path": "SFX\\exp_obj_huge01_1C9C67B2.wem"
      }
     ]
    }
