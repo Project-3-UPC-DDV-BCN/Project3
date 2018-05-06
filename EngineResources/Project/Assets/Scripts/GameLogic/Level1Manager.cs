@@ -102,7 +102,9 @@ public class Level1Manager
 
 	int ships_to_spawn = 0;
 	TheTimer timer_between_spawn = new TheTimer();
-	float time_between_spawn = 1.5f;
+	float time_between_spawn = 3.5f;
+	TheTimer new_spawn_timer = new TheTimer();
+	float time_between_new_spawn = 50.0f;
 
 
 	void Init()
@@ -278,6 +280,8 @@ public class Level1Manager
 
 		// Start mission
 		NextMissionState();
+
+		new_spawn_timer.Start();
 	}
 	
 	void Update () 
@@ -380,6 +384,8 @@ public class Level1Manager
 			}
 			case 4:
 			{
+				SetCurrMissionObj("Survive the ambush");
+			
 				if(slave1_shooting_script != null)
 				{
 					object[] args = {true};
@@ -396,6 +402,8 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				SetCurrMissionObj("Approach the shield gate");
+
 				if(dialog_manager != null)
 				{
 					object[] args =  {"IntroSucces"};
@@ -420,15 +428,17 @@ public class Level1Manager
 			}
 			case 6:
 			{
+				SetCurrMissionObj("Destroy all generators");
+
 				SpawnNextWave(5);
 				
 				if(dialog_manager != null)
 				{
 					object[] args =  {"Enemies interception"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
-
-					timer_between_spawn.Start();
 				}
+
+				timer_between_spawn.Start();
 
 				break;
 			}
@@ -491,6 +501,9 @@ public class Level1Manager
 			}
 			case 6:
 			{
+				HideCurrMissionObj();
+				HideEnemiesToKill();
+
 				if(dialog_manager != null)
 				{
 					object[] args = {ackbar_canvas_go};
@@ -556,6 +569,12 @@ public class Level1Manager
 				if(GetEntitiesToDestroyCount() == 0)
 				{
 					NextMissionState();
+				}
+
+				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
+				{
+					SpawnNextWave(5);
+					new_spawn_timer.Start();
 				}
 
 				break;

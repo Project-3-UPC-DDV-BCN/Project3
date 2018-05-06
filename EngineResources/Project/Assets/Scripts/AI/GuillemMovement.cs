@@ -385,6 +385,12 @@ public class GuillemMovement
 			////TheConsole.Log("2");
 			self_transform.LocalRotation = new TheVector3(self_trans_rot.x - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.y, self_trans_rot.z);
 		}
+
+		// Security (sometimes they go wild)
+		if(self_transform.LocalRotation.x > 180 || self_transform.LocalRotation.x < -180) 
+		{
+			self_transform.LocalRotation.x = 0;
+		}
     }
 
     float GetAngleFromTwoPoints(float x1, float y1, float x2, float y2)
