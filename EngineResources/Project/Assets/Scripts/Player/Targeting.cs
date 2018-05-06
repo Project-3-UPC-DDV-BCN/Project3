@@ -32,6 +32,13 @@ public class Targeting
 	private List<TheGameObject> enemies  = new List<TheGameObject>();
 	private int enemy_index = 0;
 	
+	//UI
+	public TheGameObject tie_img;
+	public TheGameObject turret_img;
+	public TheGameObject generator_img;	
+	public TheGameObject target_hp_bar;
+	private TheProgressBar bar = null;
+	
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
@@ -45,6 +52,9 @@ public class Targeting
 		
 		if(gm_go != null)
 			gm = gm_go.GetScript("GameManager");
+		
+		if(target_hp_bar != null)
+			bar = target_hp_bar.GetComponent<TheProgressBar>();
 	}
 	
 	void Update () 
@@ -209,4 +219,47 @@ public class Targeting
 	{
 		return target_go;
 	}
+	
+	void SetUIElements()
+	{
+		if(tie_img != null && turret_img != null && generator_img != null && bar != null)
+		{
+			if(target_script != null && !(bool)target_script.CallFunctionArgs("IsDead"))
+			{
+				if((bool)target_script.CallFunctionArgs("IsShip"))
+				{
+					tie_img.SetActive(true);
+					turret_img.SetActive(false);
+					generator_img.SetActive(false);
+				}
+				if((bool)target_script.CallFunctionArgs("IsTurret"))
+				{
+					tie_img.SetActive(false);
+					turret_img.SetActive(true);
+					generator_img.SetActive(false);
+				}
+				if((bool)target_script.CallFunctionArgs("IsGenerator"))
+				{
+					tie_img.SetActive(false);
+					turret_img.SetActive(false);
+					generator_img.SetActive(true);
+				}
+				
+				int hp = (int)target_script.CallFunctionArgs("GetLife");
+				bar.PercentageProgress = (float)hp;
+			}
+			else
+			{
+				bar.PercentageProgress = 0;
+				
+				tie_img.SetActive(false);
+				turret_img.SetActive(false);
+				generator_img.SetActive(false);
+				
+			}
+		}
+	}
 }
+
+
+
