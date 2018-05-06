@@ -57,12 +57,10 @@ public class Laser
 			return;
 		
 		TheScript entity_properties = other_ship.GetScript("EntityProperties");
-		
-		//TheConsole.Log("Laser trigger 1");
+		TheScript self_properties = sender.GetScript("EntityProperties");
 
 		if(entity_properties != null && sender != null)
 		{
-			// I could do this comparing only the game objects but for some reason it's not working :(
 			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
 			{
 				object[] args = {sender, laser_damage};

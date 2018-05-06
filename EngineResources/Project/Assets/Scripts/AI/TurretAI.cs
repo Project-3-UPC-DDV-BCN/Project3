@@ -15,16 +15,19 @@ public class TurretAI {
 	TheVector3 BlasterRotation;
 	public TheGameObject BlasterCannon = null;
 	TheTransform CannonTransform = null;
-	TheFactory blaster_factory = null;
 	public TheGameObject LBlaster = null;
 	TheTransform LBlasterTransform = null;
+	TheFactory LBlasterFactory = null;
 	public TheGameObject RBlaster = null;
 	TheTransform RBlasterTransform = null;
+	TheFactory RBlasterFactory = null;
 	bool shoot = false;
 	
-	public TheGameObject TargetPlayer = null;
+	TheGameObject TargetPlayer = null;
 	TheTransform PlayerTransform = null;
 	TheVector3 PlayerPosition;
+	TheGameObject game_manager = null;
+	TheScript game_manager_script = null;
 	
 	TheAudioSource AudioSource = null;
 	
@@ -44,17 +47,26 @@ public class TurretAI {
 	void Start () {
 		TurretBase = TheGameObject.Self;
 		BlasterTransform = BlasterPivot.GetComponent<TheTransform>();
-		PlayerTransform = TargetPlayer.GetComponent<TheTransform>();
 		SelfTransform = TurretHead.GetComponent<TheTransform>();
 		CannonTransform = BlasterCannon.GetComponent<TheTransform>();
 		
 		LBlasterTransform = LBlaster.GetComponent<TheTransform>();
 		RBlasterTransform = RBlaster.GetComponent<TheTransform>();
 		
-		blaster_factory	= BlasterCannon.GetComponent<TheFactory>();
-		blaster_factory.StartFactory();
+		LBlasterFactory	= LBlaster.GetComponent<TheFactory>();
+		LBlasterFactory.StartFactory();
+		RBlasterFactory	= RBlaster.GetComponent<TheFactory>();
+		RBlasterFactory.StartFactory();
 		
 		AudioSource = TurretBase.GetComponent<TheAudioSource>();
+		
+		game_manager = TheGameObject.Find("GameManager");
+		if(game_manager != null)
+			game_manager_script = game_manager.GetScript("GameManager");
+		if(game_manager_script != null)
+			TargetPlayer = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");	
+
+		PlayerTransform = TargetPlayer.GetComponent<TheTransform>();
 		
 		BlasterTimer.Start();
 	}
@@ -91,7 +103,7 @@ public class TurretAI {
 		TheQuaternion test = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 		
 		TheVector3 euler = test.ToEulerAngles();
-		if (euler.z >= MinAngleBlasters && euler.z <= MaxAngleBlasters0)
+		if (euler.z >= MinAngleBlasters && euler.z <= MaxAngleBlasters)
 			BlasterTransform.QuatRotation = test;
 	}
 	
@@ -101,9 +113,13 @@ public class TurretAI {
 		
 		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters*2)
 		{
-			if (BlasterTimer.ReadTime() >= LaserFrequency && blaster_factory != null)
+			if (BlasterTimer.ReadTime() >= LaserFrequency && LBlasterFactory != null && RBlasterFactory != null)
 			{
-				TheGameObject laser = blaster_factory.Spawn();
+				TheGameObject laser = null;
+				if (shoot)
+					laser = LBlasterFactory.Spawn();
+				else
+					laser = RBlasterFactory.Spawn();
 				
 				if(laser != null)
 				{
@@ -116,12 +132,12 @@ public class TurretAI {
 					{
 						if (shoot)
 						{
-							object[] args = {LBlasterTransform, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);
 						}
 						else
 						{
-							object[] args = {RBlasterTransform, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);						
 						}
 						shoot = !shoot;
