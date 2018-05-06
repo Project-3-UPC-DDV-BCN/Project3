@@ -190,7 +190,7 @@ public class Targeting
 		}
 		
 		//Target Closest enemy
-		if((TheInput.GetControllerButton(0, controller_closest_target_button) == 1 || TheInput.IsKeyDown(key_closest_target_button)) && gm != null)
+		if((/*TheInput.GetControllerButton(0, controller_closest_target_button) == 1 ||*/ TheInput.IsKeyDown(key_closest_target_button)) && gm != null)
 		{
 			enemies = (List<TheGameObject>)gm.CallFunctionArgs("GetSlaveEnemies");
 			
@@ -259,6 +259,12 @@ public class Targeting
 				
 			}
 		}
+	}
+	
+	void SetToNull()
+	{
+		target_go = null;
+		target_script = null;
 	}
 }
 

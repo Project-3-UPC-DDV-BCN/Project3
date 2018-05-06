@@ -32,6 +32,8 @@ public class EntityProperties
 	private TheScript player_movement_script = null;
 	
 	TheGameObject self = null;
+	
+	TheScript player_targeting_script = null;
 		
 	void Init()
 	{
@@ -64,6 +66,11 @@ public class EntityProperties
 
 		else if(is_generator)
 			SetGenerator();
+		
+		TheGameObject player_cam = TheGameObject.Find("PlayerCam");
+		
+		if(player_cam != null)
+			player_targeting_script = player_cam.GetScript("Targeting");
 	}
 
 	void Start()
@@ -259,6 +266,14 @@ public class EntityProperties
 
 			if(factory != null)
 				factory.ClearFactory();
+			
+			if(player_targeting_script != null)
+			{
+				TheGameObject player_target = (TheGameObject)player_targeting_script.CallFunctionArgs("GetTarget");
+			
+				if(self_transform == player_target.GetComponent<TheTransform>())
+					player_targeting_script.CallFunctionArgs("SetToNull");
+			}
 
 			if(IsShip())
 			{
@@ -303,7 +318,7 @@ public class EntityProperties
 		{
 			object[] args = {ship};
 			movement_script.CallFunctionArgs("ClearIfTarget", args);
-		}
+		}	
 	}
 
 	void SpawnExplosion()
