@@ -1,0 +1,539 @@
+{
+    "UUID": "740370467",
+    "assets_path": "./Project/Assets/Prefabs/Target.jprefab",
+    "library_path": "./Project/Library/Prefabs/Target.jprefab",
+    "prefab_name": "Target",
+    "GameObjects_Count": "7",
+    "GameObject_0": {
+        "UUID": "1429787713",
+        "Name": "Target",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "170331249",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1866461153",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "227187895",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "0",
+                "scale": "1.000000"
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_1": {
+        "UUID": "940877382",
+        "Name": "Base_target",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1353835229",
+                "pos": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.410000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.420000",
+                    "value_Y": "0.420000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "831377640",
+                "position": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.410000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "157727732",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "Background_target"
+            }
+        },
+        "ParentID": "1429787713",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "130527781",
+        "Name": "Target_hp_bar",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1724207029",
+                "pos": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.410000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.250000",
+                    "value_Y": "0.340000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1972198070",
+                "position": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.410000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.707107",
+                    "value_Y": "0.707107",
+                    "value_Z": "-0.000000",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "28",
+                "Active": "1",
+                "UUID": "976666003",
+                "progress_percentage": "100.000000",
+                "base_colour": {
+                    "value_X": "0.000001",
+                    "value_Y": "0.000001",
+                    "value_Z": "0.000001",
+                    "value_W": "1.000000"
+                },
+                "progress_colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1429787713",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "1471330544",
+        "Name": "Over_base_target",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "584067890",
+                "pos": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.410000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.420000",
+                    "value_Y": "0.420000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1755677993",
+                "position": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.410000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "787713745",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "No_target"
+            }
+        },
+        "ParentID": "1429787713",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "533841924",
+        "Name": "Tie_target",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1297039756",
+                "pos": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.450000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.400000",
+                    "value_Y": "0.400000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1078542461",
+                "position": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.450000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "1664979773",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "Tie_fighter_target"
+            }
+        },
+        "ParentID": "1429787713",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_5": {
+        "UUID": "109112175",
+        "Name": "Turret_target",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "61090462",
+                "pos": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.450000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.400000",
+                    "value_Y": "0.400000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "684478267",
+                "position": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.450000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "1161433842",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "Ackbar_3"
+            }
+        },
+        "ParentID": "1429787713",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_6": {
+        "UUID": "849076236",
+        "Name": "Generator_target",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1469813631",
+                "pos": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.450000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.400000",
+                    "value_Y": "0.400000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "983753391",
+                "position": {
+                    "value_X": "1.290000",
+                    "value_Y": "0.450000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "151540654",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "Ackbar_3"
+            }
+        },
+        "ParentID": "1429787713",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    }
+}
