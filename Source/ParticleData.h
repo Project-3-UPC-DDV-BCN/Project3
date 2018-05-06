@@ -127,8 +127,8 @@ public:
 	float emmit_depth;
 
 	//Blending 
-	float src_blending; 
-	float dst_blending; 
+	int src_blending; 
+	int dst_blending; 
 
 	//Interpolations
 	///Velocity

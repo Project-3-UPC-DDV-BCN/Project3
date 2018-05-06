@@ -81,6 +81,11 @@ public:
 	float GetAngular() const;
 	void ApplyAngularVelocity(); 
 
+	//Blending 
+	void SetSourceBlendingMode(float blend_type);
+	void SetDestinationBlendingMode(float blend_type);
+	float GetCodeFromBlendPos(int combo_pos);
+
 	//Lifetime
 	void SetMaxLifetime(const float& new_lifetime);
 	float GetMaxLifeTime() const;

@@ -152,6 +152,16 @@ void Particle::ApplyAngularVelocity()
 	GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
 }
 
+void Particle::SetSourceBlendingMode(float blend_type)
+{
+	particle_data->src_blending = blend_type; 
+}
+
+void Particle::SetDestinationBlendingMode(float blend_type)
+{
+	particle_data->dst_blending = blend_type;
+}
+
 void Particle::SetColor(Color new_color)
 {
 	particle_data->color = new_color;
@@ -273,6 +283,56 @@ void Particle::UpdateColor()
 	particle_data->color.g = (particle_data->initial_color.g + increment_g);
 	particle_data->color.b = (particle_data->initial_color.b + increment_b);
 
+}
+
+float Particle::GetCodeFromBlendPos(int combo_pos)
+{
+	switch (combo_pos)
+	{
+	case GlZero:
+		return GL_ZERO;
+		break;
+
+	case GlOne:
+		return GL_ONE;
+		break;
+
+	case GlSrcColor:
+		return GL_SRC_COLOR;
+		break;
+
+	case GlOneMinusSrcColor:
+		return GL_ONE_MINUS_SRC_COLOR;
+		break;
+
+	case GlDstColor:
+		return GL_DST_COLOR;
+		break;
+
+	case GlOneMinusDstColor:
+		return GL_ONE_MINUS_DST_COLOR;
+		break;
+
+	case GlSrcAlpha:
+		return GL_SRC_ALPHA;
+		break;
+
+	case GlOneMinusSrcAlpha:
+		return GL_ONE_MINUS_SRC_ALPHA;
+		break;
+
+	case GlDstAlpha:
+		return GL_DST_ALPHA;
+		break;
+
+	case GlOneMinusDstAlpha:
+		return GL_ONE_MINUS_DST_ALPHA;
+		break;
+
+	case GlSrcAlphaSaturate:
+		return GL_SRC_ALPHA_SATURATE;
+		break;
+	}
 }
 
 void Particle::UpdateVelocity()
@@ -491,9 +551,14 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 	}
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	
+	float src_code, dst_code; 
+
+	src_code = GetCodeFromBlendPos(particle_data->src_blending);
+	dst_code = GetCodeFromBlendPos(particle_data->dst_blending);
+
+	glBlendFunc(src_code, dst_code);
+
 	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
