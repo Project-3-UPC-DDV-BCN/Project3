@@ -204,7 +204,7 @@ public class Level1Manager
 			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 6.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args2);
 
-			object[] args3 =  {"AckbarIntro1", "Be careful, try to not get detected", 4.5f};
+			object[] args3 =  {"AckbarIntro1", "Be careful, try not to get detected", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args3);
 
 			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 4.5f};
@@ -214,7 +214,7 @@ public class Level1Manager
 			object[] args9 = {"AckbarIntro2"};
 			dialog_manager.CallFunctionArgs("NewDialog", args9);
 
-			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!.", 5.0f};
+			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!", 5.0f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args10);
 
 
@@ -244,18 +244,11 @@ public class Level1Manager
 			object[] args15 = {"IntroSucces", "Well done, Bobba. But it ain't finished.", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args15);
 
-			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the shield generators.", 4.5f};
+			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the generators", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args16);
 
 			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
-
-
-			object[] args18 = {"Starting mission"};
-			dialog_manager.CallFunctionArgs("NewDialog", args18);
-
-			object[] args19 = {"Starting mission", "so our fleet can destroy the ship!", 4.5f};
-			dialog_manager.CallFunctionArgs("NewDialogLine", args19);
 
 			
 			object[] args20 = {"Enemies interception"};

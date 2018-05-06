@@ -301,6 +301,14 @@ public class GuillemMovement
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
+		// Security (sometimes they go wild)
+		if(self_trans_rot.x > 180 || self_trans_rot.x < -180) 
+		{
+			TheConsole.Log("IM WRONG!!!");
+			self_transform.LocalRotation = new TheVector3(0, self_trans_rot.y, self_trans_rot.z);
+			self_trans_rot = self_transform.LocalRotation;
+		}
+
 		// Target avoidance ----
 		if(movement_mode == 0)
 		{
@@ -384,12 +392,6 @@ public class GuillemMovement
 		{
 			////TheConsole.Log("2");
 			self_transform.LocalRotation = new TheVector3(self_trans_rot.x - (modified_rotation_speed * TheTime.DeltaTime), self_trans_rot.y, self_trans_rot.z);
-		}
-
-		// Security (sometimes they go wild)
-		if(self_transform.LocalRotation.x > 180 || self_transform.LocalRotation.x < -180) 
-		{
-			self_transform.LocalRotation.x = 0;
 		}
     }
 
