@@ -1,11 +1,11 @@
 {
-    "UUID": "1879607956",
+    "UUID": "1860051894",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1121991084",
+        "UUID": "1114030780",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -143,7 +143,7 @@
                 "Active": "1",
                 "UUID": "1238846532",
                 "Sound_ID": "100",
-                "SoundBank_Name": "Enemy.bnk"
+                "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
                 "Type": "10",
@@ -407,7 +407,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1571083186",
+        "UUID": "1417539328",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -445,12 +445,12 @@
                 }
             }
         },
-        "ParentID": "1121991084",
+        "ParentID": "1114030780",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "450416208",
+        "UUID": "747073156",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -520,12 +520,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1571083186",
+        "ParentID": "1417539328",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "870603674",
+        "UUID": "2073747183",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -596,7 +596,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "450416208",
+        "ParentID": "747073156",
         "IsRoot": "0",
         "IsStatic": "0"
     }
