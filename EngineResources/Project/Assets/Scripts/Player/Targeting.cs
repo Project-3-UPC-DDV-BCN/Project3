@@ -3,7 +3,6 @@ using TheEngine.TheConsole;
 
 public class Targeting 
 {
-	
 	public float raycast_distance = 100.0f;
 	
 	public string controller_front_target_button = "CONTROLLER_Y";
@@ -21,6 +20,9 @@ public class Targeting
 	
 	private TheScript target_script = null;
 	private TheGameObject target_go = null;
+	
+	//Target arrow
+	public TheGameObject mark_arrow;
 	
 	void Start () 
 	{
@@ -64,6 +66,11 @@ public class Targeting
 					}
 				}
 			}
-		}
+		}			
+	}
+	
+	TheGameObject GetTarget()
+	{
+		return target_go;
 	}
 }

@@ -891,7 +891,7 @@ public class PlayerMovement
 	
 	void DamageFrontShield(int dmg)
 	{
-		if(shield_hp > 0)
+		if(shield_hp > 0 && front_shield != 0)
 		{
 			float shield_dmg = (float)dmg*(4-front_shield)*shield_step;
 			
@@ -908,7 +908,7 @@ public class PlayerMovement
 	
 	void DamageBackShield(int dmg)
 	{
-		if(shield_hp > 0)
+		if(shield_hp > 0 && back_shield != 0)
 		{
 			float shield_dmg = (float)dmg*(4-back_shield)*shield_step;
 			

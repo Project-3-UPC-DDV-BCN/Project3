@@ -20,6 +20,9 @@ public class EnemyHUD {
 
 	TheScript GameManager = null;
 	TheGameObject gm_GO = null;
+
+    public TheGameObject targeting_go;
+    private TheScript targeting_script = null;
 	
 
 	//CANVAS GO
@@ -49,6 +52,9 @@ public class EnemyHUD {
 		self_front = self_transform.ForwardDirection;
 		self_up = self_transform.UpDirection;
 		enemies = (List<TheGameObject>)GameManager.CallFunctionArgs("GetSlaveEnemies");
+
+        if (targeting_go != null)
+            targeting_script = targeting_go.GetScript("Targeting");
 	}
 	
 	void Update () {
@@ -83,8 +89,28 @@ public class EnemyHUD {
 		for(int l = 0; l <enemies_in_front.Count; l++)
 		{
 			if(prev_enemies_in_front.Count != enemies_in_front.Count)
-			{				
-				markers.Add(TheResources.LoadPrefab("enemy_marker"));
+			{
+                if (targeting_script != null)
+                {
+                    TheGameObject target = (TheGameObject)targeting_script.CallFunctionArgs("GetTarget");
+                    if (target != null)
+                    {
+                        if (target.GetComponent<TheTransform>() == enemies_in_front[l].GetComponent<TheTransform>())
+                        {
+                            markers.Add(TheResources.LoadPrefab("enemy_target"));
+                        }
+                    }
+                    else
+                    {
+                        markers.Add(TheResources.LoadPrefab("enemy_marker"));
+                    }
+
+                }
+                else
+                {
+                    markers.Add(TheResources.LoadPrefab("enemy_marker"));
+                }
+
 				if(canvas != null)
 					markers[l].SetParent(canvas);
 				else	
