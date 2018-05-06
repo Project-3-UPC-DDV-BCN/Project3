@@ -1,8 +1,13 @@
 using TheEngine;
 using TheEngine.TheConsole;
 
+using System.Collections.Generic;
+
 public class Targeting 
 {
+	private TheGameObject gm_go = null;
+	private TheScript gm = null;
+	
 	public float raycast_distance = 100.0f;
 	
 	public string controller_front_target_button = "CONTROLLER_Y";
@@ -21,8 +26,8 @@ public class Targeting
 	private TheScript target_script = null;
 	private TheGameObject target_go = null;
 	
-	//Target arrow
-	public TheGameObject mark_arrow;
+	private List<TheGameObject> enemies  = new List<TheGameObject>();
+	private int enemy_index = 0;
 	
 	void Start () 
 	{
@@ -32,6 +37,11 @@ public class Targeting
 		{
 			slavia_trans = slavia.GetComponent<TheTransform>();
 		}
+		
+		gm_go = TheGameObject.Find("GameManager");
+		
+		if(gm_go != null)
+			gm = gm_go.GetScript("GameManager");
 	}
 	
 	void Update () 
@@ -59,14 +69,50 @@ public class Targeting
 							target_script = s;
 							target_go = go;
 					
-							TheConsole.Log("Se Targeteo");
+							TheConsole.Log("Se Targeteo");						
 					
 							break;
 						}
 					}
 				}
 			}
-		}			
+		}
+
+		if((TheInput.GetControllerButton(0, controller_next_target_button) == 1 || TheInput.IsKeyDown(key_next_target_button)) && gm != null)
+		{
+			enemies = (List<TheGameObject>)gm.CallFunctionArgs("GetSlaveEnemies");
+			
+			for(int i = 0; i<enemies.Count; ++i)
+			{
+				if(target_go.GetComponent<TheTransform>() == enemies[i].GetComponent<TheTransform>() && (i+1) < enemies.Count)
+				{
+					target_go = enemies[i+1];
+					target_script = target_go.GetScript("EntityProperties");
+					
+					TheConsole.Log("Se Targeteo el next!!!");
+					
+					break;
+				}
+			}
+		}
+		
+		if((TheInput.GetControllerButton(0, controller_prev_target_button) == 1 || TheInput.IsKeyDown(key_prev_target_button)) && gm != null)
+		{
+			enemies = (List<TheGameObject>)gm.CallFunctionArgs("GetSlaveEnemies");
+			
+			for(int i = 0; i<enemies.Count; ++i)
+			{
+				if(target_go.GetComponent<TheTransform>() == enemies[i].GetComponent<TheTransform>() && (i-1) >= 0)
+				{
+					target_go = enemies[i-1];
+					target_script = target_go.GetScript("EntityProperties");
+					
+					TheConsole.Log("Se Targeteo el prev!!!");
+					
+					break;
+				}
+			}
+		}
 	}
 	
 	TheGameObject GetTarget()
