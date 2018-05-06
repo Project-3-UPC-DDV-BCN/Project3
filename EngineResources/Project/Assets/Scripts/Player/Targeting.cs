@@ -163,7 +163,7 @@ public class Targeting
 			
 			for(int i = 0; i<enemies.Count; ++i)
 			{
-				if(target_go.GetComponent<TheTransform>() == enemies[i].GetComponent<TheTransform>() && (i-1) >= 0)
+				if(target_go.GetComponent<TheTransform>() == enemies[i].GetComponent<TheTransform>())
 				{
 					int next = i-1;
 					if(next < 0)
