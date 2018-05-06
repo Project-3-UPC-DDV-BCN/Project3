@@ -10,6 +10,8 @@ public class Targeting
 	private TheScript gm = null;
 	
 	public float raycast_distance = 2000.0f;
+	public float raycast_x_offset = 0.5f;
+	public float raycast_y_offset = 0.5f;
 	
 	public string controller_front_target_button = "CONTROLLER_Y";
 	public string controller_next_target_button = "CONTROLLER_B";
@@ -50,6 +52,8 @@ public class Targeting
 		//Target front
 		if(TheInput.GetControllerButton(0, controller_front_target_button) == 1)
 		{
+			bool target_found = false;
+			//Main ray
 			TheConsole.Log("Ray pos: " + trans.GlobalPosition + " dir: " + slavia_trans.ForwardDirection);
 			TheRayCastHit[] hits = ThePhysics.RayCastAll(trans.GlobalPosition, slavia_trans.ForwardDirection, raycast_distance);
 			
@@ -70,10 +74,59 @@ public class Targeting
 						{
 							target_script = s;
 							target_go = go;
+							target_found = true;
 					
-							TheConsole.Log("Se Targeteo");						
+							TheConsole.Log("Se Targeteo");									
 					
 							break;
+						}
+					}
+				}
+			}
+			
+			//Secondary Rays
+			if(!target_found)
+			{
+				for(int ray_x = -1; ray_x < 2 && !target_found; ++ray_x)
+				{
+					for(int ray_y = -1; ray_y < 2 && !target_found; ++ray_y)
+					{
+						if(ray_x == 0 && ray_y == 0)
+							continue;
+						
+						TheVector3 ray_inc_xpos = slavia_trans.RightDirection*ray_x*raycast_x_offset;
+						TheVector3 ray_inc_ypos = slavia_trans.UpDirection*ray_y*raycast_y_offset;
+						TheVector3 ray_pos = trans.GlobalPosition;
+						ray_pos.x += ray_inc_xpos.x;
+						ray_pos.y += ray_inc_ypos.y;
+						TheConsole.Log("Ray pos: " + ray_pos + " dir: " + slavia_trans.ForwardDirection);
+						TheRayCastHit[] sec_hits = ThePhysics.RayCastAll(ray_pos, slavia_trans.ForwardDirection, raycast_distance);
+						
+						for(int i = 0; i<sec_hits.Length;++i)
+						{
+							TheConsole.Log("Ray hit " + i);
+							TheGameObject go = sec_hits[i].Collider.GetGameObject();
+							if(go != null)
+							{
+								TheConsole.Log("Ray hit has go");
+								TheScript s = go.GetScript("EntityProperties");
+							
+								if(s != null)
+								{
+									TheConsole.Log("Ray hit has entity prop");
+									
+									if((bool)s.CallFunctionArgs("IsShip") || (bool)s.CallFunctionArgs("IsTurret") || (bool)s.CallFunctionArgs("IsGenerator"))
+									{
+										target_script = s;
+										target_go = go;
+										target_found = true;
+								
+										TheConsole.Log("Se Targeteo");									
+								
+										break;
+									}
+								}
+							}
 						}
 					}
 				}
@@ -110,7 +163,7 @@ public class Targeting
 			
 			for(int i = 0; i<enemies.Count; ++i)
 			{
-				if(target_go.GetComponent<TheTransform>() == enemies[i].GetComponent<TheTransform>() && (i-1) >= 0)
+				if(target_go.GetComponent<TheTransform>() == enemies[i].GetComponent<TheTransform>())
 				{
 					int next = i-1;
 					if(next < 0)
