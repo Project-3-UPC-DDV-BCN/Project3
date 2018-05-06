@@ -57,6 +57,8 @@ public class Shield
 						slave_script.CallFunctionArgs("DamageBackShield", args);
 					else
 						TheConsole.Log("Invalid Shield Options");
+
+					TheConsole.Log("Shield Hit: Chewbacca repair them!!");
 				}	
 			}
 		}
