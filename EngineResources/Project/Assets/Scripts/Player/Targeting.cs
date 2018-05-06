@@ -194,23 +194,26 @@ public class Targeting
 		{
 			enemies = (List<TheGameObject>)gm.CallFunctionArgs("GetSlaveEnemies");
 			
-			int closest = 0;
-			float closest_no_abs = TheVector3.Distance(enemies[0].GetComponent<TheTransform>().GlobalPosition, slavia_trans.GlobalPosition);
-			float closest_dist = TheMath.Abs(closest_no_abs);
-			
-			for(int i = 1; i<enemies.Count; ++i)
+			if(enemies.Count > 0)
 			{
-				float curr_dist_no_abs = TheVector3.Distance(enemies[i].GetComponent<TheTransform>().GlobalPosition, slavia_trans.GlobalPosition);
-				float curr_dist = TheMath.Abs(curr_dist_no_abs);
+				int closest = 0;
+				float closest_no_abs = TheVector3.Distance(enemies[0].GetComponent<TheTransform>().GlobalPosition, slavia_trans.GlobalPosition);
+				float closest_dist = TheMath.Abs(closest_no_abs);
 				
-				if(curr_dist < closest_dist)
-					closest = i;
+				for(int i = 1; i<enemies.Count; ++i)
+				{
+					float curr_dist_no_abs = TheVector3.Distance(enemies[i].GetComponent<TheTransform>().GlobalPosition, slavia_trans.GlobalPosition);
+					float curr_dist = TheMath.Abs(curr_dist_no_abs);
+					
+					if(curr_dist < closest_dist)
+						closest = i;
+				}
+				
+				target_go = enemies[closest];
+				target_script = target_go.GetScript("EntityProperties");
+				
+				TheConsole.Log("Se targeteo el closest");
 			}
-			
-			target_go = enemies[closest];
-			target_script = target_go.GetScript("EntityProperties");
-			
-			TheConsole.Log("Se targeteo el closest");
 		}
 		
 		SetUIElements();
