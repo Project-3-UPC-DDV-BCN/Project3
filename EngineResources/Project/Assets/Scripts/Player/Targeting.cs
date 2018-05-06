@@ -213,6 +213,7 @@ public class Targeting
 			TheConsole.Log("Se targeteo el closest");
 		}
 		
+		SetUIElements();
 	}
 	
 	TheGameObject GetTarget()
