@@ -85,23 +85,15 @@ public class TurretAI {
 	
 	void RotateBlasterTowardsPlayer()
 	{
+		
 		TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
 		TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.ForwardDirection);
 		q.x = 0; q.y = 0;
-		TheVector3 euler = q.ToEulerAngles();
-		TheConsole.Log(euler.z+"QUE PASOOOO");
-		if (euler.z < MinAngleBlasters)
-		{
-			euler.z = MinAngleBlasters;
-			q = TheQuaternion.FromEulerAngles(euler);
-		}
-		else if (euler.z > MaxAngleBlasters)
-		{
-			TheConsole.Log("QUE PASOOOO");
-			euler.z = MaxAngleBlasters;
-			q = TheQuaternion.FromEulerAngles(euler);
-		}
-		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
+		TheQuaternion test = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
+		
+		TheVector3 euler = test.ToEulerAngles();
+		if (euler.z >= MinAngleBlasters && euler.z <= MaxAngleBlasters)
+			BlasterTransform.QuatRotation = test;
 	}
 	
 	void Shoot()
