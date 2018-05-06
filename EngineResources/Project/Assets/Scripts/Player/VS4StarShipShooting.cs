@@ -67,6 +67,8 @@ public class VS4StarShipShooting
 	float shooting_frequency_w0_base;
 	
 	public string shoot_button = "CONTROLLER_A";
+	public string ChangeWeaponKeyboardInput = "C";
+	public string ChangeWeaponControllerInput = "CONTROLLER_RB";
 	
     void Start () 
 	{
@@ -213,7 +215,7 @@ public class VS4StarShipShooting
 			laser_light.GetComponent<TheLight>().SetComponentActive(false);
 		}
 
-        if(TheInput.IsKeyDown("C"))
+        if(TheInput.IsKeyDown(ChangeWeaponKeyboardInput) || TheInput.GetControllerButton(0, ChangeWeaponControllerInput) == 3)
 			ChangeWeapon();
     }
 
