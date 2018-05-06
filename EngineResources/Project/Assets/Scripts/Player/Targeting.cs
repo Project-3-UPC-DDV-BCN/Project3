@@ -46,6 +46,7 @@ public class Targeting
 	
 	void Update () 
 	{
+		//Target front
 		if(TheInput.GetControllerButton(0, controller_front_target_button) == 1)
 		{
 			TheConsole.Log("Ray pos: " + trans.GlobalPosition + " dir: " + slavia_trans.ForwardDirection);
@@ -64,7 +65,7 @@ public class Targeting
 					{
 						TheConsole.Log("Ray hit has entity prop");
 						
-						if((bool)s.CallFunctionArgs("IsShip"))
+						if((bool)s.CallFunctionArgs("IsShip") || (bool)s.CallFunctionArgs("IsTurret") || (bool)s.CallFunctionArgs("IsGenerator"))
 						{
 							target_script = s;
 							target_go = go;
@@ -77,8 +78,9 @@ public class Targeting
 				}
 			}
 		}
-
-		if((TheInput.GetControllerButton(0, controller_next_target_button) == 1 || TheInput.IsKeyDown(key_next_target_button)) && gm != null)
+		
+		//Target Next
+		if((TheInput.GetControllerButton(0, controller_next_target_button) == 1 || TheInput.IsKeyDown(key_next_target_button)) && gm != null && target_go != null)
 		{
 			enemies = (List<TheGameObject>)gm.CallFunctionArgs("GetSlaveEnemies");
 			
@@ -96,7 +98,8 @@ public class Targeting
 			}
 		}
 		
-		if((TheInput.GetControllerButton(0, controller_prev_target_button) == 1 || TheInput.IsKeyDown(key_prev_target_button)) && gm != null)
+		//Target Previous
+		if((TheInput.GetControllerButton(0, controller_prev_target_button) == 1 || TheInput.IsKeyDown(key_prev_target_button)) && gm != null && target_go != null)
 		{
 			enemies = (List<TheGameObject>)gm.CallFunctionArgs("GetSlaveEnemies");
 			
@@ -113,6 +116,9 @@ public class Targeting
 				}
 			}
 		}
+		
+		//Target Closest enemy
+		
 	}
 	
 	TheGameObject GetTarget()
