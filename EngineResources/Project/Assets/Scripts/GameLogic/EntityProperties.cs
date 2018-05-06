@@ -195,7 +195,7 @@ public class EntityProperties
 			if(player_movement_script != null)
 			{	
 				object[] args = {dmg};
-				player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
+				//player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
 
 				TheConsole.Log("DealDamage: Slave");
 			}
