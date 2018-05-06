@@ -126,6 +126,10 @@ public:
 	float emmit_height;
 	float emmit_depth;
 
+	//Blending 
+	float src_blending; 
+	float dst_blending; 
+
 	//Interpolations
 	///Velocity
 	bool change_velocity_interpolation;

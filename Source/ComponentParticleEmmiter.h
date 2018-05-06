@@ -82,6 +82,9 @@ public:
 	void SetSpawnVelocity(float v);
 	void SetParticlesVelocity(float v);
 
+	//Blending 
+	void AssignBlendingMode(float blend_variable, int combo_pos);
+
 public:
 
 	ParticleData* data; 
