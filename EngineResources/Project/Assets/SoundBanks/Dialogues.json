@@ -5,11 +5,11 @@
   "SchemaVersion": "11",
   "SoundbankVersion": "128",
   "RootPaths": {
-   "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\",
-   "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\.cache\\Windows\\",
-   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\..\\Dialogues_Soundbank\\",
+   "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\",
+   "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\.cache\\Windows\\",
+   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\..\\..\\..\\Dialogues\\",
    "ExternalSourcesInputFile": "",
-   "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\StarWars\\GeneratedSoundBanks\\Windows\\"
+   "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\GeneratedSoundBanks\\Windows\\"
   },
   "SoundBanks": [
    {
@@ -20,105 +20,83 @@
     "Path": "Dialogues.bnk",
     "IncludedEvents": [
      {
-      "Id": "1287401009",
-      "Name": "Play_Ackbar_dialogue_01",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_01"
+      "Id": "1139314818",
+      "Name": "Play_Dialogue_01",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_01"
      },
      {
-      "Id": "1287401010",
-      "Name": "Play_Ackbar_dialogue_02",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_02"
+      "Id": "1139314817",
+      "Name": "Play_Dialogue_02",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_02"
      },
      {
-      "Id": "1287401011",
-      "Name": "Play_Ackbar_dialogue_03",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_03"
+      "Id": "1139314816",
+      "Name": "Play_Dialogue_03",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_03"
      },
      {
-      "Id": "1287401012",
-      "Name": "Play_Ackbar_dialogue_04",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ackbar_dialogue_04"
+      "Id": "1139314823",
+      "Name": "Play_Dialogue_04",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_04"
      },
      {
-      "Id": "1731128770",
-      "Name": "Play_Dialogue_1_Tarkin",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_1_Tarkin"
+      "Id": "1139314822",
+      "Name": "Play_Dialogue_05",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_05"
      },
      {
-      "Id": "4291260667",
-      "Name": "Play_Dialogue_2_Tarkin",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_2_Tarkin"
+      "Id": "1139314821",
+      "Name": "Play_Dialogue_06",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_06"
      },
      {
-      "Id": "198772536",
-      "Name": "Play_Dialogue_3_Tarkin",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_3_Tarkin"
-     },
-     {
-      "Id": "665058289",
-      "Name": "Play_Dialogue_4_Tarkin",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_4_Tarkin"
-     },
-     {
-      "Id": "2187735046",
-      "Name": "Play_Dialogue_5_Tarkin",
-      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_5_Tarkin"
+      "Id": "1139314820",
+      "Name": "Play_Dialogue_07",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Dialogue_07"
      }
     ],
     "IncludedMemoryFiles": [
      {
-      "Id": "57728033",
+      "Id": "93666008",
       "Language": "SFX",
-      "ShortName": "Dialogue_5_Tarkin.wav",
-      "Path": "SFX\\Dialogue_5_Tarkin_1C9C67B2.wem"
+      "ShortName": "Dialogue_02.wav",
+      "Path": "SFX\\Dialogue_02_1C9C67B2.wem"
      },
      {
-      "Id": "236546423",
+      "Id": "144289083",
       "Language": "SFX",
-      "ShortName": "Dialogue2.wav",
-      "Path": "SFX\\Dialogue2_1C9C67B2.wem"
+      "ShortName": "Dialogue_06.wav",
+      "Path": "SFX\\Dialogue_06_1C9C67B2.wem"
      },
      {
-      "Id": "247010014",
+      "Id": "280769465",
       "Language": "SFX",
-      "ShortName": "Dialogue_2_Tarkin.wav",
-      "Path": "SFX\\Dialogue_2_Tarkin_1C9C67B2.wem"
+      "ShortName": "Dialogue_05.wav",
+      "Path": "SFX\\Dialogue_05_1C9C67B2.wem"
      },
      {
-      "Id": "468090989",
+      "Id": "820496055",
       "Language": "SFX",
-      "ShortName": "Dialogue_3_Tarkin.wav",
-      "Path": "SFX\\Dialogue_3_Tarkin_1C9C67B2.wem"
+      "ShortName": "Dialogue_01.wav",
+      "Path": "SFX\\Dialogue_01_1C9C67B2.wem"
      },
      {
-      "Id": "605188401",
+      "Id": "936670607",
       "Language": "SFX",
-      "ShortName": "Dialogue_4_Tarkin.wav",
-      "Path": "SFX\\Dialogue_4_Tarkin_1C9C67B2.wem"
+      "ShortName": "Dialogue_04.wav",
+      "Path": "SFX\\Dialogue_04_1C9C67B2.wem"
      },
      {
-      "Id": "742823025",
+      "Id": "1007872642",
       "Language": "SFX",
-      "ShortName": "Dialogue1.wav",
-      "Path": "SFX\\Dialogue1_1C9C67B2.wem"
+      "ShortName": "Dialogue_07.wav",
+      "Path": "SFX\\Dialogue_07_1C9C67B2.wem"
      },
      {
-      "Id": "862128156",
+      "Id": "1054634990",
       "Language": "SFX",
-      "ShortName": "Dialogue3.wav",
-      "Path": "SFX\\Dialogue3_1C9C67B2.wem"
-     },
-     {
-      "Id": "880519657",
-      "Language": "SFX",
-      "ShortName": "Dialogue_1_Tarkin.wav",
-      "Path": "SFX\\Dialogue_1_Tarkin_1C9C67B2.wem"
-     },
-     {
-      "Id": "948668134",
-      "Language": "SFX",
-      "ShortName": "Dialogue4.wav",
-      "Path": "SFX\\Dialogue4_1C9C67B2.wem"
+      "ShortName": "Dialogue_03.wav",
+      "Path": "SFX\\Dialogue_03_1C9C67B2.wem"
      }
     ]
    }
