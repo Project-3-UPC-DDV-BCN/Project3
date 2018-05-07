@@ -30,6 +30,9 @@ public class EntityProperties
 	private TheTransform self_transform = null;
 	private TheAudioSource audio_source = null;
 	private TheScript player_movement_script = null;
+
+    public TheGameObject slave_emmiter;
+    TheAudioSource slave_audio = null;
 	
 	TheGameObject self = null;
 	
@@ -51,6 +54,11 @@ public class EntityProperties
 		factory = self.GetComponent<TheFactory>();
 
 		audio_source = self.GetComponent<TheAudioSource>();
+
+        if (slave_emmiter != null)
+        {
+            slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
+        }
 
 		self.tag = "Entity";
 
@@ -202,8 +210,8 @@ public class EntityProperties
 			if(player_movement_script != null)
 			{	
 				object[] args = {dmg};
-				//player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
-
+                //player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
+                slave_audio.Play("Play_Ship_hit");
 				TheConsole.Log("DealDamage: Slave");
 			}
 		}
@@ -280,8 +288,10 @@ public class EntityProperties
 
 			if(IsShip())
 			{
-				if(audio_source != null)
+				if(audio_source != null){
 					audio_source.Play("Play_Enemy_Explosions");
+					audio_source.Play("Stop_Enemy_Engine");
+                }
 
 				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
