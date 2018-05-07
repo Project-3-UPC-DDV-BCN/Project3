@@ -136,6 +136,7 @@ public class TrainingModeManager
 
 	void Lose()
 	{
+		audio_source.Stop("Play_Music");
 		TheData.AddString("score", score_text.Text);
 		TheData.AddString("time", gametime_text.Text);
 		TheData.AddString("faction", "rebels");
