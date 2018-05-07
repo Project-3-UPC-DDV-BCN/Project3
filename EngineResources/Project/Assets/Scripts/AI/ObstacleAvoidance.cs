@@ -1,6 +1,7 @@
 using TheEngine;
 using TheEngine.TheDebug;
 using TheEngine.TheMath;
+using TheEngine.TheConsole;
 
 public class ObstacleAvoidance {
 
@@ -167,7 +168,9 @@ public class ObstacleAvoidance {
 		}
 	
 		// Multiplier / RotationSpeed Managing
-		if(hitting == true) {
+		if(hitting == true) 
+		{
+			TheConsole.Log("I hit");
 			avoidingMultiplier += avoidingForce * TheTime.DeltaTime;
 		}
 		else {
