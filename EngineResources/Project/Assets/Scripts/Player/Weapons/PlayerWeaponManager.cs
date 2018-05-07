@@ -18,6 +18,12 @@ public class PlayerWeaponManager
 	public string p1_change_weapon = "CONTROLLER_RB";
 	public string p2_change_weapon = "C";
 	private float overheat = 0.0f;
+	public string weapon0_script_name = "BaseLaser";
+	public string weapon1_script_name = "Weapon1";
+	private bool can_shoot = true;	
+	///weapons bar
+	public TheGameObject weapons_energy;
+    TheProgressBar weapons_bar = null;
 
 	//Overheat bar
 	public TheGameObject overheat_bar_obj;
@@ -37,50 +43,98 @@ public class PlayerWeaponManager
 	private bool light_on = false;
 	private float light_duration = 0.0f;
 	
+	//Factory
+	TheFactory laser_factory = null;
+	
 	void Start () 
 	{
-		if(curr_weapon == null)
-			weapon_script = TheGameObject.Self.GetScript("Weapon0");
+		if(weapon_script == null)
+			weapon_script = TheGameObject.Self.GetScript(weapon0_script_name);
 		
 		if(overheat_bar_obj != null)
 			overheat_bar = overheat_bar_obj.GetComponent<TheProgressBar>();
 		
 		if(laser_light != null)
 			laser_light_comp = laser_light.GetComponent<TheLight>();
+		
+		//Set initial crosshair
+		if(crosshair_1 != null)
+			crosshair_1.SetActive(true);
+
+		if(crosshair_2 != null)
+			crosshair_2.SetActive(false);
+
+		if(weapon_icon_1 != null)
+			weapon_icon_2.SetActive(true);
+		
+		if(weapon_icon_2 != null)
+			weapon_icon_2.SetActive(false);
+		
+		//Get weapons energy bar
+		if(weapons_energy != null)
+			weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
+		
+		laser_factory = TheGameObject.Self.GetComponent<TheFactory>();
+		
+		if(laser_factory != null)
+        	laser_factory.StartFactory();
+		
 	}
 	
 	void Update () 
 	{
-		if(is_joystick)
+		if(can_shoot) // Perform curr_weapon shoot
 		{
-			if(TheInput.GetControllerJoystickMove(0, shoot_button) > joystick_sensivility)
-			{
-				was_pressed = true;
-				
-				//overheat = 
-			}
+			float energy_percentage = weapons_bar.PercentageProgress;
+			object[] args = {energy_percentage};
 			
-			else if(was_pressed)
+			if(is_joystick)
 			{
-				was_pressed = false;
+				if(TheInput.GetControllerJoystickMove(0, shoot_button) > joystick_sensivility)
+				{
+					was_pressed = true;
+					
+					overheat = (float)weapon_script.CallFunctionArgs("ShootPress", args);
+					
+					TheConsole.Log("Shoot Pressed");
+				}
 				
+				else if(was_pressed)
+				{
+					was_pressed = false;
+					
+					weapon_script.CallFunctionArgs("ShootRelease");
+					TheConsole.Log("Shoot Release");
+				}
 			}
-		}
-		else
-		{
-			if(TheInput.GetControllerButton(0, shoot_button) == 2)
+			else
 			{
+				if(TheInput.GetControllerButton(0, shoot_button) == 2)
+				{
+					overheat = (float)weapon_script.CallFunctionArgs("ShootPress", args);
+					TheConsole.Log("Shoot Pressed");
+				}
 				
-			}
-			
-			else if(TheInput.GetControllerButton(0, shoot_button) == 3)
-			{
-				
+				else if(TheInput.GetControllerButton(0, shoot_button) == 3)
+				{
+					weapon_script.CallFunctionArgs("ShootRelease");
+					TheConsole.Log("Shoot Release");
+				}
 			}
 		}
 		
+		//set overheat bar value
 		if(overheat_bar != null)
-			overheat_bar_bar.PercentageProgress = overheat * 100;
+			overheat_bar.PercentageProgress = overheat * 100;
+		
+		//check laser light state
+		if(laser_light_comp != null && light_duration <= 0.0f && light_on)
+		{
+			laser_light_comp.SetComponentActive(false);
+			light_on = false;
+		}
+		else if(laser_light_comp != null)
+			light_duration -= TheTime.DeltaTime;
 	}
 	
 	void TurnOnLaserLight(float duration)
@@ -91,5 +145,15 @@ public class PlayerWeaponManager
 			light_on = true;
 			light_duration = duration;
 		}
+	}
+	
+	void SetCanShoot(bool set)
+	{
+		can_shoot = set;
+	}
+	
+	TheFactory GetFactory()
+	{
+		return laser_factory;
 	}
 }
