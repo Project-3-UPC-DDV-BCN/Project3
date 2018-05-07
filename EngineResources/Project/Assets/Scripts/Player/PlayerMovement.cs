@@ -209,6 +209,15 @@ public class PlayerMovement
 	private bool direct_hit = false;
 	private float shake_timer = 0;
 	
+	//Red Hit Marks
+	public float hit_mark_time = 1.0f;
+	public TheGameObject hit_mark_top;
+	public TheGameObject hit_mark_bot;
+	public TheGameObject hit_mark_left;
+	public TheGameObject hit_mark_right;
+	private float hit_mark_timer = 0.0f;
+	private bool hit_on = false;
+	
 	
 	TheGameObject self = null;
 
@@ -783,6 +792,29 @@ public class PlayerMovement
 			else if(shield_hp > 0.0f)
 				shield_red.SetActive(false);
 		}
+		
+		if(hit_mark_bot != null && hit_mark_left != null && hit_mark_right != null && hit_mark_top != null)
+		{
+			if(hit_mark_timer > 0.0f && !hit_on)
+			{
+				hit_mark_top.SetActive(true);
+				hit_mark_bot.SetActive(true);
+				hit_mark_left.SetActive(true);
+				hit_mark_right.SetActive(true);
+				
+				hit_on = true;
+			}
+			else if(hit_on)
+			{
+				hit_mark_top.SetActive(false);
+				hit_mark_bot.SetActive(false);
+				hit_mark_left.SetActive(false);
+				hit_mark_right.SetActive(false);
+				
+				hit_on = false;
+			}
+		}
+		
 	}
 	
 	void SetParticlesValues()
@@ -927,8 +959,12 @@ public class PlayerMovement
     {
 		float f_dmg = dmg;
 		direct_hit = true;
+		
 		shaking = true;
 		shake_timer = shake_duration_hull;
+		
+		hit_mark_timer = hit_mark_time;
+		
 		if(audio_source != null)
 			audio_source.Play("Play_Ship_hit");
 
