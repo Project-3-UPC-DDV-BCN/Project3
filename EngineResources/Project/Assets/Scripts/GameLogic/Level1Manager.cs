@@ -284,6 +284,8 @@ public class Level1Manager
 	{
 		UpdateMissionState(curr_mission_state);
 		UpdateAudio();
+		
+		CheckWinLose();
 	}
 
 	void UpdateAudio()
