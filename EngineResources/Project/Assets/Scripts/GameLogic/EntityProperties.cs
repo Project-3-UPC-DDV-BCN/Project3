@@ -15,13 +15,13 @@ public class EntityProperties
 	public bool is_turret = false;
 	public bool is_generator = false;
 	
-	public string explosion_prefab;
+	public int life = 100;
+	private bool dead = false;
 
 	public float laser_speed = 30;
 	public int base_laser_damage = 10;
 
-	private int life = 100;
-	private bool dead = false;
+	public string explosion_prefab;
 
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
