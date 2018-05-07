@@ -16,6 +16,7 @@ public class EntityProperties
 	public bool is_generator = false;
 	
 	public int life = 100;
+	private int modified_life = 0;
 	private bool dead = false;
 
 	public float laser_speed = 30;
@@ -40,6 +41,8 @@ public class EntityProperties
 		
 	void Init()
 	{
+		modified_life = life;
+
 		self = TheGameObject.Self;
 
 		self_transform = self.GetComponent<TheTransform>();
@@ -165,13 +168,19 @@ public class EntityProperties
 	// Returns if the ship is dead or not
 	bool IsDead()
 	{
-		return life <= 0;
+		return modified_life <= 0;
+	}
+
+	// Returns max life of the ship
+	int GetMaxLife()
+	{
+		return life;
 	}
 
 	// Returns life of the ship
 	int GetLife()
 	{
-		return life;
+		return modified_life;
 	}
 
 	// Returns faction of the ship
@@ -183,13 +192,13 @@ public class EntityProperties
 	// Sets life of the ship
 	void SetLife(int set)
 	{
-		if(set != life)
+		if(set != modified_life)
 			TheConsole.Log("Life set to: " + set);
 
-		life = set;
+		modified_life = set;
 
-		if(life < 0)
-			life = 0;
+		if(modified_life < 0)
+			modified_life = 0;
 	}
 
 	// Deals damage to the ship
@@ -200,10 +209,10 @@ public class EntityProperties
 			if(dmg < 0)
 				dmg = 0;
 
-			life -= dmg;
+			modified_life -= dmg;
 
-			if(life < 0)
-				life = 0;
+			if(modified_life < 0)
+				modified_life = 0;
 		}
 		else
 		{
