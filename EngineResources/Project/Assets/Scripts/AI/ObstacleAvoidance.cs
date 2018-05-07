@@ -68,7 +68,7 @@ public class ObstacleAvoidance {
 			}
 		}
 		// Left
-		if(ArrRayHitLeft.Length > 0) {
+		else if(ArrRayHitLeft.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitLeft) {
 				if(hit.Collider != self_collider) {
 					rayHitLeft = hit;
@@ -77,7 +77,7 @@ public class ObstacleAvoidance {
 			}
 		}	
 		// Right
-		if(ArrRayHitRight.Length > 0) {
+		else if(ArrRayHitRight.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitRight) {
 				if(hit.Collider != self_collider) {
 					rayHitRight = hit;
@@ -86,7 +86,7 @@ public class ObstacleAvoidance {
 			}
 		}
 		// Top
-		if(ArrRayHitTop.Length > 0) {
+		else if(ArrRayHitTop.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitTop) {
 				if(hit.Collider != self_collider) {
 					rayHitTop = hit;
@@ -95,7 +95,7 @@ public class ObstacleAvoidance {
 			}
 		}
 		// Bottom	
-		if(ArrRayHitBottom.Length > 0) {
+		else if(ArrRayHitBottom.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitBottom) {
 				if(hit.Collider != self_collider) {
 					rayHitBottom = hit;
@@ -118,7 +118,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitCenter.Distance / rayLength);
 		}
 		// Left
-		else if(rayHitLeft != null) {
+		if(rayHitLeft != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitLeft.Normal.x, 
 				avoidanceVector.y + rayHitLeft.Normal.y, 
@@ -129,7 +129,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitLeft.Distance / rayLength);
 		}
 		// Right
-		else if(rayHitRight != null) {
+		if(rayHitRight != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitRight.Normal.x, 
 				avoidanceVector.y + rayHitRight.Normal.y, 
@@ -140,7 +140,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitRight.Distance / rayLength);
 		}
 		// Top
-		else if(rayHitTop != null) {
+		if(rayHitTop != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitTop.Normal.x, 
 				avoidanceVector.y + rayHitTop.Normal.y, 
@@ -151,7 +151,7 @@ public class ObstacleAvoidance {
 			avoidingMultiplier = 1 - (rayHitTop.Distance / rayLength);
 		}
 		// Bottom
-		else if(rayHitBottom != null) {
+		if(rayHitBottom != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitBottom.Normal.x, 
 				avoidanceVector.y + rayHitBottom.Normal.y, 
@@ -163,7 +163,7 @@ public class ObstacleAvoidance {
 		}
 		
 		// Rotation Managing ---
-		TheVector3 finalRotation = avoidanceVector.Normalized * (avoidingForce * avoidingMultiplier);
+		TheVector3 finalRotation = avoidanceVector.Normalized * avoidingForce;
 		
 		transform.LocalRotation = new TheVector3(
 			transform.LocalRotation.x + finalRotation.y,
