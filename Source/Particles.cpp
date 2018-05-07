@@ -537,7 +537,7 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 	GetCodeFromBlendPos(particle_data->src_blending, src_code);
 	GetCodeFromBlendPos(particle_data->dst_blending, dst_code);
 
-	if((src_code >= 0 && src_code <= 10) && (dst_code >= 0 && dst_code <= 10))
+	if((particle_data->src_blending >= 0 && particle_data->src_blending <= 10) && (particle_data->dst_blending >= 0 && particle_data->dst_blending <= 10))
 		glBlendFunc(src_code, dst_code);
 	else
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
