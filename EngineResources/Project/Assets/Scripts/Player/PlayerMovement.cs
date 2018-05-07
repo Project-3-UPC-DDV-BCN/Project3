@@ -89,7 +89,7 @@ public class PlayerMovement
     private TheVector3 cam_rot;
     private TheVector3 cam_pos;
 	//hp and shield
-	private float total_hp = 100.0f;
+	public float total_hp = 155.0f;
 	private float curr_total_hp;
 	private float body_hp;
 	private float wings_hp;
