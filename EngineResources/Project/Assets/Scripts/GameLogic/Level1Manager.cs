@@ -327,8 +327,8 @@ public class Level1Manager
 
 	void Lose()
 	{
-		TheData.AddString("score", 0);
-		TheData.AddString("time", 0);
+		TheData.AddString("score", "0");
+		TheData.AddString("time", "0");
 		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "campaign");
 		TheData.AddInt("won", 0);
