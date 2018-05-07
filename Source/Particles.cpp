@@ -122,26 +122,7 @@ float Particle::GetAlphaInterpolationPercentage()
 {
 	float alpha_percentage = 0.0f; 
 
-	alpha_started = false;
-
-	if (particle_data->init_alpha_interpolation_time == 0)
-		alpha_percentage = (particle_timer.Read() / (particle_data->max_lifetime * 1000)); 
-	else
-	{
-		float time_to_interpolate = particle_data->max_lifetime - particle_data->init_alpha_interpolation_time; 
-
-		if (particle_timer.Read() > particle_data->init_alpha_interpolation_time * 1000 && !alpha_started)
-		{
-			interpolation_timer.Start(); 
-			alpha_started = true;
-		}
-
-		if (alpha_started)
-		{
-			alpha_percentage = (interpolation_timer.Read() / (time_to_interpolate * 1000)); 
-		}
-
-	}
+	alpha_percentage = (particle_timer.Read() / (particle_data->max_lifetime * 1000)); 
 
 	return (1.0f - alpha_percentage); 
 }
@@ -481,7 +462,6 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 	{
 		App->renderer3D->SetUniformBool(id, "alpha_interpolation", true); 
 		float percentage = GetAlphaInterpolationPercentage(); 
-
 		App->renderer3D->SetUniformFloat(id, "alpha_percentage", percentage);
 	}
 	else
@@ -492,7 +472,6 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	
 	if (GetAtributes().texture == nullptr)
 	{
