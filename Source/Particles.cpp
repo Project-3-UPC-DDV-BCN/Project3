@@ -133,6 +133,16 @@ void Particle::ApplyAngularVelocity()
 	GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
 }
 
+void Particle::SetSourceBlendingMode(float blend_type)
+{
+	particle_data->src_blending = blend_type; 
+}
+
+void Particle::SetDestinationBlendingMode(float blend_type)
+{
+	particle_data->dst_blending = blend_type;
+}
+
 void Particle::SetColor(Color new_color)
 {
 	particle_data->color = new_color;
@@ -254,6 +264,56 @@ void Particle::UpdateColor()
 	particle_data->color.g = (particle_data->initial_color.g + increment_g);
 	particle_data->color.b = (particle_data->initial_color.b + increment_b);
 
+}
+
+void Particle::GetCodeFromBlendPos(int combo_pos, int& to_assign)
+{
+	switch (combo_pos)
+	{
+	case GlZero:
+		to_assign = GL_ZERO;
+		break;
+
+	case GlOne:
+		to_assign = GL_ONE;
+		break;
+
+	case GlSrcColor:
+		to_assign = GL_SRC_COLOR;
+		break;
+
+	case GlOneMinusSrcColor:
+		to_assign = GL_ONE_MINUS_SRC_COLOR;
+		break;
+
+	case GlDstColor:
+		to_assign = GL_DST_COLOR;
+		break;
+
+	case GlOneMinusDstColor:
+		to_assign = GL_ONE_MINUS_DST_COLOR;
+		break;
+
+	case GlSrcAlpha:
+		to_assign = GL_SRC_ALPHA;
+		break;
+
+	case GlOneMinusSrcAlpha:
+		to_assign = GL_ONE_MINUS_SRC_ALPHA;
+		break;
+
+	case GlDstAlpha:
+		to_assign = GL_DST_ALPHA;
+		break;
+
+	case GlOneMinusDstAlpha:
+		to_assign = GL_ONE_MINUS_DST_ALPHA;
+		break;
+
+	case GlSrcAlphaSaturate:
+		to_assign = GL_SRC_ALPHA_SATURATE;
+		break;
+	}
 }
 
 void Particle::UpdateVelocity()
@@ -471,8 +531,14 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 	}
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+
+	int src_code, dst_code; 
+
+	GetCodeFromBlendPos(particle_data->src_blending, src_code);
+	GetCodeFromBlendPos(particle_data->dst_blending, dst_code);
+
+	glBlendFunc(src_code, dst_code);
+
 	if (GetAtributes().texture == nullptr)
 	{
 		App->renderer3D->SetUniformBool(id, "has_texture", false);
@@ -480,8 +546,6 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
-
-		
 
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}

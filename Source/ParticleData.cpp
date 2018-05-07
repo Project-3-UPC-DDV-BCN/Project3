@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleTextureImporter.h"
 #include "ModuleResources.h"
+#include "OpenGL.h"
 #include "Texture.h"
 
 ParticleData::ParticleData()
@@ -42,6 +43,9 @@ void ParticleData::LoadDefaultData()
 
 	relative_pos = false;
 	billboarding = false;
+
+	src_blending = GlSrcAlpha; 
+	dst_blending = GlOneMinusSrcAlpha; 
 
 	change_rotation_interpolation = false;
 	change_velocity_interpolation = false; 
@@ -98,6 +102,10 @@ void ParticleData::Save(Data & data) const
 	data.AddFloat("Emit_Depth", emmit_depth);
 
 	data.AddInt("Emmision_Style", (int)emmit_style);
+
+	//Blending
+	data.AddFloat("SRC_Blending", src_blending);
+	data.AddFloat("DST_Blending", dst_blending);
 
 	//billboarding 
 	data.AddBool("Billboard", billboarding); 
@@ -231,6 +239,9 @@ void ParticleData::Copy(ParticleData * other)
 	amount_to_emmit = other->amount_to_emmit; 
 
 	color = other->color; 
+
+	src_blending = other->src_blending; 
+	dst_blending = other->dst_blending;
 									
 	max_lifetime = other->max_lifetime;
 	emmision_rate = other->emmision_rate;
@@ -337,6 +348,10 @@ bool ParticleData::Load(Data & _data)
 		color.g = col.y;
 		color.b = col.z;
 		color.a = col.w;
+
+		//Blending 
+		src_blending = _data.GetInt("SRC_Blending");
+		dst_blending = _data.GetInt("DST_Blending");
 
 		//Billboard
 		billboarding = _data.GetBool("Billboard");
