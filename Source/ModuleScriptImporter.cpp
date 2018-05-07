@@ -738,7 +738,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOver", (const void*)GetOnMouseOver);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseEnter", (const void*)GetOnMouseEnter);
 	mono_add_internal_call("TheEngine.TheRectTransform::GetOnMouseOut", (const void*)GetOnMouseOut);
-	
+
 	//TEXT
 	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
 	mono_add_internal_call("TheEngine.TheText::GetText", (const void*)GetText);

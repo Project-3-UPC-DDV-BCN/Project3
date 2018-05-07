@@ -320,8 +320,6 @@ public class Level1Manager
 				{
 					if(slave_audio!=null)
 						slave_audio.Play("Stop_Engine");
-
-
 					Lose();
 				}
 			}	
@@ -332,10 +330,6 @@ public class Level1Manager
 
 	void Lose()
 	{
-		audio_source.Stop("Level");
-
-		audio_source.Stop("Play_Music");
-
 		TheData.AddString("score", "0");
 		TheData.AddString("time", "0");
 		TheData.AddString("faction", "rebels");
@@ -630,8 +624,6 @@ public class Level1Manager
 		
 					if(!running)
 					{
-						audio_source.Stop("Play_Music");
-
 						TheData.AddString("score", "0");
 						TheData.AddString("time", "0");
 						TheData.AddString("faction", "rebels");
