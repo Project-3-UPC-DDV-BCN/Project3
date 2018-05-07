@@ -1,11 +1,11 @@
 {
-    "UUID": "10615762",
+    "UUID": "1499365621",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "345591634",
+        "UUID": "301302618",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -295,7 +295,7 @@
                     "float_fields_count": "1",
                     "bool_fields_count": "4",
                     "string_fields_count": "2",
-                    "gameobject_fields_count": "0",
+                    "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -340,7 +340,12 @@
                             "field_value": "ParticleExplosion"
                         }
                     },
-                    "gameobject_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "slave_emmiter",
+                            "field_value": "249855895"
+                        }
+                    },
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -352,7 +357,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "28369726",
+        "UUID": "369303882",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -390,12 +395,12 @@
                 }
             }
         },
-        "ParentID": "345591634",
+        "ParentID": "301302618",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1591222253",
+        "UUID": "1631346838",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -465,12 +470,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "28369726",
+        "ParentID": "369303882",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "245578324",
+        "UUID": "2030569509",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -541,7 +546,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1591222253",
+        "ParentID": "1631346838",
         "IsRoot": "0",
         "IsStatic": "0"
     }

@@ -1,11 +1,11 @@
 {
-    "UUID": "1172692115",
+    "UUID": "993531374",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "964446769",
+        "UUID": "199519384",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -60,14 +60,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "-13605073859011141435392.000000",
+                    "value_Y": "493326027216396484608.000000",
+                    "value_Z": "-3290900156059700166656.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "464155332820615561216.000000",
+                    "value_Y": "-2713827477156907712512.000000",
+                    "value_Z": "-1009121920348627927040.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -179,7 +179,7 @@
                     "float_fields_count": "1",
                     "bool_fields_count": "4",
                     "string_fields_count": "2",
-                    "gameobject_fields_count": "0",
+                    "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
                     "vec4_fields_count": "0",
@@ -224,7 +224,12 @@
                             "field_value": "ParticleExplosion"
                         }
                     },
-                    "gameobject_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "slave_emmiter",
+                            "field_value": "249855895"
+                        }
+                    },
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -287,7 +292,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "377313800",
+        "UUID": "814804668",
         "Name": "Billboard(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -345,12 +350,12 @@
                 }
             }
         },
-        "ParentID": "964446769",
+        "ParentID": "199519384",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "944099696",
+        "UUID": "1735255323",
         "Name": "canvas(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -420,12 +425,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "377313800",
+        "ParentID": "814804668",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1132951487",
+        "UUID": "1370796951",
         "Name": "marker(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -496,7 +501,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "944099696",
+        "ParentID": "1735255323",
         "IsRoot": "0",
         "IsStatic": "0"
     }

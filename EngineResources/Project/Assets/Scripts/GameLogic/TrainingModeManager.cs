@@ -136,7 +136,12 @@ public class TrainingModeManager
 
 	void Lose()
 	{
-		TheApplication.LoadScene("Alpha1 - MainMenuScene");
+		TheData.AddString("score", score_text.Text);
+		TheData.AddString("time", gametime_text.Text);
+		TheData.AddString("faction", "rebels");
+		TheData.AddString("mode", "training");
+		TheData.AddInt("won", 0);
+		TheApplication.LoadScene("Alpha1 - EndGameScene");
 	}
 
 	bool CheckWaveFinished()
