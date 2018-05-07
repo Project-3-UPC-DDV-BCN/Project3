@@ -2463,9 +2463,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
 						current_emmiter->data->change_alpha_interpolation = true;
-			
-						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
-							current_emmiter->data->alpha_interpolation_delayed = true;
 					}
 
 					ImGui::SameLine();

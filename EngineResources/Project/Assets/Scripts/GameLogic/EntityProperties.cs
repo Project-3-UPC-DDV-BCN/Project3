@@ -15,13 +15,14 @@ public class EntityProperties
 	public bool is_turret = false;
 	public bool is_generator = false;
 	
-	public string explosion_prefab;
+	public int life = 100;
+	private int modified_life = 0;
+	private bool dead = false;
 
 	public float laser_speed = 30;
 	public int base_laser_damage = 10;
 
-	private int life = 100;
-	private bool dead = false;
+	public string explosion_prefab;
 
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
@@ -30,11 +31,18 @@ public class EntityProperties
 	private TheTransform self_transform = null;
 	private TheAudioSource audio_source = null;
 	private TheScript player_movement_script = null;
+
+    public TheGameObject slave_emmiter;
+    TheAudioSource slave_audio = null;
 	
 	TheGameObject self = null;
+	
+	TheScript player_targeting_script = null;
 		
 	void Init()
 	{
+		modified_life = life;
+
 		self = TheGameObject.Self;
 
 		self_transform = self.GetComponent<TheTransform>();
@@ -50,6 +58,11 @@ public class EntityProperties
 
 		audio_source = self.GetComponent<TheAudioSource>();
 
+        if (slave_emmiter != null)
+        {
+            slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
+        }
+
 		self.tag = "Entity";
 
 		// Add entity to game manager
@@ -64,6 +77,11 @@ public class EntityProperties
 
 		else if(is_generator)
 			SetGenerator();
+		
+		TheGameObject player_cam = TheGameObject.Find("PlayerCam");
+		
+		if(player_cam != null)
+			player_targeting_script = player_cam.GetScript("Targeting");
 	}
 
 	void Start()
@@ -150,13 +168,19 @@ public class EntityProperties
 	// Returns if the ship is dead or not
 	bool IsDead()
 	{
-		return life <= 0;
+		return modified_life <= 0;
+	}
+
+	// Returns max life of the ship
+	int GetMaxLife()
+	{
+		return life;
 	}
 
 	// Returns life of the ship
 	int GetLife()
 	{
-		return life;
+		return modified_life;
 	}
 
 	// Returns faction of the ship
@@ -168,13 +192,13 @@ public class EntityProperties
 	// Sets life of the ship
 	void SetLife(int set)
 	{
-		if(set != life)
+		if(set != modified_life)
 			TheConsole.Log("Life set to: " + set);
 
-		life = set;
+		modified_life = set;
 
-		if(life < 0)
-			life = 0;
+		if(modified_life < 0)
+			modified_life = 0;
 	}
 
 	// Deals damage to the ship
@@ -185,18 +209,18 @@ public class EntityProperties
 			if(dmg < 0)
 				dmg = 0;
 
-			life -= dmg;
+			modified_life -= dmg;
 
-			if(life < 0)
-				life = 0;
+			if(modified_life < 0)
+				modified_life = 0;
 		}
 		else
 		{
 			if(player_movement_script != null)
 			{	
 				object[] args = {dmg};
-				//player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
-
+                //player_movement_script.CallFunctionArgs("DamageSlaveOne", args);				
+                slave_audio.Play("Play_Ship_hit");
 				TheConsole.Log("DealDamage: Slave");
 			}
 		}
@@ -259,11 +283,24 @@ public class EntityProperties
 
 			if(factory != null)
 				factory.ClearFactory();
+			
+			if(player_targeting_script != null)
+			{
+				TheGameObject player_target = (TheGameObject)player_targeting_script.CallFunctionArgs("GetTarget");
+			
+				if(player_target != null && self_transform != null)
+				{
+					if(self_transform == player_target.GetComponent<TheTransform>())
+						player_targeting_script.CallFunctionArgs("SetToNull");
+				}
+			}
 
 			if(IsShip())
 			{
-				if(audio_source != null)
+				if(audio_source != null){
 					audio_source.Play("Play_Enemy_Explosions");
+					audio_source.Play("Stop_Enemy_Engine");
+                }
 
 				object[] args = {self, killer};
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
@@ -303,7 +340,7 @@ public class EntityProperties
 		{
 			object[] args = {ship};
 			movement_script.CallFunctionArgs("ClearIfTarget", args);
-		}
+		}	
 	}
 
 	void SpawnExplosion()

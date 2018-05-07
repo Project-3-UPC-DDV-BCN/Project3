@@ -106,6 +106,7 @@ public class Level1Manager
 	TheTimer new_spawn_timer = new TheTimer();
 	float time_between_new_spawn = 50.0f;
 
+	TheTimer check_win_lose = new TheTimer();
 
 	void Init()
 	{
@@ -204,7 +205,7 @@ public class Level1Manager
 			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 6.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args2);
 
-			object[] args3 =  {"AckbarIntro1", "Be careful, try to not get detected", 4.5f};
+			object[] args3 =  {"AckbarIntro1", "Be careful, try not to get detected", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args3);
 
 			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 4.5f};
@@ -214,7 +215,7 @@ public class Level1Manager
 			object[] args9 = {"AckbarIntro2"};
 			dialog_manager.CallFunctionArgs("NewDialog", args9);
 
-			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!.", 5.0f};
+			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!", 5.0f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args10);
 
 
@@ -244,18 +245,11 @@ public class Level1Manager
 			object[] args15 = {"IntroSucces", "Well done, Bobba. But it ain't finished.", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args15);
 
-			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the shield generators.", 4.5f};
+			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the generators", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args16);
 
 			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
-
-
-			object[] args18 = {"Starting mission"};
-			dialog_manager.CallFunctionArgs("NewDialog", args18);
-
-			object[] args19 = {"Starting mission", "so our fleet can destroy the ship!", 4.5f};
-			dialog_manager.CallFunctionArgs("NewDialogLine", args19);
 
 			
 			object[] args20 = {"Enemies interception"};
@@ -281,13 +275,18 @@ public class Level1Manager
 		// Start mission
 		NextMissionState();
 
+		audio_source.SetState("Level","Calm");
+
 		new_spawn_timer.Start();
+		
+		check_win_lose.Start();
 	}
 	
 	void Update () 
 	{
 		UpdateMissionState(curr_mission_state);
-		UpdateAudio();
+		
+		CheckWinLose();
 	}
 
 	void UpdateAudio()
@@ -307,6 +306,36 @@ public class Level1Manager
 					audio_source.SetState("Level","Calm");
 			}
 		}
+	}
+	
+	void CheckWinLose()
+	{
+		if(check_win_lose.ReadTime() > 1)
+		{
+			if(slave1_script != null)
+			{
+				bool dead = (bool)slave1_script.CallFunctionArgs("IsDead");
+
+				if(dead)
+				{
+					if(slave_audio!=null)
+						slave_audio.Play("Stop_Engine");
+					Lose();
+				}
+			}	
+
+			check_win_lose.Start();
+		}
+	}
+
+	void Lose()
+	{
+		TheData.AddString("score", "0");
+		TheData.AddString("time", "0");
+		TheData.AddString("faction", "rebels");
+		TheData.AddString("mode", "campaign");
+		TheData.AddInt("won", 0);
+		TheApplication.LoadScene("Alpha1 - EndGameScene");
 	}
 
 	void NextMissionState()
@@ -384,6 +413,8 @@ public class Level1Manager
 			}
 			case 4:
 			{
+				audio_source.SetState("Level","Combat");
+
 				SetCurrMissionObj("Survive the ambush");
 			
 				if(slave1_shooting_script != null)
@@ -402,6 +433,8 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				audio_source.SetState("Level","Calm");
+
 				SetCurrMissionObj("Approach the shield gate");
 
 				if(dialog_manager != null)
@@ -428,6 +461,8 @@ public class Level1Manager
 			}
 			case 6:
 			{
+				audio_source.SetState("Level","Combat");
+
 				SetCurrMissionObj("Destroy all generators");
 
 				SpawnNextWave(5);
@@ -444,12 +479,14 @@ public class Level1Manager
 			}
 			case 7:
 			{
+				audio_source.SetState("Level","Calm");
+
 				if(dialog_manager != null)
 				{
 					object[] args =  {"Win dialog"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
-
+				
 				break;
 			}
 		}
@@ -577,6 +614,25 @@ public class Level1Manager
 					new_spawn_timer.Start();
 				}
 
+				break;
+			}
+			case 7:
+			{
+				if(dialog_manager != null)
+				{
+					bool running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
+		
+					if(!running)
+					{
+						TheData.AddString("score", "0");
+						TheData.AddString("time", "0");
+						TheData.AddString("faction", "rebels");
+						TheData.AddString("mode", "campaign");
+						TheData.AddInt("won", 1);
+						TheApplication.LoadScene("Alpha1 - EndGameScene");
+					}
+				}
+				
 				break;
 			}
 		}

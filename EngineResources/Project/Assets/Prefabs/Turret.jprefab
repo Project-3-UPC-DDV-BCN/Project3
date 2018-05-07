@@ -1,11 +1,11 @@
 {
-    "UUID": "1933267256",
+    "UUID": "1631102313",
     "assets_path": ".\\Project\\Assets\\Prefabs\\Turret.jprefab",
     "library_path": "./Project/Library/Prefabs/Turret.jprefab",
     "prefab_name": "Turret",
     "GameObjects_Count": "11",
     "GameObject_0": {
-        "UUID": "314570604",
+        "UUID": "38880013",
         "Name": "Turret",
         "Tag": "Default",
         "Layer": "Default",
@@ -28,9 +28,9 @@
                     "value_W": "1.000000"
                 },
                 "scale": {
-                    "value_X": "0.100000",
-                    "value_Y": "0.100000",
-                    "value_Z": "0.100000"
+                    "value_X": "2.000000",
+                    "value_Y": "2.000000",
+                    "value_Z": "2.000000"
                 }
             },
             "Component_1": {
@@ -158,23 +158,23 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "BlasterCannon",
-                            "field_value": "483450315"
+                            "field_value": "1567176303"
                         },
                         "field_1": {
                             "field_name": "BlasterPivot",
-                            "field_value": "142049750"
+                            "field_value": "1631155110"
                         },
                         "field_2": {
                             "field_name": "LBlaster",
-                            "field_value": "1966814334"
+                            "field_value": "810311193"
                         },
                         "field_3": {
                             "field_name": "RBlaster",
-                            "field_value": "1580963753"
+                            "field_value": "280161163"
                         },
                         "field_4": {
                             "field_name": "TurretHead",
-                            "field_value": "2048173684"
+                            "field_value": "1601979354"
                         }
                     },
                     "vec2_fields": {},
@@ -186,8 +186,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1939738842",
-                "Sound_ID": "102",
-                "SoundBank_Name": "Player.bnk"
+                "Sound_ID": "102"
             },
             "Component_4": {
                 "Type": "2",
@@ -241,14 +240,14 @@
                 "HaveMaterial": "0",
                 "ColliderCenter": {
                     "value_X": "0.000000",
-                    "value_Y": "0.500000",
+                    "value_Y": "3.750000",
                     "value_Z": "0.000000"
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "2.000000",
-                        "value_Y": "2.500000",
-                        "value_Z": "1.750000"
+                        "value_X": "36.250000",
+                        "value_Y": "65.000000",
+                        "value_Z": "34.500000"
                     }
                 }
             }
@@ -258,7 +257,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "681788978",
+        "UUID": "1035989853",
         "Name": "Turret_Build",
         "Tag": "Default",
         "Layer": "Default",
@@ -287,12 +286,12 @@
                 }
             }
         },
-        "ParentID": "314570604",
+        "ParentID": "38880013",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "999387697",
+        "UUID": "1263787571",
         "Name": "Turret_Base_Bot",
         "Tag": "Default",
         "Layer": "Default",
@@ -340,12 +339,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "681788978",
+        "ParentID": "1035989853",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "2048173684",
+        "UUID": "1601979354",
         "Name": "Top",
         "Tag": "Default",
         "Layer": "Default",
@@ -374,12 +373,12 @@
                 }
             }
         },
-        "ParentID": "681788978",
+        "ParentID": "1035989853",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "838409317",
+        "UUID": "1841397889",
         "Name": "Turret_Base_Top",
         "Tag": "Default",
         "Layer": "Default",
@@ -427,12 +426,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "2048173684",
+        "ParentID": "1601979354",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_5": {
-        "UUID": "142049750",
+        "UUID": "1631155110",
         "Name": "Gun Pivot",
         "Tag": "Default",
         "Layer": "Default",
@@ -461,12 +460,12 @@
                 }
             }
         },
-        "ParentID": "2048173684",
+        "ParentID": "1601979354",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_6": {
-        "UUID": "483450315",
+        "UUID": "1567176303",
         "Name": "Guns(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -495,12 +494,12 @@
                 }
             }
         },
-        "ParentID": "142049750",
+        "ParentID": "1631155110",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_7": {
-        "UUID": "783181184",
+        "UUID": "1179738034",
         "Name": "Gun_Left",
         "Tag": "Default",
         "Layer": "Default",
@@ -548,12 +547,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "483450315",
+        "ParentID": "1567176303",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_8": {
-        "UUID": "1247413934",
+        "UUID": "1882101952",
         "Name": "Gun_Right",
         "Tag": "Default",
         "Layer": "Default",
@@ -601,12 +600,12 @@
                 "has_light": "1"
             }
         },
-        "ParentID": "483450315",
+        "ParentID": "1567176303",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_9": {
-        "UUID": "1966814334",
+        "UUID": "810311193",
         "Name": "LSpawner",
         "Tag": "Default",
         "Layer": "Default",
@@ -658,12 +657,12 @@
                 "Object_to_spawn_name": "VS4 - Laser"
             }
         },
-        "ParentID": "783181184",
+        "ParentID": "1179738034",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_10": {
-        "UUID": "1580963753",
+        "UUID": "280161163",
         "Name": "RSpawner",
         "Tag": "Default",
         "Layer": "Default",
@@ -715,7 +714,7 @@
                 "Object_to_spawn_name": "VS4 - Laser"
             }
         },
-        "ParentID": "1247413934",
+        "ParentID": "1882101952",
         "IsRoot": "0",
         "IsStatic": "0"
     }

@@ -741,7 +741,7 @@ void ModuleScriptImporter::RegisterAPI()
 
 	//TEXT
 	mono_add_internal_call("TheEngine.TheText::SetText", (const void*)SetText);
-	mono_add_internal_call("TheEngine.TheText::GettText", (const void*)GetText);
+	mono_add_internal_call("TheEngine.TheText::GetText", (const void*)GetText);
 
 	//PROGRESSBAR
 	mono_add_internal_call("TheEngine.TheProgressBar::SetPercentageProgress", (const void*)SetPercentageProgress);

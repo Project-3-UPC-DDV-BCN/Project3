@@ -19,7 +19,9 @@ public class EndGameManager
 	TheAudioSource audio_source = null;
 
 	bool sound_over = false;
-	bool sound_pressed = false;	
+	bool sound_pressed = false;
+	
+	string mode_played = "Campaign";
 
 	void Start () 
 	{
@@ -42,6 +44,8 @@ public class EndGameManager
 		string time = TheData.GetString("time");
 		string side = TheData.GetString("faction");
 		int won = TheData.GetInt("won");
+		
+		mode_played = TheData.GetString("mode");
 		
 		if(background_alliance != null && background_empire != null)
 		{	
@@ -81,6 +85,14 @@ public class EndGameManager
 			if(continue_rect.OnClickUp)
 			{
 				sound_pressed = true;
+				if(mode_played == "training")
+				{
+					TheApplication.LoadScene("Alpha1 - TrainingScene");
+				}
+				else
+				{
+					TheApplication.LoadScene("Alpha1 - Level1Scene");
+				}
 			}
 
 			if(continue_rect.OnMouseEnter)
@@ -93,8 +105,8 @@ public class EndGameManager
 		{
 			if(back_to_menu_rect.OnClickUp)
 			{
-				TheApplication.LoadScene("VS3 - MainMenu");
 				sound_pressed = true;
+				TheApplication.LoadScene("Alpha1 - MainMenuScene");
 			}
 
 			if(back_to_menu_rect.OnMouseEnter)

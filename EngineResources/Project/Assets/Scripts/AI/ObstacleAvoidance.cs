@@ -5,8 +5,7 @@ using TheEngine.TheMath;
 public class ObstacleAvoidance {
 
 	public float rayLength = 50f;
-	public float avoidingForce = 40f;
-	public float avoidingMultiplier = 1f;
+	public float avoidingForce = 30f;
 
 	// Debug
 	public bool ShowRays = false;
@@ -17,6 +16,9 @@ public class ObstacleAvoidance {
 	// RayCasts Directions
 	public float XOffset = 15f;
 	public float YOffset = 10f;
+	// Avoidance Multiplier
+	bool hitting = false;
+	float avoidingMultiplier = 0f;
 
 	// Exceptions
 	public TheBoxCollider self_collider = null;
@@ -28,6 +30,8 @@ public class ObstacleAvoidance {
 	
 	void Update () {
 		if(transform == null) return;
+
+		hitting = false;
 
 		// RayCast Setup
 		TheVector3 originLeft = transform.GlobalPosition + new TheVector3(-XOffset, 0, 0);
@@ -68,7 +72,7 @@ public class ObstacleAvoidance {
 			}
 		}
 		// Left
-		if(ArrRayHitLeft.Length > 0) {
+		else if(ArrRayHitLeft.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitLeft) {
 				if(hit.Collider != self_collider) {
 					rayHitLeft = hit;
@@ -77,7 +81,7 @@ public class ObstacleAvoidance {
 			}
 		}	
 		// Right
-		if(ArrRayHitRight.Length > 0) {
+		else if(ArrRayHitRight.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitRight) {
 				if(hit.Collider != self_collider) {
 					rayHitRight = hit;
@@ -86,7 +90,7 @@ public class ObstacleAvoidance {
 			}
 		}
 		// Top
-		if(ArrRayHitTop.Length > 0) {
+		else if(ArrRayHitTop.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitTop) {
 				if(hit.Collider != self_collider) {
 					rayHitTop = hit;
@@ -95,7 +99,7 @@ public class ObstacleAvoidance {
 			}
 		}
 		// Bottom	
-		if(ArrRayHitBottom.Length > 0) {
+		else if(ArrRayHitBottom.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitBottom) {
 				if(hit.Collider != self_collider) {
 					rayHitBottom = hit;
@@ -115,10 +119,10 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitCenter.Normal == TheVector3.Forward || rayHitCenter.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y + 1f;
-			avoidingMultiplier = 1 - (rayHitCenter.Distance / rayLength);
+			hitting = true;
 		}
 		// Left
-		else if(rayHitLeft != null) {
+		if(rayHitLeft != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitLeft.Normal.x, 
 				avoidanceVector.y + rayHitLeft.Normal.y, 
@@ -126,10 +130,10 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitLeft.Normal == TheVector3.Forward || rayHitLeft.Normal == TheVector3.BackWard)
 				avoidanceVector.x = avoidanceVector.x + 1f;
-			avoidingMultiplier = 1 - (rayHitLeft.Distance / rayLength);
+			hitting = true;
 		}
 		// Right
-		else if(rayHitRight != null) {
+		if(rayHitRight != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitRight.Normal.x, 
 				avoidanceVector.y + rayHitRight.Normal.y, 
@@ -137,10 +141,10 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitRight.Normal == TheVector3.Forward || rayHitRight.Normal == TheVector3.BackWard)
 				avoidanceVector.x = avoidanceVector.x - 1f;
-			avoidingMultiplier = 1 - (rayHitRight.Distance / rayLength);
+			hitting = true;
 		}
 		// Top
-		else if(rayHitTop != null) {
+		if(rayHitTop != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitTop.Normal.x, 
 				avoidanceVector.y + rayHitTop.Normal.y, 
@@ -148,10 +152,10 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitTop.Normal == TheVector3.Forward || rayHitTop.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y - 1f;
-			avoidingMultiplier = 1 - (rayHitTop.Distance / rayLength);
+			hitting = true;
 		}
 		// Bottom
-		else if(rayHitBottom != null) {
+		if(rayHitBottom != null) {
 			avoidanceVector = new TheVector3(
 				avoidanceVector.x + rayHitBottom.Normal.x, 
 				avoidanceVector.y + rayHitBottom.Normal.y, 
@@ -159,11 +163,19 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitBottom.Normal == TheVector3.Forward || rayHitBottom.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y + 1f;
-			avoidingMultiplier = 1 - (rayHitBottom.Distance / rayLength);
+			hitting = true;
 		}
-		
+	
+		// Multiplier / RotationSpeed Managing
+		if(hitting == true) {
+			avoidingMultiplier += avoidingForce * TheTime.DeltaTime;
+		}
+		else {
+			avoidingMultiplier = 0f;
+		}		
+
 		// Rotation Managing ---
-		TheVector3 finalRotation = avoidanceVector.Normalized * (avoidingForce * avoidingMultiplier);
+		TheVector3 finalRotation = avoidanceVector.Normalized * avoidingMultiplier;
 		
 		transform.LocalRotation = new TheVector3(
 			transform.LocalRotation.x + finalRotation.y,
