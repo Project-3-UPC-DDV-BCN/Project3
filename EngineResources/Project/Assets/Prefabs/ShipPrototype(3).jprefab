@@ -1,17 +1,17 @@
 {
-    "UUID": "1470790",
-    "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
+    "UUID": "1737230261",
+    "assets_path": "./Project/Assets/Prefabs/ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1466139181",
+        "UUID": "1429002041",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "10",
+            "Components_Count": "11",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -83,14 +83,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "-1782785941291629805568.000000",
-                    "value_Y": "-293887513010200641536.000000",
-                    "value_Z": "-548352062994771869696.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "1164320256001210056704.000000",
-                    "value_Y": "-3302962484711658618880.000000",
-                    "value_Z": "2843051231589886328832.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -345,6 +345,61 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_10": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1869471239",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ObstacleAvoidance.dll",
+                    "assets_path": "",
+                    "script_name": "ObstacleAvoidance",
+                    "UUID": "1915736690",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "5",
+                    "bool_fields_count": "1",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "XOffset",
+                            "field_value": "15.000000"
+                        },
+                        "field_1": {
+                            "field_name": "YOffset",
+                            "field_value": "10.000000"
+                        },
+                        "field_2": {
+                            "field_name": "avoidingForce",
+                            "field_value": "40.000000"
+                        },
+                        "field_3": {
+                            "field_name": "avoidingMultiplier",
+                            "field_value": "1.000000"
+                        },
+                        "field_4": {
+                            "field_name": "rayLength",
+                            "field_value": "100.000000"
+                        }
+                    },
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "ShowRays",
+                            "field_value": "0"
+                        }
+                    },
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -352,7 +407,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2030694844",
+        "UUID": "2076181892",
         "Name": "Billboard(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -410,12 +465,12 @@
                 }
             }
         },
-        "ParentID": "1466139181",
+        "ParentID": "1429002041",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1567317526",
+        "UUID": "882707009",
         "Name": "canvas(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -485,12 +540,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "2030694844",
+        "ParentID": "2076181892",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "274406282",
+        "UUID": "405147390",
         "Name": "marker(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -561,7 +616,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1567317526",
+        "ParentID": "882707009",
         "IsRoot": "0",
         "IsStatic": "0"
     }
