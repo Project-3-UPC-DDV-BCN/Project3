@@ -84,7 +84,7 @@ public:
 	//Blending 
 	void SetSourceBlendingMode(float blend_type);
 	void SetDestinationBlendingMode(float blend_type);
-	float GetCodeFromBlendPos(int combo_pos);
+	void GetCodeFromBlendPos(int combo_pos, int& assign);
 
 	//Lifetime
 	void SetMaxLifetime(const float& new_lifetime);

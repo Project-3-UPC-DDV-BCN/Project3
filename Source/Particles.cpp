@@ -285,52 +285,52 @@ void Particle::UpdateColor()
 
 }
 
-float Particle::GetCodeFromBlendPos(int combo_pos)
+void Particle::GetCodeFromBlendPos(int combo_pos, int& to_assign)
 {
 	switch (combo_pos)
 	{
 	case GlZero:
-		return GL_ZERO;
+		to_assign = GL_ZERO;
 		break;
 
 	case GlOne:
-		return GL_ONE;
+		to_assign = GL_ONE;
 		break;
 
 	case GlSrcColor:
-		return GL_SRC_COLOR;
+		to_assign = GL_SRC_COLOR;
 		break;
 
 	case GlOneMinusSrcColor:
-		return GL_ONE_MINUS_SRC_COLOR;
+		to_assign = GL_ONE_MINUS_SRC_COLOR;
 		break;
 
 	case GlDstColor:
-		return GL_DST_COLOR;
+		to_assign = GL_DST_COLOR;
 		break;
 
 	case GlOneMinusDstColor:
-		return GL_ONE_MINUS_DST_COLOR;
+		to_assign = GL_ONE_MINUS_DST_COLOR;
 		break;
 
 	case GlSrcAlpha:
-		return GL_SRC_ALPHA;
+		to_assign = GL_SRC_ALPHA;
 		break;
 
 	case GlOneMinusSrcAlpha:
-		return GL_ONE_MINUS_SRC_ALPHA;
+		to_assign = GL_ONE_MINUS_SRC_ALPHA;
 		break;
 
 	case GlDstAlpha:
-		return GL_DST_ALPHA;
+		to_assign = GL_DST_ALPHA;
 		break;
 
 	case GlOneMinusDstAlpha:
-		return GL_ONE_MINUS_DST_ALPHA;
+		to_assign = GL_ONE_MINUS_DST_ALPHA;
 		break;
 
 	case GlSrcAlphaSaturate:
-		return GL_SRC_ALPHA_SATURATE;
+		to_assign = GL_SRC_ALPHA_SATURATE;
 		break;
 	}
 }
@@ -552,10 +552,10 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 
 	glEnable(GL_BLEND);
 
-	float src_code, dst_code; 
+	int src_code, dst_code; 
 
-	src_code = GetCodeFromBlendPos(particle_data->src_blending);
-	dst_code = GetCodeFromBlendPos(particle_data->dst_blending);
+	GetCodeFromBlendPos(particle_data->src_blending, src_code);
+	GetCodeFromBlendPos(particle_data->dst_blending, dst_code);
 
 	glBlendFunc(src_code, dst_code);
 
@@ -566,8 +566,6 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 		App->renderer3D->SetUniformFloat(id, "material_alpha", particle_data->color.a);
 
 		float4 color = float4(particle_data->color.r, particle_data->color.g, particle_data->color.b, particle_data->color.a);
-
-		
 
 		App->renderer3D->SetUniformVector4(id, "material_color", color);
 	}

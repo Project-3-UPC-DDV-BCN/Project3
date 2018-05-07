@@ -73,7 +73,7 @@ Particle * ComponentParticleEmmiter::CreateParticle()
 
 	//Blend Mode
 	new_particle->SetSourceBlendingMode(data->src_blending);
-	new_particle->SetSourceBlendingMode(data->dst_blending);
+	new_particle->SetDestinationBlendingMode(data->dst_blending);
 
 	//We generate the always squared surface for the particle 
 	new_particle->components.particle_mesh = App->resources->GetMesh("PrimitiveParticlePlane");
