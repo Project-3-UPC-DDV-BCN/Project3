@@ -106,6 +106,7 @@ public class Level1Manager
 	TheTimer new_spawn_timer = new TheTimer();
 	float time_between_new_spawn = 50.0f;
 
+	TheTimer check_win_lose = new TheTimer();
 
 	void Init()
 	{
@@ -275,6 +276,8 @@ public class Level1Manager
 		NextMissionState();
 
 		new_spawn_timer.Start();
+		
+		check_win_lose.Start();
 	}
 	
 	void Update () 
@@ -300,6 +303,36 @@ public class Level1Manager
 					audio_source.SetState("Level","Calm");
 			}
 		}
+	}
+	
+	void CheckWinLose()
+	{
+		if(check_win_lose.ReadTime() > 1)
+		{
+			if(slave1_script != null)
+			{
+				bool dead = (bool)slave1_script.CallFunctionArgs("IsDead");
+
+				if(dead)
+				{
+					if(slave_audio!=null)
+						slave_audio.Play("Stop_Engine");
+					Lose();
+				}
+			}	
+
+			check_win_lose.Start();
+		}
+	}
+
+	void Lose()
+	{
+		TheData.AddString("score", 0);
+		TheData.AddString("time", 0);
+		TheData.AddString("faction", "rebels");
+		TheData.AddString("mode", "campaign");
+		TheData.AddInt("won", 0);
+		TheApplication.LoadScene("Alpha1 - EndGameScene");
 	}
 
 	void NextMissionState()
@@ -442,7 +475,7 @@ public class Level1Manager
 					object[] args =  {"Win dialog"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
-
+				
 				break;
 			}
 		}
@@ -570,6 +603,25 @@ public class Level1Manager
 					new_spawn_timer.Start();
 				}
 
+				break;
+			}
+			case 7:
+			{
+				if(dialog_manager != null)
+				{
+					bool running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
+		
+					if(!running)
+					{
+						TheData.AddString("score", "0");
+						TheData.AddString("time", "0");
+						TheData.AddString("faction", "rebels");
+						TheData.AddString("mode", "campaign");
+						TheData.AddInt("won", 1);
+						TheApplication.LoadScene("Alpha1 - EndGameScene");
+					}
+				}
+				
 				break;
 			}
 		}
