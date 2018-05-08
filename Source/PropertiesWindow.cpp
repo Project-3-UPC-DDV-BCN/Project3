@@ -2207,14 +2207,6 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
 				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 0, 10.0f);
 			}
-
-			if (ImGui::TreeNode("Blending Mode"))
-			{
-				ImGui::Combo("Source Blending", &current_emmiter->data->src_blending, "GL_ZERO\0GL_ONE\0GL_SRC_COLOR\0GL_ONE_MINUS_SRC_COLOR\0GL_DST_COLOR\0GL_ONE_MINUS_DST_COLOR\0GL_SRC_ALPHA\0GL_ONE_MINUS_SRC_ALPHA\0GL_DST_ALPHA\0GL_ONE_MINUS_DST_ALPHA\0GL_SRC_ALPHA_SATURATE");
-				ImGui::Combo("Destination Blending", &current_emmiter->data->dst_blending, "GL_ZERO\0GL_ONE\0GL_SRC_COLOR\0GL_ONE_MINUS_SRC_COLOR\0GL_DST_COLOR\0GL_ONE_MINUS_DST_COLOR\0GL_SRC_ALPHA\0GL_ONE_MINUS_SRC_ALPHA\0GL_DST_ALPHA\0GL_ONE_MINUS_DST_ALPHA\0GL_SRC_ALPHA_SATURATE");
-
-				ImGui::TreePop();
-			}
 								
 			ImGui::Separator(); 
 
@@ -2463,6 +2455,9 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 					if (ImGui::Button("Apply Alpha Interpolation"))
 					{
 						current_emmiter->data->change_alpha_interpolation = true;
+			
+						if (current_interpolation_type == 2 && current_emmiter->data->init_alpha_interpolation_time != 0) 
+							current_emmiter->data->alpha_interpolation_delayed = true;
 					}
 
 					ImGui::SameLine();

@@ -1,11 +1,11 @@
 {
-    "UUID": "737022698",
+    "UUID": "1499365621",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "282996040",
+        "UUID": "301302618",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -176,11 +176,11 @@
                         },
                         "field_2": {
                             "field_name": "move_speed",
-                            "field_value": "50.000000"
+                            "field_value": "60.000000"
                         },
                         "field_3": {
                             "field_name": "rotation_speed",
-                            "field_value": "30.000000"
+                            "field_value": "20.000000"
                         }
                     },
                     "bool_fields": {},
@@ -290,7 +290,7 @@
                     "assets_path": "",
                     "script_name": "EntityProperties",
                     "UUID": "1408815119",
-                    "int_fields_count": "2",
+                    "int_fields_count": "1",
                     "double_fields_count": "0",
                     "float_fields_count": "1",
                     "bool_fields_count": "4",
@@ -303,10 +303,6 @@
                         "field_0": {
                             "field_name": "base_laser_damage",
                             "field_value": "7"
-                        },
-                        "field_1": {
-                            "field_name": "life",
-                            "field_value": "100"
                         }
                     },
                     "double_fields": {},
@@ -347,7 +343,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "slave_emmiter",
-                            "field_value": "0"
+                            "field_value": "249855895"
                         }
                     },
                     "vec2_fields": {},
@@ -361,7 +357,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1452323262",
+        "UUID": "369303882",
         "Name": "Billboard",
         "Tag": "Default",
         "Layer": "Default",
@@ -399,12 +395,12 @@
                 }
             }
         },
-        "ParentID": "282996040",
+        "ParentID": "301302618",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "77788354",
+        "UUID": "1631346838",
         "Name": "canvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -474,12 +470,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1452323262",
+        "ParentID": "369303882",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1896719747",
+        "UUID": "2030569509",
         "Name": "marker",
         "Tag": "Default",
         "Layer": "Default",
@@ -550,7 +546,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "77788354",
+        "ParentID": "1631346838",
         "IsRoot": "0",
         "IsStatic": "0"
     }
