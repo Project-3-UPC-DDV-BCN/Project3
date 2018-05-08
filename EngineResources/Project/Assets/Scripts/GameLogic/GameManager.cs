@@ -30,7 +30,9 @@ public class GameManager
 	float last_time_scale = 1;
 	
 	public TheGameObject controller_image;
+	public TheGameObject cockpit_image;
 	bool game_paused = false;
+	bool is_controller_image;
 
 	void Init ()
 	{
@@ -76,6 +78,28 @@ public class GameManager
 		{
 			PauseGame(!game_paused);
 		}
+		
+		if(game_paused)
+		{
+			if(is_controller_image)
+			{
+				if(TheInput.GetControllerButton(0, "CONTROLLER_RIGHT_ARROW") == 1 || TheInput.IsKeyDown("RIGHT_ARROW"))
+				{
+					cockpit_image.SetActive(true);
+					controller_image.SetActive(false);
+					is_controller_image = false;
+				}
+			}
+			else
+			{
+				if(TheInput.GetControllerButton(0, "CONTROLLER_LEFT_ARROW") == 1 || TheInput.IsKeyDown("LEFT_ARROW"))
+				{
+					controller_image.SetActive(true);
+					cockpit_image.SetActive(false);
+					is_controller_image = true;
+				}
+			}
+		}
 	}
 	
 	void PauseGame(bool pause)
@@ -91,7 +115,15 @@ public class GameManager
 		}
 		
 		if(controller_image != null)
+		{
 			controller_image.SetActive(pause);
+			is_controller_image = true;
+		}
+		
+		if(cockpit_image != null)
+		{
+			cockpit_image.SetActive(false);
+		}
 
 		game_paused = pause;
 	}

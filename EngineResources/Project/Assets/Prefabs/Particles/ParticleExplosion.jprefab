@@ -1,11 +1,11 @@
 {
-    "UUID": "1856051029",
+    "UUID": "747286698",
     "assets_path": ".\\Project\\Assets\\Prefabs\\Particles\\ParticleExplosion.jprefab",
     "library_path": "./Project/Library/Prefabs/ParticleExplosion.jprefab",
     "prefab_name": "ParticleExplosion",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1742682725",
+        "UUID": "1908369236",
         "Name": "ParticleExplosion",
         "Tag": "Default",
         "Layer": "Default",
@@ -73,7 +73,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "930392666",
+        "UUID": "2056306960",
         "Name": "SmokeParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -106,17 +106,17 @@
                 "Active": "1",
                 "UUID": "951168033",
                 "ParticleEmitter": {
-                    "Rate": "34",
-                    "Template": "SmokeTemplate"
+                    "Rate": "15",
+                    "Template": "SmokeAlpha1"
                 }
             }
         },
-        "ParentID": "1742682725",
+        "ParentID": "1908369236",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "318555125",
+        "UUID": "149534905",
         "Name": "FireParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -149,17 +149,17 @@
                 "Active": "1",
                 "UUID": "1463886601",
                 "ParticleEmitter": {
-                    "Rate": "1",
-                    "Template": "GeneratorSmoke"
+                    "Rate": "15",
+                    "Template": "FireAlpha1"
                 }
             }
         },
-        "ParentID": "1742682725",
+        "ParentID": "1908369236",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1062735056",
+        "UUID": "1916383996",
         "Name": "SparkleParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -193,11 +193,11 @@
                 "UUID": "1970128895",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "SparkleTemplate"
+                    "Template": "SparksAlpha1"
                 }
             }
         },
-        "ParentID": "1742682725",
+        "ParentID": "1908369236",
         "IsRoot": "0",
         "IsStatic": "0"
     }
