@@ -1,11 +1,11 @@
 {
-    "UUID": "747286698",
+    "UUID": "1152043871",
     "assets_path": ".\\Project\\Assets\\Prefabs\\Particles\\ParticleExplosion.jprefab",
     "library_path": "./Project/Library/Prefabs/ParticleExplosion.jprefab",
     "prefab_name": "ParticleExplosion",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "1908369236",
+        "UUID": "79611088",
         "Name": "ParticleExplosion",
         "Tag": "Default",
         "Layer": "Default",
@@ -73,7 +73,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2056306960",
+        "UUID": "2095748388",
         "Name": "SmokeParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -107,16 +107,16 @@
                 "UUID": "951168033",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "SmokeAlpha1"
+                    "Template": "SmokeAlpha1v2"
                 }
             }
         },
-        "ParentID": "1908369236",
+        "ParentID": "79611088",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "149534905",
+        "UUID": "1617092827",
         "Name": "FireParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -150,16 +150,16 @@
                 "UUID": "1463886601",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "FireAlpha1"
+                    "Template": "FireAlpha1v2"
                 }
             }
         },
-        "ParentID": "1908369236",
+        "ParentID": "79611088",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1916383996",
+        "UUID": "1789514592",
         "Name": "SparkleParticle",
         "Tag": "Default",
         "Layer": "Default",
@@ -193,11 +193,11 @@
                 "UUID": "1970128895",
                 "ParticleEmitter": {
                     "Rate": "15",
-                    "Template": "SparksAlpha1"
+                    "Template": "SparkAlpha1v2"
                 }
             }
         },
-        "ParentID": "1908369236",
+        "ParentID": "79611088",
         "IsRoot": "0",
         "IsStatic": "0"
     }
