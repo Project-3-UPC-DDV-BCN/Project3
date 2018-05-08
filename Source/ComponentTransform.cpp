@@ -153,14 +153,17 @@ void ComponentTransform::UpdateGlobalMatrix(bool from_rigidbody)
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 
-		global_pos = parent_transform->GetGlobalPosition() + position;
-		global_quat_rot = parent_transform->GetGlobalQuatRotation() * rotation;
-		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
-		global_scale = parent_transform->GetGlobalScale().Mul(scale);
-
 		transform_matrix = float4x4::FromTRS(position, rotation, scale);
 
 		transform_matrix = parent_transform->transform_matrix * transform_matrix;
+		
+		float3 _pos, _scale;
+		Quat _rot;
+		transform_matrix.Decompose(_pos, _rot, _scale);
+		global_pos = _pos;
+		global_quat_rot = _rot;
+		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
+		global_scale = _scale;
 		
 		for (std::vector<GameObject*>::iterator it = this->GetGameObject()->childs.begin(); it != this->GetGameObject()->childs.end(); it++)
 		{
@@ -214,9 +217,13 @@ void ComponentTransform::UpdateLocals()
 		ComponentTransform* parent_transform = (ComponentTransform*)this->GetGameObject()->GetParent()->GetComponent(Component::CompTransform);
 		transform_matrix = transform_matrix * parent_transform->transform_matrix;
 
-		global_pos = parent_transform->GetGlobalPosition() + position;
-		global_rot = (parent_transform->GetQuatRotation() * rotation).ToEulerXYZ() * RADTODEG;
-		global_scale = parent_transform->GetGlobalScale().Mul(scale);
+		float3 _pos, _scale;
+		Quat _rot;
+		transform_matrix.Decompose(_pos, _rot, _scale);
+		global_pos = _pos;
+		global_quat_rot = _rot;
+		global_rot = global_quat_rot.ToEulerXYZ() * RADTODEG;
+		global_scale = _scale;
 	}
 	else
 	{
