@@ -99,6 +99,11 @@ public class TurretAI {
 	{	
 		float angleRad = TheMath.Atan2(PlayerPosition.y - SelfPosition.y, PlayerPosition.x - SelfPosition.x);
 		float angleDeg = -angleRad * 180 / TheMath.PI;
+		if (angleDeg < MinAngleBlasters)
+			angleDeg = MinAngleBlasters;
+		else if (angleDeg > MaxAngleBlasters)
+			angleDeg = MaxAngleBlasters;
+		
 		TheQuaternion q = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angleDeg));
 		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 		/*TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
@@ -107,8 +112,7 @@ public class TurretAI {
 		TheQuaternion test = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 		
 		TheVector3 euler = test.ToEulerAngles();
-		if (euler.z >= MinAngleBlasters && euler.z <= MaxAngleBlasters)
-			BlasterTransform.QuatRotation = test;*/
+		*/
 	}
 	
 	void Shoot()
