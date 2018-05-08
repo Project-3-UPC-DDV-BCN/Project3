@@ -4,6 +4,7 @@
 #include "ComponentBillboard.h"
 #include "MathGeoLib\MathGeoLib.h"
 #include "Particles.h"
+#include "OpenGL.h"
 #include <map>
 
 class ComponentCamera; 
@@ -82,6 +83,8 @@ public:
 	void SetSpawnVelocity(float v);
 	void SetParticlesVelocity(float v);
 
+	GLenum GetCodeFromBlendMode(BlendingMode blend_mode);
+
 public:
 
 	ParticleData* data; 
@@ -89,6 +92,9 @@ public:
 		
 	//Emmit area AABB
 	AABB emmit_area; 
+
+	BlendingMode src_blending_mode; 
+	BlendingMode dst_blending_mode;
 
 	float show_width; 
 	float show_height; 

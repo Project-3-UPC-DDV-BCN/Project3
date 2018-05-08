@@ -8,4 +8,19 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+enum BlendingMode {
+
+	GlZero = 0,
+	GlOne,
+	GlSrcColor,
+	GlOneMinusSrcColor,
+	GlDstColor,
+	GlOneMinusDstColor,
+	GlSrcAlpha,
+	GlOneMinusSrcAlpha,
+	GlDstAlpha,
+	GlOneMinusDstAlpha,
+	GlSrcAlphaSaturate
+};
+
 #endif // __OPENGL_H__

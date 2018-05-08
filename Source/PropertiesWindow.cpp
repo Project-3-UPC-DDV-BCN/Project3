@@ -2207,6 +2207,23 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
 				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 0, 10.0f);
 			}
+
+			if (ImGui::TreeNode("Blending Mode"))
+			{
+				int blend_src = (int)current_emmiter->src_blending_mode; 
+				if (ImGui::Combo("SRC Blending", &blend_src, "GL_ZERO\0GL_ONE\0GL_SRC_COLOR\0GL_ONE_MINUS_SRC_COLOR\0GL_DST_COLOR\0GL_ONE_MINUS_DST_COLOR\0GL_SRC_ALPHA\0GL_ONE_MINUS_SRC_ALPHA\0GL_DST_ALPHA\0GL_ONE_MINUS_DST_ALPHA\0GL_SRC_ALPHA_SATURATE"))
+				{
+					current_emmiter->src_blending_mode = (BlendingMode)blend_src; 
+				}
+
+				int blend_dst = (int)current_emmiter->dst_blending_mode;
+				if (ImGui::Combo("DST Blending", &blend_dst, "GL_ZERO\0GL_ONE\0GL_SRC_COLOR\0GL_ONE_MINUS_SRC_COLOR\0GL_DST_COLOR\0GL_ONE_MINUS_DST_COLOR\0GL_SRC_ALPHA\0GL_ONE_MINUS_SRC_ALPHA\0GL_DST_ALPHA\0GL_ONE_MINUS_DST_ALPHA\0GL_SRC_ALPHA_SATURATE"))
+				{
+					current_emmiter->dst_blending_mode = (BlendingMode)blend_dst;
+				}
+
+				ImGui::TreePop();
+			}
 								
 			ImGui::Separator(); 
 
