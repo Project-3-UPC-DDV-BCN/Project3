@@ -341,12 +341,26 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	data.AddUInt("UUID", GetUID());
 	data.CreateSection("ParticleEmitter");
 
-	int rate = GetEmmisionRate(); 
+	int rate; 
+	string name; 
+
+	if (this->data != nullptr)
+	{
+		name = this->data->GetName();
+		rate = GetEmmisionRate();
+	}		
+	else
+	{
+		rate = 0;
+		name = "Default"; 
+	}
+		
+
 	data.AddInt("Rate", rate);
+	data.AddString("Template", name);
 
-	string name = this->data->GetName(); 
-
-	data.AddString("Template", name); 
+	data.AddInt("SRC_Blending", (int)src_blending_mode); 
+	data.AddInt("DST_Blending", (int)dst_blending_mode);
 
 	data.CloseSection();
 
@@ -363,6 +377,9 @@ void ComponentParticleEmmiter::Load(Data & data)
 	//Load Template 
 	SetFrequencyFromRate(data.GetInt("Rate"));
 	string template_name = data.GetString("Template");
+
+	src_blending_mode = (BlendingMode)data.GetInt("SRC_Blending");
+	dst_blending_mode = (BlendingMode)data.GetInt("DST_Blending");
 
 	if (first_loaded == false)
 	{
