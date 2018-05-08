@@ -249,8 +249,9 @@ public class Targeting
 					generator_img.SetActive(true);
 				}
 				
+				int max_hp = (int)target_script.CallFunctionArgs("GetMaxLife");
 				int hp = (int)target_script.CallFunctionArgs("GetLife");
-				bar.PercentageProgress = (float)hp;
+				bar.PercentageProgress = (float)hp/max_hp;
 			}
 			else
 			{
