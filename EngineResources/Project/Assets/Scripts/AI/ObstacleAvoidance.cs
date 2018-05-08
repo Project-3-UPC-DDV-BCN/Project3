@@ -5,7 +5,8 @@ using TheEngine.TheMath;
 public class ObstacleAvoidance {
 
 	public float rayLength = 50f;
-	public float avoidingForce = 30f;
+	public float avoidingForce = 40f;
+	public float avoidingMultiplier = 1f;
 
 	// Debug
 	public bool ShowRays = false;
@@ -16,9 +17,6 @@ public class ObstacleAvoidance {
 	// RayCasts Directions
 	public float XOffset = 15f;
 	public float YOffset = 10f;
-	// Avoidance Multiplier
-	bool hitting = false;
-	float avoidingMultiplier = 0f;
 
 	// Exceptions
 	public TheBoxCollider self_collider = null;
@@ -30,8 +28,6 @@ public class ObstacleAvoidance {
 	
 	void Update () {
 		if(transform == null) return;
-
-		hitting = false;
 
 		// RayCast Setup
 		TheVector3 originLeft = transform.GlobalPosition + new TheVector3(-XOffset, 0, 0);
@@ -119,7 +115,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitCenter.Normal == TheVector3.Forward || rayHitCenter.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y + 1f;
-			hitting = true;
+			avoidingMultiplier = 1 - (rayHitCenter.Distance / rayLength);
 		}
 		// Left
 		if(rayHitLeft != null) {
@@ -130,7 +126,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitLeft.Normal == TheVector3.Forward || rayHitLeft.Normal == TheVector3.BackWard)
 				avoidanceVector.x = avoidanceVector.x + 1f;
-			hitting = true;
+			avoidingMultiplier = 1 - (rayHitLeft.Distance / rayLength);
 		}
 		// Right
 		if(rayHitRight != null) {
@@ -141,7 +137,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitRight.Normal == TheVector3.Forward || rayHitRight.Normal == TheVector3.BackWard)
 				avoidanceVector.x = avoidanceVector.x - 1f;
-			hitting = true;
+			avoidingMultiplier = 1 - (rayHitRight.Distance / rayLength);
 		}
 		// Top
 		if(rayHitTop != null) {
@@ -152,7 +148,7 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitTop.Normal == TheVector3.Forward || rayHitTop.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y - 1f;
-			hitting = true;
+			avoidingMultiplier = 1 - (rayHitTop.Distance / rayLength);
 		}
 		// Bottom
 		if(rayHitBottom != null) {
@@ -163,19 +159,11 @@ public class ObstacleAvoidance {
 			);
 			if(rayHitBottom.Normal == TheVector3.Forward || rayHitBottom.Normal == TheVector3.BackWard)
 				avoidanceVector.y = avoidanceVector.y + 1f;
-			hitting = true;
+			avoidingMultiplier = 1 - (rayHitBottom.Distance / rayLength);
 		}
-	
-		// Multiplier / RotationSpeed Managing
-		if(hitting == true) {
-			avoidingMultiplier += avoidingForce * TheTime.DeltaTime;
-		}
-		else {
-			avoidingMultiplier = 0f;
-		}		
-
+		
 		// Rotation Managing ---
-		TheVector3 finalRotation = avoidanceVector.Normalized * avoidingMultiplier;
+		TheVector3 finalRotation = avoidanceVector.Normalized * avoidingForce;
 		
 		transform.LocalRotation = new TheVector3(
 			transform.LocalRotation.x + finalRotation.y,

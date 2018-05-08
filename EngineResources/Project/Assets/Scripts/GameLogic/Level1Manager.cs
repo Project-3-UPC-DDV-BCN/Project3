@@ -275,8 +275,6 @@ public class Level1Manager
 		// Start mission
 		NextMissionState();
 
-		audio_source.SetState("Level","Calm");
-
 		new_spawn_timer.Start();
 		
 		check_win_lose.Start();
@@ -285,8 +283,7 @@ public class Level1Manager
 	void Update () 
 	{
 		UpdateMissionState(curr_mission_state);
-		
-		CheckWinLose();
+		UpdateAudio();
 	}
 
 	void UpdateAudio()
@@ -330,8 +327,8 @@ public class Level1Manager
 
 	void Lose()
 	{
-		TheData.AddString("score", "0");
-		TheData.AddString("time", "0");
+		TheData.AddString("score", 0);
+		TheData.AddString("time", 0);
 		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "campaign");
 		TheData.AddInt("won", 0);
@@ -413,8 +410,6 @@ public class Level1Manager
 			}
 			case 4:
 			{
-				audio_source.SetState("Level","Combat");
-
 				SetCurrMissionObj("Survive the ambush");
 			
 				if(slave1_shooting_script != null)
@@ -433,8 +428,6 @@ public class Level1Manager
 			}
 			case 5:
 			{
-				audio_source.SetState("Level","Calm");
-
 				SetCurrMissionObj("Approach the shield gate");
 
 				if(dialog_manager != null)
@@ -461,8 +454,6 @@ public class Level1Manager
 			}
 			case 6:
 			{
-				audio_source.SetState("Level","Combat");
-
 				SetCurrMissionObj("Destroy all generators");
 
 				SpawnNextWave(5);
@@ -479,8 +470,6 @@ public class Level1Manager
 			}
 			case 7:
 			{
-				audio_source.SetState("Level","Calm");
-
 				if(dialog_manager != null)
 				{
 					object[] args =  {"Win dialog"};
