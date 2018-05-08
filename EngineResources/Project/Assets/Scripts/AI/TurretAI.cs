@@ -97,6 +97,10 @@ public class TurretAI {
 	
 	void RotateBlasterTowardsPlayer()
 	{	
+		float angleRad = TheMath.Atan2(PlayerPosition.y - SelfPosition.y, PlayerPosition.x - SelfPosition.x);
+		float angleDeg = -angleRad * 180 / TheMath.PI;
+		TheQuaternion q = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angleDeg));
+		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 		/*TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
 		TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.ForwardDirection);
 		q.x = 0; q.y = 0;
@@ -132,12 +136,12 @@ public class TurretAI {
 					{
 						if (shoot)
 						{
-							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, CannonTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);
 						}
 						else
 						{
-							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, SelfTransform.QuatRotation};
+							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, CannonTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);						
 						}
 						shoot = !shoot;
