@@ -218,6 +218,13 @@ public class PlayerMovement
 	private float hit_mark_timer = 0.0f;
 	private bool hit_on = false;
 	
+	public float hit_mark_time_shield = 1.0f;
+	public TheGameObject hit_mark_top_shield;
+	public TheGameObject hit_mark_bot_shield;
+	public TheGameObject hit_mark_left_shield;
+	public TheGameObject hit_mark_right_shield;
+	private float hit_mark_timer_shield = 0.0f;
+	private bool hit_on_shield = false;
 	
 	TheGameObject self = null;
 
@@ -813,6 +820,32 @@ public class PlayerMovement
 				
 				hit_on = false;
 			}
+			hit_mark_timer -= delta_time;
+		}
+		
+		
+
+		if(hit_mark_bot_shield != null && hit_mark_left_shield != null && hit_mark_right_shield != null && hit_mark_top_shield != null)
+		{
+			if(hit_mark_time_shield > 0.0f && !hit_on_shield)
+			{
+				hit_mark_top_shield.SetActive(true);
+				hit_mark_bot_shield.SetActive(true);
+				hit_mark_left_shield.SetActive(true);
+				hit_mark_right_shield.SetActive(true);
+				
+				hit_on_shield = true;
+			}
+			else if(hit_on)
+			{
+				hit_mark_top_shield.SetActive(false);
+				hit_mark_bot_shield.SetActive(false);
+				hit_mark_left_shield.SetActive(false);
+				hit_mark_right_shield.SetActive(false);
+				
+				hit_on_shield = false;
+			}
+			hit_mark_timer_shield -= delta_time;
 		}
 		
 	}
@@ -933,6 +966,8 @@ public class PlayerMovement
 			
 			shaking = true;
 			shake_timer = shake_duration_shield;
+			
+			hit_mark_timer_shield = hit_mark_time_shield;
 		}
 		else
 			DamageSlaveOne(dmg);
@@ -950,6 +985,8 @@ public class PlayerMovement
 			
 			shaking = true;
 			shake_timer = shake_duration_shield;
+			
+			hit_mark_timer_shield = hit_mark_time_shield;
 		}
 		else
 			DamageSlaveOne(dmg);
