@@ -174,6 +174,14 @@ public class PlayerMovement
 	public TheGameObject body_part;
     public TheGameObject wings_part;
     public TheGameObject engine_part;
+	
+	public TheGameObject body_part_hp;
+	public TheGameObject wing_part_hp;
+	public TheGameObject engine_part_hp;
+	
+	public TheText body_part_hp_text;
+	public TheText wing_part_hp_text;
+	public TheText engine_part_hp_text;
 	/// Element Component
 	private TheRectTransform inner_ring_trans;
     private TheRectTransform center_ring_trans;
@@ -346,8 +354,17 @@ public class PlayerMovement
 		
 		//Get ShipProperties Script
 		ship_properties = self.GetScript("EntityProperties");
+		
+		//Get Puzzle parts hp values
+		if(body_part_hp != null)
+			body_part_hp_text = body_part_hp.GetComponent<TheText>();
+		
+		if(wing_part_hp != null)
+			wing_part_hp_text = wing_part_hp.GetComponent<TheText>();
+		
+		if(engine_part_hp != null)
+			engine_part_hp_text = engine_part_hp.GetComponent<TheText>();
 	}
-	
 	void Update () 
 	{
 		//Get delta_time for this Update from engine
@@ -836,7 +853,7 @@ public class PlayerMovement
 				
 				hit_on_shield = true;
 			}
-			else if(hit_on)
+			else if(hit_on_shield)
 			{
 				hit_mark_top_shield.SetActive(false);
 				hit_mark_bot_shield.SetActive(false);
@@ -848,6 +865,16 @@ public class PlayerMovement
 			hit_mark_timer_shield -= delta_time;
 		}
 		
+		if(engine_part_hp_text != null && wing_part_hp_text != null && body_part_hp_text != null)
+		{
+			int tmp_body_int = body_hp * 3;
+			int tmp_wing_int = wing_hp * 3;
+			int tmp_engine_int = engine_hp * 3;
+			
+			body_part_hp_text.Text = tmp_body_int.ToString();
+			wing_part_hp_text.Text = tmp_wing_int.ToString();
+			engine_part_hp_text.Text = tmp_engine_int.ToString();
+		}
 	}
 	
 	void SetParticlesValues()
