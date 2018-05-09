@@ -2,7 +2,7 @@
 
 namespace TheEngine
 {
-    public class TheCamera
+    public class TheCamera : TheComponent
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int SizeX();
