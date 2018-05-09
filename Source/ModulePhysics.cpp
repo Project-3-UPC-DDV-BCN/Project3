@@ -979,7 +979,8 @@ std::vector<RayCastInfo> ModulePhysics::RayCastAll(physx::PxVec3 origin, physx::
 
 			info.distance = hit.touches[i].distance;
 			info.colldier = (ComponentCollider*)hit.touches[i].shape->userData;
-			CONSOLE_DEBUG("RaycastAll Hitted collider %s!", info.colldier->GetGameObject()->GetName());
+			//if(info.colldier && info.colldier->GetGameObject())
+				//CONSOLE_DEBUG("RaycastAll Hitted collider %s!", info.colldier->GetGameObject()->GetName());
 
 
 			info_list.push_back(info);

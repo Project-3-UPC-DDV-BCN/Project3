@@ -508,8 +508,9 @@ public class Level1Manager
 					object[] args =  {"EnemiesInterception"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
-
+				
 				timer_between_spawn.Start();
+			
 
 				break;
 			}
@@ -607,12 +608,13 @@ public class Level1Manager
 			}
 			case 7:
 			{
-				HideCurrMissionObj();
-				HideEnemiesToKill();
 				break;
 			}
 			case 8:
 			{
+				HideCurrMissionObj();
+				HideEnemiesToKill();
+
 				break;
 			}
 			
@@ -669,13 +671,23 @@ public class Level1Manager
 
 				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
 				{
+					TheConsole.Log("Spawning new wave");
+
 					SpawnNextWave(5);
 					new_spawn_timer.Start();
 				}
 
-				if(GetEntitiesToDestroyCount() == 3)
+				if(GetEntitiesToDestroyCount() <= 3)
 				{
-					NextMissionState();
+					bool running = false;
+
+					if(dialog_manager != null)
+					{
+						running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
+					}
+
+					if(!running)
+						NextMissionState();
 				}
 
 				break;
@@ -688,6 +700,8 @@ public class Level1Manager
 
 				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
 				{
+					TheConsole.Log("Spawning new wave");
+
 					SpawnNextWave(5);
 					new_spawn_timer.Start();
 				}
@@ -738,10 +752,28 @@ public class Level1Manager
 		}
 	}
 
+	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
+	{
+		if(trigger_name == "IntroTrigger")
+		{
+			if(go_triggerer == slave1 && curr_mission_state == 3)
+			{
+				NextMissionState();
+			}
+		}
+
+		else if(trigger_name == "MainMissionTrigger")
+		{
+			if(go_triggerer == slave1 && curr_mission_state == 5)
+			{
+				NextMissionState();
+			}
+		}
+	}
+
 	void OnShipDestroyedCallback(TheGameObject ship, TheGameObject killer)
 	{
-		if(curr_mission_state == 4)
-			RemoveFromEntitiesToDestroy(ship);
+		RemoveFromEntitiesToDestroy(ship);
 	}
 
 	void OnTurretDestroyedCallback(TheGameObject ship, TheGameObject killer)
@@ -751,8 +783,7 @@ public class Level1Manager
 
 	void OnGeneratorDestroyedCallback(TheGameObject generator, TheGameObject killer)
 	{
-		if(curr_mission_state == 6)
-			RemoveFromEntitiesToDestroy(generator);
+		RemoveFromEntitiesToDestroy(generator);
 	}
 
 	void SetCurrMissionObj(string set)
@@ -925,25 +956,6 @@ public class Level1Manager
 	void SpawnNextWave(int ships)
 	{
 		ships_to_spawn += ships;
-	}
-
-	void CallTrigger(string trigger_name, TheGameObject go_triggerer)
-	{
-		if(trigger_name == "IntroTrigger")
-		{
-			if(go_triggerer == slave1)
-			{
-				NextMissionState();
-			}
-		}
-
-		else if(trigger_name == "MainMissionTrigger")
-		{
-			if(go_triggerer == slave1)
-			{
-				NextMissionState();
-			}
-		}
 	}
 
 	void AddToEntitiesToDestroy(TheGameObject add)
