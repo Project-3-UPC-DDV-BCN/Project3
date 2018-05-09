@@ -125,7 +125,10 @@ public class TrainingModeManager
 				if(dead)
 				{
 					if(slave_audio!=null)
+					{
 						slave_audio.Play("Stop_Engine");
+						audio_source.Stop("Play_Music");
+					}
 					Lose();
 				}
 			}	
