@@ -86,6 +86,15 @@ bool ComponentAudioSource::Update()
 	return ret;
 }
 
+bool ComponentAudioSource::CleanUp()
+{
+	bool ret = true;
+
+	App->audio->DeleteSoundObject(this->obj);
+
+	return ret;
+}
+
 void ComponentAudioSource::PlayMusic(double audio_id)
 {
 	AK::SoundEngine::PostEvent(audio_id, obj->GetID(), AK_EnableGetMusicPlayPosition);
