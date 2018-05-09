@@ -844,7 +844,7 @@ public class PlayerMovement
 
 		if(hit_mark_bot_shield != null && hit_mark_left_shield != null && hit_mark_right_shield != null && hit_mark_top_shield != null)
 		{
-			if(hit_mark_time_shield > 0.0f && !hit_on_shield)
+			if(hit_mark_timer_shield > 0.0f && !hit_on_shield)
 			{
 				hit_mark_top_shield.SetActive(true);
 				hit_mark_bot_shield.SetActive(true);
@@ -867,13 +867,13 @@ public class PlayerMovement
 		
 		if(engine_part_hp_text != null && wing_part_hp_text != null && body_part_hp_text != null)
 		{
-			int tmp_body_int = (int)(body_hp * 3);
-			int tmp_wing_int = (int)(wings_hp * 3);
-			int tmp_engine_int = (int)(engine_hp * 3);
+			int tmp_body_int = (int)(body_hp * 2 - 3);
+			int tmp_wing_int = (int)(wings_hp * 2 - 3);
+			int tmp_engine_int = (int)(engine_hp * 2 - 3);
 			
-			body_part_hp_text.Text = tmp_body_int.ToString();
-			wing_part_hp_text.Text = tmp_wing_int.ToString();
-			engine_part_hp_text.Text = tmp_engine_int.ToString();
+			body_part_hp_text.Text = tmp_body_int.ToString() + "%";
+			wing_part_hp_text.Text = tmp_wing_int.ToString() + "%";
+			engine_part_hp_text.Text = tmp_engine_int.ToString() + "%";
 		}
 	}
 	
