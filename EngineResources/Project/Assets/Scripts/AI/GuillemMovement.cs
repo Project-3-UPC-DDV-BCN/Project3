@@ -24,8 +24,6 @@ public class GuillemMovement
     private float modified_move_speed = 0;
     private float modified_rotation_speed = 0;
 
-    public float target_sphere_radius = 0f;
-
     TheTransform self_transform = null;
 
 	TheGameObject target_go = null;
@@ -35,6 +33,12 @@ public class GuillemMovement
 
     TheTimer timer = new TheTimer();
     float random_time = 0;
+
+	public float target_sphere_radius = 0f;
+
+	float missingTimer = 0f;
+	public float missSwitchTime = 3f;
+	bool missSwitching = false;
 
 	//Audio
 	TheAudioSource audio_source = null;
@@ -100,6 +104,12 @@ public class GuillemMovement
     {
 		if(audio_source != null)
 			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);;
+
+		missingTimer += TheTime.DeltaTime;
+		if(missingTimer > missSwitchTime) {
+			missSwitching = !missSwitching;
+			missingTimer = 0;
+		}
 
 		switch(movement_mode)
 		{	
@@ -318,7 +328,13 @@ public class GuillemMovement
     void OrientateToTarget()
     {
 		TheVector3 self_pos = self_transform.GlobalPosition;
-        TheVector3 target_pos = target_transform.GlobalPosition + GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
+		TheVector3 target_pos = new TheVector3();
+		if(missSwitching == true) {
+			 target_pos = GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
+		}
+		else {
+			target_pos = target_transform.GlobalPosition;
+		}
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
