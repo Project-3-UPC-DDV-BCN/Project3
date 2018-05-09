@@ -15,6 +15,7 @@ public :
 	~ComponentAudioSource();
 
 	bool Update();
+	bool CleanUp();
 	void PlayMusic(double audio_id);
 	void PlayMusic(const char* name);
 	void PlayEvent(uint id);
