@@ -70,12 +70,12 @@ public class Shield
 		
 		if(front_shield && slave_script != null)
 		{
-			TheConsole.Log("colliding");
+			//TheConsole.Log("colliding");
 			TheGameObject go = coll.Collider.GetGameObject();
 			
 			if(go.GetComponent<TheTransform>() != TheGameObject.Self.GetComponent<TheTransform>())	
 			{
-				slave_script.CallFunctionArgs("Collided");
+				//slave_script.CallFunctionArgs("Collided");
 				TheConsole.Log("colliding effective");
 			}
 

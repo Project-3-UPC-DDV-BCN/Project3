@@ -420,8 +420,8 @@ public class PlayerMovement
 
 	void Movement()
 	{
-		if(!collided)
-		{
+		/*if(!collided)
+		{*/
 			int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
 			int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
 			int rjoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
@@ -712,7 +712,7 @@ public class PlayerMovement
 			TheVector3 new_vel_pos = trans.LocalPosition;
 			new_vel_pos += trans.ForwardDirection*curr_vel*delta_time;
 			trans.LocalPosition = new_vel_pos;
-		}
+		/*}
 		else
 		{
 			TheVector3 new_vel_pos = trans.LocalPosition;
@@ -722,7 +722,7 @@ public class PlayerMovement
 			collision_timer -= delta_time;
 			if(collision_timer<=0.0f)
 				collided = false;
-		}
+		}*/
 		
 		if(camera_go != null)
 		{
