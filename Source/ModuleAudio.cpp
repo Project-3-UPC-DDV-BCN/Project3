@@ -127,23 +127,6 @@ Wwise::SoundObject * ModuleAudio::CreateSoundObject(const char * name, math::flo
 	return ret;
 }
 
-void ModuleAudio::DeleteSoundObject(Wwise::SoundObject * obj)
-{
-	for (std::list<Wwise::SoundObject*>::iterator it = sound_obj.begin(); it != sound_obj.end();)
-	{
-		if (*it == obj)
-		{
-			RELEASE(*it);
-			it = sound_obj.erase(it);
-		}
-		else
-		{
-			it++;
-		}
-	}
-
-}
-
 Wwise::SoundObject * ModuleAudio::CreateListener(const char * name, math::float3 position)
 {
 	Wwise::SoundObject* ret;

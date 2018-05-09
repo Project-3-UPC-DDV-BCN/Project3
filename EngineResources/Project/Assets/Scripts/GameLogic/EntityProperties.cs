@@ -299,7 +299,7 @@ public class EntityProperties
 			{
 				if(audio_source != null){
 					audio_source.Play("Play_Enemy_Explosions");
-					
+					audio_source.Play("Stop_Enemy_Engine");
                 }
 
 				object[] args = {self, killer};

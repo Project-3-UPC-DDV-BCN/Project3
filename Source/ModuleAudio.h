@@ -39,7 +39,6 @@ public:
 
 	// Game Objects
 	Wwise::SoundObject* CreateSoundObject(const char* name, math::float3 position);
-	void DeleteSoundObject(Wwise::SoundObject* obj);
 	Wwise::SoundObject* CreateListener(const char* name, math::float3 position);
 	Wwise::SoundObject * GetSoundObject(std::string obj_name);
 
