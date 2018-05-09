@@ -365,4 +365,9 @@ public class EntityProperties
 			}
 		}
 	}
+
+	void SpawnTieExplosion()
+	{
+
+	}
 }
