@@ -867,9 +867,9 @@ public class PlayerMovement
 		
 		if(engine_part_hp_text != null && wing_part_hp_text != null && body_part_hp_text != null)
 		{
-			int tmp_body_int = body_hp * 3;
-			int tmp_wing_int = wing_hp * 3;
-			int tmp_engine_int = engine_hp * 3;
+			int tmp_body_int = (int)(body_hp * 3);
+			int tmp_wing_int = (int)(wings_hp * 3);
+			int tmp_engine_int = (int)(engine_hp * 3);
 			
 			body_part_hp_text.Text = tmp_body_int.ToString();
 			wing_part_hp_text.Text = tmp_wing_int.ToString();
