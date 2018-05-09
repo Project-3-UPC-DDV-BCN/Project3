@@ -950,6 +950,7 @@ RayCastInfo ModulePhysics::RayCast(physx::PxVec3 origin, physx::PxVec3 direction
 
 		info.distance = hit.block.distance;
 		info.colldier = (ComponentCollider*)hit.block.shape->userData;
+		CONSOLE_DEBUG("Raycast Hitted collider %s!", info.colldier->GetGameObject()->GetName());
 	}
 
 	return info;
@@ -965,6 +966,7 @@ std::vector<RayCastInfo> ModulePhysics::RayCastAll(physx::PxVec3 origin, physx::
 	
 	if (main_scene->raycast(origin, direction, distance, hit, physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_MULTIPLE))
 	{
+		CONSOLE_DEBUG("RaycastAll Hitted %d colliders", (int)hit.nbTouches);
 		for (int i = 0; i < hit.nbTouches; i++)
 		{
 			RayCastInfo info;
@@ -977,6 +979,8 @@ std::vector<RayCastInfo> ModulePhysics::RayCastAll(physx::PxVec3 origin, physx::
 
 			info.distance = hit.touches[i].distance;
 			info.colldier = (ComponentCollider*)hit.touches[i].shape->userData;
+			CONSOLE_DEBUG("RaycastAll Hitted collider %s!", info.colldier->GetGameObject()->GetName());
+
 
 			info_list.push_back(info);
 		}
