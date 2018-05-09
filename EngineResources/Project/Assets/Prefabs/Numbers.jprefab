@@ -1,0 +1,275 @@
+{
+    "UUID": "351513147",
+    "assets_path": "./Project/Assets/Prefabs/Numbers.jprefab",
+    "library_path": "./Project/Library/Prefabs/Numbers.jprefab",
+    "prefab_name": "Numbers",
+    "GameObjects_Count": "4",
+    "GameObject_0": {
+        "UUID": "2120649722",
+        "Name": "Numbers",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1590370661",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    },
+    "GameObject_1": {
+        "UUID": "106080465",
+        "Name": "wings_text",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1712472905",
+                "pos": {
+                    "value_X": "-1.040000",
+                    "value_Y": "1.680000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.090000",
+                    "value_Y": "0.064615"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "1.392857",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "2086615781",
+                "position": {
+                    "value_X": "-1.383200",
+                    "value_Y": "2.234400",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.948324",
+                    "value_Z": "-0.317305",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "27",
+                "Active": "1",
+                "UUID": "79004859",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "100",
+                "font_size": "24",
+                "grow_dir": "2",
+                "font": "arial"
+            }
+        },
+        "ParentID": "2120649722",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "231791732",
+        "Name": "body_text",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1606341405",
+                "pos": {
+                    "value_X": "-1.040000",
+                    "value_Y": "1.750000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.090000",
+                    "value_Y": "0.064615"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "1.392857",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1624872431",
+                "position": {
+                    "value_X": "-1.383200",
+                    "value_Y": "2.327500",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.948324",
+                    "value_Z": "-0.317305",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "27",
+                "Active": "1",
+                "UUID": "589072686",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "100",
+                "font_size": "24",
+                "grow_dir": "2",
+                "font": "arial"
+            }
+        },
+        "ParentID": "2120649722",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "1380050014",
+        "Name": "bottom_text",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "369471299",
+                "pos": {
+                    "value_X": "-1.040000",
+                    "value_Y": "1.610000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "0.083571",
+                    "value_Y": "0.060000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "1",
+                "fixed_ratio": "1.392857",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1328126755",
+                "position": {
+                    "value_X": "-1.383200",
+                    "value_Y": "2.141300",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "-0.948324",
+                    "value_Z": "-0.317305",
+                    "value_W": "-0.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "27",
+                "Active": "1",
+                "UUID": "402183913",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "bold": "0",
+                "italic": "0",
+                "underline": "0",
+                "strikethrough": "0",
+                "text": "100",
+                "font_size": "24",
+                "grow_dir": "2",
+                "font": "arial"
+            }
+        },
+        "ParentID": "2120649722",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    }
+}
