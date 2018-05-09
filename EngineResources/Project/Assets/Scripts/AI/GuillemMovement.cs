@@ -34,6 +34,12 @@ public class GuillemMovement
     TheTimer timer = new TheTimer();
     float random_time = 0;
 
+	public float target_sphere_radius = 0f;
+
+	float missingTimer = 0f;
+	public float missSwitchTime = 3f;
+	bool missSwitching = false;
+
 	//Audio
 	TheAudioSource audio_source = null;
 
@@ -99,6 +105,12 @@ public class GuillemMovement
 		if(audio_source != null)
 			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);;
 
+		missingTimer += TheTime.DeltaTime;
+		if(missingTimer > missSwitchTime) {
+			missSwitching = !missSwitching;
+			missingTimer = 0;
+		}
+
 		switch(movement_mode)
 		{	
 			case 0:
@@ -141,7 +153,26 @@ public class GuillemMovement
 		path_loop = set;
 	}
 
-	void UpdateAutomaticTargetMode()
+    TheVector3 GetPointInsideSphere(TheVector3 origin, float radius)
+    {
+        /* Thats how a random point inside a sphere is picked mathematically
+		x = r * cos(theta) * cos(phi)
+		y = r * sin(phi)
+		z = r * sin(theta) * cos(phi)*/
+
+        TheVector3 pos = new TheVector3(origin.x, origin.y, origin.z);
+
+        float theta = TheRandom.RandomRange(0.0f, TheMath.PI * 2);
+        float phi = TheRandom.RandomRange(0.0f, TheMath.PI * 2);
+
+        pos.x += radius * TheMath.Cos(theta) * TheMath.Cos(phi);
+        pos.y += radius * TheMath.Sin(phi);
+        pos.z += radius * TheMath.Sin(theta) * TheMath.Cos(phi);
+
+        return pos;
+    }
+
+    void UpdateAutomaticTargetMode()
 	{
 		// Change target after x seconds
         if (timer.ReadTime() > random_time && !forced)
@@ -297,7 +328,13 @@ public class GuillemMovement
     void OrientateToTarget()
     {
 		TheVector3 self_pos = self_transform.GlobalPosition;
-        TheVector3 target_pos = target_transform.GlobalPosition;
+		TheVector3 target_pos = new TheVector3();
+		if(missSwitching == true) {
+			 target_pos = GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
+		}
+		else {
+			target_pos = target_transform.GlobalPosition;
+		}
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
