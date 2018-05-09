@@ -12,5 +12,10 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern TheVector3 WorldPosToCameraPos(TheVector3 world_pos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheVector3 IsObjectInside(TheVector3 world_pos);
+
+
     }
 }

@@ -19,6 +19,7 @@ public:
 
 	math::Frustum GetFrustum() const;
 	bool ContainsGameObjectAABB(AABB& gameobject_bounding_box);
+	bool IsPointInside(float3 world_position);
 	void UpdatePosition();
 	float* GetProjectionMatrix() const;
 	float* GetViewMatrix();

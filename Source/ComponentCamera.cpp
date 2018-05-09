@@ -87,6 +87,11 @@ bool ComponentCamera::ContainsGameObjectAABB(AABB& gameobject_bounding_box)
 	return true;
 }
 
+bool ComponentCamera::IsPointInside(float3 world_position)
+{
+    return GetFrustum().Contains(world_position) == true;
+}
+
 void ComponentCamera::UpdatePosition()
 {
 	BROFILER_CATEGORY("Component - Camera - Update", Profiler::Color::Beige);
