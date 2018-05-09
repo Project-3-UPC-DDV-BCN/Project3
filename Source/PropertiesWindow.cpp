@@ -677,14 +677,12 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						{
 							rect_transform->SetControllerAdmision(controller_admision);
 							c_canvas->controler_elements.insert(pair<int, ComponentRectTransform*>(order, rect_transform));
-							CONSOLE_LOG("ADDED SUCCESFULY BRO, U ALMOST HAVE IT");
 						}
 					}
 					else if (controller_admision == false)
 					{
 						rect_transform->SetControllerAdmision(controller_admision);
 						c_canvas->controler_elements.erase(order);
-						CONSOLE_LOG("DELETED SUCCESFULY BRO, U HAVE IT");
 					}
 
 				}
@@ -2206,6 +2204,23 @@ void PropertiesWindow::DrawParticleEmmiterPanel(ComponentParticleEmmiter * curre
 				ImGui::TextColored(ImVec4(0, 1, 1, 1), "Setting the time-step to 0 will cause a unique emission.");
 				ImGui::DragFloat("Particle Amount", &current_emmiter->data->amount_to_emmit, 1, 1.0f, 1, 500.0f);
 				ImGui::DragFloat("Emision TimeStep", &current_emmiter->data->time_step_sim, 1, 1.0f, 0, 10.0f);
+			}
+
+			if (ImGui::TreeNode("Blending Mode"))
+			{
+				int blend_src = (int)current_emmiter->src_blending_mode; 
+				if (ImGui::Combo("SRC Blending", &blend_src, "GL_ZERO\0GL_ONE\0GL_SRC_COLOR\0GL_ONE_MINUS_SRC_COLOR\0GL_DST_COLOR\0GL_ONE_MINUS_DST_COLOR\0GL_SRC_ALPHA\0GL_ONE_MINUS_SRC_ALPHA\0GL_DST_ALPHA\0GL_ONE_MINUS_DST_ALPHA\0GL_SRC_ALPHA_SATURATE"))
+				{
+					current_emmiter->src_blending_mode = (BlendingMode)blend_src; 
+				}
+
+				int blend_dst = (int)current_emmiter->dst_blending_mode;
+				if (ImGui::Combo("DST Blending", &blend_dst, "GL_ZERO\0GL_ONE\0GL_SRC_COLOR\0GL_ONE_MINUS_SRC_COLOR\0GL_DST_COLOR\0GL_ONE_MINUS_DST_COLOR\0GL_SRC_ALPHA\0GL_ONE_MINUS_SRC_ALPHA\0GL_DST_ALPHA\0GL_ONE_MINUS_DST_ALPHA\0GL_SRC_ALPHA_SATURATE"))
+				{
+					current_emmiter->dst_blending_mode = (BlendingMode)blend_dst;
+				}
+
+				ImGui::TreePop();
 			}
 								
 			ImGui::Separator(); 

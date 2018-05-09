@@ -125,7 +125,10 @@ public class TrainingModeManager
 				if(dead)
 				{
 					if(slave_audio!=null)
+					{
 						slave_audio.Play("Stop_Engine");
+						audio_source.Stop("Play_Music");
+					}
 					Lose();
 				}
 			}	
@@ -138,6 +141,8 @@ public class TrainingModeManager
 	{
 		TheData.AddString("score", score_text.Text);
 		TheData.AddString("time", gametime_text.Text);
+		TheData.AddString("rounds",curr_wave_text.Text);
+
 		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "training");
 		TheData.AddInt("won", 0);

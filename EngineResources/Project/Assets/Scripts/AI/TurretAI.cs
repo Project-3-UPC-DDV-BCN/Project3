@@ -97,16 +97,26 @@ public class TurretAI {
 	
 	void RotateBlasterTowardsPlayer()
 	{	
-		float angleRad = TheMath.Atan2(PlayerPosition.y - SelfPosition.y, PlayerPosition.x - SelfPosition.x);
-		float angleDeg = -angleRad * 180 / TheMath.PI;
+		float z = TheVector3.Distance(PlayerPosition, BlasterPosition);
+		float x = PlayerPosition.x - BlasterPosition.x;
+		float y = PlayerPosition.y - BlasterPosition.y;
+		float angle = TheMath.Acos((TheMath.Pow(y, 2) + TheMath.Pow(z, 2) - TheMath.Pow(x, 2)) / 2 * y * z);
+		angle *= TheMath.RadToDeg;
+		
+		if (x > 0)
+			angle = -angle;
+		
+		BlasterTransform.QuatRotation = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angle));
+		/*float angleRad = TheMath.Atan2(PlayerPosition.y - SelfPosition.y, PlayerPosition.x - SelfPosition.x);
+		float angleDeg = angleRad * (float)(180 / TheMath.PI);
 		if (angleDeg < MinAngleBlasters)
 			angleDeg = MinAngleBlasters;
 		else if (angleDeg > MaxAngleBlasters)
 			angleDeg = MaxAngleBlasters;
 		
-		TheQuaternion q = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angleDeg));
-		BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
-		/*TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
+		BlasterTransform.QuatRotation = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angleDeg));
+		heVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
+		//BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 		TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.ForwardDirection);
 		q.x = 0; q.y = 0;
 		TheQuaternion test = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);

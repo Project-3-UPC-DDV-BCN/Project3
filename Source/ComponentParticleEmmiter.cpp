@@ -16,8 +16,6 @@
 #include "ModuleTime.h"
 #include <map>
 
-#include "OpenGL.h"
-
 void ComponentParticleEmmiter::GenerateParticles()
 {
 	if (system_state == PARTICLE_STATE_PAUSE || App->time->time_scale <= 0)
@@ -181,6 +179,10 @@ ComponentParticleEmmiter::ComponentParticleEmmiter(GameObject* parent)
 	time_lefting = 0; 
 	particles_this_frame = 1; 
 
+	//Default Blendings 
+	src_blending_mode = BlendingMode::GlSrcAlpha; 
+	dst_blending_mode = BlendingMode::GlOneMinusSrcAlpha; 
+
 	//Make the aabb enclose a primitive cube
 	emmit_area.minPoint = { -0.5f,-0.5f,-0.5f };
 	emmit_area.maxPoint = { 0.5f,0.5f,0.5f };
@@ -339,12 +341,26 @@ void ComponentParticleEmmiter::Save(Data & data) const
 	data.AddUInt("UUID", GetUID());
 	data.CreateSection("ParticleEmitter");
 
-	int rate = GetEmmisionRate(); 
+	int rate; 
+	string name; 
+
+	if (this->data != nullptr)
+	{
+		name = this->data->GetName();
+		rate = GetEmmisionRate();
+	}		
+	else
+	{
+		rate = 0;
+		name = "Default"; 
+	}
+		
+
 	data.AddInt("Rate", rate);
+	data.AddString("Template", name);
 
-	string name = this->data->GetName(); 
-
-	data.AddString("Template", name); 
+	data.AddInt("SRC_Blending", (int)src_blending_mode); 
+	data.AddInt("DST_Blending", (int)dst_blending_mode);
 
 	data.CloseSection();
 
@@ -361,6 +377,9 @@ void ComponentParticleEmmiter::Load(Data & data)
 	//Load Template 
 	SetFrequencyFromRate(data.GetInt("Rate"));
 	string template_name = data.GetString("Template");
+
+	src_blending_mode = (BlendingMode)data.GetInt("SRC_Blending");
+	dst_blending_mode = (BlendingMode)data.GetInt("DST_Blending");
 
 	if (first_loaded == false)
 	{
@@ -551,6 +570,35 @@ void ComponentParticleEmmiter::SetParticlesVelocity(float v)
 	}
 
 	data->velocity = v; 
+}
+
+GLenum ComponentParticleEmmiter::GetCodeFromBlendMode(BlendingMode blend_mode)
+{
+	switch (blend_mode)
+	{
+	case GlZero:
+		return GL_ZERO;
+	case GlOne:
+		return GL_ONE;
+	case GlSrcColor:
+		return GL_SRC_COLOR;
+	case GlOneMinusSrcColor:
+		return GL_ONE_MINUS_SRC_COLOR;
+	case GlDstColor:
+		return GL_DST_COLOR;
+	case GlOneMinusDstColor:
+		return GL_ONE_MINUS_DST_COLOR;
+	case GlSrcAlpha:
+		return GL_SRC_ALPHA;
+	case GlOneMinusSrcAlpha:
+		return GL_ONE_MINUS_SRC_ALPHA;
+	case GlDstAlpha:
+		return GL_DST_ALPHA;
+	case GlOneMinusDstAlpha:
+		return GL_ONE_MINUS_DST_ALPHA;
+	case GlSrcAlphaSaturate:
+		return GL_SRC_ALPHA_SATURATE;
+	}
 }
 
 void ComponentParticleEmmiter::DrawShockWave(ComponentCamera* active_camera)

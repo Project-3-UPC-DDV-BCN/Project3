@@ -491,8 +491,8 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 	}
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glBlendFunc(emmiter->GetCodeFromBlendMode(emmiter->src_blending_mode), emmiter->GetCodeFromBlendMode(emmiter->dst_blending_mode));
 	
 	if (GetAtributes().texture == nullptr)
 	{

@@ -174,6 +174,26 @@ public class PlayerMovement
 	public TheGameObject body_part;
     public TheGameObject wings_part;
     public TheGameObject engine_part;
+	
+	public TheGameObject body_part_top_green;
+	public TheGameObject body_part_top_orange;
+	public TheGameObject body_part_top_red;
+	
+	public TheGameObject wings_part_mid_green;
+	public TheGameObject wings_part_mid_orange;
+	public TheGameObject wings_part_mid_red;
+	
+	public TheGameObject bottom_part_bot_green;
+	public TheGameObject bottom_part_bot_orange;
+	public TheGameObject bottom_part_bot_red;
+	
+	public TheGameObject body_part_hp;
+	public TheGameObject wing_part_hp;
+	public TheGameObject engine_part_hp;
+	
+	public TheText body_part_hp_text;
+	public TheText wing_part_hp_text;
+	public TheText engine_part_hp_text;
 	/// Element Component
 	private TheRectTransform inner_ring_trans;
     private TheRectTransform center_ring_trans;
@@ -218,6 +238,13 @@ public class PlayerMovement
 	private float hit_mark_timer = 0.0f;
 	private bool hit_on = false;
 	
+	public float hit_mark_time_shield = 1.0f;
+	public TheGameObject hit_mark_top_shield;
+	public TheGameObject hit_mark_bot_shield;
+	public TheGameObject hit_mark_left_shield;
+	public TheGameObject hit_mark_right_shield;
+	private float hit_mark_timer_shield = 0.0f;
+	private bool hit_on_shield = false;
 	
 	TheGameObject self = null;
 
@@ -339,8 +366,17 @@ public class PlayerMovement
 		
 		//Get ShipProperties Script
 		ship_properties = self.GetScript("EntityProperties");
+		
+		//Get Puzzle parts hp values
+		if(body_part_hp != null)
+			body_part_hp_text = body_part_hp.GetComponent<TheText>();
+		
+		if(wing_part_hp != null)
+			wing_part_hp_text = wing_part_hp.GetComponent<TheText>();
+		
+		if(engine_part_hp != null)
+			engine_part_hp_text = engine_part_hp.GetComponent<TheText>();
 	}
-	
 	void Update () 
 	{
 		//Get delta_time for this Update from engine
@@ -813,8 +849,115 @@ public class PlayerMovement
 				
 				hit_on = false;
 			}
+			hit_mark_timer -= delta_time;
 		}
 		
+		
+
+		if(hit_mark_bot_shield != null && hit_mark_left_shield != null && hit_mark_right_shield != null && hit_mark_top_shield != null)
+		{
+			if(hit_mark_timer_shield > 0.0f && !hit_on_shield)
+			{
+				hit_mark_top_shield.SetActive(true);
+				hit_mark_bot_shield.SetActive(true);
+				hit_mark_left_shield.SetActive(true);
+				hit_mark_right_shield.SetActive(true);
+				
+				hit_on_shield = true;
+			}
+			else if(hit_on_shield)
+			{
+				hit_mark_top_shield.SetActive(false);
+				hit_mark_bot_shield.SetActive(false);
+				hit_mark_left_shield.SetActive(false);
+				hit_mark_right_shield.SetActive(false);
+				
+				hit_on_shield = false;
+			}
+			hit_mark_timer_shield -= delta_time;
+		}
+		
+		if(engine_part_hp_text != null && wing_part_hp_text != null && body_part_hp_text != null)
+		{
+			int tmp_body_int = (int)(body_hp * 2 - 3);
+			int tmp_wing_int = (int)(wings_hp * 2 - 3);
+			int tmp_engine_int = (int)(engine_hp * 2 - 3);
+			
+			body_part_hp_text.Text = tmp_body_int.ToString() + "%";
+			wing_part_hp_text.Text = tmp_wing_int.ToString() + "%";
+			engine_part_hp_text.Text = tmp_engine_int.ToString() + "%";
+		}
+		
+		if(body_part_top_green != null && wings_part_mid_green != null && bottom_part_bot_green != null)
+		{
+			int tmp_body_int = (int)(body_hp * 2 - 3);
+			int tmp_wing_int = (int)(wings_hp * 2 - 3);
+			int tmp_engine_int = (int)(engine_hp * 2 - 3);
+			
+			//Top Part colors
+			if(tmp_body_int > 50 && !body_part_top_green.IsActive())
+			{
+				body_part_top_green.SetActive(true);
+				body_part_top_orange.SetActive(false);
+				body_part_top_red.SetActive(false);
+			}
+			if(tmp_body_int > 25 && tmp_body_int <= 50 && !body_part_top_orange.IsActive())
+			{
+				body_part_top_green.SetActive(false);
+				body_part_top_orange.SetActive(true);
+				body_part_top_red.SetActive(false);
+			}
+			if(tmp_body_int < 25 && !body_part_top_red.IsActive())
+			{
+				body_part_top_green.SetActive(false);
+				body_part_top_orange.SetActive(false);
+				body_part_top_red.SetActive(true);
+			}
+			//------------------------------------------------------------------------------
+			
+			//Mid Part colors
+			if(tmp_wing_int > 50 && !wings_part_mid_green.IsActive())
+			{
+				wings_part_mid_green.SetActive(true);
+				body_part_top_orange.SetActive(false);
+				wings_part_mid_red.SetActive(false);
+			}
+			if(tmp_wing_int > 25 && tmp_wing_int <= 50 && !wings_part_mid_orange.IsActive())
+			{
+				wings_part_mid_green.SetActive(false);
+				wings_part_mid_orange.SetActive(true);
+				wings_part_mid_red.SetActive(false);
+			}
+			if(tmp_wing_int < 25 && !wings_part_mid_red.IsActive())
+			{
+				wings_part_mid_green.SetActive(false);
+				wings_part_mid_orange.SetActive(false);
+				wings_part_mid_red.SetActive(true);
+			}
+			//--------------------------------------------------------------------------------
+			
+			//Bot part colors
+						//Mid Part colors
+			if(tmp_engine_int > 50 && !bottom_part_bot_green.IsActive())
+			{
+				bottom_part_bot_green.SetActive(true);
+				bottom_part_bot_orange.SetActive(false);
+				bottom_part_bot_red.SetActive(false);
+			}
+			if(tmp_engine_int > 25 && tmp_engine_int <= 50 && !bottom_part_bot_orange.IsActive())
+			{
+				bottom_part_bot_green.SetActive(false);
+				bottom_part_bot_orange.SetActive(true);
+				bottom_part_bot_red.SetActive(false);
+			}
+			if(tmp_engine_int < 25 && !bottom_part_bot_red.IsActive())
+			{
+				bottom_part_bot_green.SetActive(false);
+				bottom_part_bot_orange.SetActive(false);
+				bottom_part_bot_red.SetActive(true);
+			}
+			//---------------------------------------------------------------------------------
+		}
 	}
 	
 	void SetParticlesValues()
@@ -933,6 +1076,8 @@ public class PlayerMovement
 			
 			shaking = true;
 			shake_timer = shake_duration_shield;
+			
+			hit_mark_timer_shield = hit_mark_time_shield;
 		}
 		else
 			DamageSlaveOne(dmg);
@@ -950,6 +1095,8 @@ public class PlayerMovement
 			
 			shaking = true;
 			shake_timer = shake_duration_shield;
+			
+			hit_mark_timer_shield = hit_mark_time_shield;
 		}
 		else
 			DamageSlaveOne(dmg);
