@@ -97,16 +97,25 @@ public class TurretAI {
 	
 	void RotateBlasterTowardsPlayer()
 	{	
-		float z = TheVector3.Distance(PlayerPosition, BlasterPosition);
-		float x = PlayerPosition.x - BlasterPosition.x;
-		float y = PlayerPosition.y - BlasterPosition.y;
-		float angle = TheMath.Acos((TheMath.Pow(y, 2) + TheMath.Pow(z, 2) - TheMath.Pow(x, 2)) / 2 * y * z);
+		float DeltaZ = TheMath.Abs(PlayerPosition.z - BlasterPosition.z);
+		float DeltaY = TheMath.Abs(PlayerPosition.y - BlasterPosition.y);
+		float angle = TheMath.Atan(DeltaY / DeltaZ);
 		angle *= TheMath.RadToDeg;
 		
-		if (x > 0)
-			angle = -angle;
+		if (angle < MinAngleBlasters)
+			angle = MinAngleBlasters;
+		else if (angle > MaxAngleBlasters)
+			angle = MaxAngleBlasters;
 		
-		BlasterTransform.QuatRotation = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angle));
+		TheConsole.Log("Angle: "+angle);
+		
+		TheQuaternion q = TheQuaternion.FromAngleAxis(angle, new TheVector3(0, 0, 1));
+		TheVector3 euler = q.ToEulerAngles();
+		
+		if (euler.z >= MinAngleBlasters && euler.z <= MaxAngleBlasters)
+			BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
+		
+		
 		/*float angleRad = TheMath.Atan2(PlayerPosition.y - SelfPosition.y, PlayerPosition.x - SelfPosition.x);
 		float angleDeg = angleRad * (float)(180 / TheMath.PI);
 		if (angleDeg < MinAngleBlasters)
