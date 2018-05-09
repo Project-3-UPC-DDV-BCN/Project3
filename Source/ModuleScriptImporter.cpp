@@ -927,6 +927,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCamera::SizeX", (const void*)GetSizeX);
 	mono_add_internal_call("TheEngine.TheCamera::SizeY", (const void*)GetSizeY);
 	mono_add_internal_call("TheEngine.TheCamera::WorldPosToCameraPos", (const void*)WorldPosToScreenPos);
+	mono_add_internal_call("TheEngine.TheCamera::IsObjectInside", (const bool*)IsObjectInside);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1952,7 +1953,7 @@ MonoObject * ModuleScriptImporter::WorldPosToScreenPos(MonoObject * from)
 
 bool ModuleScriptImporter::IsObjectInside(MonoObject* object, MonoObject* position)
 {
-	ns_importer->IsObjectInside(object, position);
+	return ns_importer->IsObjectInside(object, position);
 }
 
 void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
