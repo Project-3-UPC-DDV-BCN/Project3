@@ -24,6 +24,8 @@ public class GuillemMovement
     private float modified_move_speed = 0;
     private float modified_rotation_speed = 0;
 
+    public float target_sphere_radius = 0f;
+
     TheTransform self_transform = null;
 
 	TheGameObject target_go = null;
@@ -141,7 +143,26 @@ public class GuillemMovement
 		path_loop = set;
 	}
 
-	void UpdateAutomaticTargetMode()
+    TheVector3 GetPointInsideSphere(TheVector3 origin, float radius)
+    {
+        /* Thats how a random point inside a sphere is picked mathematically
+		x = r * cos(theta) * cos(phi)
+		y = r * sin(phi)
+		z = r * sin(theta) * cos(phi)*/
+
+        TheVector3 pos = new TheVector3(origin.x, origin.y, origin.z);
+
+        float theta = TheRandom.RandomRange(0.0f, TheMath.PI * 2);
+        float phi = TheRandom.RandomRange(0.0f, TheMath.PI * 2);
+
+        pos.x += radius * TheMath.Cos(theta) * TheMath.Cos(phi);
+        pos.y += radius * TheMath.Sin(phi);
+        pos.z += radius * TheMath.Sin(theta) * TheMath.Cos(phi);
+
+        return pos;
+    }
+
+    void UpdateAutomaticTargetMode()
 	{
 		// Change target after x seconds
         if (timer.ReadTime() > random_time && !forced)
@@ -297,7 +318,7 @@ public class GuillemMovement
     void OrientateToTarget()
     {
 		TheVector3 self_pos = self_transform.GlobalPosition;
-        TheVector3 target_pos = target_transform.GlobalPosition;
+        TheVector3 target_pos = target_transform.GlobalPosition + GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
