@@ -247,6 +247,10 @@ public class PlayerMovement
 	private bool hit_on_shield = false;
 	
 	TheGameObject self = null;
+	
+	private bool collided = false;
+	public float collision_time = 2.0f;
+	private float collision_timer;
 
 	void Start () 
 	{
@@ -416,296 +420,309 @@ public class PlayerMovement
 
 	void Movement()
 	{
-		int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
-        int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
-        int rjoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
-        int rjoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
-
-        int ljoy_up = TheInput.GetControllerJoystickMove(0, pitch_pos_joystic);
-        int ljoy_down = TheInput.GetControllerJoystickMove(0, pitch_neg_joystic);
-        int ljoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
-        int ljoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
-
-        int right_trigger = TheInput.GetControllerJoystickMove(0, accel_joystic);
-        int left_trigger = TheInput.GetControllerJoystickMove(0, break_joystick);
-		
-		if (ljoy_up > controller_sensibility)
-        {
-            float move_percentage = (float)(ljoy_up - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_rot = trans.LocalRotation;
-			if(invert_axis)
+		if(!collided)
+		{
+			int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
+			int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
+			int rjoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
+			int rjoy_left = TheInput.GetControllerJoystickMove(0, yaw_neg_joystic);
+	
+			int ljoy_up = TheInput.GetControllerJoystickMove(0, pitch_pos_joystic);
+			int ljoy_down = TheInput.GetControllerJoystickMove(0, pitch_neg_joystic);
+			int ljoy_right = TheInput.GetControllerJoystickMove(0, roll_pos_joystic);
+			int ljoy_left = TheInput.GetControllerJoystickMove(0, roll_neg_joystic);
+	
+			int right_trigger = TheInput.GetControllerJoystickMove(0, accel_joystic);
+			int left_trigger = TheInput.GetControllerJoystickMove(0, break_joystick);
+			
+			if (ljoy_up > controller_sensibility)
 			{
-				new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
-				trans.SetIncrementalRotation(new_rot);
-				if (cam_rot.x > -pitch_camera_rot * move_percentage && cam_rot.x <= 0.0f)
-                {
-                    cam_rot.x -= camera_rot_step * delta_time;
-                    if (cam_rot.x < -pitch_camera_rot * move_percentage)
-                    {
-                        cam_rot.x = -pitch_camera_rot * move_percentage;
-                    }
-                }
+				float move_percentage = (float)(ljoy_up - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_rot = trans.LocalRotation;
+				if(invert_axis)
+				{
+					new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
+					trans.SetIncrementalRotation(new_rot);
+					if (cam_rot.x > -pitch_camera_rot * move_percentage && cam_rot.x <= 0.0f)
+					{
+						cam_rot.x -= camera_rot_step * delta_time;
+						if (cam_rot.x < -pitch_camera_rot * move_percentage)
+						{
+							cam_rot.x = -pitch_camera_rot * move_percentage;
+						}
+					}
+				}
+				else
+				{
+					new_rot.x += pitch_rotate_speed * move_percentage * delta_time;
+					trans.SetIncrementalRotation(new_rot);
+					if (cam_rot.x < pitch_camera_rot * move_percentage && cam_rot.x >= 0.0f)
+					{
+							cam_rot.x += camera_rot_step * delta_time;
+							if (cam_rot.x > pitch_camera_rot * move_percentage)
+								cam_rot.x = pitch_camera_rot * move_percentage;
+					}
+				}
 			}
 			else
 			{
-				new_rot.x += pitch_rotate_speed * move_percentage * delta_time;
-				trans.SetIncrementalRotation(new_rot);
-				if (cam_rot.x < pitch_camera_rot * move_percentage && cam_rot.x >= 0.0f)
+				if(invert_axis)
 				{
-						cam_rot.x += camera_rot_step * delta_time;
-						if (cam_rot.x > pitch_camera_rot * move_percentage)
-							cam_rot.x = pitch_camera_rot * move_percentage;
+					if (cam_rot.x < 0.0f)
+					{
+						cam_rot.x += camera_return_step * delta_time;
+						if (cam_rot.x > 0.0f)
+							cam_rot.x = 0.0f;
+					}
+				}
+				else
+				{
+					if (cam_rot.x > 0.0f)
+					{
+						cam_rot.x -= camera_return_step * delta_time;
+						if (cam_rot.x < 0.0f)
+							cam_rot.x = 0.0f;
+					}
 				}
 			}
-		}
-		else
-        {
-			if(invert_axis)
+			
+			if (ljoy_down > controller_sensibility)
 			{
+				float move_percentage = (float)(ljoy_down - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_rot = trans.LocalRotation;
+				new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
+				trans.SetIncrementalRotation(new_rot);
+				if (cam_rot.x > -pitch_camera_rot * move_percentage && cam_rot.x <= 0.0f)
+					{
+						cam_rot.x -= camera_rot_step * delta_time;
+						if (cam_rot.x < -pitch_camera_rot * move_percentage)
+						{
+							cam_rot.x = -pitch_camera_rot * move_percentage;
+						}
+					}
+			}
+			else
+			{
+				
 				if (cam_rot.x < 0.0f)
 				{
 					cam_rot.x += camera_return_step * delta_time;
 					if (cam_rot.x > 0.0f)
 						cam_rot.x = 0.0f;
 				}
-			}
-			else
-			{
-				if (cam_rot.x > 0.0f)
-                {
-                    cam_rot.x -= camera_return_step * delta_time;
-                    if (cam_rot.x < 0.0f)
-                        cam_rot.x = 0.0f;
-                }
-			}
-		}
-		
-		if (ljoy_down > controller_sensibility)
-        {
-            float move_percentage = (float)(ljoy_down - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_rot = trans.LocalRotation;
-            new_rot.x -= pitch_rotate_speed * move_percentage * delta_time;
-            trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.x > -pitch_camera_rot * move_percentage && cam_rot.x <= 0.0f)
-                {
-                    cam_rot.x -= camera_rot_step * delta_time;
-                    if (cam_rot.x < -pitch_camera_rot * move_percentage)
-                    {
-                        cam_rot.x = -pitch_camera_rot * move_percentage;
-                    }
-                }
-        }
-		else
-        {
-            
-            if (cam_rot.x < 0.0f)
-            {
-                cam_rot.x += camera_return_step * delta_time;
-                if (cam_rot.x > 0.0f)
-                    cam_rot.x = 0.0f;
-            }
-            
-        }
-		
-		if (ljoy_right > controller_sensibility)
-        {
-            float move_percentage = (float)(ljoy_right - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_rot = trans.LocalRotation;
-            new_rot.z += roll_rotate_speed * move_percentage * delta_time;
-            trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.z > -roll_camera_rot && cam_rot.z <= 0.0f)
-            {
-                cam_rot.z -= camera_rot_step * delta_time;
-                if (cam_rot.z < -roll_camera_rot)
-                    cam_rot.z = -roll_camera_rot;
-            }
-		}
-        else
-        {
-            if(cam_rot.z<0.0f)
-            {
-                cam_rot.z += camera_return_step * delta_time;
-                if (cam_rot.z > 0.0f)
-                    cam_rot.z = 0.0f;
-            }
-        }
-
-        if (ljoy_left > controller_sensibility)
-        {
-            float move_percentage = (float)(ljoy_left - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_rot = trans.LocalRotation;
-            new_rot.z -= roll_rotate_speed * move_percentage * delta_time;
-            trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.z < roll_camera_rot && cam_rot.z >= 0.0f)
-            {
-                cam_rot.z += camera_rot_step * delta_time;
-                if (cam_rot.z > roll_camera_rot)
-                    cam_rot.z = roll_camera_rot;
-            }
-        }
-        else
-        {
-            if (cam_rot.z > 0.0f)
-            {
-                cam_rot.z -= camera_return_step * delta_time;
-                if (cam_rot.z < 0.0f)
-                    cam_rot.z = 0.0f;
-            }
-        }
-
-        if (rjoy_up > controller_sensibility)
-        {
-            float move_percentage = (float)(rjoy_up - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_pos = trans.LocalPosition;
-            new_pos += vertical_thrust * move_percentage * delta_time * trans.UpDirection;
-            trans.LocalPosition = new_pos;
-        }
-
-        if (rjoy_down > controller_sensibility)
-        {
-            float move_percentage = (float)(rjoy_down - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_pos = trans.LocalPosition;
-            new_pos -= vertical_thrust * move_percentage * delta_time * trans.UpDirection;
-            trans.LocalPosition = new_pos;
-        }
-
-        if (rjoy_right > controller_sensibility)
-        {
-            float move_percentage = (float)(rjoy_right - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_rot = trans.LocalRotation;
-            new_rot.y -= yaw_rotate_speed * move_percentage * delta_time;
-            trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.y < yaw_camera_rot * move_percentage && cam_rot.y >= 0.0f)
-            {
-                cam_rot.y += camera_rot_step * delta_time;
-                if (cam_rot.y > yaw_camera_rot * move_percentage)
-                    cam_rot.y = yaw_camera_rot * move_percentage;
-            }
-        }
-        else
-        {
-            if (cam_rot.y > 0.0f)
-            {
-                cam_rot.y -= camera_return_step * delta_time;
-                if (cam_rot.y < 0.0f)
-                    cam_rot.y = 0.0f;
-            }
-        }
-
-        if (rjoy_left > controller_sensibility)
-        {
-            float move_percentage = (float)(rjoy_left - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
-            TheVector3 new_rot = trans.LocalRotation;
-            new_rot.y += yaw_rotate_speed * move_percentage * delta_time;
-            trans.SetIncrementalRotation(new_rot);
-			if (cam_rot.y > -yaw_camera_rot * move_percentage && cam_rot.y <= 0.0f)
-            {
-                cam_rot.y -= camera_rot_step * delta_time;
-                if (cam_rot.y < -yaw_camera_rot * move_percentage)
-                    cam_rot.y = -yaw_camera_rot * move_percentage;
-            }
-        }
-        else
-        {
-            if (cam_rot.y < 0.0f)
-            {
-                cam_rot.y += camera_return_step * delta_time;
-                if (cam_rot.y > 0.0f)
-                    cam_rot.y = 0.0f;
-            }
-        }
-		
-		vel_percent = default_speed_percent; //reset to min vel
-		if(right_trigger > trigger_sensibility)
-		{
-			vel_percent = (float)(right_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
-			if(vel_percent<default_speed_percent) vel_percent = default_speed_percent;
-		}
-		
-		decel_percent = default_break_percent;
-		breaking = false;
-		if (left_trigger > controller_sensibility)
-        {
-            decel_percent = (float)(left_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
-			if(decel_percent<default_break_percent)
-			{	
-				decel_percent = default_break_percent;
 				
 			}
-			else
-				breaking = true;
 			
-        }
-		
-		if(TheInput.GetControllerButton(0,boost_button) == 2 && boost_cd_timer <= 0.0f)
-		{
-			boosting = true;
-			boost_timer = boost_time;
-			boost_cd_timer = 0.1f; //dont allow to boost continously
-		}
-		
-		float target_vel = vel_percent * curr_max_vel;
-		
-		if(audio_source != null)
-			audio_source.SetMyRTPCvalue("Velocity",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
-		
-		if(boosting)
-		{
-			target_vel = curr_max_vel + boost_extra_vel;
-			curr_accel = acceleration * boost_accel_multiplier;
-
-			TheInput.RumbleController(0, boost_rumble_strength,boost_rumble_ms);
-
-			if(curr_vel >= target_vel && boost_timer <= 0.0f)
+			if (ljoy_right > controller_sensibility)
 			{
-				boosting = false;
-				curr_accel = acceleration;
-				boost_cd_timer = boost_cd_time;
+				float move_percentage = (float)(ljoy_right - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_rot = trans.LocalRotation;
+				new_rot.z += roll_rotate_speed * move_percentage * delta_time;
+				trans.SetIncrementalRotation(new_rot);
+				if (cam_rot.z > -roll_camera_rot && cam_rot.z <= 0.0f)
+				{
+					cam_rot.z -= camera_rot_step * delta_time;
+					if (cam_rot.z < -roll_camera_rot)
+						cam_rot.z = -roll_camera_rot;
+				}
 			}
-
-			if(curr_vel>= target_vel)
-				boost_timer -= delta_time;
+			else
+			{
+				if(cam_rot.z<0.0f)
+				{
+					cam_rot.z += camera_return_step * delta_time;
+					if (cam_rot.z > 0.0f)
+						cam_rot.z = 0.0f;
+				}
+			}
+	
+			if (ljoy_left > controller_sensibility)
+			{
+				float move_percentage = (float)(ljoy_left - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_rot = trans.LocalRotation;
+				new_rot.z -= roll_rotate_speed * move_percentage * delta_time;
+				trans.SetIncrementalRotation(new_rot);
+				if (cam_rot.z < roll_camera_rot && cam_rot.z >= 0.0f)
+				{
+					cam_rot.z += camera_rot_step * delta_time;
+					if (cam_rot.z > roll_camera_rot)
+						cam_rot.z = roll_camera_rot;
+				}
+			}
+			else
+			{
+				if (cam_rot.z > 0.0f)
+				{
+					cam_rot.z -= camera_return_step * delta_time;
+					if (cam_rot.z < 0.0f)
+						cam_rot.z = 0.0f;
+				}
+			}
+	
+			if (rjoy_up > controller_sensibility)
+			{
+				float move_percentage = (float)(rjoy_up - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_pos = trans.LocalPosition;
+				new_pos += vertical_thrust * move_percentage * delta_time * trans.UpDirection;
+				trans.LocalPosition = new_pos;
+			}
+	
+			if (rjoy_down > controller_sensibility)
+			{
+				float move_percentage = (float)(rjoy_down - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_pos = trans.LocalPosition;
+				new_pos -= vertical_thrust * move_percentage * delta_time * trans.UpDirection;
+				trans.LocalPosition = new_pos;
+			}
+	
+			if (rjoy_right > controller_sensibility)
+			{
+				float move_percentage = (float)(rjoy_right - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_rot = trans.LocalRotation;
+				new_rot.y -= yaw_rotate_speed * move_percentage * delta_time;
+				trans.SetIncrementalRotation(new_rot);
+				if (cam_rot.y < yaw_camera_rot * move_percentage && cam_rot.y >= 0.0f)
+				{
+					cam_rot.y += camera_rot_step * delta_time;
+					if (cam_rot.y > yaw_camera_rot * move_percentage)
+						cam_rot.y = yaw_camera_rot * move_percentage;
+				}
+			}
+			else
+			{
+				if (cam_rot.y > 0.0f)
+				{
+					cam_rot.y -= camera_return_step * delta_time;
+					if (cam_rot.y < 0.0f)
+						cam_rot.y = 0.0f;
+				}
+			}
+	
+			if (rjoy_left > controller_sensibility)
+			{
+				float move_percentage = (float)(rjoy_left - controller_sensibility) / (float)(TheInput.MaxJoystickMove - controller_sensibility);
+				TheVector3 new_rot = trans.LocalRotation;
+				new_rot.y += yaw_rotate_speed * move_percentage * delta_time;
+				trans.SetIncrementalRotation(new_rot);
+				if (cam_rot.y > -yaw_camera_rot * move_percentage && cam_rot.y <= 0.0f)
+				{
+					cam_rot.y -= camera_rot_step * delta_time;
+					if (cam_rot.y < -yaw_camera_rot * move_percentage)
+						cam_rot.y = -yaw_camera_rot * move_percentage;
+				}
+			}
+			else
+			{
+				if (cam_rot.y < 0.0f)
+				{
+					cam_rot.y += camera_return_step * delta_time;
+					if (cam_rot.y > 0.0f)
+						cam_rot.y = 0.0f;
+				}
+			}
+			
+			vel_percent = default_speed_percent; //reset to min vel
+			if(right_trigger > trigger_sensibility)
+			{
+				vel_percent = (float)(right_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
+				if(vel_percent<default_speed_percent) vel_percent = default_speed_percent;
+			}
+			
+			decel_percent = default_break_percent;
+			breaking = false;
+			if (left_trigger > controller_sensibility)
+			{
+				decel_percent = (float)(left_trigger - trigger_sensibility)/(float)(TheInput.MaxJoystickMove - trigger_sensibility);
+				if(decel_percent<default_break_percent)
+				{	
+					decel_percent = default_break_percent;
+					
+				}
+				else
+					breaking = true;
+				
+			}
+			
+			if(TheInput.GetControllerButton(0,boost_button) == 2 && boost_cd_timer <= 0.0f)
+			{
+				boosting = true;
+				boost_timer = boost_time;
+				boost_cd_timer = 0.1f; //dont allow to boost continously
+			}
+			
+			float target_vel = vel_percent * curr_max_vel;
+			
+			if(audio_source != null)
+				audio_source.SetMyRTPCvalue("Velocity",(curr_vel/((1.5f * max_vel) + boost_extra_vel))*100);
+			
+			if(boosting)
+			{
+				target_vel = curr_max_vel + boost_extra_vel;
+				curr_accel = acceleration * boost_accel_multiplier;
+	
+				TheInput.RumbleController(0, boost_rumble_strength,boost_rumble_ms);
+	
+				if(curr_vel >= target_vel && boost_timer <= 0.0f)
+				{
+					boosting = false;
+					curr_accel = acceleration;
+					boost_cd_timer = boost_cd_time;
+				}
+	
+				if(curr_vel>= target_vel)
+					boost_timer -= delta_time;
+			}
+			else
+			{
+				if(engine_energy > 4)
+				{
+					boost_cd_timer -= delta_time*(1+(0.5f/4) * (engine_energy-4));
+				}
+				else if(engine_energy < 4)
+				{
+					boost_cd_timer -= delta_time*(1-(0.75f/4) * (engine_energy));
+				}
+				else
+					boost_cd_timer -= delta_time;
+			
+			}
+			
+			if(curr_vel < target_vel) 
+			{
+				curr_vel += curr_accel*delta_time;
+	
+				float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
+	
+				TheInput.RumbleController(0,rumble,accel_rumble_ms);
+			}
+			else if(curr_vel > target_vel)
+			{
+				if(breaking)
+				{
+					curr_vel -= decel_percent*slow_acceleration*delta_time;
+					float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
+					TheInput.RumbleController(0,rumble,accel_rumble_ms);
+				}
+				else
+				{
+					curr_vel -= acceleration*delta_time;
+				}		
+			}
+			
+			TheVector3 new_vel_pos = trans.LocalPosition;
+			new_vel_pos += trans.ForwardDirection*curr_vel*delta_time;
+			trans.LocalPosition = new_vel_pos;
 		}
 		else
 		{
-			if(engine_energy > 4)
-			{
-				boost_cd_timer -= delta_time*(1+(0.5f/4) * (engine_energy-4));
-			}
-			else if(engine_energy < 4)
-			{
-				boost_cd_timer -= delta_time*(1-(0.75f/4) * (engine_energy));
-			}
-			else
-				boost_cd_timer -= delta_time;
-		
+			TheVector3 new_vel_pos = trans.LocalPosition;
+			new_vel_pos -= trans.ForwardDirection*curr_vel*delta_time;
+			trans.LocalPosition = new_vel_pos;
+			
+			collision_timer -= delta_time;
+			if(collision_timer<=0.0f)
+				collided = false;
 		}
-		
-		if(curr_vel < target_vel) 
-		{
-			curr_vel += curr_accel*delta_time;
-
-			float rumble = accel_max_rumble_strength - (curr_vel/target_vel)*accel_max_rumble_strength;
-
-			TheInput.RumbleController(0,rumble,accel_rumble_ms);
-		}
-		else if(curr_vel > target_vel)
-		{
-			if(breaking)
-			{
-				curr_vel -= decel_percent*slow_acceleration*delta_time;
-				float rumble = accel_max_rumble_strength - (target_vel/curr_vel)*accel_max_rumble_strength;
-				TheInput.RumbleController(0,rumble,accel_rumble_ms);
-			}
-			else
-			{
-				curr_vel -= acceleration*delta_time;
-			}		
-		}
-		
-		TheVector3 new_vel_pos = trans.LocalPosition;
-		new_vel_pos += trans.ForwardDirection*curr_vel*delta_time;
-		trans.LocalPosition = new_vel_pos;
 		
 		if(camera_go != null)
 		{
@@ -1563,4 +1580,9 @@ public class PlayerMovement
 		return pos;
 	}
 	
+	void Collided()
+	{
+		collided = true;
+		collision_timer = collision_time;
+	}
 }
