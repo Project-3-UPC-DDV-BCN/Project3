@@ -141,6 +141,8 @@ public class TrainingModeManager
 	{
 		TheData.AddString("score", score_text.Text);
 		TheData.AddString("time", gametime_text.Text);
+		TheData.AddString("rounds",curr_wave_text.Text);
+
 		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "training");
 		TheData.AddInt("won", 0);

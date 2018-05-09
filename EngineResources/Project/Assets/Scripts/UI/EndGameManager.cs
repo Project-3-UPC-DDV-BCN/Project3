@@ -4,6 +4,8 @@ public class EndGameManager
 {
 	public TheGameObject score_go;	
 	public TheGameObject time_go;
+	public TheGameObject rounds_go;
+
 	public TheGameObject continue_go;
 	public TheGameObject back_to_menu_go;
 	public TheGameObject audio_emiter;
@@ -14,6 +16,8 @@ public class EndGameManager
 
 	TheText score_text = null;
 	TheText time_text = null;
+	TheText rounds_text = null;
+
 	TheRectTransform continue_rect = null;
 	TheRectTransform back_to_menu_rect = null;
 	TheAudioSource audio_source = null;
@@ -31,6 +35,9 @@ public class EndGameManager
 		if(time_go != null)
 			time_text = time_go.GetComponent<TheText>();
 
+		if(rounds_go != null)
+			rounds_text = rounds_go.GetComponent<TheText>();
+
 		if(continue_go != null)
 			continue_rect = continue_go.GetComponent<TheRectTransform>();
 
@@ -42,24 +49,14 @@ public class EndGameManager
 
 		string score = TheData.GetString("score");
 		string time = TheData.GetString("time");
+		string rounds = TheData.GetString("rounds");
+
 		string side = TheData.GetString("faction");
 		int won = TheData.GetInt("won");
 		
 		mode_played = TheData.GetString("mode");
-		
-		if(background_alliance != null && background_empire != null)
-		{	
-			if(side == "rebels")
-			{
-				background_alliance.SetActive(true);
-				background_empire.SetActive(false);
-			}else if(side == "empire")
-			{
-				background_alliance.SetActive(false);
-				background_empire.SetActive(true);
-			}
-		}
-	
+
+		//VICTORY & LOSE
 		if(victory_text != null && won == 1)
 		{
 			victory_text.SetActive(true);
@@ -70,12 +67,16 @@ public class EndGameManager
 			victory_text.SetActive(false);
 			lose_text.SetActive(true);
 		}
-		
+
+		//------------- Text Setting
 		if(score_text != null)
-			score_text.Text = "Score: " + score;
+			score_text.Text = "" + score;
 
 		if(time_text != null)
-			time_text.Text = "Time: " + time;
+			time_text.Text = "" + time;
+
+		if(rounds_text != null)
+			rounds_text.Text = "" + rounds;
 	}
 	
 	void Update () 

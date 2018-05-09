@@ -338,7 +338,7 @@ public class Level1Manager
 		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "campaign");
 		TheData.AddInt("won", 0);
-		TheApplication.LoadScene("Alpha1 - EndGameScene");
+		TheApplication.LoadScene("Alpha1 - EndGameSceneCampaign");
 	}
 
 	void NextMissionState()
