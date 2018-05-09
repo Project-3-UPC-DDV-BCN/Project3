@@ -35,10 +35,10 @@ public class ObstacleAvoidance {
 		hitting = false;
 
 		// RayCast Setup
-		TheVector3 originLeft = transform.GlobalPosition + new TheVector3(-XOffset, 0, 0);
-		TheVector3 originRight = transform.GlobalPosition + new TheVector3(XOffset, 0, 0);
-		TheVector3 originTop = transform.GlobalPosition + new TheVector3(0, YOffset, 0);
-		TheVector3 originBottom = transform.GlobalPosition + new TheVector3(0, -YOffset, 0);
+		TheVector3 originLeft = transform.LocalPosition + new TheVector3(-XOffset, 0, 0);
+		TheVector3 originRight = transform.LocalPosition + new TheVector3(XOffset, 0, 0);
+		TheVector3 originTop = transform.LocalPosition + new TheVector3(0, YOffset, 0);
+		TheVector3 originBottom = transform.LocalPosition + new TheVector3(0, -YOffset, 0);
 
 		// RayDebug ---
 		if(ShowRays == true) {
@@ -63,10 +63,14 @@ public class ObstacleAvoidance {
 		TheRayCastHit rayHitRight = null;
 		TheRayCastHit rayHitTop = null;
 		TheRayCastHit rayHitBottom = null;
+
+
+
 		// Center
 		if(ArrRayHitCenter.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitCenter) {
 				if(hit.Collider != self_collider) {
+					TheConsole.Log("I hit");
 					rayHitCenter = hit;
 					break;
 				}
@@ -76,6 +80,7 @@ public class ObstacleAvoidance {
 		else if(ArrRayHitLeft.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitLeft) {
 				if(hit.Collider != self_collider) {
+					TheConsole.Log("I hit");
 					rayHitLeft = hit;
 					break;
 				}
@@ -85,6 +90,7 @@ public class ObstacleAvoidance {
 		else if(ArrRayHitRight.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitRight) {
 				if(hit.Collider != self_collider) {
+					TheConsole.Log("I hit");
 					rayHitRight = hit;
 					break;
 				}
@@ -94,6 +100,7 @@ public class ObstacleAvoidance {
 		else if(ArrRayHitTop.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitTop) {
 				if(hit.Collider != self_collider) {
+					TheConsole.Log("I hit");
 					rayHitTop = hit;
 					break;
 				}
@@ -103,6 +110,7 @@ public class ObstacleAvoidance {
 		else if(ArrRayHitBottom.Length > 0) {
 			foreach(TheRayCastHit hit in ArrRayHitBottom) {
 				if(hit.Collider != self_collider) {
+					TheConsole.Log("I hit");
 					rayHitBottom = hit;
 					break;
 				}
