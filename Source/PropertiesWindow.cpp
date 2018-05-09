@@ -677,14 +677,12 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						{
 							rect_transform->SetControllerAdmision(controller_admision);
 							c_canvas->controler_elements.insert(pair<int, ComponentRectTransform*>(order, rect_transform));
-							CONSOLE_LOG("ADDED SUCCESFULY BRO, U ALMOST HAVE IT");
 						}
 					}
 					else if (controller_admision == false)
 					{
 						rect_transform->SetControllerAdmision(controller_admision);
 						c_canvas->controler_elements.erase(order);
-						CONSOLE_LOG("DELETED SUCCESFULY BRO, U HAVE IT");
 					}
 
 				}

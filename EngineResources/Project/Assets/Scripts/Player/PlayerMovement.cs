@@ -175,6 +175,18 @@ public class PlayerMovement
     public TheGameObject wings_part;
     public TheGameObject engine_part;
 	
+	public TheGameObject body_part_top_green;
+	public TheGameObject body_part_top_orange;
+	public TheGameObject body_part_top_red;
+	
+	public TheGameObject wings_part_mid_green;
+	public TheGameObject wings_part_mid_orange;
+	public TheGameObject wings_part_mid_red;
+	
+	public TheGameObject bottom_part_bot_green;
+	public TheGameObject bottom_part_bot_orange;
+	public TheGameObject bottom_part_bot_red;
+	
 	public TheGameObject body_part_hp;
 	public TheGameObject wing_part_hp;
 	public TheGameObject engine_part_hp;
@@ -874,6 +886,77 @@ public class PlayerMovement
 			body_part_hp_text.Text = tmp_body_int.ToString() + "%";
 			wing_part_hp_text.Text = tmp_wing_int.ToString() + "%";
 			engine_part_hp_text.Text = tmp_engine_int.ToString() + "%";
+		}
+		
+		if(body_part_top_green != null && wings_part_mid_green != null && bottom_part_bot_green != null)
+		{
+			int tmp_body_int = (int)(body_hp * 2 - 3);
+			int tmp_wing_int = (int)(wings_hp * 2 - 3);
+			int tmp_engine_int = (int)(engine_hp * 2 - 3);
+			
+			//Top Part colors
+			if(tmp_body_int > 50 && !body_part_top_green.IsActive())
+			{
+				body_part_top_green.SetActive(true);
+				body_part_top_orange.SetActive(false);
+				body_part_top_red.SetActive(false);
+			}
+			if(tmp_body_int > 25 && tmp_body_int <= 50 && !body_part_top_orange.IsActive())
+			{
+				body_part_top_green.SetActive(false);
+				body_part_top_orange.SetActive(true);
+				body_part_top_red.SetActive(false);
+			}
+			if(tmp_body_int < 25 && !body_part_top_red.IsActive())
+			{
+				body_part_top_green.SetActive(false);
+				body_part_top_orange.SetActive(false);
+				body_part_top_red.SetActive(true);
+			}
+			//------------------------------------------------------------------------------
+			
+			//Mid Part colors
+			if(tmp_wing_int > 50 && !wings_part_mid_green.IsActive())
+			{
+				wings_part_mid_green.SetActive(true);
+				body_part_top_orange.SetActive(false);
+				wings_part_mid_red.SetActive(false);
+			}
+			if(tmp_wing_int > 25 && tmp_wing_int <= 50 && !wings_part_mid_orange.IsActive())
+			{
+				wings_part_mid_green.SetActive(false);
+				wings_part_mid_orange.SetActive(true);
+				wings_part_mid_red.SetActive(false);
+			}
+			if(tmp_wing_int < 25 && !wings_part_mid_red.IsActive())
+			{
+				wings_part_mid_green.SetActive(false);
+				wings_part_mid_orange.SetActive(false);
+				wings_part_mid_red.SetActive(true);
+			}
+			//--------------------------------------------------------------------------------
+			
+			//Bot part colors
+						//Mid Part colors
+			if(tmp_engine_int > 50 && !bottom_part_bot_green.IsActive())
+			{
+				bottom_part_bot_green.SetActive(true);
+				bottom_part_bot_orange.SetActive(false);
+				bottom_part_bot_red.SetActive(false);
+			}
+			if(tmp_engine_int > 25 && tmp_engine_int <= 50 && !bottom_part_bot_orange.IsActive())
+			{
+				bottom_part_bot_green.SetActive(false);
+				bottom_part_bot_orange.SetActive(true);
+				bottom_part_bot_red.SetActive(false);
+			}
+			if(tmp_engine_int < 25 && !bottom_part_bot_red.IsActive())
+			{
+				bottom_part_bot_green.SetActive(false);
+				bottom_part_bot_orange.SetActive(false);
+				bottom_part_bot_red.SetActive(true);
+			}
+			//---------------------------------------------------------------------------------
 		}
 	}
 	
