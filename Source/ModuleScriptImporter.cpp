@@ -2726,6 +2726,10 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		{
 			comp_name = "TheFactory";
 		}
+		else if (name == "TheEngine.TheCamera")
+		{
+			comp_name = "TheCamera";
+		}
 		else if (name == "TheEngine.TheRectTransform")
 		{
 			comp_name = "TheRectTransform";
@@ -6267,6 +6271,10 @@ Component::ComponentType NSScriptImporter::CsToCppComponent(std::string componen
 	{
 		type = Component::CompRigidBody;
 	}
+	else if (component_type == "TheCamera")
+	{
+		type = Component::CompCamera;
+	}
 	else if (component_type == "TheCollider")
 	{
 		type = Component::CompCollider;
@@ -6367,6 +6375,9 @@ std::string NSScriptImporter::CppComponentToCs(Component::ComponentType componen
 		break;
 	case Component::CompScript:
 		cs_name = "TheScript";
+		break;
+	case Component::CompCamera:
+		cs_name = "TheCamera";
 		break;
 	case Component::CompRadar:
 		cs_name = "TheRadar";
