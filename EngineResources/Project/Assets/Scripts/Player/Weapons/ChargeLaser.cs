@@ -121,13 +121,13 @@ public class ChargeLaser
 						TheConsole.Log("Shoot Release - info");
 						//calculate the target point
 						TheVector3 target = slave_transform.GlobalPosition + slave_transform.ForwardDirection * laser_dir_distance;
-						//TheVector3 scale = new TheVector3(1.0f+overheat,1.0f+overheat,0.0f);
+						TheVector3 scale = new TheVector3(1.0f+overheat,1.0f+overheat,1.0f);
 					
 						TheVector3 laser_dir = target - shoot_pos;
 						laser_dir = TheVector3.Normalize(laser_dir);
 						
 						laser_trans.GlobalPosition = shoot_pos;
-						//laser_trans.LocalScale = scale;
+						laser_trans.LocalScale = scale;
 						
 						object[] args = {slave_go, speed, total_damage*overheat, laser_dir, slave_transform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
