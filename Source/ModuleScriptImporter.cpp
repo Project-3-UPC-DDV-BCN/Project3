@@ -16,6 +16,7 @@
 #include "ComponentProgressBar.h"
 #include "ComponentRadar.h"
 #include "ModuleEditor.h"
+#include "ComponentCamera.h"
 #include "ComponentFactory.h"
 #include "ModuleTime.h"
 #include "ModuleInput.h"
@@ -926,6 +927,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCamera::SizeX", (const void*)GetSizeX);
 	mono_add_internal_call("TheEngine.TheCamera::SizeY", (const void*)GetSizeY);
 	mono_add_internal_call("TheEngine.TheCamera::WorldPosToCameraPos", (const void*)WorldPosToScreenPos);
+	mono_add_internal_call("TheEngine.TheCamera::IsObjectInside", (const bool*)IsObjectInside);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1947,6 +1949,11 @@ int ModuleScriptImporter::GetSizeY()
 MonoObject * ModuleScriptImporter::WorldPosToScreenPos(MonoObject * from)
 {
 	return ns_importer->WorldPosToScreenPos(from);
+}
+
+bool ModuleScriptImporter::IsObjectInside(MonoObject* object, MonoObject* position)
+{
+	return ns_importer->IsObjectInside(object, position);
 }
 
 void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
@@ -6232,6 +6239,33 @@ MonoObject* NSScriptImporter::WorldPosToScreenPos(MonoObject * world)
 	}
 
 	return ret;
+}
+
+bool NSScriptImporter::IsObjectInside(MonoObject* object, MonoObject* position)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		ComponentCamera* camera = (ComponentCamera*)comp;
+
+		if (camera != nullptr)
+		{
+			float3 world_pos; 
+
+			MonoClass* my_class = mono_object_get_class(object);
+
+			MonoClassField* x_field = mono_class_get_field_from_name(my_class, "x");
+			MonoClassField* y_field = mono_class_get_field_from_name(my_class, "y");
+			MonoClassField* z_field = mono_class_get_field_from_name(my_class, "z");
+
+			if (x_field) mono_field_get_value(object, x_field, &world_pos.x);
+			if (y_field) mono_field_get_value(object, y_field, &world_pos.y);
+			if (z_field) mono_field_get_value(object, z_field, &world_pos.z);
+
+			return camera->IsPointInside(world_pos);
+		}
+	}
 }
 
 

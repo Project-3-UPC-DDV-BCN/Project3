@@ -7,15 +7,14 @@ public class EnemyMarker
 
 	public int range; 
 
-	TheCamera main_camera;  
 	TheScript game_manager_scp; 
 
-	List<TheGameObject> ships_in_scene; 
+	List<TheGameObject> ships_in_scene;
+	List<TheGameObject> ships_with_marker; 
 
 	void Start () 
 	{
 		range = 0;
-		main_camera =  TheGameObject.Find("PlayerCam").GetComponent<TheCamera>(0); 
 		game_manager_scp = TheGameObject.Self.GetComponent<TheScript>(0); 
 		ships_in_scene = (List<TheGameObject>)game_manager_scp.CallFunctionArgs("GetSlaveEnemies"); 		
 	}
@@ -25,15 +24,23 @@ public class EnemyMarker
 		for(int i = 0; i < ships_in_scene.Count ;i++)
 		{
 			TheVector3 ship_pos = ships_in_scene[i].GetComponent<TheTransform>().GlobalPosition; 
-			TheVector3 screen_position = TheCamera.WorldPosToCameraPos(ship_pos);
 
-			if(screen_position.z < range)
+			if(TheCamera.IsObjectInside(ship_pos) == true)
 			{		
-				TheConsole.Log(screen_position.x);
-				TheConsole.Log(screen_position.y);
+				
 			}
 
 		}
 				
+	}
+	
+	void MoveToSeen()
+	{
+		
+	}
+	
+	void MoveToUnseen()
+	{
+		
 	}
 }
