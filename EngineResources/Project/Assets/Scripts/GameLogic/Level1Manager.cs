@@ -106,6 +106,9 @@ public class Level1Manager
 	TheTimer new_spawn_timer = new TheTimer();
 	float time_between_new_spawn = 50.0f;
 
+	TheTimer time_to_warp = new TheTimer();
+	int time_to_survive = 20;
+
 	TheTimer check_win_lose = new TheTimer();
 
 	void Init()
@@ -252,20 +255,47 @@ public class Level1Manager
 			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
 
 			
-			object[] args20 = {"Enemies interception"};
+			object[] args20 = {"EnemiesInterception"};
 			dialog_manager.CallFunctionArgs("NewDialog", args20);
 
-			object[] args21 = {"Enemies interception", "...Intruders in our base!...", 4.5f};
+			object[] args21 = {"EnemiesInterception", "...Intruders in our base!...", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args21);
 
-			object[] args22 = {"Enemies interception", "...All units ready!...", 4.5f};
+			object[] args22 = {"EnemiesInterception", "...All units ready!...", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args22);
 
-			object[] args23 = {"Win dialog"};
+
+			object[] args27 = {"HalfMission"};
+			dialog_manager.CallFunctionArgs("NewDialog", args27);
+
+			object[] args25 = {"HalfMission", "We are running out of time!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args25);
+
+			object[] args26 = {"HalfMission", "We need the shields down", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args26);
+			
+
+			object[] args23 = {"WinDialog"};
 			dialog_manager.CallFunctionArgs("NewDialog", args23);
 
-			object[] args24 = {"Win dialog", "Great work Bobba! You did it!", 4.5f};
+			object[] args24 = {"WinDialog", "Great work Bobba! You did it!", 4.5f};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args24);
+
+			object[] args30 = {"WinDialog", "But you need time to clear the way for you to jump into hyperspace", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args30);
+
+			object[] args28 = {"WinDialog", "to jump into hyperspace.", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args28);
+
+			object[] args29 = {"WinDialog", "Survive 20 seconds!", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args29);
+
+
+			object[] args31 = {"EndDialog"};
+			dialog_manager.CallFunctionArgs("NewDialog", args31);
+
+			object[] args32 = {"EndDialog", "Well done! Let's get out of here.", 4.5f};
+			dialog_manager.CallFunctionArgs("NewDialogLine", args32);
 
 		}
 
@@ -416,7 +446,8 @@ public class Level1Manager
 			}
 			case 4:
 			{
-				audio_source.SetState("Level","Combat");
+				if(audio_source != null)
+					audio_source.SetState("Level","Combat");
 
 				SetCurrMissionObj("Survive the ambush");
 			
@@ -436,7 +467,8 @@ public class Level1Manager
 			}
 			case 5:
 			{
-				audio_source.SetState("Level","Calm");
+				if(audio_source != null)
+					audio_source.SetState("Level","Calm");
 
 				SetCurrMissionObj("Approach the shield gate");
 
@@ -464,7 +496,8 @@ public class Level1Manager
 			}
 			case 6:
 			{
-				audio_source.SetState("Level","Combat");
+				if(audio_source != null)
+					audio_source.SetState("Level","Combat");
 
 				SetCurrMissionObj("Destroy all generators");
 
@@ -472,7 +505,7 @@ public class Level1Manager
 				
 				if(dialog_manager != null)
 				{
-					object[] args =  {"Enemies interception"};
+					object[] args =  {"EnemiesInterception"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
 
@@ -482,14 +515,34 @@ public class Level1Manager
 			}
 			case 7:
 			{
-				audio_source.SetState("Level","Calm");
+				if(dialog_manager != null)
+				{
+					object[] args =  {"HalfMission"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
+	
+				break;
+			}
+			case 8:
+			{
+				time_to_warp.Start();
+
+				SetCurrMissionObj("Survive until warp is ready");
 
 				if(dialog_manager != null)
 				{
-					object[] args =  {"Win dialog"};
+					object[] args =  {"WinDialog"};
 					dialog_manager.CallFunctionArgs("FireDialog", args);
 				}
-				
+				break;
+			}
+			case 9:
+			{
+				if(dialog_manager != null)
+				{
+					object[] args =  {"EndDialog"};
+					dialog_manager.CallFunctionArgs("FireDialog", args);
+				}
 				break;
 			}
 		}
@@ -541,9 +594,6 @@ public class Level1Manager
 			}
 			case 6:
 			{
-				HideCurrMissionObj();
-				HideEnemiesToKill();
-
 				if(dialog_manager != null)
 				{
 					object[] args = {ackbar_canvas_go};
@@ -555,6 +605,17 @@ public class Level1Manager
 
 				break;	
 			}
+			case 7:
+			{
+				HideCurrMissionObj();
+				HideEnemiesToKill();
+				break;
+			}
+			case 8:
+			{
+				break;
+			}
+			
 		}
 	}
 
@@ -606,10 +667,24 @@ public class Level1Manager
 
 				SpawnMainMissionShips();
 
-				if(GetEntitiesToDestroyCount() == 0)
+				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
+				{
+					SpawnNextWave(5);
+					new_spawn_timer.Start();
+				}
+
+				if(GetEntitiesToDestroyCount() == 3)
 				{
 					NextMissionState();
 				}
+
+				break;
+			}
+			case 7:
+			{
+				SetEnemiesToKill("Generators to destroy: " + GetEntitiesToDestroyCount().ToString());
+
+				SpawnMainMissionShips();
 
 				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
 				{
@@ -617,9 +692,26 @@ public class Level1Manager
 					new_spawn_timer.Start();
 				}
 
+				if(GetEntitiesToDestroyCount() == 0)
+				{
+					NextMissionState();
+				}
+				
+
 				break;
 			}
-			case 7:
+			case 8:
+			{
+				SetEnemiesToKill("Time to survive: " + (time_to_survive - (int)time_to_warp.ReadTime()).ToString());
+	
+				if(time_to_warp.ReadTime() > time_to_survive)
+				{
+					NextMissionState();
+				}
+				
+				break;
+			}
+			/*case 8:
 			{
 				if(dialog_manager != null)
 				{
@@ -640,9 +732,9 @@ public class Level1Manager
 						TheApplication.LoadScene("Alpha1 - EndGameScene");
 					}
 				}
-				
+
 				break;
-			}
+			}*/
 		}
 	}
 
