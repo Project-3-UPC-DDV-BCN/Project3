@@ -329,12 +329,12 @@ public class GuillemMovement
     {
 		TheVector3 self_pos = self_transform.GlobalPosition;
 		TheVector3 target_pos = new TheVector3();
-		if(missSwitching == true) {
+		//if(missSwitching == true) {
 			 target_pos = GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
-		}
-		else {
-			target_pos = target_transform.GlobalPosition;
-		}
+		//}
+		//else {
+		//	target_pos = target_transform.GlobalPosition;
+		//}
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
