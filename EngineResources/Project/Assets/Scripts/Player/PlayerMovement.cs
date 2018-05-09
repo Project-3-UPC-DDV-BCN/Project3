@@ -844,7 +844,7 @@ public class PlayerMovement
 
 		if(hit_mark_bot_shield != null && hit_mark_left_shield != null && hit_mark_right_shield != null && hit_mark_top_shield != null)
 		{
-			if(hit_mark_time_shield > 0.0f && !hit_on_shield)
+			if(hit_mark_timer_shield > 0.0f && !hit_on_shield)
 			{
 				hit_mark_top_shield.SetActive(true);
 				hit_mark_bot_shield.SetActive(true);
