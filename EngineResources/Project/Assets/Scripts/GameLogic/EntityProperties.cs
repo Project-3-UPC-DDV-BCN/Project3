@@ -23,6 +23,7 @@ public class EntityProperties
 	public int base_laser_damage = 10;
 
 	public string explosion_prefab;
+	public string tie_particles_prefab; 
 
 	private TheGameObject game_manager = null;	
 	private TheScript game_manager_script = null;
@@ -306,6 +307,7 @@ public class EntityProperties
 				game_manager_script.CallFunctionArgs("RemoveShip", args);
 				
 				SpawnExplosion();
+				SpawnTieExplosion(); 
 				
 				TheGameObject.Destroy(self);					
 			}
@@ -368,6 +370,24 @@ public class EntityProperties
 
 	void SpawnTieExplosion()
 	{
+		/*TheGameObject particle = TheResources.LoadPrefab(tie_particles_prefab);
+				
+		// Particles when destroying ship
+		if(particle != null)
+		{
+			TheTransform particle_trans = particle.GetComponent<TheTransform>();
+			if(particle_trans != null && self_transform != null)
+			{
+				particle_trans.LocalPosition = self_transform.LocalPosition;
+			
+				TheScript particle_script = particle.GetScript("ParticleAutoDestroy");
+				if(particle_script != null)
+				{
+					particle_script.CallFunctionArgs("Destroy");
 
+					TheConsole.Log("Explosion particle created!");
+				}
+			}
+		}*/
 	}
 }
