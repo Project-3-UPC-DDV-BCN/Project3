@@ -33,6 +33,7 @@ public class TurretAI {
 	
 	float DeltaTime = 0.0f;
 	public float RotationSpeed = 50.0f;
+	public float BlasterRotationSpeed = 30.0f;
 	public float MinDistance = 600.0f;
 	public float ShootingRange = 500.0f;
 	public float MinAngleBlasters = 0.0f;
@@ -41,6 +42,8 @@ public class TurretAI {
 	public float LaserFrequency = 0.100f;
 	public float LaserSpeed = 30.0f;
 	public int BaseLaserDamage = 10;
+	
+	public float AngleOffset = 8.0f;
 	
 	TheTimer BlasterTimer = new TheTimer();
 
@@ -102,36 +105,27 @@ public class TurretAI {
 		float angle = TheMath.Atan(DeltaY / DeltaZ);
 		angle *= TheMath.RadToDeg;
 		
+		angle -= AngleOffset;
+		
 		if (angle < MinAngleBlasters)
 			angle = MinAngleBlasters;
 		else if (angle > MaxAngleBlasters)
 			angle = MaxAngleBlasters;
 		
-		TheConsole.Log("Angle: "+angle);
+		if (BlasterRotation.z >= MinAngleBlasters && BlasterRotation.z <= MaxAngleBlasters)
+		{
+			if (angle > BlasterRotation.z)
+				BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, BlasterRotation.z + DeltaTime * BlasterRotationSpeed));
+			else
+				BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, BlasterRotation.z - DeltaTime * BlasterRotationSpeed));		
+		}
 		
-		TheQuaternion q = TheQuaternion.FromAngleAxis(angle, new TheVector3(0, 0, 1));
-		TheVector3 euler = q.ToEulerAngles();
-		
-		if (euler.z >= MinAngleBlasters && euler.z <= MaxAngleBlasters)
-			BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
-		
-		
-		/*float angleRad = TheMath.Atan2(PlayerPosition.y - SelfPosition.y, PlayerPosition.x - SelfPosition.x);
-		float angleDeg = angleRad * (float)(180 / TheMath.PI);
-		if (angleDeg < MinAngleBlasters)
-			angleDeg = MinAngleBlasters;
-		else if (angleDeg > MaxAngleBlasters)
-			angleDeg = MaxAngleBlasters;
-		
-		BlasterTransform.QuatRotation = TheQuaternion.FromEulerAngles(new TheVector3(0, 0, angleDeg));
-		heVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, PlayerPosition.y - SelfPosition.y, PlayerPosition.z - SelfPosition.z);
-		//BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
-		TheQuaternion q = TheQuaternion.LookRotation(LookPos, BlasterTransform.ForwardDirection);
-		q.x = 0; q.y = 0;
-		TheQuaternion test = TheQuaternion.Slerp(BlasterTransform.QuatRotation, q, DeltaTime * RotationSpeed);
-		
-		TheVector3 euler = test.ToEulerAngles();
-		*/
+		if (BlasterRotation.z < MinAngleBlasters)
+			BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, MinAngleBlasters));
+		else if (BlasterRotation.z > MaxAngleBlasters)
+			BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, MaxAngleBlasters));
+
+		//BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, rotation, DeltaTime * RotationSpeed);
 	}
 	
 	void Shoot()
