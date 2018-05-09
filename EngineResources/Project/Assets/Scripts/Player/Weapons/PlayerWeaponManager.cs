@@ -125,6 +125,12 @@ public class PlayerWeaponManager
 					weapon_script.CallFunctionArgs("ShootRelease");
 				}
 			}
+			
+			//Change weapon
+			if(TheInput.GetControllerButton(0, p1_change_weapon) == 1 || TheInput.IsKeyDown(p2_change_weapon))
+			{
+				ChangeWeapon();
+			}
 		}
 		
 		//set overheat bar value
@@ -168,5 +174,52 @@ public class PlayerWeaponManager
 			audio_source.Stop(audio);
 			audio_source.Play(audio);
 		}
+	}
+	
+	void ChangeWeapon()
+	{
+		if(audio_source != null)
+			audio_source.Play("Play_change_weapon");
+
+		curr_weapon++;
+		curr_weapon %= num_weapons;
+		
+		if(crosshair_1 != null && crosshair_2 != null && crosshair_1.IsActive())
+		{
+			crosshair_1.SetActive(false);
+			crosshair_2.SetActive(true);
+						
+			if(weapon_icon_1 != null)
+				weapon_icon_1.SetActive(false);
+
+			if(weapon_icon_2 != null)
+				weapon_icon_2.SetActive(true);
+		}
+		else if(crosshair_1 != null && crosshair_2 != null)
+		{
+			crosshair_1.SetActive(true);
+			crosshair_2.SetActive(false);
+
+			if(weapon_icon_1 != null)
+				weapon_icon_1.SetActive(true);
+
+			if(weapon_icon_2 != null)
+				weapon_icon_2.SetActive(false);
+		}
+		
+		switch (curr_weapon)
+		{
+			case 0:
+				weapon_script = TheGameObject.Self.GetScript(weapon0_script_name);
+				break;
+			case 1:
+				weapon_script = TheGameObject.Self.GetScript(weapon1_script_name);
+				break;
+		}
+	}
+	
+	void SetOverheat(float val)
+	{
+		overheat = val;
 	}
 }

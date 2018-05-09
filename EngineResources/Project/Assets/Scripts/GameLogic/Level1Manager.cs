@@ -100,6 +100,11 @@ public class Level1Manager
 	public TheGameObject main_ship_spawner6;
 	TheTransform main_ship_spawner6_trans = null;
 
+	public string destroyer_ship_prefab;
+	public TheGameObject destroyer_ship_spawner;
+	TheTransform destroyer_ship_spawner_trans = null;
+
+	// Spawn
 	int ships_to_spawn = 0;
 	TheTimer timer_between_spawn = new TheTimer();
 	float time_between_spawn = 3.5f;
@@ -108,6 +113,8 @@ public class Level1Manager
 
 	TheTimer time_to_warp = new TheTimer();
 	int time_to_survive = 20;
+	TheTimer warp_time = new TheTimer();
+	bool warping = false;
 
 	TheTimer check_win_lose = new TheTimer();
 
@@ -528,7 +535,7 @@ public class Level1Manager
 			{
 				time_to_warp.Start();
 
-				SetCurrMissionObj("Survive until warp is ready");
+				SetCurrMissionObj("Survive until hyperspace jump is ready");
 
 				if(dialog_manager != null)
 				{
@@ -539,6 +546,12 @@ public class Level1Manager
 			}
 			case 9:
 			{
+				if(slave1_movement_script != null)
+				{
+					object[] args = {false};
+					slave1_movement_script.CallFunctionArgs("SetCanMove", args);
+				}
+
 				if(dialog_manager != null)
 				{
 					object[] args =  {"EndDialog"};
@@ -671,8 +684,6 @@ public class Level1Manager
 
 				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
 				{
-					TheConsole.Log("Spawning new wave");
-
 					SpawnNextWave(5);
 					new_spawn_timer.Start();
 				}
@@ -700,8 +711,6 @@ public class Level1Manager
 
 				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
 				{
-					TheConsole.Log("Spawning new wave");
-
 					SpawnNextWave(5);
 					new_spawn_timer.Start();
 				}
@@ -723,6 +732,20 @@ public class Level1Manager
 					NextMissionState();
 				}
 				
+				break;
+			}
+			case 9:
+			{
+				if(dialog_manager != null)
+				{
+					bool running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
+
+					if(!running)
+					{
+						SlaveWarp();
+					}
+				}
+
 				break;
 			}
 			/*case 8:
@@ -951,6 +974,12 @@ public class Level1Manager
 				--ships_to_spawn;
 			}
 		}
+	}
+
+	void SlaveWarp()
+	{
+		warp_time.Start();
+		warping = true;
 	}
 
 	void SpawnNextWave(int ships)
