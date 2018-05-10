@@ -22,7 +22,9 @@ public class TurretAI {
 	TheTransform RBlasterTransform = null;
 	TheFactory RBlasterFactory = null;
 	bool shoot = false;
-	
+	public TheGameObject DirectionGO = null;
+	TheTransform DirectionTransform = null;
+
 	TheGameObject TargetPlayer = null;
 	TheTransform PlayerTransform = null;
 	TheVector3 PlayerPosition;
@@ -60,6 +62,8 @@ public class TurretAI {
 		LBlasterFactory.StartFactory();
 		RBlasterFactory	= RBlaster.GetComponent<TheFactory>();
 		RBlasterFactory.StartFactory();
+		
+		DirectionTransform = DirectionGO.GetComponent<TheTransform>();
 		
 		AudioSource = TurretBase.GetComponent<TheAudioSource>();
 		
@@ -115,15 +119,15 @@ public class TurretAI {
 		if (BlasterRotation.z >= MinAngleBlasters && BlasterRotation.z <= MaxAngleBlasters)
 		{
 			if (angle > BlasterRotation.z)
-				BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, BlasterRotation.z + DeltaTime * BlasterRotationSpeed));
+				BlasterTransform.SetIncrementalRotation(new TheVector3(0, BlasterRotation.y, BlasterRotation.z + DeltaTime * BlasterRotationSpeed));
 			else
-				BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, BlasterRotation.z - DeltaTime * BlasterRotationSpeed));		
+				BlasterTransform.SetIncrementalRotation(new TheVector3(0, BlasterRotation.y, BlasterRotation.z - DeltaTime * BlasterRotationSpeed));		
 		}
 		
 		if (BlasterRotation.z < MinAngleBlasters)
-			BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, MinAngleBlasters));
+			BlasterTransform.SetIncrementalRotation(new TheVector3(0, BlasterRotation.y, MinAngleBlasters));
 		else if (BlasterRotation.z > MaxAngleBlasters)
-			BlasterTransform.SetIncrementalRotation(new TheVector3(0, 0, MaxAngleBlasters));
+			BlasterTransform.SetIncrementalRotation(new TheVector3(0, BlasterRotation.y, MaxAngleBlasters));
 
 		//BlasterTransform.QuatRotation = TheQuaternion.Slerp(BlasterTransform.QuatRotation, rotation, DeltaTime * RotationSpeed);
 	}
@@ -151,14 +155,16 @@ public class TurretAI {
 
 					if(laser_script != null)
 					{
+						DirectionTransform.LookAt(PlayerPosition);
+						
 						if (shoot)
 						{
-							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, LBlasterTransform.ForwardDirection, CannonTransform.QuatRotation};
+							object[] args = {LBlaster, LaserSpeed, BaseLaserDamage, CannonTransform.RightDirection, DirectionTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);
 						}
 						else
 						{
-							object[] args = {TurretBase, LaserSpeed, BaseLaserDamage, RBlasterTransform.ForwardDirection, CannonTransform.QuatRotation};
+							object[] args = {RBlaster, LaserSpeed, BaseLaserDamage, CannonTransform.RightDirection, DirectionTransform.QuatRotation};
 							laser_script.CallFunctionArgs("SetInfo", args);						
 						}
 						shoot = !shoot;
