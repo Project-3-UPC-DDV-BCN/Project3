@@ -9,8 +9,8 @@ public class Arrow {
 	private TheGameObject curr_target = null;
 	private TheGameObject self = null;
 	//Angle variables
-	private TheVector3 original_angle = TheVector3.Up;
-	private TheVector3 curr_angle = null;
+	private TheVector3 original_angle = new TheVector3(0,1,0);
+	private TheVector3 curr_angle = new TheVector3(0,0,0);
 	
 	private TheVector3 original_arrow_pos = null;
 	public float radius = 5f;
@@ -23,8 +23,8 @@ public class Arrow {
 		if(targeting_script != null)
 			curr_target = (TheGameObject)targeting_script.CallFunctionArgs("GetTarget");
 		if(arrow_go != null)
-			original_arrow_pos = arrow_go.GetComponent<TheTransform>().GlobalPosition;
-		
+			original_arrow_pos = arrow_go.GetComponent<TheRectTransform>().Position;
+			
 	}
 	
 	void Update () {
@@ -37,7 +37,10 @@ public class Arrow {
 		if(arrow_go != null)
 		{
 			//Update Position
-			arrow_go.GetComponent<TheTransform>().GlobalPosition = original_arrow_pos + radius * curr_angle;
+			curr_angle.x = curr_angle.x * radius;
+			curr_angle.y = curr_angle.y * radius;
+			curr_angle.z = curr_angle.z * radius;
+			arrow_go.GetComponent<TheRectTransform>().Position = original_arrow_pos + curr_angle;
 			//Rotate Arrow
 			
 			
