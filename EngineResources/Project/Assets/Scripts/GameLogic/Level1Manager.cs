@@ -111,10 +111,14 @@ public class Level1Manager
 	TheTimer new_spawn_timer = new TheTimer();
 	float time_between_new_spawn = 50.0f;
 
+	// Warp
 	TheTimer time_to_warp = new TheTimer();
 	int time_to_survive = 20;
+	
+	TheTimer warp_prepare_time = new TheTimer();
 	TheTimer warp_time = new TheTimer();
 	bool warping = false;
+	bool preparing_warp = false;
 
 	TheTimer check_win_lose = new TheTimer();
 
@@ -372,10 +376,26 @@ public class Level1Manager
 	{
 		TheData.AddString("score", "0");
 		TheData.AddString("time", "0");
-		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "campaign");
 		TheData.AddInt("won", 0);
+
 		TheApplication.LoadScene("Alpha1 - EndGameSceneCampaign");
+	}
+
+	void Win()
+	{
+		if(slave_audio!=null)
+		{
+			slave_audio.Play("Stop_Engine");
+			audio_source.Stop("Play_Music");
+		}
+
+		TheData.AddString("score", "0");
+		TheData.AddString("time", "0");
+		TheData.AddString("mode", "campaign");
+		TheData.AddInt("won", 1);
+
+		TheApplication.LoadScene("Alpha1 - EndGameScene");
 	}
 
 	void NextMissionState()
@@ -740,38 +760,35 @@ public class Level1Manager
 				{
 					bool running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
 
-					if(!running)
+					if(!running && !preparing_warp)
 					{
-						SlaveWarp();
+						warp_prepare_time.Start();
+						preparing_warp = true;
 					}
+
+					if(warp_prepare_time.ReadTime() > 3 && !warping)
+					{
+						warp_time.Start();
+						warping = true;
+					}
+
+					if(warping && warp_time.ReadTime() < 4)
+					{
+						TheVector3 speed_dir = new TheVector3(0, 0, 0);
+						speed_dir = slave_trans.ForwardDirection;
+						speed_dir *= warp_time.ReadTime() * TheTime.DeltaTime * 300;
+
+						slave_trans.LocalPosition += speed_dir;
+					}
+					else if(warping &&  warp_time.ReadTime() > 4)
+					{
+						Win();
+					}
+					
 				}
 
 				break;
 			}
-			/*case 8:
-			{
-				if(dialog_manager != null)
-				{
-					bool running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
-		
-					if(!running)
-					{
-						if(slave_audio!=null)
-						{
-							slave_audio.Play("Stop_Engine");
-							audio_source.Stop("Play_Music");
-						}
-						TheData.AddString("score", "0");
-						TheData.AddString("time", "0");
-						TheData.AddString("faction", "rebels");
-						TheData.AddString("mode", "campaign");
-						TheData.AddInt("won", 1);
-						TheApplication.LoadScene("Alpha1 - EndGameScene");
-					}
-				}
-
-				break;
-			}*/
 		}
 	}
 
