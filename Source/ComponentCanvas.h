@@ -30,6 +30,7 @@ public:
 	void SetTextureId(const uint& id);
 	void SetColour(const float4& colour);
 	void SetFlip(const bool& vertical_flip, const bool& horizontal_flip);
+	void SetUsesLight(const bool& set);
 
 	int GetLayer();
 	Component* GetComponent();
@@ -38,6 +39,7 @@ public:
 	uint GetTextureId() const;
 	float4 GetColour() const;
 	Mesh* GetPlane() const;
+	bool GetUsesLight() const;
 
 	bool CheckRay(LineSegment ray, CanvasRenderMode mode);
 
@@ -59,6 +61,7 @@ private:
 	bool			  vertical_flip;
 	bool			  horizontal_flip;
 	float4			  colour;
+	bool			  uses_light = false;
 };
 
 enum CanvasRenderMode
