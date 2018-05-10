@@ -1,0 +1,273 @@
+{
+    "UUID": "677133426",
+    "assets_path": "./Project/Assets/Prefabs/Laser_factory(29).jprefab",
+    "library_path": "./Project/Library/Prefabs/Laser_factory(29).jprefab",
+    "prefab_name": "Laser_factory(29)",
+    "GameObjects_Count": "1",
+    "GameObject_0": {
+        "UUID": "1145232602",
+        "Name": "Laser_factory(29)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "5",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1086972864",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "12",
+                "Active": "1",
+                "UUID": "1174447447",
+                "Object_count": "100",
+                "Spawn_position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "Spawn_scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "-nan"
+                },
+                "Life_time": "8.000000",
+                "Object_to_spawn_name": "VS4 - Laser"
+            },
+            "Component_2": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1700288535",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/PlayerWeaponManager.dll",
+                    "assets_path": "",
+                    "script_name": "PlayerWeaponManager",
+                    "UUID": "47021654",
+                    "int_fields_count": "2",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "1",
+                    "string_fields_count": "5",
+                    "gameobject_fields_count": "8",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "joystick_sensivility",
+                            "field_value": "200"
+                        },
+                        "field_1": {
+                            "field_name": "num_weapons",
+                            "field_value": "2"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {
+                        "field_0": {
+                            "field_name": "is_joystick",
+                            "field_value": "1"
+                        }
+                    },
+                    "string_fields": {
+                        "field_0": {
+                            "field_name": "p1_change_weapon",
+                            "field_value": "CONTROLLER_RB"
+                        },
+                        "field_1": {
+                            "field_name": "p2_change_weapon",
+                            "field_value": "C"
+                        },
+                        "field_2": {
+                            "field_name": "shoot_button",
+                            "field_value": "RIGHT_TRIGGER"
+                        },
+                        "field_3": {
+                            "field_name": "weapon0_script_name",
+                            "field_value": "BaseLaser"
+                        },
+                        "field_4": {
+                            "field_name": "weapon1_script_name",
+                            "field_value": "ChargeLaser"
+                        }
+                    },
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "crosshair_1",
+                            "field_value": "267738717"
+                        },
+                        "field_1": {
+                            "field_name": "crosshair_2",
+                            "field_value": "79160297"
+                        },
+                        "field_2": {
+                            "field_name": "laser_light",
+                            "field_value": "1979650184"
+                        },
+                        "field_3": {
+                            "field_name": "overheat_bar_obj",
+                            "field_value": "775999235"
+                        },
+                        "field_4": {
+                            "field_name": "shoot_audio_emiter",
+                            "field_value": "670866571"
+                        },
+                        "field_5": {
+                            "field_name": "weapon_icon_1",
+                            "field_value": "1765652076"
+                        },
+                        "field_6": {
+                            "field_name": "weapon_icon_2",
+                            "field_value": "1406202872"
+                        },
+                        "field_7": {
+                            "field_name": "weapons_energy",
+                            "field_value": "218030178"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_3": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "929495106",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/BaseLaser.dll",
+                    "assets_path": "",
+                    "script_name": "BaseLaser",
+                    "UUID": "106556128",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "3",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "2",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "damage",
+                            "field_value": "10"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "laser_dir_distance",
+                            "field_value": "10000.000000"
+                        },
+                        "field_1": {
+                            "field_name": "light_duration",
+                            "field_value": "0.500000"
+                        },
+                        "field_2": {
+                            "field_name": "speed",
+                            "field_value": "1000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "laser_spawn_1",
+                            "field_value": "1634251832"
+                        },
+                        "field_1": {
+                            "field_name": "laser_spawn_2",
+                            "field_value": "268210318"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_4": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1502075089",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ChargeLaser.dll",
+                    "assets_path": "",
+                    "script_name": "ChargeLaser",
+                    "UUID": "2106096957",
+                    "int_fields_count": "1",
+                    "double_fields_count": "0",
+                    "float_fields_count": "4",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {
+                        "field_0": {
+                            "field_name": "total_damage",
+                            "field_value": "10"
+                        }
+                    },
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "laser_dir_distance",
+                            "field_value": "10000.000000"
+                        },
+                        "field_1": {
+                            "field_name": "light_duration",
+                            "field_value": "0.500000"
+                        },
+                        "field_2": {
+                            "field_name": "overheat_increment",
+                            "field_value": "0.200000"
+                        },
+                        "field_3": {
+                            "field_name": "speed",
+                            "field_value": "1000.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "laser_spawn",
+                            "field_value": "1634251832"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "0",
+        "IsRoot": "1",
+        "IsStatic": "0"
+    }
+}
