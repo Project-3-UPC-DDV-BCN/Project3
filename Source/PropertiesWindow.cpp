@@ -645,6 +645,7 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 				int curr_id = rect_transform->GetID();
 				bool controller_admision = rect_transform->GetControllerAdmision(); 
 				int order = rect_transform->GetControllerOrder(); 
+				bool uses_light = rect_transform->GetUsesLight();
 
 				bool snap_up = rect_transform->GetSnapUp();
 				bool snap_down = rect_transform->GetSnapDown();
@@ -665,11 +666,11 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 					}
 					else if(controller_admision == true)
 					{
-						if (rect_transform->GetCanvas()->IsOrderRepeated(order))
+						if (c_canvas->IsOrderRepeated(order))
 						{
 							CONSOLE_ERROR("Error assigning controller rect: order can not be repeated.");
 						}
-						if (rect_transform->GetCanvas()->IsIDInController(curr_id))
+						if (c_canvas->IsIDInController(curr_id))
 						{
 							CONSOLE_ERROR("Error assigning controller rect: a rect with the same ID already exists in controller list.");
 						}
@@ -731,30 +732,17 @@ void PropertiesWindow::DrawRectTransformPanel(ComponentRectTransform * rect_tran
 						rect_transform->SetAnchor(anchor);
 					}
 
-				/*	if (ImGui::Checkbox("Snap Up", &snap_up))
-					{
-						rect_transform->SetSnapUp(snap_up);
-					}*/
-
-					//ImGui::SameLine();
-					//if (ImGui::Checkbox("Snap Down", &snap_down))
-					//{
-					//	rect_transform->SetSnapDown(snap_down);
-					//}
-
-					//if (ImGui::Checkbox("Snap Left", &snap_left))
-					//{
-					//	rect_transform->SetSnapLeft(snap_left);
-					//}
-					//ImGui::SameLine();
-					//if (ImGui::Checkbox("Snap Right", &snap_right))
-					//{
-					//	rect_transform->SetSnapRight(snap_right);
-					//}
-
 					if (ImGui::Checkbox("Interactable", &interactable))
 					{
 						rect_transform->SetInteractable(interactable);
+					}
+
+					if (c_canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+					{
+						if (ImGui::Checkbox("Uses Light", &uses_light))
+						{
+							rect_transform->SetUsesLight(uses_light);
+						}
 					}
 
 					ImGui::Text("Has canvas");

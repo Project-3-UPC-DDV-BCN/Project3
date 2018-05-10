@@ -65,6 +65,7 @@ bool ComponentText::Update()
 		de.SetSize(c_rect_trans->GetScaledSize());
 		de.SetColour(colour);
 		de.SetFlip(true, false);
+		de.SetUsesLight(c_rect_trans->GetUsesLight());
 
 		de.SetTextureId(texture);
 		

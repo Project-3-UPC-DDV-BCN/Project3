@@ -398,7 +398,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 				// WORLD
 				if (editor_camera || canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
 				{
-					if (canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE)
+					if (canvas->GetRenderMode() == CanvasRenderMode::RENDERMODE_WORLD_SPACE && rect_trans->GetUsesLight())
 					{
 						SetUniformBool(program, "is_ui", false);
 						SetUniformBool(program, "has_opacity", false);

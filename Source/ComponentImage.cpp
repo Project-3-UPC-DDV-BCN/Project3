@@ -98,6 +98,7 @@ bool ComponentImage::Update()
 		de.SetSize(c_rect_trans->GetScaledSize());
 		de.SetColour(colour);
 		de.SetFlip(false, flip);
+		de.SetUsesLight(c_rect_trans->GetUsesLight());
 
 		if(tex != nullptr)
 		{

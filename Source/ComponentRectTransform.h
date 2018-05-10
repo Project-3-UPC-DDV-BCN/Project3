@@ -113,6 +113,9 @@ public:
 	void SetControllerOrder(int new_order);
 	int GetControllerOrder() const;
 
+	void SetUsesLight(bool set);
+	bool GetUsesLight() const;
+
 private:
 	bool GetHasParent() const;
 	bool GetHasParentInactive() const;
@@ -146,6 +149,8 @@ private:
 	bool				on_mouse_enter;
 	bool				on_mouse_over;
 	bool				on_mouse_out;
+
+	bool				uses_light;
 };
 
 #endif // !_H_COMPONENT_RECT_TRANSFORM__

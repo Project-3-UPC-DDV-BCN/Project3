@@ -34,6 +34,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 	on_mouse_out = false;
 	fixed_aspect_ratio = false;
 	aspect_ratio = 1.0f;
+	uses_light = true;
 
 	id = 0; 
 	controler_order = 0; 
@@ -788,10 +789,6 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddFloat("z_pos", z_pos);
 	data.AddVector2("size", size);
 	data.AddVector2("anchor", anchor);
-	//data.AddBool("snap_up", snap_up);
-	//data.AddBool("snap_down", snap_down);
-	//data.AddBool("snap_left", snap_left);
-	//data.AddBool("snap_right", snap_right);
 	data.AddFloat("scale", 1.0f);
 	data.AddBool("interactable", interactable);
 	data.AddBool("fixed_aspect_ratio", fixed_aspect_ratio);
@@ -799,6 +796,7 @@ void ComponentRectTransform::Save(Data & data) const
 	data.AddBool("accept_controller", GetControllerAdmision()); 
 	data.AddInt("id", GetID());
 	data.AddInt("order", GetControllerOrder());
+	data.AddBool("uses_light", GetUsesLight());
 }
 
 void ComponentRectTransform::Load(Data & data)
@@ -811,15 +809,12 @@ void ComponentRectTransform::Load(Data & data)
 	SetZPos(data.GetFloat("z_pos"));
 	SetSize(data.GetVector2("size"));
 	SetAnchor(data.GetVector2("anchor"));
-	//SetSnapUp(data.GetBool("snap_up"));
-	//SetSnapDown(data.GetBool("snap_down"));
-	//SetSnapLeft(data.GetBool("snap_left"));
-	//SetSnapRight(data.GetBool("snap_right"));
 	SetScale(data.GetFloat("scale"));
 	SetInteractable(data.GetBool("interactable"));
 	SetID(data.GetInt("id"));
 	SetControllerAdmision(data.GetBool("accept_controller")); 
 	SetControllerOrder(data.GetInt("order"));
+	SetUsesLight(data.GetBool("uses_light"));
 
 	if (GetControllerAdmision() == true)
 		GetCanvas()->controler_elements.insert(std::pair<int, ComponentRectTransform*>(GetControllerOrder(), this));
@@ -855,6 +850,16 @@ void ComponentRectTransform::SetControllerOrder(int new_order)
 int ComponentRectTransform::GetControllerOrder() const
 {
 	return controler_order;
+}
+
+void ComponentRectTransform::SetUsesLight(bool set)
+{
+	uses_light = set;
+}
+
+bool ComponentRectTransform::GetUsesLight() const
+{
+	return uses_light;
 }
 
 bool ComponentRectTransform::GetHasParent() const

@@ -42,6 +42,7 @@ bool ComponentProgressBar::Update()
 		base.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		base.SetSize(c_rect_trans->GetScaledSize());
 		base.SetColour(base_colour);
+		base.SetUsesLight(c_rect_trans->GetUsesLight());
 
 		canvas->AddDrawElement(base);
 
@@ -57,6 +58,7 @@ bool ComponentProgressBar::Update()
 		progres.SetPosition(pos);
 		progres.SetSize(float2(GetProgesSize(), c_rect_trans->GetScaledSize().y));
 		progres.SetColour(progress_colour);
+		progres.SetUsesLight(c_rect_trans->GetUsesLight());
 
 		if(progress_percentage != 0.0f)
 			canvas->AddDrawElement(progres);

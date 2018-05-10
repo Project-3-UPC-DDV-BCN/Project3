@@ -118,6 +118,7 @@ bool ComponentButton::Update()
 		de.SetTransform(c_rect_trans->GetMatrix());
 		de.SetOrtoTransform(c_rect_trans->GetOrtoMatrix());
 		de.SetSize(c_rect_trans->GetScaledSize());
+		de.SetUsesLight(c_rect_trans->GetUsesLight());
 
 		de.SetColour(colour);
 		de.SetFlip(false, false);
