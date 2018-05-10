@@ -148,14 +148,16 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				if (e.window.event == SDL_WINDOWEVENT_RESIZED)
 				{
-					if (!App->IsGame())
-					{
-						App->renderer3D->OnResize(e.window.data1, e.window.data2, App->renderer3D->editor_camera);
-					}
+					App->renderer3D->OnResize(e.window.data1, e.window.data2, App->renderer3D->editor_camera);
+
+					if (App->IsGame())
+						App->renderer3D->OnResize(e.window.data1, e.window.data2, App->renderer3D->game_camera);
+
 					for (std::list<ComponentCamera*>::iterator it = App->renderer3D->rendering_cameras.begin(); it != App->renderer3D->rendering_cameras.end(); it++)
 					{
 						App->renderer3D->OnResize(e.window.data1, e.window.data2, *it);
 					}
+
 					App->window->SetWidth(e.window.data1);
 					App->window->SetHeight(e.window.data2);
 				}

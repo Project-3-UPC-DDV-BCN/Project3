@@ -167,11 +167,8 @@ float ComponentCanvas::GetScale() const
 
 void ComponentCanvas::UpdateSize()
 {
-	if (GetSize().x != last_size.x || GetSize().y != last_size.y)
-	{
-		last_size = GetSize();
-		c_rect_trans->SetSize(GetSize());
-	}
+	last_size = GetSize();
+	c_rect_trans->SetSize(GetSize());
 }
 
 void ComponentCanvas::AddDrawElement(CanvasDrawElement de)
@@ -414,6 +411,10 @@ void CanvasDrawElement::SetFlip(const bool& _vertical_flip, const bool& _horizon
 	horizontal_flip = _horizontal_flip;
 }
 
+void CanvasDrawElement::SetUsesLight(const bool & set)
+{
+}
+
 int CanvasDrawElement::GetLayer()
 {
 	return layer;
@@ -485,6 +486,11 @@ float4 CanvasDrawElement::GetColour() const
 Mesh * CanvasDrawElement::GetPlane() const
 {
 	return plane;
+}
+
+bool CanvasDrawElement::GetUsesLight() const
+{
+	return false;
 }
 
 bool CanvasDrawElement::CheckRay(LineSegment ray, CanvasRenderMode mode)

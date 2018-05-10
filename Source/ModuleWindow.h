@@ -19,8 +19,8 @@ public:
 	bool CleanUp();
 
 	void SetTitle(const char* title);
-	uint GetWidth() const;
-	uint GetHeight() const;
+	uint GetWidth();
+	uint GetHeight();
 	void SetWidth(uint width);
 	void SetHeight(uint height);
 	void SetSize(uint width, uint height);
@@ -47,8 +47,8 @@ public:
 	SDL_Texture* engine_icon;
 
 private:
-	uint screen_width;
-	uint screen_height;
+	int screen_width;
+	int screen_height;
 	bool is_fullscreen;
 	bool is_resizable;
 	bool is_borderless;
