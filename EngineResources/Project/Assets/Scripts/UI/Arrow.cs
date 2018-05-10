@@ -20,7 +20,6 @@ public class Arrow {
 		self = TheGameObject.Self;
 		if(self != null)
 			targeting_script = TheGameObject.Self.GetScript("Targeting");
-	
 		if(targeting_script != null)
 			curr_target = (TheGameObject)targeting_script.CallFunctionArgs("GetTarget");
 		if(arrow_go != null)
