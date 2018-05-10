@@ -167,11 +167,8 @@ float ComponentCanvas::GetScale() const
 
 void ComponentCanvas::UpdateSize()
 {
-	if (GetSize().x != last_size.x || GetSize().y != last_size.y)
-	{
-		last_size = GetSize();
-		c_rect_trans->SetSize(GetSize());
-	}
+	last_size = GetSize();
+	c_rect_trans->SetSize(GetSize())
 }
 
 void ComponentCanvas::AddDrawElement(CanvasDrawElement de)

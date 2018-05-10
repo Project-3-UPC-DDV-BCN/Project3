@@ -41,8 +41,9 @@ bool ModuleWindow::Init(Data* editor_config)
 		//Get Config Data
 		if (editor_config->EnterSection("Window_Config"))
 		{
-			screen_width = editor_config->GetInt("screen_width");
-			screen_height = editor_config->GetInt("screen_height");
+			int width = editor_config->GetInt("screen_width");
+			int height = editor_config->GetInt("screen_height");
+			SetSize(width, height);
 			is_fullscreen = editor_config->GetBool("Fullscreen");
 			is_resizable = editor_config->GetBool("Window_Resizable");
 			is_borderless = editor_config->GetBool("Window_Borderless");
@@ -123,29 +124,49 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-uint ModuleWindow::GetWidth() const
+uint ModuleWindow::GetWidth()
 {
+	SDL_GetWindowSize(window, &screen_width, &screen_height);
+
 	return screen_width;
 }
 
-uint ModuleWindow::GetHeight() const
+uint ModuleWindow::GetHeight()
 {
+	SDL_GetWindowSize(window, &screen_width, &screen_height);
+
 	return screen_height;
 }
 
 void ModuleWindow::SetWidth(uint width)
 {
-	screen_width = width;
+	if (width > 0)
+	{
+		screen_width = width;
+
+		SDL_SetWindowSize(window, screen_width, screen_height);
+	}
 }
 
 void ModuleWindow::SetHeight(uint height)
 {
-	screen_height = height;
+	if (height > 0)
+	{
+		screen_height = height;
+
+		SDL_SetWindowSize(window, screen_width, screen_height);
+	}
 }
 
 void ModuleWindow::SetSize(uint width, uint height)
 {
-	SDL_SetWindowSize(window, width, height);
+	if (width > 0)
+		screen_width = width;
+
+	if (height > 0)
+		screen_height = height;
+
+	SDL_SetWindowSize(window, screen_width, screen_height);
 }
 
 float ModuleWindow::GetBrightness() const
@@ -221,8 +242,8 @@ void ModuleWindow::SetIcon(const char * path)
 void ModuleWindow::SaveData(Data * data)
 {
 	data->CreateSection("Window_Config");
-	data->AddInt("screen_width", screen_width);
-	data->AddInt("screen_height", screen_height);
+	data->AddInt("screen_width", GetWidth());
+	data->AddInt("screen_height", GetHeight());
 	data->AddBool("Fullscreen", is_fullscreen);
 	data->AddBool("Window_Resizable", is_resizable);
 	data->AddBool("Window_Borderless", is_borderless);
