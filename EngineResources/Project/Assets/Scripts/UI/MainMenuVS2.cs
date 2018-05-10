@@ -4,6 +4,7 @@ using TheEngine.TheConsole;
 public class MainMenuVS2 
 {
 	public TheGameObject menu_go;
+	public TheCanvas menu_canvas; 
 	public TheGameObject side_selection_go;
 	
 	// Menu
@@ -40,10 +41,13 @@ public class MainMenuVS2
 
 	bool pressed_sound = false;
 	bool over_sound = false;
+	bool mouse_moved = false; 
 
 	void Start () 
 	{
 		// Menu
+		menu_canvas = menu_go.GetComponent<TheCanvas>(); 
+
 		if(menu_go != null)
 			menu_go.SetActive(true);
 	
@@ -101,12 +105,45 @@ public class MainMenuVS2
 			menu_audio_source.Play("Play_Menu_song");
 
 		TheData.AddString("faction", "no_str");
+		
 	}
 	
 	void Update ()
 	{
+		//Controller Managing
+		if(TheInput.IsKeyDown("UP_ARROW"))
+		{
+			menu_canvas.EnableCurrent();
+			menu_canvas.ControllerIDDown(); 
+			over_sound = true; 
+		}
+
+		if(TheInput.IsKeyDown("DOWN_ARROW"))
+		{
+			menu_canvas.EnableCurrent();
+			menu_canvas.ControllerIDUp();
+			over_sound = true; 
+		}
+
+		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		{
+			menu_canvas.EnableCurrent();
+			menu_canvas.PressButton(); 
+			pressed_sound = true; 
+					
+		}
+
+		if(TheInput.GetMouseXMotion() != 0.0 || TheInput.GetMouseYMotion() != 0.0)
+		{
+			menu_canvas.DisableCurrent();
+			mouse_moved = true; 
+		}
+
+
 		// Campaign button
-		if(campaign_rect != null)
+
+	
+			if(campaign_rect != null)
 		{
 			if(campaign_rect.OnClickUp)
 			{					
@@ -235,8 +272,8 @@ public class MainMenuVS2
 				if(side_selection_go != null)
 					side_selection_go.SetActive(false);
 
-				if(menu_go != null)
-					menu_go.SetActive(true);
+				if(menu_canvas != null)
+					menu_canvas.SetCanvasActive(true);
 
 				if(rebels_idle_image_go != null)
 					rebels_idle_image_go.SetActive(true);
@@ -318,5 +355,6 @@ public class MainMenuVS2
 				menu_audio_source.Play("Play_hover");
 			over_sound = false;
 		}
+		
 	}
 }

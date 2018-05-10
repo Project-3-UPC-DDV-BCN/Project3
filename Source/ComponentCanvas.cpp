@@ -30,6 +30,7 @@ ComponentCanvas::ComponentCanvas(GameObject * attached_gameobject)
 	c_rect_trans->SetInteractable(false);
 
 	controller_selection = false;
+	print_cursor = false; 
 	controller_id = 0; 
 }
 

@@ -184,6 +184,9 @@ public:
 	void ControllerIDUp(MonoObject * object);
 	void ControllerIDDown(MonoObject * object);
 	void SetSelectedRectID(MonoObject* object, int new_id);
+	void SetCanvasActive(MonoObject* object, bool active);
+	void EnableCurrent(MonoObject* object);
+	void DisableCurrent(MonoObject* object);
 	void PressButton(MonoObject* object);
 
 	//LIGHT
@@ -492,6 +495,9 @@ private:
 	static void ControllerIDUp(MonoObject * object);
 	static void ControllerIDDown(MonoObject * object);
 	static void SetSelectedRectID(MonoObject* object, int new_id); 
+	static void SetCanvasActive(MonoObject* object, bool active);
+	static void EnableCurrent(MonoObject* object);
+	static void DisableCurrent(MonoObject* object);
 	static void PressButton(MonoObject* object); 
 
 	// LIGHT

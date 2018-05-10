@@ -132,6 +132,7 @@ public:
 	void PrintCursor(); 
 	
 	std::map<int, ComponentRectTransform*> controler_elements;
+	bool print_cursor = false; 
 
 private:
 	void UpdateSize();

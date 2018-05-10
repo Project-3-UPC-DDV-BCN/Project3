@@ -376,7 +376,7 @@ void ModuleRenderer3D::DrawCanvas(ComponentCamera* camera, bool editor_camera)
 			CanvasDrawElement* top_element = nullptr;
 			int highest_layer = -9999999999;
 
-			if (App->GetEngineState() == Application::EngineState::OnPlay && canvas->controler_elements.size() != 0)
+			if (App->GetEngineState() == Application::EngineState::OnPlay && canvas->controler_elements.size() != 0 && canvas->print_cursor == true)
 			{
 				canvas->PrintCursor(); 
 			}
