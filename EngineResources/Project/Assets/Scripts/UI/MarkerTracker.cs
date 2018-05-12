@@ -24,8 +24,6 @@ public class MarkerTracker
 	void Update () 
 	{
 		is_visible = TheCamera.IsObjectInside(transform.GlobalPosition);
-		
-		TheConsole.Log(is_visible); 
 
 		if(prev_visible != is_visible)
 		{
