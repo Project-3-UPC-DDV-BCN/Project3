@@ -11,6 +11,9 @@ namespace TheEngine
         public extern void SetCanvasActive(bool active);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern int GetCurrentID();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void ControllerIDDown();
 
         [MethodImpl(MethodImplOptions.InternalCall)]

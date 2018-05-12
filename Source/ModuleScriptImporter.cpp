@@ -767,6 +767,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCanvas::ControllerIDDown", (const void*)ControllerIDDown);
 	mono_add_internal_call("TheEngine.TheCanvas::SetCanvasActive", (const void*)SetCanvasActive);
 	mono_add_internal_call("TheEngine.TheCanvas::PressButton", (const void*)PressButton);
+	mono_add_internal_call("TheEngine.TheCanvas::GetCurrentID", (const int*)GetCurrentID);
 	mono_add_internal_call("TheEngine.TheCanvas::EnableCurrent", (const void*)EnableCurrent);
 	mono_add_internal_call("TheEngine.TheCanvas::DisableCurrent", (const void*)DisableCurrent);
 
@@ -1209,6 +1210,10 @@ void ModuleScriptImporter::DisableCurrent(MonoObject * object)
 	return ns_importer->DisableCurrent(object);
 }
 
+int ModuleScriptImporter::GetCurrentID(MonoObject * object)
+{
+	return ns_importer->GetCurrentID(object);
+}
 
 void ModuleScriptImporter::ControllerIDDown(MonoObject * object)
 {
@@ -3555,6 +3560,21 @@ void NSScriptImporter::DisableCurrent(MonoObject * object)
 		if (canvas != nullptr)
 		{
 			canvas->print_cursor = false; 
+		}
+	}
+}
+
+int NSScriptImporter::GetCurrentID(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		ComponentCanvas* canvas = (ComponentCanvas*)comp;
+
+		if (canvas != nullptr)
+		{		
+			return canvas->GetCurrentID();
 		}
 	}
 }

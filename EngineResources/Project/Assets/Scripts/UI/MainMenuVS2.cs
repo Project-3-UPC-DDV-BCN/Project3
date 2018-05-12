@@ -19,22 +19,6 @@ public class MainMenuVS2
 	TheRectTransform settings_rect = null;
 	TheRectTransform exit_rect = null;
 	TheText	explanation_text = null;	
-
-	// Side Selection
-	public TheGameObject loading_text_go;
-	public TheGameObject side_selection_continue_go;
-	public TheGameObject rebels_idle_image_go;
-	public TheGameObject rebels_selected_image_go;
-	public TheGameObject empire_idle_image_go;
-	public TheGameObject empire_selected_image_go;
-	public TheGameObject side_selection_back_go;
-
-	TheRectTransform continue_rect = null;
-	TheRectTransform rebels_idle_rect = null;
-	TheRectTransform empire_idle_rect = null;
-	TheRectTransform side_selection_back_rect = null;
-
-	string faction = "no_faction";
 	
 	// Audio
 	TheAudioSource menu_audio_source = null;
@@ -74,63 +58,40 @@ public class MainMenuVS2
 				explanation_text.Text = "";
 		}
 		
-		// Side Selection
-		if(loading_text_go != null)
-			loading_text_go.SetActive(false);
-
-		if(side_selection_continue_go != null)
-			continue_rect = side_selection_continue_go.GetComponent<TheRectTransform>();
-
-		if(rebels_idle_image_go != null)
-			rebels_idle_rect = rebels_idle_image_go.GetComponent<TheRectTransform>();
-
-		if(empire_idle_image_go != null)
-			empire_idle_rect = empire_idle_image_go.GetComponent<TheRectTransform>();
-
-		if(rebels_selected_image_go != null)
-			rebels_selected_image_go.SetActive(false);
-
-		if(empire_selected_image_go != null)
-			empire_selected_image_go.SetActive(false);
-
-		if(side_selection_continue_go != null)
-			side_selection_continue_go.SetActive(false);
-
-		if(side_selection_back_go != null)
-			side_selection_back_rect = side_selection_back_go.GetComponent<TheRectTransform>();
 
 		// Audio
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 		if(menu_audio_source != null)
 			menu_audio_source.Play("Play_Menu_song");
 
-		TheData.AddString("faction", "no_str");
+		menu_canvas.EnableCurrent();
 		
 	}
 	
 	void Update ()
 	{
 		//Controller Managing
-		if(TheInput.IsKeyDown("UP_ARROW"))
+		int id_pressed = -1; 
+		if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
 		{
+			menu_canvas.ControllerIDDown();
 			menu_canvas.EnableCurrent();
-			menu_canvas.ControllerIDDown(); 
 			over_sound = true; 
 		}
 
-		if(TheInput.IsKeyDown("DOWN_ARROW"))
-		{
-			menu_canvas.EnableCurrent();
+		if(TheInput.GetControllerButton(0, "CONTROLLER_DOWN_ARROW") == 1)
+		{			
 			menu_canvas.ControllerIDUp();
+			menu_canvas.EnableCurrent();
 			over_sound = true; 
 		}
 
-		if(TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(TheInput.GetControllerButton(0,"CONTROLLER_A") == 1)
 		{
 			menu_canvas.EnableCurrent();
 			menu_canvas.PressButton(); 
-			pressed_sound = true; 
-					
+			id_pressed = menu_canvas.GetCurrentID(); 
+			pressed_sound = true; 				
 		}
 
 		if(TheInput.GetMouseXMotion() != 0.0 || TheInput.GetMouseYMotion() != 0.0)
@@ -141,17 +102,17 @@ public class MainMenuVS2
 
 
 		// Campaign button
-
-	
-			if(campaign_rect != null)
+		if(campaign_rect != null)
 		{
-			if(campaign_rect.OnClickUp)
+			if(campaign_rect.OnClickUp || id_pressed == 0)
 			{					
 				if(menu_go != null)
 					menu_go.SetActive(false);
+
+				if(menu_audio_source != null)	
+					menu_audio_source.Stop("Play_Menu_song");
 				
-				if(side_selection_go != null)
-					side_selection_go.SetActive(true);
+				TheApplication.LoadScene("Alpha1 - Level1Scene");
 			}
 
 			if(campaign_rect.OnMouseOver)
@@ -167,7 +128,7 @@ public class MainMenuVS2
 		// Training button
 		if(training_rect != null)
 		{
-			if(training_rect.OnClickUp)
+			if(training_rect.OnClickUp || id_pressed == 1)
 			{				
 				if(menu_audio_source != null)	
 					menu_audio_source.Stop("Play_Menu_song");
@@ -188,7 +149,7 @@ public class MainMenuVS2
 		// Settings button
 		if(settings_rect != null)
 		{
-			if(settings_rect.OnClickUp)
+			if(settings_rect.OnClickUp || id_pressed == 2)
 			{
 				TheConsole.Log("Settings");
 				pressed_sound = true;
@@ -208,7 +169,7 @@ public class MainMenuVS2
 		// Exit button
 		if(exit_rect != null)
 		{
-			if(exit_rect.OnClickUp)
+			if(exit_rect.OnClickUp || id_pressed == 3)
 			{
 				pressed_sound = true;
 				TheApplication.Quit();
@@ -233,112 +194,6 @@ public class MainMenuVS2
 			{
 				if(explanation_text != null)
 					explanation_text.Text = "";
-			}
-		}
-
-		// Continue button
-		if(continue_rect != null)
-		{
-			if(continue_rect.OnMouseEnter)
-				over_sound = true;
-
-			if(continue_rect.OnClickUp && faction != "")
-			{
-				pressed_sound = true;
-
-				if(menu_audio_source != null)
-					menu_audio_source.Stop("Play_Menu_song");
-
-				if(loading_text_go != null)
-					loading_text_go.SetActive(true);
-
-				TheData.AddString("faction", faction);
-				
-				TheApplication.LoadScene("Alpha1 - Level1Scene");
-			}
-		}
-
-		// Back sideselection rect
-		if(side_selection_back_rect != null)
-		{
-			if(side_selection_back_rect.OnMouseEnter)
-				over_sound = true;
-
-			if(side_selection_back_rect.OnClickUp)
-			{
-				pressed_sound = true;
-				faction = "";
-
-				if(side_selection_go != null)
-					side_selection_go.SetActive(false);
-
-				if(menu_canvas != null)
-					menu_canvas.SetCanvasActive(true);
-
-				if(rebels_idle_image_go != null)
-					rebels_idle_image_go.SetActive(true);
-
-				if(rebels_selected_image_go != null)
-					rebels_selected_image_go.SetActive(false);
-
-				if(empire_selected_image_go != null)
-					empire_selected_image_go.SetActive(false);
-
-				if(empire_idle_image_go != null)
-					empire_idle_image_go.SetActive(true);
-
-				if(side_selection_continue_go != null)
-					side_selection_continue_go.SetActive(false);
-			}
-		}
-
-		// Rebels rect
-		if(rebels_idle_rect != null)
-		{
-			if(rebels_idle_rect.OnClickUp)
-			{
-				pressed_sound = true;
-				faction = "alliance";
-
-				if(rebels_idle_image_go != null)
-					rebels_idle_image_go.SetActive(false);
-
-				if(rebels_selected_image_go != null)
-					rebels_selected_image_go.SetActive(true);
-
-				if(empire_selected_image_go != null)
-					empire_selected_image_go.SetActive(false);
-
-				if(empire_idle_image_go != null)
-					empire_idle_image_go.SetActive(true);
-
-				if(side_selection_continue_go != null)
-					side_selection_continue_go.SetActive(true);
-			}
-		}
-
-		// Empire rect
-		if(empire_idle_rect != null)
-		{
-			if(empire_idle_rect.OnClickUp)
-			{
-				pressed_sound = true;
-				faction = "empire";
-
-				if(rebels_idle_image_go != null)
-					rebels_idle_image_go.SetActive(true);
-
-				if(rebels_selected_image_go != null)
-					rebels_selected_image_go.SetActive(false);
-
-				if(empire_selected_image_go != null)
-					empire_selected_image_go.SetActive(true);
-
-				if(empire_idle_image_go != null)
-					empire_idle_image_go.SetActive(false);
-
-				if(side_selection_continue_go != null)
-					side_selection_continue_go.SetActive(true);
 			}
 		}
 

@@ -187,6 +187,7 @@ public:
 	void SetCanvasActive(MonoObject* object, bool active);
 	void EnableCurrent(MonoObject* object);
 	void DisableCurrent(MonoObject* object);
+	int GetCurrentID(MonoObject* object);
 	void PressButton(MonoObject* object);
 
 	//LIGHT
@@ -498,6 +499,7 @@ private:
 	static void SetCanvasActive(MonoObject* object, bool active);
 	static void EnableCurrent(MonoObject* object);
 	static void DisableCurrent(MonoObject* object);
+	static int GetCurrentID(MonoObject* object);
 	static void PressButton(MonoObject* object); 
 
 	// LIGHT
