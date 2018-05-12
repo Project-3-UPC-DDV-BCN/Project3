@@ -8,6 +8,7 @@ public class GameManager
 
 	TheScript training_mode_script = null;
 	TheScript level1_script = null;
+	TheScript markers_script = null; 
 
 	public TheGameObject front_radar_go;
 	TheRadar front_radar = null;
@@ -61,6 +62,8 @@ public class GameManager
 	
 		if(back_radar_go != null)
 			back_radar = back_radar_go.GetComponent<TheRadar>();
+
+		markers_script = TheGameObject.Self.GetScript("EnemyMarker"); 
 	}
 
 	void Start ()
@@ -213,6 +216,7 @@ public class GameManager
 				if(!is_slave)
 				{
 					empire_ships.Add(add);
+					markers_script.CallFunction("UpdateShipList");
 				
 					AddToRadar(add, "Empire");
 

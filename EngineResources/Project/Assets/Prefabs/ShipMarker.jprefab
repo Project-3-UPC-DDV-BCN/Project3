@@ -1,17 +1,17 @@
 {
-    "UUID": "434569169",
+    "UUID": "1132862694",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipMarker.jprefab",
     "library_path": "./Project/Library/Prefabs/ShipMarker.jprefab",
     "prefab_name": "ShipMarker",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "1390496013",
+        "UUID": "401715605",
         "Name": "ShipMarker",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "4",
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
@@ -35,7 +35,8 @@
                 "fixed_ratio": "1.000000",
                 "accept_controller": "0",
                 "id": "0",
-                "order": "0"
+                "order": "0",
+                "uses_light": "0"
             },
             "Component_1": {
                 "Type": "0",
@@ -74,40 +75,6 @@
                 "anim_speed": "1.000000",
                 "anim_textures_count": "1",
                 "texture": "mira1"
-            },
-            "Component_3": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "812227735",
-                "Script": {
-                    "library_path": "./Project/Library/Scripts/EnemyMarker.dll",
-                    "assets_path": "",
-                    "script_name": "EnemyMarker",
-                    "UUID": "567745631",
-                    "int_fields_count": "1",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {
-                        "field_0": {
-                            "field_name": "range",
-                            "field_value": "2000"
-                        }
-                    },
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
             }
         },
         "ParentID": "0",

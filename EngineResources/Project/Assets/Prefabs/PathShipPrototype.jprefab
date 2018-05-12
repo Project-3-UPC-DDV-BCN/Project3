@@ -1,11 +1,11 @@
 {
-    "UUID": "993531374",
+    "UUID": "451500759",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
-    "GameObjects_Count": "4",
+    "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "199519384",
+        "UUID": "1216201200",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -60,14 +60,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "-13605073859011141435392.000000",
-                    "value_Y": "493326027216396484608.000000",
-                    "value_Z": "-3290900156059700166656.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "464155332820615561216.000000",
-                    "value_Y": "-2713827477156907712512.000000",
-                    "value_Z": "-1009121920348627927040.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -119,7 +119,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "100",
+                "Sound_ID": "134",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_5": {
@@ -174,11 +174,11 @@
                     "assets_path": "",
                     "script_name": "EntityProperties",
                     "UUID": "1408815119",
-                    "int_fields_count": "1",
+                    "int_fields_count": "2",
                     "double_fields_count": "0",
                     "float_fields_count": "1",
                     "bool_fields_count": "4",
-                    "string_fields_count": "2",
+                    "string_fields_count": "3",
                     "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
                     "vec3_fields_count": "0",
@@ -187,6 +187,10 @@
                         "field_0": {
                             "field_name": "base_laser_damage",
                             "field_value": "10"
+                        },
+                        "field_1": {
+                            "field_name": "life",
+                            "field_value": "100"
                         }
                     },
                     "double_fields": {},
@@ -222,12 +226,16 @@
                         "field_1": {
                             "field_name": "explosion_prefab",
                             "field_value": "ParticleExplosion"
+                        },
+                        "field_2": {
+                            "field_name": "tie_particles_prefab",
+                            "field_value": ""
                         }
                     },
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "slave_emmiter",
-                            "field_value": "249855895"
+                            "field_value": "0"
                         }
                     },
                     "vec2_fields": {},
@@ -246,7 +254,7 @@
                     "UUID": "1246964694",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "4",
+                    "float_fields_count": "6",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "1",
@@ -265,12 +273,20 @@
                             "field_value": "100000000.000000"
                         },
                         "field_2": {
+                            "field_name": "missSwitchTime",
+                            "field_value": "3.000000"
+                        },
+                        "field_3": {
                             "field_name": "move_speed",
                             "field_value": "40.000000"
                         },
-                        "field_3": {
+                        "field_4": {
                             "field_name": "rotation_speed",
                             "field_value": "20.000000"
+                        },
+                        "field_5": {
+                            "field_name": "target_sphere_radius",
+                            "field_value": "0.000000"
                         }
                     },
                     "bool_fields": {},
@@ -289,220 +305,6 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
-    },
-    "GameObject_1": {
-        "UUID": "814804668",
-        "Name": "Billboard(4)",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "944411777",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "1548955120",
-                "Script": {
-                    "library_path": "./Project/Library/Scripts/BillboardToPlayer.dll",
-                    "assets_path": "",
-                    "script_name": "BillboardToPlayer",
-                    "UUID": "1765591768",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
-            }
-        },
-        "ParentID": "199519384",
-        "IsRoot": "0",
-        "IsStatic": "0"
-    },
-    "GameObject_2": {
-        "UUID": "1735255323",
-        "Name": "canvas(4)",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "3",
-            "Component_0": {
-                "Type": "25",
-                "Active": "1",
-                "UUID": "1570421869",
-                "pos": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000"
-                },
-                "z_pos": "0.000000",
-                "size": {
-                    "value_X": "1280.000000",
-                    "value_Y": "720.000000"
-                },
-                "anchor": {
-                    "value_X": "0.500000",
-                    "value_Y": "0.500000"
-                },
-                "scale": "1.000000",
-                "interactable": "0",
-                "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000",
-                "accept_controller": "0",
-                "id": "-1",
-                "order": "-1"
-            },
-            "Component_1": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "1812393179",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_2": {
-                "Type": "24",
-                "Active": "1",
-                "UUID": "1653505585",
-                "size": {
-                    "value_X": "1280.000000",
-                    "value_Y": "720.000000"
-                },
-                "reference_size": {
-                    "value_X": "1280.000000",
-                    "value_Y": "720.000000"
-                },
-                "render_mode": "1",
-                "scale_mode": "1",
-                "scale": "1.000000"
-            }
-        },
-        "ParentID": "814804668",
-        "IsRoot": "0",
-        "IsStatic": "0"
-    },
-    "GameObject_3": {
-        "UUID": "1370796951",
-        "Name": "marker(4)",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "3",
-            "Component_0": {
-                "Type": "25",
-                "Active": "1",
-                "UUID": "1224727003",
-                "pos": {
-                    "value_X": "0.500000",
-                    "value_Y": "-1.000000"
-                },
-                "z_pos": "0.000000",
-                "size": {
-                    "value_X": "30.000000",
-                    "value_Y": "30.000000"
-                },
-                "anchor": {
-                    "value_X": "0.500000",
-                    "value_Y": "0.500000"
-                },
-                "scale": "1.000000",
-                "interactable": "0",
-                "fixed_aspect_ratio": "0",
-                "fixed_ratio": "1.000000",
-                "accept_controller": "0",
-                "id": "-1",
-                "order": "-1"
-            },
-            "Component_1": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "703952203",
-                "position": {
-                    "value_X": "0.500000",
-                    "value_Y": "-1.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_2": {
-                "Type": "26",
-                "Active": "1",
-                "UUID": "880471728",
-                "mode": "0",
-                "colour": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000",
-                    "value_W": "1.000000"
-                },
-                "flip": "0",
-                "loop": "1",
-                "anim_speed": "1.000000",
-                "anim_textures_count": "1",
-                "texture": "mira1"
-            }
-        },
-        "ParentID": "1735255323",
-        "IsRoot": "0",
         "IsStatic": "0"
     }
 }
