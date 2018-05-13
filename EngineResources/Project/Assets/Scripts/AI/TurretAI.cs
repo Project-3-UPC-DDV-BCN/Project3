@@ -99,6 +99,7 @@ public class TurretAI {
 	{
 		TheVector3 LookPos = new TheVector3(PlayerPosition.x - SelfPosition.x, 0, PlayerPosition.z - SelfPosition.z);
 		TheQuaternion q = TheQuaternion.LookRotation(LookPos, SelfTransform.UpDirection);
+		q.x = 0; q.z = 0;
 		SelfTransform.QuatRotation = TheQuaternion.Slerp(SelfTransform.QuatRotation, q, DeltaTime * RotationSpeed);
 	}
 	
