@@ -1,11 +1,11 @@
 {
-    "UUID": "632956500",
+    "UUID": "229048455",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "700050060",
+        "UUID": "1516406580",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -60,14 +60,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "-13605073859011141435392.000000",
+                    "value_Y": "493326027216396484608.000000",
+                    "value_Z": "-3290900156059700166656.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "464155332820615561216.000000",
+                    "value_Y": "-2713827477156907712512.000000",
+                    "value_Z": "-1009121920348627927040.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -119,7 +119,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "124",
+                "Sound_ID": "123",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_5": {
@@ -225,7 +225,7 @@
                         },
                         "field_1": {
                             "field_name": "explosion_prefab",
-                            "field_value": "ParticleExplosion"
+                            "field_value": "ExplosionBUM"
                         },
                         "field_2": {
                             "field_name": "tie_particles_prefab",
@@ -254,7 +254,7 @@
                     "UUID": "1246964694",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "6",
+                    "float_fields_count": "9",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "1",
@@ -269,22 +269,34 @@
                             "field_value": "30.000000"
                         },
                         "field_1": {
-                            "field_name": "max_distance_to_center_object",
-                            "field_value": "100000000.000000"
-                        },
-                        "field_2": {
-                            "field_name": "missSwitchTime",
+                            "field_name": "getAwayTime",
                             "field_value": "3.000000"
                         },
+                        "field_2": {
+                            "field_name": "getFarRadius",
+                            "field_value": "75.000000"
+                        },
                         "field_3": {
-                            "field_name": "move_speed",
+                            "field_name": "getNearRadius",
                             "field_value": "30.000000"
                         },
                         "field_4": {
+                            "field_name": "max_distance_to_center_object",
+                            "field_value": "100000000.000000"
+                        },
+                        "field_5": {
+                            "field_name": "missSwitchTime",
+                            "field_value": "3.000000"
+                        },
+                        "field_6": {
+                            "field_name": "move_speed",
+                            "field_value": "30.000000"
+                        },
+                        "field_7": {
                             "field_name": "rotation_speed",
                             "field_value": "40.000000"
                         },
-                        "field_5": {
+                        "field_8": {
                             "field_name": "target_sphere_radius",
                             "field_value": "0.000000"
                         }
@@ -308,7 +320,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1043858595",
+        "UUID": "1298936013",
         "Name": "Billboard(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -366,12 +378,12 @@
                 }
             }
         },
-        "ParentID": "700050060",
+        "ParentID": "1516406580",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1485144368",
+        "UUID": "540302256",
         "Name": "canvas(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -442,12 +454,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1043858595",
+        "ParentID": "1298936013",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "193408772",
+        "UUID": "1059804124",
         "Name": "marker(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -519,7 +531,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1485144368",
+        "ParentID": "540302256",
         "IsRoot": "0",
         "IsStatic": "0"
     }
