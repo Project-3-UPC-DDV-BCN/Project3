@@ -85,7 +85,13 @@ bool ModuleWindow::Init(Data* editor_config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(DEFAULT_SCENE_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, flags);
+		const char* title = DEFAULT_SCENE_TITLE;
+		if (App->IsGame())
+		{
+			title = "The Slave One";
+		}
+
+		window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, flags);
 
 		if(window == NULL)
 		{

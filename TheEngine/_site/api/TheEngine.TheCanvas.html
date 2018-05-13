@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class TheRectTransform
+    <title>Class TheCanvas
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class TheRectTransform
+    <meta name="title" content="Class TheCanvas
    ">
     <meta name="generator" content="docfx 2.33.0.0">
     
@@ -68,10 +68,10 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="TheEngine.TheRectTransform">
+            <article class="content wrap" id="_content" data-uid="TheEngine.TheCanvas">
   
   
-  <h1 id="TheEngine_TheRectTransform" data-uid="TheEngine.TheRectTransform" class="text-break">Class TheRectTransform
+  <h1 id="TheEngine_TheCanvas" data-uid="TheEngine.TheCanvas" class="text-break">Class TheCanvas
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
@@ -79,7 +79,7 @@
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="TheEngine.TheComponent.html">TheComponent</a></div>
-    <div class="level2"><span class="xref">TheRectTransform</span></div>
+    <div class="level2"><span class="xref">TheCanvas</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -110,23 +110,63 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="TheEngine.html">TheEngine</a></h6>
   <h6><strong>Assembly</strong>: TheEngine.dll</h6>
-  <h5 id="TheEngine_TheRectTransform_syntax">Syntax</h5>
+  <h5 id="TheEngine_TheCanvas_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TheRectTransform : TheComponent</code></pre>
+    <pre><code class="lang-csharp hljs">public class TheCanvas : TheComponent</code></pre>
   </div>
-  <h3 id="properties">Properties
+  <h3 id="methods">Methods
   </h3>
   
   
-  <a id="TheEngine_TheRectTransform_Anchor_" data-uid="TheEngine.TheRectTransform.Anchor*"></a>
-  <h4 id="TheEngine_TheRectTransform_Anchor" data-uid="TheEngine.TheRectTransform.Anchor">Anchor</h4>
+  <a id="TheEngine_TheCanvas_ControllerIDDown_" data-uid="TheEngine.TheCanvas.ControllerIDDown*"></a>
+  <h4 id="TheEngine_TheCanvas_ControllerIDDown" data-uid="TheEngine.TheCanvas.ControllerIDDown">ControllerIDDown()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TheVector3 Anchor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public void ControllerIDDown()</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  
+  
+  <a id="TheEngine_TheCanvas_ControllerIDUp_" data-uid="TheEngine.TheCanvas.ControllerIDUp*"></a>
+  <h4 id="TheEngine_TheCanvas_ControllerIDUp" data-uid="TheEngine.TheCanvas.ControllerIDUp">ControllerIDUp()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ControllerIDUp()</code></pre>
+  </div>
+  
+  
+  <a id="TheEngine_TheCanvas_DisableCurrent_" data-uid="TheEngine.TheCanvas.DisableCurrent*"></a>
+  <h4 id="TheEngine_TheCanvas_DisableCurrent" data-uid="TheEngine.TheCanvas.DisableCurrent">DisableCurrent()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DisableCurrent()</code></pre>
+  </div>
+  
+  
+  <a id="TheEngine_TheCanvas_EnableCurrent_" data-uid="TheEngine.TheCanvas.EnableCurrent*"></a>
+  <h4 id="TheEngine_TheCanvas_EnableCurrent" data-uid="TheEngine.TheCanvas.EnableCurrent">EnableCurrent()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EnableCurrent()</code></pre>
+  </div>
+  
+  
+  <a id="TheEngine_TheCanvas_GetCurrentID_" data-uid="TheEngine.TheCanvas.GetCurrentID*"></a>
+  <h4 id="TheEngine_TheCanvas_GetCurrentID" data-uid="TheEngine.TheCanvas.GetCurrentID">GetCurrentID()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int GetCurrentID()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -136,236 +176,58 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
+        <td><span class="xref">System.Int32</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="TheEngine_TheRectTransform_OnClick_" data-uid="TheEngine.TheRectTransform.OnClick*"></a>
-  <h4 id="TheEngine_TheRectTransform_OnClick" data-uid="TheEngine.TheRectTransform.OnClick">OnClick</h4>
+  <a id="TheEngine_TheCanvas_PressButton_" data-uid="TheEngine.TheCanvas.PressButton*"></a>
+  <h4 id="TheEngine_TheCanvas_PressButton" data-uid="TheEngine.TheCanvas.PressButton">PressButton()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OnClick { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public void PressButton()</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   
   
-  <a id="TheEngine_TheRectTransform_OnClickDown_" data-uid="TheEngine.TheRectTransform.OnClickDown*"></a>
-  <h4 id="TheEngine_TheRectTransform_OnClickDown" data-uid="TheEngine.TheRectTransform.OnClickDown">OnClickDown</h4>
+  <a id="TheEngine_TheCanvas_SetCanvasActive_" data-uid="TheEngine.TheCanvas.SetCanvasActive*"></a>
+  <h4 id="TheEngine_TheCanvas_SetCanvasActive_System_Boolean_" data-uid="TheEngine.TheCanvas.SetCanvasActive(System.Boolean)">SetCanvasActive(Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OnClickDown { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public void SetCanvasActive(bool active)</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="TheEngine_TheRectTransform_OnClickUp_" data-uid="TheEngine.TheRectTransform.OnClickUp*"></a>
-  <h4 id="TheEngine_TheRectTransform_OnClickUp" data-uid="TheEngine.TheRectTransform.OnClickUp">OnClickUp</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OnClickUp { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="TheEngine_TheRectTransform_OnMouseEnter_" data-uid="TheEngine.TheRectTransform.OnMouseEnter*"></a>
-  <h4 id="TheEngine_TheRectTransform_OnMouseEnter" data-uid="TheEngine.TheRectTransform.OnMouseEnter">OnMouseEnter</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OnMouseEnter { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">active</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   
   
-  <a id="TheEngine_TheRectTransform_OnMouseOut_" data-uid="TheEngine.TheRectTransform.OnMouseOut*"></a>
-  <h4 id="TheEngine_TheRectTransform_OnMouseOut" data-uid="TheEngine.TheRectTransform.OnMouseOut">OnMouseOut</h4>
+  <a id="TheEngine_TheCanvas_SetCurrentClicked_" data-uid="TheEngine.TheCanvas.SetCurrentClicked*"></a>
+  <h4 id="TheEngine_TheCanvas_SetCurrentClicked" data-uid="TheEngine.TheCanvas.SetCurrentClicked">SetCurrentClicked()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OnMouseOut { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public void SetCurrentClicked()</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="TheEngine_TheRectTransform_OnMouseOver_" data-uid="TheEngine.TheRectTransform.OnMouseOver*"></a>
-  <h4 id="TheEngine_TheRectTransform_OnMouseOver" data-uid="TheEngine.TheRectTransform.OnMouseOver">OnMouseOver</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool OnMouseOver { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="TheEngine_TheRectTransform_Position_" data-uid="TheEngine.TheRectTransform.Position*"></a>
-  <h4 id="TheEngine_TheRectTransform_Position" data-uid="TheEngine.TheRectTransform.Position">Position</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TheVector3 Position { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="TheEngine_TheRectTransform_Rotation_" data-uid="TheEngine.TheRectTransform.Rotation*"></a>
-  <h4 id="TheEngine_TheRectTransform_Rotation" data-uid="TheEngine.TheRectTransform.Rotation">Rotation</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TheVector3 Rotation { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="TheEngine_TheRectTransform_Size_" data-uid="TheEngine.TheRectTransform.Size*"></a>
-  <h4 id="TheEngine_TheRectTransform_Size" data-uid="TheEngine.TheRectTransform.Size">Size</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TheVector3 Size { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="TheEngine.TheVector3.html">TheVector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 </article>
           </div>
           

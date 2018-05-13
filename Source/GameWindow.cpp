@@ -46,6 +46,23 @@ void GameWindow::DrawWindow()
 			ImGui::Image((void*)App->renderer3D->game_camera->GetViewportTexture()->GetTextureID(), { width, height }, ImVec2(0, 1), ImVec2(1, 0));
 		}
 
+		if (ImGui::IsMouseHoveringWindow() && !App->show_mouse)
+		{
+			if (!ImGui::GetIO().MouseDrawCursor)
+			{
+				ImGui::GetIO().MouseDrawCursor = true;
+				ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+			}
+		}
+		else if (!ImGui::IsMouseHoveringWindow() && !App->show_mouse)
+		{
+			if (ImGui::GetIO().MouseDrawCursor)
+			{
+				ImGui::GetIO().MouseDrawCursor = false;
+				ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
+			}
+		}
+
 		ImGui::End();
 	}
 	else
@@ -71,9 +88,27 @@ void GameWindow::DrawWindow()
 			{
 				ImGui::Image((void*)App->renderer3D->game_camera->GetViewportTexture()->GetTextureID(), size, ImVec2(0, 1), ImVec2(1, 0));
 			}
+
+			if (App->IsPlaying() && ImGui::IsMouseHoveringWindow() && !App->show_mouse)
+			{
+				if (!ImGui::GetIO().MouseDrawCursor)
+				{
+					ImGui::GetIO().MouseDrawCursor = true;
+					ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+				}
+			}
+			else if (App->IsPlaying() && !ImGui::IsMouseHoveringWindow() && !App->show_mouse)
+			{
+				if (ImGui::GetIO().MouseDrawCursor)
+				{
+					ImGui::GetIO().MouseDrawCursor = false;
+					ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
+				}
+			}
 		}
 		ImGui::EndDock();
 	}
+
 }
 
 float2 GameWindow::GetPos() const

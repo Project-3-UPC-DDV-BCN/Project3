@@ -110,6 +110,8 @@ public:
 
 	bool quit;
 
+	bool show_mouse = true;
+
 private:
 
 	Timer	ms_timer;

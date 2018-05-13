@@ -882,6 +882,7 @@ void ModuleScriptImporter::RegisterAPI()
 	//APPLICATION
 	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
 	mono_add_internal_call("TheEngine.TheApplication::Quit", (const void*)Quit);
+	mono_add_internal_call("TheEngine.TheApplication::DrawMouse", (const void*)DrawMouse);
 
 	//RESOURCES
 	mono_add_internal_call("TheEngine.TheResources::LoadPrefab", (const void*)LoadPrefab);
@@ -1733,6 +1734,11 @@ void ModuleScriptImporter::LoadScene(MonoString * scene_name)
 void ModuleScriptImporter::Quit()
 {
 	ns_importer->Quit();
+}
+
+void ModuleScriptImporter::DrawMouse(bool draw)
+{
+	ns_importer->DrawMouse(draw);
 }
 
 void ModuleScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
@@ -5107,6 +5113,11 @@ void NSScriptImporter::Quit()
 			App->Stop();
 		}
 	}
+}
+
+void NSScriptImporter::DrawMouse(bool draw)
+{
+	App->show_mouse = draw;
 }
 
 void NSScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)

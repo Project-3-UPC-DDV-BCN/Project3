@@ -124,7 +124,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	while(SDL_PollEvent(&e))
 	{
 		App->editor->HandleInput(&e);
-
+		
 		switch(e.type)
 		{
 

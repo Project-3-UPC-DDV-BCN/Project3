@@ -19,5 +19,8 @@ namespace TheEngine
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void Quit();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void DrawMouse(bool draw);
     }
 }

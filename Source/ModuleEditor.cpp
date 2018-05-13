@@ -91,6 +91,7 @@ update_status ModuleEditor::PreUpdate(float delta_time)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGuizmo::BeginFrame();
+
 	return UPDATE_CONTINUE;
 }
 

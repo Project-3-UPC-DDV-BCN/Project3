@@ -307,6 +307,7 @@ public:
 	//APPLICATION
 	void LoadScene(MonoString* scene_name);
 	void Quit();
+	void DrawMouse(bool draw);
 
 	//SCRIPT
 	void SetBoolField(MonoObject* object, MonoString* field_name, bool value);
@@ -618,6 +619,7 @@ private:
 	//APPLICATION
 	static void LoadScene(MonoString* scene_name);
 	static void Quit();
+	static void DrawMouse(bool draw);
 
 	//SCRIPT
 	static void SetBoolField(MonoObject* object, MonoString* field_name, bool value);

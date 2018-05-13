@@ -489,7 +489,7 @@ void Application::Stop()
 {
 	if (state == OnPlay || state == OnPause) 
 		to_stop = true;
-	
+	App->show_mouse = true;
 }
 
 bool Application::IsPlaying()
