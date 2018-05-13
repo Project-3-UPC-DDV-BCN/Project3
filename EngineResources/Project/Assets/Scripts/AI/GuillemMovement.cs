@@ -40,6 +40,14 @@ public class GuillemMovement
 	public float missSwitchTime = 3f;
 	bool missSwitching = false;
 
+	// GetAway From Player
+	public float getNearRadius = 30f;
+	public float getFarRadius = 75f;
+	bool gettingAway = false;
+	TheTransform GetAway_transform = new TheTransform();
+	public float getAwayTime = 3f;
+	float getAwayTimer = 0f;
+
 	//Audio
 	TheAudioSource audio_source = null;
 
@@ -134,10 +142,36 @@ public class GuillemMovement
         {
             MoveFront();
             OrientateToTarget();
+            //KeepTargetDistance(); // Always last since can put the target_transform to null
         }
     }
 
-	void SetMovementMode(int set)
+    void KeepTargetDistance()
+    {
+        if (self_transform == null || target_transform == null) return;
+
+        TheVector3 toTargetVec = target_transform.GlobalPosition - self_transform.GlobalPosition;
+
+        if (TheVector3.Magnitude(toTargetVec) < getNearRadius && gettingAway == false)
+        {
+            GetAway_transform.GlobalPosition = GetPointInsideSphere(target_transform.GlobalPosition, getFarRadius);
+            target_transform = GetAway_transform;
+            gettingAway = true;
+        }
+
+        if (gettingAway == true)
+        {
+            getAwayTimer += TheTime.DeltaTime;
+            if (getAwayTimer > getAwayTime)
+            {
+                target_transform = null;
+                gettingAway = false;
+                getAwayTimer = 0f;
+            }
+        }
+    }
+
+    void SetMovementMode(int set)
 	{
 		movement_mode = set;
 
