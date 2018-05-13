@@ -38,7 +38,8 @@ public class TrainingModeManager
 
 	private int score = 0; 
 	
-	TheAudioSource audio_source;
+	TheAudioSource audio_source = null;
+
 	void Init()
 	{
 		TheGameObject game_manager = TheGameObject.Find("GameManager");

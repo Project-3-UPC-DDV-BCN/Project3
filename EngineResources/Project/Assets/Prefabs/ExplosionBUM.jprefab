@@ -1,11 +1,11 @@
 {
-    "UUID": "1968388409",
+    "UUID": "1103087585",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ExplosionBUM.jprefab",
     "library_path": "./Project/Library/Prefabs/ExplosionBUM.jprefab",
     "prefab_name": "ExplosionBUM",
     "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "1647973331",
+        "UUID": "1898054918",
         "Name": "ExplosionBUM",
         "Tag": "Default",
         "Layer": "Default",
@@ -36,15 +36,15 @@
             "Component_1": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1103642960",
+                "UUID": "365401927",
                 "Script": {
-                    "library_path": "./Project/Library/Scripts/ExplosionController.dll",
+                    "library_path": "./Project/Library/Scripts/ParticleAutoDestroy.dll",
                     "assets_path": "",
-                    "script_name": "ExplosionController",
-                    "UUID": "1909112147",
+                    "script_name": "ParticleAutoDestroy",
+                    "UUID": "556277305",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "3",
+                    "float_fields_count": "1",
                     "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "0",
@@ -55,16 +55,8 @@
                     "double_fields": {},
                     "float_fields": {
                         "field_0": {
-                            "field_name": "fire1_start",
-                            "field_value": "0.300000"
-                        },
-                        "field_1": {
-                            "field_name": "fire2_start",
-                            "field_value": "0.500000"
-                        },
-                        "field_2": {
-                            "field_name": "start_in",
-                            "field_value": "2.000000"
+                            "field_name": "destruction_time",
+                            "field_value": "7.000000"
                         }
                     },
                     "bool_fields": {},
@@ -81,7 +73,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "2089952929",
+        "UUID": "1222711580",
         "Name": "New GameObject(21)",
         "Tag": "Default",
         "Layer": "Default",
@@ -121,12 +113,12 @@
                 }
             }
         },
-        "ParentID": "1647973331",
+        "ParentID": "1898054918",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1858367424",
+        "UUID": "151144100",
         "Name": "New GameObject(22)",
         "Tag": "Default",
         "Layer": "Default",
@@ -166,12 +158,12 @@
                 }
             }
         },
-        "ParentID": "1647973331",
+        "ParentID": "1898054918",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1951145495",
+        "UUID": "133515800",
         "Name": "New GameObject(23)",
         "Tag": "Default",
         "Layer": "Default",
@@ -183,8 +175,8 @@
                 "Active": "1",
                 "UUID": "721596919",
                 "position": {
-                    "value_X": "-2.990364",
-                    "value_Y": "0.282038",
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -211,12 +203,12 @@
                 }
             }
         },
-        "ParentID": "1647973331",
+        "ParentID": "1898054918",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_4": {
-        "UUID": "1622416410",
+        "UUID": "1194287584",
         "Name": "New GameObject(24)",
         "Tag": "Default",
         "Layer": "Default",
@@ -228,8 +220,8 @@
                 "Active": "1",
                 "UUID": "208451834",
                 "position": {
-                    "value_X": "2.965747",
-                    "value_Y": "-1.519996",
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -256,7 +248,7 @@
                 }
             }
         },
-        "ParentID": "1647973331",
+        "ParentID": "1898054918",
         "IsRoot": "0",
         "IsStatic": "0"
     }

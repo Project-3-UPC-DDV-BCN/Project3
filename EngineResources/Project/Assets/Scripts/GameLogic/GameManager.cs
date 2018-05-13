@@ -37,10 +37,7 @@ public class GameManager
 
 	void Init ()
 	{
-		team = TheData.GetString("faction");
-
-		if(team == "no_str")
-			team = "alliance";
+		team = "alliance";
 
         TheConsole.Log("Team: " + team); 
 
@@ -219,7 +216,11 @@ public class GameManager
 				if(!is_slave)
 				{
 					empire_ships.Add(add);
-					markers_script.CallFunction("UpdateShipList");
+
+					// Why doing this instead of passing directly the game object, i dont get it
+					if(markers_script != null)
+						markers_script.CallFunction("UpdateShipList"); 
+
 				
 					AddToRadar(add, "Empire");
 

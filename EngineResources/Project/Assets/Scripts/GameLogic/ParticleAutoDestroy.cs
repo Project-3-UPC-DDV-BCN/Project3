@@ -7,7 +7,7 @@ public class ParticleAutoDestroy
 
 	TheTimer timer = new TheTimer();
 
-	private bool to_destroy = false;
+	private bool to_start = true;
 	private int iterations_waited = 0;
 	
 	TheGameObject self = null;
@@ -17,42 +17,46 @@ public class ParticleAutoDestroy
 		self = TheGameObject.Self;
 	}
 	
-	void Destroy()
+	void FireEmiters()
 	{
-		to_destroy = true;
+		int childs_count = self.GetChildCount();
+
+		for(int i = 0; i < childs_count; ++i)
+		{
+			TheGameObject child = self.GetChild(i);
+
+			if(child != null)
+			{
+				TheParticleEmmiter emmiter = child.GetComponent<TheParticleEmmiter>();
+
+				if(emmiter != null)
+				{
+					emmiter.Play();
+				}
+			}
+		}
 	}
 
 	void Update () 
 	{
-		if(timer.ReadTime() > destruction_time)
+		if(timer.ReadTime() > destruction_time && !to_start)
 		{
 			TheGameObject.Destroy(self);
 			return;
 		}
 
-		if(to_destroy && iterations_waited == 2)
+		if(to_start && iterations_waited == 2)
 		{
 			int childs_count = self.GetChildCount();
 
-			for(int i = 0; i < childs_count; ++i)
-			{
-				TheGameObject child = self.GetChild(i);
-
-				if(child != null)
-				{
-					TheParticleEmmiter emmiter = child.GetComponent<TheParticleEmmiter>();
-
-					if(emmiter != null)
-					{
-						emmiter.Play();
-					}
-				}
-			}
+			FireEmiters();
 
 			timer.Start();
+
+			to_start = false;
 		}	
 
-		if(to_destroy)
+		if(to_start)
 			iterations_waited++;
 	}
 }
