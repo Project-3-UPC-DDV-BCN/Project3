@@ -215,7 +215,7 @@ public class VS4StarShipShooting
 			laser_light.GetComponent<TheLight>().SetComponentActive(false);
 		}
 
-        if(TheInput.IsKeyDown(ChangeWeaponKeyboardInput) || TheInput.GetControllerButton(0, ChangeWeaponControllerInput) == 3)
+        if(TheInput.IsKeyDown(ChangeWeaponKeyboardInput) || TheInput.GetControllerButton(0, ChangeWeaponControllerInput) == 1)
 			ChangeWeapon();
     }
 
