@@ -936,7 +936,7 @@ public class PlayerMovement
 			if(tmp_wing_int > 50 && !wings_part_mid_green.IsActive())
 			{
 				wings_part_mid_green.SetActive(true);
-				body_part_top_orange.SetActive(false);
+				wings_part_mid_orange.SetActive(false);
 				wings_part_mid_red.SetActive(false);
 			}
 			if(tmp_wing_int > 25 && tmp_wing_int <= 50 && !wings_part_mid_orange.IsActive())
