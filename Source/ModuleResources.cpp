@@ -2042,7 +2042,7 @@ void ModuleResources::CreateDefaultShaders()
 			"					color.a = self_transparency / 100;\n"
 			"				}\n	"
 		///	"			color = vec4(texture2D(Tex_ShadowMap, TexCoord).r,texture2D(Tex_ShadowMap, TexCoord).r, texture2D(Tex_ShadowMap, TexCoord).r * (1-shadow), color.a);  \n"
-			"			color = vec4((color.rgb)  * (1 - shadow) * (result) + (color.rgb * AMBIENT_LIGHT), color.a);  \n"
+				"			color = vec4((color.rgb)  * (1 - shadow) * (result) + (color.rgb * AMBIENT_LIGHT), color.a);  \n"
 		//	"			color.rgb = color.rgb / (color.rgb + vec3(1.0));\n"
 		//	"			color.rgb = pow(color.rgb, vec3(1.0 / 2.2));\n"
 

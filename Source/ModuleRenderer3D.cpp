@@ -1763,7 +1763,8 @@ void ModuleRenderer3D::SetDepthMap()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
@@ -1786,7 +1787,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		glEnable(GL_DEPTH_TEST);
 
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+		//glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
 
 		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 		glm::vec3 l_pos;
@@ -1828,7 +1829,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
 		{
 			ComponentMeshRenderer* mesh = (ComponentMeshRenderer*)(*it)->GetComponent(Component::CompMeshRenderer);
-			if (mesh != nullptr)
+			if (mesh != nullptr && mesh->GetMesh() != nullptr && mesh->GetMaterial() != nullptr && mesh->has_light == true)
 				SendObjectToDepthShader(program, mesh);
 		}
 
