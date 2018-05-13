@@ -71,8 +71,8 @@ public class GameManager
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
 		
-		if(controller_image != null)
-			PauseGame(true);
+		/*if(controller_image != null)
+			PauseGame(true);*/
 	}
 	
 	void Update()
@@ -131,7 +131,7 @@ public class GameManager
 		game_paused = pause;
 		
 		TheApplication.DrawMouse(pause);
-		//TheApplication.SetMusicPause(pause);
+		TheApplication.SetMusicPause(pause);
 	}
 
 	bool GetIsTrainingMode()

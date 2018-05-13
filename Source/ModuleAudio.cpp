@@ -66,7 +66,7 @@ update_status ModuleAudio::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Audio PreUpdate", Profiler::Color::Yellow);
 
-	if ((App->IsStopped() || App->IsPaused()) && !stop_all) // pause_from_game
+	if ((App->IsStopped() || App->IsPaused()) && !stop_all)
 	{
 		AK::SoundEngine::StopAll();
 		stop_all = true;
@@ -364,4 +364,8 @@ int * ModuleAudio::GetPitchPtr()
 void ModuleAudio::SetPauseInGame(const bool set)
 {
 	pause_from_game = set;
+	if (pause_from_game)
+		AK::SoundEngine::PostEvent("Pause_FX", 0, AK_EnableGetMusicPlayPosition);
+	else
+		AK::SoundEngine::PostEvent("Resume_FX", 0, AK_EnableGetMusicPlayPosition);
 }
