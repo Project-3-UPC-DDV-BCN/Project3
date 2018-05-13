@@ -43,8 +43,8 @@ public class GuillemMovement
 	// GetAway From Player
 	public float getNearRadius = 30f;
 	public float getFarRadius = 75f;
-	bool gettingAway = false;
-	TheTransform GetAway_transform = new TheTransform();
+	public bool gettingAway = false; // public for debug reasons
+	TheVector3 getAwayPos = new TheVector3();
 	public float getAwayTime = 3f;
 	float getAwayTimer = 0f;
 
@@ -142,7 +142,7 @@ public class GuillemMovement
         {
             MoveFront();
             OrientateToTarget();
-            //KeepTargetDistance(); // Always last since can put the target_transform to null
+            KeepTargetDistance(); // Always last since can put the target_transform to null
         }
     }
 
@@ -151,24 +151,24 @@ public class GuillemMovement
         if (self_transform == null || target_transform == null) return;
 
         TheVector3 toTargetVec = target_transform.GlobalPosition - self_transform.GlobalPosition;
-
+		//TheConsole.Log("Before Getting Near");
         if (TheVector3.Magnitude(toTargetVec) < getNearRadius && gettingAway == false)
         {
-            GetAway_transform.GlobalPosition = GetPointInsideSphere(target_transform.GlobalPosition, getFarRadius);
-            target_transform = GetAway_transform;
+            getAwayPos = GetPointInsideSphere(target_transform.GlobalPosition, getFarRadius);
             gettingAway = true;
         }
-
+		
         if (gettingAway == true)
         {
+			//TheConsole.Log("Before Getting Away");
             getAwayTimer += TheTime.DeltaTime;
             if (getAwayTimer > getAwayTime)
             {
-                target_transform = null;
+				//TheConsole.Log("After Getting Away");
                 gettingAway = false;
                 getAwayTimer = 0f;
             }
-        }
+        } else getAwayTimer = 0f;
     }
 
     void SetMovementMode(int set)
@@ -363,12 +363,15 @@ public class GuillemMovement
     {
 		TheVector3 self_pos = self_transform.GlobalPosition;
 		TheVector3 target_pos = new TheVector3();
-		//if(missSwitching == true) {
-			 target_pos = GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
-		//}
-		//else {
-		//	target_pos = target_transform.GlobalPosition;
-		//}
+		if(gettingAway == true) target_pos = getAwayPos;
+		else {
+			//if(missSwitching == true) {
+				 target_pos = GetPointInsideSphere(target_transform.GlobalPosition, target_sphere_radius);
+			//}
+			//else {
+			//	target_pos = target_transform.GlobalPosition;
+			//}
+		}
 		
 		TheVector3 self_trans_rot = self_transform.LocalRotation;
 		
