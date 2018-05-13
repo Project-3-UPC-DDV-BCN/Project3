@@ -22,5 +22,8 @@ namespace TheEngine
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void DrawMouse(bool draw);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void SetMusicPause(bool set);
     }
 }

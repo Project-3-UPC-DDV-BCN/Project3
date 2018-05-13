@@ -131,6 +131,7 @@ public class GameManager
 		game_paused = pause;
 		
 		TheApplication.DrawMouse(pause);
+		//TheApplication.SetMusicPause(pause);
 	}
 
 	bool GetIsTrainingMode()

@@ -883,6 +883,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheApplication::LoadScene", (const void*)LoadScene);
 	mono_add_internal_call("TheEngine.TheApplication::Quit", (const void*)Quit);
 	mono_add_internal_call("TheEngine.TheApplication::DrawMouse", (const void*)DrawMouse);
+	mono_add_internal_call("TheEngine.TheApplication::SetMusicPause", (const void*)SetMusicPause);
 
 	//RESOURCES
 	mono_add_internal_call("TheEngine.TheResources::LoadPrefab", (const void*)LoadPrefab);
@@ -1739,6 +1740,11 @@ void ModuleScriptImporter::Quit()
 void ModuleScriptImporter::DrawMouse(bool draw)
 {
 	ns_importer->DrawMouse(draw);
+}
+
+void ModuleScriptImporter::SetMusicPause(bool set)
+{
+	ns_importer->SetMusicPause(set);
 }
 
 void ModuleScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
@@ -5119,6 +5125,12 @@ void NSScriptImporter::DrawMouse(bool draw)
 {
 	App->show_mouse = draw;
 }
+
+void NSScriptImporter::SetMusicPause(bool set)
+{
+	App->audio->SetPauseInGame(set);
+}
+
 
 void NSScriptImporter::SetBoolField(MonoObject * object, MonoString * field_name, bool value)
 {

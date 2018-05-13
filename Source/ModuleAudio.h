@@ -76,6 +76,8 @@ public:
 	int* GetVolumePtr();
 	int* GetPitchPtr();
 
+	void SetPauseInGame(const bool set);
+
 private:
 
 	Wwise::SoundObject* camera_listener = nullptr;
@@ -97,6 +99,8 @@ private:
 	JSONTool* json = nullptr;
 
 	bool stop_all = false;
+
+	bool pause_from_game = false;
 };
 
 #endif // __ModuleAudio_H__

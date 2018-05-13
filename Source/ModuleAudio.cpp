@@ -66,7 +66,7 @@ update_status ModuleAudio::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Audio PreUpdate", Profiler::Color::Yellow);
 
-	if ((App->IsStopped() || App->IsPaused()) && !stop_all)
+	if ((App->IsStopped() || App->IsPaused()) && !stop_all) // pause_from_game
 	{
 		AK::SoundEngine::StopAll();
 		stop_all = true;
@@ -82,6 +82,7 @@ update_status ModuleAudio::PreUpdate(float dt)
 update_status ModuleAudio::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Audio PostUpdate", Profiler::Color::Yellow);
+	
 	AK::SoundEngine::RenderAudio();
 
 	return update_status::UPDATE_CONTINUE;
@@ -358,4 +359,9 @@ int * ModuleAudio::GetVolumePtr()
 int * ModuleAudio::GetPitchPtr()
 {
 	return &pitch;
+}
+
+void ModuleAudio::SetPauseInGame(const bool set)
+{
+	pause_from_game = set;
 }
