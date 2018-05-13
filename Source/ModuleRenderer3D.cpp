@@ -1779,15 +1779,10 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 	if (dir_lights[0] != nullptr)
 	{
 	
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
-		//glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 
-		glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK); // Cull back-facing triangles -> draw only front-facing triangles
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 
 		ComponentTransform* trans = (ComponentTransform*)dir_lights[0]->GetGameObject()->GetComponent(Component::CompTransform);
 		glm::vec3 l_pos;
@@ -1795,28 +1790,17 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 		l_pos.y = trans->GetGlobalPosition().y;
 		l_pos.z = trans->GetGlobalPosition().z;
 
-		glm::vec3 l_dir;
-		l_dir.x = trans->GetMatrix().WorldZ().x;
-		l_dir.y = trans->GetMatrix().WorldZ().y;
-		l_dir.z = trans->GetMatrix().WorldZ().z;
-
-		/*	glm::mat4 biasMatrix(
-		0.5, 0.0, 0.0, 0,
-		0.0, 0.5, 0.0, 0,
-		0.0, 0.0, 0.5, 0,
-		0.5, 0.5, 0.5, 1.0
-		);*/
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depth_mapFBO);
 
-		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-15500.0, 15500.0, -15000.0, 15000.0, 0.0, 15000.0);
+		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-5500.0, 5500.0, -15000.0, 15000.0, 0.0, 15000.0);
 		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
 		light_space_mat = depthMVP;
-		//	glm::mat4 MVP_BIAS = biasMatrix* depthMVP;
-		//	bias_MVP = glm::value_ptr(MVP_BIAS);
-		glClear(GL_DEPTH_BUFFER_BIT);
 
+		glClear(GL_DEPTH_BUFFER_BIT);
+		//glCullFace(GL_FRONT);
 		uint program = 0;
 		ShaderProgram* shader = App->resources->GetShaderProgram("depth_shader_program");
 		program = shader->GetProgramID();
@@ -1832,6 +1816,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 			if (mesh != nullptr && mesh->GetMesh() != nullptr && mesh->GetMaterial() != nullptr && mesh->has_light == true)
 				SendObjectToDepthShader(program, mesh);
 		}
+		//glCullFace(GL_BACK);
 
 		shader = App->resources->GetShaderProgram("default_shader_program");
 		program = shader->GetProgramID();
