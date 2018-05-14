@@ -74,6 +74,9 @@ public class PlayerWeaponManager
 		if(weapon_icon_2 != null)
 			weapon_icon_2.SetActive(false);
 		
+		if(overheat_bar_obj != null)
+			overheat_bar_obj.SetActive(false);
+		
 		//Get weapons energy bar
 		if(weapons_energy != null)
 			weapons_bar = weapons_energy.GetComponent<TheProgressBar>();
@@ -188,6 +191,7 @@ public class PlayerWeaponManager
 		{
 			crosshair_1.SetActive(false);
 			crosshair_2.SetActive(true);
+			overheat_bar_obj.SetActive(true);
 						
 			if(weapon_icon_1 != null)
 				weapon_icon_1.SetActive(false);
@@ -199,6 +203,7 @@ public class PlayerWeaponManager
 		{
 			crosshair_1.SetActive(true);
 			crosshair_2.SetActive(false);
+			overheat_bar_obj.SetActive(false);
 
 			if(weapon_icon_1 != null)
 				weapon_icon_1.SetActive(true);
