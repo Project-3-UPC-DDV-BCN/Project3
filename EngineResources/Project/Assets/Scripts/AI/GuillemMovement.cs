@@ -110,7 +110,8 @@ public class GuillemMovement
 
     void Update()
     {
-		if(audio_source != null)
+        if (TheTime.TimeScale == 0) return;
+        if (audio_source != null)
 			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);;
 
 		missingTimer += TheTime.DeltaTime;
@@ -142,7 +143,9 @@ public class GuillemMovement
         {
             MoveFront();
             OrientateToTarget();
-            KeepTargetDistance(); // Always last since can put the target_transform to null
+
+			if(movement_mode == 0)
+            	KeepTargetDistance(); // Always last since can put the target_transform to null
         }
     }
 

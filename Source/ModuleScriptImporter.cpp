@@ -933,7 +933,7 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCamera::SizeX", (const void*)GetSizeX);
 	mono_add_internal_call("TheEngine.TheCamera::SizeY", (const void*)GetSizeY);
 	mono_add_internal_call("TheEngine.TheCamera::WorldPosToCameraPos", (const void*)WorldPosToScreenPos);
-	mono_add_internal_call("TheEngine.TheCamera::IsObjectInside", (const bool*)IsObjectInside);
+	mono_add_internal_call("TheEngine.TheCamera::IsObjectInside", (const void*)IsObjectInside);
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1987,9 +1987,9 @@ MonoObject * ModuleScriptImporter::WorldPosToScreenPos(MonoObject * from)
 	return ns_importer->WorldPosToScreenPos(from);
 }
 
-bool ModuleScriptImporter::IsObjectInside(MonoObject* object, MonoObject* position)
+bool ModuleScriptImporter::IsObjectInside( MonoObject* other)
 {
-	return ns_importer->IsObjectInside(object, position);
+	return ns_importer->IsObjectInside(other);
 }
 
 void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
@@ -2657,6 +2657,9 @@ MonoArray * NSScriptImporter::GetObjectsInFrustum(MonoObject * pos, MonoObject *
 	}
 	return nullptr;
 }
+
+
+
 
 MonoArray * NSScriptImporter::GetAllChilds(MonoObject * object)
 {
@@ -6354,31 +6357,17 @@ MonoObject* NSScriptImporter::WorldPosToScreenPos(MonoObject * world)
 	return ret;
 }
 
-bool NSScriptImporter::IsObjectInside(MonoObject* object, MonoObject* position)
+bool NSScriptImporter::IsObjectInside(MonoObject* other)
 {
-	Component* comp = GetComponentFromMonoObject(object);
+	bool to_ret = false; 
 
-	if (comp != nullptr)
-	{
-		ComponentCamera* camera = (ComponentCamera*)comp;
+	GameObject* go = GetGameObjectFromMonoObject(other);
+	Frustum frustum = App->renderer3D->game_camera->GetFrustum(); 
+	ComponentTransform* tranform = (ComponentTransform*)go->GetComponent(Component::CompTransform);
 
-		if (camera != nullptr)
-		{
-			float3 world_pos; 
+	to_ret = frustum.Contains(tranform->GetGlobalPosition());
 
-			MonoClass* my_class = mono_object_get_class(object);
-
-			MonoClassField* x_field = mono_class_get_field_from_name(my_class, "x");
-			MonoClassField* y_field = mono_class_get_field_from_name(my_class, "y");
-			MonoClassField* z_field = mono_class_get_field_from_name(my_class, "z");
-
-			if (x_field) mono_field_get_value(object, x_field, &world_pos.x);
-			if (y_field) mono_field_get_value(object, y_field, &world_pos.y);
-			if (z_field) mono_field_get_value(object, z_field, &world_pos.z);
-
-			return camera->IsPointInside(world_pos);
-		}
-	}
+	return to_ret; 
 }
 
 

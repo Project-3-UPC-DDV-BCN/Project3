@@ -674,7 +674,7 @@ public class Level1Manager
 			}
 			case 2:
 			{
-				if(attack_intro_ship.ReadTime() > 9)
+				if(attack_intro_ship.ReadTime() > 12)
 					NextMissionState();
 				
 				break;

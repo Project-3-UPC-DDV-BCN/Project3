@@ -52,7 +52,8 @@ public class Ai_Starship_Shooting
 	
 	void Update () 
 	{
-		CheckForShooting();
+        if (TheTime.TimeScale == 0) return;
+        CheckForShooting();
 	}
 
 	void CheckForShooting()

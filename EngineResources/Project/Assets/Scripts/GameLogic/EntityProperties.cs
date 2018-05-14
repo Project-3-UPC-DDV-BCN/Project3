@@ -191,12 +191,12 @@ public class EntityProperties
 	}
 	
 	// Sets life of the ship
-	void SetLife(int set)
+	void SetLife(int val)
 	{
-		if(set != modified_life)
-			TheConsole.Log("Life set to: " + set);
+		if(val != modified_life)
+			TheConsole.Log("Life set to: " + val);
 
-		modified_life = set;
+		modified_life = val;
 
 		if(modified_life < 0)
 			modified_life = 0;

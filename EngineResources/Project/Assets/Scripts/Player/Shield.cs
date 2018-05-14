@@ -76,7 +76,7 @@ public class Shield
 			if(go.GetComponent<TheTransform>() != TheGameObject.Self.GetComponent<TheTransform>())	
 			{
 				//slave_script.CallFunctionArgs("Collided");
-				TheConsole.Log("colliding effective");
+				//TheConsole.Log("colliding effective");
 			}
 
 		}
