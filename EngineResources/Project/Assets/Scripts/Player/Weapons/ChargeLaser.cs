@@ -139,6 +139,13 @@ public class ChargeLaser
 						
 						if(overheat >= 1.0f)
 							overheated = true;
+						else
+						{
+							overheat = 0.0f;
+							
+							object[] arg = {overheat};
+							weapon_manager.CallFunctionArgs("SetOverheat", arg);
+						}
 						
 						charging = false;
 						
