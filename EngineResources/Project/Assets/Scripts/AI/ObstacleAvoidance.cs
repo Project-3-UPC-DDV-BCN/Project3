@@ -30,6 +30,7 @@ public class ObstacleAvoidance {
 	}
 	
 	void Update () {
+        if (TheTime.TimeScale == 0) return;
 		if(transform == null) return;
 
 		hitting = false;

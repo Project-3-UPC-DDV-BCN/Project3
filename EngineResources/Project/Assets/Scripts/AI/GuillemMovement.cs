@@ -110,7 +110,8 @@ public class GuillemMovement
 
     void Update()
     {
-		if(audio_source != null)
+        if (TheTime.TimeScale == 0) return;
+        if (audio_source != null)
 			audio_source.SetMyRTPCvalue("Speed", modified_move_speed);;
 
 		missingTimer += TheTime.DeltaTime;
