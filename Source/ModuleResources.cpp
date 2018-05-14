@@ -2062,9 +2062,8 @@ void ModuleResources::CreateDefaultShaders()
 			"	projCoords = projCoords * vec3(0.5) + 0.5;\n"
 			"	float closestDepth = texture(Tex_ShadowMap, projCoords.xy).r;\n"
 			"	float currentDepth = projCoords.z;\n"
-			"	vec3 normal_p = normalize(Normal);\n"
-			"	vec3 lightDir_p = normalize(dirLights[0].position - FragPos);\n"
-			"	float bias = max(0.05 * (1.0 - dot(normal_p, -dirLights[0].direction)), 0.005);\n"
+
+			"	float bias = 0.005;\n"
 			"	float shadow = 0.0;\n"
 			"	vec2 texelSize = 1.0 / textureSize(Tex_ShadowMap, 0);\n"
 			"	for (int x = -1; x <= 1; ++x)\n"
