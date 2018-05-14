@@ -26,6 +26,7 @@ Particle::Particle(ComponentParticleEmmiter * parent)
 
 	emmiter_transform = (ComponentTransform*)emmiter->GetGameObject()->GetComponent(Component::CompTransform); 
 	prev_emmiter_pos = emmiter_transform->GetGlobalPosition();
+	rot_amount = 0; 
 	
 	//Timers
 	particle_timer.Start();
@@ -146,10 +147,11 @@ float Particle::GetAlphaInterpolationPercentage()
 	return (1.0f - alpha_percentage); 
 }
 
-void Particle::ApplyAngularVelocity()
+float Particle::ApplyAngularVelocity()
 {
 	float rads_to_spin = particle_data->angular_v * (2 * pi) / 360;
 	GetAtributes().particle_transform->SetRotation({ GetAtributes().particle_transform->GetGlobalRotation().x, GetAtributes().particle_transform->GetGlobalRotation().y, GetAtributes().particle_transform->GetGlobalRotation().z + rads_to_spin });
+	return rads_to_spin; 
 }
 
 void Particle::SetColor(Color new_color)
@@ -428,7 +430,7 @@ void Particle::Update()
 	}
 		
 	//Apply angular velocity
-	ApplyAngularVelocity();
+	rot_amount += ApplyAngularVelocity();
 
 	//Animations
 	if (particle_data->animation_system.GetNumFrames() != 0)
@@ -464,6 +466,7 @@ void Particle::Draw(ComponentCamera* active_camera, bool editor_camera)
 			components.billboard->AttachToCamera(App->renderer3D->game_camera);
 
 		components.billboard->RotateObject();
+		components.particle_transform->SetRotation({ components.particle_transform->GetGlobalRotation().x,components.particle_transform->GetGlobalRotation().y, components.particle_transform->GetGlobalRotation().z + rot_amount});
 	}
 		
 	//Activate shader program

@@ -79,7 +79,7 @@ public:
 	//Rotation
 	void SetAngular(const float& new_velocity);
 	float GetAngular() const;
-	void ApplyAngularVelocity(); 
+	float ApplyAngularVelocity(); 
 
 	//Lifetime
 	void SetMaxLifetime(const float& new_lifetime);
@@ -145,6 +145,7 @@ private:
 	float distance_to_camera;
 	float3 movement;
 	Color current_color_in_interpolation;
+	float rot_amount; 
 
 	//Runtime Behaviour
 	RuntimeBehaviour runtime_behaviour; 
