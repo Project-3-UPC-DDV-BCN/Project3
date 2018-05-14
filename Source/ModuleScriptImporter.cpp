@@ -2920,6 +2920,8 @@ MonoObject * NSScriptImporter::GetScript(MonoObject * object, MonoString * strin
 		}
 
 		int comp_type_count = 0;
+		if (go->is_on_destroy)
+			return nullptr;
 		for (Component* comp : go->components_list)
 		{
 			if (cpp_type == comp->GetType())
