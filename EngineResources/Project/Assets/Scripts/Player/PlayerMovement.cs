@@ -104,7 +104,6 @@ public class PlayerMovement
 	private int back_shield = 2;
 	private float shield_step = 0.25f;
 	
-	
 	// Ship Information Timers
 	///boost
 	private float boost_timer;
@@ -252,6 +251,10 @@ public class PlayerMovement
 	public float collision_time = 2.0f;
 	private float collision_timer;
 
+	private bool shield_down = false;
+	TheTimer shield_down_timer = new TheTimer();
+	public float shield_down_time = 8.0f;
+	
 	void Start () 
 	{
 		self = TheGameObject.Self;
@@ -834,15 +837,15 @@ public class PlayerMovement
 			shield_yellow.SetActive(false);
 			shield_red.SetActive(false);
 		
-			if(shield_hp > shield_yellow_value)
+			if(curr_shield_hp > shield_yellow_value)
 			{
 				shield_green.SetActive(true);
 			}
-			else if(shield_hp > shield_red_value)
+			else if(curr_shield_hp > shield_red_value)
 			{
 				shield_yellow.SetActive(true);
 			}
-			else if(shield_hp > 0.0f)
+			else if(curr_shield_hp > 0.0f)
 				shield_red.SetActive(false);
 		}
 		
@@ -1083,13 +1086,13 @@ public class PlayerMovement
 	
 	void DamageFrontShield(int dmg)
 	{
-		if(shield_hp > 0 && front_shield != 0)
+		if(curr_shield_hp > 0 && front_shield != 0)
 		{
 			float shield_dmg = (float)dmg*(4-front_shield)*shield_step;
 			
-			shield_hp -= shield_dmg;
-			if(shield_hp < 0)
-				shield_hp = 0;
+			curr_shield_hp -= shield_dmg;
+			if(curr_shield_hp < 0)
+				curr_shield_hp = 0;
 			
 			shaking = true;
 			shake_timer = shake_duration_shield;
@@ -1102,13 +1105,13 @@ public class PlayerMovement
 	
 	void DamageBackShield(int dmg)
 	{
-		if(shield_hp > 0 && back_shield != 0)
+		if(curr_shield_hp > 0 && back_shield != 0)
 		{
 			float shield_dmg = (float)dmg*(4-back_shield)*shield_step;
 			
-			shield_hp -= shield_dmg;
-			if(shield_hp < 0)
-				shield_hp = 0;
+			curr_shield_hp -= shield_dmg;
+			if(curr_shield_hp < 0)
+				curr_shield_hp = 0;
 			
 			shaking = true;
 			shake_timer = shake_duration_shield;
@@ -1185,15 +1188,35 @@ public class PlayerMovement
 	
 	void RegenShield()
     {
-        if(shield_regen_timer <= 0.0f && curr_shield_hp < shield_hp)
+		if (curr_shield_hp > 0)
         {
-            curr_shield_hp += shield_regen_energy * delta_time;
+			if(shield_regen_timer <= 0.0f && curr_shield_hp < shield_hp)
+			{
+				curr_shield_hp += shield_regen_energy * delta_time;
 
-            if (curr_shield_hp > shield_hp)
-                curr_shield_hp = shield_hp;
-        }
+				if (curr_shield_hp > shield_hp)
+					curr_shield_hp = shield_hp;
+			}
 
-        shield_regen_timer -= delta_time;
+			shield_regen_timer -= delta_time;
+		}
+		else
+		{
+			if (!shield_down)
+			{	
+				shield_down = true;
+				shield_down_timer.Start();
+			}
+			
+			if (shield_down_timer.ReadTime() >= shield_down_time)
+			{
+				TheConsole.Warning("Thing");
+				curr_shield_hp += shield_regen_energy * delta_time;
+				shield_regen_timer = 0.0f;
+				shield_down = false;
+			}
+			
+		}
     }
 	
 	void RepairPuzzle()
