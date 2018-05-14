@@ -899,9 +899,9 @@ public class PlayerMovement
 		
 		if(engine_part_hp_text != null && wing_part_hp_text != null && body_part_hp_text != null)
 		{
-			int tmp_body_int = (int)(body_hp * 2 - 3);
-			int tmp_wing_int = (int)(wings_hp * 2 - 3);
-			int tmp_engine_int = (int)(engine_hp * 2 - 3);
+			int tmp_body_int = (int)((body_hp / (total_hp/3))*100);
+			int tmp_wing_int = (int)((wings_hp / (total_hp/3))*100);
+			int tmp_engine_int = (int)((engine_hp / (total_hp/3))*100);
 			
 			body_part_hp_text.Text = tmp_body_int.ToString() + "%";
 			wing_part_hp_text.Text = tmp_wing_int.ToString() + "%";
@@ -1160,6 +1160,7 @@ public class PlayerMovement
 
         if (wings_hp <= 0.0f)
         {
+			TheConsole.Log("las alitas murieron");
 			is_dead = true;
         }
         
@@ -1171,6 +1172,7 @@ public class PlayerMovement
 
         if (wings_hp <= 0.0f)
         {
+			TheConsole.Log("el cuerpecito murio");
             is_dead = true;
         }
         
@@ -1181,6 +1183,7 @@ public class PlayerMovement
         engine_hp -= damage;
         if (wings_hp <= 0.0f)
         {
+			TheConsole.Log("el engine murio");
             is_dead = true;
         }
         
