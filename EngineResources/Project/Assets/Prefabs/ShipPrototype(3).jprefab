@@ -1,11 +1,11 @@
 {
-    "UUID": "392731325",
+    "UUID": "1816081936",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "585784221",
+        "UUID": "45781837",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -83,14 +83,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "572478690623525748736.000000",
-                    "value_Y": "-3606458937700249501696.000000",
-                    "value_Z": "4599062147196891693056.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "-395898249102606991360.000000",
-                    "value_Y": "889869135490647588864.000000",
-                    "value_Z": "-498154378598146899968.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "105",
+                "Sound_ID": "113",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -168,7 +168,7 @@
                     "float_fields": {
                         "field_0": {
                             "field_name": "avoidance_rad",
-                            "field_value": "50.000000"
+                            "field_value": "100.000000"
                         },
                         "field_1": {
                             "field_name": "getAwayTime",
@@ -176,11 +176,11 @@
                         },
                         "field_2": {
                             "field_name": "getFarRadius",
-                            "field_value": "300.000000"
+                            "field_value": "750.000000"
                         },
                         "field_3": {
                             "field_name": "getNearRadius",
-                            "field_value": "100.000000"
+                            "field_value": "150.000000"
                         },
                         "field_4": {
                             "field_name": "max_distance_to_center_object",
