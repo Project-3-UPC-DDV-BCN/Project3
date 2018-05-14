@@ -53,14 +53,14 @@ public class Laser
 
 		TheGameObject other_ship = coll.Collider.GetGameObject();
 
-		if(other_ship == null)
+		if(other_ship == null || sender == null)
 			return;
 		
 		TheScript entity_properties = other_ship.GetScript("EntityProperties");
-		TheScript self_properties = sender.GetScript("EntityProperties");
 
 		if(entity_properties != null && sender != null)
 		{
+			TheScript self_properties = sender.GetScript("EntityProperties");
 			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
 			{
 				object[] args = {sender, laser_damage};

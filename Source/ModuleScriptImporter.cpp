@@ -2841,11 +2841,16 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 		Component::ComponentType cpp_type = CsToCppComponent(comp_name);
 
 		int temp_index = index;
-		if (cpp_type != Component::CompUnknown)
+		if (cpp_type != Component::CompUnknown && go != nullptr)
 		{
 			int comp_type_count = 0;
+			if (go->is_on_destroy)
+				return nullptr;
 			for (Component* comp : go->components_list)
 			{
+				if (comp == nullptr)
+					continue;
+
 				Component::ComponentType c_type = comp->GetType();
 				if (cpp_type == Component::CompCollider)
 				{
