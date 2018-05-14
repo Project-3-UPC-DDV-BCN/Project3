@@ -1,17 +1,17 @@
 {
-    "UUID": "2040356172",
-    "assets_path": "./Project/Assets/Prefabs/TieParticles.jprefab",
+    "UUID": "612026824",
+    "assets_path": ".\\Project\\Assets\\Prefabs\\TieParticles.jprefab",
     "library_path": "./Project/Library/Prefabs/TieParticles.jprefab",
     "prefab_name": "TieParticles",
     "GameObjects_Count": "4",
     "GameObject_0": {
-        "UUID": "2036252703",
+        "UUID": "1696473577",
         "Name": "TieParticles",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "1",
+            "Components_Count": "2",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -32,6 +32,40 @@
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "842672466",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/ParticleAutoDestroy.dll",
+                    "assets_path": "",
+                    "script_name": "ParticleAutoDestroy",
+                    "UUID": "594002993",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "destruction_time",
+                            "field_value": "7.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -39,7 +73,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1963962505",
+        "UUID": "733802964",
         "Name": "New GameObject(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -79,12 +113,12 @@
                 }
             }
         },
-        "ParentID": "2036252703",
+        "ParentID": "1696473577",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "602272468",
+        "UUID": "1607678161",
         "Name": "New GameObject(4)",
         "Tag": "Default",
         "Layer": "Default",
@@ -124,12 +158,12 @@
                 }
             }
         },
-        "ParentID": "2036252703",
+        "ParentID": "1696473577",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_3": {
-        "UUID": "1193286953",
+        "UUID": "1313565341",
         "Name": "New GameObject(5)",
         "Tag": "Default",
         "Layer": "Default",
@@ -169,7 +203,7 @@
                 }
             }
         },
-        "ParentID": "2036252703",
+        "ParentID": "1696473577",
         "IsRoot": "0",
         "IsStatic": "0"
     }
