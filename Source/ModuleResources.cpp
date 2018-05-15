@@ -1906,7 +1906,7 @@ void ModuleResources::CreateDefaultShaders()
 			"#define NR_POINT_LIGHTS 8\n"
 			"#define NR_DIREC_LIGHTS 2\n"
 			"#define NR_SPOT_LIGHTS 8\n\n"
-			"#define AMBIENT_LIGHT 0.25\n"
+			"#define AMBIENT_LIGHT 0.15\n"
 
 			"uniform vec3 viewPos;\n"
 			"uniform DirLight dirLights[NR_DIREC_LIGHTS];\n"
@@ -1990,14 +1990,6 @@ void ModuleResources::CreateDefaultShaders()
 			"			vec3 result = vec3(0.0, 0.0, 0.0); \n"
 			"			if (has_light){\n"
 
-						// -----  DIFFERENT LIGHTS --------
-
-			"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
-			"				result += CalcDirLight(dirLights[i], normal, viewDir);\n"
-			"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
-			"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
-			"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
-			"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
 
 						// -------------- FRESNEL + predefined metallic and roughness ----------
 		/*	"			float metallic = 1.5;\n"
@@ -2036,13 +2028,27 @@ void ModuleResources::CreateDefaultShaders()
 						// -------------- SHADOWS ----------
 			"			float shadow = 0.0f;\n"
 			"			shadow = ShadowCalculation();\n"
+
+
+						// -----  DIFFERENT LIGHTS --------
+
+				"			for (int i = 0; i < NR_DIREC_LIGHTS; i++)\n"
+				"			{\n"
+				"				result += CalcDirLight(dirLights[i], normal, viewDir);\n"
+				"				if(i == 0) result *= (1-shadow);\n"
+				"			}\n"
+				"			for (int k = 0; k < NR_POINT_LIGHTS; k++)\n"
+				"				result += CalcPointLight(pointLights[k], normal, fragPosarg, viewDir);\n"
+				"			for (int j = 0; j < NR_SPOT_LIGHTS; j++)\n"
+				"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
+
 						// -------------- SELF_TRANSPARENCY ----------
 			"			if (self_transparency >= 0.0 && self_transparency <= 100.0)\n"
 			"				{\n	"
 			"					color.a = self_transparency / 100;\n"
 			"				}\n	"
-		///	"			color = vec4(texture2D(Tex_ShadowMap, TexCoord).r,texture2D(Tex_ShadowMap, TexCoord).r, texture2D(Tex_ShadowMap, TexCoord).r * (1-shadow), color.a);  \n"
-				"			color = vec4((color.rgb)  * (1 - shadow) * (result) + (color.rgb * AMBIENT_LIGHT), color.a);  \n"
+		//	"			color = vec4(texture2D(Tex_ShadowMap, TexCoord).r,texture2D(Tex_ShadowMap, TexCoord).r, texture2D(Tex_ShadowMap, TexCoord).r * (1-shadow), color.a);  \n"
+				"			color = vec4((color.rgb) * (result) + (color.rgb * AMBIENT_LIGHT), color.a); \n"
 		//	"			color.rgb = color.rgb / (color.rgb + vec3(1.0));\n"
 		//	"			color.rgb = pow(color.rgb, vec3(1.0 / 2.2));\n"
 
