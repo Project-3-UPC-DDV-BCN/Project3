@@ -198,7 +198,7 @@ public class Level1Manager
 
 			for(int i = 0; i < childs.Length; ++i)
 			{
-				slave1_shooting_script = childs[i].GetScript("VS4StarShipShooting");
+				slave1_shooting_script = childs[i].GetScript("PlayerWeaponManager");
 
 				if(slave1_shooting_script != null)
 					break;
