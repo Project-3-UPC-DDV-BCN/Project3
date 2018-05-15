@@ -100,6 +100,32 @@ void HierarchyWindow::DrawWindow()
 							}
 						}
 					}
+					else
+					{
+						if (selected != App->scene->root_gameobjects.front())
+						{
+							if (ImGui::MenuItem("Move Object Up"))
+							{
+								std::vector<GameObject*> list_to_vector(App->scene->root_gameobjects.begin(), App->scene->root_gameobjects.end());
+								std::vector<GameObject*>::iterator it = std::find(list_to_vector.begin(), list_to_vector.end(), selected);
+								std::iter_swap(it, it - 1);
+								std::list<GameObject*> list_to_return(list_to_vector.begin(), list_to_vector.end());
+								App->scene->root_gameobjects = list_to_return;
+							}
+						}
+
+						if (selected != App->scene->root_gameobjects.back())
+						{
+							if (ImGui::MenuItem("Move Object Down"))
+							{
+								std::vector<GameObject*> list_to_vector(App->scene->root_gameobjects.begin(), App->scene->root_gameobjects.end());
+								std::vector<GameObject*>::iterator it = std::find(list_to_vector.begin(), list_to_vector.end(), selected);
+								std::iter_swap(it, it + 1);
+								std::list<GameObject*> list_to_return(list_to_vector.begin(), list_to_vector.end());
+								App->scene->root_gameobjects = list_to_return;
+							}
+						}
+					}
 
 					if (ImGui::BeginMenu("Child UI"))
 					{

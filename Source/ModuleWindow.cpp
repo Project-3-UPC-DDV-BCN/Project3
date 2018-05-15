@@ -88,7 +88,7 @@ bool ModuleWindow::Init(Data* editor_config)
 		const char* title = DEFAULT_SCENE_TITLE;
 		if (App->IsGame())
 		{
-			title = "The Slave One";
+			title = "Slave One";
 		}
 
 		window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, flags);
@@ -103,7 +103,14 @@ bool ModuleWindow::Init(Data* editor_config)
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
 		}
-		SetIcon("../EngineResources/The-Creator-Logo.bmp");
+		if (App->IsGame())
+		{
+			SetIcon("./Slave-One-Logo.bmp");
+		}
+		else
+		{
+			SetIcon("./The-Creator-Logo.bmp");
+		}
 	}
 
 	return ret;
@@ -127,6 +134,8 @@ bool ModuleWindow::CleanUp()
 
 void ModuleWindow::SetTitle(const char* title)
 {
+	if(App->IsGame())
+		title = "Slave One";
 	SDL_SetWindowTitle(window, title);
 }
 

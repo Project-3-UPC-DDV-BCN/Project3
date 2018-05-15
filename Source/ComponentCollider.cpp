@@ -45,15 +45,26 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 		{
 		case ComponentCollider::BoxCollider:
 		{
+			if (mesh_renderer != nullptr)
+			{
+				rigidbody->SetPosition(box.CenterPoint());
+				//rigidbody->SetRotation(Quat::identity);
+			}
 			physx::PxBoxGeometry geo_box(box.HalfSize().x, box.HalfSize().y, box.HalfSize().z);
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), geo_box, *collider_material);
 			SetColliderCenter(float3::zero);
 			SetType(ComponentType::CompBoxCollider);
 			name += "Box_";
+			
 		}
 			break;
 		case ComponentCollider::SphereCollider:
 		{
+			if (mesh_renderer != nullptr)
+			{
+				rigidbody->SetPosition(box.CenterPoint());
+				//rigidbody->SetRotation(Quat::identity);
+			}
 			physx::PxSphereGeometry geo_sphere(box.MinimalEnclosingSphere().r);
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), geo_sphere, *collider_material);
 			SetColliderCenter(float3::zero);
@@ -75,14 +86,15 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 			rigidbody->SetKinematic(true);
 			Mesh* collider_mesh = mesh_renderer->GetMesh();
 			triangle_mesh = App->physics->CreateTriangleMesh(collider_mesh);
-			geo_triangle_mesh = new physx::PxTriangleMeshGeometry(triangle_mesh);
+			physx::PxMeshScale scale(physx::PxVec3(transform->GetGlobalScale().x, transform->GetGlobalScale().y, transform->GetGlobalScale().z), physx::PxQuat(physx::PxIdentity));
+			geo_triangle_mesh = new physx::PxTriangleMeshGeometry(triangle_mesh, scale);
 			convex_mesh = App->physics->CreateConvexMesh(collider_mesh);
-			geo_convex_mesh = new physx::PxConvexMeshGeometry(convex_mesh);
-			geo_convex_mesh->meshFlags.set(physx::PxConvexMeshGeometryFlag::eTIGHT_BOUNDS);
+			geo_convex_mesh = new physx::PxConvexMeshGeometry(convex_mesh, scale);
+			//geo_convex_mesh->meshFlags.set(physx::PxConvexMeshGeometryFlag::eTIGHT_BOUNDS);
 			ChangeMeshToConvex(false);
 			SetType(ComponentType::CompMeshCollider);
 			name += "Mesh_";
-			float3 global = transform->GetGlobalPosition();
+			/*float3 global = transform->GetGlobalPosition();
 			if (!attached_gameobject->IsRoot())
 			{
 				ComponentTransform* parent_transform = (ComponentTransform*)attached_gameobject->GetParent()->GetComponent(Component::CompTransform);
@@ -96,7 +108,7 @@ ComponentCollider::ComponentCollider(GameObject* attached_gameobject, ColliderTy
 			else
 			{
 				rigidbody->SetPosition(global);
-			}
+			}*/
 			collider_shape = App->physics->CreateShape(*rigidbody->GetRigidBody(), *geo_triangle_mesh, *collider_material);
 		}
 			break;

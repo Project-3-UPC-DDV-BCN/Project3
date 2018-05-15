@@ -325,6 +325,7 @@ public class Level1Manager
 	
 	void Update () 
 	{
+		if(TheTime.TimeScale == 0) return;
 		UpdateMissionState(curr_mission_state);
 		
 		CheckWinLose();

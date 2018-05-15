@@ -386,6 +386,7 @@ public class PlayerMovement
 	}
 	void Update () 
 	{
+		if(TheTime.TimeScale == 0) return;
 		//Get delta_time for this Update from engine
 		delta_time = TheTime.DeltaTime;
 		

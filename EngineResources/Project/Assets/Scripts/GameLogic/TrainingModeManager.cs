@@ -100,6 +100,7 @@ public class TrainingModeManager
 	
 	void Update () 
 	{
+		if(TheTime.TimeScale == 0) return;
 		if(enabled)
 		{	
 			CheckWinLose();

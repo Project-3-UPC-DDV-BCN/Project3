@@ -32,6 +32,7 @@ public class GameManager
 	
 	public TheGameObject controller_image;
 	public TheGameObject cockpit_image;
+	public TheGameObject back_controls_image;
 	bool game_paused = false;
 	bool is_controller_image;
 
@@ -68,8 +69,6 @@ public class GameManager
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
 		
-		/*if(controller_image != null)
-			PauseGame(true);*/
 	}
 	
 	void Update()
@@ -123,6 +122,11 @@ public class GameManager
 		if(cockpit_image != null)
 		{
 			cockpit_image.SetActive(false);
+		}
+		
+		if(back_controls_image != null)
+		{
+			back_controls_image.SetActive(pause);
 		}
 
 		game_paused = pause;

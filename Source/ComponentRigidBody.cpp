@@ -21,15 +21,16 @@ ComponentRigidBody::ComponentRigidBody(GameObject* attached_gameobject)
 	float3 offset;
 	ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)attached_gameobject->GetComponent(Component::CompMeshRenderer);
 	ComponentTransform* transform = (ComponentTransform*)attached_gameobject->GetComponent(Component::CompTransform);
-	if (mesh_renderer != nullptr)
+	/*if (mesh_renderer != nullptr)
 	{
 		mesh_renderer->UpdateBoundingBox();
 		SetPosition(mesh_renderer->bounding_box.CenterPoint());
 	}
 	else
 	{
-		SetPosition(transform->GetGlobalPosition());
-	}
+		
+	}*/
+	SetPosition(transform->GetGlobalPosition());
 	//rigidbody->userData = attached_gameobject;
 
 	/*float* matrix = attached_gameobject->GetOpenGLMatrix().ptr();
