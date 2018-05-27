@@ -1803,7 +1803,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	TangentFragPos = TBN * FragPos;\n"
 			"	ourColor = color;\n"
 			"	TexCoord = texCoord.xy;\n"
-			"	FragPosLightSpace = MVP * Model * vec4(position, 1.0);\n"
+			"	FragPosLightSpace = MVP * vec4(FragPos, 1.0);\n"
 			"}";
 
 
@@ -2538,7 +2538,7 @@ void ModuleResources::CreateDefaultShaders()
 			"uniform mat4 Model;\n"
 			"void main()\n"
 			"{\n"
-			"	gl_Position = depthMVP * Model* vec4(position, 1.0);\n"
+			"	gl_Position = depthMVP * Model * vec4(position, 1.0);\n"
 			"}\n"
 			;
 

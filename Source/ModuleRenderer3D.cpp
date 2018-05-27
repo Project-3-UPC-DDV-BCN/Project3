@@ -1796,8 +1796,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 		glm::mat4 depthProjectionMatrix = glm::ortho<float>(-2500.0, 2500.0, -10000.0, 10000.0, 0.0, 15000.0);
 		glm::mat4 depthViewMatrix = glm::lookAt(l_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-		glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
-		light_space_mat = depthMVP;
+		light_space_mat = depthProjectionMatrix * depthViewMatrix;
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 		//glCullFace(GL_FRONT);
@@ -1808,7 +1807,7 @@ void ModuleRenderer3D::DrawFromLightForShadows()
 
 		std::list<GameObject*> scene_gos = App->scene->scene_gameobjects;
 
-		SetUniformMatrix(program, "depthMVP", glm::value_ptr(depthMVP));
+		SetUniformMatrix(program, "depthMVP", glm::value_ptr(light_space_mat));
 
 		for (std::list<GameObject*>::iterator it = scene_gos.begin(); it != scene_gos.end(); it++)
 		{
