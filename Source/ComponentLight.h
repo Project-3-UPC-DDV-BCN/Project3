@@ -69,6 +69,10 @@ public:
 	float * GetProjectionMatrix() const;
 	float * GetViewMatrix();
 
+	float3 GetLensFlarePos() const;
+	void SetLensFlarePos(float3 flare_pos);
+
+	bool has_lens_flare = false;
 
 private:
 	Color color = White;
@@ -85,4 +89,6 @@ private:
 	float3 position;
 	Rect viewport;
 	float aspect_ratio = 0.0f;
+
+	float3 lens_flare_pos;
 };

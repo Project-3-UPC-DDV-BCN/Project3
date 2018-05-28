@@ -28,6 +28,7 @@ ComponentLight::ComponentLight(GameObject * attached_gameobject)
 
 	view.SetHorizontalFovAndAspectRatio(view.VerticalFov() * DEGTORAD, aspect_ratio);
 
+	lens_flare_pos = float3::zero;
 
 }
 
@@ -56,6 +57,10 @@ void ComponentLight::Save(Data & data) const
 	data.AddFloat("specular", (float)GetSpecular());
 	data.AddFloat("cutOff", (float)GetCutOff());
 	data.AddFloat("outercutOff", (float)GetOuterCutOff());
+
+	data.AddBool("hasLensFlare", has_lens_flare);
+	ImVec3 lenspos(GetLensFlarePos().x, GetLensFlarePos().y, GetLensFlarePos().z);
+	data.AddImVector3("lensflarepos", lenspos);
 }
 
 void ComponentLight::Load(Data & data)
@@ -72,6 +77,10 @@ void ComponentLight::Load(Data & data)
 	SetSpecular(data.GetFloat("specular"));
 	SetCutOff(data.GetFloat("cutOff"));
 	SetOuterCutOff(data.GetFloat("outercutOff"));
+
+	has_lens_flare = data.GetBool("hasLensFlare");
+	SetLensFlarePos(float3(data.GetImVector3("lensflarepos").x, data.GetImVector3("lensflarepos").y, data.GetImVector3("lensflarepos").z));
+
 	App->renderer3D->AddLight(this);
 }
 
@@ -146,7 +155,6 @@ void ComponentLight::SetTypeToDirectional()
 	type = DIRECTIONAL_LIGHT;
 
 	SetDirectionOffset({ -100, -150, 0 });
-
 	App->renderer3D->AddLight(this);
 }
 
@@ -334,4 +342,14 @@ float * ComponentLight::GetViewMatrix()
 	matrix.Transpose();
 
 	return (float*)matrix.v;
+}
+
+float3 ComponentLight::GetLensFlarePos() const
+{
+	return lens_flare_pos;
+}
+
+void ComponentLight::SetLensFlarePos(float3 flare_pos)
+{
+	lens_flare_pos = flare_pos;
 }

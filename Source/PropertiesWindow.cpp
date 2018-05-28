@@ -2808,6 +2808,8 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 
 			float3 light_pos = comp_light->GetPositionOffset();
 			float3 light_rot = comp_light->GetDirectionOffset();
+			float3 lf_pos = comp_light->GetLensFlarePos();
+			bool flare = comp_light->has_lens_flare;
 
 			switch (comp_light->GetLightType())
 			{
@@ -2816,6 +2818,17 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 					comp_light->SetDirectionOffset(light_rot);
 				}*/
 				if (ImGui::DragFloat(("Diffuse##directional_" + std::to_string(lights_count)).c_str(), comp_light->GetDiffuseToEdit(), is_active, 0.25f, 0.0f)) {
+				}
+				
+				if (ImGui::Checkbox("Produce Lens Flare", &flare))
+				{
+					comp_light->has_lens_flare = flare;
+				}
+
+				
+				if (ImGui::DragFloat3("LensFlare##Position", lf_pos.ptr(), comp_light->has_lens_flare))
+				{
+					comp_light->SetLensFlarePos(lf_pos);
 				}
 				break;
 			case SPOT_LIGHT:
@@ -2849,6 +2862,8 @@ void PropertiesWindow::DrawLightPanel(ComponentLight* comp_light)
 			ImGuiColorEditFlags flags = ImGuiColorEditFlags_AlphaBar;
 			flags |= ImGuiColorEditFlags_RGB;
 			ImGui::ColorPicker4(("Current Color##" + std::to_string(lights_count)).c_str(), comp_light->GetColorToEdit(), flags);
+
+
 		}
 	}
 }
