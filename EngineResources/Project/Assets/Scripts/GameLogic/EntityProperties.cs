@@ -39,7 +39,10 @@ public class EntityProperties
 	TheGameObject self = null;
 	
 	TheScript player_targeting_script = null;
-		
+
+    // Damage on Solid Collision ---
+    public int damageOnSolidCollision = 0; // Put it to 100 when Raycasts are fixed
+
 	void Init()
 	{
 		modified_life = life;
@@ -390,4 +393,23 @@ public class EntityProperties
 			}
 		}*/
 	}
+
+    void OnCollisionEnter(TheGameObject other)
+    {
+        if (other == self) return;
+        if (IsShip())
+        {
+            DealDamage(damageOnSolidCollision);
+            CheckDeath(self);
+        }
+        if(IsSlave1()) // Player Solid Collision
+        {
+            /*
+            // Speed Filtering for Player ?? --
+            // ...
+            DealDamage(damageOnSolidCollision);
+            CheckDeath(self);
+            */
+        }
+    }
 }
