@@ -69,6 +69,7 @@ public class Level1Manager
 
 	// Ships intro
 	TheGameObject intro_ship = null;
+	TheTransform intro_ship_trans = null;
 	public TheGameObject intro_ship_spawn;
 	public TheGameObject intro_ship_path;
 
@@ -79,7 +80,11 @@ public class Level1Manager
 
 	private TheTimer attack_intro_ship = new TheTimer();
 	
-	// Main mission ships
+	// Main mission
+
+	public TheGameObject shield_gate_center;
+	TheTransform shield_gate_center_trans = null;
+
 	public string enemy_ship_prefab;
 
 	public TheGameObject main_ship_spawner1;
@@ -173,6 +178,12 @@ public class Level1Manager
 	
 		if(main_ship_spawner6 != null)
 			main_ship_spawner6_trans = main_ship_spawner6.GetComponent<TheTransform>();
+
+		if(shield_gate_center != null)
+			shield_gate_center_trans = shield_gate_center.GetComponent<TheTransform>();
+
+		if(intro_ship != null)
+			intro_ship_trans = intro_ship.GetComponent<TheTransform>();
 
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
@@ -695,6 +706,14 @@ public class Level1Manager
 			}
 			case 5:
 			{
+				if(shield_gate_center_trans != null && slave_trans != null)
+				{
+					float distanece_to_shieldgate = TheVector3.Distance(shield_gate_center_trans.LocalPosition, slave_trans.LocalPosition);
+
+					if(distanece_to_shieldgate < 2400)
+						NextMissionState();
+				}
+
 				break;
 			}
 			case 6:
