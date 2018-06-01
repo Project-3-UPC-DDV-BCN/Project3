@@ -24,9 +24,24 @@ public class Ai_OA {
 		
 	}
 
-	void OnTriggerStay(TheGameObject other) {
+	void OnCollisionStay(TheGameObject other) {
+		TheConsole.Log("TriggerStay");
 		if(other == null || parent == null)
 			return;
+        TheConsole.Log("has other and has parent");
+		TheVector3 colDir = other.GetComponent<TheTransform>().GlobalPosition - parent_transform.GlobalPosition;
+		TheVector3 newRot = TheVector3.Reflect(-colDir, parent_transform.ForwardDirection);
+		float aux = newRot.z;
+		newRot.z = newRot.x;
+		newRot.x = aux;
+		parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
+		
+	}
+	void OnTriggerStay(TheGameObject other) {
+		TheConsole.Log("TriggerStay");
+		if(other == null || parent == null)
+			return;
+        TheConsole.Log("has other and has parent");
 		TheVector3 colDir = other.GetComponent<TheTransform>().GlobalPosition - parent_transform.GlobalPosition;
 		TheVector3 newRot = TheVector3.Reflect(-colDir, parent_transform.ForwardDirection);
 		float aux = newRot.z;
