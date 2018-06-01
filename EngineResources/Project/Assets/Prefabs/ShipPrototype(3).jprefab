@@ -1,11 +1,11 @@
 {
-    "UUID": "525810041",
+    "UUID": "11033241",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "2",
     "GameObject_0": {
-        "UUID": "1414617699",
+        "UUID": "1493609682",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -37,7 +37,7 @@
                 "Type": "12",
                 "Active": "1",
                 "UUID": "1437024583",
-                "Object_count": "10",
+                "Object_count": "7",
                 "Spawn_position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -83,14 +83,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "-704163345593513541632.000000",
-                    "value_Y": "-3573099930835386105856.000000",
-                    "value_Z": "-5945182727793375444992.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "-2377143435564270223360.000000",
-                    "value_Y": "-214112877865471049728.000000",
-                    "value_Z": "-69335665042438225920.000000"
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "107",
+                "Sound_ID": "129",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -394,7 +394,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1351287012",
+        "UUID": "1146515488",
         "Name": "OAChecker",
         "Tag": "Default",
         "Layer": "Default",
@@ -516,7 +516,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "parent",
-                            "field_value": "1414617699"
+                            "field_value": "1493609682"
                         }
                     },
                     "vec2_fields": {},
@@ -525,7 +525,7 @@
                 }
             }
         },
-        "ParentID": "1414617699",
+        "ParentID": "1493609682",
         "IsRoot": "0",
         "IsStatic": "0"
     }

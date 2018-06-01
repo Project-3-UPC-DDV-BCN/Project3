@@ -203,8 +203,10 @@ Component * GameObject::AddComponent(Component::ComponentType component_type)
 
 Component * GameObject::GetComponent(Component::ComponentType component_type)
 {
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
-		if ((*it)->GetType() == component_type) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) 
+	{
+		if ((*it)->GetType() == component_type) 
+		{
 			return (*it);
 		}
 	}
@@ -213,8 +215,10 @@ Component * GameObject::GetComponent(Component::ComponentType component_type)
 
 Component * GameObject::GetComponent(std::string component_type)
 {
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
-		if ((*it)->GetName() == component_type) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) 
+	{
+		if ((*it)->GetName() == component_type) 
+		{
 			return (*it);
 		}
 	}
@@ -236,7 +240,7 @@ void GameObject::DestroyComponent(Component* component)
 		}
 		else 
 		{
-			it++;
+			++it;
 		}
 	}
 }
@@ -596,24 +600,23 @@ void GameObject::SetParentByID(UID parent_id)
 void GameObject::InitScripts()
 {
 	ComponentScript* comp_script = nullptr;
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
-		if ((*it)->GetType() == Component::CompScript) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) 
+	{
+		if ((*it)->GetType() == Component::CompScript) 
+		{
 			comp_script = (ComponentScript*)*it;
 			comp_script->InitScript();
 		}
-	}
-	ComponentRigidBody* rb = (ComponentRigidBody*)GetComponent(Component::CompRigidBody);
-	if (rb)
-	{
-		//rb->GetRigidBody()->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
 	}
 }
 
 void GameObject::StartScripts()
 {
 	ComponentScript* comp_script = nullptr;
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
-		if ((*it)->GetType() == Component::CompScript) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) 
+	{
+		if ((*it)->GetType() == Component::CompScript) 
+		{
 			comp_script = (ComponentScript*)*it;
 			comp_script->StartScript();
 		}
@@ -624,7 +627,7 @@ void GameObject::UpdateScripts()
 {
 	BROFILER_CATEGORY("GameObjecct Update Scripts", Profiler::Color::IndianRed);
 	ComponentScript* comp_script = nullptr;
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) 
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) 
 	{
 		if ((*it)->GetType() == Component::CompScript) 
 		{
@@ -639,7 +642,7 @@ void GameObject::UpdateScripts()
 void GameObject::OnCollisionEnter(CollisionData& col_data)
 {
 	ComponentScript* comp_script = nullptr;
-	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); it++) {
+	for (std::list<Component*>::iterator it = components_list.begin(); it != components_list.end(); ++it) {
 		if ((*it)->GetType() == Component::CompScript) {
 			comp_script = (ComponentScript*)*it;
 			comp_script->OnCollisionEnter(col_data);
@@ -848,11 +851,20 @@ void GameObject::Load(Data & data)
 	}
 
 	is_root = data.GetBool("IsRoot");
+}
+
+void GameObject::LoadComponents(Data & data)
+{
+	UID parent_id = data.GetUInt("ParentID");
+	if (parent_id != 0)
+	{
+		SetParentByID(parent_id);
+	}
 
 	if (data.EnterSection("Components"))
 	{
 		int componentsCount = data.GetInt("Components_Count");
-		for (int i = 0; i < componentsCount; i++)
+		for (int i = 0; i < componentsCount; ++i)
 		{
 			if (data.EnterSection("Component_" + std::to_string(i)))
 			{
@@ -895,57 +907,6 @@ void GameObject::Load(Data & data)
 		}
 		data.LeaveSection();
 	}
-	
-	////Store gameObject name to know the existing gameObjects when loading scene
-	//if (std::find(App->scene->scene_gameobjects.begin(), App->scene->scene_gameobjects.end(), this) != App->scene->scene_gameobjects.end())
-	//{
-	//	int gameObjectCount = 1;
-	//	bool inParenthesis = false;
-	//	std::string str;
-	//	std::string tempName = name;
-	//	for (int i = 0; i < name.size(); i++)
-	//	{
-	//		if (name[i] == ')')
-	//		{
-	//			inParenthesis = false;
-	//			if (name[i + 1] == '\0')
-	//			{
-	//				break;
-	//			}
-	//			else
-	//			{
-	//				str.clear();
-	//			}
-	//		}
-	//		if (inParenthesis)
-	//		{
-	//			str.push_back(name[i]);
-	//		}
-	//		if (name[i] == '(')
-	//		{
-	//			inParenthesis = true;
-	//		}
-	//	}
-	//	if (atoi(str.c_str()) != 0)
-	//	{
-	//		name.erase(name.end() - (str.length() + 2), name.end());
-	//		gameObjectCount = stoi(str);
-	//	}
-
-	//	std::map<std::string, int>::iterator it = App->scene->scene_gameobjects_name_counter.find(name);
-	//	if (it != App->scene->scene_gameobjects_name_counter.end())
-	//	{
-	//		if (App->scene->scene_gameobjects_name_counter[name] < gameObjectCount)
-	//		{
-	//			App->scene->scene_gameobjects_name_counter[name] = gameObjectCount;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		App->scene->scene_gameobjects_name_counter[name] = 1;
-	//	}
-	//	name = tempName;
-	//}
 }
 
 bool GameObject::Update()

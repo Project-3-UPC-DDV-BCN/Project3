@@ -37,7 +37,8 @@ public class Ai_OA {
 		parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
 		
 	}
-	void OnTriggerStay(TheGameObject other) {
+	/*void OnTriggerStay(TheGameObject other) 
+	{
 		TheConsole.Log("TriggerStay");
 		if(other == null || parent == null)
 			return;
@@ -50,4 +51,5 @@ public class Ai_OA {
 		parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
 		
 	}
+*/
 }

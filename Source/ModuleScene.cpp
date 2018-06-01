@@ -502,6 +502,8 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 		if (destroy_scene)
 			NewScene(true);
 
+		std::list<GameObject*> to_start;
+
 		int gameObjectsCount = data.GetInt("GameObjects_Count");
 		for (int i = 0; i < gameObjectsCount; i++)
 		{
@@ -510,29 +512,21 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				GameObject* game_object = new GameObject();
 				AddGameObjectToScene(game_object);
 
-				ComponentParticleEmmiter* emmiter = (ComponentParticleEmmiter*)game_object->GetComponent(Component::CompParticleSystem);
-				if(emmiter) emmiter->first_loaded = false; 
-
 				game_object->Load(data);
+				game_object->LoadComponents(data);
 
 				App->resources->AddGameObject(game_object);
 
 				new_gos.push_back(game_object);
-
-				ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
-				if (mesh_renderer) mesh_renderer->LoadToMemory();
-				ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
-				if (camera)
-				{
-					if (game_object->GetTag() == "Main Camera")
-					{
-						App->renderer3D->game_camera = camera;
-						App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
-						App->renderer3D->rendering_cameras.push_back(camera);
-					}
-				}
 			
 				data.LeaveSection();
+
+
+				if (App->IsPlaying())
+				{
+					App->script_importer->AddGameObjectInfoToMono(game_object);
+					to_start.push_back(game_object);
+				}
 			}
 		}
 
@@ -540,32 +534,54 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 		{
 			data.ResetData();
 			
-			std::list<GameObject*> to_init;
 			std::list<GameObject*>::iterator it = new_gos.begin();
 			for (int i = 0; i < gameObjectsCount; i++)
 			{
 				if (data.EnterSection("GameObject_" + std::to_string(i)))
 				{
 					GameObject* game_object = *it;
-					game_object->Load(data);
-					data.LeaveSection();
-					++it;
-					RenameDuplicatedGameObject(game_object);
+					game_object->LoadComponents(data);
+
+					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
+					if (mesh_renderer)
+						mesh_renderer->LoadToMemory();
+
+					ComponentRigidBody* rb = (ComponentRigidBody*)game_object->GetComponent(Component::CompRigidBody);
+					if (rb)
+					{
+						if (game_object->IsActive() && RecursiveCheckActiveParents(rb->GetGameObject()))
+						{
+							App->physics->AddRigidBodyToScene(rb->GetRigidBody(), nullptr);
+							App->physics->AddNonBlastActorToList(rb->GetRigidBody(), game_object);
+						}
+					}
+
+					ComponentCamera* camera = (ComponentCamera*)game_object->GetComponent(Component::CompCamera);
+
+					if (camera)
+					{
+						if (game_object->GetTag() == "Main Camera")
+						{
+							App->renderer3D->game_camera = camera;
+							App->renderer3D->OnResize(App->editor->game_window->GetSize().x, App->editor->game_window->GetSize().y, App->renderer3D->game_camera);
+							App->renderer3D->rendering_cameras.push_back(camera);
+						}
+					}
 
 					if (App->IsPlaying())
 					{
-						App->script_importer->AddGameObjectInfoToMono(game_object);
-						to_init.push_back(game_object);
+						(*it)->InitScripts();
 					}
+
+					++it;
+					data.LeaveSection();
 				}
 			}
 			
 			if (App->IsPlaying())
 			{
-				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
-					(*it)->InitScripts();
 			
-				for (std::list<GameObject*>::iterator it = to_init.begin(); it != to_init.end(); ++it)
+				for (std::list<GameObject*>::iterator it = to_start.begin(); it != to_start.end(); ++it)
 					(*it)->StartScripts();
 
 				SetParticleSystemsState("Play");
@@ -813,17 +829,16 @@ JSONTool * ModuleScene::GetJSONTool() const
 
 void ModuleScene::SetParticleSystemsState(const char* state)
 {
-
 	if (state == "Stop")
 	{
-		for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+		for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); ++it)
 		{
 			(*it)->SetShowEmmisionArea(true);
 		}
 	}
 	else if (state == "Play")
 	{
-		for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); it++)
+		for (list<ComponentParticleEmmiter*>::iterator it = scene_emmiters.begin(); it != scene_emmiters.end(); ++it)
 		{
 			if ((*it)->GetDataBehaviour() == 0)
 				(*it)->PlayEmmiter();

@@ -84,6 +84,7 @@ public:
 
 	void Save(Data& data, bool save_children = true);
 	void Load(Data & data);
+	void LoadComponents(Data & data);
 
 	bool Update();
 
