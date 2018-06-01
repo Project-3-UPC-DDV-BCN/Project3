@@ -5,6 +5,8 @@ using TheEngine.TheConsole;
 public class ChargeLaser 
 {
 	// other scripts and go information
+
+	public float charge_factor = 0.5f; // used for the charging fx
 	private TheGameObject game_manager = null;
 	private TheGameObject slave_go = null;
 	private TheTransform slave_transform = null;	
@@ -75,7 +77,7 @@ public class ChargeLaser
 
 		if(charge_fx)
 		{
-			charge += 0.1f;
+			charge += charge_factor;
 			slave_audio.SetMyRTPCvalue("Charge_Percentatge",charge);
 		}
 		if(release_charge)		
