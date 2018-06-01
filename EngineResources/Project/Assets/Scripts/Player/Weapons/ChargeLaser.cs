@@ -9,10 +9,15 @@ public class ChargeLaser
 	private TheGameObject slave_go = null;
 	private TheTransform slave_transform = null;	
 	private TheScript weapon_manager = null;
+	public TheGameObject slave_emmiter;
+	private TheAudioSource slave_audio = null;
 	
 	//spawns
 	public TheGameObject laser_spawn;
 	private TheTransform laser_spawn_trans;
+	private bool charge_fx = false;
+	private bool release_charge = false;
+	float charge = 50;
 
 	
 	//weapon info
@@ -57,6 +62,9 @@ public class ChargeLaser
 		if(laser_spawn != null)
 			laser_spawn_trans = laser_spawn.GetComponent<TheTransform>();
 		
+		if(slave_emmiter != null)
+			slave_audio = slave_emmiter.GetComponent<TheAudioSource>();
+
 		laser_factory = (TheFactory)weapon_manager.CallFunctionArgs("GetFactory");
 		
 		curr_overheat_inc = overheat_increment;
@@ -64,6 +72,28 @@ public class ChargeLaser
 	
 	void Update () 
 	{
+
+		if(charge_fx)
+		{
+			charge += 0.1f;
+			slave_audio.SetMyRTPCvalue("Charge_Percentatge",charge);
+		}
+		if(release_charge)		
+		{
+			if(charge > 0)
+			{
+				charge-=2;
+				slave_audio.SetMyRTPCvalue("Charge_Percentatge", charge);
+			}
+			else
+			{
+				slave_audio.Stop("Play_Charge");
+				charge_fx = false;
+				release_charge = false;
+				charge = 50;
+			}
+		}
+
 		if(!charging && overheat > 0.0f)
 		{
 			overheat -=curr_overheat_inc*TheTime.DeltaTime;
@@ -81,6 +111,13 @@ public class ChargeLaser
 	
 	float ShootPress(float weapon_energy)
 	{
+
+		if(!charge_fx)
+		{
+			slave_audio.Play("Play_Charge");
+			charge_fx = true;
+		}
+
 		curr_overheat_inc = overheat_increment + overheat_increment * (weapon_energy / 100.0f);
 		
 		if(!overheated)
@@ -98,8 +135,12 @@ public class ChargeLaser
 	
 	void ShootRelease()
 	{
+
+		release_charge = true;
+		charge_fx = false;
 		if(!overheated)
 		{
+			
 			//shoot
 			TheVector3 shoot_pos;
 			

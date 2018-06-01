@@ -7,7 +7,7 @@
   "RootPaths": {
    "ProjectRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\",
    "SourceFilesRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\.cache\\Windows\\",
-   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\..\\..\\Player+enemy\\",
+   "SoundBanksRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\..\\..\\..\\Player\\",
    "ExternalSourcesInputFile": "",
    "ExternalSourcesOutputRoot": "C:\\Users\\USUARIO\\Desktop\\Project3Audio\\vs3\\StarWars\\GeneratedSoundBanks\\Windows\\"
   },
@@ -20,14 +20,14 @@
     "Path": "Player.bnk",
     "IncludedEvents": [
      {
-      "Id": "3386681354",
-      "Name": "Pause_FX",
-      "ObjectPath": "\\Events\\Default Work Unit\\Pause_FX"
-     },
-     {
       "Id": "2491293469",
       "Name": "Play_change_weapon",
       "ObjectPath": "\\Events\\Default Work Unit\\Play_change_weapon"
+     },
+     {
+      "Id": "1543804514",
+      "Name": "Play_Charge",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Charge"
      },
      {
       "Id": "1712192651",
@@ -95,11 +95,6 @@
       "ObjectPath": "\\Events\\Default Work Unit\\Play_Turret_Shoot"
      },
      {
-      "Id": "2534666781",
-      "Name": "Resume_FX",
-      "ObjectPath": "\\Events\\Default Work Unit\\Resume_FX"
-     },
-     {
       "Id": "3391768389",
       "Name": "Stop_Enemy_Engine",
       "ObjectPath": "\\Events\\Default Work Unit\\Stop_Enemy_Engine"
@@ -111,6 +106,12 @@
      }
     ],
     "IncludedMemoryFiles": [
+     {
+      "Id": "3497713",
+      "Language": "SFX",
+      "ShortName": "eng_tieFighter_hi_lp.wav",
+      "Path": "SFX\\eng_tieFighter_hi_lp_F17FB28C.wem"
+     },
      {
       "Id": "27322232",
       "Language": "SFX",
@@ -148,6 +149,12 @@
       "Path": "SFX\\exp_obj_large04_1C9C67B2.wem"
      },
      {
+      "Id": "369194773",
+      "Language": "SFX",
+      "ShortName": "Machine Loop 002 SOUND Effect.wav",
+      "Path": "SFX\\Machine Loop 002 SOUND Effect_1F4A96EE.wem"
+     },
+     {
       "Id": "376536248",
       "Language": "SFX",
       "ShortName": "droid_speed_up.wav",
@@ -160,6 +167,12 @@
       "Path": "SFX\\shotgun-reload-mossberg590-RA_The_Sun_God-1398444554_1C9C67B2.wem"
      },
      {
+      "Id": "466525598",
+      "Language": "SFX",
+      "ShortName": "wpn_geonFighter_blaster_fire.wav",
+      "Path": "SFX\\wpn_geonFighter_blaster_fire_1C9C67B2.wem"
+     },
+     {
       "Id": "570977170",
       "Language": "SFX",
       "ShortName": "TIE fighter fire 1.wav",
@@ -170,12 +183,6 @@
       "Language": "SFX",
       "ShortName": "wpn_drdFghtr_missile_fire.wav",
       "Path": "SFX\\wpn_drdFghtr_missile_fire_1C9C67B2.wem"
-     },
-     {
-      "Id": "670837835",
-      "Language": "SFX",
-      "ShortName": "Tie_Fighter_Engine_Loop.wav",
-      "Path": "SFX\\Tie_Fighter_Engine_Loop_F17FB28C.wem"
      },
      {
       "Id": "673363346",
@@ -214,10 +221,10 @@
       "Path": "SFX\\exp_obj_huge02_1C9C67B2.wem"
      },
      {
-      "Id": "1047241511",
+      "Id": "1011728167",
       "Language": "SFX",
-      "ShortName": "turret_shot.wav",
-      "Path": "SFX\\turret_shot_1C9C67B2.wem"
+      "ShortName": "eng_tieFighter_mid_lp.wav",
+      "Path": "SFX\\eng_tieFighter_mid_lp_F17FB28C.wem"
      },
      {
       "Id": "1073036598",
