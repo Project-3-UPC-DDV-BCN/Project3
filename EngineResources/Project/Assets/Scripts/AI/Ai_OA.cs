@@ -9,6 +9,10 @@ public class Ai_OA {
 
 	public float Mnv = 10.0f;
 
+	private bool hitting = false;
+
+	private TheGameObject obstacleObject = null;
+
 	void Start () {
 		transform = TheGameObject.Self.GetComponent<TheTransform>();
 		if(parent == null)
@@ -21,35 +25,42 @@ public class Ai_OA {
 		if(parent == null)
 			return;
 		transform.LocalPosition = parent_transform.ForwardDirection.Normalized;
+
+		if(hitting == true && obstacleObject != null) {
+			ObstacleAvoidance(obstacleObject);
+		}		
+
+	}
+
+	void OnTriggerEnter(TheGameObject other) {
+		//TheConsole.Log("TriggerEnter");
+		hitting = true;
+		obstacleObject = other;
+	}
+	void OnTriggerExit(TheGameObject other) {
+        //TheConsole.Log("TriggerExit");
+		if(other == obstacleObject) {
+			hitting = false;
+			obstacleObject = null;
+		}
+	}
+
+	void ObstacleAvoidance(TheGameObject other) 
+	{
+		if(other == null || parent == null)
+			return;
+        TheTransform otherTrans = other.GetComponent<TheTransform>();
+        if (otherTrans != null)
+        {
+            TheConsole.Log("otherTrans NOT NULL");
+            TheVector3 colDir = otherTrans.GlobalPosition - parent_transform.GlobalPosition; // ERROR AT: 'other.GetComponent<TheTransform>().GlobalPosition'
+            //TheVector3 newRot = TheVector3.Reflect(-colDir, parent_transform.ForwardDirection);
+            //float aux = newRot.z;
+            //newRot.z = newRot.x;
+            //newRot.x = aux;
+            //parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
+        }
 		
 	}
 
-	void OnCollisionStay(TheGameObject other) {
-		TheConsole.Log("TriggerStay");
-		if(other == null || parent == null)
-			return;
-        TheConsole.Log("has other and has parent");
-		TheVector3 colDir = other.GetComponent<TheTransform>().GlobalPosition - parent_transform.GlobalPosition;
-		TheVector3 newRot = TheVector3.Reflect(-colDir, parent_transform.ForwardDirection);
-		float aux = newRot.z;
-		newRot.z = newRot.x;
-		newRot.x = aux;
-		parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
-		
-	}
-	/*void OnTriggerStay(TheGameObject other) 
-	{
-		TheConsole.Log("TriggerStay");
-		if(other == null || parent == null)
-			return;
-        TheConsole.Log("has other and has parent");
-		TheVector3 colDir = other.GetComponent<TheTransform>().GlobalPosition - parent_transform.GlobalPosition;
-		TheVector3 newRot = TheVector3.Reflect(-colDir, parent_transform.ForwardDirection);
-		float aux = newRot.z;
-		newRot.z = newRot.x;
-		newRot.x = aux;
-		parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
-		
-	}
-*/
 }
