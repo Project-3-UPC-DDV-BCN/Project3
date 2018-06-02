@@ -11,7 +11,7 @@ public class Ai_OA
 
 	private bool hitting = false;
 
-	private List<TheTransform> avoiding_objects = new List<TheTransform>();
+	private List<TheCollider> avoiding_objects = new List<TheCollider>();
 
 	void Init () 
 	{
@@ -41,19 +41,12 @@ public class Ai_OA
 
 	void OnTriggerEnter(TheCollisionData coll) 
 	{
-		//TheConsole.Log("TriggerEnter");
+		TheConsole.Log("TriggerEnter");
 
 		TheGameObject other_ship = coll.Collider.GetGameObject();
 
 		if(other_ship != go_avoidance)
-			avoiding_objects.Add(other_ship.GetComponent<TheTransform>());
-
-		TheConsole.Log("Points: " + coll.ContactPoints.Length);
-		for(int i = 0; i < coll.ContactPoints.Length; ++i)
-		{
-			TheContactPoint p = coll.ContactPoints[i];
-			TheConsole.Log("Contact: " + p.Position.x + " " + p.Position.y + " " + p.Position.z);
-		}
+			avoiding_objects.Add(coll.Collider);
 	}
 
 	void OnTriggerExit(TheCollisionData coll) 
@@ -61,7 +54,7 @@ public class Ai_OA
         //TheConsole.Log("TriggerExit");
 
 		TheGameObject other_ship = coll.Collider.GetGameObject();
-		avoiding_objects.Remove(other_ship.GetComponent<TheTransform>());
+		avoiding_objects.Remove(coll.Collider);
 	}
 
 	void DoAvoidance() 
@@ -72,7 +65,7 @@ public class Ai_OA
 		
 			for(int i = 0; i < avoiding_objects.Count; ++i)
 			{
-				TheVector3 colDir = go_avoidance_trans.GlobalPosition - avoiding_objects[i].GlobalPosition;
+				TheVector3 colDir = go_avoidance_trans.GlobalPosition - avoiding_objects[i].WorldPosition;
 				avoidance += colDir;
 			}
 			
@@ -81,9 +74,10 @@ public class Ai_OA
 
 			//TheVector3 newRot = TheVector3.Reflect(avoidance_norm, go_avoidance_trans.ForwardDirection);
 
-			//TheConsole.Log("NewRot: " + newRot.x + " " + newRot.y + " " + newRot.z);
+			TheConsole.Log("NewRot: " + -avoidance_norm.x + " " + -avoidance_norm.x + " " + -avoidance_norm.z);
 
-			go_avoidance_trans.GlobalRotation += avoidance_norm * avoidance_force * TheTime.DeltaTime;
+			TheVector3 to_add = new TheVector3(-avoidance_norm.x, -avoidance_norm.y, 0);
+			go_avoidance_trans.GlobalRotation += to_add * avoidance_force * TheTime.DeltaTime;
 		}
 	}
 
