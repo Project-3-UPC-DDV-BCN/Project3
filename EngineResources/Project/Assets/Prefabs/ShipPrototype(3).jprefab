@@ -1,11 +1,11 @@
 {
-    "UUID": "1743470157",
+    "UUID": "112170004",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "2065104763",
+        "UUID": "1137307992",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "126",
+                "Sound_ID": "125",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -318,7 +318,7 @@
                     "int_fields_count": "3",
                     "double_fields_count": "0",
                     "float_fields_count": "1",
-                    "bool_fields_count": "4",
+                    "bool_fields_count": "5",
                     "string_fields_count": "3",
                     "gameobject_fields_count": "1",
                     "vec2_fields_count": "0",
@@ -347,18 +347,22 @@
                     },
                     "bool_fields": {
                         "field_0": {
+                            "field_name": "hitmarker_at_hit",
+                            "field_value": "1"
+                        },
+                        "field_1": {
                             "field_name": "is_generator",
                             "field_value": "0"
                         },
-                        "field_1": {
+                        "field_2": {
                             "field_name": "is_ship",
                             "field_value": "1"
                         },
-                        "field_2": {
+                        "field_3": {
                             "field_name": "is_slave1",
                             "field_value": "0"
                         },
-                        "field_3": {
+                        "field_4": {
                             "field_name": "is_turret",
                             "field_value": "0"
                         }
@@ -465,7 +469,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker",
-                            "field_value": "181867514"
+                            "field_value": "302752929"
                         }
                     },
                     "vec2_fields": {},
@@ -479,8 +483,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "628538173",
-        "Name": "MarkerCanvas",
+        "UUID": "650162495",
+        "Name": "Canvas(15)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -550,12 +554,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "2065104763",
+        "ParentID": "1137307992",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "181867514",
+        "UUID": "302752929",
         "Name": "Image(69)",
         "Tag": "Default",
         "Layer": "Default",
@@ -627,7 +631,7 @@
                 "texture": "Ackbar_19"
             }
         },
-        "ParentID": "628538173",
+        "ParentID": "650162495",
         "IsRoot": "0",
         "IsStatic": "0"
     }

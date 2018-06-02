@@ -11,10 +11,11 @@ ComponentBillboard::ComponentBillboard(GameObject* attached_gameobject)
 	SetGameObject(attached_gameobject);
 	SetActive(true);
 	SetType(Component::CompBillboard);
+	SetBillboardType(BILLBOARD_ALL);
 	SetAttachedToParticle(false); 
 	particle_attached = nullptr; 
 
-	AttachToCamera(App->renderer3D->editor_camera);
+	AttachToCamera(App->renderer3D->game_camera);
 }
 
 ComponentBillboard::ComponentBillboard(Particle * attached_particle)

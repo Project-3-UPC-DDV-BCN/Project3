@@ -14,6 +14,7 @@ public class EntityProperties
 	public bool is_ship = false;
 	public bool is_turret = false;
 	public bool is_generator = false;
+	public bool hitmarker_at_hit = false; 
 	
 	public int life = 100;
 	private int modified_life = 0;
@@ -410,6 +411,7 @@ public class EntityProperties
         }
         if(IsSlave1()) // Player Solid Collision
         {
+			
             /*
             // Speed Filtering for Player ?? --
             // ...
@@ -417,5 +419,23 @@ public class EntityProperties
             CheckDeath(self);
             */
         }
+
+		TheConsole.Log(other.tag); 
+
+		if(hitmarker_at_hit && other.tag == "Laser")
+		{
+			TheConsole.Log("ENTEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED"); 
+
+			TheScript laser_scpt = other.GetComponent<TheScript>(0); 
+			TheGameObject sender = (TheGameObject)laser_scpt.CallFunctionArgs("GetSender"); 
+			TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
+
+			if(sender.GetComponent<TheTransform>() == slave1.GetComponent<TheTransform>())
+			{
+				TheScript hitmarker_scpt = slave1.GetComponent<TheScript>(2); 
+				hitmarker_scpt.CallFunction("ShowHitMarker"); 
+			}
+
+		}
     }
 }
