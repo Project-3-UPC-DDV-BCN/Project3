@@ -486,10 +486,13 @@ void ModuleScene::SaveScene(std::string path)
 
 bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data, bool destroy_scene, bool duplicate, std::list<GameObject*>& new_gos)
 {
+	BROFILER_CATEGORY("Scene - LoadPrefab", Profiler::Color::Beige);
+
 	bool can_load = false;
 
 	extension = '.' + extension;
 
+	BROFILER_CATEGORY("Scene - LoadPrefab - LoadJSON", Profiler::Color::Beige);
 	if (data.CanLoadAsJSON(path.c_str(), extension))
 	{
 		CONSOLE_LOG("Loading scene as JSON: %s", path.c_str());
@@ -504,8 +507,9 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 
 		std::list<GameObject*> to_start;
 
+		BROFILER_CATEGORY("Scene - LoadPrefab - FirstLoad", Profiler::Color::Beige);
 		int gameObjectsCount = data.GetInt("GameObjects_Count");
-		for (int i = 0; i < gameObjectsCount; i++)
+		for (int i = 0; i < gameObjectsCount; ++i)
 		{
 			if (data.EnterSection("GameObject_" + std::to_string(i)))
 			{
@@ -518,24 +522,26 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				App->resources->AddGameObject(game_object);
 
 				new_gos.push_back(game_object);
-			
-				data.LeaveSection();
-
 
 				if (App->IsPlaying())
 				{
 					App->script_importer->AddGameObjectInfoToMono(game_object);
 					to_start.push_back(game_object);
 				}
+
+				data.LeaveSection();
 			}
 		}
+
+
+		BROFILER_CATEGORY("Scene - LoadPrefab - SecondLoad", Profiler::Color::Beige);
 
 		if (can_load)
 		{
 			data.ResetData();
 			
 			std::list<GameObject*>::iterator it = new_gos.begin();
-			for (int i = 0; i < gameObjectsCount; i++)
+			for (int i = 0; i < gameObjectsCount; ++i)
 			{
 				if (data.EnterSection("GameObject_" + std::to_string(i)))
 				{
@@ -578,9 +584,9 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				}
 			}
 			
+			BROFILER_CATEGORY("Scene - LoadPrefab - ScriptsStart", Profiler::Color::Beige);
 			if (App->IsPlaying())
 			{
-			
 				for (std::list<GameObject*>::iterator it = to_start.begin(); it != to_start.end(); ++it)
 					(*it)->StartScripts();
 
