@@ -235,19 +235,6 @@ references:
   commentId: T:TheEngine.TheBoxCollider
   fullName: TheEngine.TheBoxCollider
   nameWithType: TheBoxCollider
-- uid: TheEngine.TheBoxCollider.Center
-  name: Center
-  href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Center
-  commentId: P:TheEngine.TheBoxCollider.Center
-  fullName: TheEngine.TheBoxCollider.Center
-  nameWithType: TheBoxCollider.Center
-- uid: TheEngine.TheBoxCollider.Center*
-  name: Center
-  href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Center_
-  commentId: Overload:TheEngine.TheBoxCollider.Center
-  isSpec: "True"
-  fullName: TheEngine.TheBoxCollider.Center
-  nameWithType: TheBoxCollider.Center
 - uid: TheEngine.TheBoxCollider.Size
   name: Size
   href: api/TheEngine.TheBoxCollider.html#TheEngine_TheBoxCollider_Size
@@ -423,19 +410,6 @@ references:
   commentId: T:TheEngine.TheCapsuleCollider
   fullName: TheEngine.TheCapsuleCollider
   nameWithType: TheCapsuleCollider
-- uid: TheEngine.TheCapsuleCollider.Center
-  name: Center
-  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Center
-  commentId: P:TheEngine.TheCapsuleCollider.Center
-  fullName: TheEngine.TheCapsuleCollider.Center
-  nameWithType: TheCapsuleCollider.Center
-- uid: TheEngine.TheCapsuleCollider.Center*
-  name: Center
-  href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Center_
-  commentId: Overload:TheEngine.TheCapsuleCollider.Center
-  isSpec: "True"
-  fullName: TheEngine.TheCapsuleCollider.Center
-  nameWithType: TheCapsuleCollider.Center
 - uid: TheEngine.TheCapsuleCollider.Direction
   name: Direction
   href: api/TheEngine.TheCapsuleCollider.html#TheEngine_TheCapsuleCollider_Direction
@@ -481,6 +455,19 @@ references:
   commentId: T:TheEngine.TheCollider
   fullName: TheEngine.TheCollider
   nameWithType: TheCollider
+- uid: TheEngine.TheCollider.Center
+  name: Center
+  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_Center
+  commentId: P:TheEngine.TheCollider.Center
+  fullName: TheEngine.TheCollider.Center
+  nameWithType: TheCollider.Center
+- uid: TheEngine.TheCollider.Center*
+  name: Center
+  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_Center_
+  commentId: Overload:TheEngine.TheCollider.Center
+  isSpec: "True"
+  fullName: TheEngine.TheCollider.Center
+  nameWithType: TheCollider.Center
 - uid: TheEngine.TheCollider.ClosestPoint(TheEngine.TheVector3)
   name: ClosestPoint(TheVector3)
   href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_ClosestPoint_TheEngine_TheVector3_
@@ -493,30 +480,6 @@ references:
   commentId: Overload:TheEngine.TheCollider.ClosestPoint
   fullName: TheEngine.TheCollider.ClosestPoint
   nameWithType: TheCollider.ClosestPoint
-- uid: TheEngine.TheCollider.GetColliderLocalPosition
-  name: GetColliderLocalPosition()
-  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_GetColliderLocalPosition
-  commentId: M:TheEngine.TheCollider.GetColliderLocalPosition
-  fullName: TheEngine.TheCollider.GetColliderLocalPosition()
-  nameWithType: TheCollider.GetColliderLocalPosition()
-- uid: TheEngine.TheCollider.GetColliderLocalPosition*
-  name: GetColliderLocalPosition
-  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_GetColliderLocalPosition_
-  commentId: Overload:TheEngine.TheCollider.GetColliderLocalPosition
-  fullName: TheEngine.TheCollider.GetColliderLocalPosition
-  nameWithType: TheCollider.GetColliderLocalPosition
-- uid: TheEngine.TheCollider.GetColliderWorldPosition
-  name: GetColliderWorldPosition()
-  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_GetColliderWorldPosition
-  commentId: M:TheEngine.TheCollider.GetColliderWorldPosition
-  fullName: TheEngine.TheCollider.GetColliderWorldPosition()
-  nameWithType: TheCollider.GetColliderWorldPosition()
-- uid: TheEngine.TheCollider.GetColliderWorldPosition*
-  name: GetColliderWorldPosition
-  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_GetColliderWorldPosition_
-  commentId: Overload:TheEngine.TheCollider.GetColliderWorldPosition
-  fullName: TheEngine.TheCollider.GetColliderWorldPosition
-  nameWithType: TheCollider.GetColliderWorldPosition
 - uid: TheEngine.TheCollider.GetGameObject
   name: GetGameObject()
   href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_GetGameObject
@@ -553,6 +516,19 @@ references:
   commentId: Overload:TheEngine.TheCollider.IsTrigger
   fullName: TheEngine.TheCollider.IsTrigger
   nameWithType: TheCollider.IsTrigger
+- uid: TheEngine.TheCollider.LocalPosition
+  name: LocalPosition
+  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_LocalPosition
+  commentId: P:TheEngine.TheCollider.LocalPosition
+  fullName: TheEngine.TheCollider.LocalPosition
+  nameWithType: TheCollider.LocalPosition
+- uid: TheEngine.TheCollider.LocalPosition*
+  name: LocalPosition
+  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_LocalPosition_
+  commentId: Overload:TheEngine.TheCollider.LocalPosition
+  isSpec: "True"
+  fullName: TheEngine.TheCollider.LocalPosition
+  nameWithType: TheCollider.LocalPosition
 - uid: TheEngine.TheCollider.SetTrigger(System.Boolean)
   name: SetTrigger(Boolean)
   href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_SetTrigger_System_Boolean_
@@ -578,6 +554,19 @@ references:
   isSpec: "True"
   fullName: TheEngine.TheCollider.ToString
   nameWithType: TheCollider.ToString
+- uid: TheEngine.TheCollider.WorldPosition
+  name: WorldPosition
+  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_WorldPosition
+  commentId: P:TheEngine.TheCollider.WorldPosition
+  fullName: TheEngine.TheCollider.WorldPosition
+  nameWithType: TheCollider.WorldPosition
+- uid: TheEngine.TheCollider.WorldPosition*
+  name: WorldPosition
+  href: api/TheEngine.TheCollider.html#TheEngine_TheCollider_WorldPosition_
+  commentId: Overload:TheEngine.TheCollider.WorldPosition
+  isSpec: "True"
+  fullName: TheEngine.TheCollider.WorldPosition
+  nameWithType: TheCollider.WorldPosition
 - uid: TheEngine.TheCollisionData
   name: TheCollisionData
   href: api/TheEngine.TheCollisionData.html
@@ -3542,19 +3531,6 @@ references:
   commentId: T:TheEngine.TheSphereCollider
   fullName: TheEngine.TheSphereCollider
   nameWithType: TheSphereCollider
-- uid: TheEngine.TheSphereCollider.Center
-  name: Center
-  href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Center
-  commentId: P:TheEngine.TheSphereCollider.Center
-  fullName: TheEngine.TheSphereCollider.Center
-  nameWithType: TheSphereCollider.Center
-- uid: TheEngine.TheSphereCollider.Center*
-  name: Center
-  href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Center_
-  commentId: Overload:TheEngine.TheSphereCollider.Center
-  isSpec: "True"
-  fullName: TheEngine.TheSphereCollider.Center
-  nameWithType: TheSphereCollider.Center
 - uid: TheEngine.TheSphereCollider.Radius
   name: Radius
   href: api/TheEngine.TheSphereCollider.html#TheEngine_TheSphereCollider_Radius

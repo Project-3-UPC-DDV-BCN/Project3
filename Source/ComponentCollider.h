@@ -48,6 +48,8 @@ public:
 	void ChangeMeshToConvex(bool set_convex);
 	bool IsConvex() const;
 
+	float3 GetColliderWorldPos() const;
+
 	void Save(Data& data) const;
 	void Load(Data& data);
 

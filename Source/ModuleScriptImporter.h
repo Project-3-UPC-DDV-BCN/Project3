@@ -344,16 +344,16 @@ public:
 	bool ColliderIsTrigger(MonoObject* object);
 	void ColliderSetTrigger(MonoObject* object, bool trigger);
 	MonoObject* ClosestPoint(MonoObject* object, MonoObject* position);
+	MonoObject* GetColliderWorldPosition(MonoObject* object);
+	MonoObject* GetColliderLocalPosition(MonoObject* object);
+	MonoObject* GetColliderCenter(MonoObject* object);
+	void SetColliderCenter(MonoObject* object, MonoObject* center);
 
 	//BOX COLLIDER
-	MonoObject* GetBoxColliderCenter(MonoObject* object);
-	void SetBoxColliderCenter(MonoObject* object, MonoObject* center);
 	MonoObject* GetBoxColliderSize(MonoObject* object);
 	void SetBoxColliderSize(MonoObject* object, MonoObject* size);
 
 	//CAPSULE COLLIDER
-	MonoObject* GetCapsuleColliderCenter(MonoObject* object);
-	void SetCapsuleColliderCenter(MonoObject* object, MonoObject* center);
 	float GetCapsuleColliderRadius(MonoObject* object);
 	void SetCapsuleColliderRadius(MonoObject* object, float radius);
 	float GetCapsuleColliderHeight(MonoObject* object);
@@ -362,8 +362,6 @@ public:
 	void SetCapsuleColliderDirection(MonoObject* object, int direction);
 
 	//SPHERE COLLIDER
-	MonoObject* GetSphereColliderCenter(MonoObject* object);
-	void SetSphereColliderCenter(MonoObject* object, MonoObject* center);
 	float GetSphereColliderRadius(MonoObject* object);
 	void SetSphereColliderRadius(MonoObject* object, float radius);
 
@@ -657,16 +655,16 @@ private:
 	static bool ColliderIsTrigger(MonoObject* object);
 	static void ColliderSetTrigger(MonoObject* object, bool trigger);
 	static MonoObject* ClosestPoint(MonoObject* object, MonoObject* position);
+	static MonoObject* GetColliderWorldPosition(MonoObject* object);
+	static MonoObject* GetColliderLocalPosition(MonoObject* object);
+	static MonoObject* GetColliderCenter(MonoObject* object);
+	static void SetColliderCenter(MonoObject* object, MonoObject* center);
 
 	//BOX COLLIDER
-	static MonoObject* GetBoxColliderCenter(MonoObject* object);
-	static void SetBoxColliderCenter(MonoObject* object, MonoObject* center);
 	static MonoObject* GetBoxColliderSize(MonoObject* object);
 	static void SetBoxColliderSize(MonoObject* object, MonoObject* size);
 
 	//CAPSULE COLLIDER
-	static MonoObject* GetCapsuleColliderCenter(MonoObject* object);
-	static void SetCapsuleColliderCenter(MonoObject* object, MonoObject* center);
 	static float GetCapsuleColliderRadius(MonoObject* object);
 	static void SetCapsuleColliderRadius(MonoObject* object, float radius);
 	static float GetCapsuleColliderHeight(MonoObject* object);
@@ -675,8 +673,6 @@ private:
 	static void SetCapsuleColliderDirection(MonoObject* object, int direction);
 
 	//SPHERE COLLIDER
-	static MonoObject* GetSphereColliderCenter(MonoObject* object);
-	static void SetSphereColliderCenter(MonoObject* object, MonoObject* center);
 	static float GetSphereColliderRadius(MonoObject* object);
 	static void SetSphereColliderRadius(MonoObject* object, float radius);
 
