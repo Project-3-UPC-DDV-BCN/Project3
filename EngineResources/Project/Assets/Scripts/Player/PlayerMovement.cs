@@ -1238,6 +1238,8 @@ public class PlayerMovement
 			
             if (TheInput.IsKeyDown("SPACE"))
             {
+				audio_source.Stop("Play_Puzzle_Repair");
+				audio_source.Play("Play_Puzzle_Repair");
                 switch(repair_ring)
                 {
                     case 0:
