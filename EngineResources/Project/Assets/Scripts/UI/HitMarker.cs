@@ -29,7 +29,7 @@ public class HitMarker
 		}
 	}
 
-	void ShowHitMarker()
+	public void ShowHitMarker()
 	{
 		hit_marker.SetActive(true);
 		showing_marker = true; 
