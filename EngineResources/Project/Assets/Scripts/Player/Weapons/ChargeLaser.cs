@@ -75,7 +75,7 @@ public class ChargeLaser
 	
 	void Update () 
 	{
-		if(charge_fx)
+		if(charge_fx && !cooling)
 		{
 			charge += charge_factor;
 			slave_audio.SetMyRTPCvalue("Charge_Percentatge",charge);
@@ -140,6 +140,9 @@ public class ChargeLaser
 	
 	void ShootRelease()
 	{
+		if (cooling)
+			return;
+		
 		release_charge = true;
 		charge_fx = false;
 		if(!overheated)
