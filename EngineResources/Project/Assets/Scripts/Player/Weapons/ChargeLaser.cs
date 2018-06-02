@@ -31,6 +31,7 @@ public class ChargeLaser
 	public float light_duration = 0.5f;
 	private bool overheated = false;
 	private bool charging = false;
+	private bool cooling = false;
 	
 	//factory
 	TheFactory laser_factory;
@@ -74,7 +75,6 @@ public class ChargeLaser
 	
 	void Update () 
 	{
-
 		if(charge_fx)
 		{
 			charge += charge_factor;
@@ -113,7 +113,9 @@ public class ChargeLaser
 	
 	float ShootPress(float weapon_energy)
 	{
-
+		if (cooling)
+			return overheat;
+		
 		if(!charge_fx)
 		{
 			slave_audio.Play("Play_Charge");
@@ -137,17 +139,14 @@ public class ChargeLaser
 	
 	void ShootRelease()
 	{
-
 		release_charge = true;
 		charge_fx = false;
 		if(!overheated)
 		{
-			
 			//shoot
 			TheVector3 shoot_pos;
 			
 			shoot_pos = laser_spawn_trans.GlobalPosition;
-			
 			
 			if(laser_factory != null)
 			{
@@ -183,11 +182,10 @@ public class ChargeLaser
 						if(overheat >= 1.0f)
 							overheated = true;
 						else
-						{
-							overheat = 0.0f;
-							
+						{			
 							object[] arg = {overheat};
 							weapon_manager.CallFunctionArgs("SetOverheat", arg);
+							cooling = true;
 						}
 						
 						charging = false;
