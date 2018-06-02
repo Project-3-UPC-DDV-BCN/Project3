@@ -18,8 +18,9 @@ public class Weapon1
 	TheTimer heat_timer = new TheTimer();
 	public float heat_time = 2.0f;
 	
+	private bool cooldown = false;
 	TheTimer cooldown_timer = new TheTimer();
-	public float cooldown_timer = 2.0f;
+	public float cooldown_time = 2.0f;
 	
 	private TheGameObject game_manager = null;
 	
@@ -65,35 +66,50 @@ public class Weapon1
 			TheConsole.Log("audio_source == null");
 		*/
 		
-		TheVector3 offset = new TheVector3(0, 2, 0);
-
-		//starship_shooting.SetFloatField("curr_overheat_inc", overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f));
-		
-		if(laser_factory != null)
+		if (cooldown)
 		{
-			TheGameObject go = laser_factory.Spawn();
-
-			if(go != null)
-			{
-				TheScript laser_script = go.GetScript("Laser"); 
-				if(laser_script != null && slave_transform != null && slave_go != null)
-				{
-					//TheConsole.Log("Slave1 shoots with weapon 1");			
-	
-					object[] args = {slave_go, speed, damage, slave_transform.ForwardDirection, slave_transform.QuatRotation};
-					laser_script.CallFunctionArgs("SetInfo", args);
-				}
+			if (cooldown_timer.ReadTime() >= cooldown_time)
+			{	
+				cooldown = true;
+				cooldown_timer.Stop();
 			}
 		}
-
-		if(audio_source != null)
-		{	
-			audio_source.Stop("Play_shot_2");
-			audio_source.Play("Play_shot_2");
-		}
 		
-		starship_shooting.SetBoolField("cooling", true);
-		heat_timer.Stop();
+		if (!cooldown)
+		{
+			TheVector3 offset = new TheVector3(0, 2, 0);
+
+			//starship_shooting.SetFloatField("curr_overheat_inc", overheat_increment * 1.5f - overheat_increment * (weapons_bar.PercentageProgress / 100.0f));
+			
+			if(laser_factory != null)
+			{
+				TheGameObject go = laser_factory.Spawn();
+
+				if(go != null)
+				{
+					TheScript laser_script = go.GetScript("Laser"); 
+					if(laser_script != null && slave_transform != null && slave_go != null)
+					{
+						//TheConsole.Log("Slave1 shoots with weapon 1");			
+		
+						object[] args = {slave_go, speed, damage, slave_transform.ForwardDirection, slave_transform.QuatRotation};
+						laser_script.CallFunctionArgs("SetInfo", args);
+					}
+				}
+			}
+
+			if(audio_source != null)
+			{	
+				audio_source.Stop("Play_shot_2");
+				audio_source.Play("Play_shot_2");
+			}
+			
+			starship_shooting.SetBoolField("cooling", true);
+			heat_timer.Stop();
+			
+			cooldown = true;
+			cooldown_timer.Start();
+		}
 	}
 	
 	void Cooling(float overheat_timer, float overheat, float w2_cooling_rate)
