@@ -118,7 +118,7 @@ public class Level1Manager
 
 	// Warp
 	TheTimer time_to_warp = new TheTimer();
-	int time_to_survive = 20;
+	int time_to_survive = 60;
 	
 	TheTimer warp_prepare_time = new TheTimer();
 	TheTimer warp_time = new TheTimer();
@@ -783,6 +783,8 @@ public class Level1Manager
 			}
 			case 8:
 			{
+				bool running = false;
+
 				SetEnemiesToKill("Time to survive: " + (time_to_survive - (int)time_to_warp.ReadTime()).ToString());
 	
 				if(time_to_warp.ReadTime() > time_to_survive)
