@@ -1200,6 +1200,9 @@
     <ClInclude Include="Brofiler\Brofiler.h">
       <Filter>Sources\3d Party\Brofiler</Filter>
     </ClInclude>
+    <ClInclude Include="LensFlare.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -1876,6 +1879,9 @@
     </ClCompile>
     <ClCompile Include="TinyXML\tinyxml2.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="LensFlare.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,6 +38,7 @@
 #include "ModuleResources.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "LensFlare.h"
 #include "glmath.h"
 #include "OpenGL.h"
 #include "Brofiler\Brofiler.h"
@@ -168,6 +169,9 @@ bool ModuleRenderer3D::Init(Data* editor_config)
 
 	//Set Up Depth Map
 	SetDepthMap();
+
+	//lensflare = new LensFlare();
+
 	return ret;
 }
 
@@ -776,11 +780,13 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 
 	current_material = nullptr;
 
+	glDepthMask(GL_FALSE);
+
 	for (std::map<float, ComponentMeshRenderer*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 	{
 		DrawMeshWithBlending(it->second, active_camera);
 	}
-
+	glDepthMask(GL_TRUE);
 
 	for (uint i = 0; i < cubes_to_draw.size(); ++i)
 	{
@@ -826,6 +832,9 @@ void ModuleRenderer3D::DrawSceneGameObjects(ComponentCamera* active_camera, bool
 		DrawCanvas(active_camera, false);
 	else if(active_camera == editor_camera)
 		DrawCanvas(active_camera, true);
+
+	if (lensflare != nullptr)
+		lensflare->SetActiveCamera(active_camera);
 
 	// Debug Draw render
 	/*if(is_editor_camera)
@@ -992,6 +1001,9 @@ bool ModuleRenderer3D::CleanUp()
 	RELEASE(debug_draw);
 	
 	SDL_GL_DeleteContext(context);
+
+	if (lensflare != nullptr)
+		delete lensflare;
 
 	return true;
 }

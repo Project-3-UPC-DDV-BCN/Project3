@@ -19,6 +19,7 @@ class ComponentCamera;
 class ComponentCanvas;
 class DebugDraw;
 class Material;
+class LensFlare;
 
 #define MAX_LIGHTS 8
 
@@ -191,6 +192,9 @@ private:
 	bool changed_material = true;
 	float self_alpha = -1.0f;
 
+
+	// LENS FLARE
+	LensFlare *lensflare = nullptr;
 
 	// SHADOW MAPPING DON'T TOUCH
 	uint depth_map;
