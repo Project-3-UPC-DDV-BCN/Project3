@@ -1,11 +1,12 @@
 using TheEngine;
+using TheEngine.TheConsole;
 
 public class SoftBoundariesDomi {
 
     TheTransform trans;
-    public TheGameObject canv;
 
-    public TheText cdText;
+    public TheGameObject cdText;	
+	private TheText texttext;
 
 	TheScript entity_script = null;
 
@@ -15,13 +16,16 @@ public class SoftBoundariesDomi {
 
     
     public int timeLeft = 5;
-    private float countdownTimeMs; //seconds to ms
-	private int timeToShow;
     
+	private float countdown;
 
-    private bool is_counting;
+	private float deltaTime; //optimizing delta time 
 
-	private int suicide = 200;
+    private bool is_counting = false;
+
+	private int suicide = 200; //damage to self
+
+	private float offset = 0.1f;
 
 
 	// Use this for initialization
@@ -29,56 +33,64 @@ public class SoftBoundariesDomi {
         trans = TheGameObject.Self.GetComponent<TheTransform>();
 		
 		entity_script = TheGameObject.Self.GetScript("EntityProperties");
-        
-        is_counting = false;
-        countdownTimeMs = timeLeft * 1000;
-		timeToShow = timeLeft;
+		texttext = cdText.GetChild(0).GetComponent<TheText>();	
+
+		cdText.SetActive(false);
+		
+		countdown = timeLeft;
         
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        if(IsInside())
+		deltaTime = TheTime.DeltaTime;
+
+        if(!IsInside())
         {
-                
             if(is_counting)//reset countdown
             {
-                countdownTimeMs = timeLeft * 1000;
-                is_counting = false;
-				timeToShow = timeLeft;
+        
+				countdown -= deltaTime;
 
-				countdownTimeMs -= TheTime.DeltaTime;
-
-				if((countdownTimeMs % 1000.0 < (timeToShow + 0.4)) && (countdownTimeMs % 1000.0 > (timeToShow - 0.4)))
-                {
-                    timeToShow--;
-                }
-
-				//cdText.text = "Return to combat zone: " + timeToShow;
+				texttext.Text = "Return to combat zone: " + (int)countdown;
             }
             else
             {
                 is_counting = true;
+
+				countdown = timeLeft;
+				cdText.SetActive(true); //activate canvas
             }
              
-            if(timeLeft <= 0)
+            if(countdown <= 0.0f)
             {
-               //entity_script.CallFunction(DealDamage(suicide));
-            }
+				cdText.SetActive(false);
+				object[] args = {suicide};
+                entity_script.CallFunctionArgs("DealDamage", args);
+				is_counting = false;
 
+            }
         }
-		
 	}
+
     bool IsInside()
     {
 
         TheVector3 object_pos = trans.GlobalPosition;
 
         if (object_pos.x < (limitX / 2) && object_pos.x > -(limitX / 2))
-            if (object_pos.y < (limitY / 2) && object_pos.y > -(limitY / 2))
-                if (object_pos.z < (limitZ / 2) && object_pos.z > -(limitZ / 2))
-                    return true;
+        {
+			if (object_pos.y < (limitY / 2) && object_pos.y > -(limitY / 2))
+            { 
+				if (object_pos.z < (limitZ / 2) && object_pos.z > -(limitZ / 2))
+				{
+					is_counting = false;	
+					return true;
+				}
+			}   
+		}    
+                    
 
         return false;
     }
