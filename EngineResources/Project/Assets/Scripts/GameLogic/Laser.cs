@@ -11,9 +11,14 @@ public class Laser
 	private TheVector3 direction = new TheVector3(0, 0, 0);
 	private TheQuaternion orientation = TheQuaternion.Identity;
 
+	int current_mission = 0;
+	
 	void Init()
 	{
 		self_trans = TheGameObject.Self.GetComponent<TheTransform>();
+		TheGameObject manager = TheGameObject.Find("GameManager");
+		TheScript level1 = manager.GetScript("Level1Manager");
+		current_mission = (int)level1.CallFunctionArgs("GetCurrentMission");
 	}
 	
 	void Update()
@@ -63,6 +68,12 @@ public class Laser
 			TheScript self_properties = sender.GetScript("EntityProperties");
 			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
 			{
+				if (((bool)entity_properties.CallFunctionArgs("IsTurret") || (bool)entity_properties.CallFunctionArgs("IsGenerator")) && current_mission < 6)
+				{	
+					TheGameObject.Self.SetActive(false);
+					return;
+				}
+				
 				object[] args = {sender, laser_damage};
 				entity_properties.CallFunctionArgs("HitByShip", args);
 				TheGameObject.Self.SetActive(false);

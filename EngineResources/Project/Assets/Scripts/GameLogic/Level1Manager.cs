@@ -1038,4 +1038,9 @@ public class Level1Manager
 	{
 		return entities_to_destroy.Count;
 	}
+	
+	public int GetCurrentMission()
+	{
+		return curr_mission_state;
+	}
 }
