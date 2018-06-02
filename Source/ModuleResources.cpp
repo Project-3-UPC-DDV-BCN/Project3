@@ -1992,7 +1992,7 @@ void ModuleResources::CreateDefaultShaders()
 
 
 						// -------------- FRESNEL + predefined metallic and roughness ----------
-		/*	"			float metallic = 1.5;\n"
+			"			float metallic = 1.5;\n"
 			"			float roughness = 1.5;\n"
 			"			vec3 V = normalize(viewPos - FragPos);\n"
 
@@ -2021,7 +2021,7 @@ void ModuleResources::CreateDefaultShaders()
 			"				kD *= 1.0 - metallic;\n"
 			"				float NdotL = max(dot(normal, L), 0.0);\n"
 			"				Lo += (kD * color.rgb / PI + specular) * radiance * NdotL;\n"
-			"			}\n"*/
+			"			}\n"
 
 
 
@@ -2043,14 +2043,13 @@ void ModuleResources::CreateDefaultShaders()
 				"				result += CalcSpotLight(spotLights[j], normal, fragPosarg, viewDir);\n"
 
 						// -------------- SELF_TRANSPARENCY ----------
+
+			"			color = vec4((color.rgb) * (result) + (color.rgb * AMBIENT_LIGHT), 1.0); \n"
+
 			"			if (self_transparency >= 0.0 && self_transparency <= 100.0)\n"
 			"				{\n	"
 			"					color.a = self_transparency / 100;\n"
 			"				}\n	"
-		//	"			color = vec4(texture2D(Tex_ShadowMap, TexCoord).r,texture2D(Tex_ShadowMap, TexCoord).r, texture2D(Tex_ShadowMap, TexCoord).r * (1-shadow), color.a);  \n"
-				"			color = vec4((color.rgb) * (result) + (color.rgb * AMBIENT_LIGHT), color.a); \n"
-		//	"			color.rgb = color.rgb / (color.rgb + vec3(1.0));\n"
-		//	"			color.rgb = pow(color.rgb, vec3(1.0 / 2.2));\n"
 
 			"			}\n"
 						// -------------- OPACITY MAP ----------
@@ -2069,7 +2068,7 @@ void ModuleResources::CreateDefaultShaders()
 			"	float closestDepth = texture(Tex_ShadowMap, projCoords.xy).r;\n"
 			"	float currentDepth = projCoords.z;\n"
 
-			"	float bias = 0.005;\n"
+			"	float bias = 0.002;\n"
 			"	float shadow = 0.0;\n"
 			"	vec2 texelSize = 1.0 / textureSize(Tex_ShadowMap, 0);\n"
 			"	for (int x = -1; x <= 1; ++x)\n"
