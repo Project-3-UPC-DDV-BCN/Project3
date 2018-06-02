@@ -45,7 +45,7 @@ public class TurretAI {
 	public float LaserSpeed = 30.0f;
 	public int BaseLaserDamage = 10;
 	
-	public float AngleOffset = 8.0f;
+	private float OffsetAngle = 5.0f;
 	
 	TheTimer BlasterTimer = new TheTimer();
 
@@ -114,7 +114,7 @@ public class TurretAI {
 		float angle = TheMath.Atan(DeltaY / DeltaZ);
 		angle *= TheMath.RadToDeg;
 		
-		angle -= AngleOffset;
+		angle -= OffsetAngle;
 		
 		if (angle < MinAngleBlasters)
 			angle = MinAngleBlasters;

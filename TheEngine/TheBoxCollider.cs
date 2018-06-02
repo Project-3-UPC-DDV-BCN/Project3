@@ -4,17 +4,6 @@ namespace TheEngine
 {
     public class TheBoxCollider : TheCollider
     {
-        public TheVector3 Center
-        {
-            get
-            {
-                return GetBoxColliderCenter();
-            }
-            set
-            {
-                SetBoxColliderCenter(value);
-            }
-        }
 
         public TheVector3 Size
         {
@@ -27,13 +16,6 @@ namespace TheEngine
                 SetBoxColliderSize(value);
             }
         }
-
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern TheVector3 GetBoxColliderCenter();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern void SetBoxColliderCenter(TheVector3 center);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern TheVector3 GetBoxColliderSize();

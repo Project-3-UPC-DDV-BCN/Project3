@@ -511,6 +511,13 @@ bool ComponentCollider::IsConvex() const
 	return is_convex;
 }
 
+float3 ComponentCollider::GetColliderWorldPos() const
+{
+	physx::PxVec3 col_world_pos = rigidbody->GetRigidBody()->getGlobalPose().p + collider_shape->getLocalPose().p;
+	float3 float3_world_pos(col_world_pos.x, col_world_pos.y, col_world_pos.z);
+	return float3_world_pos;
+}
+
 void ComponentCollider::Save(Data & data) const
 {
 	data.AddInt("Type", GetType());

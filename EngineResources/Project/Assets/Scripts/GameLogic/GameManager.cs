@@ -257,7 +257,7 @@ public class GameManager
 			if(ship_prop != null)
 			{
 				generator_entities.Add(add);
-				TheConsole.Log("Generator added: " + TurretsCount());
+				TheConsole.Log("Generator added: " + GeneratorsCount());
 			}
 		}
 	}	

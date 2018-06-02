@@ -114,7 +114,8 @@ public class Level1Manager
 	TheTimer timer_between_spawn = new TheTimer();
 	float time_between_spawn = 3.5f;
 	TheTimer new_spawn_timer = new TheTimer();
-	float time_between_new_spawn = 50.0f;
+	public float time_between_new_spawn = 50.0f;
+	public int max_enemies_same_time = 15;
 
 	// Warp
 	TheTimer time_to_warp = new TheTimer();
@@ -1104,7 +1105,15 @@ public class Level1Manager
 
 	void SpawnNextWave(int ships)
 	{
-		ships_to_spawn += ships;
+		if(game_manager_script != null)
+		{
+			int enemies = (int)game_manager_script.CallFunctionArgs("GetSlaveEnemies");
+
+			if(enemies < max_enemies_same_time)
+			{
+				ships_to_spawn += ships;
+			}
+		}
 	}
 
 	void AddToEntitiesToDestroy(TheGameObject add)

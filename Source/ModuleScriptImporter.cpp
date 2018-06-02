@@ -899,16 +899,15 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCollider::IsTrigger", (const void*)ColliderIsTrigger);
 	mono_add_internal_call("TheEngine.TheCollider::SetTrigger", (const void*)ColliderSetTrigger);
 	mono_add_internal_call("TheEngine.TheCollider::ClosestPoint", (const void*)ClosestPoint);
+	mono_add_internal_call("TheEngine.TheCollider::GetColliderCenter", (const void*)GetColliderCenter);
+	mono_add_internal_call("TheEngine.TheCollider::GetColliderWorldPosition", (const void*)GetColliderWorldPosition);
+	mono_add_internal_call("TheEngine.TheCollider::GetColliderLocalPosition", (const void*)GetColliderLocalPosition);
 
 	//BOX COLLIDER
-	mono_add_internal_call("TheEngine.TheBoxCollider::GetBoxColliderCenter", (const void*)GetBoxColliderCenter);
-	mono_add_internal_call("TheEngine.TheBoxCollider::SetBoxColliderCenter", (const void*)SetBoxColliderCenter);
 	mono_add_internal_call("TheEngine.TheBoxCollider::GetBoxColliderSize", (const void*)GetBoxColliderSize);
 	mono_add_internal_call("TheEngine.TheBoxCollider::SetBoxColliderSize", (const void*)SetBoxColliderSize);
 
 	//CAPSULE COLLIDER
-	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderCenter", (const void*)GetCapsuleColliderCenter);
-	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderCenter", (const void*)SetCapsuleColliderCenter);
 	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderRadius", (const void*)GetCapsuleColliderRadius);
 	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderRadius", (const void*)SetCapsuleColliderRadius);
 	mono_add_internal_call("TheEngine.TheCapsuleCollider::GetCapsuleColliderHeight", (const void*)GetCapsuleColliderHeight);
@@ -917,8 +916,6 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCapsuleCollider::SetCapsuleColliderDirection", (const void*)SetCapsuleColliderDirection);
 
 	//SPHERE COLLIDER
-	mono_add_internal_call("TheEngine.TheSphereCollider::GetSphereColliderCenter", (const void*)GetSphereColliderCenter);
-	mono_add_internal_call("TheEngine.TheSphereCollider::SetSphereColliderCenter", (const void*)SetSphereColliderCenter);
 	mono_add_internal_call("TheEngine.TheSphereCollider::GetSphereColliderRadius", (const void*)GetSphereColliderRadius);
 	mono_add_internal_call("TheEngine.TheSphereCollider::SetSphereColliderRadius", (const void*)SetSphereColliderRadius);
 
@@ -1882,14 +1879,24 @@ MonoObject * ModuleScriptImporter::ClosestPoint(MonoObject * object, MonoObject 
 	return ns_importer->ClosestPoint(object, position);
 }
 
-MonoObject * ModuleScriptImporter::GetBoxColliderCenter(MonoObject * object)
+MonoObject * ModuleScriptImporter::GetColliderWorldPosition(MonoObject * object)
 {
-	return ns_importer->GetBoxColliderCenter(object);
+	return ns_importer->GetColliderWorldPosition(object);
 }
 
-void ModuleScriptImporter::SetBoxColliderCenter(MonoObject * object, MonoObject * center)
+MonoObject * ModuleScriptImporter::GetColliderLocalPosition(MonoObject * object)
 {
-	ns_importer->SetBoxColliderCenter(object, center);
+	return ns_importer->GetColliderLocalPosition(object);
+}
+
+MonoObject * ModuleScriptImporter::GetColliderCenter(MonoObject * object)
+{
+	return ns_importer->GetColliderCenter(object);
+}
+
+void ModuleScriptImporter::SetColliderCenter(MonoObject * object, MonoObject * center)
+{
+	ns_importer->SetColliderCenter(object, center);
 }
 
 MonoObject * ModuleScriptImporter::GetBoxColliderSize(MonoObject * object)
@@ -1900,16 +1907,6 @@ MonoObject * ModuleScriptImporter::GetBoxColliderSize(MonoObject * object)
 void ModuleScriptImporter::SetBoxColliderSize(MonoObject * object, MonoObject * size)
 {
 	ns_importer->SetBoxColliderSize(object, size);
-}
-
-MonoObject * ModuleScriptImporter::GetCapsuleColliderCenter(MonoObject * object)
-{
-	return ns_importer->GetCapsuleColliderCenter(object);
-}
-
-void ModuleScriptImporter::SetCapsuleColliderCenter(MonoObject * object, MonoObject * center)
-{
-	ns_importer->SetCapsuleColliderCenter(object, center);
 }
 
 float ModuleScriptImporter::GetCapsuleColliderRadius(MonoObject * object)
@@ -1940,16 +1937,6 @@ int ModuleScriptImporter::GetCapsuleColliderDirection(MonoObject * object)
 void ModuleScriptImporter::SetCapsuleColliderDirection(MonoObject * object, int direction)
 {
 	ns_importer->SetCapsuleColliderDirection(object, direction);
-}
-
-MonoObject * ModuleScriptImporter::GetSphereColliderCenter(MonoObject * object)
-{
-	return ns_importer->GetSphereColliderCenter(object);
-}
-
-void ModuleScriptImporter::SetSphereColliderCenter(MonoObject * object, MonoObject * center)
-{
-	ns_importer->SetSphereColliderCenter(object, center);
 }
 
 float ModuleScriptImporter::GetSphereColliderRadius(MonoObject * object)
@@ -2860,6 +2847,21 @@ MonoObject* NSScriptImporter::GetComponent(MonoObject * object, MonoReflectionTy
 					if (c_type == Component::CompBoxCollider || c_type == Component::CompSphereCollider || c_type == Component::CompCapsuleCollider || c_type == Component::CompMeshCollider)
 					{
 						comp_type_count++;
+						switch (c_type)
+						{
+						case Component::CompBoxCollider:
+							cpp_type = Component::CompBoxCollider;
+							break;
+						case Component::CompSphereCollider:
+							cpp_type = Component::CompSphereCollider;
+							break;
+						case Component::CompCapsuleCollider:
+							cpp_type = Component::CompCapsuleCollider;
+							break;
+						case Component::CompMeshCollider:
+							cpp_type = Component::CompMeshCollider;
+							break;
+						}
 					}
 				}
 				else if (c_type == cpp_type)
@@ -5889,7 +5891,67 @@ MonoObject * NSScriptImporter::ClosestPoint(MonoObject * object, MonoObject * po
 	return nullptr;
 }
 
-MonoObject * NSScriptImporter::GetBoxColliderCenter(MonoObject * object)
+MonoObject * NSScriptImporter::GetColliderWorldPosition(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
+			{
+				MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+				MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+				MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+				ComponentCollider* col = (ComponentCollider*)comp;
+				float3 world_pos = col->GetColliderWorldPos();
+
+				if (x_field) mono_field_set_value(new_object, x_field, &world_pos.x);
+				if (y_field) mono_field_set_value(new_object, y_field, &world_pos.y);
+				if (z_field) mono_field_set_value(new_object, z_field, &world_pos.z);
+
+				return new_object;
+			}
+		}
+	}
+	return nullptr;
+}
+
+MonoObject * NSScriptImporter::GetColliderLocalPosition(MonoObject * object)
+{
+	Component* comp = GetComponentFromMonoObject(object);
+
+	if (comp != nullptr)
+	{
+		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
+		if (c)
+		{
+			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
+			if (new_object)
+			{
+				MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
+				MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
+				MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
+
+				ComponentCollider* col = (ComponentCollider*)comp;
+				float3 local_pos = col->GetColliderCenter();
+
+				if (x_field) mono_field_set_value(new_object, x_field, &local_pos.x);
+				if (y_field) mono_field_set_value(new_object, y_field, &local_pos.y);
+				if (z_field) mono_field_set_value(new_object, z_field, &local_pos.z);
+
+				return new_object;
+			}
+		}
+	}
+	return nullptr;
+}
+
+MonoObject * NSScriptImporter::GetColliderCenter(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
@@ -5920,7 +5982,7 @@ MonoObject * NSScriptImporter::GetBoxColliderCenter(MonoObject * object)
 	return nullptr;
 }
 
-void NSScriptImporter::SetBoxColliderCenter(MonoObject * object, MonoObject * center)
+void NSScriptImporter::SetColliderCenter(MonoObject * object, MonoObject * center)
 {
 	Component* comp = GetComponentFromMonoObject(object);
 
@@ -5997,60 +6059,6 @@ void NSScriptImporter::SetBoxColliderSize(MonoObject * object, MonoObject * size
 	}
 }
 
-MonoObject * NSScriptImporter::GetCapsuleColliderCenter(MonoObject * object)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentCollider* col = (ComponentCollider*)comp;
-
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
-		if (c)
-		{
-			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-			if (new_object)
-			{
-				MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
-				MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
-				MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
-
-				float3 center = col->GetColliderCenter();
-
-				if (x_field) mono_field_set_value(new_object, x_field, &center.x);
-				if (y_field) mono_field_set_value(new_object, y_field, &center.y);
-				if (z_field) mono_field_set_value(new_object, z_field, &center.z);
-
-				return new_object;
-			}
-		}
-	}
-	return nullptr;
-}
-
-void NSScriptImporter::SetCapsuleColliderCenter(MonoObject * object, MonoObject * center)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentCollider* col = (ComponentCollider*)comp;
-
-		MonoClass* c = mono_object_get_class(center);
-		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
-		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
-		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
-
-		float3 new_center;
-
-		if (x_field) mono_field_get_value(center, x_field, &new_center.x);
-		if (y_field) mono_field_get_value(center, y_field, &new_center.y);
-		if (z_field) mono_field_get_value(center, z_field, &new_center.z);
-
-		col->SetColliderCenter(new_center);
-	}
-}
-
 float NSScriptImporter::GetCapsuleColliderRadius(MonoObject * object)
 {
 	Component* comp = GetComponentFromMonoObject(object);
@@ -6123,60 +6131,6 @@ void NSScriptImporter::SetCapsuleColliderDirection(MonoObject * object, int dire
 		ComponentCollider* col = (ComponentCollider*)comp;
 
 		return col->SetCapsuleDirection((ComponentCollider::CapsuleDirection)direction);
-	}
-}
-
-MonoObject * NSScriptImporter::GetSphereColliderCenter(MonoObject * object)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentCollider* col = (ComponentCollider*)comp;
-
-		MonoClass* c = mono_class_from_name(App->script_importer->GetEngineImage(), "TheEngine", "TheVector3");
-		if (c)
-		{
-			MonoObject* new_object = mono_object_new(App->script_importer->GetDomain(), c);
-			if (new_object)
-			{
-				MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
-				MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
-				MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
-
-				float3 center = col->GetColliderCenter();
-
-				if (x_field) mono_field_set_value(new_object, x_field, &center.x);
-				if (y_field) mono_field_set_value(new_object, y_field, &center.y);
-				if (z_field) mono_field_set_value(new_object, z_field, &center.z);
-
-				return new_object;
-			}
-		}
-	}
-	return nullptr;
-}
-
-void NSScriptImporter::SetSphereColliderCenter(MonoObject * object, MonoObject * center)
-{
-	Component* comp = GetComponentFromMonoObject(object);
-
-	if (comp)
-	{
-		ComponentCollider* col = (ComponentCollider*)comp;
-
-		MonoClass* c = mono_object_get_class(center);
-		MonoClassField* x_field = mono_class_get_field_from_name(c, "x");
-		MonoClassField* y_field = mono_class_get_field_from_name(c, "y");
-		MonoClassField* z_field = mono_class_get_field_from_name(c, "z");
-
-		float3 new_center;
-
-		if (x_field) mono_field_get_value(center, x_field, &new_center.x);
-		if (y_field) mono_field_get_value(center, y_field, &new_center.y);
-		if (z_field) mono_field_get_value(center, z_field, &new_center.z);
-
-		col->SetColliderCenter(new_center);
 	}
 }
 
