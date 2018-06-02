@@ -7,7 +7,7 @@ public class SoftBoundariesDomi {
 
     public TheText cdText;
 
-	TheScript entity_script = TheGameObject.Self.GetScript("EntityProperties");
+	TheScript entity_script = null;
 
     public float limitX;
     public float limitY;
@@ -27,6 +27,8 @@ public class SoftBoundariesDomi {
 	// Use this for initialization
 	void Start () {
         trans = TheGameObject.Self.GetComponent<TheTransform>();
+		
+		entity_script = TheGameObject.Self.GetScript("EntityProperties");
         
         is_counting = false;
         countdownTimeMs = timeLeft * 1000;

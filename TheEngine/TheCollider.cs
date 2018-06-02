@@ -19,6 +19,12 @@ namespace TheEngine
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern TheVector3 ClosestPoint(TheVector3 position);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheVector3 GetColliderWorldPosition();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern TheVector3 GetColliderLocalPosition();
+
         public override string ToString()
         {
             return "Collider";
