@@ -7,71 +7,64 @@ public class SoftBoundariesDomi {
 
     public TheText cdText;
 
+	TheScript entity_script = TheGameObject.Self.GetScript("EntityProperties");
+
     public float limitX;
     public float limitY;
     public float limitZ;
 
-    private float check = 1.0f; //time between checks
-
+    
     public int timeLeft = 5;
-    private int timeToShow;
-
     private float countdownTimeMs; //seconds to ms
+	private int timeToShow;
     
 
     private bool is_counting;
+
+	private int suicide = 200;
 
 
 	// Use this for initialization
 	void Start () {
         trans = TheGameObject.Self.GetComponent<TheTransform>();
         
-
         is_counting = false;
         countdownTimeMs = timeLeft * 1000;
-        timeToShow = timeLeft;
+		timeToShow = timeLeft;
         
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        //check -= Time.deltaTime;
-        if(check < 0)
-        {
-            if(IsInside())
-            {
-                
-                if(is_counting)//reset countdown
-                {
-                    countdownTimeMs = timeLeft * 1000;
-                    timeToShow = timeLeft;
 
-                }
+        if(IsInside())
+        {
+                
+            if(is_counting)//reset countdown
+            {
+                countdownTimeMs = timeLeft * 1000;
                 is_counting = false;
+				timeToShow = timeLeft;
+
+				countdownTimeMs -= TheTime.DeltaTime;
+
+				if((countdownTimeMs % 1000.0 < (timeToShow + 0.4)) && (countdownTimeMs % 1000.0 > (timeToShow - 0.4)))
+                {
+                    timeToShow--;
+                }
+
+				//cdText.text = "Return to combat zone: " + timeToShow;
             }
             else
             {
                 is_counting = true;
             }
-                
-
-            if (is_counting)
-            {
-                //countdownTimeMs -= Time.deltaTime;
-                //cdText.text = "Return to combat zone in " + countdownTimeMs;
-                if(countdownTimeMs % 1000 == 0)
-                {
-                    timeToShow--;
-                }
-
-              
-            }
+             
             if(timeLeft <= 0)
             {
-                //die
+               //entity_script.CallFunction(DealDamage(suicide));
             }
 
-            check = 1.0f;
         }
 		
 	}

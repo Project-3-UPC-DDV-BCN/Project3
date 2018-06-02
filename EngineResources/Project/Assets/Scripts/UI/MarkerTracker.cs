@@ -4,55 +4,49 @@ using TheEngine.TheConsole;
 public class MarkerTracker 
 {
 
-	private bool is_visible;
-	private bool prev_visible;
-	private bool just_entered = false; 
+	public TheGameObject marker;
+	private TheGameObject ship;
 
-	private TheTransform transform;  
-
-	public TheGameObject marker_prf;
-	private TheGameObject marker_go;
-	private TheRectTransform marker_rect;  
+	private TheScript slave_targeting;  
 
 	void Start () 
 	{
-		transform = TheGameObject.Self.GetComponent<TheTransform>();
+		marker.SetActive(false); 
+		ship = TheGameObject.Self; 
 
-		is_visible = false; 
-		prev_visible = is_visible; 
-		just_entered = false; 
+		slave_targeting = TheGameObject.Find("PlayerCam").GetComponent<TheScript>(0);
+
+		if(slave_targeting != null) TheConsole.Log("targeting detected"); 
+		if(ship != null) TheConsole.Log("parent detected"); 
 	}
-	
-	void Update () 
+
+	void Update()
 	{
-	
-		is_visible = TheCamera.IsObjectInside(TheGameObject.Self);
+		if(slave_targeting == null) TheConsole.Log("targeting not detected"); 
+		if(ship == null) TheConsole.Log("parent not detected");
+ 
+		TheGameObject target = (TheGameObject)slave_targeting.CallFunctionArgs("GetTarget"); 
 
-		if(prev_visible != is_visible)
+		if(target != null)
 		{
-			if(is_visible == true)
-				just_entered = true; 
+			if(target.GetComponent<TheTransform>() == ship.GetComponent<TheTransform>())
+			{
+				ShowTargetMarker();
+			}
 			else
-				just_entered = false; 
+			{
+				HideTargetMarker(); 
+			}
+		}	
+	}	
+	void ShowTargetMarker()
+	{
+		marker.SetActive(true); 
+	}
 
-			prev_visible = is_visible;
-		}
-			
-		if(just_entered)
-		{
-			//TheGameObject test = TheResources.LoadPrefab("ShipMarker"); 		
-			//TheConsole.Log("Prefab loaded");
-			
-			/*marker_go = TheGameObject.Duplicate(marker_prf);
-			TheConsole.Log("Prefab duplicated");
-			marker_go.SetParent(TheGameObject.Find("SceneCanvas"));
-			marker_rect = marker_go.GetComponent<TheRectTransform>(); 
-			marker_rect.Position = new TheVector3(0,0,0); //TheCamera.WorldPosToCameraPos(transform.GlobalPosition); */
-		}
-
-		//if(is_visible)
-			//marker_rect.Position = new TheVector3(0,0,0); 
-			
+	void HideTargetMarker()
+	{
+		marker.SetActive(false); 
 	}
 
 }

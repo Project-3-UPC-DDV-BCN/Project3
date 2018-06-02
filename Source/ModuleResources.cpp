@@ -1992,7 +1992,7 @@ void ModuleResources::CreateDefaultShaders()
 
 
 						// -------------- FRESNEL + predefined metallic and roughness ----------
-			"			float metallic = 1.5;\n"
+			/*"			float metallic = 1.5;\n"
 			"			float roughness = 1.5;\n"
 			"			vec3 V = normalize(viewPos - FragPos);\n"
 
@@ -2021,7 +2021,7 @@ void ModuleResources::CreateDefaultShaders()
 			"				kD *= 1.0 - metallic;\n"
 			"				float NdotL = max(dot(normal, L), 0.0);\n"
 			"				Lo += (kD * color.rgb / PI + specular) * radiance * NdotL;\n"
-			"			}\n"
+			"			}\n"*/
 
 
 

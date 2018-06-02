@@ -19,7 +19,7 @@ public class PlayerWeaponManager
 	public string p2_change_weapon = "C";
 	private float overheat = 0.0f;
 	public string weapon0_script_name = "BaseLaser";
-	public string weapon1_script_name = "Weapon1";
+	public string weapon1_script_name = "ChargeLaser";
 	private bool can_shoot = true;	
 	///weapons bar
 	public TheGameObject weapons_energy;
