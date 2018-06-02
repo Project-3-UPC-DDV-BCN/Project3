@@ -18,6 +18,9 @@ public class Weapon1
 	TheTimer heat_timer = new TheTimer();
 	public float heat_time = 2.0f;
 	
+	TheTimer cooldown_timer = new TheTimer();
+	public float cooldown_timer = 2.0f;
+	
 	private TheGameObject game_manager = null;
 	
 	void Init()	

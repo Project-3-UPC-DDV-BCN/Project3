@@ -68,7 +68,7 @@ public class Laser
 			TheScript self_properties = sender.GetScript("EntityProperties");
 			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
 			{
-				if (((bool)entity_properties.CallFunctionArgs("IsTurret") || (bool)entity_properties.CallFunctionArgs("IsGenerator")) && current_mission < 6)
+				if (((bool)entity_properties.CallFunctionArgs("IsTurret") || (bool)entity_properties.CallFunctionArgs("IsGenerator")) && current_mission < 5)
 				{	
 					TheGameObject.Self.SetActive(false);
 					return;
