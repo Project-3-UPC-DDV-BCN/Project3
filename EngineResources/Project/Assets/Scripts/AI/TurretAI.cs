@@ -49,7 +49,10 @@ public class TurretAI {
 	
 	TheTimer BlasterTimer = new TheTimer();
 
-	void Start () {
+	private bool can_shoot = true;
+
+	void Start () 
+	{
 		TurretBase = TheGameObject.Self;
 		BlasterTransform = BlasterPivot.GetComponent<TheTransform>();
 		SelfTransform = TurretHead.GetComponent<TheTransform>();
@@ -78,7 +81,8 @@ public class TurretAI {
 		BlasterTimer.Start();
 	}
 	
-	void Update () {
+	void Update () 
+	{
 		PlayerPosition = PlayerTransform.GlobalPosition;
 		SelfPosition = SelfTransform.GlobalPosition;
 		SelfRotation = SelfTransform.LocalRotation;
@@ -135,49 +139,52 @@ public class TurretAI {
 	
 	void Shoot()
 	{
-		TheVector3 tOffset = PlayerPosition - SelfPosition;
-		
-		if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters*2)
+		if(can_shoot)
 		{
-			if (BlasterTimer.ReadTime() >= LaserFrequency && LBlasterFactory != null && RBlasterFactory != null)
+			TheVector3 tOffset = PlayerPosition - SelfPosition;
+		
+			if (TheVector3.Magnitude(tOffset) < ShootingRange && TheVector3.AngleBetween(SelfTransform.ForwardDirection, tOffset) < MaxAngleBlasters*2)
 			{
-				TheGameObject laser = null;
-				if (shoot)
-					laser = LBlasterFactory.Spawn();
-				else
-					laser = RBlasterFactory.Spawn();
-				
-				if(laser != null)
+				if (BlasterTimer.ReadTime() >= LaserFrequency && LBlasterFactory != null && RBlasterFactory != null)
 				{
-					if(AudioSource != null)
-						AudioSource.Play("Play_Turret_Shoot");
-					
-					TheScript laser_script = laser.GetScript("Laser");
-
-					if(laser_script != null)
+					TheGameObject laser = null;
+					if (shoot)
+						laser = LBlasterFactory.Spawn();
+					else
+						laser = RBlasterFactory.Spawn();
+				
+					if(laser != null)
 					{
-						DirectionTransform.LookAt(PlayerPosition);
+						if(AudioSource != null)
+							AudioSource.Play("Play_Turret_Shoot");
+					
+						TheScript laser_script = laser.GetScript("Laser");
+
+						if(laser_script != null)
+						{
+							DirectionTransform.LookAt(PlayerPosition);
 						
-						if (shoot)
-						{
-							object[] args = {LBlaster, LaserSpeed, BaseLaserDamage, CannonTransform.RightDirection, DirectionTransform.QuatRotation};
-							laser_script.CallFunctionArgs("SetInfo", args);
+							if (shoot)
+							{
+								object[] args = {LBlaster, LaserSpeed, BaseLaserDamage, CannonTransform.RightDirection, DirectionTransform.QuatRotation};
+								laser_script.CallFunctionArgs("SetInfo", args);
+							}
+							else
+							{
+								object[] args = {RBlaster, LaserSpeed, BaseLaserDamage, CannonTransform.RightDirection, DirectionTransform.QuatRotation};
+								laser_script.CallFunctionArgs("SetInfo", args);						
+							}
+							shoot = !shoot;
 						}
-						else
-						{
-							object[] args = {RBlaster, LaserSpeed, BaseLaserDamage, CannonTransform.RightDirection, DirectionTransform.QuatRotation};
-							laser_script.CallFunctionArgs("SetInfo", args);						
-						}
-						shoot = !shoot;
 					}
-				}
 				// 1. Shoot			
 				// 2. Change Between Left and Rigth Blasters
 				// 3. Restart Timer
-				BlasterTimer.Start();
+					BlasterTimer.Start();
+				}
 			}
 		}
-	}
+	}	
 	
 	float GetAngleFromTwoPoints(float x1, float y1, float x2, float y2)
     {
@@ -202,4 +209,9 @@ public class TurretAI {
 
         return angle;
     }
+
+	public void SetCanShoot(bool set)
+	{
+		can_shoot = set;
+	}
 }

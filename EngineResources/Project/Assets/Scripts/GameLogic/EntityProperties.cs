@@ -18,6 +18,7 @@ public class EntityProperties
 	public int life = 100;
 	private int modified_life = 0;
 	private bool dead = false;
+	private bool can_be_hit = true;
 
 	public float laser_speed = 30;
 	public int base_laser_damage = 10;
@@ -143,7 +144,7 @@ public class EntityProperties
 	// Called when the ship is hit by a laser
 	void HitByShip(TheGameObject ship, int dmg)
 	{
-		if(ship != null && !IsDead())
+		if(ship != null && !IsDead() && can_be_hit)
 		{
 			TheScript entity_script = ship.GetScript("EntityProperties");
 
@@ -167,6 +168,11 @@ public class EntityProperties
 				TheConsole.Log("Hit by ship");
 			}
 		}
+	}
+
+	void SetCanBeHit(bool set)
+	{
+		can_be_hit = set;
 	}
 
 	// Returns if the ship is dead or not

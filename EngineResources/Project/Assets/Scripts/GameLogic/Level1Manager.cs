@@ -425,6 +425,10 @@ public class Level1Manager
 		{
 			case 1:
 			{
+				SetTurretsCanBeHit(false);
+				SetTurretsCanShoot(false);
+				SetGeneratorsCanBeHit(false);
+
 				if(dialog_manager != null)
 				{
 					object[] args = {ackbar_canvas_go};
@@ -535,6 +539,10 @@ public class Level1Manager
 			}
 			case 6:
 			{
+				SetTurretsCanBeHit(true);
+				SetGeneratorsCanBeHit(true);
+				SetTurretsCanShoot(true);
+
 				if(audio_source != null)
 					audio_source.SetState("Level","Combat");
 
@@ -708,10 +716,20 @@ public class Level1Manager
 			{
 				if(shield_gate_center_trans != null && slave_trans != null)
 				{
-					float distanece_to_shieldgate = TheVector3.Distance(shield_gate_center_trans.LocalPosition, slave_trans.LocalPosition);
+					bool running = false;
 
-					if(distanece_to_shieldgate < 2400)
-						NextMissionState();
+					if(dialog_manager != null)
+					{
+						running = (bool)dialog_manager.CallFunctionArgs("DialogIsRunning");
+					}
+
+					if(!running)
+					{
+						float distanece_to_shieldgate = TheVector3.Distance(shield_gate_center_trans.LocalPosition, slave_trans.LocalPosition);
+
+						if(distanece_to_shieldgate < 2400)
+							NextMissionState();
+					}
 				}
 
 				break;
@@ -1009,6 +1027,69 @@ public class Level1Manager
 
 				timer_between_spawn.Start();
 				--ships_to_spawn;
+			}
+		}
+	}
+
+	void SetTurretsCanBeHit(bool set)
+	{
+		if(game_manager_script != null)
+		{
+			List<TheGameObject> turrets = new List<TheGameObject>();
+			
+			turrets = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetTurrets");
+
+			for(int i = 0; i < turrets.Count; ++i)
+			{
+				TheScript properties = turrets[i].GetScript("EntityProperties");
+
+				if(properties != null)
+				{
+					object[] args = {set};
+					properties.CallFunctionArgs("SetCanBeHit", args);
+				}
+			}
+		}
+	}
+
+	void SetTurretsCanShoot(bool set)
+	{
+		if(game_manager_script != null)
+		{
+			List<TheGameObject> turrets = new List<TheGameObject>();
+			
+			turrets = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetTurrets");
+
+			for(int i = 0; i < turrets.Count; ++i)
+			{
+				TheScript properties = turrets[i].GetScript("TurretAI");
+
+				if(properties != null)
+				{
+					object[] args = {set};
+					properties.CallFunctionArgs("SetCanShoot", args);
+				}
+			}
+		}
+	}
+
+	void SetGeneratorsCanBeHit(bool set)
+	{
+		if(game_manager_script != null)
+		{
+			List<TheGameObject> generators = new List<TheGameObject>();
+			
+			generators = (List<TheGameObject>)game_manager_script.CallFunctionArgs("GetGenerators");
+
+			for(int i = 0; i < generators.Count; ++i)
+			{
+				TheScript properties = generators[i].GetScript("EntityProperties");
+
+				if(properties != null)
+				{
+					object[] args = {set};
+					properties.CallFunctionArgs("SetCanBeHit", args);
+				}
 			}
 		}
 	}
