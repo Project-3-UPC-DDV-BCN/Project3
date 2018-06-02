@@ -104,9 +104,10 @@ public class ChargeLaser
 			{
 				overheat = 0.0f;
 				overheated = false;
+				cooling = false;
 			}
 			
-			object[] args = {overheat};
+			object[] args =  {overheat};
 			weapon_manager.CallFunctionArgs("SetOverheat", args);
 		}
 	}
