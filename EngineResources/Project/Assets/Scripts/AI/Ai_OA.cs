@@ -1,66 +1,90 @@
 using TheEngine;
 using TheEngine.TheConsole;
+using System.Collections.Generic;
 
-public class Ai_OA {
+public class Ai_OA 
+{
+	public TheGameObject go_avoidance = null;
+	TheTransform go_avoidance_trans = null;
 
-	public TheGameObject parent;
-	TheTransform parent_transform;
-	TheTransform transform;
-
-	public float Mnv = 10.0f;
+	public float avoidance_force = 100.0f;
 
 	private bool hitting = false;
 
-	private TheGameObject obstacleObject = null;
+	private List<TheTransform> avoiding_objects = new List<TheTransform>();
 
-	void Start () {
-		transform = TheGameObject.Self.GetComponent<TheTransform>();
-		if(parent == null)
-			parent = TheGameObject.Self.GetParent();
-		if(parent != null)
-			parent_transform = parent.GetComponent<TheTransform>();
+	void Init () 
+	{
+		if(go_avoidance != null)
+		{
+			go_avoidance_trans = go_avoidance.GetComponent<TheTransform>();
+
+			if(go_avoidance_trans == null)
+			{
+				//TheConsole.Log("OA: Go trans is null");
+			}
+			else
+			{
+				//TheConsole.Log("OA: Go trans is null not null!!");
+			}
+		}
+		else
+		{
+			//TheConsole.Log("OA: Go is null");
+		}
 	}
 	
-	void Update () {
-		if(parent == null)
-			return;
-		transform.LocalPosition = parent_transform.ForwardDirection.Normalized;
-
-		if(hitting == true && obstacleObject != null) {
-			ObstacleAvoidance(obstacleObject);
-		}		
-
+	void Update () 
+	{
+		DoAvoidance();	
 	}
 
-	void OnTriggerEnter(TheGameObject other) {
+	void OnTriggerEnter(TheCollisionData coll) 
+	{
 		//TheConsole.Log("TriggerEnter");
-		hitting = true;
-		obstacleObject = other;
-	}
-	void OnTriggerExit(TheGameObject other) {
-        //TheConsole.Log("TriggerExit");
-		if(other == obstacleObject) {
-			hitting = false;
-			obstacleObject = null;
+
+		TheGameObject other_ship = coll.Collider.GetGameObject();
+
+		if(other_ship != go_avoidance)
+			avoiding_objects.Add(other_ship.GetComponent<TheTransform>());
+
+		TheConsole.Log("Points: " + coll.ContactPoints.Length);
+		for(int i = 0; i < coll.ContactPoints.Length; ++i)
+		{
+			TheContactPoint p = coll.ContactPoints[i];
+			TheConsole.Log("Contact: " + p.Position.x + " " + p.Position.y + " " + p.Position.z);
 		}
 	}
 
-	void ObstacleAvoidance(TheGameObject other) 
+	void OnTriggerExit(TheCollisionData coll) 
 	{
-		if(other == null || parent == null)
-			return;
-        TheTransform otherTrans = other.GetComponent<TheTransform>();
-        if (otherTrans != null)
-        {
-            TheConsole.Log("otherTrans NOT NULL");
-            TheVector3 colDir = otherTrans.GlobalPosition - parent_transform.GlobalPosition; // ERROR AT: 'other.GetComponent<TheTransform>().GlobalPosition'
-            //TheVector3 newRot = TheVector3.Reflect(-colDir, parent_transform.ForwardDirection);
-            //float aux = newRot.z;
-            //newRot.z = newRot.x;
-            //newRot.x = aux;
-            //parent_transform.GlobalRotation += newRot.Normalized * Mnv * TheTime.DeltaTime;
-        }
+        //TheConsole.Log("TriggerExit");
+
+		TheGameObject other_ship = coll.Collider.GetGameObject();
+		avoiding_objects.Remove(other_ship.GetComponent<TheTransform>());
+	}
+
+	void DoAvoidance() 
+	{
+		if(go_avoidance_trans != null)
+		{
+			TheVector3 avoidance = new TheVector3(0, 0, 0);
 		
+			for(int i = 0; i < avoiding_objects.Count; ++i)
+			{
+				TheVector3 colDir = go_avoidance_trans.GlobalPosition - avoiding_objects[i].GlobalPosition;
+				avoidance += colDir;
+			}
+			
+			TheVector3 avoidance_norm = new TheVector3(0, 0, 0);
+			avoidance_norm = TheVector3.Normalize(avoidance);
+
+			//TheVector3 newRot = TheVector3.Reflect(avoidance_norm, go_avoidance_trans.ForwardDirection);
+
+			//TheConsole.Log("NewRot: " + newRot.x + " " + newRot.y + " " + newRot.z);
+
+			go_avoidance_trans.GlobalRotation += avoidance_norm * avoidance_force * TheTime.DeltaTime;
+		}
 	}
 
 }

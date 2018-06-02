@@ -523,12 +523,6 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 
 				new_gos.push_back(game_object);
 
-				if (App->IsPlaying())
-				{
-					App->script_importer->AddGameObjectInfoToMono(game_object);
-					to_start.push_back(game_object);
-				}
-
 				data.LeaveSection();
 			}
 		}
@@ -546,6 +540,7 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 				if (data.EnterSection("GameObject_" + std::to_string(i)))
 				{
 					GameObject* game_object = *it;
+					game_object->Load(data);
 					game_object->LoadComponents(data);
 
 					ComponentMeshRenderer* mesh_renderer = (ComponentMeshRenderer*)game_object->GetComponent(Component::CompMeshRenderer);
@@ -576,7 +571,8 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 
 					if (App->IsPlaying())
 					{
-						(*it)->InitScripts();
+						App->script_importer->AddGameObjectInfoToMono(game_object);
+						to_start.push_back(game_object);
 					}
 
 					++it;
@@ -587,6 +583,9 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 			BROFILER_CATEGORY("Scene - LoadPrefab - ScriptsStart", Profiler::Color::Beige);
 			if (App->IsPlaying())
 			{
+				for (std::list<GameObject*>::iterator it = to_start.begin(); it != to_start.end(); ++it)
+					(*it)->InitScripts();
+
 				for (std::list<GameObject*>::iterator it = to_start.begin(); it != to_start.end(); ++it)
 					(*it)->StartScripts();
 
