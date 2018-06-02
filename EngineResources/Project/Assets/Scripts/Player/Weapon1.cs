@@ -68,7 +68,7 @@ public class Weapon1
 		
 		if (cooldown)
 		{
-			if (cooldown_timer >= cooldown_time)
+			if (cooldown_timer.ReadTime() >= cooldown_time)
 			{	
 				cooldown = true;
 				cooldown_timer.Stop();
