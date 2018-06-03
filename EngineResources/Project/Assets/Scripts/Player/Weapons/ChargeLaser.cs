@@ -113,9 +113,6 @@ public class ChargeLaser
 		
 		if (overheat == 0.0f)
 			cooling = false;
-		
-		TheConsole.Log("Cooling: "+cooling);
-		TheConsole.Log("Overheated: "+overheated);
 	}
 	
 	float ShootPress(float weapon_energy)
