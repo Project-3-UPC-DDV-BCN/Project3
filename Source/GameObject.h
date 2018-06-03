@@ -96,6 +96,7 @@ public:
 	bool is_on_destroy;
 	bool used_in_scene;
 	bool was_active;
+	bool is_prefab;
 
 private:
 	bool active;
@@ -107,7 +108,6 @@ private:
 	UID uuid;
 	bool is_selected;
 	bool is_static;
-	bool is_used_in_prefab;
 	bool is_ui;
 	bool is_canvas;
 };
