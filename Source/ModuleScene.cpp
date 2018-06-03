@@ -888,6 +888,7 @@ GameObject * ModuleScene::ClonePrefab(Prefab* prefab)
 				{
 					go_to_return = game_object;
 				}
+				App->resources->AddGameObject(game_object);
 
 				data.LeaveSection();
 			}
