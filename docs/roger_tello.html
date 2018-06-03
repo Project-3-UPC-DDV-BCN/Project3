@@ -462,81 +462,69 @@
 		<section class="single-post">
 			<div class="full-width">
 				<div class="blog-details">
-					<h2 class="blog-title">Dead Island 2 Official E3 Announce Gameplay</h2>
-					<ul class="meta">
-						<li><a href="#"><i class="fa fa-clock-o"></i>Jan 11,2018</a><span>by:</span> <a href="#">Mominul</a></li>
-						<li><a href="#"><i class="fa fa-comments-o"></i> 50 Comments</a></li>
+					<style>
+					img {
+						display: block;
+						margin-left: auto;
+						margin-right: auto;
+					}	
+					</style>
+					<h2 class="blog-title">Gameplay Bases</h2>
+					<p>
+						Added a base for the logic system of the game: 
+					</p>
+					<ul>
+						<li><b>-Score & Time:</b>  added an score system that rewarded or punished the player with some points. Also added a time counter needed for setting a gameplay time.</li>
+						<br>
+						<img src="WebPhotos/RogerTello/Score.png" alt="Score" align = "middle">
+						<img src="WebPhotos/RogerTello/timer.gif" alt="Time" align = "middle">
+						<br>
+						<li><b>-Basic Scripting:</b> basic scripts for the basis of the game (Game Manager, Ship Properties, Spawners…) </li>
+						<br>
+						<li><b>-Prefabs Set Up:</b> added the basic prefabs for each ship containing the basic functionalities for shooting and be shoot. </li>
+						<img src="WebPhotos/RogerTello/tie.png" alt="Tie Fighter" align = "middle">
+						<br>
+						<li><b>-Laser:</b> created functionality for the laser in order to subtract HP when hitting other ships and killing them once they are dead. </li>
+						<img src="WebPhotos/RogerTello/laser.png" alt="Laser" align = "middle">
+						<br>
+						<li><b>-Explosion System for Ships:</b> added an universal script that could be used for any type of object in the game constructed with child pieces. It separate its parts with random linear and rotational velocity. </li>
+					</ul>	
+					<br>
+					<h2 class="blog-title">GamePad Management System </h2>
+					<p>
+						Added an management system for the UI elements to allow controller manipulation independently from the ID. The system works like following: 
+					</p>
+					<img src="WebPhotos/RogerTello/GamePadSystem.png" alt="Time" align = "middle">
+					<br>
+					<ul>
+						<li>1. The canvas will contain a number for the current UI element selected.</li>
+						<li>2. An ID and an order need to be set before pressing “Accept Controller” checkbox.</li>
+						<li>3. From script, call the function <i>ControllerIDUp()</i> or <i>ControllerIDDown()</i> to move the cursor when pressing the button the user selected. </li>
 					</ul>
-
-					<div class="feature-image">
-						<div class="youtube-wrapper">
-							<div class="youtube-poster" data-bg-image="media/video/12.jpg" style="background-image: url(_media/game/30.html);"></div>
-							<!-- <iframe src="//player.vimeo.com/video/56585357" allowfullscreen=""></iframe> -->
-							<iframe src="https://www.youtube.com/embed/KYniUCGPGLs" allowfullscreen=""></iframe>
-						</div>
-					</div>
-
+					<br>
+					<h2 class="blog-title">Engine Optimization</h2>
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringilla porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
+						Re-worked the textures and materials resource manager when loading the engine. 
 					</p>
-
+					<br>
+					<h2 class="blog-title">Particle System</h2>
 					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
+						I was in charge of particle system implementation and manteinence, for that reason I coded the entire system trying to implement the most necessary features: 
 					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
-					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit
-					</p>
-
-					<blockquote>
-						“This is a pretty fast price drop for a game that released last month and has garnered some respectable ratings a game that released last month and has gnere.”
-					</blockquote>
-
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringilla porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
-					</p>
-
-					<div class="blog-inner-thumb">
-						<div class="row no-gutters">
-							<div class="col-md-8 pr__15">
-								<img src="media/blog/97.jpg" alt="thumb">
-							</div>
-
-							<div class="col-md-4">
-								<img class="mb__15" src="media/blog/98.jpg" alt="thumb">
-								<img src="media/blog/99.jpg" alt="thumb">
-							</div>
-						</div>
-						<!-- /.row -->
-					</div>
-
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringila porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
-					</p>
-
-					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
-					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
-					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?
-					</p>
-					<div class="blog-footer clearfix">
-						<div class="tagCloud float-left">
-							<a href="#">#playstation-4</a>
-							<a href="#">#remastered</a>
-							<a href="#">#uncharted-4</a>
-							<a href="#">#fps</a>
-							<a href="#">#playstation-4</a>
-						</div>
-					</div>
+					<img src="WebPhotos/RogerTello/ParticleSystem.png" alt="System" align = "middle">
+					<br>
+					<ul>
+						<li><b>Template System: </b> the system is template based, that means the user can save a "preset" of a particle and use it later on from any part of the engine. That also ease the handling since you can send the template file to someone using TheCreator and just draging the file in the folder of templates would be enough for the system to work. </li>
+						<img src="WebPhotos/RogerTello/TemplateSelection.gif" alt="Template" align = "middle">
+						<br>
+						<li><b>Emmision Type:</b> the system will let you spawn a bunch of particles at once instead of beeing forced to lower the Emmision Rate to almost 0 and stoping the system later on. This looks perfect with explosions!</li>
+						<img src="WebPhotos/RogerTello/Simultaneous.png" alt="Simultaneos" align = "middle">
+						<br>
+						<li><b>Auto Pause System:</b> the system is allowed to be paused automatically without the intervention of any coder, just setting a time limit will do the job.  </li>
+						<img src="WebPhotos/RogerTello/AutoPause.png" alt="AutoPause" align = "middle">
+						<br>
+						<li><b>General Characteristics:</b> the system lets you modify the basic movements (emit rate, velocity, rotation) and interpolations. </li>						
+					</ul>
 					<!-- /.blog-footer -->
 				</div>
 				<!-- /.blog-details -->

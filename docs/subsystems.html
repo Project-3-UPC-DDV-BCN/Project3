@@ -462,80 +462,99 @@
 		<section class="single-post">
 			<div class="full-width">
 				<div class="blog-details">
-					<h2 class="blog-title">Dead Island 2 Official E3 Announce Gameplay</h2>
-					<ul class="meta">
-						<li><a href="#"><i class="fa fa-clock-o"></i>Jan 11,2018</a><span>by:</span> <a href="#">Mominul</a></li>
-						<li><a href="#"><i class="fa fa-comments-o"></i> 50 Comments</a></li>
-					</ul>
-
-					<div class="feature-image">
-						<div class="youtube-wrapper">
-							<div class="youtube-poster" data-bg-image="media/video/12.jpg" style="background-image: url(_media/game/30.html);"></div>
-							<!-- <iframe src="//player.vimeo.com/video/56585357" allowfullscreen=""></iframe> -->
-							<iframe src="https://www.youtube.com/embed/KYniUCGPGLs" allowfullscreen=""></iframe>
-						</div>
-					</div>
-
+					<style>
+						img {
+						display: block;
+						margin-left: auto;
+						margin-right: auto;
+						}
+						div.a {
+						text-indent: 50px;
+						}
+					</style>
+					<h2 class="blog-title">Particle System</h2>
+					<h3 class="blog-title">Template System</h3>
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringilla porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
+						The user will need to save the particles created with the system and use them later on, when a template is saved it’s included into a list all the emitters will have access to, in that way a template can be used easily anywhere in the project. 
+						<img src="WebPhotos/RogerTello/TemplateSelection.gif" alt="Simult">
 					</p>
-
+					<h3 class="blog-title">System Stats</h3>
 					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
+						All the properties of the system will be visible in this section.  
+						<img src="WebPhotos/RogerTello/SystemStats.gif" alt="Simult">
 					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
+					<h3 class="blog-title">Runtime Behaviour</h3>
 					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit
+						It will set the behaviour of the system once the game is running, if it’s set to “Always Emit” the system will emit particles constantly since moment zero, on the other hand, if we are using “Manual Mode” the system will not play until it’s told to do it, using a function from the scripting system. 
+						<img src="WebPhotos/RogerTello/RuntimeBehaviour.png" alt="Simult">
 					</p>
-
-					<blockquote>
-						“This is a pretty fast price drop for a game that released last month and has garnered some respectable ratings a game that released last month and has gnere.”
-					</blockquote>
-
+					<h3 class="blog-title">Emission Behaviour</h3>
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringilla porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
+						It will set the way the particles are being created, which can be: 
+						<ul>
+							<li><b>Continuous:</b> it will emit particles one after the other.</li>
+							<li><b>Simultaneous: </b>it will emit a bunch of particles at the same time, when it’s activated we can set the <i>Particle Amount</i> which is the number of particles that will be created, and <i>Emision TimeStep</i> will set the difference between the launchments.</li>
+						</ul>
+						<br>
+						<img src="WebPhotos/RogerTello/Simultaneous.png" alt="Simult">
+						<br>
+						<i>Particles emitted are following the properties set on the system. If TimeStep is 1 and Particle Amount is 20, the system will emit a bunch of 20 particles each second.</i>				
 					</p>
-
-					<div class="blog-inner-thumb">
-						<div class="row no-gutters">
-							<div class="col-md-8 pr__15">
-								<img src="media/blog/97.jpg" alt="thumb">
-							</div>
-
-							<div class="col-md-4">
-								<img class="mb__15" src="media/blog/98.jpg" alt="thumb">
-								<img src="media/blog/99.jpg" alt="thumb">
-							</div>
-						</div>
-						<!-- /.row -->
-					</div>
-
+					<h3 class="blog-title">Blending Mode</h3>
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringila porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
+						It will let the user select between different blending modes from OpenGL.  
+						<img src="WebPhotos/RogerTello/blendmode.png" alt="blend">						
 					</p>
-
+					<h3 class="blog-title">Position Type</h3>
 					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
+						This option will let the user select between <i>Local Position</i> or <i>World Position</i> in particles emitted.   
+						<img src="WebPhotos/RogerTello/postype.png" alt="PosType">
 					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
+					<h3 class="blog-title">Emit Area</h3>
 					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?
+						This section will let you adjust everything related to the box from where the particles are being emitted.
+						<img src="WebPhotos/RogerTello/EmitArea.png" alt="EmitArea">						
+						<div class = "a"> -We can set the <b>visibility</b> of the box.</div>
+						<div class = "a"> -We can modify its <b>size</b> from width, height and depth.</div>
+						<div class = "a"> -Emision Style will set the <b>point from where the particles are being created</b> within the box, they can spawn from random points inside the box or always from the center.  </div>
 					</p>
-					<div class="blog-footer clearfix">
-						<div class="tagCloud float-left">
-							<a href="#">#playstation-4</a>
-							<a href="#">#remastered</a>
-							<a href="#">#uncharted-4</a>
-							<a href="#">#fps</a>
-							<a href="#">#playstation-4</a>
-						</div>
+					<h3 class="blog-title">Textures & Animations</h3>
+					<p>
+						This system consist on a queue of textures that will be changing over time, the user will have the capability to manage the position of textures inside this queue as well as modify the framerate in which they are displayed :<br>
+						<img src="WebPhotos/RogerTello/Textures.png" alt="Tex">
+						<i>Add to Stack</i> button needs to be pressed in order to add a texture to the queue, animation will just happen if there is more than one texture on the queue and <i>TimeStep</i> is larger than 0. 
+					</p>
+					<h3 class="blog-title">Motion</h3>
+					<p>
+						This is the basis of the system since it will let the user control the movement of the particles, the section consist on the following: 
+						<img src="WebPhotos/RogerTello/Textures.png" alt="Tex">
+						<div class = "a"> <b>-Emission Rate: </b> sets the time difference between particle emission. </div>
+						<div class = "a"> <b>-Lifetime:</b> sets how much time will the particles stay alive. </div>
+						<div class = "a"> <b>-Launching Velocity:</b> sets the initial velocity of the particle.</div>
+						<div class = "a"> <b>-Gravity:</b> adds gravity to each axis. </div>
+						<div class = "a"> <b>-Emission Angle:</b> the aperture angle in which particles are launched.</div>
+					</p>
+					<h3 class="blog-title">Velocity</h3>
+					<p>
+						This will let you make adjustments to <i>Launching Velocity</i> and modify the velocity over lifetime.
+						<img src="WebPhotos/RogerTello/VelocityInterpol.png" alt="Tex">
+						<i>This will let you modify the velocity between two marks, this example would start to interpolate from 0.4s to 1s and will slow the particle from 5.0 to 0.3.</i>
+					</p>
+					<h3 class="blog-title">Size</h3>
+					<p>
+						This will let you make adjustments to <i>Initial Size</i> and modify the size over lifetime.
+						<img src="WebPhotos/RogerTello/SizeInterpolation.png" alt="Tex">
+					</p>
+					<h3 class="blog-title">Rotation</h3>
+					<p>
+						This will let you add an angular velocity to the particles and also modify this velocity over lifetime.
+						<img src="WebPhotos/RogerTello/RotationInterpolation.png" alt="Tex">
+					</p>
+					<h3 class="blog-title">Alpha</h3>
+					<p>
+						This section will let you interpolate the alpha value of the particles in order to make them fade off.
+						<img src="WebPhotos/RogerTello/AlphaInterpolation.png" alt="Tex">
+					</p>
 					</div>
 					<!-- /.blog-footer -->
 				</div>
