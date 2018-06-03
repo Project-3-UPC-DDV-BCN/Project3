@@ -1,11 +1,11 @@
 {
-    "UUID": "434957170",
+    "UUID": "542996841",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
-    "GameObjects_Count": "2",
+    "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "486226223",
+        "UUID": "1828429120",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "100",
+                "Sound_ID": "102",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -447,8 +447,8 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker_prf",
-                            "field_value": "532172983",
-                            "is_prefab": "1",
+                            "field_value": "1026655680",
+                            "is_prefab": "0",
                             "go_name": "CanvasMarkerGO"
                         }
                     },
@@ -463,7 +463,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "771143822",
+        "UUID": "675620301",
         "Name": "OAChecker",
         "Tag": "Default",
         "Layer": "Default",
@@ -585,7 +585,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "go_avoidance",
-                            "field_value": "486226223",
+                            "field_value": "1828429120",
                             "is_prefab": "0",
                             "go_name": "ShipPrototype(3)"
                         }
@@ -596,7 +596,194 @@
                 }
             }
         },
-        "ParentID": "486226223",
+        "ParentID": "1828429120",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "1026655680",
+        "Name": "CanvasMarkerGO",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "144447402",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1828429120",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "2096874179",
+        "Name": "CanvasMarker",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1971638551",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "0",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0",
+                "uses_light": "1"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "872756551",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "24",
+                "Active": "1",
+                "UUID": "292842931",
+                "size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "reference_size": {
+                    "value_X": "1280.000000",
+                    "value_Y": "720.000000"
+                },
+                "render_mode": "1",
+                "scale_mode": "0",
+                "scale": "1.000000"
+            }
+        },
+        "ParentID": "1026655680",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_4": {
+        "UUID": "538893099",
+        "Name": "Image(67)",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "731960437",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "60.000000",
+                    "value_Y": "60.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0",
+                "uses_light": "0"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1955438180",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "30641067",
+                "mode": "0",
+                "colour": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1",
+                "texture": "target_circle"
+            }
+        },
+        "ParentID": "2096874179",
         "IsRoot": "0",
         "IsStatic": "0"
     }
