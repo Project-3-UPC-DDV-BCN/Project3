@@ -12,7 +12,18 @@ public class MarkerTracker
 
 	void Start () 
 	{
-		if(marker_prf != null)
+
+		marker_prf.SetActive(false); 
+		TheGameObject slave_cam = TheGameObject.Find("PlayerCam");	
+
+		if(slave_cam != null)
+		{
+			slave_targeting = slave_cam.GetScript("Targeting"); // Aixi ja no es pillen scripts
+		}
+
+		ship = TheGameObject.Self; 
+
+		/*if(marker_prf != null)
 		{
 			marker = TheGameObject.Duplicate(marker_prf); 
 
@@ -33,13 +44,13 @@ public class MarkerTracker
 				if(slave_targeting != null) TheConsole.Log("targeting detected"); 
 				if(ship != null) TheConsole.Log("parent detected"); 
 			}
-		}
+		}*/
 	}
 
 	void Update()
 	{
 		
-		FollowShip();
+		//FollowShip();
 
 		if(slave_targeting == null) 
 			TheConsole.Log("targeting not detected"); 
@@ -53,6 +64,7 @@ public class MarkerTracker
 
 			if(target != null)
 			{
+				TheConsole.Log("target returned"); 
 				if(target.GetComponent<TheTransform>() == ship.GetComponent<TheTransform>())
 				{
 					ShowTargetMarker();
@@ -65,29 +77,16 @@ public class MarkerTracker
 		}
 	}	
 
-	void FollowShip()
-	{
-		if(marker != null && ship != null)
-		{
-			TheTransform marker_trans = marker.GetComponent<TheTransform>(); 
-			TheTransform ship_trans = ship.GetComponent<TheTransform>(); 
-
-			if(marker_trans != null && ship_trans != null)
-				marker_trans.GlobalPosition = ship_trans.GlobalPosition; 
-		}
-	}
 	
 
 	void ShowTargetMarker()
 	{
-		if(marker != null)
-			marker.SetActive(true); 
+		marker_prf.SetActive(true); 
 	}
 
 	void HideTargetMarker()
 	{
-		if(marker != null)
-			marker.SetActive(false); 
+		marker_prf.SetActive(false); 
 	}
 
 }
