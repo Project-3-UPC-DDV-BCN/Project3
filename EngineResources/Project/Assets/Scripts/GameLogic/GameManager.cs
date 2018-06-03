@@ -36,6 +36,12 @@ public class GameManager
 	bool game_paused = false;
 	bool is_controller_image;
 
+	int turrets_destroyed = 0;
+	int generators_destroyed = 0;
+	int tie_fighters_destroyed = 0;
+	
+	TheTimer total_time = new TheTimer();
+	
 	void Init ()
 	{
 		team = "alliance";
@@ -69,6 +75,7 @@ public class GameManager
 		if(slave1 != null)
 			slave1_trans = slave1.GetComponent<TheTransform>();
 		
+		total_time.Start();
 	}
 	
 	void Update()
@@ -322,6 +329,8 @@ public class GameManager
 					level1_script.CallFunctionArgs("OnShipDestroyedCallback", args);
 				}
 			}
+			
+			tie_fighters_destroyed++;
 		}
 	}
 
@@ -347,6 +356,8 @@ public class GameManager
 				}
 
 				TheConsole.Log("Turret destroyed! Remaining: " + TurretsCount());
+				
+				turrets_destroyed++;
 			}
 		}
 	}
@@ -373,6 +384,8 @@ public class GameManager
 				}
 
 				TheConsole.Log("Generator destroyed! Remaining: " + TurretsCount());
+				
+				generators_destroyed++;
 			}
 		}
 	}
@@ -530,4 +543,19 @@ public class GameManager
 		}
 	}
 	*/
+	
+	int[] GetDestoyedObjects()
+	{
+		int[] destroyed_obj = {turrets_destroyed, generators_destroyed, tie_fighters_destroyed, GetTotalTime()};
+		
+		return destroyed_obj;
+	}
+	
+	int GetTotalTime()
+	{
+		int time = (int)total_time.ReadTime();
+		total_time.Stop();
+		return time;
+	}
+	
 }
