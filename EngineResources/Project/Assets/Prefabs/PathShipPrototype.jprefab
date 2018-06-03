@@ -1,17 +1,17 @@
 {
-    "UUID": "1575794489",
+    "UUID": "455510373",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "2038528027",
+        "UUID": "1196663384",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "9",
+            "Components_Count": "10",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -349,9 +349,38 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker",
-                            "field_value": "603637248"
+                            "field_value": "1018989025"
                         }
                     },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "771819960",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/HitMarkerDetection.dll",
+                    "assets_path": "",
+                    "script_name": "HitMarkerDetection",
+                    "UUID": "541619926",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -363,7 +392,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1460504831",
+        "UUID": "1273372099",
         "Name": "Canvas(15)",
         "Tag": "Default",
         "Layer": "Default",
@@ -443,12 +472,12 @@
                 }
             }
         },
-        "ParentID": "2038528027",
+        "ParentID": "1196663384",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "603637248",
+        "UUID": "1018989025",
         "Name": "Image(68)",
         "Tag": "Default",
         "Layer": "Default",
@@ -520,7 +549,7 @@
                 "texture": "Panel_HUD_Elements_Normal"
             }
         },
-        "ParentID": "1460504831",
+        "ParentID": "1273372099",
         "IsRoot": "0",
         "IsStatic": "0"
     }
