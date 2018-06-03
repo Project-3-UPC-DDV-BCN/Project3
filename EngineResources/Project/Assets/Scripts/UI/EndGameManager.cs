@@ -116,6 +116,10 @@ public class EndGameManager
 			ships_text.Text = "" + ships;
 		if(generators_go != null)
 			generators_text.Text = "" + generators;
+
+		if(audio_source!= null)
+			audio_source.Play("Play_Menu_song");
+
 	}
 	
 	void Update () 
@@ -127,11 +131,15 @@ public class EndGameManager
 				sound_pressed = true;
 				if(mode_played == "training")
 				{
+					audio_source.Stop("Play_Menu_song");
 					TheApplication.LoadScene("Alpha1 - TrainingScene");
+					
 				}
 				else
 				{
+					audio_source.Stop("Play_Menu_song");
 					TheApplication.LoadScene("Alpha1 - Level1Scene");
+					
 				}
 			}
 
@@ -146,6 +154,7 @@ public class EndGameManager
 			if(back_to_menu_rect.OnClickUp)
 			{
 				sound_pressed = true;
+				audio_source.Stop("Play_Menu_song");
 				TheApplication.LoadScene("Alpha1 - MainMenuScene");
 			}
 

@@ -24,7 +24,12 @@ public class DialogManager
 
 	bool update_info = false;
 	
-	void Update () 
+	void Start()
+	{
+		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>(1);
+	}
+	
+	void Update() 
 	{
 		UpdateText();
 	}
@@ -41,11 +46,6 @@ public class DialogManager
 		//TheConsole.Log("Setting canvas");
 
 		canvas_go = cv;
-	}
-
-	void SetAudioSource(TheAudioSource sc)
-	{
-		audio_source = sc;
 	}
 
 	void FireDialog(string dialog)

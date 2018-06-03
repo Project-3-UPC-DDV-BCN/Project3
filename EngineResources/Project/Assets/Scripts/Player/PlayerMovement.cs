@@ -257,6 +257,7 @@ public class PlayerMovement
 	
 	public TheGameObject front_shield_go;
 	public TheGameObject back_shield_go;
+	public int max_collision_damage = 25;
 	
 	void Start () 
 	{
@@ -1616,11 +1617,11 @@ public class PlayerMovement
 	{
 		collided = true;
 		collision_timer = collision_time;
+		DamageFrontShield(max_collision_damage*vel_percent);
 	}
 	
 	void OnCollisionEnter(TheCollisionData coll)
 	{
-		TheConsole.Log("colliding");
 		TheGameObject go = coll.Collider.GetGameObject();
 		
 		if(front_shield_go != null && back_shield_go != null)
