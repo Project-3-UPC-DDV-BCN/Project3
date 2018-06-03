@@ -18,21 +18,14 @@ public class HitMarkerDetection
 	
 	void OnTriggerEnter(TheCollisionData other)
 	{
-
-		TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
-
-		TheScript hitmarker_scpt = slave1.GetComponent<TheScript>(2); 
-		hitmarker_scpt.CallFunction("ShowHitMarker");
-
-	/*	TheConsole.Log(other.Collider.GetGameObject().tag); 
-
 		if(other.Collider.GetGameObject().tag == "Laser")
 		{
 			TheConsole.Log("ENTEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED"); 
 
-			TheScript laser_scpt = other.Collider.GetGameObject().GetComponent<TheScript>(0); 
-			TheGameObject sender = (TheGameObject)laser_scpt.CallFunctionArgs("GetSender"); 
-			
+			TheScript laser_scpt = other.Collider.GetGameObject().GetComponent<TheScript>(0);
+ 
+			TheGameObject sender = (TheGameObject)laser_scpt.CallFunctionArgs("GetSender");			
+			TheGameObject slave1 = (TheGameObject)game_manager_script.CallFunctionArgs("GetSlave1");
 
 			if(sender.GetComponent<TheTransform>() == slave1.GetComponent<TheTransform>())
 			{
@@ -40,6 +33,6 @@ public class HitMarkerDetection
 				hitmarker_scpt.CallFunction("ShowHitMarker"); 
 			}
 
-		}*/
+		}
 	}
 }
