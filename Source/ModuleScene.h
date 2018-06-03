@@ -89,6 +89,8 @@ public:
 
 	void SetParticleSystemsState(const char* state);
 
+	GameObject* ClonePrefab(Prefab* prefab);
+
 private:
 	bool RecursiveCheckActiveParents(GameObject* gameobject);
 	void HandleInput();

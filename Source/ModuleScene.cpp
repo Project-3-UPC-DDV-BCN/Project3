@@ -854,6 +854,47 @@ void ModuleScene::SetParticleSystemsState(const char* state)
 
 }
 
+GameObject * ModuleScene::ClonePrefab(Prefab* prefab)
+{
+	Data data;
+	bool can_load = false;
+	const char* extension = ".jprefab";
+
+	if (data.CanLoadAsJSON(prefab->GetLibraryPath().c_str(), extension))
+	{
+		if (data.LoadJSON(prefab->GetLibraryPath().c_str()))
+			can_load = true;
+	}
+
+	GameObject* go_to_return = nullptr;
+
+	if (can_load)
+	{
+
+		std::list<GameObject*> to_start;
+
+		int gameObjectsCount = data.GetInt("GameObjects_Count");
+		for (int i = 0; i < gameObjectsCount; ++i)
+		{
+			if (data.EnterSection("GameObject_" + std::to_string(i)))
+			{
+				GameObject* game_object = new GameObject();
+
+				game_object->Load(data);
+
+				if (game_object->IsRoot())
+				{
+					go_to_return = game_object;
+				}
+
+				data.LeaveSection();
+			}
+		}
+	}
+
+	return go_to_return;
+}
+
 bool ModuleScene::RecursiveCheckActiveParents(GameObject* gameobject)
 {
 	BROFILER_CATEGORY("Scene Recursive Check Active Parents", Profiler::Color::SteelBlue);

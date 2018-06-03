@@ -84,7 +84,7 @@ public class ChargeLaser
 		{
 			if(charge > 0)
 			{
-				charge-=2;
+				charge-= 1;
 				slave_audio.SetMyRTPCvalue("Charge_Percentatge", charge);
 			}
 			else

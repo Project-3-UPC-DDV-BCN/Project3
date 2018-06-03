@@ -23,10 +23,6 @@ public class SoftBoundariesDomi {
 
     private bool is_counting = false;
 
-	private int suicide = 200; //damage to self
-
-	private float offset = 0.1f;
-
 
 	// Use this for initialization
 	void Start () {
@@ -66,12 +62,26 @@ public class SoftBoundariesDomi {
             if(countdown <= 0.0f)
             {
 				cdText.SetActive(false);
-				object[] args = {suicide};
-                entity_script.CallFunctionArgs("DealDamage", args);
+				if(entity_script != null)
+				{
+					object[] args = {0};
+                	entity_script.CallFunctionArgs("SetLife", args);
+					entity_script.SetBoolField("is_dead", true);
+					
+				}
+				
 				is_counting = false;
 
             }
         }
+		else
+		{
+			if(cdText.IsActive())
+			{
+				cdText.SetActive(false);
+				is_counting = false;
+			}
+		}
 	}
 
     bool IsInside()

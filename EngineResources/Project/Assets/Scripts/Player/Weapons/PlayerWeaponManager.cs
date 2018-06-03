@@ -182,7 +182,11 @@ public class PlayerWeaponManager
 	void ChangeWeapon()
 	{
 		if(audio_source != null)
-			audio_source.Play("Play_change_weapon");
+			{
+				audio_source.Play("Play_change_weapon");
+				audio_source.Play("Stop_Charge");
+
+			}
 
 		curr_weapon++;
 		curr_weapon %= num_weapons;

@@ -227,7 +227,11 @@ public class VS4StarShipShooting
     void ChangeWeapon()
 	{
 		if(audio_source != null)
-			audio_source.Play("Play_change_weapon");
+			{
+				audio_source.Play("Play_change_weapon");
+				audio_source.Play("Stop_Charge");
+
+			}	
 
 		weapon++;
 		weapon %= num_weapons;

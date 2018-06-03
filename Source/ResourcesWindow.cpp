@@ -262,6 +262,7 @@ void ResourcesWindow::DrawWindow()
 				{
 					if (ImGui::Selectable(name.c_str()))
 					{
+						gameobject_to_return = App->scene->ClonePrefab(it->second);
 						gameobject_changed = true;
 						break;
 					}
