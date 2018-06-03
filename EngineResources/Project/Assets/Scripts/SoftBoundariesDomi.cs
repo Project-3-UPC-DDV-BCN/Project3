@@ -8,7 +8,7 @@ public class SoftBoundariesDomi {
     public TheGameObject cdText;	
 	private TheText texttext;
 
-	TheScript entity_script = null;
+	TheScript slave_script = null;
 
     public float limitX;
     public float limitY;
@@ -23,12 +23,14 @@ public class SoftBoundariesDomi {
 
     private bool is_counting = false;
 
+	private int damage_to_self = 200;
+
 
 	// Use this for initialization
 	void Start () {
         trans = TheGameObject.Self.GetComponent<TheTransform>();
 		
-		entity_script = TheGameObject.Self.GetScript("EntityProperties");
+		slave_script = TheGameObject.Self.GetScript("PlayerMovement");
 		texttext = cdText.GetChild(0).GetComponent<TheText>();	
 
 		cdText.SetActive(false);
@@ -62,11 +64,10 @@ public class SoftBoundariesDomi {
             if(countdown <= 0.0f)
             {
 				cdText.SetActive(false);
-				if(entity_script != null)
+				if(slave_script != null)
 				{
-					object[] args = {0};
-                	entity_script.CallFunctionArgs("SetLife", args);
-					entity_script.SetBoolField("is_dead", true);
+					object[] args = {damage_to_self};
+                	slave_script.CallFunctionArgs("DamageSlaveOne", args);
 					
 				}
 				
