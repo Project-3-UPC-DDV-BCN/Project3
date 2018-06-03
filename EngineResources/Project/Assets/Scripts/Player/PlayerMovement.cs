@@ -1617,7 +1617,9 @@ public class PlayerMovement
 	{
 		collided = true;
 		collision_timer = collision_time;
-		DamageFrontShield(max_collision_damage*vel_percent);
+		shaking = true;
+		shake_timer = collision_time/2.0f;
+		DamageFrontShield((int)(max_collision_damage*vel_percent));
 	}
 	
 	void OnCollisionEnter(TheCollisionData coll)
