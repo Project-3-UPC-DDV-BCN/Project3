@@ -140,7 +140,7 @@ public class ChargeLaser
 	
 	void ShootRelease()
 	{
-		if (cooling)
+		if (cooling || overheated)
 			return;
 		
 		release_charge = true;
@@ -175,7 +175,9 @@ public class ChargeLaser
 						laser_trans.GlobalPosition = shoot_pos;
 						laser_trans.LocalScale = scale;
 						
-						object[] args = {slave_go, speed, total_damage*overheat, laser_dir, slave_transform.QuatRotation};
+						int curr_damage = (int)(total_damage*overheat);
+						
+						object[] args = {slave_go, speed, curr_damage, laser_dir, slave_transform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
 						
 						string audio = "Play_shot_2";
