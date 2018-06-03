@@ -2,10 +2,12 @@ using TheEngine;
 
 public class EndGameManager 
 {
-	public TheGameObject score_go;	
 	public TheGameObject time_go;
-	public TheGameObject rounds_go;
-
+	public TheGameObject turrets_go;
+	public TheGameObject ships_go;
+	public TheGameObject generators_go;
+	public TheGameObject score_go;	
+	
 	public TheGameObject continue_go;
 	public TheGameObject back_to_menu_go;
 	public TheGameObject audio_emiter;
@@ -14,10 +16,17 @@ public class EndGameManager
 	public TheGameObject victory_text;
 	public TheGameObject lose_text;	
 
-	TheText score_text = null;
+	public int multiply_turrets_by = 100;
+	public int multiply_ships_by = 200;
+	public int multiply_generators_by = 500;
+	
+	
 	TheText time_text = null;
-	TheText rounds_text = null;
-
+	TheText turrets_text = null;
+	TheText ships_text = null;	
+	TheText generators_text = null;
+	TheText score_text = null;
+	
 	TheRectTransform continue_rect = null;
 	TheRectTransform back_to_menu_rect = null;
 	TheAudioSource audio_source = null;
@@ -35,9 +44,13 @@ public class EndGameManager
 		if(time_go != null)
 			time_text = time_go.GetComponent<TheText>();
 
-		if(rounds_go != null)
-			rounds_text = rounds_go.GetComponent<TheText>();
-
+		if(turrets_go != null)
+			turrets_text = turrets_go.GetComponent<TheText>();
+		if(ships_go != null)
+			ships_text = ships_go.GetComponent<TheText>();
+		if(generators_go != null)
+			generators_text = generators_go.GetComponent<TheText>();
+		
 		if(continue_go != null)
 			continue_rect = continue_go.GetComponent<TheRectTransform>();
 
@@ -47,10 +60,16 @@ public class EndGameManager
 		if(audio_emiter != null)
 			audio_source = audio_emiter.GetComponent<TheAudioSource>();
 
-		string score = TheData.GetString("score");
-		string time = TheData.GetString("time");
+		//string score = TheData.GetString("score");
+		int time = TheData.GetInt("time");
+		
+		int ships = TheData.GetInt("ships") * multiply_ships_by;	
+		int generators = TheData.GetInt("generators") * multiply_generators_by;
+		int turrets = TheData.GetInt("turrets") * multiply_turrets_by;
+		int score = turrets + generators + ships;
+		
 		string rounds = TheData.GetString("rounds");
-
+		
 		string side = TheData.GetString("faction");
 		int won = TheData.GetInt("won");
 		
@@ -62,7 +81,8 @@ public class EndGameManager
 			victory_text.SetActive(true);
 			lose_text.SetActive(false);
 			
-		}else if(lose_text!= null && won == 0)
+		}
+		else if(lose_text!= null && won == 0)
 		{
 			victory_text.SetActive(false);
 			lose_text.SetActive(true);
@@ -73,10 +93,29 @@ public class EndGameManager
 			score_text.Text = "" + score;
 
 		if(time_text != null)
-			time_text.Text = "" + time;
-
-		if(rounds_text != null)
-			rounds_text.Text = "" + rounds;
+		{	
+			int hours = time / 3600;
+			int seconds = time % 3600;
+			int minutes = seconds / 60;
+			seconds %= 60;
+	
+			string hours_str = ""+hours;
+			string minutes_str = ""+minutes;
+			if (minutes < 10)
+				minutes_str = "0"+minutes;
+			string seconds_str = ""+seconds;
+			if (seconds < 10)
+				seconds_str = "0"+seconds;
+		
+			time_text.Text = ""+hours_str + ":" + minutes_str + ":" + seconds_str;
+		}
+		
+		if(turrets_go != null)
+			turrets_text.Text = "" + turrets;
+		if(ships_go != null)
+			ships_text.Text = "" + ships;
+		if(generators_go != null)
+			generators_text.Text = "" + generators;
 	}
 	
 	void Update () 
