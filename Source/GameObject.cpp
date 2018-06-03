@@ -808,6 +808,7 @@ void GameObject::Save(Data & data, bool save_children)
 	data.AddUInt("ParentID", parent ? parent->GetUID() : 0);
 	data.AddBool("IsRoot", is_root);
 	data.AddBool("IsStatic", is_static);
+	data.AddInt("WasActive", was_active);
 	data.CloseSection();
 
 	//Save all childs recursively
@@ -841,6 +842,8 @@ void GameObject::Load(Data & data)
 	}
 
 	is_root = data.GetBool("IsRoot");
+	if(data.GetBool("WasActive") != -1)
+		was_active = data.GetBool("WasActive");
 }
 
 void GameObject::LoadComponents(Data & data)
