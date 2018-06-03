@@ -544,11 +544,19 @@ public class GameManager
 	}
 	*/
 	
-	int[] GetDestoyedObjects()
+	int GetDestroyedTurrets()
 	{
-		int[] destroyed_obj = {turrets_destroyed, generators_destroyed, tie_fighters_destroyed, GetTotalTime()};
-		
-		return destroyed_obj;
+		return turrets_destroyed;
+	}
+	
+	int GetDestroyedShips()
+	{
+		return tie_fighters_destroyed;
+	}
+	
+	int GetDestroyedGenerators()
+	{
+		return generators_destroyed;
 	}
 	
 	int GetTotalTime()

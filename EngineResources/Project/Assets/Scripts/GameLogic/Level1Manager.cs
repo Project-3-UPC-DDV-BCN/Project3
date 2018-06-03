@@ -393,17 +393,13 @@ public class Level1Manager
 			audio_source.Stop("Play_Music");
 		}
 		
-		int[] new_data = (int[])game_manager_script.CallFunctionArgs("GetDestroyedObjects");
-		
-		TheData.AddInt("turrets", new_data[0]);
-		TheData.AddInt("generators", new_data[1]);
-		TheData.AddInt("ships", new_data[2]);
-		TheData.AddInt("time", new_data[3]);
+		TheData.AddInt("turrets", (int)game_manager_script.CallFunctionArgs("GetDestroyedTurrets"));
+		TheData.AddInt("generators", (int)game_manager_script.CallFunctionArgs("GetDestroyedGenerators"));
+		TheData.AddInt("ships", (int)game_manager_script.CallFunctionArgs("GetDestroyedShips"));
+		TheData.AddInt("time", (int)game_manager_script.CallFunctionArgs("GetTotalTime"));
 		TheData.AddString("mode", "campaign");
 		TheData.AddInt("won", 0);
 
-		
-		TheConsole.Log("turrets"+new_data[0]+" generators"+new_data[1]+" ships"+new_data[2]+" time"+new_data[3]);
 		TheApplication.LoadScene("Alpha1 - EndGameScene");
 	}
 
@@ -417,14 +413,13 @@ public class Level1Manager
 
 		int[] new_data = (int[])game_manager_script.CallFunctionArgs("GetDestroyedObjects");
 		
-		TheData.AddInt("turrets", new_data[0]);
-		TheData.AddInt("generators", new_data[1]);
-		TheData.AddInt("ships", new_data[2]);
-		TheData.AddInt("time", new_data[3]);
+		TheData.AddInt("turrets", (int)game_manager_script.CallFunctionArgs("GetDestroyedTurrets"));
+		TheData.AddInt("generators", (int)game_manager_script.CallFunctionArgs("GetDestroyedGenerators"));
+		TheData.AddInt("ships", (int)game_manager_script.CallFunctionArgs("GetDestroyedShips"));
+		TheData.AddInt("time", (int)game_manager_script.CallFunctionArgs("GetTotalTime"));
 		TheData.AddString("mode", "campaign");
 		TheData.AddInt("won", 1);
-
-		TheConsole.Log("turrets"+new_data[0]+" generators"+new_data[1]+" ships"+new_data[2]+" time"+new_data[3]);
+		
 		TheApplication.LoadScene("Alpha1 - EndGameScene");
 	}
 
