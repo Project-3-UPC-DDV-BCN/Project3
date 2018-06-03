@@ -878,10 +878,12 @@ GameObject * ModuleScene::ClonePrefab(Prefab* prefab)
 		{
 			if (data.EnterSection("GameObject_" + std::to_string(i)))
 			{
-				GameObject* game_object = new GameObject();
+				GameObject* game_object = new GameObject(nullptr);
 
 				game_object->Load(data);
-
+				std::string name = game_object->GetName();
+				game_object->LoadComponents(data);
+				game_object->SetName(name); //If you load a gameobject with a canvas component, the name is changed
 				if (game_object->IsRoot())
 				{
 					go_to_return = game_object;
