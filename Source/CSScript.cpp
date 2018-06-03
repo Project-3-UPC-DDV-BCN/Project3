@@ -11,6 +11,7 @@
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/exception.h>
 #include "ModulePhysics.h"
+#include "GameObject.h"
 
 #pragma comment (lib, "../EngineResources/mono/lib/mono-2.0-sgen.lib")
 
@@ -1154,6 +1155,8 @@ void CSScript::Save(Data & data) const
 		data.CreateSection("field_" + std::to_string(i));
 		data.AddString("field_name", it->first);
 		data.AddInt("field_value", it->second ? it->second->GetUID() : 0);
+		data.AddBool("is_prefab", it->second ? it->second->is_prefab : false);
+		data.AddString("go_name", it->second ? it->second->GetName() : "");
 		data.CloseSection();
 		i++;
 	}
@@ -1318,6 +1321,16 @@ bool CSScript::Load(Data & data)
 				std::string field_name = data.GetString("field_name");
 				uint field_value = data.GetInt("field_value");
 				GameObject* go = App->scene->FindGameObject(field_value);
+				bool is_prefab = data.GetBool("is_prefab");
+				std::string go_name = data.GetString("go_name");
+				if (is_prefab)
+				{
+					Prefab* p = App->resources->GetPrefab(go_name);
+					if (p)
+					{
+						go = App->scene->ClonePrefab(p);
+					}
+				}
 				data.LeaveSection();
 				SetGameObjectProperty(field_name.c_str(), go);
 			}

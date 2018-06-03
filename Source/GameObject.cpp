@@ -52,11 +52,11 @@ GameObject::GameObject(GameObject* parent)
 	is_on_destroy = false;
 	is_selected = false;
 	is_static = false;
-	is_used_in_prefab = false;
 	is_ui = false;
 	used_in_scene = false;
 	uuid = App->RandomNumber().Int();
 	was_active = true;
+	is_prefab = false;
 }
 
 GameObject::~GameObject()
@@ -480,16 +480,6 @@ void GameObject::SetLayer(std::string layer)
 std::string GameObject::GetLayer() const
 {
 	return layer;
-}
-
-void GameObject::SetIsUsedInPrefab(bool used)
-{
-	is_used_in_prefab = used;
-}
-
-bool GameObject::GetIsUsedInPrefab() const
-{
-	return is_used_in_prefab;
 }
 
 void GameObject::SetNewUID()
