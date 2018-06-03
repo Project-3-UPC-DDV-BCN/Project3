@@ -75,7 +75,7 @@ public class ChargeLaser
 	
 	void Update () 
 	{
-		if(charge_fx && !cooling)
+		if(charge_fx && !cooling && !overheated)
 		{
 			charge += charge_factor;
 			slave_audio.SetMyRTPCvalue("Charge_Percentatge",charge);
@@ -110,6 +110,12 @@ public class ChargeLaser
 			object[] args =  {overheat};
 			weapon_manager.CallFunctionArgs("SetOverheat", args);
 		}
+		
+		if (overheat == 0.0f)
+			cooling = false;
+		
+		TheConsole.Log("Cooling: "+cooling);
+		TheConsole.Log("Overheated: "+overheated);
 	}
 	
 	float ShootPress(float weapon_energy)
