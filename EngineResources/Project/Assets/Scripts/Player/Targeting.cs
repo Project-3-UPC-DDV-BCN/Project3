@@ -1,6 +1,7 @@
 using TheEngine;
 using TheEngine.TheConsole;
 using TheEngine.TheMath;
+using TheEngine.TheDebug;
 
 using System.Collections.Generic;
 
@@ -39,6 +40,8 @@ public class Targeting
 	public TheGameObject target_hp_bar;
 	private TheProgressBar bar = null;
 	
+	public bool debug_draw = false;
+	
 	void Start () 
 	{
 		trans = TheGameObject.Self.GetComponent<TheTransform>();
@@ -59,6 +62,10 @@ public class Targeting
 	
 	void Update () 
 	{
+		
+		if(debug_draw)
+			DrawRays();
+		
 		//Target front
 		if(TheInput.GetControllerButton(0, controller_front_target_button) == 1)
 		{
@@ -270,6 +277,31 @@ public class Targeting
 	{
 		target_go = null;
 		target_script = null;
+	}
+	
+	void DrawRays()
+	{
+		TheVector3 pos = trans.GlobalPosition+(slavia_trans.ForwardDirection*raycast_distance);
+		TheDebugDraw.Line(trans.GlobalPosition, pos,TheColor.Green); 
+		
+		for(int ray_x = -1; ray_x < 2; ++ray_x)
+		{
+			for(int ray_y = -1; ray_y < 2; ++ray_y)
+			{
+				if(ray_x == 0 && ray_y == 0)
+					continue;
+				
+				TheVector3 ray_inc_xpos = slavia_trans.RightDirection*ray_x*raycast_x_offset;
+				TheVector3 ray_inc_ypos = slavia_trans.UpDirection*ray_y*raycast_y_offset;
+				TheVector3 ray_pos = trans.GlobalPosition;
+				ray_pos.x += ray_inc_xpos.x;
+				ray_pos.y += ray_inc_ypos.y;
+				
+				pos = ray_pos + (slavia_trans.ForwardDirection*raycast_distance);
+				
+				TheDebugDraw.Line(ray_pos, pos, TheColor.Green);
+			}
+		}
 	}
 }
 
