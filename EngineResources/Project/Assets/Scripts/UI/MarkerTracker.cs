@@ -27,7 +27,7 @@ public class MarkerTracker
 
 				if(slave_cam != null)
 				{
-					slave_targeting = slave_cam.GetComponent<TheScript>(0); // Aixi ja no es pillen scripts
+					slave_targeting = slave_cam.GetScript("Targeting"); // Aixi ja no es pillen scripts
 				}
 
 				if(slave_targeting != null) TheConsole.Log("targeting detected"); 
@@ -38,7 +38,7 @@ public class MarkerTracker
 
 	void Update()
 	{
-		/*
+		
 		FollowShip();
 
 		if(slave_targeting == null) 
@@ -63,7 +63,6 @@ public class MarkerTracker
 				}
 			}	
 		}
-*/
 	}	
 
 	void FollowShip()
