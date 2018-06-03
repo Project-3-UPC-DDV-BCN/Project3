@@ -1107,7 +1107,7 @@ public class Level1Manager
 	{
 		if(game_manager_script != null)
 		{
-			int enemies = (game_manager_script.CallFunctionArgs("GetSlaveEnemies") as List<TheGameObject>).Count;
+			int enemies = (int)game_manager_script.CallFunctionArgs("GetSlaveEnemiesCount");
 
 			if(enemies < max_enemies_same_time)
 			{

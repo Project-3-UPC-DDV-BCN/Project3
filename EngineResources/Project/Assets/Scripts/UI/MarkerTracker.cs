@@ -3,69 +3,90 @@ using TheEngine.TheConsole;
 
 public class MarkerTracker 
 {
-
 	public TheGameObject marker_prf;
 
-	private TheGameObject marker; 
-	private TheGameObject ship;
+	private TheGameObject marker = null; 
+	private TheGameObject ship = null;
 
-	private TheScript slave_targeting;  
+	private TheScript slave_targeting = null;  
 
 	void Start () 
 	{
+		if(marker_prf != null)
+		{
+			marker = TheGameObject.Duplicate(marker_prf); 
 
-		marker = TheGameObject.Duplicate(marker_prf); 
-		ship = TheGameObject.Self; 
-		FollowShip();
+			if(marker != null)
+			{
+				ship = TheGameObject.Self; 
+				FollowShip();
 
-		marker.SetActive(false); 
+				marker.SetActive(false); 
 		
-		slave_targeting = TheGameObject.Find("PlayerCam").GetComponent<TheScript>(0);
+				TheGameObject slave_cam = TheGameObject.Find("PlayerCam");	
 
-		if(slave_targeting != null) TheConsole.Log("targeting detected"); 
-		if(ship != null) TheConsole.Log("parent detected"); 
+				if(slave_cam != null)
+				{
+					slave_targeting = slave_cam.GetComponent<TheScript>(0); // Aixi ja no es pillen scripts
+				}
+
+				if(slave_targeting != null) TheConsole.Log("targeting detected"); 
+				if(ship != null) TheConsole.Log("parent detected"); 
+			}
+		}
 	}
 
 	void Update()
 	{
-
 		FollowShip();
 
-		if(slave_targeting == null) TheConsole.Log("targeting not detected"); 
-		if(ship == null) TheConsole.Log("parent not detected");
- 
-		TheGameObject target = (TheGameObject)slave_targeting.CallFunctionArgs("GetTarget"); 
+		if(slave_targeting == null) 
+			TheConsole.Log("targeting not detected"); 
 
-		if(target != null)
+		if(ship == null) 
+			TheConsole.Log("parent not detected");
+ 
+		if(slave_targeting != null)
 		{
-			if(target.GetComponent<TheTransform>() == ship.GetComponent<TheTransform>())
+			TheGameObject target = (TheGameObject)slave_targeting.CallFunctionArgs("GetTarget"); 	
+
+			if(target != null)
 			{
-				ShowTargetMarker();
-			}
-			else
-			{
-				HideTargetMarker(); 
-			}
-		}	
+				if(target.GetComponent<TheTransform>() == ship.GetComponent<TheTransform>())
+				{
+					ShowTargetMarker();
+				}
+				else
+				{
+					HideTargetMarker(); 
+				}
+			}	
+		}
 	}	
 
 	void FollowShip()
 	{
-		TheTransform marker_trans = marker.GetComponent<TheTransform>(); 
-		TheTransform ship_trans = ship.GetComponent<TheTransform>(); 
+		if(marker != null && ship != null)
+		{
+			TheTransform marker_trans = marker.GetComponent<TheTransform>(); 
+			TheTransform ship_trans = ship.GetComponent<TheTransform>(); 
 
-		marker_trans.GlobalPosition = ship_trans.GlobalPosition; 
+			if(marker_trans != null && ship_trans != null)
+				marker_trans.GlobalPosition = ship_trans.GlobalPosition; 
+		}
 	}
 	
 
 	void ShowTargetMarker()
 	{
-		marker.SetActive(true); 
+		if(marker != null)
+			marker.SetActive(true); 
 	}
 
 	void HideTargetMarker()
 	{
-		marker.SetActive(false); 
+		if(marker != null)
+			marker.SetActive(false); 
 	}
 
 }
