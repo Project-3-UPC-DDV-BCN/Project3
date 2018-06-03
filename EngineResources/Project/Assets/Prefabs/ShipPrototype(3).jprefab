@@ -1,11 +1,11 @@
 {
-    "UUID": "408676076",
+    "UUID": "1712724376",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "426248093",
+        "UUID": "406798174",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -132,9 +132,9 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "6.750691",
-                        "value_Y": "3.899920",
-                        "value_Z": "10.197910"
+                        "value_X": "18.251001",
+                        "value_Y": "25.150002",
+                        "value_Z": "18.198000"
                     }
                 }
             },
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "126",
+                "Sound_ID": "139",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -465,7 +465,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker",
-                            "field_value": "1183708862"
+                            "field_value": "1634341642"
                         }
                     },
                     "vec2_fields": {},
@@ -476,12 +476,12 @@
             "Component_12": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1592623971",
+                "UUID": "189247217",
                 "Script": {
                     "library_path": "./Project/Library/Scripts/HitMarkerDetection.dll",
                     "assets_path": "",
                     "script_name": "HitMarkerDetection",
-                    "UUID": "1197823087",
+                    "UUID": "768320412",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
@@ -508,8 +508,8 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1889448507",
-        "Name": "Canvas(15)",
+        "UUID": "681335418",
+        "Name": "MarkerCanvas",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -579,12 +579,12 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "426248093",
+        "ParentID": "406798174",
         "IsRoot": "0",
         "IsStatic": "0"
     },
     "GameObject_2": {
-        "UUID": "1183708862",
+        "UUID": "1634341642",
         "Name": "Image(69)",
         "Tag": "Default",
         "Layer": "Default",
@@ -656,7 +656,7 @@
                 "texture": "Ackbar_19"
             }
         },
-        "ParentID": "1889448507",
+        "ParentID": "681335418",
         "IsRoot": "0",
         "IsStatic": "0"
     }
