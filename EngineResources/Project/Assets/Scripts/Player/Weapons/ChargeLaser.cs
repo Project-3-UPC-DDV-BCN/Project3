@@ -75,7 +75,7 @@ public class ChargeLaser
 	
 	void Update () 
 	{
-		if(charge_fx && !cooling)
+		if(charge_fx && !cooling && !overheated)
 		{
 			charge += charge_factor;
 			slave_audio.SetMyRTPCvalue("Charge_Percentatge",charge);
@@ -110,6 +110,9 @@ public class ChargeLaser
 			object[] args =  {overheat};
 			weapon_manager.CallFunctionArgs("SetOverheat", args);
 		}
+		
+		if (overheat == 0.0f)
+			cooling = false;
 	}
 	
 	float ShootPress(float weapon_energy)
@@ -140,7 +143,7 @@ public class ChargeLaser
 	
 	void ShootRelease()
 	{
-		if (cooling)
+		if (cooling || overheated)
 			return;
 		
 		release_charge = true;
@@ -175,7 +178,9 @@ public class ChargeLaser
 						laser_trans.GlobalPosition = shoot_pos;
 						laser_trans.LocalScale = scale;
 						
-						object[] args = {slave_go, speed, total_damage*overheat, laser_dir, slave_transform.QuatRotation};
+						int curr_damage = (int)(total_damage*overheat);
+						
+						object[] args = {slave_go, speed, curr_damage, laser_dir, slave_transform.QuatRotation};
 						laser_script.CallFunctionArgs("SetInfo", args);
 						
 						string audio = "Play_shot_2";

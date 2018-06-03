@@ -251,7 +251,8 @@ public class Targeting
 				
 				int max_hp = (int)target_script.CallFunctionArgs("GetMaxLife");
 				int hp = (int)target_script.CallFunctionArgs("GetLife");
-				bar.PercentageProgress = (float)hp/max_hp;
+				float percentage = (float)((float)hp/max_hp)*100;
+				bar.PercentageProgress = percentage;
 			}
 			else
 			{
