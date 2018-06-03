@@ -727,6 +727,8 @@ public class PlayerMovement
 			new_vel_pos -= trans.ForwardDirection*curr_vel*delta_time;
 			trans.LocalPosition = new_vel_pos;
 			
+			curr_vel -= acceleration*delta_time;
+			
 			collision_timer -= delta_time;
 			if(collision_timer<=0.0f)
 				collided = false;
@@ -1617,7 +1619,9 @@ public class PlayerMovement
 	{
 		collided = true;
 		collision_timer = collision_time;
-		DamageFrontShield(max_collision_damage*vel_percent);
+		shaking = true;
+		shake_timer = collision_time/2.0f;
+		DamageFrontShield((int)(max_collision_damage*vel_percent));
 	}
 	
 	void OnCollisionEnter(TheCollisionData coll)
