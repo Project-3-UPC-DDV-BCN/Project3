@@ -1,17 +1,17 @@
 {
-    "UUID": "829038571",
+    "UUID": "164533593",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "2",
     "GameObject_0": {
-        "UUID": "576371172",
+        "UUID": "315505155",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "10",
+            "Components_Count": "11",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "117",
+                "Sound_ID": "100",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -387,6 +387,35 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_10": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "17639432",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/HitMarkerDetection.dll",
+                    "assets_path": "",
+                    "script_name": "HitMarkerDetection",
+                    "UUID": "1861732835",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
@@ -394,7 +423,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1805421617",
+        "UUID": "1321654739",
         "Name": "OAChecker",
         "Tag": "Default",
         "Layer": "Default",
@@ -516,7 +545,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "go_avoidance",
-                            "field_value": "576371172"
+                            "field_value": "315505155"
                         }
                     },
                     "vec2_fields": {},
@@ -525,7 +554,7 @@
                 }
             }
         },
-        "ParentID": "576371172",
+        "ParentID": "315505155",
         "IsRoot": "0",
         "IsStatic": "0"
     }
