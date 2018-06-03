@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Prefab.h"
 #include "ImportWindow.h"
+#include "AssetsWindow.h"
 
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -83,7 +84,7 @@ std::string ModuleMeshImporter::ImportMesh(std::string path)
 		App->resources->AddPrefab(prefab);
 
 		ret = library_path;
-
+		App->editor->assets_window->CheckDirectories();
 		CONSOLE_DEBUG("Object succesfully loaded from, %s", path.c_str());
 		aiReleaseImport(scene);
 	}
