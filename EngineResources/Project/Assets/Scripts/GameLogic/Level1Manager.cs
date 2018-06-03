@@ -228,96 +228,96 @@ public class Level1Manager
 			object[] args1 = {"AckbarIntro1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args1);
 
-			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 2.5f, "AkbarIntro1-1"};
+			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 2.5f, "Play_AkbarIntro1_1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args2);
 
-			object[] args3 =  {"AckbarIntro1", "Be careful, try not to get detected", 2.75f, "AkbarIntro1-2"};
+			object[] args3 =  {"AckbarIntro1", "Be careful, try not to get detected", 2.75f, "Play_AkbarIntro1_2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args3);
 
-			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 2.75f, "AkbarIntro1-3"};
+			object[] args8 =  {"AckbarIntro1", "or things will heat up in no time!", 2.75f, "Play_AkbarIntro1_3"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args8);
 
 
 			object[] args9 = {"AckbarIntro2"};
 			dialog_manager.CallFunctionArgs("NewDialog", args9);
 
-			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!", 3.0f, "AkbarIntro2-1"};
+			object[] args10 = {"AckbarIntro2", "Look, there is an enemy ship at your right!", 3.0f, "Play_AkbarIntro2_1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args10);
 
 
 			object[] args5 = {"AckbarIntro3"};
 			dialog_manager.CallFunctionArgs("NewDialog", args5);
 
-			object[] args6 = {"AckbarIntro3", "Don't get trigger happy, Bobba.", 1.8f, "AkbarIntro3-1"};
+			object[] args6 = {"AckbarIntro3", "Don't get trigger happy, Bobba.", 1.8f, "Play_AkbarIntro3_1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args6);
 
-			object[] args7 = {"AckbarIntro3", "Follow that ship. Let's see where this leads to...", 3.5f, "AkbarIntro3-2"};
+			object[] args7 = {"AckbarIntro3", "Follow that ship. Let's see where this leads to...", 3.5f, "Play_AkbarIntro3_2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args7);
 
 
 			object[] args11 = {"AckbarAttack1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args11);
 
-			object[] args12 = {"AckbarAttack1", "Oh no, they found you Bobba! Don't hesitate!,", 4.5f, "AkbarAttack1-1"};
+			object[] args12 = {"AckbarAttack1", "Oh no, they found you Bobba! Don't hesitate!,", 4.5f, "Play_AkbarAttack1_1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args12);
 
-			object[] args13 = {"AckbarAttack1", "Shoot'em down!", 2.0f, "AkbarAttack1-2"};
+			object[] args13 = {"AckbarAttack1", "Shoot'em down!", 2.0f, "Play_AkbarAttack1_2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args13);
 
 
 			object[] args14 = {"IntroSucces"};
 			dialog_manager.CallFunctionArgs("NewDialog", args14);
 
-			object[] args15 = {"IntroSucces", "Well done, Bobba. But it ain't finished.", 4.25f, "IntroSucces1"};
+			object[] args15 = {"IntroSucces", "Well done, Bobba. But it ain't finished.", 4.25f, "Play_IntroSucces1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args15);
 
-			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the generators", 3.5f, "IntroSucces2"};
+			object[] args16 = {"IntroSucces", "Go to the shield gate and destroy all the generators", 3.5f, "Play_IntroSucces2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args16);
 
-			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 3.0f, "IntroSucces3"};
+			object[] args17 = {"IntroSucces", "so our fleet can destroy the ship!", 3.0f, "Play_IntroSucces3"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args17);
 
 			
 			object[] args20 = {"EnemiesInterception"};
 			dialog_manager.CallFunctionArgs("NewDialog", args20);
 
-			object[] args21 = {"EnemiesInterception", "...Intruders in our base!...", 2.75f, "EnemiesInterception1"};
+			object[] args21 = {"EnemiesInterception", "...Intruders in our base!...", 2.75f, "Play_EnemiesInterception1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args21);
 
-			object[] args22 = {"EnemiesInterception", "...All units ready!...", 3.0f, "EnemiesInterception2"};
+			object[] args22 = {"EnemiesInterception", "...All units ready!...", 3.0f, "Play_EnemiesInterception2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args22);
 
 
 			object[] args27 = {"HalfMission"};
 			dialog_manager.CallFunctionArgs("NewDialog", args27);
 
-			object[] args25 = {"HalfMission", "We are running out of time!", 2.75f, "HalfMission1"};
+			object[] args25 = {"HalfMission", "We are running out of time!", 2.75f, "Play_HalfMission1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args25);
 
-			object[] args26 = {"HalfMission", "We need the shields down", 3.5f, "HalfMission2"};
+			object[] args26 = {"HalfMission", "We need the shields down", 3.5f, "Play_HalfMission2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args26);
 			
 
 			object[] args23 = {"WinDialog"};
 			dialog_manager.CallFunctionArgs("NewDialog", args23);
 
-			object[] args24 = {"WinDialog", "Great work Bobba! You did it!", 3.5f, "WinDialog1"};
+			object[] args24 = {"WinDialog", "Great work Bobba! You did it!", 3.5f, "Play_WinDialog1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args24);
 
-			object[] args30 = {"WinDialog", "But you need time to clear the way for you to jump into hyperspace", 4.2f, "WinDialog2"};
+			object[] args30 = {"WinDialog", "But you need time to clear the way for you to jump into hyperspace", 4.2f, "Play_WinDialog2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args30);
 
-			object[] args28 = {"WinDialog", "to jump into hyperspace.", 3.0f, "WinDialog3"};
+			object[] args28 = {"WinDialog", "to jump into hyperspace.", 3.0f, "Play_WinDialog3"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args28);
 
-			object[] args29 = {"WinDialog", "Survive 20 seconds!", 3.0f, "WinDialog4"};
+			object[] args29 = {"WinDialog", "Survive 20 seconds!", 3.0f, "Play_WinDialog4"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args29);
 
 
 			object[] args31 = {"EndDialog"};
 			dialog_manager.CallFunctionArgs("NewDialog", args31);
 
-			object[] args32 = {"EndDialog", "Well done! Let's get out of here.", 3.25f, "EndDialog"};
+			object[] args32 = {"EndDialog", "Well done! Let's get out of here.", 3.25f, "Play_EndDialog"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args32);
 
 		}
@@ -410,8 +410,6 @@ public class Level1Manager
 			slave_audio.Play("Stop_Engine");
 			audio_source.Stop("Play_Music");
 		}
-
-		int[] new_data = (int[])game_manager_script.CallFunctionArgs("GetDestroyedObjects");
 		
 		TheData.AddInt("turrets", (int)game_manager_script.CallFunctionArgs("GetDestroyedTurrets"));
 		TheData.AddInt("generators", (int)game_manager_script.CallFunctionArgs("GetDestroyedGenerators"));
