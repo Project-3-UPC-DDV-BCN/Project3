@@ -38,6 +38,7 @@ public class MarkerTracker
 
 	void Update()
 	{
+		/*
 		FollowShip();
 
 		if(slave_targeting == null) 
@@ -62,6 +63,7 @@ public class MarkerTracker
 				}
 			}	
 		}
+*/
 	}	
 
 	void FollowShip()
