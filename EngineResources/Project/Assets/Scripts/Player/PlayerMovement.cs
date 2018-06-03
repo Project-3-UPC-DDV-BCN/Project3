@@ -255,6 +255,9 @@ public class PlayerMovement
 	TheTimer shield_down_timer = new TheTimer();
 	public float shield_down_time = 8.0f;
 	
+	public TheGameObject front_shield_go;
+	public TheGameObject back_shield_go;
+	
 	void Start () 
 	{
 		self = TheGameObject.Self;
@@ -424,8 +427,8 @@ public class PlayerMovement
 
 	void Movement()
 	{
-		/*if(!collided)
-		{*/
+		if(!collided)
+		{
 			int rjoy_up = TheInput.GetControllerJoystickMove(0, vertical_movement_up_joystic);
 			int rjoy_down = TheInput.GetControllerJoystickMove(0, vertical_movement_down_joystic);
 			int rjoy_right = TheInput.GetControllerJoystickMove(0, yaw_pos_joystic);
@@ -716,7 +719,7 @@ public class PlayerMovement
 			TheVector3 new_vel_pos = trans.LocalPosition;
 			new_vel_pos += trans.ForwardDirection*curr_vel*delta_time;
 			trans.LocalPosition = new_vel_pos;
-		/*}
+		}
 		else
 		{
 			TheVector3 new_vel_pos = trans.LocalPosition;
@@ -726,7 +729,7 @@ public class PlayerMovement
 			collision_timer -= delta_time;
 			if(collision_timer<=0.0f)
 				collided = false;
-		}*/
+		}
 		
 		if(camera_go != null)
 		{
@@ -1613,5 +1616,20 @@ public class PlayerMovement
 	{
 		collided = true;
 		collision_timer = collision_time;
+	}
+	
+	void OnCollisionEnter(TheCollisionData coll)
+	{
+		TheConsole.Log("colliding");
+		TheGameObject go = coll.Collider.GetGameObject();
+		
+		if(front_shield_go != null && back_shield_go != null)
+		{
+			if(go.GetComponent<TheTransform>() != TheGameObject.Self.GetComponent<TheTransform>() && go.GetComponent<TheTransform>() != front_shield_go.GetComponent<TheTransform>() &&
+			go.GetComponent<TheTransform>() != back_shield_go.GetComponent<TheTransform>())	
+			{
+				Collided();
+			}
+		}
 	}
 }
