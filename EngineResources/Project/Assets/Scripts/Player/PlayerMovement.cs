@@ -727,6 +727,8 @@ public class PlayerMovement
 			new_vel_pos -= trans.ForwardDirection*curr_vel*delta_time;
 			trans.LocalPosition = new_vel_pos;
 			
+			curr_vel -= acceleration*delta_time;
+			
 			collision_timer -= delta_time;
 			if(collision_timer<=0.0f)
 				collided = false;
