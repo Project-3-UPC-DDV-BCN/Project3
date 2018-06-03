@@ -1,17 +1,17 @@
 {
-    "UUID": "183864264",
+    "UUID": "1575794489",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
-    "GameObjects_Count": "4",
+    "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "1811387824",
+        "UUID": "2038528027",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "10",
+            "Components_Count": "9",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -23,9 +23,9 @@
                 },
                 "rotation": {
                     "value_X": "0.000000",
-                    "value_Y": "0.010908",
+                    "value_Y": "0.000000",
                     "value_Z": "0.000000",
-                    "value_W": "0.999941"
+                    "value_W": "1.000000"
                 },
                 "scale": {
                     "value_X": "1.000000",
@@ -119,7 +119,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "100",
+                "Sound_ID": "153",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_5": {
@@ -294,7 +294,7 @@
                         },
                         "field_6": {
                             "field_name": "move_speed",
-                            "field_value": "30.000000"
+                            "field_value": "70.000000"
                         },
                         "field_7": {
                             "field_name": "rotation_speed",
@@ -349,38 +349,9 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker",
-                            "field_value": "825420178"
+                            "field_value": "603637248"
                         }
                     },
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
-            },
-            "Component_9": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "141397631",
-                "Script": {
-                    "library_path": "./Project/Library/Scripts/HitMarkerDetection.dll",
-                    "assets_path": "",
-                    "script_name": "HitMarkerDetection",
-                    "UUID": "179430003",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {},
                     "vec2_fields": {},
                     "vec3_fields": {},
                     "vec4_fields": {}
@@ -392,50 +363,7 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "1802008276",
-        "Name": "Canvas_GO",
-        "Tag": "Default",
-        "Layer": "Default",
-        "Active": "1",
-        "Components": {
-            "Components_Count": "2",
-            "Component_0": {
-                "Type": "0",
-                "Active": "1",
-                "UUID": "701378653",
-                "position": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
-                },
-                "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
-                },
-                "scale": {
-                    "value_X": "1.000000",
-                    "value_Y": "1.000000",
-                    "value_Z": "1.000000"
-                }
-            },
-            "Component_1": {
-                "Type": "23",
-                "Active": "1",
-                "UUID": "1934811879",
-                "Billboard": {
-                    "Active": "1",
-                    "Billboard_Type": "0"
-                }
-            }
-        },
-        "ParentID": "1811387824",
-        "IsRoot": "0",
-        "IsStatic": "0"
-    },
-    "GameObject_2": {
-        "UUID": "1623525656",
+        "UUID": "1460504831",
         "Name": "Canvas(15)",
         "Tag": "Default",
         "Layer": "Default",
@@ -515,13 +443,13 @@
                 }
             }
         },
-        "ParentID": "1802008276",
+        "ParentID": "2038528027",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_3": {
-        "UUID": "825420178",
-        "Name": "Image(69)",
+    "GameObject_2": {
+        "UUID": "603637248",
+        "Name": "Image(68)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -592,7 +520,7 @@
                 "texture": "Panel_HUD_Elements_Normal"
             }
         },
-        "ParentID": "1623525656",
+        "ParentID": "1460504831",
         "IsRoot": "0",
         "IsStatic": "0"
     }
