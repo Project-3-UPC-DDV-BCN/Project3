@@ -1,11 +1,11 @@
 {
-    "UUID": "46496515",
+    "UUID": "573072980",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
-    "GameObjects_Count": "3",
+    "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "876014786",
+        "UUID": "1962746614",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -37,7 +37,7 @@
                 "Type": "12",
                 "Active": "1",
                 "UUID": "1437024583",
-                "Object_count": "10",
+                "Object_count": "7",
                 "Spawn_position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -83,14 +83,14 @@
                 "IsUsingGravity": "0",
                 "IsKinematic": "0",
                 "LinearVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "-1088548388539352481792.000000",
+                    "value_Y": "-2080425462964825358336.000000",
+                    "value_Z": "-10826489122812273360896.000000"
                 },
                 "AngularVelocity": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000"
+                    "value_X": "-718269464051368067072.000000",
+                    "value_Y": "-1172381910440435777536.000000",
+                    "value_Z": "138387788026305576960.000000"
                 },
                 "MaxAngularVelocity": "7.000000",
                 "LinearDamping": "0.000000",
@@ -132,8 +132,8 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "6.750691",
-                        "value_Y": "3.899920",
+                        "value_X": "14.501000",
+                        "value_Y": "8.150001",
                         "value_Z": "10.197910"
                     }
                 }
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "100",
+                "Sound_ID": "104",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -192,7 +192,7 @@
                         },
                         "field_6": {
                             "field_name": "move_speed",
-                            "field_value": "115.000000"
+                            "field_value": "40.000000"
                         },
                         "field_7": {
                             "field_name": "rotation_speed",
@@ -395,16 +395,16 @@
             "Component_10": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1216373843",
+                "UUID": "17639432",
                 "Script": {
-                    "library_path": "./Project/Library/Scripts/ObstacleAvoidance.dll",
+                    "library_path": "./Project/Library/Scripts/HitMarkerDetection.dll",
                     "assets_path": "",
-                    "script_name": "ObstacleAvoidance",
-                    "UUID": "1293187705",
+                    "script_name": "HitMarkerDetection",
+                    "UUID": "1861732835",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
-                    "float_fields_count": "4",
-                    "bool_fields_count": "1",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
                     "string_fields_count": "0",
                     "gameobject_fields_count": "0",
                     "vec2_fields_count": "0",
@@ -412,30 +412,8 @@
                     "vec4_fields_count": "0",
                     "int_fields": {},
                     "double_fields": {},
-                    "float_fields": {
-                        "field_0": {
-                            "field_name": "XOffset",
-                            "field_value": "15.000000"
-                        },
-                        "field_1": {
-                            "field_name": "YOffset",
-                            "field_value": "10.000000"
-                        },
-                        "field_2": {
-                            "field_name": "avoidingForce",
-                            "field_value": "30.000000"
-                        },
-                        "field_3": {
-                            "field_name": "rayLength",
-                            "field_value": "100.000000"
-                        }
-                    },
-                    "bool_fields": {
-                        "field_0": {
-                            "field_name": "ShowRays",
-                            "field_value": "0"
-                        }
-                    },
+                    "float_fields": {},
+                    "bool_fields": {},
                     "string_fields": {},
                     "gameobject_fields": {},
                     "vec2_fields": {},
@@ -446,12 +424,12 @@
             "Component_11": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "622658955",
+                "UUID": "1243725022",
                 "Script": {
                     "library_path": "./Project/Library/Scripts/MarkerTracker.dll",
                     "assets_path": "",
                     "script_name": "MarkerTracker",
-                    "UUID": "1034207713",
+                    "UUID": "691625975",
                     "int_fields_count": "0",
                     "double_fields_count": "0",
                     "float_fields_count": "0",
@@ -469,9 +447,9 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker_prf",
-                            "field_value": "190787531",
-                            "is_prefab": "1",
-                            "go_name": "CanvasMarker"
+                            "field_value": "2021487211",
+                            "is_prefab": "0",
+                            "go_name": "CanvasMarkerGO"
                         }
                     },
                     "vec2_fields": {},
@@ -485,8 +463,180 @@
         "IsStatic": "0"
     },
     "GameObject_1": {
-        "UUID": "489841306",
-        "Name": "Canvas(15)",
+        "UUID": "1850071037",
+        "Name": "OAChecker",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "4",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "429565322",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "2",
+                "Active": "1",
+                "UUID": "1080621846",
+                "Mass": "1.000000",
+                "IsUsingGravity": "0",
+                "IsKinematic": "0",
+                "LinearVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "AngularVelocity": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "MaxAngularVelocity": "7.000000",
+                "LinearDamping": "0.000000",
+                "AngularDamping": "0.050000",
+                "CenterMass": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "InertiaTensor": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                },
+                "SleepThreshold": "0.005000",
+                "SolverIterations": "4",
+                "VelocitySolverIterations": "1",
+                "LinearXLock": "0",
+                "LinearYLock": "0",
+                "LinearZLock": "0",
+                "AngularXLock": "0",
+                "AngularYLock": "0",
+                "AngularZLock": "0",
+                "IsCCDMode": "0",
+                "Transforms": "0"
+            },
+            "Component_2": {
+                "Type": "4",
+                "Active": "1",
+                "UUID": "1178935015",
+                "IsConvex": "0",
+                "IsTrigger": "1",
+                "CapsuleDir": "0",
+                "HaveMaterial": "0",
+                "ColliderCenter": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "66.500000"
+                },
+                "Box": {
+                    "BoxSize": {
+                        "value_X": "39.250000",
+                        "value_Y": "35.000000",
+                        "value_Z": "100.000000"
+                    }
+                }
+            },
+            "Component_3": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1809690975",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/Ai_OA.dll",
+                    "assets_path": "",
+                    "script_name": "Ai_OA",
+                    "UUID": "1777284632",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "1",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {
+                        "field_0": {
+                            "field_name": "avoidance_force",
+                            "field_value": "100.000000"
+                        }
+                    },
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "go_avoidance",
+                            "field_value": "1962746614",
+                            "is_prefab": "0",
+                            "go_name": "ShipPrototype(3)"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
+            }
+        },
+        "ParentID": "1962746614",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_2": {
+        "UUID": "2021487211",
+        "Name": "CanvasMarkerGO",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "1",
+            "Component_0": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "144447402",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            }
+        },
+        "ParentID": "1962746614",
+        "IsRoot": "0",
+        "IsStatic": "0"
+    },
+    "GameObject_3": {
+        "UUID": "472827239",
+        "Name": "CanvasMarker",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -495,7 +645,7 @@
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
-                "UUID": "585301278",
+                "UUID": "1971638551",
                 "pos": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000"
@@ -521,7 +671,7 @@
             "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "221184680",
+                "UUID": "872756551",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -542,7 +692,7 @@
             "Component_2": {
                 "Type": "24",
                 "Active": "1",
-                "UUID": "758073813",
+                "UUID": "292842931",
                 "size": {
                     "value_X": "1280.000000",
                     "value_Y": "720.000000"
@@ -556,13 +706,13 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "876014786",
+        "ParentID": "2021487211",
         "IsRoot": "0",
         "IsStatic": "0"
     },
-    "GameObject_2": {
-        "UUID": "1201250666",
-        "Name": "Image(69)",
+    "GameObject_4": {
+        "UUID": "2075865203",
+        "Name": "Image(67)",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
@@ -571,15 +721,15 @@
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
-                "UUID": "1965313111",
+                "UUID": "731960437",
                 "pos": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000"
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "25.000000",
-                    "value_Y": "25.000000"
+                    "value_X": "100.000000",
+                    "value_Y": "100.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -597,7 +747,7 @@
             "Component_1": {
                 "Type": "0",
                 "Active": "1",
-                "UUID": "1298826201",
+                "UUID": "1955438180",
                 "position": {
                     "value_X": "0.000000",
                     "value_Y": "0.000000",
@@ -618,7 +768,7 @@
             "Component_2": {
                 "Type": "26",
                 "Active": "1",
-                "UUID": "143532326",
+                "UUID": "30641067",
                 "mode": "0",
                 "colour": {
                     "value_X": "1.000000",
@@ -630,10 +780,10 @@
                 "loop": "1",
                 "anim_speed": "1.000000",
                 "anim_textures_count": "1",
-                "texture": "Ackbar_19"
+                "texture": "mira1"
             }
         },
-        "ParentID": "489841306",
+        "ParentID": "472827239",
         "IsRoot": "0",
         "IsStatic": "0"
     }
