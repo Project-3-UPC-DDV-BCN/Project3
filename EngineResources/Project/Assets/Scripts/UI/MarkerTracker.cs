@@ -54,7 +54,8 @@ public class MarkerTracker
 
 	public void DestroyObject()
 	{
-		marker_prf.SetActive(false); 
+		if(marker_prf != null)
+			marker_prf.SetActive(false); 
 	}
 
 	void ShowTargetMarker()
