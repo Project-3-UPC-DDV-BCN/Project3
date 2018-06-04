@@ -360,7 +360,8 @@ public class EntityProperties
 	void SpawnExplosion()
 	{
 		//First Delete Marker
-		target_mark_script.CallFunction("DeleteObject"); 
+		if(target_mark_script != null)
+			target_mark_script.CallFunction("DeleteObject"); 
 
 		TheGameObject particle = TheResources.LoadPrefab(explosion_prefab);
 				

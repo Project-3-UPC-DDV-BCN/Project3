@@ -3,15 +3,14 @@ using TheEngine.TheConsole;
 
 public class MarkerShipBillboard 
 {
-
 	public TheGameObject ship_marker;
-	private TheGameObject target_mark; 
+	private TheGameObject target_mark = null; 
 
-	private TheScript slave_targeting;
-    private TheScript properties;
-	private TheGameObject ship;  
+	private TheScript slave_targeting = null;
+    private TheScript properties = null;
+	private TheGameObject ship = null;  
 
-	private bool target_active; 
+	private bool target_active = false; 
 
 	void Start () 
 	{
@@ -36,18 +35,23 @@ public class MarkerShipBillboard
 
 	public void DeleteObject()
 	{
-		TheGameObject.Destroy(target_mark); 
+		if(target_mark != null)
+			TheGameObject.Destroy(target_mark); 
 	}
 
 	void FollowShip()
 	{
-		TheTransform marker_trans = target_mark.GetComponent<TheTransform>(); 
-		marker_trans.GlobalPosition = ship.GetComponent<TheTransform>().GlobalPosition;
+		if(target_mark != null)
+		{
+			TheTransform marker_trans = target_mark.GetComponent<TheTransform>(); 
+			
+			if(ship != null && marker_trans != null)
+				marker_trans.GlobalPosition = ship.GetComponent<TheTransform>().GlobalPosition;
+		}
 	}
 	
 	void Update () 
 	{
-
 		if(target_active == true)
 			FollowShip(); 
 
@@ -82,11 +86,13 @@ public class MarkerShipBillboard
 
 	void ShowTargetMarker()
 	{
-		target_mark.SetActive(true); 
+		if(target_mark != null)
+			target_mark.SetActive(true); 
 	}
 
 	void HideTargetMarker()
 	{
-		target_mark.SetActive(false); 
+		if(target_mark != null)
+			target_mark.SetActive(false); 
 	}
 }
