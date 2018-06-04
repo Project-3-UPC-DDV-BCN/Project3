@@ -32,7 +32,7 @@ public class PauseMenu {
 	void Start () 
 	{
 		// Menu
-		menu_canvas = TheGameObject.Self.GetComponent<TheCanvas>(); 
+		//menu_canvas = canvas_go.GetComponent<TheCanvas>(); 
 		if(continue_button_go != null)
 			continue_rect = continue_button_go.GetComponent<TheRectTransform>();
 
@@ -46,7 +46,7 @@ public class PauseMenu {
 		// Audio
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
-		menu_canvas.EnableCurrent();
+		//menu_canvas.EnableCurrent();
 		
 		game_manager = game_manager_go.GetScript("GameManager");
 	}
@@ -55,7 +55,7 @@ public class PauseMenu {
 	{
 		//Controller Managing
 		int id_pressed = -1; 
-		if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
+		/*if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
 		{
 			menu_canvas.ControllerIDDown();
 			menu_canvas.EnableCurrent();
@@ -81,7 +81,7 @@ public class PauseMenu {
 		{
 			menu_canvas.DisableCurrent();
 			mouse_moved = true; 
-		}
+		}*/
 
 
 		// Campaign button
@@ -127,7 +127,7 @@ public class PauseMenu {
 			{
 				pressed_sound = true;
 				TheApplication.DrawMouse(true);
-				TheApplication.Quit();
+				TheApplication.LoadScene("Alpha1 - MainMenuScene");
 			}
 
 			if(exit_rect.OnMouseEnter)
