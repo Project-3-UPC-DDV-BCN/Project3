@@ -8,6 +8,7 @@ public class MarkerShipBillboard
 	private TheGameObject target_mark; 
 
 	private TheScript slave_targeting;
+    private TheScript properties;
 	private TheGameObject ship;  
 
 	private bool target_active; 
@@ -21,6 +22,8 @@ public class MarkerShipBillboard
 			target_mark.SetActive(false); 
 
 		TheGameObject slave_cam = TheGameObject.Find("PlayerCam");	
+		properties = TheGameObject.Self.GetScript("EntityProperties");
+
 
 		if(slave_cam != null)
 		{
@@ -29,6 +32,11 @@ public class MarkerShipBillboard
 
 		ship = TheGameObject.Self;
 		target_active = false;  
+	}
+
+	public void DeleteObject()
+	{
+		TheGameObject.Destroy(target_mark); 
 	}
 
 	void FollowShip()
@@ -67,7 +75,7 @@ public class MarkerShipBillboard
 					target_active = false; 
 				}
 			}	
-		}
+		}			
 		
 	}
 
