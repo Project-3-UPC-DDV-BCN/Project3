@@ -36,8 +36,11 @@
 
 	<script>
 		function show(id) {
-		  obj = document.getElementById(id);
-		  obj.style.visibility = (obj.style.visibility == 'hidden') ? 'visible' : 'hidden';
+			var e = document.getElementById(id);
+			if(e.style.display == 'block')
+				e.style.display = 'none';
+			else
+				e.style.display = 'block';
 		}
 	</script>
 </head>
@@ -469,177 +472,164 @@
 				<div class="blog-details">
 					<h2 class="blog-title">Simón Stoyanov Beltrán</h2>
 					<ul class="meta">
-						<li><a href="#"><i class="fa fa-code"><j class="fa fa-music"><span/></i></j>Code and Audio</a><a href="#"></a></li>
-						<li><a href="#"><i class="fa fa-linkedin"><span/></i></a><a href="https://es.linkedin.com/in/sim%C3%B3n-stoyanov-beltr%C3%A1n-7504b8107">Linkedin</a></li>
-						<li><a href="#"><i class="fa fa-twitter"><span/></i></a><a href="https://twitter.com/stoyanov_simon">Twitter</a></li>					
+						<li><a href="#"><i class="fa fa-code"><j class="fa fa-music"><span/></i></j>Gameplay, Audio Programmer and Dub</a><a href="#"></a></li>				
+					</ul>
+					
+					<ul class="footer-social-link">
+						<li class="fb-bg"><a href="https://es.linkedin.com/in/sim%C3%B3n-stoyanov-beltr%C3%A1n-7504b8107"><i class="fa fa-linkedin"></i></a></li>
+						<li class="tw-bg"><a href="https://twitter.com/stoyanov_simon"><i class="fa fa-twitter"></i></a></li>
+						<li class="gp-bg"><a href="https://github.com/SimonStoyanov"><i class="fa fa-github"></i></a></li>
 					</ul>
 						<!-- https://www.youtube.com/watch?v=zVAZxSVpyL8 -->
 					<p>
 					
-					<a href="#" onclick="show('divTexto1'); return false" />Akbar Dialogues</a>
-					<div id="divTexto1" style="visibility:hidden">
-											<b>Akbar Intro 1</b>
-					<p>
-						<audio
-							id="audio-AkbarIntro1-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarIntro1-1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-AkbarIntro1-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarIntro1-2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-AkbarIntro1-3"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarIntro1-3.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
-					<b>Akbar Intro 2</b>
-					<p>					
-						<audio
-							id="audio-AkbarIntro2-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarIntro2-1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
-					<b>Akbar Attack 1</b>
-					<p>							
-						<audio
-							id="audio-AkbarAttack-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarAttack1-1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-AkbarAttack-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarAttack1-2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
-					<b>Akbar Intro 3</b>
-					<p>							
-						<audio
-							id="audio-AkbarIntro3-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarIntro3-1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-AkbarIntro3-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\AkbarIntro3-2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
-					<b>Intro Succes</b>
-					<p>							
-						<audio
-							id="audio-IntroSucces-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\IntroSucces1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-IntroSucces-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\IntroSucces2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-IntroSucces-3"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\IntroSucces3.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>	
-					<b>Enemies Interception</b>
-					<p>							
-						<audio
-							id="audio-EnemiesInterception-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\EnemiesInterception1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-EnemiesInterception-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\EnemiesInterception2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
-					<b>Half Mission</b>
-					<p>							
-						<audio
-							id="audio-HalfMission-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\HalfMission1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-HalfMission-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\HalfMission2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
-					<b>Win Dialog</b>
-					<p>							
-						<audio
-							id="audio-WinDialog-1"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\WinDialog1.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-WinDialog-2"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\WinDialog2.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-WinDialog-3"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\WinDialog3.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-						<audio
-							id="audio-WinDialog-4"
-							controls
-							src="media\code_team\simon_media\Akbar_voice\WinDialog4.wav">
-							Your browser does not support the <code>audio</code> element.
-						</audio>
-					</p>
+					
+					
+					<a href="#Audio-Show" onclick="show('Audio-Show'); return false" /><h2>Akbar Dialogues</h2></a>
+					<div id="Audio-Show" style="display:none">
+						<b>Akbar Intro 1</b>
+						<p>
+							<audio
+								id="audio-AkbarIntro1-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarIntro1-1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-AkbarIntro1-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarIntro1-2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-AkbarIntro1-3"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarIntro1-3.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
+						<b>Akbar Intro 2</b>
+						<p>					
+							<audio
+								id="audio-AkbarIntro2-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarIntro2-1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
+						<b>Akbar Attack 1</b>
+						<p>							
+							<audio
+								id="audio-AkbarAttack-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarAttack1-1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-AkbarAttack-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarAttack1-2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
+						<b>Akbar Intro 3</b>
+						<p>							
+							<audio
+								id="audio-AkbarIntro3-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarIntro3-1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-AkbarIntro3-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\AkbarIntro3-2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
+						<b>Intro Succes</b>
+						<p>							
+							<audio
+								id="audio-IntroSucces-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\IntroSucces1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-IntroSucces-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\IntroSucces2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-IntroSucces-3"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\IntroSucces3.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>	
+						<b>Enemies Interception</b>
+						<p>							
+							<audio
+								id="audio-EnemiesInterception-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\EnemiesInterception1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-EnemiesInterception-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\EnemiesInterception2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
+						<b>Half Mission</b>
+						<p>							
+							<audio
+								id="audio-HalfMission-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\HalfMission1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-HalfMission-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\HalfMission2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
+						<b>Win Dialog</b>
+						<p>							
+							<audio
+								id="audio-WinDialog-1"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\WinDialog1.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-WinDialog-2"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\WinDialog2.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-WinDialog-3"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\WinDialog3.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+							<audio
+								id="audio-WinDialog-4"
+								controls
+								src="media\code_team\simon_media\Akbar_voice\WinDialog4.wav">
+								Your browser does not support the <code>audio</code> element.
+							</audio>
+						</p>
 					</div>
 					<BR>
 					
 					</p>
 
-					
-					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
-					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
-					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit
-					</p>
-
-					<blockquote>
-						“This is a pretty fast price drop for a game that released last month and has garnered some respectable ratings a game that released last month and has gnere.”
-					</blockquote>
-
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringilla porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
-					</p>
 
 					<div class="blog-inner-thumb">
 						<div class="row no-gutters">
@@ -654,24 +644,10 @@
 						</div>
 						<!-- /.row -->
 					</div>
-
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringila porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
-					</p>
-
-					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
-					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
-					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?
-					</p>
+	
 					<div class="blog-footer clearfix">
 						<div class="tagCloud float-left">
-							<a href="#">#playstation-4</a>
+							<a href="#Audio-Show">#playstation-4</a>
 							<a href="#">#remastered</a>
 							<a href="#">#uncharted-4</a>
 							<a href="#">#fps</a>
