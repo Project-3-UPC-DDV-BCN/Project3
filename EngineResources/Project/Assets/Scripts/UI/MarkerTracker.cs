@@ -52,7 +52,10 @@ public class MarkerTracker
 		}
 	}	
 
-	
+	void DestroyObject()
+	{
+		marker_prf.SetActive(false); 
+	}
 
 	void ShowTargetMarker()
 	{
