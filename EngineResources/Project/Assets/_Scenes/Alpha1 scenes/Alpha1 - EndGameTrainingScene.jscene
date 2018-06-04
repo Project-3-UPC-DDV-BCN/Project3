@@ -1,8 +1,8 @@
 {
     "Scene_Name": "Alpha1 - EndGameTrainingScene",
-    "GameObjects_Count": "17",
+    "GameObjects_Count": "18",
     "GameObject_0": {
-        "UUID": "1958002084",
+        "UUID": "281463928",
         "Name": "Main Camera",
         "Tag": "Main Camera",
         "Layer": "Default",
@@ -55,10 +55,11 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_1": {
-        "UUID": "96145898",
+        "UUID": "11852413",
         "Name": "Directional Light",
         "Tag": "Default",
         "Layer": "Default",
@@ -106,10 +107,11 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_2": {
-        "UUID": "67036959",
+        "UUID": "543125025",
         "Name": "EndGameCanvas",
         "Tag": "Default",
         "Layer": "Default",
@@ -126,8 +128,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "1242.000000",
-                    "value_Y": "581.000000"
+                    "value_X": "806.000000",
+                    "value_Y": "561.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -218,51 +220,75 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "audio_emiter",
-                            "field_value": "67036959"
+                            "field_value": "543125025",
+                            "is_prefab": "0",
+                            "go_name": "EndGameCanvas"
                         },
                         "field_1": {
                             "field_name": "back_to_menu_go",
-                            "field_value": "1673512080"
+                            "field_value": "30579341",
+                            "is_prefab": "0",
+                            "go_name": "ContinueButton(2)"
                         },
                         "field_2": {
                             "field_name": "background_alliance",
-                            "field_value": "698157608"
+                            "field_value": "686373617",
+                            "is_prefab": "0",
+                            "go_name": "BackGround(2)"
                         },
                         "field_3": {
                             "field_name": "background_empire",
-                            "field_value": "698157608"
+                            "field_value": "686373617",
+                            "is_prefab": "0",
+                            "go_name": "BackGround(2)"
                         },
                         "field_4": {
                             "field_name": "continue_go",
-                            "field_value": "285960370"
+                            "field_value": "211476113",
+                            "is_prefab": "0",
+                            "go_name": "Replay"
                         },
                         "field_5": {
                             "field_name": "generators_go",
-                            "field_value": "0"
+                            "field_value": "0",
+                            "is_prefab": "0",
+                            "go_name": ""
                         },
                         "field_6": {
                             "field_name": "lose_text",
-                            "field_value": "69380856"
+                            "field_value": "822630499",
+                            "is_prefab": "0",
+                            "go_name": "Defeat Training"
                         },
                         "field_7": {
                             "field_name": "score_go",
-                            "field_value": "1446606013"
+                            "field_value": "1179962430",
+                            "is_prefab": "0",
+                            "go_name": "TotalScoreText"
                         },
                         "field_8": {
                             "field_name": "ships_go",
-                            "field_value": "424891371"
+                            "field_value": "1284737603",
+                            "is_prefab": "0",
+                            "go_name": "Tiefighters Text "
                         },
                         "field_9": {
                             "field_name": "time_go",
-                            "field_value": "1307153892"
+                            "field_value": "1596356001",
+                            "is_prefab": "0",
+                            "go_name": "Time Text"
                         },
                         "field_10": {
                             "field_name": "turrets_go",
-                            "field_value": "673853473"
+                            "field_value": "1116589036",
+                            "is_prefab": "0",
+                            "go_name": "TurretText"
                         },
                         "field_11": {
                             "field_name": "victory_text",
-                            "field_value": "2006737342"
+                            "field_value": "808005584",
+                            "is_prefab": "0",
+                            "go_name": "VictoryTraining"
                         }
                     },
                     "vec2_fields": {},
@@ -274,7 +300,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "20222405",
-                "Sound_ID": "125",
+                "Sound_ID": "101",
                 "SoundBank_Name": "UI.bnk"
             },
             "Component_5": {
@@ -286,10 +312,88 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_3": {
-        "UUID": "698157608",
+        "UUID": "15309149",
+        "Name": "Blackground",
+        "Tag": "Default",
+        "Layer": "Default",
+        "Active": "1",
+        "Components": {
+            "Components_Count": "3",
+            "Component_0": {
+                "Type": "25",
+                "Active": "1",
+                "UUID": "1266737410",
+                "pos": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000"
+                },
+                "z_pos": "0.000000",
+                "size": {
+                    "value_X": "1980.000000",
+                    "value_Y": "1020.000000"
+                },
+                "anchor": {
+                    "value_X": "0.500000",
+                    "value_Y": "0.500000"
+                },
+                "scale": "1.000000",
+                "interactable": "1",
+                "fixed_aspect_ratio": "0",
+                "fixed_ratio": "1.000000",
+                "accept_controller": "0",
+                "id": "0",
+                "order": "0",
+                "uses_light": "1"
+            },
+            "Component_1": {
+                "Type": "0",
+                "Active": "1",
+                "UUID": "1603534609",
+                "position": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000"
+                },
+                "rotation": {
+                    "value_X": "0.000000",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "scale": {
+                    "value_X": "1.000000",
+                    "value_Y": "1.000000",
+                    "value_Z": "1.000000"
+                }
+            },
+            "Component_2": {
+                "Type": "26",
+                "Active": "1",
+                "UUID": "814290261",
+                "mode": "0",
+                "colour": {
+                    "value_X": "0.000001",
+                    "value_Y": "0.000000",
+                    "value_Z": "0.000000",
+                    "value_W": "1.000000"
+                },
+                "flip": "0",
+                "loop": "1",
+                "anim_speed": "1.000000",
+                "anim_textures_count": "1"
+            }
+        },
+        "ParentID": "543125025",
+        "IsRoot": "0",
+        "IsStatic": "0",
+        "WasActive": "1"
+    },
+    "GameObject_4": {
+        "UUID": "686373617",
         "Name": "BackGround(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -361,12 +465,13 @@
                 "texture": "EndScreen"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_4": {
-        "UUID": "285960370",
+    "GameObject_5": {
+        "UUID": "211476113",
         "Name": "Replay",
         "Tag": "Default",
         "Layer": "Default",
@@ -404,8 +509,8 @@
                 "Active": "1",
                 "UUID": "1746266682",
                 "position": {
-                    "value_X": "133.190918",
-                    "value_Y": "-331.859497",
+                    "value_X": "86.434662",
+                    "value_Y": "-215.361328",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -466,12 +571,13 @@
                 "pressed_texture": "Clicked Replay"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_5": {
-        "UUID": "1673512080",
+    "GameObject_6": {
+        "UUID": "30579341",
         "Name": "ContinueButton(2)",
         "Tag": "Default",
         "Layer": "Default",
@@ -509,8 +615,8 @@
                 "Active": "1",
                 "UUID": "1746266682",
                 "position": {
-                    "value_X": "-132.298218",
-                    "value_Y": "-334.995544",
+                    "value_X": "-85.855377",
+                    "value_Y": "-217.396469",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -571,12 +677,13 @@
                 "pressed_texture": "Clicked Continue"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_6": {
-        "UUID": "2006737342",
+    "GameObject_7": {
+        "UUID": "808005584",
         "Name": "VictoryTraining",
         "Tag": "Default",
         "Layer": "Default",
@@ -615,7 +722,7 @@
                 "UUID": "862941305",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "242.578125",
+                    "value_Y": "157.421875",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -648,12 +755,13 @@
                 "texture": "EndScreen Victory"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_7": {
-        "UUID": "69380856",
+    "GameObject_8": {
+        "UUID": "822630499",
         "Name": "Defeat Training",
         "Tag": "Default",
         "Layer": "Default",
@@ -692,7 +800,7 @@
                 "UUID": "1816890539",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "242.578125",
+                    "value_Y": "157.421875",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -725,12 +833,13 @@
                 "texture": "EndScreen Defeat"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_8": {
-        "UUID": "673853473",
+    "GameObject_9": {
+        "UUID": "1116589036",
         "Name": "TurretText",
         "Tag": "Default",
         "Layer": "Default",
@@ -747,8 +856,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "25.000050",
-                    "value_Y": "50.892956"
+                    "value_X": "25.000051",
+                    "value_Y": "50.892963"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -768,8 +877,8 @@
                 "Active": "1",
                 "UUID": "474067675",
                 "position": {
-                    "value_X": "0.970312",
-                    "value_Y": "-41.954372",
+                    "value_X": "0.629687",
+                    "value_Y": "-27.226431",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -804,12 +913,13 @@
                 "font": "arial"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_9": {
-        "UUID": "424891371",
+    "GameObject_10": {
+        "UUID": "1284737603",
         "Name": "Tiefighters Text ",
         "Tag": "Default",
         "Layer": "Default",
@@ -826,8 +936,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "25.000050",
-                    "value_Y": "50.892956"
+                    "value_X": "25.000051",
+                    "value_Y": "50.892963"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -847,8 +957,8 @@
                 "Active": "1",
                 "UUID": "557974825",
                 "position": {
-                    "value_X": "0.727734",
-                    "value_Y": "-148.591705",
+                    "value_X": "0.472266",
+                    "value_Y": "-96.429085",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -883,12 +993,13 @@
                 "font": "arial"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_10": {
-        "UUID": "1922386613",
+    "GameObject_11": {
+        "UUID": "2022760913",
         "Name": "Image(8)",
         "Tag": "Default",
         "Layer": "Default",
@@ -926,8 +1037,8 @@
                 "Active": "1",
                 "UUID": "1303443010",
                 "position": {
-                    "value_X": "-164.710556",
-                    "value_Y": "-92.539673",
+                    "value_X": "-106.889458",
+                    "value_Y": "-60.053928",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -960,12 +1071,13 @@
                 "texture": "Tie_fighter"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_11": {
-        "UUID": "855051692",
+    "GameObject_12": {
+        "UUID": "1102404654",
         "Name": "Rounds_text",
         "Tag": "Default",
         "Layer": "Default",
@@ -1003,8 +1115,8 @@
                 "Active": "1",
                 "UUID": "31977968",
                 "position": {
-                    "value_X": "-57.248440",
-                    "value_Y": "-248.642578",
+                    "value_X": "-37.151562",
+                    "value_Y": "-161.357422",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1039,12 +1151,13 @@
                 "font": "earthorbiter"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_12": {
-        "UUID": "1307153892",
+    "GameObject_13": {
+        "UUID": "1596356001",
         "Name": "Time Text",
         "Tag": "Default",
         "Layer": "Default",
@@ -1061,8 +1174,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "147.368729",
-                    "value_Y": "50.000107"
+                    "value_X": "147.368759",
+                    "value_Y": "50.000114"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -1082,8 +1195,8 @@
                 "Active": "1",
                 "UUID": "738275658",
                 "position": {
-                    "value_X": "3.638672",
-                    "value_Y": "66.067612",
+                    "value_X": "2.361328",
+                    "value_Y": "42.874794",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1118,12 +1231,13 @@
                 "font": "arial"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_13": {
-        "UUID": "1446606013",
+    "GameObject_14": {
+        "UUID": "1179962430",
         "Name": "TotalScoreText",
         "Tag": "Default",
         "Layer": "Default",
@@ -1140,8 +1254,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "24.623159",
-                    "value_Y": "49.686020"
+                    "value_X": "24.623169",
+                    "value_Y": "49.686039"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -1161,8 +1275,8 @@
                 "Active": "1",
                 "UUID": "2090917935",
                 "position": {
-                    "value_X": "106.734375",
-                    "value_Y": "-249.612885",
+                    "value_X": "69.265625",
+                    "value_Y": "-161.987106",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1197,12 +1311,13 @@
                 "font": "arial"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_14": {
-        "UUID": "1469154067",
+    "GameObject_15": {
+        "UUID": "324906692",
         "Name": "Rounds",
         "Tag": "Default",
         "Layer": "Default",
@@ -1240,8 +1355,8 @@
                 "Active": "1",
                 "UUID": "1452268378",
                 "position": {
-                    "value_X": "4.560469",
-                    "value_Y": "8.732812",
+                    "value_X": "2.959532",
+                    "value_Y": "5.667187",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1276,12 +1391,13 @@
                 "font": "earthorbiter"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_15": {
-        "UUID": "1476675644",
+    "GameObject_16": {
+        "UUID": "883549881",
         "Name": "Time",
         "Tag": "Default",
         "Layer": "Default",
@@ -1320,7 +1436,7 @@
                 "UUID": "1626972867",
                 "position": {
                     "value_X": "0.000000",
-                    "value_Y": "115.467194",
+                    "value_Y": "74.932816",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1355,12 +1471,13 @@
                 "font": "earthorbiter"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
-    "GameObject_16": {
-        "UUID": "1150378093",
+    "GameObject_17": {
+        "UUID": "1104680433",
         "Name": "Ties",
         "Tag": "Default",
         "Layer": "Default",
@@ -1398,8 +1515,8 @@
                 "Active": "1",
                 "UUID": "1447018856",
                 "position": {
-                    "value_X": "-2.018250",
-                    "value_Y": "-89.916924",
+                    "value_X": "-1.309751",
+                    "value_Y": "-58.351883",
                     "value_Z": "0.000000"
                 },
                 "rotation": {
@@ -1434,8 +1551,9 @@
                 "font": "earthorbiter"
             }
         },
-        "ParentID": "67036959",
+        "ParentID": "543125025",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     }
 }
