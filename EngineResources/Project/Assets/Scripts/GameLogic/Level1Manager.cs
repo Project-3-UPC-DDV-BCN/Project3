@@ -229,7 +229,7 @@ public class Level1Manager
 			object[] args1 = {"AckbarIntro1"};
 			dialog_manager.CallFunctionArgs("NewDialog", args1);
 
-			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 2.5f, "Play_AkbarIntro1_1"};
+			object[] args2 = {"AckbarIntro1", "Bobba, you are behind enemy lines.", 3.25f, "Play_AkbarIntro1_1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args2);
 
 			object[] args3 =  {"AckbarIntro1", "Be careful, try not to get detected", 2.75f, "Play_AkbarIntro1_2"};
