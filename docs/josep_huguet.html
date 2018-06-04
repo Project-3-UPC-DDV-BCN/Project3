@@ -465,76 +465,62 @@
 					<h2 class="blog-title">Josep Huguet Giron</h2>
 					<ul class="meta">
 						<li><a href="#"><i class="fa fa-code"></i>Graphics Programmer</a><a href="#"></a></li>
-						<li><a href="#"><i class="fa fa-linkedin"><span/></i></a><a href="https://www.linkedin.com/in/josep-huguet-giron/">Find me on Linkedin</a></li>	
-						<li><a href="#"><i class="fa fa-github"><span/></i></a><a href="https://github.com/ArmisJoe">Find me on Github</a></li>
+						<li><a href="#"><i class="fa fa-mail"></i>rchuguetgironjosep@gmail.com</a><a href="#"></a></li>
+						<li><a href="#"><i class="fa fa-linkedin"><span/></i></a><a href="https://www.linkedin.com/in/josep-huguet-giron/">Link to Linkedin</a></li>	
+						<li><a href="#"><i class="fa fa-github"><span/></i></a><a href="https://github.com/ArmisJoe">Link to Github</a></li>
 					
 					</ul>
 					
 					<p>
-						I'm Josep Huguet, 20, and I was in charge of the graphics programming. I developed a diverse amount of tools in the engine for the Art and Design teams, while learning all sorts of techniques on computer graphics.
+						I'm Josep Huguet, and I was in charge of the graphics programming. I developed a diverse amount of tools in the engine for the Art and Design teams, while learning all sorts of techniques on computer graphics.
 					</p>
 
-					<h3>Shading</h3>
+					<h3><b>LIGHTING</b></h3>
 					<p>
-						Just like in any Videogame Engine, The Creator can make use of three different types of lights:
+						Just like in any videogame engine, The Creator can make use of three different types of lights:
 					</p>
 					
-					<div class="row">
-							<div class="column">
-								<img src="WebPhotos/RogerTello/FireDemo.gif" alt="DemoFire" align = "middle" width = "500" height = "500">
-							</div>
-							<div class="column">
-								<img src="WebPhotos/RogerTello/FountainDemo.gif" alt="DemoFountain" align = "middle"  width = "500" height = "500">
-							</div>
-						</div>	
-						<img src="WebPhotos/RogerTello/RastroDemo.gif" alt="DemoRastro" align = "middle" width = "500" height = "500">
-
-					<blockquote>
-						“This is a pretty fast price drop for a game that released last month and has garnered some respectable ratings a game that released last month and has gnere.”
-					</blockquote>
-
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringilla porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
-					</p>
-
-					<div class="blog-inner-thumb">
-						<div class="row no-gutters">
-							<div class="col-md-8 pr__15">
-								<img src="media/blog/97.jpg" alt="thumb">
-							</div>
-
-							<div class="col-md-4">
-								<img class="mb__15" src="media/blog/98.jpg" alt="thumb">
-								<img src="media/blog/99.jpg" alt="thumb">
-							</div>
-						</div>
-						<!-- /.row -->
-					</div>
-
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas elit ante, congue sodales orci ac, ultrices pretium lectus. Maecenas lorem enim, dignissim sed lacus non, feugiat iaculis lorem. Integer eu aliquet diam. Suspendisse fringila porta justo,
-						vel tempus risus. Ut et enim sit amet libero fermentum aliquam et ut sem. Donec sit amet eros nulla. Proin non fermentum odio. Pellentesque ut sodales erat, ac aliquam sem. Praesent tempus velit ac leo hendrerit auctor. Cras id efficitur eros.
-					</p>
-
-					<p>
-						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
-						nulla ut, sodales dui..
-					</p>
-
-					<h3>Absolute the best game we have ever seen</h3>
-					<p>
-						Dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?
-					</p>
-					<div class="blog-footer clearfix">
-						<div class="tagCloud float-left">
-							<a href="#">#playstation-4</a>
-							<a href="#">#remastered</a>
-							<a href="#">#uncharted-4</a>
-							<a href="#">#fps</a>
-							<a href="#">#playstation-4</a>
-						</div>
-					</div>
+								<p><b>- Directional Light:</b> It mimics the lighting that you would get from the sun. Directional lights emit parallel light rays in a single direction but the light reaches out into infinity.</p>
+								<img src="media/code_team/josep_stuff/directional.png" alt="DemoFire" align = "middle" width = "673" height = "371">
+					
+						
+								<p><b>- Point Light:</b> It mimics an incandescent light bulb that emits light in all directions.</p>
+								<img src="media/code_team/josep_stuff/point.png" alt="DemoFountain" align = "middle"  width = "673" height = "369">
+						
+						
+								<p><b>- Spot Light: </b> With it, light is emitted through a cone whose angle you can control, determining how much of the area is actually illuminated</p>
+						<img src="media/code_team/josep_stuff/spot.png" alt="DemoRastro" align = "middle" width = "483" height = "393">
+							<p>As shown in the picture above, the designer can determine different values for each light. Color and diffuse values are general for all three lights, but spot lights have a cut off value to tweak the angle of extension.</p>
+							<p>Although all these values can be saved, I also implemented a way of accessing them from scripting to edit them from C# code (being able to for exaple switch them on and off, or even changing the color).</p>
+							<p>Lights are behave as components to game objects, meaning that any game object can have a <i>Component Light</i> attatched to it. As a side note, lights position and rotation are matched with the game object's Component Transform.</p>
+					<h3><b></b></h3>	
+					<h3><b>NORMAL MAPPING</b></h3>
+						<p>Due to the use of low poly objects, <i>Normal Mapping</i> was mandatory. Thanks to it, the art team was able to add details without using too many polygons, greatly enhancing the appearance and details of a the low polygon models. Here is an example of how greatly the result improved after implementation:</p>
+						<img src="media/code_team/josep_stuff/normalmap.png" alt="DemoRastro" align = "middle" width = "901" height = "499">
+					<h3><b></b></h3>
+					<h3><b>SHADOW MAPPING</b></h3>
+					<p>On <i>Concept Discovery</i> it was decided that shadows were mandatory for at least <i>Directional Lights</i>. This was done by testing whether a pixel was visible from the light source, all with the help of a z-buffer stored in form of a texture attatched to a framebuffer.</p>
+						<img src="media/code_team/josep_stuff/shadowmap.png" alt="DemoRastro" align = "middle" width = "806" height = "478">
+					<h3><b></b></h3>
+					<h3><b>OTHER GRAPHIC TOOLS</b></h3>
+					<p>During the development of the project, I was requested to do other tools to help the art and design tools to reach the goal they had envisioned. The most important ones were:</p>
+					<p><b>- Opacity Maps:</b> Mainly for lasers, opacity maps allowed meshes to become transparent at certain parts.</p>
+					<p><b>- Blending:</b> By rendering objects with custom transparency from further to nearer, I was able to properly blend the lasers in fragments where the alpha was smaller than 1.</p>
+					<img src="media/code_team/josep_stuff/image2.gif" alt="DemoRastro" align = "middle" width = "904" height = "311">
+					<p><i> As seen on the .gif avobe, light was disabled for lasers to make them look shiny. This was also a feature requested by the art team.</i></p>
+					<p><b>- Texture Tiling:</b> To avoid textures with high resolution, I was able to tile textures by muliplying their texture coordinates. These changes were saved for each material, there is a particular UI for this feature, and it is also available for Normal Maps.</p>
+					<p><b>- Second Diffuse Layer:</b> As a simple approach to a detail map, materials can have up to two diffuse textures. The second one is placed over the first one, and its texture coordinates are totally independent.</p>
+					<img src="media/code_team/josep_stuff/image1.gif" alt="DemoRastro" align = "middle" width = "1132" height = "552">
+					<h3><b></b></h3>
+					<h3><b>RENDERING OPTIMIZATIONS</b></h3>
+					<p>The most important ones were: sorting objects by their materials before being rendered, and minimizing going back and forth between different shaders (which was very time consuming).</p>
+					<h3><b></b></h3>
+					<h3><b>PERSONAL NOTE</b></h3>
+					<p>Before this project, I had never had any relation with shaders and little to none experience on computer graphics. Doing research to accomplish these tasks was quite challenging for me since, until now, all I had learnt was from class. In the other hand, I believe it was a positive experience to investigate by myself while working on an engine I had no relation to.</p>
+					<p>A part from that, the biggest difficulty for me was to become familiar with OpenGL 4. Many of the tasks I performed took me a lot more time than expected due to my lack of familiarity with the library. In the end, though, I have to say that it was a fulfilling experience and I cannot wait to learn more about Computer Graphics.</p>
+					
+					
+					
 					<!-- /.blog-footer -->
 				</div>
 				<!-- /.blog-details -->
