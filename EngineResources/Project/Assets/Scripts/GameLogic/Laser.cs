@@ -62,9 +62,9 @@ public class Laser
 			{			
 				object[] args = {sender, laser_damage};
 					entity_properties.CallFunctionArgs("HitByShip", args);
-			}
 
-			TheGameObject.Self.SetActive(false);
+				TheGameObject.Self.SetActive(false);
+			}
 		}
 	}
 

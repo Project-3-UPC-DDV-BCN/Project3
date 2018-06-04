@@ -8,18 +8,23 @@ public class ControlsMenu {
 	public TheGameObject controls_panel;
 	public TheGameObject ship_controls_panel;
 	
+	bool is_active = false;
+	
 	void Update ()
 	{
-		if(TheInput.GetControllerButton(0, "CONTROLLER_RIGHT_ARROW") == 1 || TheInput.IsKeyDown("RIGHT_ARROW"))
+		if(is_active)
 		{
-			ship_controls_panel.SetActive(true);
-			controls_panel.SetActive(false);
-		}
-		
-		if(TheInput.GetControllerButton(0, "CONTROLLER_LEFT_ARROW") == 1 || TheInput.IsKeyDown("LEFT_ARROW"))
-		{
-			controls_panel.SetActive(true);
-			ship_controls_panel.SetActive(false);
+			if(TheInput.GetControllerButton(0, "CONTROLLER_RIGHT_ARROW") == 1 || TheInput.IsKeyDown("RIGHT_ARROW"))
+			{
+				ship_controls_panel.SetActive(true);
+				controls_panel.SetActive(false);
+			}
+			
+			if(TheInput.GetControllerButton(0, "CONTROLLER_LEFT_ARROW") == 1 || TheInput.IsKeyDown("LEFT_ARROW"))
+			{
+				controls_panel.SetActive(true);
+				ship_controls_panel.SetActive(false);
+			}
 		}
 		
 		if(TheInput.GetControllerButton(0, "CONTROLLER_START") == 1 || TheInput.IsKeyDown("ESC"))
@@ -27,6 +32,12 @@ public class ControlsMenu {
 			ship_controls_panel.SetActive(false);
 			controls_panel.SetActive(false);
 			background.SetActive(false);
+			is_active = false;
 		}
+	}
+	
+	public void ActiveMenu()
+	{
+		is_active = true;
 	}
 }
