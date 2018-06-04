@@ -259,6 +259,10 @@ public class PlayerMovement
 	public TheGameObject back_shield_go;
 	public int max_collision_damage = 25;
 	
+	private bool external_shake = false;
+	private float ext_shake_radius = 0.2f;
+	private float ext_shake_time = 0.0f;
+	
 	void Start () 
 	{
 		self = TheGameObject.Self;
@@ -1571,6 +1575,19 @@ public class PlayerMovement
 					
 					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(shake_radius_hull * shake_intensity);
 				}
+				else if(external_shake)
+				{
+					if(shake_timer > ext_shake_time/2)
+					{
+						shake_intensity = (ext_shake_time-shake_timer)/(ext_shake_time/2);
+					}
+					else
+					{
+						shake_intensity = shake_timer/(ext_shake_time/2);
+					}
+					
+					camera_go.GetComponent<TheTransform>().LocalPosition = PickRandomPointForShake(ext_shake_radius * shake_intensity);
+				}
 				else
 				{
 					if(shake_timer > shake_duration_shield/2)
@@ -1592,6 +1609,7 @@ public class PlayerMovement
 				direct_hit = false;
 				shaking = false;
 				camera_go.GetComponent<TheTransform>().LocalPosition = original_cam_pos;
+				if(external_shake) external_shake = false;
 			}
 		}
 	}
@@ -1636,5 +1654,14 @@ public class PlayerMovement
 				Collided();
 			}
 		}
+	}
+	
+	void ExternalCameraShake(float time, float radius = 0.2f)
+	{
+		shaking = true;
+		external_shake = true;
+		ext_shake_radius = radius;
+		ext_shake_time = time;
+		shake_timer = time;
 	}
 }
