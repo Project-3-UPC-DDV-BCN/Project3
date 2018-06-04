@@ -931,6 +931,9 @@ void ModuleScriptImporter::RegisterAPI()
 	mono_add_internal_call("TheEngine.TheCamera::SizeY", (const void*)GetSizeY);
 	mono_add_internal_call("TheEngine.TheCamera::WorldPosToCameraPos", (const void*)WorldPosToScreenPos);
 	mono_add_internal_call("TheEngine.TheCamera::IsObjectInside", (const void*)IsObjectInside);
+	mono_add_internal_call("TheEngine.TheCamera::SetFov", (const void*)SetFov);
+	mono_add_internal_call("TheEngine.TheCamera::GetFov", (const void*)GetFov);
+
 }
 
 void ModuleScriptImporter::SetGameObjectName(MonoObject * object, MonoString * name)
@@ -1977,6 +1980,16 @@ MonoObject * ModuleScriptImporter::WorldPosToScreenPos(MonoObject * from)
 bool ModuleScriptImporter::IsObjectInside( MonoObject* other)
 {
 	return ns_importer->IsObjectInside(other);
+}
+
+void ModuleScriptImporter::SetFov(float fov)
+{
+	ns_importer->SetFov(fov);
+}
+
+float ModuleScriptImporter::GetFov()
+{
+	return ns_importer->GetFov();
 }
 
 void ModuleScriptImporter::DebugDrawLine(MonoObject * from, MonoObject * to, MonoObject * color)
@@ -6324,6 +6337,24 @@ bool NSScriptImporter::IsObjectInside(MonoObject* other)
 	to_ret = frustum.Contains(tranform->GetGlobalPosition());
 
 	return to_ret; 
+}
+
+void NSScriptImporter::SetFov(float fov)
+{
+	if (App->renderer3D->game_camera != nullptr)
+	{
+		App->renderer3D->game_camera->SetFOV(fov);
+	}
+}
+
+float NSScriptImporter::GetFov() const
+{
+	if (App->renderer3D->game_camera != nullptr)
+	{
+		return App->renderer3D->game_camera->GetFOV();
+	}
+
+	return 0.0f;
 }
 
 

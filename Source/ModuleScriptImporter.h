@@ -377,6 +377,8 @@ public:
 	int GetSizeY();
 	MonoObject* WorldPosToScreenPos(MonoObject* from);
 	bool IsObjectInside(MonoObject* other);
+	void SetFov(float fov);
+	float GetFov() const;
 
 	std::vector<GameObjectMono> created_gameobjects;
 	std::vector<ComponentMono> created_components;
@@ -685,6 +687,8 @@ private:
 	static int GetSizeY();
 	static MonoObject* WorldPosToScreenPos(MonoObject* from);
 	static bool IsObjectInside(MonoObject* other);
+	static void SetFov(float fov);
+	static float GetFov();
 
 	//DEBUG DRAW
 	static void DebugDrawLine(MonoObject* from, MonoObject* to, MonoObject* color);
