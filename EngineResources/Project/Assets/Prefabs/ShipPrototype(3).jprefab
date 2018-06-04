@@ -1,11 +1,11 @@
 {
-    "UUID": "1971781877",
+    "UUID": "1001979039",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "1681407789",
+        "UUID": "2071368718",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "185",
+                "Sound_ID": "127",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -447,7 +447,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker_prf",
-                            "field_value": "1225698819",
+                            "field_value": "2062543220",
                             "is_prefab": "0",
                             "go_name": "CanvasMarkerGO"
                         }
@@ -464,7 +464,7 @@
         "WasActive": "1"
     },
     "GameObject_1": {
-        "UUID": "1958079999",
+        "UUID": "792168887",
         "Name": "OAChecker",
         "Tag": "Default",
         "Layer": "Default",
@@ -586,7 +586,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "go_avoidance",
-                            "field_value": "1681407789",
+                            "field_value": "2071368718",
                             "is_prefab": "0",
                             "go_name": "ShipPrototype(3)"
                         }
@@ -597,19 +597,19 @@
                 }
             }
         },
-        "ParentID": "1681407789",
+        "ParentID": "2071368718",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_2": {
-        "UUID": "1225698819",
+        "UUID": "2062543220",
         "Name": "CanvasMarkerGO",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "2",
+            "Components_Count": "1",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -630,44 +630,15 @@
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
-            },
-            "Component_1": {
-                "Type": "10",
-                "Active": "1",
-                "UUID": "481185766",
-                "Script": {
-                    "library_path": "./Project/Library/Scripts/BillboardCanvas.dll",
-                    "assets_path": "",
-                    "script_name": "BillboardCanvas",
-                    "UUID": "2036805133",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "0",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {},
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
             }
         },
-        "ParentID": "1681407789",
+        "ParentID": "2071368718",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_3": {
-        "UUID": "1967280407",
+        "UUID": "532495671",
         "Name": "CanvasMarker",
         "Tag": "Default",
         "Layer": "Default",
@@ -738,13 +709,13 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1225698819",
+        "ParentID": "2062543220",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_4": {
-        "UUID": "1817177381",
+        "UUID": "870912530",
         "Name": "Image(67)",
         "Tag": "Default",
         "Layer": "Default",
@@ -816,7 +787,7 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "1967280407",
+        "ParentID": "532495671",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
