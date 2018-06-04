@@ -36,7 +36,7 @@ public class TrainingModeManager
 
 	private TheTimer game_timer = new TheTimer();
 
-	private int score = 0; 
+	private int score = 0;
 	
 	TheAudioSource audio_source = null;
 
@@ -142,13 +142,14 @@ public class TrainingModeManager
 	void Lose()
 	{
 		TheData.AddString("score", score_text.Text);
-		TheData.AddString("time", gametime_text.Text);
-		TheData.AddString("rounds",curr_wave_text.Text);
-
+		TheData.AddInt("time", (int)game_manager_script.CallFunctionArgs("GetTotalTime"));
+		TheData.AddString("rounds",curr_wave.ToString());
+		TheData.AddInt("ships", (int)game_manager_script.CallFunctionArgs("GetDestroyedShips"));
+		
 		TheData.AddString("faction", "rebels");
 		TheData.AddString("mode", "training");
 		TheData.AddInt("won", 0);
-		TheApplication.LoadScene("Alpha1 - EndGameScene");
+		TheApplication.LoadScene("Alpha1 - EndGameTrainingScene");
 	}
 
 	bool CheckWaveFinished()
