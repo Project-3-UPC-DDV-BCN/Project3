@@ -17,7 +17,7 @@ namespace TheEngine
         public static extern bool IsObjectInside(TheGameObject world_pos);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetFov(int fov);
+        public static extern void SetFov(float fov);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern float GetFov();

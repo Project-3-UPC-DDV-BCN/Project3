@@ -12,8 +12,9 @@ public class MarkerTracker
 
 	void Start () 
 	{
+		if(marker_prf != null)
+			marker_prf.SetActive(false); 
 
-		marker_prf.SetActive(false); 
 		TheGameObject slave_cam = TheGameObject.Find("PlayerCam");	
 
 		if(slave_cam != null)

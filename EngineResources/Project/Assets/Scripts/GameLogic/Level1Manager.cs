@@ -304,7 +304,7 @@ public class Level1Manager
 			object[] args24 = {"WinDialog", "Great work Bobba! You did it!", 3.5f, "Play_WinDialog1"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args24);
 
-			object[] args30 = {"WinDialog", "But you need time to clear the way for you to jump into hyperspace", 4.2f, "Play_WinDialog2"};
+			object[] args30 = {"WinDialog", "But you need time to clear the way for you", 4.2f, "Play_WinDialog2"};
 			dialog_manager.CallFunctionArgs("NewDialogLine", args30);
 
 			object[] args28 = {"WinDialog", "to jump into hyperspace.", 3.0f, "Play_WinDialog3"};
@@ -333,6 +333,8 @@ public class Level1Manager
 		new_spawn_timer.Start();
 		
 		check_win_lose.Start();
+
+		//SetMissionState(9);
 	}
 	
 	void Update () 
@@ -428,6 +430,14 @@ public class Level1Manager
 		++curr_mission_state;
 
 		StartMissionState(curr_mission_state);
+	}
+
+	void SetMissionState(int state)
+	{	
+		FinishMissionState(curr_mission_state);
+		curr_mission_state = state;
+		StartMissionState(curr_mission_state);
+		
 	}
 
 	void StartMissionState(int state)
@@ -798,6 +808,12 @@ public class Level1Manager
 
 				SetEnemiesToKill("Time to survive: " + (time_to_survive - (int)time_to_warp.ReadTime()).ToString());
 	
+				if(new_spawn_timer.ReadTime() > time_between_new_spawn)
+				{
+					SpawnNextWave(5);
+					new_spawn_timer.Start();
+				}
+
 				if(time_to_warp.ReadTime() > time_to_survive)
 				{
 					NextMissionState();
@@ -817,17 +833,34 @@ public class Level1Manager
 						preparing_warp = true;
 					}
 
+					if(warp_prepare_time.ReadTime() < 3 && !warping && preparing_warp)	
+					{
+						float new_fov = TheCamera.GetFov() - warp_prepare_time.ReadTime() * TheTime.DeltaTime * 3;
+						TheCamera.SetFov(new_fov);
+
+						TheVector3 speed_dir = new TheVector3(0, 0, 0);
+						speed_dir = -slave_trans.ForwardDirection;
+						speed_dir *= warp_prepare_time.ReadTime() * TheTime.DeltaTime * 50;
+
+						TheInput.RumbleController(0, 2, 3000);
+					}
+
 					if(warp_prepare_time.ReadTime() > 3 && !warping)
 					{
 						warp_time.Start();
 						warping = true;
+						
+						TheInput.RumbleController(0, 4, 4000);
 					}
 
 					if(warping && warp_time.ReadTime() < 4)
 					{
 						TheVector3 speed_dir = new TheVector3(0, 0, 0);
 						speed_dir = slave_trans.ForwardDirection;
-						speed_dir *= warp_time.ReadTime() * TheTime.DeltaTime * 300;
+						speed_dir *= warp_time.ReadTime() * TheTime.DeltaTime * 350;
+
+						float new_fov = TheCamera.GetFov() + warp_time.ReadTime() * TheTime.DeltaTime * 2;
+						TheCamera.SetFov(new_fov);
 
 						slave_trans.LocalPosition += speed_dir;
 					}

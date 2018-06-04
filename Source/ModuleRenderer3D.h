@@ -26,11 +26,11 @@ class Material;
 #define MAX_SPO_LIGHT 8
 #define MAX_POI_LIGHT 8
 
-#define SHADOW_HEIGHT 8192
-#define SHADOW_WIDTH 8192
+//#define SHADOW_HEIGHT 8192
+//#define SHADOW_WIDTH 8192
 
-//#define SHADOW_HEIGHT 4096
-//#define SHADOW_WIDTH 4096
+#define SHADOW_HEIGHT 4096
+#define SHADOW_WIDTH 4096
 
 class ModuleRenderer3D : public Module
 {
