@@ -466,6 +466,8 @@
 					img {
 						display: block;
 						margin-left: auto;
+						margin-bottom: 15px;
+						border-radius: 10px;
 						margin-right: auto;
 					}	
 					</style>
@@ -475,16 +477,26 @@
 					</p>
 					<ul>
 						<li><b>-Score & Time:</b>  added an score system that rewarded or punished the player with some points. Also added a time counter needed for setting a gameplay time.</li>
-						<br>
-						<img src="WebPhotos/RogerTello/Score.png" alt="Score" align = "middle">
-						<img src="WebPhotos/RogerTello/timer.gif" alt="Time" align = "middle">
+						<br>	
+						<center>
+						<div class="row">
+							<div class="column">
+								<img src="WebPhotos/RogerTello/Score.png" alt="Score" width = "300" height = "150" hspace = "200" >
+							</div>
+							<div class="column">
+								<img src="WebPhotos/RogerTello/timer.gif" alt="Time" align = "middle" hspace="200">
+							</div>
+						</div>	
+						</center>
 						<br>
 						<li><b>-Basic Scripting:</b> basic scripts for the basis of the game (Game Manager, Ship Properties, Spawners…) </li>
 						<br>
 						<li><b>-Prefabs Set Up:</b> added the basic prefabs for each ship containing the basic functionalities for shooting and be shoot. </li>
+						<br>
 						<img src="WebPhotos/RogerTello/tie.png" alt="Tie Fighter" align = "middle">
 						<br>
 						<li><b>-Laser:</b> created functionality for the laser in order to subtract HP when hitting other ships and killing them once they are dead. </li>
+						<br>
 						<img src="WebPhotos/RogerTello/laser.png" alt="Laser" align = "middle">
 						<br>
 						<li><b>-Explosion System for Ships:</b> added an universal script that could be used for any type of object in the game constructed with child pieces. It separate its parts with random linear and rotational velocity. </li>
@@ -506,12 +518,10 @@
 					<p>
 						Re-worked the textures and materials resource manager when loading the engine. 
 					</p>
-					<br>
 					<h2 class="blog-title">Particle System</h2>
 					<p>
 						I was in charge of particle system implementation and manteinence, for that reason I coded the entire system trying to implement the most necessary features: 
 					</p>
-					<br>
 					<ul>
 						<li><b>Template System: </b> the system is template based, that means the user can save a "preset" of a particle and use it later on from any part of the engine. That also ease the handling since you can send the template file to someone using TheCreator and just draging the file in the folder of templates would be enough for the system to work. </li>
 						<img src="WebPhotos/RogerTello/TemplateSelection.gif" alt="Template" align = "middle">
@@ -524,12 +534,18 @@
 						<br>
 						<li><b>General Characteristics:</b> the system lets you modify the basic movements (emit rate, velocity, rotation) and interpolations. </li>	
 						<br>
-						<h2 class="blog-title">How To Make Smoke in 30 seconds?</h2>	
+						<h3 class="blog-title">How To Make Smoke in 30 seconds?</h3>	
 						<div class="youtube-wrapper">
 							<div class="youtube-poster" data-bg-image="media/video/12.jpg" style="background-image: url(_media/game/30.html);"></div>
 							<!-- <iframe src="//player.vimeo.com/video/56585357" allowfullscreen=""></iframe> -->
 							<iframe src="https://www.youtube.com/embed/SMNK4IkSe7Y" allowfullscreen=""></iframe>
-						</div>
+						</div>					
+						<p>
+							Here, we will show some example particles made with the system: 
+						</p>
+						<img src="WebPhotos/RogerTello/FireDemo.gif" alt="DemoFire" align = "middle" width = "500" height = "500">
+						<img src="WebPhotos/RogerTello/FountainDemo.gif" alt="DemoFountain" align = "middle"  width = "500" height = "500">
+						<img src="WebPhotos/RogerTello/RastroDemo.gif" alt="DemoRastro" align = "middle" width = "500" height = "500">
 										
 					</ul>
 					<!-- /.blog-footer -->
