@@ -406,8 +406,9 @@ public class PlayerMovement
 			RepairPuzzle();
 			RegenShield();
 			ManageShields();
-			CameraShake();
 		}
+		
+		CameraShake();
 		
 		//Apply changes to values
 		SetValuesFromEnergy();
