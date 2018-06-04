@@ -2,7 +2,65 @@
 
 <html lang="en">
 
+<style>
+* {
+    box-sizing: border-box;
+}
 
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+/* The grid: Four equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 25%;
+    padding: 10px;
+}
+
+/* Style the images inside the grid */
+.column img {
+    opacity: 0.8; 
+    cursor: pointer; 
+}
+
+.column img:hover {
+    opacity: 1;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* The expanding image container */
+.container {
+    position: relative;
+    display: none;
+}
+
+/* Expanding image text */
+#imgtext {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    color: white;
+    font-size: 20px;
+}
+
+/* Closable button inside the expanded image */
+.closebtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+}
+</style>
 <!-- Mirrored from themeim.com/demo/gio/index/blog-single-fullwidth.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 01 Jun 2018 17:32:28 GMT -->
 <head>
 	<!-- Meta Data -->
@@ -477,29 +535,97 @@
 					</div>-->
 					<h2>In game</h2>
 					<h4>Cockpit</h4>
-					<p>
+					<img src="WebPhotos/DaniGarcia/Fotoso.png" width="960" height="540"/><br/>
+					<h5>Texture</h5>
+					<img src="WebPhotos/DaniGarcia/Texturas.png" width="960" height="540"/><br/>
+					<h5>Progress gallery</h5>
+					<div class="row">
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/1.png" alt="Base" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/2.png" alt="Version 1" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/3.png" alt="Version 1" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/4.png" alt="Version 1" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/5.png" alt="Version 1" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/6.png" alt="Fjords" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/7.png" alt="Mountains" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/8.png" alt="Lights" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/9.png" alt="Lights" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/10.png" alt="Base" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/11.png" alt="Base" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/12.png" alt="Version 1" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/13.png" alt="Mountains" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/14.png" alt="Lights" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/15.png" alt="Nature" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/16.png" alt="Fjords" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/17.png" alt="Mountains" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					  <div class="column">
+						<img src="WebPhotos/DaniGarcia/18.png" alt="Lights" style="width:100%" onclick="myFunction(this);">
+					  </div>
+					</div>
+
+					<div class="container">
+					  <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+					  <img id="expandedImg" style="width:100%">
+					  <div id="imgtext"></div>
+					</div>
+
+					<script>
+					function myFunction(imgs) {
+						var expandImg = document.getElementById("expandedImg");
+						var imgText = document.getElementById("imgtext");
+						expandImg.src = imgs.src;
+						imgText.innerHTML = imgs.alt;
+						expandImg.parentElement.style.display = "block";
+					}
+					</script>
 					
-					</p>
-					
-					<br/>
+					<br/><br/>
 					<h2>Not in game</h2>
 					<h4>A-Wing</h4>
-					<p>
-					
-					</p>
 					<div class="sketchfab-embed-wrapper">
 						<iframe width="800" height="600" src="https://sketchfab.com/models/18e58b8e58f042f087a0f106bf2af77f/embed?autostart=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe> 
 						<p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/models/18e58b8e58f042f087a0f106bf2af77f?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">A-Wing</a> by <a href="https://sketchfab.com/daraenor?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">daraenor</a> on <a href="https://sketchfab.com?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a> </p> 
-					</div>
-					<h4>YX-1980</h4>
-					<p>
-					
-					</p>
+					</div><br/>
 					<h4>Slave One</h4>
-					<p>
+					<div class="sketchfab-embed-wrapper"><iframe width="800" height="600" src="https://sketchfab.com/models/5c8f5b9b30c04c20a099ed901a159b13/embed?autostart=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe> <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/models/5c8f5b9b30c04c20a099ed901a159b13?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">Slave-1</a> by <a href="https://sketchfab.com/daraenor?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">daraenor</a> on <a href="https://sketchfab.com?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a> </p> </div><br/>
+					<h4>YX-1980</h4>
+					<div class="sketchfab-embed-wrapper"><iframe width="800" height="600" src="https://sketchfab.com/models/15a8aeb0f03c4e8cabbb4f9d6edd93bf/embed?autostart=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe> <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/models/15a8aeb0f03c4e8cabbb4f9d6edd93bf?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">YX-1980 Space Transport</a> by <a href="https://sketchfab.com/daraenor?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">daraenor</a> on <a href="https://sketchfab.com?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a> </p> </div><br/>
+					<h4>Y-Wing</h4>
+					<div class="sketchfab-embed-wrapper"><iframe width="800" height="600" src="https://sketchfab.com/models/99320cc5544e4d3196a6e840f73a4b9a/embed?autostart=1" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe> <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;"> <a href="https://sketchfab.com/models/99320cc5544e4d3196a6e840f73a4b9a?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">Y-Wing</a> by <a href="https://sketchfab.com/daraenor?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">daraenor</a> on <a href="https://sketchfab.com?utm_medium=embed&utm_source=website&utm_campain=share-popup" target="_blank" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a> </p> </div><br/>
 					
-					</p>
-
 					<!--<p>
 						Pellentesque facilisis aliquet lacus a ultrices. Vivamus leo mi, posuere quis aliquet in, pretium non leo. Fusce at tortor viverra mi sollicitudin tempus. Fusce nec erat vulputate, pretium nulla ut, sodales dui tempus. Fusce nec erat vulputate, pretium
 						nulla ut, sodales dui..
