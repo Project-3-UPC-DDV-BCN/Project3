@@ -33,7 +33,9 @@ public class EntityProperties
 	private TheTransform self_transform = null;
 	private TheAudioSource audio_source = null;
 	private TheScript player_movement_script = null;
+
 	private TheScript target_mark_script = null; 
+	private TheScript target_markship_script = null; 
 
     public TheGameObject slave_emmiter;
     TheAudioSource slave_audio = null;
@@ -87,6 +89,7 @@ public class EntityProperties
 		TheGameObject player_cam = TheGameObject.Find("PlayerCam");
 
 		target_mark_script = TheGameObject.Self.GetScript("MarkerShipBillboard");
+		target_markship_script = TheGameObject.Self.GetScript("MarkerTracker");
 		
 		if(player_cam != null)
 			player_targeting_script = player_cam.GetScript("Targeting");
@@ -360,7 +363,8 @@ public class EntityProperties
 	void SpawnExplosion()
 	{
 		//First Delete Marker
-		target_mark_script.CallFunction("DeleteObject"); 
+		target_mark_script.CallFunction("DeleteObject");
+		target_markship_script.CallFunction("DeleteObject");  
 
 		TheGameObject particle = TheResources.LoadPrefab(explosion_prefab);
 				

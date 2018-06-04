@@ -23,35 +23,10 @@ public class MarkerTracker
 		}
 
 		ship = TheGameObject.Self; 
-
-		/*if(marker_prf != null)
-		{
-			marker = TheGameObject.Duplicate(marker_prf); 
-
-			if(marker != null)
-			{
-				ship = TheGameObject.Self; 
-				FollowShip();
-
-				marker.SetActive(false); 
-		
-				TheGameObject slave_cam = TheGameObject.Find("PlayerCam");	
-
-				if(slave_cam != null)
-				{
-					slave_targeting = slave_cam.GetScript("Targeting"); // Aixi ja no es pillen scripts
-				}
-
-				if(slave_targeting != null) TheConsole.Log("targeting detected"); 
-				if(ship != null) TheConsole.Log("parent detected"); 
-			}
-		}*/
 	}
 
 	void Update()
 	{
-		
-		//FollowShip();
 
 		if(slave_targeting == null) 
 			TheConsole.Log("targeting not detected"); 
@@ -78,7 +53,10 @@ public class MarkerTracker
 		}
 	}	
 
-	
+	void DestroyObject()
+	{
+		marker_prf.SetActive(false); 
+	}
 
 	void ShowTargetMarker()
 	{
