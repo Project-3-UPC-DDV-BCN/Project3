@@ -835,7 +835,7 @@ public class Level1Manager
 
 					if(warp_prepare_time.ReadTime() < 3 && !warping && preparing_warp)	
 					{
-						float new_fov = TheCamera.GetFov() - warp_prepare_time.ReadTime() * TheTime.DeltaTime * 3;
+						float new_fov = TheCamera.GetFov() - warp_prepare_time.ReadTime() * TheTime.DeltaTime;
 						TheCamera.SetFov(new_fov);
 
 						TheVector3 speed_dir = new TheVector3(0, 0, 0);
@@ -859,7 +859,7 @@ public class Level1Manager
 						speed_dir = slave_trans.ForwardDirection;
 						speed_dir *= warp_time.ReadTime() * TheTime.DeltaTime * 350;
 
-						float new_fov = TheCamera.GetFov() + warp_time.ReadTime() * TheTime.DeltaTime * 2;
+						float new_fov = TheCamera.GetFov() + warp_time.ReadTime() * TheTime.DeltaTime * 0.5f;
 						TheCamera.SetFov(new_fov);
 
 						slave_trans.LocalPosition += speed_dir;
