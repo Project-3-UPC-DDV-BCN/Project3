@@ -1,4 +1,5 @@
 using TheEngine;
+using TheEngine.heConsole;
 
 public class PauseMenu {
 
@@ -26,7 +27,7 @@ public class PauseMenu {
 	void Start () 
 	{
 		// Menu
-		menu_canvas = TheGameObject.Self.GetComponent<TheCanvas>(); 
+		//menu_canvas = TheGameObject.Self.GetComponent<TheCanvas>(); 
 	
 		if(continue_button_go != null)
 			continue_rect = continue_button_go.GetComponent<TheRectTransform>();
@@ -41,7 +42,7 @@ public class PauseMenu {
 		// Audio
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
-		menu_canvas.EnableCurrent();
+		//menu_canvas.EnableCurrent();
 		
 	}
 	
@@ -49,7 +50,7 @@ public class PauseMenu {
 	{
 		//Controller Managing
 		int id_pressed = -1; 
-		if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
+		/*if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
 		{
 			menu_canvas.ControllerIDDown();
 			menu_canvas.EnableCurrent();
@@ -75,16 +76,20 @@ public class PauseMenu {
 		{
 			//menu_canvas.DisableCurrent();
 			//mouse_moved = true; 
-		}
+		}*/
 
 
 		// Campaign button
 		if(continue_rect != null)
 		{
+			TheConsole.Log("continue");
 			if(continue_rect.OnClickUp || id_pressed == 0)
 			{					
 				if(canvas_go != null)
+				{
 					canvas_go.SetActive(false);
+					TheConsole.Log("continue");
+				}
 			}
 			
 			if(continue_rect.OnMouseEnter)

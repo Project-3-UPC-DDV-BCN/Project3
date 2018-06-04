@@ -128,7 +128,7 @@ void ComponentCamera::SetAsMainCamera()
 
 void ComponentCamera::SetFOV(float fov)
 {
-	camera_frustum.SetHorizontalFovAndAspectRatio(fov * DEGTORAD, aspect_ratio);
+	camera_frustum.SetVerticalFovAndAspectRatio(fov * DEGTORAD, aspect_ratio);
 	current_fov = fov;
 	camera_frustum.ComputeProjectionMatrix();
 }

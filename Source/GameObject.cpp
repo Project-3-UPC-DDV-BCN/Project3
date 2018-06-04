@@ -842,8 +842,8 @@ void GameObject::Load(Data & data)
 	}
 
 	is_root = data.GetBool("IsRoot");
-	if(data.GetBool("WasActive") != -1)
-		was_active = data.GetBool("WasActive");
+	/*if(data.GetBool("WasActive") != -1)
+		was_active = data.GetBool("WasActive");*/
 }
 
 void GameObject::LoadComponents(Data & data)
