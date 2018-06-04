@@ -106,9 +106,14 @@ public class PauseMenu {
 		{
 			if(controls_rect.OnClickUp || id_pressed == 1)
 			{				
-				controls_menu.SetActive(true);
 				controls_panel.SetActive(true);
 				background.SetActive(true);
+				canvas_go.SetActive(false);
+				TheScript controls_menu_script = controls_menu.GetScript("ControlsMenu");
+				if(controls_menu_script != null)
+				{
+					controls_menu_script.CallFunction("ActiveMenu");
+				}
 			}
 			
 			if(controls_rect.OnMouseEnter)
