@@ -1,17 +1,17 @@
 {
-    "UUID": "454902643",
+    "UUID": "460616427",
     "assets_path": ".\\Project\\Assets\\Prefabs\\MenuPause.jprefab",
     "library_path": "./Project/Library/Prefabs/MenuPause.jprefab",
     "prefab_name": "MenuPause",
     "GameObjects_Count": "11",
     "GameObject_0": {
-        "UUID": "1835565994",
+        "UUID": "202963516",
         "Name": "MenuPause",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "0",
         "Components": {
-            "Components_Count": "4",
+            "Components_Count": "5",
             "Component_0": {
                 "Type": "25",
                 "Active": "1",
@@ -101,31 +101,31 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "canvas_go",
-                            "field_value": "1835565994",
+                            "field_value": "202963516",
                             "is_prefab": "0",
                             "go_name": "MenuPause"
                         },
                         "field_1": {
                             "field_name": "continue_button_go",
-                            "field_value": "634127290",
+                            "field_value": "1414484597",
                             "is_prefab": "0",
                             "go_name": "Resume"
                         },
                         "field_2": {
                             "field_name": "controls_button_go",
-                            "field_value": "607242064",
+                            "field_value": "674527258",
                             "is_prefab": "0",
                             "go_name": "Controls(2)"
                         },
                         "field_3": {
                             "field_name": "controls_panel",
-                            "field_value": "296909363",
+                            "field_value": "904000979",
                             "is_prefab": "0",
                             "go_name": "Controls"
                         },
                         "field_4": {
                             "field_name": "exit_button_go",
-                            "field_value": "1436662902",
+                            "field_value": "89836622",
                             "is_prefab": "0",
                             "go_name": "Exit"
                         }
@@ -134,19 +134,26 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_4": {
+                "Type": "8",
+                "Active": "1",
+                "UUID": "944267161",
+                "Sound_ID": "104",
+                "SoundBank_Name": "UI.bnk"
             }
         },
         "ParentID": "0",
         "IsRoot": "1",
         "IsStatic": "0",
-        "WasActive": "0"
+        "WasActive": "1"
     },
     "GameObject_1": {
-        "UUID": "1483202598",
+        "UUID": "80550176",
         "Name": "Panel",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "0",
+        "Active": "1",
         "Components": {
             "Components_Count": "1",
             "Component_0": {
@@ -171,15 +178,15 @@
                 }
             }
         },
-        "ParentID": "1835565994",
+        "ParentID": "202963516",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_2": {
-        "UUID": "296909363",
+        "UUID": "904000979",
         "Name": "Controls",
-        "Tag": "Default",
+        "Tag": "NoActive",
         "Layer": "Default",
         "Active": "0",
         "Components": {
@@ -206,17 +213,17 @@
                 }
             }
         },
-        "ParentID": "1835565994",
+        "ParentID": "202963516",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "0"
     },
     "GameObject_3": {
-        "UUID": "1596659048",
+        "UUID": "1148916330",
         "Name": "Image(70)",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "0",
+        "Active": "1",
         "Components": {
             "Components_Count": "3",
             "Component_0": {
@@ -283,17 +290,17 @@
                 "anim_textures_count": "0"
             }
         },
-        "ParentID": "1483202598",
+        "ParentID": "80550176",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_4": {
-        "UUID": "803561147",
+        "UUID": "1380411121",
         "Name": "Panel(2)",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "0",
+        "Active": "1",
         "Components": {
             "Components_Count": "3",
             "Component_0": {
@@ -361,17 +368,17 @@
                 "texture": "PauseMenu_Image"
             }
         },
-        "ParentID": "1483202598",
+        "ParentID": "80550176",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_5": {
-        "UUID": "634127290",
+        "UUID": "1414484597",
         "Name": "Resume",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "0",
+        "Active": "1",
         "Components": {
             "Components_Count": "3",
             "Component_0": {
@@ -467,17 +474,17 @@
                 "pressed_texture": "ResumeClicked"
             }
         },
-        "ParentID": "1483202598",
+        "ParentID": "80550176",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_6": {
-        "UUID": "607242064",
+        "UUID": "674527258",
         "Name": "Controls(2)",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "0",
+        "Active": "1",
         "Components": {
             "Components_Count": "3",
             "Component_0": {
@@ -573,17 +580,17 @@
                 "pressed_texture": "ControlsClicked_Button"
             }
         },
-        "ParentID": "1483202598",
+        "ParentID": "80550176",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_7": {
-        "UUID": "1436662902",
+        "UUID": "89836622",
         "Name": "Exit",
         "Tag": "Default",
         "Layer": "Default",
-        "Active": "0",
+        "Active": "1",
         "Components": {
             "Components_Count": "3",
             "Component_0": {
@@ -679,13 +686,13 @@
                 "pressed_texture": "ExitGameClicked_Button"
             }
         },
-        "ParentID": "1483202598",
+        "ParentID": "80550176",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_8": {
-        "UUID": "709557470",
+        "UUID": "1043080198",
         "Name": "Image(13)",
         "Tag": "Default",
         "Layer": "Default",
@@ -756,13 +763,13 @@
                 "anim_textures_count": "1"
             }
         },
-        "ParentID": "296909363",
+        "ParentID": "904000979",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_9": {
-        "UUID": "1534286929",
+        "UUID": "979458006",
         "Name": "Image(14)",
         "Tag": "Default",
         "Layer": "Default",
@@ -834,15 +841,15 @@
                 "texture": "controler_info_v3"
             }
         },
-        "ParentID": "296909363",
+        "ParentID": "904000979",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
     },
     "GameObject_10": {
-        "UUID": "606198482",
+        "UUID": "1797592535",
         "Name": "Image(15)",
-        "Tag": "Default",
+        "Tag": "NoActive",
         "Layer": "Default",
         "Active": "0",
         "Components": {
@@ -912,9 +919,9 @@
                 "texture": "cockpit_info_v3"
             }
         },
-        "ParentID": "296909363",
+        "ParentID": "904000979",
         "IsRoot": "0",
         "IsStatic": "0",
-        "WasActive": "0"
+        "WasActive": "1"
     }
 }

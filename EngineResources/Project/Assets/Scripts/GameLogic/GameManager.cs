@@ -83,7 +83,7 @@ public class GameManager
 		}
 	}
 	
-	void PauseGame(bool pause)
+	public void PauseGame(bool pause)
 	{
 		if(pause)
 		{

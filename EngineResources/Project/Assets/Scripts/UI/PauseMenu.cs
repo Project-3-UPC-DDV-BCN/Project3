@@ -11,6 +11,8 @@ public class PauseMenu {
 	public TheGameObject exit_button_go;
 	
 	public TheGameObject canvas_go;
+	public TheGameObject controls_menu;
+	public TheGameObject background;
 	public TheGameObject controls_panel;
 
 	TheRectTransform continue_rect = null;
@@ -19,6 +21,9 @@ public class PauseMenu {
 	
 	// Audio
 	TheAudioSource menu_audio_source = null;
+	
+	public TheGameObject game_manager_go;
+	TheScript game_manager = null;
 
 	bool pressed_sound = false;
 	bool over_sound = false;
@@ -27,8 +32,7 @@ public class PauseMenu {
 	void Start () 
 	{
 		// Menu
-		//menu_canvas = TheGameObject.Self.GetComponent<TheCanvas>(); 
-	
+		menu_canvas = TheGameObject.Self.GetComponent<TheCanvas>(); 
 		if(continue_button_go != null)
 			continue_rect = continue_button_go.GetComponent<TheRectTransform>();
 
@@ -42,15 +46,16 @@ public class PauseMenu {
 		// Audio
 		menu_audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 
-		//menu_canvas.EnableCurrent();
+		menu_canvas.EnableCurrent();
 		
+		game_manager = game_manager_go.GetScript("GameManager");
 	}
 	
 	void Update ()
 	{
 		//Controller Managing
 		int id_pressed = -1; 
-		/*if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
+		if(TheInput.GetControllerButton(0, "CONTROLLER_UP_ARROW") == 1)
 		{
 			menu_canvas.ControllerIDDown();
 			menu_canvas.EnableCurrent();
@@ -74,21 +79,21 @@ public class PauseMenu {
 
 		if(TheInput.GetMouseXMotion() != 0.0 || TheInput.GetMouseYMotion() != 0.0)
 		{
-			//menu_canvas.DisableCurrent();
-			//mouse_moved = true; 
-		}*/
+			menu_canvas.DisableCurrent();
+			mouse_moved = true; 
+		}
 
 
 		// Campaign button
 		if(continue_rect != null)
 		{
-			TheConsole.Log("continue");
 			if(continue_rect.OnClickUp || id_pressed == 0)
 			{					
 				if(canvas_go != null)
 				{
 					canvas_go.SetActive(false);
-					TheConsole.Log("continue");
+					object[] args = {false};
+					game_manager.CallFunctionArgs("PauseGame", args);
 				}
 			}
 			
@@ -101,7 +106,9 @@ public class PauseMenu {
 		{
 			if(controls_rect.OnClickUp || id_pressed == 1)
 			{				
+				controls_menu.SetActive(true);
 				controls_panel.SetActive(true);
+				background.SetActive(true);
 			}
 			
 			if(controls_rect.OnMouseEnter)
@@ -114,6 +121,7 @@ public class PauseMenu {
 			if(exit_rect.OnClickUp || id_pressed == 2)
 			{
 				pressed_sound = true;
+				TheApplication.DrawMouse(true);
 				TheApplication.Quit();
 			}
 
@@ -133,14 +141,6 @@ public class PauseMenu {
 			if(menu_audio_source != null)
 				menu_audio_source.Play("Play_hover");
 			over_sound = false;
-		}
-	}
-	
-	void OnDisable()
-	{
-		if(controls_panel != null)
-		{
-			controls_panel.SetActive(false);
 		}
 	}
 }
