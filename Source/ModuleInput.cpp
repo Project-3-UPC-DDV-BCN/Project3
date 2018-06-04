@@ -262,7 +262,7 @@ uint ModuleInput::GetControllerJoystickMove(int pad, int id) const
 
 void ModuleInput::RumbleController(int pad, float strength, int ms) const
 {
-	if (App->time->GetGameDt() >= 0) return;
+	if (App->time->GetGameDt() <= 0) return;
 
 	for (std::vector<GamePad*>::const_iterator it = gamepads.begin(); it != gamepads.end(); it++)
 	{
