@@ -169,7 +169,7 @@ void ComponentCamera::SetAspectRatio(float ratio)
 
 	//if (r > 0.0f)
 	//{
-		camera_frustum.SetHorizontalFovAndAspectRatio(current_fov * DEGTORAD, ratio);
+		camera_frustum.SetVerticalFovAndAspectRatio(current_fov * DEGTORAD, ratio);
 		aspect_ratio = ratio;
 	//}
 }
