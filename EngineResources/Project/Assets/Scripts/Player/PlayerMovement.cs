@@ -917,9 +917,9 @@ public class PlayerMovement
 		
 		if(body_part_top_green != null && wings_part_mid_green != null && bottom_part_bot_green != null)
 		{
-			int tmp_body_int = (int)(body_hp * 2 - 3);
-			int tmp_wing_int = (int)(wings_hp * 2 - 3);
-			int tmp_engine_int = (int)(engine_hp * 2 - 3);
+			int tmp_body_int = (int)((body_hp / (total_hp/3))*100);
+			int tmp_wing_int = (int)((wings_hp / (total_hp/3))*100);
+			int tmp_engine_int = (int)((engine_hp / (total_hp/3))*100);
 			
 			//Top Part colors
 			if(tmp_body_int > 50 && !body_part_top_green.IsActive())
