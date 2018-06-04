@@ -185,6 +185,7 @@ public class Level1Manager
 
 		if(intro_ship != null)
 			intro_ship_trans = intro_ship.GetComponent<TheTransform>();
+			
 
 		audio_source = TheGameObject.Self.GetComponent<TheAudioSource>();
 	}
@@ -437,7 +438,6 @@ public class Level1Manager
 		FinishMissionState(curr_mission_state);
 		curr_mission_state = state;
 		StartMissionState(curr_mission_state);
-		
 	}
 
 	void StartMissionState(int state)
@@ -831,18 +831,22 @@ public class Level1Manager
 					{
 						warp_prepare_time.Start();
 						preparing_warp = true;
+
+						object[] args = {3, 0.1f};
+						if(slave1_movement_script != null)
+							slave1_movement_script.CallFunctionArgs("ExternalCameraShake", args);
+
+						TheInput.RumbleController(0, 1, 3000);
 					}
 
 					if(warp_prepare_time.ReadTime() < 3 && !warping && preparing_warp)	
 					{
-						float new_fov = TheCamera.GetFov() - warp_prepare_time.ReadTime() * TheTime.DeltaTime;
+						float new_fov = TheCamera.GetFov() - warp_prepare_time.ReadTime() * TheTime.DeltaTime * 0.7f;
 						TheCamera.SetFov(new_fov);
 
 						TheVector3 speed_dir = new TheVector3(0, 0, 0);
 						speed_dir = -slave_trans.ForwardDirection;
 						speed_dir *= warp_prepare_time.ReadTime() * TheTime.DeltaTime * 50;
-
-						TheInput.RumbleController(0, 2, 3000);
 					}
 
 					if(warp_prepare_time.ReadTime() > 3 && !warping)
@@ -851,6 +855,10 @@ public class Level1Manager
 						warping = true;
 						
 						TheInput.RumbleController(0, 4, 4000);
+
+						object[] args = {4, 0.3f};
+						if(slave1_movement_script != null)
+							slave1_movement_script.CallFunctionArgs("ExternalCameraShake", args);
 					}
 
 					if(warping && warp_time.ReadTime() < 4)
@@ -859,7 +867,7 @@ public class Level1Manager
 						speed_dir = slave_trans.ForwardDirection;
 						speed_dir *= warp_time.ReadTime() * TheTime.DeltaTime * 350;
 
-						float new_fov = TheCamera.GetFov() + warp_time.ReadTime() * TheTime.DeltaTime * 0.5f;
+						float new_fov = TheCamera.GetFov() + warp_time.ReadTime() * TheTime.DeltaTime;
 						TheCamera.SetFov(new_fov);
 
 						slave_trans.LocalPosition += speed_dir;
