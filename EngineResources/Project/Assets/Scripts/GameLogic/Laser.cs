@@ -54,16 +54,20 @@ public class Laser
 		if(other_ship == null || sender == null)
 			return;
 		
-		TheScript entity_properties = other_ship.GetScript("EntityProperties");
-
-		if(entity_properties != null && sender != null)
+		if(other_ship != sender)
 		{
-			if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
-			{				
-				object[] args = {sender, laser_damage};
-				entity_properties.CallFunctionArgs("HitByShip", args);
-				TheGameObject.Self.SetActive(false);
+			TheScript entity_properties = other_ship.GetScript("EntityProperties");
+
+			if(entity_properties != null && sender != null)
+			{
+				if(other_ship.GetComponent<TheTransform>() != sender.GetComponent<TheTransform>())
+				{				
+					object[] args = {sender, laser_damage};
+					entity_properties.CallFunctionArgs("HitByShip", args);
+				}
 			}
+
+			TheGameObject.Self.SetActive(false);
 		}
 	}
 
