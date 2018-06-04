@@ -1,17 +1,17 @@
 {
-    "UUID": "263799914",
+    "UUID": "1897124786",
     "assets_path": ".\\Project\\Assets\\Prefabs\\CanvasMarkerGO.jprefab",
     "library_path": "./Project/Library/Prefabs/CanvasMarkerGO.jprefab",
     "prefab_name": "CanvasMarkerGO",
     "GameObjects_Count": "3",
     "GameObject_0": {
-        "UUID": "733663450",
+        "UUID": "890501018",
         "Name": "CanvasMarkerGO",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "1",
+            "Components_Count": "3",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -22,24 +22,53 @@
                     "value_Z": "0.000000"
                 },
                 "rotation": {
-                    "value_X": "0.000000",
-                    "value_Y": "0.000000",
-                    "value_Z": "0.000000",
-                    "value_W": "1.000000"
+                    "value_X": "-0.000000",
+                    "value_Y": "0.966192",
+                    "value_Z": "-0.257823",
+                    "value_W": "0.000000"
                 },
                 "scale": {
-                    "value_X": "1.000000",
+                    "value_X": "0.999897",
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
+                }
+            },
+            "Component_1": {
+                "Type": "3",
+                "Active": "1",
+                "UUID": "997016622",
+                "Mesh": {
+                    "mesh_name": "Buttons"
+                },
+                "Material": {
+                    "Name": "default_mat"
+                },
+                "Interior_Material": {
+                    "UUID": "1480464845"
+                },
+                "Mat_Indices_Number": "0",
+                "Mat_Indices_Start": "0",
+                "Int_Mat_Indices_Number": "0",
+                "Int_Mat_Indices_Start": "0",
+                "has_light": "1"
+            },
+            "Component_2": {
+                "Type": "23",
+                "Active": "1",
+                "UUID": "180318281",
+                "Billboard": {
+                    "Active": "1",
+                    "Billboard_Type": "2"
                 }
             }
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_1": {
-        "UUID": "484508555",
+        "UUID": "1865968935",
         "Name": "CanvasMarker",
         "Tag": "Default",
         "Layer": "Default",
@@ -110,12 +139,13 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "733663450",
+        "ParentID": "890501018",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_2": {
-        "UUID": "1444464226",
+        "UUID": "747482017",
         "Name": "Image(67)",
         "Tag": "Default",
         "Layer": "Default",
@@ -187,8 +217,9 @@
                 "texture": "mira1"
             }
         },
-        "ParentID": "484508555",
+        "ParentID": "1865968935",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     }
 }

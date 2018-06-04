@@ -1,11 +1,11 @@
 {
-    "UUID": "1362057415",
+    "UUID": "250382480",
     "assets_path": ".\\Project\\Assets\\Prefabs\\PathShipPrototype.jprefab",
     "library_path": "./Project/Library/Prefabs/PathShipPrototype.jprefab",
     "prefab_name": "PathShipPrototype",
     "GameObjects_Count": "1",
     "GameObject_0": {
-        "UUID": "1363889136",
+        "UUID": "753877381",
         "Name": "PathShipPrototype",
         "Tag": "Default",
         "Layer": "Default",
@@ -119,7 +119,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "101",
+                "Sound_ID": "127",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_5": {
@@ -330,42 +330,6 @@
             "Component_8": {
                 "Type": "10",
                 "Active": "1",
-                "UUID": "1320304606",
-                "Script": {
-                    "library_path": "./Project/Library/Scripts/MarkerTracker.dll",
-                    "assets_path": "",
-                    "script_name": "MarkerTracker",
-                    "UUID": "36948138",
-                    "int_fields_count": "0",
-                    "double_fields_count": "0",
-                    "float_fields_count": "0",
-                    "bool_fields_count": "0",
-                    "string_fields_count": "0",
-                    "gameobject_fields_count": "1",
-                    "vec2_fields_count": "0",
-                    "vec3_fields_count": "0",
-                    "vec4_fields_count": "0",
-                    "int_fields": {},
-                    "double_fields": {},
-                    "float_fields": {},
-                    "bool_fields": {},
-                    "string_fields": {},
-                    "gameobject_fields": {
-                        "field_0": {
-                            "field_name": "marker_prf",
-                            "field_value": "532172983",
-                            "is_prefab": "1",
-                            "go_name": "CanvasMarkerGO"
-                        }
-                    },
-                    "vec2_fields": {},
-                    "vec3_fields": {},
-                    "vec4_fields": {}
-                }
-            },
-            "Component_9": {
-                "Type": "10",
-                "Active": "1",
                 "UUID": "771819960",
                 "Script": {
                     "library_path": "./Project/Library/Scripts/HitMarkerDetection.dll",
@@ -391,10 +355,47 @@
                     "vec3_fields": {},
                     "vec4_fields": {}
                 }
+            },
+            "Component_9": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "1042367816",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/MarkerShipBillboard.dll",
+                    "assets_path": "",
+                    "script_name": "MarkerShipBillboard",
+                    "UUID": "774834665",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "1",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {
+                        "field_0": {
+                            "field_name": "ship_marker",
+                            "field_value": "474287806",
+                            "is_prefab": "1",
+                            "go_name": "CanvasMarkerGO"
+                        }
+                    },
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     }
 }
