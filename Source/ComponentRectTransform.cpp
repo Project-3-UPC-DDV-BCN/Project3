@@ -42,6 +42,7 @@ ComponentRectTransform::ComponentRectTransform(GameObject * attached_gameobject)
 
 	c_transform->SetPosition(float3(0, 0, 0));
 	UpdateTransform();
+	UpdateTransformAndChilds();
 }
 
 ComponentRectTransform::~ComponentRectTransform()

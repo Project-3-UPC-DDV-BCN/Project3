@@ -22,7 +22,6 @@ public class RandomRotate
 	{
 		if(self_trans != null)
 		{
-			TheConsole.Log(rotation.x + " " + rotation.y + " " + rotation.z);
 			self_trans.LocalRotation += rotation * TheTime.DeltaTime * speed;
 		}
 	}
