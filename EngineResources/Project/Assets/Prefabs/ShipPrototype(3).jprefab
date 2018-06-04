@@ -1,11 +1,11 @@
 {
-    "UUID": "542996841",
+    "UUID": "1971781877",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "5",
     "GameObject_0": {
-        "UUID": "1828429120",
+        "UUID": "1681407789",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -142,7 +142,7 @@
                 "Type": "8",
                 "Active": "1",
                 "UUID": "1238846532",
-                "Sound_ID": "102",
+                "Sound_ID": "185",
                 "SoundBank_Name": "Player.bnk"
             },
             "Component_6": {
@@ -447,7 +447,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "marker_prf",
-                            "field_value": "1026655680",
+                            "field_value": "1225698819",
                             "is_prefab": "0",
                             "go_name": "CanvasMarkerGO"
                         }
@@ -460,10 +460,11 @@
         },
         "ParentID": "0",
         "IsRoot": "1",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_1": {
-        "UUID": "675620301",
+        "UUID": "1958079999",
         "Name": "OAChecker",
         "Tag": "Default",
         "Layer": "Default",
@@ -585,7 +586,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "go_avoidance",
-                            "field_value": "1828429120",
+                            "field_value": "1681407789",
                             "is_prefab": "0",
                             "go_name": "ShipPrototype(3)"
                         }
@@ -596,18 +597,19 @@
                 }
             }
         },
-        "ParentID": "1828429120",
+        "ParentID": "1681407789",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_2": {
-        "UUID": "1026655680",
+        "UUID": "1225698819",
         "Name": "CanvasMarkerGO",
         "Tag": "Default",
         "Layer": "Default",
         "Active": "1",
         "Components": {
-            "Components_Count": "1",
+            "Components_Count": "2",
             "Component_0": {
                 "Type": "0",
                 "Active": "1",
@@ -628,14 +630,44 @@
                     "value_Y": "1.000000",
                     "value_Z": "1.000000"
                 }
+            },
+            "Component_1": {
+                "Type": "10",
+                "Active": "1",
+                "UUID": "481185766",
+                "Script": {
+                    "library_path": "./Project/Library/Scripts/BillboardCanvas.dll",
+                    "assets_path": "",
+                    "script_name": "BillboardCanvas",
+                    "UUID": "2036805133",
+                    "int_fields_count": "0",
+                    "double_fields_count": "0",
+                    "float_fields_count": "0",
+                    "bool_fields_count": "0",
+                    "string_fields_count": "0",
+                    "gameobject_fields_count": "0",
+                    "vec2_fields_count": "0",
+                    "vec3_fields_count": "0",
+                    "vec4_fields_count": "0",
+                    "int_fields": {},
+                    "double_fields": {},
+                    "float_fields": {},
+                    "bool_fields": {},
+                    "string_fields": {},
+                    "gameobject_fields": {},
+                    "vec2_fields": {},
+                    "vec3_fields": {},
+                    "vec4_fields": {}
+                }
             }
         },
-        "ParentID": "1828429120",
+        "ParentID": "1681407789",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_3": {
-        "UUID": "2096874179",
+        "UUID": "1967280407",
         "Name": "CanvasMarker",
         "Tag": "Default",
         "Layer": "Default",
@@ -706,12 +738,13 @@
                 "scale": "1.000000"
             }
         },
-        "ParentID": "1026655680",
+        "ParentID": "1225698819",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     },
     "GameObject_4": {
-        "UUID": "538893099",
+        "UUID": "1817177381",
         "Name": "Image(67)",
         "Tag": "Default",
         "Layer": "Default",
@@ -728,8 +761,8 @@
                 },
                 "z_pos": "0.000000",
                 "size": {
-                    "value_X": "60.000000",
-                    "value_Y": "60.000000"
+                    "value_X": "100.000000",
+                    "value_Y": "100.000000"
                 },
                 "anchor": {
                     "value_X": "0.500000",
@@ -780,11 +813,12 @@
                 "loop": "1",
                 "anim_speed": "1.000000",
                 "anim_textures_count": "1",
-                "texture": "target_circle"
+                "texture": "mira1"
             }
         },
-        "ParentID": "2096874179",
+        "ParentID": "1967280407",
         "IsRoot": "0",
-        "IsStatic": "0"
+        "IsStatic": "0",
+        "WasActive": "1"
     }
 }
