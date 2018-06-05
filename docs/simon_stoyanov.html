@@ -503,7 +503,7 @@
 						<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
 						<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
 					</div>
-					
+				
 					<script>
 						var slideIndex = 1;
 						showDivs(slideIndex);
@@ -513,47 +513,84 @@
 						}
 
 						function showDivs(n) {
-						  var i;
-						  var x = document.getElementsByClassName("mySlides");
-						  if (n > x.length) {slideIndex = 1}    
-						  if (n < 1) {slideIndex = x.length}
-						  for (i = 0; i < x.length; i++) {
-							 x[i].style.display = "none";  
-						  }
-						  x[slideIndex-1].style.display = "block";  
+							var i;
+							var x = document.getElementsByClassName("mySlides");
+							if (n > x.length) {slideIndex = 1}    
+							if (n < 1) {slideIndex = x.length}
+							for (i = 0; i < x.length; i++) {
+								x[i].style.display = "none";  
+							}
+							x[slideIndex-1].style.display = "block";  
 						}
 					</script>
+					
+					<text><h3>Training End Game Scene</h3>
+						When dying at the training scene, this screen will show up, letting the player know the <b>time played,
+						rounds, tie fighters destroyed and the total score</b>, which is translated to 100 by the number of tie
+						fighters destroyed.
+					</text>
+					<text><h3>Campaign Defeat/Victory End Game Scene</h3>
+						If the player dies or completes the game the campaign end game scene will be shown. The <b>time played and 	
+						turrets, tie fighters and generators destroyed</b> will sum up their scores and print it in the Total Score
+						text. 
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;Turrets --> 100 points <br>
+							&nbsp;&nbsp;&nbsp;&nbsp;Tie Fighters --> 200 points <br>
+							&nbsp;&nbsp;&nbsp;&nbsp;Generators --> 500 points <br>
+						</p>
+					</text>					
+					
 					</p>
 					
 					<p>
 					<h2 class="w3-left">Weapons <a href="https://www.youtube.com/watch?v=gZPRusGVXY0">(video w/ sound)</a></h2>
-					<div class="w3-content w3-display-container">
-						<img class="weapons-slides" src="media\code_team\simon_media\weapon-1.gif" style="width:100%">
+					<div>
 						<img class="weapons-slides" src="media\code_team\simon_media\weapon-2.gif" style="width:100%">
 					</div>
 					
-					<script>
-						var myIndex = 0;
-						carousel();
-
-						function carousel() {
-							var i;
-							var x = document.getElementsByClassName("weapons-slides");
-							for (i = 0; i < x.length; i++) {
-							   x[i].style.display = "none";  
-							}
-							myIndex++;
-							if (myIndex > x.length) {myIndex = 1}    
-							x[myIndex-1].style.display = "block";  
-							setTimeout(carousel, 10000); // Change image every 2 seconds
-						}
-					</script>
 					</p>
+					<text><h3>Base Weapon</h3>
+						The base weapon increments its frequency if the weapon bar (the read bar) is incremented, and so it decreases
+						it by decreading the weapon bar. <br>
+						The damage remains the same, and it does not produce overheat.
+					</text>
+					<text><h3>Charged Weapon</h3>
+						The charged weapon has to be charged previously to shoot a laser with it. <br>
+						To charged, the shoot button must be pressed; and when the player wants to shoot, released. <br>
+						Its damage and size depend on the heat produced by the charge time. More charge means more damage, therefore 
+						more cooldown.
+					</text>			
+					
+					<h2>Scripting</h2>
+					<text><h3>TheTimer</h3>
+						<li>Stop(): Stops the timer, reseting and pausing it.</li>
+					</text>
+					<text><h3>Managers</h3>
+						<li>EndGameManager: Manager used to get the data of the game when completing the level or being defeated</li>
+						<li>LevelManager: Modified the dialogs to be shown at the expected time and playing the correct audio</li>
+					<text>
+					<text><h3>Player</h3>
+						<li>Shield: Made the regeneration of the shields to work as intended for the gold</li>
+						<li>Soft Boundaries: Worked with Guillem Dominguez on the Soft Boundaries</li>
+						<li>Weapons: Coded the intial behaviour of the weapons and the final behaviour of the charged weapon</li>
+					</text>
+					<text><h3>AI</h3>
+						<li>AI Path: Created the base for the AI path at the initial part of the project; later redone by Guillem Sunyer</li>
+						<li>Turret AI: Coded the Turrets of the campaign which move its head by 360º and its cannon between 0º and 60º in the forward direction</li>
+					</text>
+					<text><h3>Other</h3>
+						<li>Created a tool inside the engine to profile the times of each function</li>
+					</text>
+					
+					<img class="w3-center" src="media\code_team\simon_media\ScriptTimes.png" style="width:40%">
 					
 					<h2>Turrets</h2>
-					<img src="media\code_team\simon_media\turret.gif" style="width:50%">
 					
-					<h1>Audio Engine</h1>
+					
+					<h1>Audio System</h1>
+					
+					<img src="media\code_team\simon_media\AudioSource-soundbank-show.png" style="width:50%">
+					<img class="w3-right" src="media\code_team\simon_media\AudioSource-Resources.png" style="width:50%">			
 					
 					<h1>Dub</h1> <!--<a href="#Audio-Show" onclick="show('Audio-Show'); return false" /><h2>Akbar Dialogues</h2></a> -->		
 					<div id="Audio-Show"> <!--style="display:none">-->
