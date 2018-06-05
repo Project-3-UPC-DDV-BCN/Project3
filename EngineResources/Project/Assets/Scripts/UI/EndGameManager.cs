@@ -60,16 +60,6 @@ public class EndGameManager
 		if(audio_emiter != null)
 			audio_source = audio_emiter.GetComponent<TheAudioSource>();
 
-		//string score = TheData.GetString("score");
-		int time = TheData.GetInt("time");
-		
-		int ships = TheData.GetInt("ships") * multiply_ships_by;	
-		int generators = TheData.GetInt("generators") * multiply_generators_by;
-		int turrets = TheData.GetInt("turrets") * multiply_turrets_by;
-		int score = turrets + generators + ships;
-		
-		string rounds = TheData.GetString("rounds");
-		
 		string side = TheData.GetString("faction");
 		int won = TheData.GetInt("won");
 		
@@ -88,38 +78,78 @@ public class EndGameManager
 			lose_text.SetActive(true);
 		}
 
-		//------------- Text Setting
-		if(score_text != null)
-			score_text.Text = "" + score;
-
-		if(time_text != null)
-		{	
-			int hours = time / 3600;
-			int seconds = time % 3600;
-			int minutes = seconds / 60;
-			seconds %= 60;
-	
-			string hours_str = ""+hours;
-			string minutes_str = ""+minutes;
-			if (minutes < 10)
-				minutes_str = "0"+minutes;
-			string seconds_str = ""+seconds;
-			if (seconds < 10)
-				seconds_str = "0"+seconds;
-		
-			time_text.Text = ""+hours_str + ":" + minutes_str + ":" + seconds_str;
-		}
-		
-		if(turrets_go != null)
-			turrets_text.Text = "" + turrets;
-		if(ships_go != null)
-			ships_text.Text = "" + ships;
-		if(generators_go != null)
-			generators_text.Text = "" + generators;
-
 		if(audio_source!= null)
 			audio_source.Play("Play_Menu_song");
 
+		if(mode_played == "training")
+		{
+			string score = TheData.GetString("score");
+			int time = TheData.GetInt("time");
+			string rounds = TheData.GetString("rounds");
+			int ships = TheData.GetInt("ships");
+			
+			if(ships_go != null)
+				ships_text.Text = "" + ships;
+			if(turrets_go != null)
+				turrets_text.Text = "" + rounds;
+
+			if(score_text != null)
+				score_text.Text = "" + score;
+			
+			if(time_text != null)
+			{	
+				int hours = time / 3600;
+				int seconds = time % 3600;
+				int minutes = seconds / 60;
+				seconds %= 60;
+		
+				string hours_str = ""+hours;
+				string minutes_str = ""+minutes;
+				if (minutes < 10)
+					minutes_str = "0"+minutes;
+				string seconds_str = ""+seconds;
+				if (seconds < 10)
+					seconds_str = "0"+seconds;
+			
+				time_text.Text = ""+hours_str + ":" + minutes_str + ":" + seconds_str;
+			}
+		}
+		else
+		{
+			int time = TheData.GetInt("time");
+			int ships = TheData.GetInt("ships") * multiply_ships_by;	
+			int generators = TheData.GetInt("generators") * multiply_generators_by;
+			int turrets = TheData.GetInt("turrets") * multiply_turrets_by;
+			int score = turrets + generators + ships;
+			
+			//------------- Text Setting
+			if(score_text != null)
+				score_text.Text = "" + score;
+
+			if(turrets_go != null)
+				turrets_text.Text = "" + turrets;
+			if(ships_go != null)
+				ships_text.Text = "" + ships;
+			if(generators_go != null)
+				generators_text.Text = "" + generators;
+			if(time_text != null)
+			{	
+				int hours = time / 3600;
+				int seconds = time % 3600;
+				int minutes = seconds / 60;
+				seconds %= 60;
+		
+				string hours_str = ""+hours;
+				string minutes_str = ""+minutes;
+				if (minutes < 10)
+					minutes_str = "0"+minutes;
+				string seconds_str = ""+seconds;
+				if (seconds < 10)
+					seconds_str = "0"+seconds;
+			
+				time_text.Text = ""+hours_str + ":" + minutes_str + ":" + seconds_str;
+			}
+		}
 	}
 	
 	void Update () 
