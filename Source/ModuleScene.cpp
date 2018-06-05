@@ -590,6 +590,11 @@ bool ModuleScene::LoadPrefab(std::string path, std::string extension, Data& data
 					(*it)->StartScripts();
 
 				SetParticleSystemsState("Play");
+
+				if (App->IsGame())
+				{
+					App->renderer3D->OnResize(App->window->GetWidth(), App->window->GetHeight(), App->renderer3D->game_camera);
+				}
 			}
 						
 			current_scene_path = path;

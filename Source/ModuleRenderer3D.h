@@ -199,4 +199,6 @@ private:
 	float near_plane, far_plane;
 
 	glm::mat4 light_space_mat;
+
+	bool first_window_update = true;
 };

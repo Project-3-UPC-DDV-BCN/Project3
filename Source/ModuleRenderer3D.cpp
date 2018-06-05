@@ -182,6 +182,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	if (first_window_update)
+	{
+		if (App->IsGame())
+		{
+			OnResize(App->window->GetWidth(), App->window->GetHeight(), game_camera);
+		}
+
+		first_window_update = false;
+	}
+
 	BROFILER_CATEGORY("Renderer  PostUpdate", Profiler::Color::Red);
 	ms_timer.Start();
 
