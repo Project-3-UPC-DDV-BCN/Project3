@@ -9,7 +9,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Home — Multipurpose Gaming Template</title>
+	<title>StarGames — Simón Stoyanov Beltrán</title>
 
 	<!-- Fav Icon -->
 	<link rel="apple-touch-icon" sizes="180x180" href="assets/img/fav-icons/apple-touch-icon.png">
@@ -43,6 +43,9 @@
 				e.style.display = 'block';
 		}
 	</script>
+	
+	
+
 </head>
 
 <body data-style="default">
@@ -473,6 +476,7 @@
 					<h2 class="blog-title">Simón Stoyanov Beltrán</h2>
 					<ul class="meta">
 						<li><a href="#"><i class="fa fa-code"><j class="fa fa-music"><span/></i></j>Gameplay, Audio Programmer and Dub</a><a href="#"></a></li>				
+						<li><a href="mailto:simon.stoyanov@hotmail.com?Subject=Hello" target="_top"><i class="fa fa-envelope-o"><span/></i>click here to contact me, or send me an e-mail to: simon.stoyanov@hotmail.com</a></li>				
 					</ul>
 					
 					<ul class="footer-social-link">
@@ -482,11 +486,77 @@
 					</ul>
 						<!-- https://www.youtube.com/watch?v=zVAZxSVpyL8 -->
 					<p>
+					<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+					<style>
+						.mySlides {display:hidden;}
+					</style>
+										
+					<h1>Gameplay</h1>
 					
+					<p>
+					<h2 class="w3-left">End Game Screens</h2>
+					<div class="w3-content w3-display-container">
+						<img class="mySlides" src="media\code_team\simon_media\end-game-screen-training.png" style="width:100%">
+						<img class="mySlides" src="media\code_team\simon_media\end-game-screen-lose.png" style="width:100%">
+						<img class="mySlides" src="media\code_team\simon_media\end-game-screen-victory.png" style="width:100%">
 					
+						<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+						<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+					</div>
 					
-					<a href="#Audio-Show" onclick="show('Audio-Show'); return false" /><h2>Akbar Dialogues</h2></a>
-					<div id="Audio-Show" style="display:none">
+					<script>
+						var slideIndex = 1;
+						showDivs(slideIndex);
+
+						function plusDivs(n) {
+						  showDivs(slideIndex += n);
+						}
+
+						function showDivs(n) {
+						  var i;
+						  var x = document.getElementsByClassName("mySlides");
+						  if (n > x.length) {slideIndex = 1}    
+						  if (n < 1) {slideIndex = x.length}
+						  for (i = 0; i < x.length; i++) {
+							 x[i].style.display = "none";  
+						  }
+						  x[slideIndex-1].style.display = "block";  
+						}
+					</script>
+					</p>
+					
+					<p>
+					<h2 class="w3-left">Weapons <a href="https://www.youtube.com/watch?v=gZPRusGVXY0">(video w/ sound)</a></h2>
+					<div class="w3-content w3-display-container">
+						<img class="weapons-slides" src="media\code_team\simon_media\weapon-1.gif" style="width:100%">
+						<img class="weapons-slides" src="media\code_team\simon_media\weapon-2.gif" style="width:100%">
+					</div>
+					
+					<script>
+						var myIndex = 0;
+						carousel();
+
+						function carousel() {
+							var i;
+							var x = document.getElementsByClassName("weapons-slides");
+							for (i = 0; i < x.length; i++) {
+							   x[i].style.display = "none";  
+							}
+							myIndex++;
+							if (myIndex > x.length) {myIndex = 1}    
+							x[myIndex-1].style.display = "block";  
+							setTimeout(carousel, 10000); // Change image every 2 seconds
+						}
+					</script>
+					</p>
+					
+					<h2>Turrets</h2>
+					<img src="media\code_team\simon_media\turret.gif" style="width:50%">
+					
+					<h1>Audio Engine</h1>
+					
+					<h1>Dub</h1> <!--<a href="#Audio-Show" onclick="show('Audio-Show'); return false" /><h2>Akbar Dialogues</h2></a> -->		
+					<div id="Audio-Show"> <!--style="display:none">-->
 						<b>Akbar Intro 1</b>
 						<p>
 							<audio
@@ -627,34 +697,9 @@
 						</p>
 					</div>
 					<BR>
-					
+		
 					</p>
-
-
-					<div class="blog-inner-thumb">
-						<div class="row no-gutters">
-							<div class="col-md-8 pr__15">
-								<img src="media/blog/97.jpg" alt="thumb">
-							</div>
-
-							<div class="col-md-4">
-								<img class="mb__15" src="media/blog/98.jpg" alt="thumb">
-								<img src="media/blog/99.jpg" alt="thumb">
-							</div>
-						</div>
-						<!-- /.row -->
-					</div>
-	
-					<div class="blog-footer clearfix">
-						<div class="tagCloud float-left">
-							<a href="#Audio-Show">#playstation-4</a>
-							<a href="#">#remastered</a>
-							<a href="#">#uncharted-4</a>
-							<a href="#">#fps</a>
-							<a href="#">#playstation-4</a>
-						</div>
-					</div>
-					<!-- /.blog-footer -->
+					
 				</div>
 				<!-- /.blog-details -->
 
