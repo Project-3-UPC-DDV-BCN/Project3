@@ -857,8 +857,14 @@ public class PlayerMovement
 			{
 				shield_yellow.SetActive(true);
 			}
-			else if(curr_shield_hp > 0.0f)
+			else if(curr_shield_hp < shield_red_value && curr_shield_hp > 0.0f)
+			{
+				shield_red.SetActive(true);
+			}
+			if(curr_shield_hp <= 0.0f)
+			{
 				shield_red.SetActive(false);
+			}
 		}
 		
 		if(hit_mark_bot != null && hit_mark_left != null && hit_mark_right != null && hit_mark_top != null)

@@ -1,11 +1,11 @@
 {
-    "UUID": "157465579",
+    "UUID": "102857400",
     "assets_path": ".\\Project\\Assets\\Prefabs\\ShipPrototype(3).jprefab",
     "library_path": "./Project/Library/Prefabs/ShipPrototype(3).jprefab",
     "prefab_name": "ShipPrototype(3)",
     "GameObjects_Count": "2",
     "GameObject_0": {
-        "UUID": "7057624",
+        "UUID": "1324566302",
         "Name": "ShipPrototype(3)",
         "Tag": "Default",
         "Layer": "Default",
@@ -132,9 +132,9 @@
                 },
                 "Box": {
                     "BoxSize": {
-                        "value_X": "14.501000",
-                        "value_Y": "8.150001",
-                        "value_Z": "10.197910"
+                        "value_X": "18.251001",
+                        "value_Y": "24.400002",
+                        "value_Z": "19.948002"
                     }
                 }
             },
@@ -192,7 +192,7 @@
                         },
                         "field_6": {
                             "field_name": "move_speed",
-                            "field_value": "40.000000"
+                            "field_value": "80.000000"
                         },
                         "field_7": {
                             "field_name": "rotation_speed",
@@ -447,8 +447,8 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "ship_marker",
-                            "field_value": "474287806",
-                            "is_prefab": "1",
+                            "field_value": "1283741462",
+                            "is_prefab": "0",
                             "go_name": "CanvasMarkerGO"
                         }
                     },
@@ -464,7 +464,7 @@
         "WasActive": "1"
     },
     "GameObject_1": {
-        "UUID": "1732568988",
+        "UUID": "387742068",
         "Name": "OAChecker",
         "Tag": "Default",
         "Layer": "Default",
@@ -586,7 +586,7 @@
                     "gameobject_fields": {
                         "field_0": {
                             "field_name": "go_avoidance",
-                            "field_value": "7057624",
+                            "field_value": "1324566302",
                             "is_prefab": "0",
                             "go_name": "ShipPrototype(3)"
                         }
@@ -597,7 +597,7 @@
                 }
             }
         },
-        "ParentID": "7057624",
+        "ParentID": "1324566302",
         "IsRoot": "0",
         "IsStatic": "0",
         "WasActive": "1"
