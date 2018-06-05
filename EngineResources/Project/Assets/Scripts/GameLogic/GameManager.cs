@@ -42,7 +42,7 @@ public class GameManager
 	void Init ()
 	{
 		team = "alliance";
-
+		TheTime.TimeScale = 1.0f;
         TheConsole.Log("Team: " + team); 
 
 		if(is_training_mode)
