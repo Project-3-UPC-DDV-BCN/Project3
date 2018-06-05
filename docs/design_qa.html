@@ -470,28 +470,37 @@
 
 					<h3>Internal QA</h3>
 					<p>
-						Disccusion 
+						All the features that are going to be implemented, or those that already are in the game, go through our internal QA process. This process usually consists on a team meeting, where after testing the game, we dicuss and give feedback about the feature. When deciding if something stays, or it's removed, we always have in mind the game pillars of the game, and the game vision.
+						If we are having a difficult time reaching a conclusion, the Lead makes the final decision.
 					</p>
-					<a href="#"><img src="media/design_pipeline/References_Pipeline.png" alt="References"></a>
-					<h3>High Level Concept</h3>
+					<h3>External QA</h3>
 					<p>
-						After looking for references, and having a clear idea of what we want to implement, we create a high level concept document. This document will be use to iterate the feature or level, and will help the viability evaluation of the code team.
-						Once we have the feedback from the code team, we can already start iterating so that the feature can be implemented in the engine. At this point, if the engine requires a system that hasn't been done, we will also provide the code team with the information.
+						For external QA we've set up QA sessions with the whole team (Art, Code, Design). In this sessions each member has been submitting bugs, and balance problems to GitHub Issues.
+						This sessions have been specially useful for the Code team, but we have found a lot of balance problems thanks to them.
 					</p>
-					<a href="#"><img src="media/design_pipeline/High_Level.PNG" alt="High Level Concept"></a>
-					<h3>Detailed Design Document</h3>
-					<p>
-						After the required systems are defined, we define in detail how the feature or level works, defining the values that will need to be public, and creating sketches that will help both the code, and the art team. In the case of levels, we define all the assets that will be needed for the level.
-					</p>
-					<a href="#"><img src="media/design_pipeline/Detailed_Concept.PNG" alt="Detailed Concept"></a>
-					<h3>Implementation</h3>
-					<p>
-						Once all the documentation is complete, the designer responsible of the feature, will team up with an artist or a programmer(depending on which feature is beign worked on), and will iterate on it until it's in a good state.
-					</p>
+					<a href="#"><img src="media/design_qa/Error_QA.PNG" alt="Detailed Concept"></a>
 					
-					<h3>Feedback</h3>
+					<h3>Learnt Lessons</h3>
 					<p>
-						After the feature has been implemented, and some iterations have been done, a round of feedback is done, most of the times with the whole team, others only the Lead and the responsible Designer. If the feedback is good, we consider that the feature is finished and implemented, if some things need to be changed, more iterations are done until the feedback is great.
+						To conclude, we have put together a list of some of the mistakes we've made, and what we have learnt from them:
+						<br>
+						<b>Scope:</b> The scope of the project was way too ambitious, we underestimated the difficulty of putting everything together, and we overestimated the work speed of the other team members. We've learnt that knowing what tools we are working with, and the workload our teammates can handle is essential.
+						<br>
+						<br>
+						<b>Engine:</b> Related to the previous one, we underestimated the difficulty of working with a custom engine that isn't feature complete, and that is not completely stable. The engine set us back in a lot of the early tasks, until we learnt to predict better how much time it takes to put something in it.
+						<br>
+						<br>
+						<b>Minimal Parts:</b> Dissecting the core of the game in minimal parts has been essential in the pre-production phase. At the beginning we didn't do it and we had a lot of focus problems, because of this, we had a session where we went back to the basics, and with the help of references, we focused on completing the smallest parts, to later expand the scope.
+						<br>
+						<br>
+						<b>People:</b> As mentioned in the scope section, not everyone works the same, so it's always useful to have a plan B, and in case this one fails, a plan C that will minimize the risk.
+						<br>
+						<br>
+						<b>GDD:</b> We have found that very few people have consulted the GDD. They prefered small documents with the specific information they needed, than a whole document full of information that contains the information they need in one of the sections. Even though it worked great for solidifying the game vision, to implement things separate documents have worked much better.
+						<br>
+						<br>
+						<b>Organizing Method:</b> We found out that for some tasks that were shared between teams, the method we used to estimate tasks, wasn't working. We decided to switch to Gantt Charts for some of this tasks, and we've had really great results with this method.
+												
 					</p>
 					<!-- /.blog-footer -->
 				</div>
