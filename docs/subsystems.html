@@ -612,7 +612,32 @@
 						<li>3d position: The audio is heard differently depending on the distance from the listener and its position.</li>
 		
 					</p>
+		
+					<p></p>
+					<h2 class="blog-title">Scripting System</h2>
+					<p>Our Scripting System uses C#. We are using C# because it is widely used and it provides good performance. It also targets game development.
+					To implement scripting with C# in our engine we are using Mono. To make the scripting system work, we have made copies of some of our C++ classes, and ported them to C#. This allows mono to compile the scripts we write in C#, and pass the data to our actual C++ classes.</p>
 					
+					<h3 class="blog-title">Script Editor</h3>
+					<p>The engine has a built-in text editor to edit the scripts directly without necessety of visual studio</p>
+					<img class="w3-center" src="media\code_team\adria_media\EditorGif.gif">
+		
+					<h3 class="blog-title">Script In Action</h3>
+					<p>The Script are simple to use. Just add them as a component to the gameobject and assign the public variables if necessary</p>
+					<img class="w3-center" src="media\code_team\adria_media\SceneGif.gif">
+		
+					<h3 class="blog-title">Scripting API</h3>
+					<p>You have a web page with all the API</p>
+					<li><a href="#"><i class="fa fa-api_web"><span/></i></a><a href="https://tinotano.github.io/TheCreator3D_API/api/index.html">API Web</a></li>
+					
+					<p></p>
+					<h2 class="blog-title">Physics System</h2>
+					<p>For the physics system we used the PhysX library from nVidia.</p>
+					<img class="w3-center" src="media\code_team\adria_media\NV_PHYSX_F_blk.jpg" width = "901" height = "499"">
+					<p>Although many things can be done with this library, we have used it only to detect collisions and to do raycast for the obstacle avoidance.</p>
+					<img class="w3-center" src="media\code_team\adria_media\physics_colliders.gif">
+					<img class="w3-center" src="media\code_team\adria_media\obstacle avoidance.gif">
+													     
 					</div>
 					<!-- /.blog-footer -->
 				</div>
